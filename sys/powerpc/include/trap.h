@@ -192,7 +192,7 @@ value|0x1400
 end_define
 
 begin_comment
-comment|/* System Managment Interrupt */
+comment|/* System Management Interrupt */
 end_comment
 
 begin_comment
@@ -241,17 +241,6 @@ end_define
 
 begin_comment
 comment|/* Last possible exception vector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXC_AST
-value|0x3000
-end_define
-
-begin_comment
-comment|/* Fake AST vector */
 end_comment
 
 begin_comment
@@ -330,6 +319,17 @@ end_ifndef
 begin_function_decl
 name|void
 name|trap
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syscall
 parameter_list|(
 name|struct
 name|trapframe

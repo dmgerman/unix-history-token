@@ -131,20 +131,6 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|want_resched
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|astpending
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|char
 name|bootpath
 index|[]
