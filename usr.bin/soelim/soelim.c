@@ -102,19 +102,16 @@ name|STDIN_NAME
 value|"-"
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|process
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int

@@ -123,25 +123,22 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|rlines
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|off_t
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|stat
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* defines for inner loop actions */

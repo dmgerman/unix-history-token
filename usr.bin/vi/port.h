@@ -4,6 +4,10 @@ comment|/* @(#)port.h.in	8.13 (Berkeley) 6/12/96 */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Declare the basic types, if they aren't already declared.  Named and  * some system's db.h files protect them with __BIT_TYPES_DEFINED__.  */
 end_comment
 
@@ -18,68 +22,6 @@ define|#
 directive|define
 name|__BIT_TYPES_DEFINED__
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * XXX  * Handle function prototypes.  This steps on name space that vi doesn't  * control, but all of the other solutions are worse.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|__P
-end_undef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|protos
-parameter_list|)
-value|protos
-end_define
-
-begin_comment
-comment|/* ANSI C prototypes */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|protos
-parameter_list|)
-value|()
-end_define
-
-begin_comment
-comment|/* K&R C preprocessor */
-end_comment
 
 begin_endif
 endif|#

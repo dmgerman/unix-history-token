@@ -173,24 +173,21 @@ directive|include
 file|"utils.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|getsysctl
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -204,38 +201,32 @@ parameter_list|)
 value|getsysctl(name,&(var), sizeof(var))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|printable
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|swapmode
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|*
+modifier|*
 name|retavail
-operator|,
+parameter_list|,
 name|int
-operator|*
+modifier|*
 name|retfree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -262,17 +253,14 @@ begin_comment
 comment|/* Prototypes for top internals */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|quit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* get_process_info passes back a handle.  This is what it looks like: */

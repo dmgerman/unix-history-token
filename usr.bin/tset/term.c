@@ -106,35 +106,29 @@ begin_comment
 comment|/* Termcap entry. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|askuser
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|ttys
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Figure out what kind of terminal we're dealing with, and then read in  * its termcap entry.  */

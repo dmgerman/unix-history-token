@@ -84,18 +84,15 @@ name|ruleset
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|set_EFF
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -103,42 +100,31 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_closure
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_EFF
-name|__P
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_first_derives
-name|__P
-argument_list|(
-operator|(
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

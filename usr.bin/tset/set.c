@@ -75,17 +75,14 @@ parameter_list|)
 value|(val<= 0 ? dft : val)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|set_tabs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Reset the terminal mode bits to a sensible state.  Very useful after  * a child program dies in raw mode.  */

@@ -115,23 +115,20 @@ directive|include
 file|"systat.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|compar
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
