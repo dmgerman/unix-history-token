@@ -1531,7 +1531,7 @@ if|if
 condition|(
 name|AcpiOsQueueForExecution
 argument_list|(
-name|OSD_PRIORITY_GPE
+name|OSD_PRIORITY_HIGH
 argument_list|,
 name|EcGpeQueryHandler
 argument_list|,
@@ -2270,7 +2270,7 @@ if|if
 condition|(
 name|AcpiOsQueueForExecution
 argument_list|(
-name|OSD_PRIORITY_GPE
+name|OSD_PRIORITY_HIGH
 argument_list|,
 name|EcGpeQueryHandler
 argument_list|,
