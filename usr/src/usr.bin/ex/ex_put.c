@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	7.4	%G%"
+literal|"@(#)ex_put.c	7.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2137,6 +2137,8 @@ name|destline
 expr_stmt|;
 if|if
 condition|(
+name|UP_PARM
+operator|&&
 name|j
 operator|>
 literal|1
