@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)objfmt.h 1.11 %G%"; */
+comment|/* static char sccsid[] = "@(#)objfmt.h 1.12 %G%"; */
 end_comment
 
 begin_comment
@@ -440,7 +440,7 @@ begin_define
 define|#
 directive|define
 name|HEADER_BYTES
-value|1536
+value|2048
 end_define
 
 begin_comment
