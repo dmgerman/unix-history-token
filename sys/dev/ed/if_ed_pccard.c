@@ -529,6 +529,16 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ed_get_Linksys
+argument_list|(
+name|sc
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|pccard_get_ether
 argument_list|(
 name|dev
@@ -577,6 +587,7 @@ argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|ed_attach
