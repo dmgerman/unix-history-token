@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.62 1995/01/01 06:38:14 davidg Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.63 1995/01/04 21:10:17 davidg Exp $  */
 end_comment
 
 begin_include
@@ -332,6 +332,11 @@ name|u_char
 name|next_packet
 decl_stmt|;
 comment|/* pointer to next unread RX packet */
+name|struct
+name|kern_devconf
+name|kdc
+decl_stmt|;
+comment|/* kernel configuration database info */
 block|}
 name|ed_softc
 index|[
@@ -677,12 +682,8 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|kern_devconf
-name|kdc_ed
-index|[
-name|NED
-index|]
+name|kdc_ed_template
 init|=
-block|{
 block|{
 literal|0
 block|,
@@ -718,12 +719,10 @@ comment|/* parent */
 literal|0
 block|,
 comment|/* parentdata */
-name|DC_BUSY
+name|DC_UNCONFIGURED
 block|,
-comment|/* network interfaces are always ``open'' */
 literal|""
 comment|/* description */
-block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -745,68 +744,53 @@ modifier|*
 name|descr
 parameter_list|)
 block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-name|kdc_ed
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_ed
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_ed
+name|struct
+name|kern_devconf
+modifier|*
+name|kdc
+init|=
+operator|&
+name|ed_softc
 index|[
 name|id
 operator|->
 name|id_unit
 index|]
 operator|.
+name|kdc
+decl_stmt|;
+name|char
+modifier|*
+name|longdescr
+decl_stmt|;
+operator|*
+name|kdc
+operator|=
+name|kdc_ed_template
+expr_stmt|;
+name|kdc
+operator|->
 name|kdc_unit
 operator|=
 name|id
 operator|->
 name|id_unit
 expr_stmt|;
-name|kdc_ed
-index|[
-name|id
+name|kdc
 operator|->
-name|id_unit
-index|]
-operator|.
 name|kdc_parentdata
 operator|=
 name|id
 expr_stmt|;
-name|kdc_ed
-index|[
-name|id
+name|kdc
 operator|->
-name|id_unit
-index|]
-operator|.
 name|kdc_description
 operator|=
 name|descr
 expr_stmt|;
 name|dev_attach
 argument_list|(
-operator|&
-name|kdc_ed
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
+name|kdc
 argument_list|)
 expr_stmt|;
 block|}
@@ -831,6 +815,13 @@ block|{
 name|int
 name|nports
 decl_stmt|;
+name|ed_registerdev
+argument_list|(
+name|isa_dev
+argument_list|,
+literal|"Ethernet adapter"
+argument_list|)
+expr_stmt|;
 name|nports
 operator|=
 name|ed_probe_WD80x3
@@ -1233,6 +1224,14 @@ name|type_str
 operator|=
 literal|"WD8003S"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8003S"
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE_WD8003E
@@ -1242,6 +1241,14 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8003E"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8003E"
 expr_stmt|;
 break|break;
 case|case
@@ -1253,6 +1260,14 @@ name|type_str
 operator|=
 literal|"WD8003EB"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8003EB"
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE_WD8003W
@@ -1263,6 +1278,14 @@ name|type_str
 operator|=
 literal|"WD8003W"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8003W"
+expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE_WD8013EBT
@@ -1272,6 +1295,14 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013EBT"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8013EBT"
 expr_stmt|;
 name|memsize
 operator|=
@@ -1290,6 +1321,14 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013W"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8013W"
 expr_stmt|;
 name|memsize
 operator|=
@@ -1332,6 +1371,14 @@ name|type_str
 operator|=
 literal|"WD8013EP"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8013EP"
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1340,6 +1387,14 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8003EP"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8003EP"
 expr_stmt|;
 block|}
 break|break;
@@ -1351,6 +1406,14 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013WC"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8013WC"
 expr_stmt|;
 name|memsize
 operator|=
@@ -1370,6 +1433,14 @@ name|type_str
 operator|=
 literal|"WD8013EBP"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8013EBP"
+expr_stmt|;
 name|memsize
 operator|=
 literal|16384
@@ -1387,6 +1458,14 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013EPC"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: WD 8013EPC"
 expr_stmt|;
 name|memsize
 operator|=
@@ -1442,6 +1521,14 @@ name|type_str
 operator|=
 literal|"SMC8416C/SMC8416BT"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: SMC 8416C or 8416BT"
+expr_stmt|;
 name|memsize
 operator|=
 literal|8192
@@ -1454,6 +1541,14 @@ operator|->
 name|type_str
 operator|=
 literal|"SMC8216/SMC8216C"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: SMC 8216 or 8216C"
 expr_stmt|;
 name|memsize
 operator|=
@@ -1515,6 +1610,14 @@ name|type_str
 operator|=
 literal|"SMC8416T"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: SMC 8416T"
+expr_stmt|;
 name|memsize
 operator|=
 literal|8192
@@ -1527,6 +1630,14 @@ operator|->
 name|type_str
 operator|=
 literal|"SMC8216T"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: SMC 8216T"
 expr_stmt|;
 name|memsize
 operator|=
@@ -1556,6 +1667,14 @@ name|type_str
 operator|=
 literal|"Toshiba1"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: Toshiba1"
+expr_stmt|;
 name|memsize
 operator|=
 literal|32768
@@ -1573,6 +1692,14 @@ operator|->
 name|type_str
 operator|=
 literal|"Toshiba4"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: Toshiba4"
 expr_stmt|;
 name|memsize
 operator|=
@@ -3074,6 +3201,14 @@ literal|"3c503"
 expr_stmt|;
 name|sc
 operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: 3c503"
+expr_stmt|;
+name|sc
+operator|->
 name|mem_shared
 operator|=
 literal|1
@@ -4002,6 +4137,14 @@ name|type_str
 operator|=
 literal|"NE2000"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: NE2000"
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -4016,6 +4159,14 @@ operator|->
 name|type_str
 operator|=
 literal|"NE1000"
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: NE1000"
 expr_stmt|;
 block|}
 comment|/* 8k of memory plus an additional 8k if 16bit */
@@ -4633,12 +4784,22 @@ index|]
 operator|==
 literal|0x86
 condition|)
+block|{
 name|sc
 operator|->
 name|type_str
 operator|=
 literal|"Gateway AT"
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_description
+operator|=
+literal|"Ethernet adapter: Gateway AT"
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* GWETHER */
@@ -4808,20 +4969,14 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|ed_registerdev
-argument_list|(
-name|isa_dev
-argument_list|,
+comment|/* device attach does transition from UNCONFIGURED to IDLE state */
 name|sc
 operator|->
-name|type_str
-condition|?
-name|sc
-operator|->
-name|type_str
-else|:
-literal|"Ethernet adapter"
-argument_list|)
+name|kdc
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 comment|/* 	 * Print additional info when attached 	 */
 name|printf
@@ -7243,6 +7398,15 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
+comment|/* netifs are BUSY when UP */
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
 switch|switch
 condition|(
 name|ifa
@@ -7506,6 +7670,27 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* UP controls BUSY/IDLE */
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_state
+operator|=
+operator|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+condition|?
+name|DC_BUSY
+else|:
+name|DC_IDLE
+operator|)
+expr_stmt|;
 if|#
 directive|if
 name|NBPFILTER
