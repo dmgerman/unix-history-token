@@ -3603,7 +3603,7 @@ operator|<
 name|NUPDE
 condition|)
 block|{
-comment|/* Unhold the PD page */
+comment|/* We just released a PT, unhold the matching PD */
 name|vm_page_t
 name|pdpg
 decl_stmt|;
@@ -3617,10 +3617,19 @@ name|pm_pteobj
 argument_list|,
 name|NUPDE
 operator|+
-name|pmap_pdpe_index
-argument_list|(
+operator|(
+operator|(
 name|va
-argument_list|)
+operator|>>
+name|PDPSHIFT
+operator|)
+operator|&
+operator|(
+name|NUPDPE
+operator|-
+literal|1
+operator|)
+operator|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -3679,7 +3688,7 @@ name|NUPDPE
 operator|)
 condition|)
 block|{
-comment|/* Unhold the PDP page */
+comment|/* We just released a PD, unhold the matching PDP */
 name|vm_page_t
 name|pdppg
 decl_stmt|;
@@ -3695,10 +3704,19 @@ name|NUPDE
 operator|+
 name|NUPDPE
 operator|+
-name|pmap_pml4e_index
-argument_list|(
+operator|(
+operator|(
 name|va
-argument_list|)
+operator|>>
+name|PML4SHIFT
+operator|)
+operator|&
+operator|(
+name|NUPML4E
+operator|-
+literal|1
+operator|)
+operator|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -4658,6 +4676,16 @@ operator|&
 name|pdp
 index|[
 name|pdpindex
+operator|&
+operator|(
+operator|(
+literal|1ul
+operator|<<
+name|NPDPEPGSHIFT
+operator|)
+operator|-
+literal|1
+operator|)
 index|]
 expr_stmt|;
 block|}
@@ -4683,6 +4711,16 @@ operator|&
 name|pdp
 index|[
 name|pdpindex
+operator|&
+operator|(
+operator|(
+literal|1ul
+operator|<<
+name|NPDPEPGSHIFT
+operator|)
+operator|-
+literal|1
+operator|)
 index|]
 expr_stmt|;
 if|if
@@ -4999,7 +5037,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*************************************************** * Pmap allocation/deallocation routines.  ***************************************************/
+comment|/***************************************************  * Pmap allocation/deallocation routines.  ***************************************************/
 end_comment
 
 begin_comment
