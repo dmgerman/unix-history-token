@@ -2250,6 +2250,11 @@ literal|1
 operator|)
 operator|&&
 name|map
+operator|!=
+operator|&
+name|nobounce_dmamap
+operator|&&
+name|map
 operator|->
 name|pagesneeded
 operator|==
