@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.7 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/dir.h>
 end_include
 
 begin_define
