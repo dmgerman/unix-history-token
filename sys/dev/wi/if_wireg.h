@@ -1765,6 +1765,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WI_PORTTYPE_IBSS
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
 name|WI_PORTTYPE_BSS
 value|0x1
 end_define
@@ -1781,6 +1788,13 @@ define|#
 directive|define
 name|WI_PORTTYPE_ADHOC
 value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_PORTTYPE_AP
+value|0x6
 end_define
 
 begin_comment
@@ -1881,6 +1895,38 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * supported rates. (0xFCB4)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_SUPPRATES_1M
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_SUPPRATES_2M
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_SUPPRATES_5M
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_SUPPRATES_11M
+value|0x0008
+end_define
+
+begin_comment
 comment|/*  * Information frame types.  */
 end_comment
 
@@ -1967,10 +2013,14 @@ name|u_int16_t
 name|wi_rsvd2
 decl_stmt|;
 comment|/* 0x08 */
-name|u_int16_t
-name|wi_rsvd3
+name|u_int8_t
+name|wi_tx_rtry
 decl_stmt|;
 comment|/* 0x0A */
+name|u_int8_t
+name|wi_tx_rate
+decl_stmt|;
+comment|/* 0x0B */
 name|u_int16_t
 name|wi_tx_ctl
 decl_stmt|;
@@ -2077,6 +2127,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_802_11_OFFSET_HDR
+value|0x0E
+end_define
+
+begin_define
+define|#
+directive|define
 name|WI_STAT_BADCRC
 value|0x0001
 end_define
@@ -2138,6 +2195,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WI_STAT_MGMT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 802.11b management frames */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WI_RXSTAT_MSG_TYPE
 value|0xE000
 end_define
@@ -2154,6 +2222,13 @@ define|#
 directive|define
 name|WI_ENC_TX_802_11
 value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_ENC_TX_MGMT
+value|0x08
 end_define
 
 begin_define
@@ -2189,6 +2264,27 @@ define|#
 directive|define
 name|WI_TXCNTL_STRUCTTYPE
 value|0xFF00
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_TXCNTL_TX_EX
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_TXCNTL_TX_OK
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_TXCNTL_NOCRYPT
+value|0x0080
 end_define
 
 begin_comment
@@ -2243,6 +2339,13 @@ define|#
 directive|define
 name|WI_SNAPHDR_LEN
 value|0x6
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_FCS_LEN
+value|0x4
 end_define
 
 end_unit

@@ -389,6 +389,9 @@ name|u_int16_t
 name|wi_max_sleep
 decl_stmt|;
 name|u_int16_t
+name|wi_supprates
+decl_stmt|;
+name|u_int16_t
 name|wi_authtype
 decl_stmt|;
 name|u_int16_t
@@ -438,6 +441,9 @@ name|int
 name|wi_use_wep
 decl_stmt|;
 name|int
+name|wi_authmode
+decl_stmt|;
+name|int
 name|wi_tx_key
 decl_stmt|;
 name|struct
@@ -459,6 +465,18 @@ index|]
 decl_stmt|;
 name|int
 name|wi_nextitem
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|WI_HOSTAP
+name|struct
+name|wihap_info
+name|wi_hostap_info
+decl_stmt|;
+name|u_int32_t
+name|wi_icv
 decl_stmt|;
 endif|#
 directive|endif
@@ -617,6 +635,21 @@ name|devclass_t
 name|wi_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|wi_mgmt_xmit
+parameter_list|(
+name|struct
+name|wi_softc
+modifier|*
+parameter_list|,
+name|caddr_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

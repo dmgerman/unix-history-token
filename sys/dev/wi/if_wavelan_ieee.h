@@ -55,6 +55,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|WI_RID_MONITOR_MODE
+value|0x0500
+end_define
+
 begin_comment
 comment|/*  * Technically I don't think there's a limit to a record  * length. The largest record is the one that contains the CIS  * data, which is 240 words long, so 256 should be a safe  * value.  */
 end_comment
@@ -377,6 +384,48 @@ end_define
 begin_comment
 comment|/* deauthentication */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_STYPE_CTL_PSPOLL
+value|0x00A0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_STYPE_CTL_RTS
+value|0x00B0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_STYPE_CTL_CTS
+value|0x00C0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_STYPE_CTL_ACK
+value|0x00D0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_STYPE_CTL_CFEND
+value|0x00E0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_STYPE_CTL_CFENDACK
+value|0x00F0
+end_define
 
 begin_struct
 struct|struct
@@ -940,7 +989,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|WI_RID_AUTH_CNTL
+name|WI_RID_CNFAUTHMODE
 value|0xFC2A
 end_define
 
@@ -1021,7 +1070,7 @@ value|0xFC84
 end_define
 
 begin_comment
-comment|/* data rate for message xmit */
+comment|/* data rate for message xmit  					* 0 == Fixed 1mbps  					* 1 == Fixed 2mbps  					* 2 == auto fallback 					*/
 end_comment
 
 begin_define
