@@ -181,16 +181,21 @@ directive|include
 file|"un-namespace.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|SOCKCREDSIZE
-parameter_list|(
-name|ngrps
-parameter_list|)
-define|\
-value|(sizeof(struct cmsgcred) + (sizeof(gid_t) * ((ngrps) - 1)))
-end_define
+begin_struct
+struct|struct
+name|cmessage
+block|{
+name|struct
+name|cmsghdr
+name|cmsg
+decl_stmt|;
+name|struct
+name|cmsgcred
+name|cmcred
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static

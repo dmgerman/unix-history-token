@@ -1525,22 +1525,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|cmessage
-block|{
-name|struct
-name|cmsghdr
-name|cmsg
-decl_stmt|;
-name|struct
-name|cmsgcred
-name|cmcred
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* given pointer to struct cmsghdr, return pointer to data */
 end_comment

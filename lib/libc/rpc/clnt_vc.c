@@ -198,6 +198,22 @@ name|MCALL_MSG_SIZE
 value|24
 end_define
 
+begin_struct
+struct|struct
+name|cmessage
+block|{
+name|struct
+name|cmsghdr
+name|cmsg
+decl_stmt|;
+name|struct
+name|cmsgcred
+name|cmcred
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|static
 name|enum
