@@ -836,6 +836,9 @@ name|mv_rsz
 decl_stmt|,
 name|mv_csz
 decl_stmt|;
+name|u_short
+name|mv_hsz
+decl_stmt|;
 name|struct
 name|colors
 name|mv_norm
@@ -965,6 +968,12 @@ begin_struct
 struct|struct
 name|scrshot
 block|{
+name|int
+name|x
+decl_stmt|;
+name|int
+name|y
+decl_stmt|;
 name|int
 name|xsize
 decl_stmt|;
