@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	4.3 (Berkeley) %G%"
+literal|"@(#)ctime.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This routine converts time as follows.  * The epoch is 0000 Jan 1 1970 GMT.  * The argument time is in seconds since then.  * The localtime(t) entry returns a pointer to an array  * containing  *  seconds (0-59)  *  minutes (0-59)  *  hours (0-23)  *  day of month (1-31)  *  month (0-11)  *  year-1970  *  weekday (0-6, Sun is 0)  *  day of the year  *  daylight savings flag  *  * The routine calls the system to determine the local  * timezone and whether Daylight Saving Time is permitted locally.  * (DST is then determined by the current US standard rules)  * There is a table that accounts for the peculiarities  * undergone by daylight time in 1974-1975.  *  * The routine does not work  * in Saudi Arabia which runs on Solar time.  *  * asctime(tvec))  * where tvec is produced by localtime  * returns a ptr to a character string  * that has the ascii time in the form  *	Thu Jan 01 00:00:00 1970n0
+comment|/*  * This routine converts time as follows.  * The epoch is 0000 Jan 1 1970 GMT.  * The argument time is in seconds since then.  * The localtime(t) entry returns a pointer to an array  * containing  *  seconds (0-59)  *  minutes (0-59)  *  hours (0-23)  *  day of month (1-31)  *  month (0-11)  *  year-1970  *  weekday (0-6, Sun is 0)  *  day of the year  *  daylight savings flag  *  * The routine calls the system to determine the local  * timezone and whether Daylight Saving Time is permitted locally.  * (DST is then determined by the current local rules)  *  * The routine does not work  * in Saudi Arabia which runs on Solar time.  *  * asctime(tvec))  * where tvec is produced by localtime  * returns a ptr to a character string  * that has the ascii time in the form  *	Thu Jan 01 00:00:00 1970n0
 comment|\\  *	01234567890123456789012345  *	0	  1	    2  *  * ctime(t) just calls localtime, then asctime.  */
 end_comment
 
@@ -183,6 +183,90 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The European tables ... based on hearsay  * Believed correct for:  *	WE:	Great Britain, Ireland, Portugal  *	ME:	Belgium, Luxembourg, Netherlands, Denmark, Norway,  *		Austria, Poland, Czechoslovakia, Sweden, Switzerland,  *		DDR, DBR, France, Spain, Hungary, Italy, Jugoslavia  * Eastern European dst is unknown, we'll make it ME until someone speaks up.  *	EE:	Bulgaria, Finland, Greece, Rumania, Turkey, Western Russia  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|dstab
+name|wedaytab
+index|[]
+init|=
+block|{
+literal|1983
+block|,
+literal|86
+block|,
+literal|303
+block|,
+comment|/* 1983: end March - end Oct */
+literal|1984
+block|,
+literal|86
+block|,
+literal|303
+block|,
+comment|/* 1984: end March - end Oct */
+literal|1985
+block|,
+literal|86
+block|,
+literal|303
+block|,
+comment|/* 1985: end March - end Oct */
+literal|0
+block|,
+literal|400
+block|,
+literal|0
+block|,
+comment|/* others: no daylight saving at all ??? */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|dstab
+name|medaytab
+index|[]
+init|=
+block|{
+literal|1983
+block|,
+literal|86
+block|,
+literal|272
+block|,
+comment|/* 1983: end March - end Sep */
+literal|1984
+block|,
+literal|86
+block|,
+literal|272
+block|,
+comment|/* 1984: end March - end Sep */
+literal|1985
+block|,
+literal|86
+block|,
+literal|272
+block|,
+comment|/* 1985: end March - end Sep */
+literal|0
+block|,
+literal|400
+block|,
+literal|0
+block|,
+comment|/* others: no daylight saving at all ??? */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 specifier|static
 struct|struct
@@ -232,6 +316,31 @@ name|ausdaytab
 block|,
 name|STH
 block|,
+name|DST_WET
+block|,
+literal|1
+block|,
+name|wedaytab
+block|,
+name|NTH
+block|,
+name|DST_MET
+block|,
+literal|1
+block|,
+name|medaytab
+block|,
+name|NTH
+block|,
+name|DST_EET
+block|,
+literal|1
+block|,
+name|medaytab
+block|,
+name|NTH
+block|,
+comment|/* XXX */
 operator|-
 literal|1
 block|, }

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)timezone.c	4.2 (Berkeley) %G% */
+comment|/* @(#)timezone.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -28,6 +28,24 @@ name|zonetab
 index|[]
 init|=
 block|{
+literal|1
+operator|*
+literal|60
+block|,
+literal|"MET"
+block|,
+literal|"MET DST"
+block|,
+comment|/* Middle European */
+literal|2
+operator|*
+literal|60
+block|,
+literal|"EET"
+block|,
+literal|"EET DST"
+block|,
+comment|/* Eastern European */
 literal|4
 operator|*
 literal|60
@@ -73,6 +91,10 @@ block|,
 literal|"PDT"
 block|,
 comment|/* Pacific */
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* there's no way to distinguish this from WET */
 literal|0
 block|,
 literal|"GMT"
@@ -80,6 +102,17 @@ block|,
 literal|0
 block|,
 comment|/* Greenwich */
+endif|#
+directive|endif
+literal|0
+operator|*
+literal|60
+block|,
+literal|"WET"
+block|,
+literal|"WET DST"
+block|,
+comment|/* Western European */
 operator|-
 literal|10
 operator|*
