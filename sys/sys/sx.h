@@ -159,6 +159,46 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|_sx_try_slock
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_sx_try_xlock
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|_sx_sunlock
 parameter_list|(
@@ -221,6 +261,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|sx_try_slock
+parameter_list|(
+name|sx
+parameter_list|)
+value|_sx_try_slock((sx), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_try_xlock
+parameter_list|(
+name|sx
+parameter_list|)
+value|_sx_try_xlock((sx), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
 name|sx_sunlock
 parameter_list|(
 name|sx
@@ -245,17 +305,28 @@ name|INVARIANTS
 end_ifdef
 
 begin_comment
-comment|/*  * SX_ASSERT_SLOCKED() can only detect that at least *some* thread owns an  * slock, but it cannot guarantee that *this* thread owns an slock.  */
+comment|/*  * In the non-WITNESS case, SX_ASSERT_LOCKED() and SX_ASSERT_SLOCKED()  * can only detect that at least *some* thread owns an slock, but it cannot  * guarantee that *this* thread owns an slock.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|SX_ASSERT_SLOCKED
+name|_SX_ASSERT_LOCKED
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
-value|do {					\ 	mtx_lock(&(sx)->sx_lock);					\ 	_SX_ASSERT_SLOCKED((sx));					\ 	mtx_unlock(&(sx)->sx_lock);					\ } while (0)
+define|\
+value|witness_assert(&(sx)->sx_object, LA_LOCKED, file, line)
 end_define
 
 begin_define
@@ -264,8 +335,71 @@ directive|define
 name|_SX_ASSERT_SLOCKED
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
-value|do {					\ 	KASSERT(((sx)->sx_cnt> 0), ("%s: lacking slock %s\n",		\ 	    __FUNCTION__, (sx)->sx_object.lo_name));			\ } while (0)
+define|\
+value|witness_assert(&(sx)->sx_object, LA_SLOCKED, file, line)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_SX_ASSERT_LOCKED
+parameter_list|(
+name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|do {				\ 	KASSERT(((sx)->sx_cnt> 0 || (sx)->sx_xholder == curproc),	\ 	    ("Lock %s not locked @ %s:%d", (sx)->sx_object.lo_name,	\ 	    file, line));						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SX_ASSERT_SLOCKED
+parameter_list|(
+name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|do {				\ 	KASSERT(((sx)->sx_cnt> 0), ("Lock %s not share locked @ %s:%d",\ 	    (sx)->sx_object.lo_name, file, line));			\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SX_ASSERT_LOCKED
+parameter_list|(
+name|sx
+parameter_list|)
+value|_SX_ASSERT_LOCKED((sx), __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SX_ASSERT_SLOCKED
+parameter_list|(
+name|sx
+parameter_list|)
+value|_SX_ASSERT_SLOCKED((sx), __FILE__, __LINE__)
 end_define
 
 begin_comment
@@ -275,21 +409,25 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SX_ASSERT_XLOCKED
+name|_SX_ASSERT_XLOCKED
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
-value|do {					\ 	mtx_lock(&(sx)->sx_lock);					\ 	_SX_ASSERT_XLOCKED((sx));					\ 	mtx_unlock(&(sx)->sx_lock);					\ } while (0)
+value|do {				\ 	KASSERT(((sx)->sx_xholder == curproc),				\ 	    ("Lock %s not exclusively locked @ %s:%d",			\ 	    (sx)->sx_object.lo_name, file, line));			\ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|_SX_ASSERT_XLOCKED
+name|SX_ASSERT_XLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|do {					\ 	KASSERT(((sx)->sx_xholder == curproc),				\ 	    ("%s: thread %p lacking xlock %s\n", __FUNCTION__,		\ 	    curproc, (sx)->sx_object.lo_name));				\ } while (0)
+value|_SX_ASSERT_XLOCKED((sx), __FILE__, __LINE__)
 end_define
 
 begin_else
@@ -325,6 +463,10 @@ directive|define
 name|_SX_ASSERT_SLOCKED
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 end_define
 
@@ -334,6 +476,10 @@ directive|define
 name|_SX_ASSERT_XLOCKED
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 end_define
 
