@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.18	82/09/06	*/
+comment|/*	user.h	4.19	82/09/08	*/
 end_comment
 
 begin_include
@@ -79,7 +79,7 @@ name|u_ap
 decl_stmt|;
 comment|/* pointer to arglist */
 name|label_t
-name|u_qsav
+name|u_qsave
 decl_stmt|;
 comment|/* for non-local gotos on interrupts */
 name|char
@@ -176,7 +176,7 @@ name|u_csmap
 decl_stmt|;
 comment|/* shadows of u_dmap, u_smap, for 					   use of parent during fork */
 name|label_t
-name|u_ssav
+name|u_ssave
 decl_stmt|;
 comment|/* label variable for swapping */
 name|size_t
