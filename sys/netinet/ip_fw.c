@@ -4067,7 +4067,7 @@ name|expire
 operator|=
 name|time_second
 operator|+
-name|dyn_fin_lifetime
+name|dyn_ack_lifetime
 expr_stmt|;
 break|break ;
 case|case
