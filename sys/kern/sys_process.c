@@ -1720,16 +1720,13 @@ case|:
 case|case
 name|PT_DETACH
 case|:
-comment|/* XXX data is used even in the PT_STEP case. */
+comment|/* Zero means do not send any signal */
 if|if
 condition|(
-name|req
-operator|!=
-name|PT_STEP
-operator|&&
-operator|(
-name|unsigned
-operator|)
+name|data
+operator|<
+literal|0
+operator|||
 name|data
 operator|>
 name|_SIG_MAXSIG

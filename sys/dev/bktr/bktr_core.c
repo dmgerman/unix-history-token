@@ -7067,7 +7067,7 @@ name|int
 operator|*
 operator|)
 name|arg
-operator|==
+operator|<=
 literal|0
 operator|||
 operator|*
@@ -7076,8 +7076,8 @@ name|int
 operator|*
 operator|)
 name|arg
-operator|>=
-name|NSIG
+operator|>
+name|_SIG_MAXSIG
 condition|)
 block|{
 return|return
