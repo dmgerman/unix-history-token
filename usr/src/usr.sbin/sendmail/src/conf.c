@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.97 (Berkeley) %G%"
+literal|"@(#)conf.c	8.98 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,7 +489,7 @@ operator|=
 name|EM_PRINT
 expr_stmt|;
 comment|/* option e */
-name|SevenBit
+name|SevenBitInput
 operator|=
 name|FALSE
 expr_stmt|;
@@ -535,6 +535,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* option p */
+name|MimeMode
+operator|=
+name|MM_CVTMIME
+operator||
+name|MM_PASS8BIT
+expr_stmt|;
+comment|/* option 8 */
 name|setdefuser
 argument_list|()
 expr_stmt|;

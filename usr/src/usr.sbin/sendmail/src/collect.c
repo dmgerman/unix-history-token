@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.16 (Berkeley) %G%"
+literal|"@(#)collect.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
+comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
 end_comment
 
 begin_decl_stmt
@@ -111,6 +111,11 @@ name|inputerr
 init|=
 name|FALSE
 decl_stmt|;
+name|bool
+name|headeronly
+init|=
+name|FALSE
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -150,7 +155,31 @@ name|CollectErrno
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|hdrp
+operator|==
+name|NULL
+condition|)
+name|hdrp
+operator|=
+operator|&
+name|e
+operator|->
+name|e_header
+expr_stmt|;
+else|else
+name|headeronly
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
+if|if
+condition|(
+operator|!
+name|headeronly
+condition|)
+block|{
 name|e
 operator|->
 name|e_df
@@ -216,6 +245,11 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+name|HasEightBits
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
 condition|(
@@ -241,7 +275,7 @@ name|buf
 argument_list|,
 name|MAXLINE
 argument_list|,
-name|InChannel
+name|fp
 argument_list|,
 name|dbto
 argument_list|,
@@ -266,6 +300,9 @@ name|NOTUNIX
 if|if
 condition|(
 operator|!
+name|headeronly
+operator|&&
+operator|!
 name|SaveFrom
 operator|&&
 name|strncmp
@@ -287,7 +324,7 @@ name|flusheol
 argument_list|(
 name|buf
 argument_list|,
-name|InChannel
+name|fp
 argument_list|,
 name|dbto
 argument_list|)
@@ -310,7 +347,7 @@ name|buf
 argument_list|,
 name|MAXLINE
 argument_list|,
-name|InChannel
+name|fp
 argument_list|,
 name|dbto
 argument_list|,
@@ -333,7 +370,7 @@ block|}
 endif|#
 directive|endif
 comment|/* NOTUNIX */
-comment|/* 	**  Copy InChannel to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header. 	*/
+comment|/* 	**  Copy fp to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header. 	*/
 name|workbuf
 operator|=
 name|buf
@@ -392,7 +429,7 @@ name|flusheol
 argument_list|(
 name|workbuf
 argument_list|,
-name|InChannel
+name|fp
 argument_list|,
 name|dbto
 argument_list|)
@@ -449,7 +486,7 @@ name|freebuf
 argument_list|,
 name|MAXLINE
 argument_list|,
-name|InChannel
+name|fp
 argument_list|,
 name|dbto
 argument_list|,
@@ -489,7 +526,7 @@ name|flusheol
 argument_list|(
 name|freebuf
 argument_list|,
-name|InChannel
+name|fp
 argument_list|,
 name|dbto
 argument_list|)
@@ -700,6 +737,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|headeronly
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|workbuf
+operator|!=
+literal|'\0'
+condition|)
+name|syserr
+argument_list|(
+literal|"collect: lost first line of message"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|readerr
+goto|;
+block|}
+if|if
+condition|(
 operator|*
 name|workbuf
 operator|==
@@ -715,7 +773,7 @@ name|buf
 argument_list|,
 name|MAXLINE
 argument_list|,
-name|InChannel
+name|fp
 argument_list|,
 name|dbto
 argument_list|,
@@ -875,7 +933,7 @@ name|buf
 argument_list|,
 name|MAXLINE
 argument_list|,
-name|InChannel
+name|fp
 argument_list|,
 name|dbto
 argument_list|,
@@ -888,21 +946,25 @@ goto|goto
 name|readerr
 goto|;
 block|}
+name|readerr
+label|:
 if|if
 condition|(
+operator|(
 name|feof
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
+operator|&&
+name|smtpmode
+operator|)
 operator|||
 name|ferror
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 condition|)
 block|{
-name|readerr
-label|:
 if|if
 condition|(
 name|tTd
@@ -931,6 +993,18 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|headeronly
+condition|)
+return|return;
+if|if
+condition|(
+name|tf
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|fflush
@@ -977,6 +1051,7 @@ expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1062,7 +1137,7 @@ if|if
 condition|(
 name|feof
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 condition|)
 name|problem
@@ -1074,7 +1149,7 @@ if|if
 condition|(
 name|ferror
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 condition|)
 name|problem
@@ -1097,7 +1172,7 @@ literal|0
 operator|&&
 name|feof
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 condition|)
 name|syslog
@@ -1128,7 +1203,7 @@ if|if
 condition|(
 name|feof
 argument_list|(
-name|InChannel
+name|fp
 argument_list|)
 condition|)
 name|usrerr
@@ -1230,6 +1305,8 @@ argument_list|(
 literal|"to"
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 operator|==
 name|NULL
@@ -1239,6 +1316,8 @@ argument_list|(
 literal|"cc"
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 operator|==
 name|NULL
@@ -1248,6 +1327,8 @@ argument_list|(
 literal|"bcc"
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 operator|==
 name|NULL
@@ -1257,6 +1338,8 @@ argument_list|(
 literal|"apparently-to"
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 operator|==
 name|NULL
@@ -1323,7 +1406,10 @@ name|q
 operator|->
 name|q_paddr
 argument_list|,
+operator|&
 name|e
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 block|}

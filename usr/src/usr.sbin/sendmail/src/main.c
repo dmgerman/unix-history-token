@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.62 (Berkeley) %G%"
+literal|"@(#)main.c	8.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5006,9 +5006,13 @@ name|MD_VERIFY
 condition|)
 name|collect
 argument_list|(
+name|InChannel
+argument_list|,
 name|FALSE
 argument_list|,
 name|FALSE
+argument_list|,
+name|NULL
 argument_list|,
 name|CurEnv
 argument_list|)
@@ -5085,9 +5089,13 @@ name|EF_GLOBALERRS
 expr_stmt|;
 name|collect
 argument_list|(
+name|InChannel
+argument_list|,
 name|FALSE
 argument_list|,
 name|FALSE
+argument_list|,
+name|NULL
 argument_list|,
 name|CurEnv
 argument_list|)
@@ -6410,7 +6418,10 @@ literal|"X-Authentication-Warning"
 argument_list|,
 name|buf
 argument_list|,
+operator|&
 name|e
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 block|}

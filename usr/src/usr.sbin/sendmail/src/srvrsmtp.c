@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.42 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.43 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.42 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.43 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1851,7 +1851,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SevenBit
+name|SevenBitInput
 operator|=
 name|FALSE
 expr_stmt|;
@@ -1869,7 +1869,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|SevenBit
+name|SevenBitInput
 operator|=
 name|TRUE
 expr_stmt|;
@@ -2238,9 +2238,13 @@ literal|"collect"
 expr_stmt|;
 name|collect
 argument_list|(
+name|InChannel
+argument_list|,
 name|TRUE
 argument_list|,
 name|doublequeue
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)

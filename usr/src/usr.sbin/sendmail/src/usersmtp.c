@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.20 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.21 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.20 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.21 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1215,6 +1215,14 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MM_CVTMIME
+argument_list|,
+name|MimeMode
+argument_list|)
+operator|&&
 name|strcasecmp
 argument_list|(
 name|e
@@ -2118,7 +2126,45 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* now output the actual message */
+comment|/* 	**  Output the actual message. 	*/
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MCIF_8BITMIME
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+operator|&&
+name|e
+operator|->
+name|e_bodytype
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|e
+operator|->
+name|e_bodytype
+argument_list|,
+literal|"7bit"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* must convert from 8bit MIME format to 7bit encoded */
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_CVT8TO7
+expr_stmt|;
+block|}
 call|(
 modifier|*
 name|e
@@ -2129,13 +2175,10 @@ argument_list|(
 name|mci
 argument_list|,
 name|e
-argument_list|)
-expr_stmt|;
-name|putline
-argument_list|(
-literal|"\n"
+operator|->
+name|e_header
 argument_list|,
-name|mci
+name|e
 argument_list|)
 expr_stmt|;
 call|(
@@ -2152,6 +2195,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 	**  Cleanup after sending message. 	*/
 name|clrevent
 argument_list|(
 name|ev

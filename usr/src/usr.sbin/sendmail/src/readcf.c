@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.25 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3953,13 +3953,101 @@ case|case
 literal|'7'
 case|:
 comment|/* force seven-bit input */
-name|SevenBit
+name|SevenBitInput
 operator|=
 name|atobool
 argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'8'
+case|:
+comment|/* handling of 8-bit input */
+switch|switch
+condition|(
+operator|*
+name|val
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+comment|/* reject all 8-bit */
+name|MimeMode
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+comment|/* convert all 8-bit */
+name|MimeMode
+operator|=
+name|MM_CVTMIME
+operator||
+name|MM_MIME8BIT
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+comment|/* minimal encoding */
+name|MimeMode
+operator|=
+name|MM_PASS8BIT
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* pass 8 bit, convert MIME */
+name|MimeMode
+operator|=
+name|MM_PASS8BIT
+operator||
+name|MM_CVTMIME
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* strict adherence */
+name|MimeMode
+operator|=
+name|MM_CVTMIME
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* encode 8 bit if available */
+name|MimeMode
+operator|=
+name|MM_MIME8BIT
+operator||
+name|MM_PASS8BIT
+operator||
+name|MM_CVTMIME
+expr_stmt|;
+break|break;
+default|default:
+name|syserr
+argument_list|(
+literal|"Unknown 8-bit mode %c"
+argument_list|,
+operator|*
+name|val
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'A'

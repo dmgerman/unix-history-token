@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.32 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1279,14 +1279,10 @@ operator|&
 name|mcibuf
 argument_list|,
 name|e
-argument_list|)
-expr_stmt|;
-name|putline
-argument_list|(
-literal|"\n"
+operator|->
+name|e_header
 argument_list|,
-operator|&
-name|mcibuf
+name|e
 argument_list|)
 expr_stmt|;
 call|(
@@ -1886,7 +1882,10 @@ name|q
 operator|->
 name|q_paddr
 argument_list|,
+operator|&
 name|ee
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 block|}
@@ -1987,7 +1986,10 @@ literal|"MIME-Version"
 argument_list|,
 literal|"1.0"
 argument_list|,
+operator|&
 name|ee
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2038,7 +2040,10 @@ literal|"Content-Type"
 argument_list|,
 name|buf
 argument_list|,
+operator|&
 name|ee
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 block|}
@@ -2244,7 +2249,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		mci -- the mailer connection information. **		e -- the envelope we are working in. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
+comment|/* **  ERRBODY -- output the body of an error message. ** **	Typically this is a copy of the transcript plus a copy of the **	original offending message. ** **	Parameters: **		mci -- the mailer connection information. **		e -- the envelope we are working in. **		separator -- any possible MIME separator. ** **	Returns: **		none ** **	Side Effects: **		Outputs the body of an error message. */
 end_comment
 
 begin_expr_stmt
@@ -2253,6 +2258,8 @@ operator|(
 name|mci
 operator|,
 name|e
+operator|,
+name|separator
 operator|)
 specifier|register
 name|MCI
@@ -2266,6 +2273,13 @@ specifier|register
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|separator
 decl_stmt|;
 end_decl_stmt
 
@@ -2294,6 +2308,33 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MCIF_INHEADER
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+block|{
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_INHEADER
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|e
@@ -3040,13 +3081,12 @@ argument_list|,
 name|e
 operator|->
 name|e_parent
-argument_list|)
-expr_stmt|;
-name|putline
-argument_list|(
-literal|""
+operator|->
+name|e_header
 argument_list|,
-name|mci
+name|e
+operator|->
+name|e_parent
 argument_list|)
 expr_stmt|;
 if|if
@@ -3067,6 +3107,14 @@ name|e_msgboundary
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
 name|putline
 argument_list|(
 literal|"   ----- Message body suppressed -----"
@@ -3074,6 +3122,7 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

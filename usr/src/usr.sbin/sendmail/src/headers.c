@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.33 (Berkeley) %G%"
+literal|"@(#)headers.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1015,7 +1015,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field. **		e -- the envelope to add them to. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
+comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field. **		hp -- an indirect pointer to the header structure list. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
 end_comment
 
 begin_macro
@@ -1025,7 +1025,7 @@ argument|field
 argument_list|,
 argument|value
 argument_list|,
-argument|e
+argument|hdrlist
 argument_list|)
 end_macro
 
@@ -1044,9 +1044,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ENVELOPE
+name|HDR
 modifier|*
-name|e
+modifier|*
+name|hdrlist
 decl_stmt|;
 end_decl_stmt
 
@@ -1105,10 +1106,7 @@ for|for
 control|(
 name|hp
 operator|=
-operator|&
-name|e
-operator|->
-name|e_header
+name|hdrlist
 init|;
 operator|(
 name|h
@@ -1207,7 +1205,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  HVALUE -- return value of a header. ** **	Only "real" fields (i.e., ones that have not been supplied **	as a default) are used. ** **	Parameters: **		field -- the field name. **		e -- the envelope containing the header. ** **	Returns: **		pointer to the value part. **		NULL if not found. ** **	Side Effects: **		none. */
+comment|/* **  HVALUE -- return value of a header. ** **	Only "real" fields (i.e., ones that have not been supplied **	as a default) are used. ** **	Parameters: **		field -- the field name. **		header -- the header list. ** **	Returns: **		pointer to the value part. **		NULL if not found. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -1217,16 +1215,15 @@ name|hvalue
 parameter_list|(
 name|field
 parameter_list|,
-name|e
+name|header
 parameter_list|)
 name|char
 modifier|*
 name|field
 decl_stmt|;
-specifier|register
-name|ENVELOPE
+name|HDR
 modifier|*
-name|e
+name|header
 decl_stmt|;
 block|{
 specifier|register
@@ -1238,9 +1235,7 @@ for|for
 control|(
 name|h
 operator|=
-name|e
-operator|->
-name|e_header
+name|header
 init|;
 name|h
 operator|!=
@@ -1481,6 +1476,8 @@ argument_list|(
 literal|"full-name"
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 if|if
@@ -1904,6 +1901,8 @@ argument_list|(
 literal|"precedence"
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 if|if
@@ -1953,6 +1952,8 @@ argument_list|(
 literal|"posted-date"
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 if|if
@@ -1968,6 +1969,8 @@ argument_list|(
 literal|"date"
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 expr_stmt|;
 if|if
@@ -2057,6 +2060,8 @@ operator|->
 name|hi_field
 argument_list|,
 name|e
+operator|->
+name|e_header
 argument_list|)
 operator|)
 operator|!=
@@ -3502,7 +3507,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		h -- the header to put. **		e -- envelope to use. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -3537,6 +3542,8 @@ name|putheader
 argument_list|(
 name|mci
 argument_list|,
+name|h
+argument_list|,
 name|e
 argument_list|)
 specifier|register
@@ -3545,6 +3552,14 @@ operator|*
 name|mci
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|HDR
+modifier|*
+name|h
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -3566,11 +3581,6 @@ argument_list|,
 name|BUFSIZ
 argument_list|)
 index|]
-decl_stmt|;
-specifier|register
-name|HDR
-modifier|*
-name|h
 decl_stmt|;
 name|char
 name|obuf
@@ -3598,13 +3608,14 @@ operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_INHEADER
+expr_stmt|;
 for|for
 control|(
-name|h
-operator|=
-name|e
-operator|->
-name|e_header
 init|;
 name|h
 operator|!=

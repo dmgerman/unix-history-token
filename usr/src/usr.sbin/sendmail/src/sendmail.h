@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.46 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.45		%G%"
+literal|"@(#)sendmail.h	8.46		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1592,6 +1592,28 @@ begin_comment
 comment|/* MAIL11V3: handles MULT status */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MCIF_INHEADER
+value|001000
+end_define
+
+begin_comment
+comment|/* currently outputing header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_CVT8TO7
+value|002000
+end_define
+
+begin_comment
+comment|/* convert from 8 to 7 bits */
+end_comment
+
 begin_comment
 comment|/* states */
 end_comment
@@ -1786,6 +1808,9 @@ name|__P
 argument_list|(
 operator|(
 name|MCI
+operator|*
+operator|,
+name|HDR
 operator|*
 operator|,
 name|ENVELOPE
@@ -2084,6 +2109,17 @@ end_define
 
 begin_comment
 comment|/* suppress all return-receipts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_HAS8BIT
+value|0x0020000
+end_define
+
+begin_comment
+comment|/* at least one 8-bit char in body */
 end_comment
 
 begin_decl_stmt
@@ -3321,7 +3357,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  Operation, send, and error modes ** **	The operation mode describes the basic operation of sendmail. **	This can be set from the command line, and is "send mail" by **	default. ** **	The send mode tells how to send mail.  It can be set in the **	configuration file.  It's setting determines how quickly the **	mail will be delivered versus the load on your system.  If the **	-v (verbose) flag is given, it will be forced to SM_DELIVER **	mode. ** **	The error mode tells how to return errors. */
+comment|/* **  Operation, send, error, and MIME modes ** **	The operation mode describes the basic operation of sendmail. **	This can be set from the command line, and is "send mail" by **	default. ** **	The send mode tells how to send mail.  It can be set in the **	configuration file.  It's setting determines how quickly the **	mail will be delivered versus the load on your system.  If the **	-v (verbose) flag is given, it will be forced to SM_DELIVER **	mode. ** **	The error mode tells how to return errors. */
 end_comment
 
 begin_decl_stmt
@@ -3565,6 +3601,54 @@ end_define
 
 begin_comment
 comment|/* don't print messages (stat only) */
+end_comment
+
+begin_comment
+comment|/* MIME processing mode */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MimeMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bit values for MimeMode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MM_CVTMIME
+value|0x0001
+end_define
+
+begin_comment
+comment|/* convert 8 to 7 bit MIME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MM_PASS8BIT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* just send 8 bit data blind */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MM_MIME8BIT
+value|0x0004
+end_define
+
+begin_comment
+comment|/* convert 8-bit data to MIME */
 end_comment
 
 begin_escape
@@ -4101,12 +4185,23 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|SevenBit
+name|SevenBitInput
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* force 7-bit data */
+comment|/* force 7-bit data on input */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|HasEightBits
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* has at least one eight bit input byte */
 end_comment
 
 begin_decl_stmt
