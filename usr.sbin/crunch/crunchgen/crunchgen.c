@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -28,13 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -260,15 +266,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|pname
-init|=
-literal|"crunchgen"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|verbose
 decl_stmt|,
@@ -405,15 +402,6 @@ decl_stmt|;
 name|int
 name|optc
 decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 name|verbose
 operator|=
 literal|1
@@ -432,19 +420,6 @@ operator|*
 name|execfname
 operator|=
 literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|0
-condition|)
-name|pname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
 expr_stmt|;
 while|while
 condition|(
@@ -746,9 +721,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s [-fq] [-m<makefile>] [-c<c file>] [-e<exec file>]<conffile>\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|pname
+literal|"usage: crunchgen [-fq] [-m<makefile>] [-c<c file>]"
+argument_list|,
+literal|"                 [-e<exec file>]<conffile>"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -914,24 +891,15 @@ argument_list|(
 name|infilename
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: fatal: input file \"%s\" not found.\n"
-argument_list|,
-name|pname
+literal|"fatal: input file \"%s\" not found"
 argument_list|,
 name|infilename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|parse_one_file
 argument_list|(
 name|infilename
@@ -1035,8 +1003,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|curfilename
 argument_list|)
 expr_stmt|;
@@ -1177,11 +1147,9 @@ name|add_special
 expr_stmt|;
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%d: skipping unknown command `%s'.\n"
+literal|"%s:%d: skipping unknown command `%s'"
 argument_list|,
 name|curfilename
 argument_list|,
@@ -1206,11 +1174,9 @@ operator|<
 literal|2
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%d: %s command needs at least 1 argument, skipping.\n"
+literal|"%s:%d: %s command needs at least 1 argument, skipping"
 argument_list|,
 name|curfilename
 argument_list|,
@@ -1244,8 +1210,10 @@ name|cf
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|curfilename
 argument_list|)
 expr_stmt|;
@@ -1450,11 +1418,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%d: `%s' is not a directory, skipping it.\n"
+literal|"%s:%d: `%s' is not a directory, skipping it"
 argument_list|,
 name|curfilename
 argument_list|,
@@ -1721,11 +1687,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%d: no prog %s previously declared, skipping link.\n"
+literal|"%s:%d: no prog %s previously declared, skipping link"
 argument_list|,
 name|curfilename
 argument_list|,
@@ -1871,11 +1835,9 @@ condition|(
 name|reading_cache
 condition|)
 return|return;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%d: no prog %s previously declared, skipping special.\n"
+literal|"%s:%d: no prog %s previously declared, skipping special"
 argument_list|,
 name|curfilename
 argument_list|,
@@ -2128,11 +2090,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%d: bad parameter name `%s', skipping line.\n"
+literal|"%s:%d: bad parameter name `%s', skipping line"
 argument_list|,
 name|curfilename
 argument_list|,
@@ -2152,11 +2112,9 @@ block|}
 return|return;
 name|argcount
 label|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s:%d: too %s arguments, expected \"special %s %s<string>\".\n"
+literal|"%s:%d: too %s arguments, expected \"special %s %s<string>\""
 argument_list|,
 name|curfilename
 argument_list|,
@@ -2739,11 +2697,9 @@ name|srcdir
 operator|&&
 name|verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: warning: could not find source directory.\n"
+literal|"%s: %s: warning: could not find source directory"
 argument_list|,
 name|infilename
 argument_list|,
@@ -2761,11 +2717,9 @@ name|objs
 operator|&&
 name|verbose
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: warning: could not find any .o files.\n"
+literal|"%s: %s: warning: could not find any .o files"
 argument_list|,
 name|infilename
 argument_list|,
@@ -2782,11 +2736,9 @@ operator|->
 name|objpaths
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: error: no objpaths specified or calculated.\n"
+literal|"%s: %s: error: no objpaths specified or calculated"
 argument_list|,
 name|infilename
 argument_list|,
@@ -2851,8 +2803,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|tempfname
 argument_list|)
 expr_stmt|;
@@ -2929,7 +2883,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"submake pipe"
 argument_list|)
@@ -2964,10 +2918,8 @@ literal|6
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"make error: %s"
 argument_list|,
 name|line
@@ -3069,11 +3021,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"make error: make returned %d\n"
+literal|"make error: make returned %d"
 argument_list|,
 name|rc
 argument_list|)
@@ -3140,11 +3090,9 @@ expr_stmt|;
 else|else
 block|{
 comment|/* delete it from linked list */
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: ignoring program because of errors.\n"
+literal|"%s: %s: ignoring program because of errors"
 argument_list|,
 name|infilename
 argument_list|,
@@ -3228,8 +3176,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|cachename
 argument_list|)
 expr_stmt|;
@@ -3420,8 +3370,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|outmkname
 argument_list|)
 expr_stmt|;
@@ -3547,8 +3499,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|outcfname
 argument_list|)
 expr_stmt|;
@@ -4414,20 +4368,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: %d: out of memory, stopping.\n"
+literal|"%s: %d: out of memory, stopping"
 argument_list|,
 name|infilename
 argument_list|,
 name|linenum
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -10,7 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -34,13 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -60,15 +66,6 @@ include|#
 directive|include
 file|<sys/errno.h>
 end_include
-
-begin_decl_stmt
-name|char
-modifier|*
-name|pname
-init|=
-literal|"crunchide"
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|void
@@ -132,19 +129,6 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|0
-condition|)
-name|pname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -243,9 +227,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-k<symbol-name>] [-f<keep-list-file>]<files> ...\n"
-argument_list|,
-name|pname
+literal|"usage: crunchide [-k<symbol-name>] [-f<keep-list-file>]<files> ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -394,18 +376,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: out of memory for keep list\n"
-argument_list|,
-name|pname
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"out of memory for keep list"
 argument_list|)
 expr_stmt|;
 block|}
@@ -530,8 +505,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
@@ -713,8 +690,6 @@ block|{
 name|int
 name|inf
 decl_stmt|,
-name|outf
-decl_stmt|,
 name|rc
 decl_stmt|;
 name|struct
@@ -749,8 +724,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
@@ -770,8 +747,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
@@ -795,11 +774,9 @@ name|exec
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: short file\n"
+literal|"%s: short file"
 argument_list|,
 name|filename
 argument_list|)
@@ -832,11 +809,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: too big to read into memory\n"
+literal|"%s: too big to read into memory"
 argument_list|,
 name|filename
 argument_list|)
@@ -870,11 +845,9 @@ operator|.
 name|st_size
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: read error: %s\n"
+literal|"%s: read error: %s"
 argument_list|,
 name|filename
 argument_list|,
@@ -917,11 +890,9 @@ name|hdrp
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: bad magic: not an a.out file\n"
+literal|"%s: bad magic: not an a.out file"
 argument_list|,
 name|filename
 argument_list|)
@@ -1196,11 +1167,9 @@ operator|.
 name|st_size
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: write error: %s\n"
+literal|"%s: write error: %s"
 argument_list|,
 name|filename
 argument_list|,
@@ -1260,11 +1229,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: oops, have hanging relocation for %s: bailing out!\n"
+literal|"%s: oops, have hanging relocation for %s: bailing out!"
 argument_list|,
 name|filename
 argument_list|,
@@ -1278,11 +1247,6 @@ operator|->
 name|r_symbolnum
 index|]
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
