@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.54 1996/04/27 07:04:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.55 1996/04/28 00:37:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -64,36 +64,6 @@ return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_REDRAW
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|checkSrc
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|Dists
-operator|&
-name|DIST_SRC
-operator|)
-operator|&&
-operator|(
-name|SrcDists
-operator|==
-name|DIST_SRC_ALL
-operator||
-name|DIST_SRC_SMAILCF
-operator|)
-operator|)
 return|;
 block|}
 end_function
@@ -5125,9 +5095,13 @@ literal|"NFS server"
 block|,
 literal|"This machine will be an NFS server"
 block|,
-name|NULL
+name|dmenuVarCheck
 block|,
 name|configNFSServer
+block|,
+name|NULL
+block|,
+literal|"nfs_server"
 block|}
 block|,
 block|{
@@ -5149,9 +5123,13 @@ literal|"Gated"
 block|,
 literal|"This machine wants to run gated instead of routed"
 block|,
-name|NULL
+name|dmenuVarCheck
 block|,
 name|configGated
+block|,
+name|NULL
+block|,
+literal|"gated"
 block|}
 block|,
 block|{
@@ -5213,9 +5191,13 @@ literal|"Anon FTP"
 block|,
 literal|"This machine wishes to allow anonymous FTP."
 block|,
-name|NULL
+name|dmenuVarCheck
 block|,
 name|configAnonFTP
+block|,
+name|NULL
+block|,
+literal|"anon_ftp"
 block|}
 block|,
 block|{
@@ -5223,9 +5205,13 @@ literal|"WEB Server"
 block|,
 literal|"This machine wishes to be a WWW server."
 block|,
-name|NULL
+name|dmenuVarCheck
 block|,
 name|configApache
+block|,
+name|NULL
+block|,
+literal|"apache_httpd"
 block|}
 block|,
 block|{
@@ -5233,9 +5219,13 @@ literal|"Samba"
 block|,
 literal|"Install Samba for LanManager (NETBUI) access."
 block|,
-name|NULL
+name|dmenuVarCheck
 block|,
 name|configSamba
+block|,
+name|NULL
+block|,
+literal|"samba"
 block|}
 block|,
 block|{
@@ -5243,9 +5233,13 @@ literal|"PCNFSD"
 block|,
 literal|"Run authentication server for clients with PC-NFS."
 block|,
-name|NULL
+name|dmenuVarCheck
 block|,
 name|configPCNFSD
+block|,
+name|NULL
+block|,
+literal|"pcnfsd"
 block|}
 block|,
 block|{
@@ -5281,7 +5275,7 @@ name|DMenu
 name|MenuNTP
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_RADIO_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
