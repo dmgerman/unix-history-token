@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gettable.c	4.3 (Berkeley) %G%"
+literal|"@(#)gettable.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,12 +64,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VERFILE
+value|"hosts.ver"
+end_define
+
+begin_comment
+comment|/* default version file */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|QUERY
 value|"ALL\r\n"
 end_define
 
 begin_comment
 comment|/* query to hostname server */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"VERSION\r\n"
+end_define
+
+begin_comment
+comment|/* get version number */
 end_comment
 
 begin_define
@@ -164,12 +186,63 @@ name|servent
 modifier|*
 name|sp
 decl_stmt|;
+name|int
+name|version
+init|=
+literal|0
+decl_stmt|;
 name|argv
 operator|++
 operator|,
 name|argc
 operator|--
 expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|*
+name|argv
+operator|==
+literal|'-'
+condition|)
+block|{
+if|if
+condition|(
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|1
+index|]
+operator|!=
+literal|'v'
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"unknown option %s ignored\n"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+else|else
+name|version
+operator|++
+operator|,
+name|outfile
+operator|=
+name|VERFILE
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
@@ -185,7 +258,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: gettable host [ file ]\n"
+literal|"usage: gettable [-v] host [ file ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -504,6 +577,10 @@ name|fprintf
 argument_list|(
 name|sfo
 argument_list|,
+name|version
+condition|?
+name|VERSION
+else|:
 name|QUERY
 argument_list|)
 expr_stmt|;
@@ -606,6 +683,18 @@ argument_list|(
 name|hf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|version
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Version number received.\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -625,6 +714,11 @@ argument_list|,
 literal|"Connection to %s closed\n"
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
