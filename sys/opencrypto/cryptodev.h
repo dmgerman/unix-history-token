@@ -629,14 +629,21 @@ begin_struct
 struct|struct
 name|cryptotstat
 block|{
-name|u_int32_t
+name|struct
+name|timespec
 name|acc
 decl_stmt|;
-comment|/* total accumulated time (usecs) */
-name|u_int32_t
+comment|/* total accumulated time */
+name|struct
+name|timespec
+name|min
+decl_stmt|;
+comment|/* max time */
+name|struct
+name|timespec
 name|max
 decl_stmt|;
-comment|/* max time (usecs) */
+comment|/* max time */
 name|u_int32_t
 name|count
 decl_stmt|;
@@ -917,7 +924,7 @@ name|caddr_t
 name|crp_mac
 decl_stmt|;
 name|struct
-name|timeval
+name|timespec
 name|crp_tstamp
 decl_stmt|;
 comment|/* performance time stamp */
