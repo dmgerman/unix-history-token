@@ -89,12 +89,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/diskslice.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bio.h>
 end_include
 
