@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.11 (Berkeley) %G%"
+literal|"@(#)move.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,20 @@ operator|->
 name|curx
 operator|=
 name|x
+expr_stmt|;
+name|win
+operator|->
+name|lines
+index|[
+name|win
+operator|->
+name|cury
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISPASTEOL
 expr_stmt|;
 name|win
 operator|->
