@@ -1,121 +1,94 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.33 (Berkeley) %G%  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOGFS
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/quota.h"
+file|<ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/inode.h"
+file|<ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../ufs/ufsmount.h"
+file|<ufs/ufsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lfs.h"
+file|<lfs/lfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lfs_extern.h"
+file|<lfs/lfs_extern.h>
 end_include
 
 begin_comment
-comment|/* Read in the block containing a specific inode from the ifile. */
+comment|/* Allocate a new inode. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LFS_IENTRY
-parameter_list|(
-name|I
-parameter_list|,
-name|F
-parameter_list|,
-name|IN
-parameter_list|,
-name|BP
-parameter_list|)
-define|\
-value|if (bread((F)->lfs_ivnode, (IN) / IFPB(F) + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&BP)) \ 		panic("lfs_ientry: read"); \ 	(I) = (IFILE *)BP->b_un.b_addr + IN % IFPB(F);
-end_define
-
 begin_comment
-comment|/*  * Allocate a new inode.  */
+comment|/* ARGSUSED */
 end_comment
 
 begin_function
-name|ino_t
+name|int
 name|lfs_ialloc
 parameter_list|(
-name|fs
-parameter_list|,
 name|pip
 parameter_list|,
-name|ipp
+name|notused
 parameter_list|,
 name|cred
+parameter_list|,
+name|ipp
 parameter_list|)
-name|LFS
-modifier|*
-name|fs
-decl_stmt|;
 name|INODE
 modifier|*
 name|pip
@@ -127,6 +100,12 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
+name|int
+name|notused
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|UCRED
 modifier|*
 name|cred
@@ -135,6 +114,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|LFS
+modifier|*
+name|fs
+decl_stmt|;
 name|BUF
 modifier|*
 name|bp
@@ -158,6 +141,12 @@ name|int
 name|error
 decl_stmt|;
 comment|/* Get the head of the freelist. */
+name|fs
+operator|=
+name|pip
+operator|->
+name|i_lfs
+expr_stmt|;
 name|new_ino
 operator|=
 name|fs
@@ -202,6 +191,9 @@ name|ENOSPC
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|ALLOCPRINT
 name|printf
 argument_list|(
 literal|"lfs_ialloc: allocate inode %d\n"
@@ -209,6 +201,8 @@ argument_list|,
 name|new_ino
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Read the appropriate block from the ifile. */
 name|LFS_IENTRY
 argument_list|(
@@ -319,7 +313,7 @@ operator|=
 name|nextgennumber
 expr_stmt|;
 comment|/* Insert into the inode hash table. */
-name|lfs_hqueue
+name|ufs_ihashins
 argument_list|(
 name|ip
 argument_list|)
@@ -343,276 +337,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* Free an inode. */
-end_comment
-
-begin_function
-name|void
-name|lfs_ifree
-parameter_list|(
-name|ip
-parameter_list|)
-name|INODE
-modifier|*
-name|ip
-decl_stmt|;
-block|{
-name|BUF
-modifier|*
-name|bp
-decl_stmt|;
-name|IFILE
-modifier|*
-name|ifp
-decl_stmt|;
-name|LFS
-modifier|*
-name|fs
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_ifree: free %d\n"
-argument_list|,
-name|ip
-operator|->
-name|i_number
-argument_list|)
-expr_stmt|;
-comment|/* Get the inode number and file system. */
-name|fs
-operator|=
-name|ip
-operator|->
-name|i_lfs
-expr_stmt|;
-name|ino
-operator|=
-name|ip
-operator|->
-name|i_number
-expr_stmt|;
-comment|/* 	 * Read the appropriate block from the ifile.  Set the inode entry to 	 * unused, increment its version number and link it into the free chain. 	 */
-name|LFS_IENTRY
-argument_list|(
-name|ifp
-argument_list|,
-name|fs
-argument_list|,
-name|ino
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_daddr
-operator|=
-name|LFS_UNUSED_DADDR
-expr_stmt|;
-operator|++
-name|ifp
-operator|->
-name|if_version
-expr_stmt|;
-name|ifp
-operator|->
-name|if_nextfree
-operator|=
-name|fs
-operator|->
-name|lfs_free
-expr_stmt|;
-name|fs
-operator|->
-name|lfs_free
-operator|=
-name|ino
-expr_stmt|;
-name|lfs_bwrite
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* Set superblock modified bit and decrement file count. */
-name|fs
-operator|->
-name|lfs_fmod
-operator|=
-literal|1
-expr_stmt|;
-operator|--
-name|fs
-operator|->
-name|lfs_nfiles
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Translate an inode number to a disk address. */
-end_comment
-
-begin_function
-name|daddr_t
-name|itod
-parameter_list|(
-name|fs
-parameter_list|,
-name|ino
-parameter_list|)
-name|LFS
-modifier|*
-name|fs
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-block|{
-name|BUF
-modifier|*
-name|bp
-decl_stmt|;
-name|IFILE
-modifier|*
-name|ifp
-decl_stmt|;
-name|daddr_t
-name|iaddr
-decl_stmt|;
-comment|/* Read the appropriate block from the ifile. */
-name|LFS_IENTRY
-argument_list|(
-name|ifp
-argument_list|,
-name|fs
-argument_list|,
-name|ino
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_daddr
-operator|==
-name|LFS_UNUSED_DADDR
-condition|)
-name|panic
-argument_list|(
-literal|"itod: unused disk address"
-argument_list|)
-expr_stmt|;
-name|iaddr
-operator|=
-name|ifp
-operator|->
-name|if_daddr
-expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|iaddr
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Search a block for a specific dinode. */
-end_comment
-
-begin_function
-name|DINODE
-modifier|*
-name|lfs_ifind
-parameter_list|(
-name|fs
-parameter_list|,
-name|ino
-parameter_list|,
-name|page
-parameter_list|)
-name|LFS
-modifier|*
-name|fs
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-name|void
-modifier|*
-name|page
-decl_stmt|;
-block|{
-specifier|register
-name|DINODE
-modifier|*
-name|dip
-decl_stmt|;
-specifier|register
-name|int
-name|cnt
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_ifind: inode %d\n"
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-name|dip
-operator|=
-name|page
-expr_stmt|;
-for|for
-control|(
-name|cnt
-operator|=
-name|INOPB
-argument_list|(
-name|fs
-argument_list|)
-init|;
-name|cnt
-operator|--
-condition|;
-operator|++
-name|dip
-control|)
-if|if
-condition|(
-name|dip
-operator|->
-name|di_inum
-operator|==
-name|ino
-condition|)
-return|return
-operator|(
-name|dip
-operator|)
-return|;
-name|panic
-argument_list|(
-literal|"lfs_ifind: dinode %%u not found"
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-end_function
 
 begin_comment
 comment|/* Create a new vnode/inode pair and initialize what fields we can. */
@@ -654,6 +378,9 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ALLOCPRINT
 name|printf
 argument_list|(
 literal|"lfs_vcreate: ino %d\n"
@@ -661,6 +388,8 @@ argument_list|,
 name|ino
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Create the vnode. */
 if|if
 condition|(
@@ -811,90 +540,32 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the current version number for a specific inode. */
+comment|/* Free an inode. */
 end_comment
 
-begin_function
-name|u_long
-name|lfs_getversion
-parameter_list|(
-name|fs
-parameter_list|,
-name|ino
-parameter_list|)
-name|LFS
-modifier|*
-name|fs
-decl_stmt|;
-name|ino_t
-name|ino
-decl_stmt|;
-block|{
-name|BUF
-modifier|*
-name|bp
-decl_stmt|;
-name|IFILE
-modifier|*
-name|ifp
-decl_stmt|;
-name|u_long
-name|version
-decl_stmt|;
-comment|/* 	 * Read the appropriate block from the ifile.  Return the 	 * version number. 	 */
-name|LFS_IENTRY
-argument_list|(
-name|ifp
-argument_list|,
-name|fs
-argument_list|,
-name|ino
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-name|version
-operator|=
-name|ifp
-operator|->
-name|if_version
-expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|version
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
-comment|/* Set values in the ifile for the inode. */
+comment|/* ARGUSED */
 end_comment
 
 begin_function
 name|void
-name|lfs_iset
+name|lfs_ifree
 parameter_list|(
 name|ip
 parameter_list|,
-name|daddr
+name|notused1
 parameter_list|,
-name|atime
+name|notused2
 parameter_list|)
 name|INODE
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
-name|daddr
+name|ino_t
+name|notused1
 decl_stmt|;
-name|time_t
-name|atime
+name|int
+name|notused2
 decl_stmt|;
 block|{
 name|BUF
@@ -912,19 +583,21 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ALLOCPRINT
 name|printf
 argument_list|(
-literal|"lfs_iset: setting ino %d daddr %lx time %lx\n"
+literal|"lfs_ifree: free %d\n"
 argument_list|,
 name|ip
 operator|->
 name|i_number
-argument_list|,
-name|daddr
-argument_list|,
-name|atime
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* Get the inode number and file system. */
 name|fs
 operator|=
 name|ip
@@ -937,6 +610,7 @@ name|ip
 operator|->
 name|i_number
 expr_stmt|;
+comment|/* 	 * Read the appropriate block from the ifile.  Set the inode entry to 	 * unused, increment its version number and link it into the free chain. 	 */
 name|LFS_IENTRY
 argument_list|(
 name|ifp
@@ -952,30 +626,46 @@ name|ifp
 operator|->
 name|if_daddr
 operator|=
-name|daddr
+name|LFS_UNUSED_DADDR
+expr_stmt|;
+operator|++
+name|ifp
+operator|->
+name|if_version
 expr_stmt|;
 name|ifp
 operator|->
-name|if_st_atime
+name|if_nextfree
 operator|=
-name|atime
+name|fs
+operator|->
+name|lfs_free
+expr_stmt|;
+name|fs
+operator|->
+name|lfs_free
+operator|=
+name|ino
 expr_stmt|;
 name|lfs_bwrite
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* Set superblock modified bit and decrement file count. */
+name|fs
+operator|->
+name|lfs_fmod
+operator|=
+literal|1
+expr_stmt|;
+operator|--
+name|fs
+operator|->
+name|lfs_nfiles
+expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOGFS */
-end_comment
 
 end_unit
 
