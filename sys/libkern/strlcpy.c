@@ -29,7 +29,6 @@ modifier|*
 name|rcsid
 init|=
 literal|"$OpenBSD: strlcpy.c,v 1.4 1999/05/01 18:56:41 millert Exp $"
-init|)
 decl_stmt|;
 end_decl_stmt
 
