@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readobj.c 1.4 %G%"
+literal|"@(#)readobj.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,7 +384,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * allocate and read in file name information table  */
+comment|/*  * Allocate and read in file name information table.  */
 end_comment
 
 begin_function
@@ -541,7 +541,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * allocate and read in line number information table  */
+comment|/*  * Allocate and read in line number information table.  */
 end_comment
 
 begin_function
@@ -652,6 +652,17 @@ name|ftp
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|ftp
+operator|->
+name|lineindex
+operator|<
+name|nlhdr
+operator|.
+name|nlines
+condition|)
+block|{
 name|linetab
 index|[
 name|ftp
@@ -665,6 +676,7 @@ name|ftp
 operator|->
 name|line
 expr_stmt|;
+block|}
 block|}
 name|oline
 operator|=
@@ -756,7 +768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * read in the symbols  */
+comment|/*  * Read in the symbols.  */
 end_comment
 
 begin_macro

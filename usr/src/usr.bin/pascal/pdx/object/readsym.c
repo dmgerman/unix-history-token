@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readsym.c 1.2 %G%"
+literal|"@(#)readsym.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -862,7 +862,7 @@ name|f
 parameter_list|,
 name|fv
 parameter_list|)
-value|(\ 	f->class != FUNC || f->type != NIL || \ 	strcmp(f->symbol, fv->symbol) != 0 \ 	)
+value|(\     f->class != FUNC || f->type != NIL || \     strcmp(f->symbol, fv->symbol) != 0 \     )
 end_define
 
 begin_function
