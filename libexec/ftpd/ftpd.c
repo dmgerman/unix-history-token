@@ -1177,6 +1177,10 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4903,6 +4907,8 @@ argument_list|,
 literal|"ftp"
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 operator|||
 name|checkuser
@@ -4912,6 +4918,8 @@ argument_list|,
 literal|"anonymous"
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|reply
@@ -5094,6 +5102,8 @@ argument_list|,
 name|name
 argument_list|,
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -5248,7 +5258,7 @@ name|login_attempts
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Check if a user is in the file "fname"  */
+comment|/*  * Check if a user is in the file "fname",  * return a pointer to a malloc'd string with the rest  * of the matching line in "residue" if not NULL.  */
 specifier|static
 name|int
 name|checkuser
@@ -5263,6 +5273,11 @@ name|name
 parameter_list|,
 name|int
 name|pwset
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|residue
 parameter_list|)
 block|{
 name|FILE
@@ -5446,6 +5461,22 @@ name|grp
 decl_stmt|;
 if|if
 condition|(
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+comment|/* single @ matches anyone */
+name|found
+operator|=
+literal|1
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 operator|(
 name|grp
 operator|=
@@ -5462,7 +5493,7 @@ condition|)
 goto|goto
 name|nextline
 goto|;
-comment|/* 				 * Check user's default group 				 */
+comment|/* 					 * Check user's default group 					 */
 if|if
 condition|(
 name|pwset
@@ -5479,7 +5510,7 @@ name|found
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 				 * Check supplementary groups 				 */
+comment|/* 					 * Check supplementary groups 					 */
 while|while
 condition|(
 operator|!
@@ -5510,6 +5541,7 @@ operator|==
 literal|0
 expr_stmt|;
 block|}
+block|}
 comment|/* 			 * Otherwise, just check for username match 			 */
 else|else
 name|found
@@ -5523,6 +5555,57 @@ argument_list|)
 operator|==
 literal|0
 expr_stmt|;
+comment|/* 			 * Save the rest of line to "residue" if matched 			 */
+if|if
+condition|(
+name|found
+operator|&&
+name|residue
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|strtok
+argument_list|(
+name|NULL
+argument_list|,
+literal|""
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|residue
+operator|=
+name|strdup
+argument_list|(
+name|p
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatalerror
+argument_list|(
+literal|"Ran out of memory."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|residue
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|nextline
 label|:
 if|if
@@ -6391,6 +6474,10 @@ endif|#
 directive|endif
 name|char
 modifier|*
+name|chrootdir
+decl_stmt|;
+name|char
+modifier|*
 name|xpasswd
 decl_stmt|;
 if|if
@@ -7004,21 +7091,6 @@ literal|0
 expr_stmt|;
 name|dochroot
 operator|=
-ifdef|#
-directive|ifdef
-name|LOGIN_CAP
-comment|/* Allow login.conf configuration as well */
-name|login_getcapbool
-argument_list|(
-name|lc
-argument_list|,
-literal|"ftp-chroot"
-argument_list|,
-literal|0
-argument_list|)
-operator|||
-endif|#
-directive|endif
 name|checkuser
 argument_list|(
 name|_PATH_FTPCHROOT
@@ -7028,7 +7100,25 @@ operator|->
 name|pw_name
 argument_list|,
 literal|1
+argument_list|,
+operator|&
+name|chrootdir
 argument_list|)
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+comment|/* Allow login.conf configuration as well */
+operator|||
+name|login_getcapbool
+argument_list|(
+name|lc
+argument_list|,
+literal|"ftp-chroot"
+argument_list|,
+literal|0
+argument_list|)
+endif|#
+directive|endif
 expr_stmt|;
 if|if
 condition|(
@@ -7075,11 +7165,87 @@ condition|)
 block|{
 if|if
 condition|(
-name|chroot
+name|chrootdir
+condition|)
+block|{
+comment|/* chroot dir set in ftpchroot(5) */
+if|if
+condition|(
+name|chrootdir
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+block|{
+comment|/* relative to homedir */
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|p
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|pw
+operator|->
+name|pw_dir
+argument_list|,
+name|chrootdir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|fatalerror
+argument_list|(
+literal|"Ran out of memory."
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|chrootdir
+argument_list|)
+expr_stmt|;
+name|chrootdir
+operator|=
+name|p
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|chrootdir
+operator|=
+name|strdup
 argument_list|(
 name|pw
 operator|->
 name|pw_dir
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatalerror
+argument_list|(
+literal|"Ran out of memory."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chroot
+argument_list|(
+name|chrootdir
 argument_list|)
 operator|<
 literal|0
@@ -7099,10 +7265,20 @@ argument_list|,
 literal|"Can't change root."
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|chrootdir
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
 block|}
+name|free
+argument_list|(
+name|chrootdir
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
