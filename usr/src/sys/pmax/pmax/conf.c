@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -850,6 +850,20 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"mfb.h"
+end_include
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|mfb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"dtop.h"
 end_include
 
@@ -1040,6 +1054,14 @@ name|scc
 argument_list|)
 block|,
 comment|/* 17: scc 82530 serial interface */
+name|cdev_pm_init
+argument_list|(
+name|NMFB
+argument_list|,
+name|mfb
+argument_list|)
+block|,
+comment|/* 18: mono frame buffer */
 block|}
 decl_stmt|;
 end_decl_stmt

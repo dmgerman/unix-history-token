@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)fb.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)fb.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3494,6 +3494,32 @@ name|lineCount
 operator|=
 literal|40
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|max_x
+operator|>
+literal|1024
+condition|)
+block|{
+name|scanInc
+operator|=
+literal|352
+expr_stmt|;
+name|line
+operator|=
+literal|1920
+operator|*
+literal|16
+expr_stmt|;
+block|}
+else|else
+block|{
 name|scanInc
 operator|=
 literal|96
@@ -3504,6 +3530,7 @@ literal|1920
 operator|*
 literal|8
 expr_stmt|;
+block|}
 block|}
 name|src
 operator|=
@@ -3543,7 +3570,7 @@ operator|->
 name|fr_addr
 operator|+
 operator|(
-literal|60
+literal|68
 operator|*
 name|line
 operator|)
@@ -3797,16 +3824,7 @@ decl_stmt|;
 specifier|register
 name|int
 name|ote
-init|=
-name|fp
-operator|->
-name|isMono
-condition|?
-literal|256
-else|:
-literal|1024
 decl_stmt|;
-comment|/* offset to table entry */
 name|int
 name|colMult
 init|=
@@ -3818,6 +3836,37 @@ literal|1
 else|:
 literal|8
 decl_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|isMono
+condition|)
+name|ote
+operator|=
+literal|256
+expr_stmt|;
+else|else
+name|ote
+operator|=
+operator|(
+operator|(
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|max_x
+operator|+
+literal|1023
+operator|)
+operator|/
+literal|1024
+operator|)
+operator|*
+literal|1024
+expr_stmt|;
 name|c
 operator|&=
 literal|0xff
@@ -4293,7 +4342,7 @@ name|j
 operator|++
 control|)
 block|{
-comment|/* 				 * fontmaskBits converts a nibble 				 * (4 bytes) to a long word  				 * containing 4 pixels corresponding 				 * to each bit in the nibble.  Thus 				 * we write two longwords for each 				 * byte in font. 				 *  				 * Remember the font is 8 bits wide 				 * and 15 bits high. 				 * 				 * We add 256 to the pointer to 				 * point to the pixel on the  				 * next scan line 				 * directly below the current 				 * pixel. 				 */
+comment|/* 				 * fontmaskBits converts a nibble 				 * (4 bytes) to a long word  				 * containing 4 pixels corresponding 				 * to each bit in the nibble.  Thus 				 * we write two longwords for each 				 * byte in font. 				 *  				 * Remember the font is 8 bits wide 				 * and 15 bits high. 				 * 				 * We add 256/512 to the pointer to 				 * point to the pixel on the  				 * next scan line 				 * directly below the current 				 * pixel. 				 */
 name|pInt
 index|[
 literal|0
@@ -4331,6 +4380,23 @@ expr_stmt|;
 name|fRow
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|fbu
+operator|->
+name|scrInfo
+operator|.
+name|max_x
+operator|>
+literal|1024
+condition|)
+name|pInt
+operator|+=
+literal|512
+expr_stmt|;
+else|else
 name|pInt
 operator|+=
 literal|256

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1862,6 +1862,16 @@ name|tc_enable_interrupt
 operator|=
 name|kmin_enable_intr
 expr_stmt|;
+name|kmin_tc3_imask
+operator|=
+operator|(
+name|KMIN_INTR_CLOCK
+operator||
+name|KMIN_INTR_PSWARN
+operator||
+name|KMIN_INTR_TIMEOUT
+operator|)
+expr_stmt|;
 comment|/* 		 * Since all the motherboard interrupts come through the 		 * I/O ASIC, it has to be turned off for all the spls and 		 * since we don't know what kinds of devices are in the 		 * turbochannel option slots, just splhigh(). 		 */
 name|Mach_splnet
 operator|=
@@ -2136,6 +2146,10 @@ expr_stmt|;
 name|tc_enable_interrupt
 operator|=
 name|kn03_enable_intr
+expr_stmt|;
+name|kn03_tc3_imask
+operator|=
+name|KN03_INTR_PSWARN
 expr_stmt|;
 name|Mach_splnet
 operator|=
@@ -7156,6 +7170,13 @@ if|if
 condition|(
 name|cp
 operator|->
+name|pmax_alive
+condition|)
+continue|continue;
+if|if
+condition|(
+name|cp
+operator|->
 name|pmax_addr
 operator|==
 operator|(
@@ -7200,7 +7221,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|cp
+operator|->
+name|pmax_alive
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -7746,13 +7773,27 @@ block|{
 case|case
 literal|0
 case|:
+name|mask
+operator|=
+name|KN03_INTR_TC_0
+expr_stmt|;
+break|break;
 case|case
 literal|1
 case|:
+name|mask
+operator|=
+name|KN03_INTR_TC_1
+expr_stmt|;
+break|break;
 case|case
 literal|2
 case|:
-return|return;
+name|mask
+operator|=
+name|KN03_INTR_TC_2
+expr_stmt|;
+break|break;
 case|case
 name|KN03_SCSI_SLOT
 case|:

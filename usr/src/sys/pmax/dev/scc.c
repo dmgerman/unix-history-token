@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)scc.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)scc.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -806,7 +806,7 @@ name|cp
 operator|->
 name|pmax_unit
 operator|==
-literal|0
+literal|1
 condition|)
 block|{
 name|s
@@ -855,9 +855,13 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|10000
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notyet
+comment|/* 				 * For some reason doing this hangs the 3min 				 * during booting. Fortunately the keyboard 				 * works ok without it. 				 */
 name|KBDReset
 argument_list|(
 name|ctty
@@ -865,6 +869,13 @@ operator|.
 name|t_dev
 argument_list|,
 name|sccPutc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|DELAY
+argument_list|(
+literal|10000
 argument_list|)
 expr_stmt|;
 name|splx
@@ -880,7 +891,7 @@ name|cp
 operator|->
 name|pmax_unit
 operator|==
-literal|1
+literal|0
 condition|)
 block|{
 name|s
@@ -933,7 +944,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|10000
 argument_list|)
 expr_stmt|;
 name|MouseInit
@@ -945,6 +956,11 @@ argument_list|,
 name|sccPutc
 argument_list|,
 name|sccGetc
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
 argument_list|)
 expr_stmt|;
 name|splx
@@ -5202,6 +5218,15 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
+name|SCC_READ_DATA
+argument_list|(
+name|regs
+argument_list|,
+name|line
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|value
@@ -5240,15 +5265,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SCC_READ_DATA
-argument_list|(
-name|regs
-argument_list|,
-name|line
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
 name|SCC_WRITE_REG
 argument_list|(
 name|regs

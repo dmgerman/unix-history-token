@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University,  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)kn03.h	1.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University,  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)kn03.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -220,14 +220,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|KN03_SCC0_SLOT
+name|KN03_SCC1_SLOT
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|KN03_SCC1_SLOT
+name|KN03_SCC0_SLOT
 value|6
 end_define
 
