@@ -674,11 +674,13 @@ begin_comment
 comment|/*  * ntp_gettime() - NTP user application interface  *  * See the timex.h header file for synopsis and API description.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|ntp_sysctl
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|struct
 name|ntptimeval
@@ -814,7 +816,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE

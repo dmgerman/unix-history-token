@@ -105,13 +105,15 @@ name|memlock
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sysctl_root
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -630,11 +632,13 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_sysctl_debug
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|sysctl_sysctl_debug_dump_node
 argument_list|(
@@ -648,7 +652,7 @@ return|return
 name|ENOENT
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC
@@ -676,11 +680,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_sysctl_name
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -932,7 +938,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -1265,11 +1271,13 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_sysctl_next
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -1362,7 +1370,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -1657,11 +1665,13 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_sysctl_name2oid
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1815,7 +1825,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC
@@ -1843,11 +1853,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_sysctl_oidfmt
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|struct
 name|sysctl_oid
@@ -1948,7 +1960,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -1976,10 +1988,12 @@ begin_comment
 comment|/*  * Handle an int, signed or unsigned.  * Two cases:  *     a variable:  point arg1 at it.  *     a constant:  pass it in arg2.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|sysctl_handle_int
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -2064,16 +2078,18 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Handle a long, signed or unsigned.  arg1 points to it.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|sysctl_handle_long
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -2138,16 +2154,18 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Handle our generic '\0' terminated 'C' string.  * Two cases:  * 	a variable string:  point arg1 at it, arg2 is max length.  * 	a constant string:  point arg1 at it, arg2 is zero.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|sysctl_handle_string
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -2253,16 +2271,18 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Handle any kind of opaque data.  * arg1 points to it, arg2 is the size.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|sysctl_handle_opaque
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -2309,7 +2329,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Transfer functions to/from kernel space.  * XXX: rather untested at this point  */
@@ -3248,10 +3268,12 @@ begin_comment
 comment|/*  * Traverse our tree, and find the right node, execute whatever it points  * to, and return the resulting error code.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|int
 name|sysctl_root
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|struct
 name|sysctl_oid
@@ -3475,7 +3497,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_ifndef
 ifndef|#

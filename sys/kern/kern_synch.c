@@ -260,11 +260,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_kern_quantum
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -337,7 +339,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC

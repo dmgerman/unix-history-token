@@ -201,13 +201,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|nwfs_sysctl_vnprint
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -290,10 +292,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|int
 name|nwfs_sysctl_vnprint
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|struct
 name|nwnode
@@ -412,7 +416,7 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Allocate new nwfsnode/vnode from given nwnode.   * Vnode referenced and not locked.  */

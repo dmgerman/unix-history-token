@@ -308,11 +308,13 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_kernenv
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -435,7 +437,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE

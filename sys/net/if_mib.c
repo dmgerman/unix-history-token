@@ -96,11 +96,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_ifdata
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 comment|/* XXX bad syntax! */
 block|{
 name|int
@@ -483,7 +485,7 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE

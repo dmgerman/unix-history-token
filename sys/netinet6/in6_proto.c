@@ -2043,11 +2043,13 @@ begin_comment
 comment|/* net.inet6.ip6 */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_ip6_forwarding
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -2255,13 +2257,15 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_icmp6_ratelimit
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|rate_usec
@@ -2351,7 +2355,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_OID

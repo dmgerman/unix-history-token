@@ -5604,11 +5604,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_handle_children
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|device_t
 name|dev
@@ -5732,13 +5734,15 @@ return|return
 name|error
 return|;
 block|}
-end_decl_stmt
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_handle_state
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|device_t
 name|dev
@@ -5821,7 +5825,7 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static

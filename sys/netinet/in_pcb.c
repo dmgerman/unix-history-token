@@ -318,11 +318,13 @@ define|\
 value|if ((var)< (min)) { (var) = (min); } \ 	else if ((var)> (max)) { (var) = (max); }
 end_define
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_net_ipport_check
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -411,7 +413,7 @@ return|return
 name|error
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_undef
 undef|#

@@ -113,13 +113,15 @@ name|zlist
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sysctl_vm_zone
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -1457,11 +1459,13 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_vm_zone
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -1751,7 +1755,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_ifdef
 ifdef|#

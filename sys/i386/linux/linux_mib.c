@@ -110,11 +110,13 @@ literal|"Linux"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|linux_sysctl_osname
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|char
 name|osname
@@ -182,7 +184,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC
@@ -224,11 +226,13 @@ literal|"2.2.12"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|linux_sysctl_osrelease
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|char
 name|osrelease
@@ -296,7 +300,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC
@@ -335,11 +339,13 @@ literal|0x030600
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|linux_sysctl_oss_version
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|oss_version
@@ -402,7 +408,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC

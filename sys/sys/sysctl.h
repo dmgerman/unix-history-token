@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|SYSCTL_HANDLER_ARGS
-value|(struct sysctl_oid *oidp, void *arg1, int arg2, \ 	struct sysctl_req *req)
+value|struct sysctl_oid *oidp, void *arg1, int arg2, \ 	struct sysctl_req *req
 end_define
 
 begin_comment
@@ -358,11 +358,14 @@ modifier|*
 name|oid_name
 decl_stmt|;
 name|int
-argument_list|(
-argument|*oid_handler
-argument_list|)
+function_decl|(
+modifier|*
+name|oid_handler
+function_decl|)
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-expr_stmt|;
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*
@@ -400,40 +403,50 @@ parameter_list|)
 value|(r->oldfunc)(r, p, l)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sysctl_handle_int
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sysctl_handle_long
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sysctl_handle_intptr
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sysctl_handle_string
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sysctl_handle_opaque
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * These functions are used to add/remove an oid from the mib.  */

@@ -61,11 +61,13 @@ name|MODE_GDB
 value|"gdb"
 end_define
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_debug_enter_debugger
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|char
 name|dmode
@@ -181,7 +183,7 @@ return|return
 name|error
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC
