@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount.c,v 1.20 1997/09/27 13:44:17 kato Exp $"
+literal|"$Id: mount.c,v 1.21 1997/11/13 00:28:49 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3194,11 +3194,16 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|strcmp
+argument_list|(
 name|ent
 operator|->
-name|f_type
+name|f_fstypename
+argument_list|,
+literal|"ufs"
+argument_list|)
 operator|==
-name|MOUNT_UFS
+literal|0
 condition|)
 name|printf
 argument_list|(
