@@ -2008,14 +2008,11 @@ operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
 comment|/* 	 * Attach the interface. 	 */
-name|if_attach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ether_ifattach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -2033,20 +2030,6 @@ operator|.
 name|ac_enaddr
 argument_list|,
 literal|":"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * If BPF is in the kernel, call the attach for it 	 */
-name|bpfattach
-argument_list|(
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|DODEBUG

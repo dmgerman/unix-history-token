@@ -264,6 +264,24 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * For device drivers to specify whether they support BPF or not  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_BPF_UNSUPPORTED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHER_BPF_SUPPORTED
+value|1
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|ifnet

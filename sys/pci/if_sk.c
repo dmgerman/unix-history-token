@@ -6044,15 +6044,12 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Call MI attach routines. 	 */
-name|if_attach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Call MI attach routine. 	 */
 name|ether_ifattach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|callout_handle_init
@@ -6061,19 +6058,6 @@ operator|&
 name|sc_if
 operator|->
 name|sk_tick_ch
-argument_list|)
-expr_stmt|;
-name|bpfattach
-argument_list|(
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7090,9 +7074,11 @@ argument_list|(
 name|sc_if
 argument_list|)
 expr_stmt|;
-name|if_detach
+name|ether_ifdetach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|bus_generic_detach

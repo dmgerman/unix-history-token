@@ -3371,15 +3371,12 @@ name|if_rxstart
 operator|=
 name|aue_rxstart
 expr_stmt|;
-comment|/* 	 * Call MI attach routines. 	 */
-name|if_attach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Call MI attach routine. 	 */
 name|ether_ifattach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|callout_handle_init
@@ -3388,19 +3385,6 @@ operator|&
 name|sc
 operator|->
 name|aue_stat_ch
-argument_list|)
-expr_stmt|;
-name|bpfattach
-argument_list|(
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|usb_register_netisr
@@ -3484,14 +3468,11 @@ operator|->
 name|aue_stat_ch
 argument_list|)
 expr_stmt|;
-name|bpfdetach
+name|ether_ifdetach
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-name|if_detach
-argument_list|(
-name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 if|if

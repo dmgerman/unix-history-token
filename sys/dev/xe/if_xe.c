@@ -2045,7 +2045,7 @@ operator|&=
 operator|~
 name|IFF_RUNNING
 expr_stmt|;
-name|if_detach
+name|ether_ifdetach
 argument_list|(
 operator|&
 name|sc
@@ -2053,6 +2053,8 @@ operator|->
 name|arpcom
 operator|.
 name|ac_if
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|xe_deactivate
@@ -2568,48 +2570,13 @@ literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* Attach the interface */
-name|if_attach
-argument_list|(
-name|scp
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ether_ifattach
 argument_list|(
 name|scp
 operator|->
 name|ifp
-argument_list|)
-expr_stmt|;
-comment|/* BPF is in the kernel, call the attach for it */
-if|#
-directive|if
-name|XE_DEBUG
-operator|>
-literal|1
-name|device_printf
-argument_list|(
-name|dev
 argument_list|,
-literal|"BPF listener attached\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|bpfattach
-argument_list|(
-name|scp
-operator|->
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 comment|/* Done */

@@ -2603,9 +2603,11 @@ operator|=
 name|fxp_watchdog
 expr_stmt|;
 comment|/* 	 * Attach the interface. 	 */
-name|if_attach
+name|ether_ifattach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Let the system queue as many packets as we have available 	 * TX descriptors. 	 */
@@ -2618,24 +2620,6 @@ operator|=
 name|FXP_NTXCB
 operator|-
 literal|1
-expr_stmt|;
-name|ether_ifattach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|bpfattach
-argument_list|(
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -2690,7 +2674,7 @@ name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Close down routes etc. 	 */
-name|if_detach
+name|ether_ifdetach
 argument_list|(
 operator|&
 name|sc
@@ -2698,6 +2682,8 @@ operator|->
 name|arpcom
 operator|.
 name|ac_if
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Stop DMA and drop transmit queue. 	 */

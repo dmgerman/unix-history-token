@@ -824,14 +824,11 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-name|if_attach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ether_ifattach
 argument_list|(
 name|ifp
+argument_list|,
+name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill the hardware address into ifa_addr if we find an AF_LINK 	 * entry. We need to do this so bpf's can get the hardware addr of 	 * this card. netstat likes this too! 	 */
@@ -943,19 +940,6 @@ name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
-name|bpfattach
-argument_list|(
-name|ifp
-argument_list|,
-name|DLT_EN10MB
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
