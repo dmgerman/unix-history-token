@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.39	81/05/11	*/
+comment|/*	hp.c	4.40	81/06/03	*/
 end_comment
 
 begin_ifdef
@@ -2958,6 +2958,9 @@ operator|(
 literal|0
 operator|)
 return|;
+name|npf
+operator|++
+expr_stmt|;
 break|break;
 block|}
 case|case
