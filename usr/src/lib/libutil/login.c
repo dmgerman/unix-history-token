@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.4 (Berkeley) %G%"
+literal|"@(#)login.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -80,10 +92,6 @@ decl_stmt|;
 name|int
 name|tty
 decl_stmt|;
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 name|tty
 operator|=
 name|ttyslot
@@ -121,7 +129,7 @@ argument_list|(
 name|fd
 argument_list|,
 call|(
-name|long
+name|off_t
 call|)
 argument_list|(
 name|tty
@@ -143,10 +151,6 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|ut
 argument_list|,
 sizeof|sizeof
@@ -192,10 +196,6 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|ut
 argument_list|,
 sizeof|sizeof

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logout.c	5.5 (Berkeley) %G%"
+literal|"@(#)logout.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,19 +46,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_typedef
@@ -69,19 +87,17 @@ name|UTMP
 typedef|;
 end_typedef
 
-begin_expr_stmt
+begin_function
+name|int
 name|logout
-argument_list|(
+parameter_list|(
 name|line
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|line
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -93,14 +109,6 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
@@ -111,6 +119,8 @@ argument_list|(
 name|_PATH_UTMP
 argument_list|,
 name|O_RDWR
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|<
@@ -131,10 +141,6 @@ name|read
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ut
 argument_list|,
@@ -210,7 +216,7 @@ name|fd
 argument_list|,
 operator|-
 operator|(
-name|long
+name|off_t
 operator|)
 sizeof|sizeof
 argument_list|(
@@ -227,10 +233,6 @@ name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ut
 argument_list|,
@@ -259,7 +261,7 @@ name|rval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
