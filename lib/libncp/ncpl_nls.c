@@ -2365,8 +2365,6 @@ block|}
 block|}
 block|,
 block|{
-name|NULL
-block|,
 literal|0
 block|}
 block|}
