@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_time.c	5.4 (Berkeley) %G%"
+literal|"@(#)pr_time.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * pr_attime --  *	Print the time since the user logged in.   *  *	Note: SCCS forces the bizarre string manipulation, things like  *	5.4 get replaced in the source code.  */
+comment|/*  * pr_attime --  *	Print the time since the user logged in.   *  *	Note: SCCS forces the bizarre string manipulation, things like  *	8.1 get replaced in the source code.  */
 end_comment
 
 begin_function
