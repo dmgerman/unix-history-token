@@ -16,61 +16,6 @@ name|_NETINET_TCP_TIMER_H_
 end_define
 
 begin_comment
-comment|/*  * Definitions of the TCP timers.  These timers are counted  * down PR_SLOWHZ times a second.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_NTIMERS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPT_REXMT
-value|0
-end_define
-
-begin_comment
-comment|/* retransmit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_PERSIST
-value|1
-end_define
-
-begin_comment
-comment|/* retransmit persistence */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_KEEP
-value|2
-end_define
-
-begin_comment
-comment|/* keep alive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_2MSL
-value|3
-end_define
-
-begin_comment
-comment|/* 2*msl quiet time timer */
-end_comment
-
-begin_comment
 comment|/*  * The TCPT_REXMT timer is used to force retransmissions.  * The TCP has the TCPT_REXMT timer set whenever segments  * have been sent for which ACKs are expected but not yet  * received.  If an ACK is received which advances tp->snd_una,  * then the retransmit timer is cleared (if there are no more  * outstanding segments) or reset to the base value (if there  * are more ACKs expected).  Whenever the retransmit timer goes off,  * we retransmit one unacknowledged segment, and do a backoff  * on the retransmit timer.  *  * The TCPT_PERSIST timer is used to keep window size information  * flowing even if the window goes shut.  If all previous transmissions  * have been acknowledged (so that there are no retransmissions in progress),  * and the window is too small to bother sending anything, then we start  * the TCPT_PERSIST timer.  When it expires, if the window is nonzero,  * we go to transmit state.  Otherwise, at intervals send a single byte  * into the peer's window to force him to update our window information.  * We do this at most as often as TCPT_PERSMIN time intervals,  * but no more frequently than the current estimate of round-trip  * packet time.  The TCPT_PERSIST timer is cleared whenever we receive  * a window update from the peer.  *  * The TCPT_KEEP timer is used to keep connections alive.  If an  * connection is idle (no segments received) for TCPTV_KEEP_INIT amount of time,  * but not yet established, then we drop the connection.  Once the connection  * is established, if the connection is idle for TCPTV_KEEP_IDLE time  * (and keepalives have been enabled on the socket), we begin to probe  * the connection.  We force the peer to send us a segment by sending:  *<SEQ=SND.UNA-1><ACK=RCV.NXT><CTL=ACK>  * This segment is (deliberately) outside the window, and should elicit  * an ack segment in response from the peer.  If, despite the TCPT_KEEP  * initiated segments we cannot elicit a response from a peer in TCPT_MAXIDLE  * amount of time probing, then we drop the connection.  */
 end_comment
 
@@ -82,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_MSL
-value|( 30*PR_SLOWHZ)
+value|( 30*hz)
 end_define
 
 begin_comment
@@ -104,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_RTOBASE
-value|(  3*PR_SLOWHZ)
+value|(  3*hz)
 end_define
 
 begin_comment
@@ -115,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_SRTTDFLT
-value|(  3*PR_SLOWHZ)
+value|(  3*hz)
 end_define
 
 begin_comment
@@ -126,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_PERSMIN
-value|(  5*PR_SLOWHZ)
+value|(  5*hz)
 end_define
 
 begin_comment
@@ -137,7 +82,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_PERSMAX
-value|( 60*PR_SLOWHZ)
+value|( 60*hz)
 end_define
 
 begin_comment
@@ -148,18 +93,18 @@ begin_define
 define|#
 directive|define
 name|TCPTV_KEEP_INIT
-value|( 75*PR_SLOWHZ)
+value|( 75*hz)
 end_define
 
 begin_comment
-comment|/* initial connect keep alive */
+comment|/* initial connect keepalive */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCPTV_KEEP_IDLE
-value|(120*60*PR_SLOWHZ)
+value|(120*60*hz)
 end_define
 
 begin_comment
@@ -170,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_KEEPINTVL
-value|( 75*PR_SLOWHZ)
+value|( 75*hz)
 end_define
 
 begin_comment
@@ -192,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_MIN
-value|(  1*PR_SLOWHZ)
+value|(  1*hz)
 end_define
 
 begin_comment
@@ -203,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|TCPTV_REXMTMAX
-value|( 64*PR_SLOWHZ)
+value|( 64*hz)
 end_define
 
 begin_comment
@@ -241,6 +186,17 @@ end_define
 
 begin_comment
 comment|/* maximum retransmits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPTV_DELACK
+value|(hz / PR_FASTHZ)
+end_define
+
+begin_comment
+comment|/* 200mS timeout */
 end_comment
 
 begin_ifdef
@@ -290,7 +246,31 @@ name|tvmin
 parameter_list|,
 name|tvmax
 parameter_list|)
-value|{ \ 	(tv) = (value); \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	else if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ }
+value|do { \ 	(tv) = (value); \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	else if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ } while(0)
+end_define
+
+begin_comment
+comment|/*  * Convert slow-timeout ticks to timer ticks.  We don't really want to do  * this as it is rather expensive, so this is only a transitional stage  * until we are able to update all the code which counts timer ticks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_TICKS
+parameter_list|(
+name|stt
+parameter_list|)
+value|((stt) * hz / PR_SLOWHZ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPT_SLOWHZ
+parameter_list|(
+name|tt
+parameter_list|)
+value|(((tt) * PR_SLOWHZ) / hz)
 end_define
 
 begin_ifdef
@@ -324,6 +304,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|tcp_keepintvl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time between keepalive probes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|tcp_maxidle
 decl_stmt|;
 end_decl_stmt
@@ -331,6 +322,31 @@ end_decl_stmt
 begin_comment
 comment|/* time to drop after starting probes */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_delacktime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time before sending a delayed ACK */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_maxpersistidle
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_msl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -351,15 +367,93 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|void
+name|tcp_timer_2msl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|xtp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tcp_timer_keep
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|xtp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tcp_timer_persist
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|xtp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tcp_timer_rexmt
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|xtp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tcp_timer_delack
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|xtp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_NETINET_TCP_TIMER_H_ */
+end_comment
 
 end_unit
 

@@ -339,8 +339,6 @@ operator|&
 operator|~
 name|CALLOUT_PENDING
 operator|)
-operator||
-name|CALLOUT_FIRED
 expr_stmt|;
 block|}
 name|splx
@@ -582,7 +580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * New interface; clients allocate their own callout structures.  *  * callout_reset() - establish or change a timeout  * callout_stop() - disestablish a timeout  * callout_init() - initialize a callout structure so that it can  *	safely be passed to callout_reset() and callout_stop()  *  *<sys/callout.h> defines two convenience macros:  *  * callout_pending() - returns number of ticks until callout fires, or 0  *	if not scheduled  * callout_fired() - returns truth if callout has already been fired  */
+comment|/*  * New interface; clients allocate their own callout structures.  *  * callout_reset() - establish or change a timeout  * callout_stop() - disestablish a timeout  * callout_init() - initialize a callout structure so that it can  *	safely be passed to callout_reset() and callout_stop()  *  *<sys/callout.h> defines three convenience macros:  *  * callout_active() - returns truth if callout has not been serviced  * callout_pending() - returns truth if callout is still waiting for timeout  * callout_deactivate() - marks the callout as having been serviced  */
 end_comment
 
 begin_function_decl
@@ -652,7 +650,7 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We could spl down here and back up at the TAILQ_INSERT_TAIL, 	 * but there's no point since doing this setup doesn't take much 	 ^ time. 	 */
+comment|/* 	 * We could spl down here and back up at the TAILQ_INSERT_TAIL, 	 * but there's no point since doing this setup doesn't take much 	 * time. 	 */
 if|if
 condition|(
 name|to_ticks
@@ -672,17 +670,12 @@ expr_stmt|;
 name|c
 operator|->
 name|c_flags
-operator|=
+operator||=
 operator|(
-name|c
-operator|->
-name|c_flags
-operator|&
-operator|~
-name|CALLOUT_FIRED
-operator|)
+name|CALLOUT_ACTIVE
 operator||
 name|CALLOUT_PENDING
+operator|)
 expr_stmt|;
 name|c
 operator|->
@@ -758,6 +751,13 @@ name|CALLOUT_PENDING
 operator|)
 condition|)
 block|{
+name|c
+operator|->
+name|c_flags
+operator|&=
+operator|~
+name|CALLOUT_ACTIVE
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -770,7 +770,11 @@ operator|->
 name|c_flags
 operator|&=
 operator|~
+operator|(
+name|CALLOUT_ACTIVE
+operator||
 name|CALLOUT_PENDING
+operator|)
 expr_stmt|;
 if|if
 condition|(

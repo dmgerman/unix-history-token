@@ -42,13 +42,36 @@ modifier|*
 name|t_template
 decl_stmt|;
 comment|/* skeletal packet for transmit */
-name|int
-name|t_timer
-index|[
-name|TCPT_NTIMERS
-index|]
+name|struct
+name|callout
+modifier|*
+name|tt_rexmt
 decl_stmt|;
-comment|/* tcp timers */
+comment|/* retransmit timer */
+name|struct
+name|callout
+modifier|*
+name|tt_persist
+decl_stmt|;
+comment|/* retransmit persistence */
+name|struct
+name|callout
+modifier|*
+name|tt_keep
+decl_stmt|;
+comment|/* keepalive */
+name|struct
+name|callout
+modifier|*
+name|tt_2msl
+decl_stmt|;
+comment|/* 2*msl TIME_WAIT timer */
+name|struct
+name|callout
+modifier|*
+name|tt_delack
+decl_stmt|;
+comment|/* delayed ACK timer */
 name|struct
 name|inpcb
 modifier|*
@@ -215,16 +238,16 @@ name|u_int
 name|t_maxopd
 decl_stmt|;
 comment|/* mss plus options */
-name|u_int
-name|t_idle
+name|u_long
+name|t_rcvtime
 decl_stmt|;
 comment|/* inactivity time */
 name|u_long
-name|t_duration
+name|t_starttime
 decl_stmt|;
-comment|/* connection duration */
+comment|/* time connection was established */
 name|int
-name|t_rtt
+name|t_rtttime
 decl_stmt|;
 comment|/* round trip time */
 name|tcp_seq
@@ -234,7 +257,7 @@ comment|/* sequence number being timed */
 name|int
 name|t_rxtcur
 decl_stmt|;
-comment|/* current retransmit value */
+comment|/* current retransmit value (ticks) */
 name|u_int
 name|t_maxseg
 decl_stmt|;
@@ -320,6 +343,19 @@ name|tcp_cc
 name|cc_recv
 decl_stmt|;
 comment|/* receive connection count */
+comment|/* experimental */
+name|u_long
+name|snd_cwnd_prev
+decl_stmt|;
+comment|/* cwnd prior to retransmit */
+name|u_long
+name|snd_ssthresh_prev
+decl_stmt|;
+comment|/* ssthresh prior to retransmit */
+name|u_long
+name|t_badrxtwin
+decl_stmt|;
+comment|/* window for retransmit recovery */
 block|}
 struct|;
 end_struct
@@ -952,15 +988,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPCTL_MAXID
+name|TCPCTL_DELACKTIME
 value|12
+end_define
+
+begin_comment
+comment|/* time before sending delayed ACK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_MAXID
+value|13
 end_define
 
 begin_define
 define|#
 directive|define
 name|TCPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ 	{ "delacktime", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
@@ -1033,19 +1080,22 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_long
-name|tcp_now
+name|int
+name|tcp_delack_enabled
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* for RFC 1323 timestamps */
-end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|tcp_delack_enabled
+name|ss_fltsz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ss_fltsz_local
 decl_stmt|;
 end_decl_stmt
 

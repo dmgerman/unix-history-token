@@ -191,7 +191,7 @@ begin_define
 define|#
 directive|define
 name|TCP_PAWS_IDLE
-value|(24 * 24 * 60 * 60 * PR_SLOWHZ)
+value|(24 * 24 * 60 * 60 * hz)
 end_define
 
 begin_comment

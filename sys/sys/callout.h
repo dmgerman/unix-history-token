@@ -106,7 +106,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CALLOUT_PENDING
+name|CALLOUT_ACTIVE
 value|0x0002
 end_define
 
@@ -117,12 +117,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CALLOUT_FIRED
+name|CALLOUT_PENDING
 value|0x0004
 end_define
 
 begin_comment
-comment|/* callout has been fired */
+comment|/* callout is waiting for timeout */
 end_comment
 
 begin_struct
@@ -193,11 +193,21 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|callout_fired
+name|callout_active
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)->c_flags& CALLOUT_FIRED)
+value|((c)->c_flags& CALLOUT_ACTIVE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|callout_deactivate
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->c_flags&= ~CALLOUT_ACTIVE)
 end_define
 
 begin_decl_stmt
@@ -221,7 +231,7 @@ name|callout_pending
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)->c_flags& CALLOUT_PENDING) ? \ 				 ((c)->c_time - ticks) : 0)
+value|((c)->c_flags& CALLOUT_PENDING)
 end_define
 
 begin_decl_stmt

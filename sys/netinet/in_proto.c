@@ -294,7 +294,7 @@ literal|0
 block|,
 name|tcp_init
 block|,
-name|tcp_fasttimo
+literal|0
 block|,
 name|tcp_slowtimo
 block|,
