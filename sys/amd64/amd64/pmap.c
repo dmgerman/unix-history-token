@@ -4206,21 +4206,15 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* XXX this should be an error, all cases should be caught now */
-if|if
-condition|(
-name|ptepde
-operator|==
-literal|0
-condition|)
-name|ptepde
-operator|=
-operator|*
-name|pmap_pde
+name|KASSERT
 argument_list|(
-name|pmap
+name|ptepde
+operator|!=
+literal|0
 argument_list|,
-name|va
+operator|(
+literal|"pmap_unuse_pt: ptepde != 0"
+operator|)
 argument_list|)
 expr_stmt|;
 name|mpte
