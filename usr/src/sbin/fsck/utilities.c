@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.3 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -972,6 +972,13 @@ name|errs
 operator|=
 literal|0
 expr_stmt|;
+name|bzero
+argument_list|(
+name|cp
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|pfatal
 argument_list|(
 literal|"THE FOLLOWING SECTORS COULD NOT BE READ:"
@@ -1016,6 +1023,27 @@ operator|<
 literal|0
 condition|)
 block|{
+name|lseek
+argument_list|(
+name|fcp
+operator|->
+name|rfdes
+argument_list|,
+operator|(
+name|long
+operator|)
+name|dbtob
+argument_list|(
+name|blk
+argument_list|)
+operator|+
+name|i
+operator|+
+name|DEV_BSIZE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %d,"
@@ -1024,13 +1052,6 @@ name|blk
 operator|+
 name|i
 operator|/
-name|DEV_BSIZE
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|cp
-argument_list|,
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
@@ -1241,6 +1262,28 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|lseek
+argument_list|(
+name|fcp
+operator|->
+name|rfdes
+argument_list|,
+operator|(
+name|long
+operator|)
+name|dbtob
+argument_list|(
+name|blk
+argument_list|)
+operator|+
+name|i
+operator|+
+name|DEV_BSIZE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %d,"
@@ -1252,6 +1295,7 @@ operator|/
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
