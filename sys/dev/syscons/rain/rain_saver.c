@@ -70,6 +70,23 @@ name|SAVER_NAME
 value|"rain_saver"
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAX
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
