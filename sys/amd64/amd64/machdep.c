@@ -7446,6 +7446,8 @@ name|SMP_prvspace
 index|[
 literal|0
 index|]
+operator|.
+name|pcpu
 expr_stmt|;
 name|gdt_segs
 index|[
