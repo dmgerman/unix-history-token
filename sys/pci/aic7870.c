@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7870, and aic7850 SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.14 1995/09/05 23:53:48 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7870, and aic7850 SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.15 1995/10/08 17:46:11 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -81,6 +81,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ADAPTEC_3940U
+value|0x82789004ul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ADAPTEC_2940U
 value|0x81789004ul
 end_define
@@ -97,6 +104,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_ADAPTEC_2940
 value|0x71789004ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ADAPTEC_AIC7880
+value|0x80789004ul
 end_define
 
 begin_define
@@ -152,7 +166,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEVCONFIG7
+name|RAMENB
 value|0x00000080ul
 end_define
 
@@ -314,6 +328,15 @@ name|type
 condition|)
 block|{
 case|case
+name|PCI_DEVICE_ID_ADAPTEC_3940U
+case|:
+return|return
+operator|(
+literal|"Adaptec 3940 Ultra SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
 name|PCI_DEVICE_ID_ADAPTEC_3940
 case|:
 return|return
@@ -337,6 +360,15 @@ case|:
 return|return
 operator|(
 literal|"Adaptec 2940 SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7880
+case|:
+return|return
+operator|(
+literal|"Adaptec aic7880 Ultra SCSI host adapter"
 operator|)
 return|;
 break|break;
@@ -387,6 +419,9 @@ block|{
 name|u_long
 name|io_port
 decl_stmt|;
+name|u_long
+name|id
+decl_stmt|;
 name|unsigned
 name|opri
 init|=
@@ -424,17 +459,35 @@ literal|0xc01ul
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|id
+operator|=
 name|pci_conf_read
 argument_list|(
 name|config_id
 argument_list|,
 name|PCI_ID_REG
 argument_list|)
+operator|)
 condition|)
 block|{
 case|case
+name|PCI_DEVICE_ID_ADAPTEC_3940U
+case|:
+case|case
 name|PCI_DEVICE_ID_ADAPTEC_3940
 case|:
+if|if
+condition|(
+name|id
+operator|==
+name|PCI_DEVICE_ID_ADAPTEC_3940U
+condition|)
+name|ahc_t
+operator|=
+name|AHC_394U
+expr_stmt|;
+else|else
 name|ahc_t
 operator|=
 name|AHC_394
@@ -456,16 +509,34 @@ name|ahc_f
 operator||=
 name|AHC_CHNLB
 expr_stmt|;
+comment|/* Even though it doesn't turn on RAMPS, it has them */
+name|ahc_f
+operator||=
+name|AHC_EXTSCB
+expr_stmt|;
 break|break;
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_2940U
 case|:
+name|ahc_t
+operator|=
+name|AHC_294U
+expr_stmt|;
+break|break;
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_2940
 case|:
 name|ahc_t
 operator|=
 name|AHC_294
+expr_stmt|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7880
+case|:
+name|ahc_t
+operator|=
+name|AHC_AIC7880
 expr_stmt|;
 break|break;
 case|case
@@ -508,7 +579,11 @@ if|if
 condition|(
 name|devconfig
 operator|&
+operator|(
 name|RAMPSM
+operator||
+name|RAMENB
+operator|)
 condition|)
 block|{
 comment|/* 			 * External SRAM present.  Have the probe walk 			 * the SCBs to see how much SRAM we have and set 			 * the number of SCBs accordingly. 			 */
