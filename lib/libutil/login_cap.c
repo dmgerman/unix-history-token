@@ -282,7 +282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * arrayize()  * Turn a simple string<str> seperated by any of  * the set of<chars> into an array.  The last element  * of the array will be NULL, as is proper.  * Free using freearraystr()  */
+comment|/*  * arrayize()  * Turn a simple string<str> separated by any of  * the set of<chars> into an array.  The last element  * of the array will be NULL, as is proper.  * Free using freearraystr()  */
 end_comment
 
 begin_function
@@ -2892,7 +2892,7 @@ name|authtypes
 operator|=
 name|defauthtypes
 expr_stmt|;
-comment|/*      * We have at least one authtype now; auths is a comma-seperated      * (or space-separated) list of authentication types.  We have to      * convert from this to an array of char*'s; authtypes then gets this.      */
+comment|/*      * We have at least one authtype now; auths is a comma-separated      * (or space-separated) list of authentication types.  We have to      * convert from this to an array of char*'s; authtypes then gets this.      */
 name|i
 operator|=
 literal|0
