@@ -1833,7 +1833,7 @@ expr_stmt|;
 block|}
 name|Printf
 argument_list|(
-literal|"  %g ms"
+literal|"  %.3f ms"
 argument_list|,
 name|deltaT
 argument_list|(
