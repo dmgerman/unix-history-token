@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  *  *	@(#)param.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  *  *	@(#)param.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -300,35 +300,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Some macros for units conversion  */
-end_comment
-
-begin_comment
-comment|/* Core clicks (4096 bytes) to segments and vice versa */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ctos
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|stoc
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)
-end_define
-
-begin_comment
-comment|/* Core clicks (4096 bytes) to disk blocks */
+comment|/* pages ("clicks") (4096 bytes) to disk blocks */
 end_comment
 
 begin_define
@@ -362,7 +334,7 @@ value|((x)<<DEV_BSHIFT)
 end_define
 
 begin_comment
-comment|/* clicks to bytes */
+comment|/* pages to bytes */
 end_comment
 
 begin_define
@@ -376,7 +348,7 @@ value|((x)<<PGSHIFT)
 end_define
 
 begin_comment
-comment|/* bytes to clicks */
+comment|/* bytes to pages */
 end_comment
 
 begin_define
