@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.16 1997/03/29 03:32:49 imp Exp $"
+literal|"$Id: mountd.c,v 1.17 1997/04/01 14:15:30 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1847,6 +1847,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|resvport_only
+condition|)
+block|{
 name|mib
 index|[
 literal|0
@@ -1908,6 +1914,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
