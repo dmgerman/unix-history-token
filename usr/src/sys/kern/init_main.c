@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.23	81/12/03	*/
+comment|/*	init_main.c	4.24	81/12/09	*/
 end_comment
 
 begin_include
@@ -163,6 +163,20 @@ decl_stmt|;
 name|rqinit
 argument_list|()
 expr_stmt|;
+include|#
+directive|include
+file|"loop.h"
+if|#
+directive|if
+name|NLOOP
+operator|>
+literal|0
+name|loattach
+argument_list|()
+expr_stmt|;
+comment|/* XXX */
+endif|#
+directive|endif
 name|startup
 argument_list|(
 name|firstaddr
@@ -348,17 +362,7 @@ name|INET
 name|pfinit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-include|#
-directive|include
-file|"lo.h"
-if|#
-directive|if
-name|NLOOP
-operator|>
-literal|0
-name|loattach
+name|ifinit
 argument_list|()
 expr_stmt|;
 endif|#
