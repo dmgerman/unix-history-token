@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -140,6 +146,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
+name|char
+modifier|*
+name|fsname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|sig_atomic_t
+name|caughtsig
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|usage
 argument_list|(
@@ -149,14 +172,21 @@ name|__dead2
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
-specifier|const
-name|char
-modifier|*
-name|fsname
-decl_stmt|;
-end_decl_stmt
+name|void
+name|catchsig
+parameter_list|(
+name|int
+name|s
+parameter_list|)
+block|{
+name|caughtsig
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -487,6 +517,14 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 	 * nmount(2) would kill us with SIGSYS if the kernel doesn't have it. 	 * This design bug is inconvenient.  We must catch the signal and not 	 * just ignore it because of a plain bug: nmount(2) would return 	 * EINVAL instead of the correct ENOSYS if the kernel doesn't have it 	 * and we don't let the signal kill us.  EINVAL is too ambiguous. 	 * This bug in 4.4BSD-Lite1 was fixed in 4.4BSD-Lite2 but is still in 	 * FreeBSD-5.0. 	 */
+name|signal
+argument_list|(
+name|SIGSYS
+argument_list|,
+name|catchsig
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|nmount
@@ -498,14 +536,29 @@ argument_list|,
 name|mntflags
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGSYS
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Try with the old mount syscall in the case 	 * this filesystem has not been converted yet, 	 * or the user didn't recompile his kernel. 	 */
 if|if
 condition|(
 name|error
 operator|&&
+operator|(
 name|errno
 operator|==
 name|EOPNOTSUPP
+operator|||
+name|errno
+operator|==
+name|ENOSYS
+operator|||
+name|caughtsig
+operator|)
 condition|)
 name|error
 operator|=
