@@ -189,12 +189,10 @@ decl_stmt|;
 comment|/* 	 * Get an ATMARP interface block 	 */
 name|aip
 operator|=
-operator|(
-name|Atmarp_intf
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Atmarp_intf
@@ -203,22 +201,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|aip
+operator|==
+name|NULL
 condition|)
 name|atmarp_mem_err
 argument_list|(
 literal|"atmarp_cfg_netif: sizeof(Atmarp_intf)"
-argument_list|)
-expr_stmt|;
-name|UM_ZERO
-argument_list|(
-name|aip
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Atmarp_intf
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure we're configuring a valid 	 * network interface 	 */
@@ -327,7 +316,7 @@ if|if
 condition|(
 name|aip
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|aip
 argument_list|)

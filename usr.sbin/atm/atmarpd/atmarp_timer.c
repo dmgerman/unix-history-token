@@ -438,15 +438,13 @@ name|ai_keepalive_t
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* 	 * Get a message buffer 	 */
+comment|/* 	 * Get a message buffer 	 * 	 * XXX arr:  Previously, the check on the returned value from 	 * the memory allocation routine was checked and _nothing_ 	 * resulted from the check (which would cause problems since 	 * the bzero() of NULL is not fun).  At the moment, I am having 	 * it soley return -- this should be reviewed again soon. 	 */
 name|msg
 operator|=
-operator|(
-name|Scsp_if_msg
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_if_msg
@@ -455,20 +453,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|msg
+operator|==
+name|NULL
 condition|)
-block|{ 	}
-name|UM_ZERO
-argument_list|(
-name|msg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_if_msg
-argument_list|)
-argument_list|)
-expr_stmt|;
+return|return;
 comment|/* 	 * Build a NOP message 	 */
 name|msg
 operator|->
@@ -510,7 +499,7 @@ operator|->
 name|si_len
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|msg
 argument_list|)

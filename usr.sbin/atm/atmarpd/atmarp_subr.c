@@ -498,7 +498,7 @@ operator|==
 name|T_ATM_ABSENT
 operator|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|asrv_info
 argument_list|)
@@ -589,7 +589,7 @@ modifier|*
 name|anp
 decl_stmt|;
 comment|/* 	 * Get the IP address and physical interface name 	 * associated with the network interface 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -741,7 +741,7 @@ name|if_ready_fail
 goto|;
 block|}
 comment|/* 	 * Get physical interface information 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -1072,7 +1072,7 @@ argument_list|,
 name|aap
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|aap
 argument_list|)
@@ -1199,12 +1199,10 @@ block|}
 comment|/* 	 * Get a new ATMARP cache for the interface 	 */
 name|aap
 operator|=
-operator|(
-name|Atmarp
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Atmarp
@@ -1213,24 +1211,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|aap
+operator|==
+name|NULL
 condition|)
-block|{
 name|atmarp_mem_err
 argument_list|(
 literal|"atmarp_if_ready: sizeof(Atmarp)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|aap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Atmarp
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill out the entry 	 */
@@ -1311,7 +1298,7 @@ name|aa_seq
 operator|=
 name|SCSP_CSA_SEQ_MIN
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|aap
@@ -1356,12 +1343,12 @@ name|aap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free dynamic data 	 */
-name|UM_FREE
+name|free
 argument_list|(
 name|netif_rsp
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|intf_rsp
 argument_list|)
@@ -1377,7 +1364,7 @@ if|if
 condition|(
 name|netif_rsp
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|netif_rsp
 argument_list|)
@@ -1386,7 +1373,7 @@ if|if
 condition|(
 name|intf_rsp
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|intf_rsp
 argument_list|)
@@ -1470,12 +1457,10 @@ return|;
 comment|/* 	 * Get a new cache entry 	 */
 name|aap
 operator|=
-operator|(
-name|Atmarp
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Atmarp
@@ -1484,8 +1469,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|aap
+operator|==
+name|NULL
 condition|)
 block|{
 name|errno
@@ -1494,24 +1480,10 @@ name|ENOMEM
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|Atmarp
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
-name|UM_ZERO
-argument_list|(
-name|aap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Atmarp
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|aap
 operator|->
 name|aa_intf
@@ -1531,7 +1503,7 @@ name|cp
 operator|->
 name|aap_arp_addr
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ipp
@@ -1647,7 +1619,7 @@ name|id_len
 operator|=
 name|SCSP_ATMARP_ID_LEN
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|aip
@@ -1711,7 +1683,7 @@ modifier|*
 name|ipp
 decl_stmt|;
 comment|/* 	 * Build ioctl request 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|aar
@@ -2148,7 +2120,7 @@ block|}
 block|}
 block|}
 comment|/* 	 * Free the ioctl response 	 */
-name|UM_FREE
+name|free
 argument_list|(
 name|air
 operator|.
@@ -3205,8 +3177,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Build a file name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
+operator|&
 name|fname
 argument_list|,
 sizeof|sizeof

@@ -278,32 +278,22 @@ block|}
 comment|/* 	 * Get memory for the cache message 	 */
 name|smp
 operator|=
-operator|(
-name|Scsp_if_msg
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|smp
+operator|==
+name|NULL
 condition|)
-block|{
 name|atmarp_mem_err
 argument_list|(
 literal|"atmarp_scsp_cache: len"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|smp
-argument_list|,
-name|len
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set header fields in SCSP message 	 */
@@ -465,7 +455,7 @@ if|if
 condition|(
 name|smp
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|smp
 argument_list|)
@@ -598,12 +588,10 @@ block|}
 comment|/* 	 * Get storage for a Solicit Response 	 */
 name|rsp
 operator|=
-operator|(
-name|Scsp_if_msg
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_if_msg
@@ -612,24 +600,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|rsp
+operator|==
+name|NULL
 condition|)
-block|{
 name|atmarp_mem_err
 argument_list|(
 literal|"atmarp_scsp_solicit: sizeof(Scsp_if_msg)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|rsp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_if_msg
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill out the Solicit Rsp 	 */
@@ -804,7 +781,7 @@ operator|->
 name|si_len
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|rsp
 argument_list|)
@@ -879,12 +856,10 @@ block|}
 comment|/* 	 * Get memory for the cache message 	 */
 name|smp
 operator|=
-operator|(
-name|Scsp_if_msg
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_if_msg
@@ -893,24 +868,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|smp
+operator|==
+name|NULL
 condition|)
-block|{
 name|atmarp_mem_err
 argument_list|(
 literal|"atmarp_scsp_update: sizeof(Scsp_if_msg)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|smp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_if_msg
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set header fields in SCSP message 	 */
@@ -1039,7 +1003,7 @@ operator|->
 name|si_len
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|smp
 argument_list|)
@@ -1243,12 +1207,10 @@ block|{
 comment|/* 			 * Copy info from SCSP to a new cache entry 			 */
 name|aap
 operator|=
-operator|(
-name|Atmarp
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Atmarp
@@ -1257,22 +1219,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|aap
+operator|==
+name|NULL
 condition|)
 name|atmarp_mem_err
 argument_list|(
 literal|"atmarp_scsp_update_in: sizeof(Atmarp)"
-argument_list|)
-expr_stmt|;
-name|UM_ZERO
-argument_list|(
-name|aap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Atmarp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|aap
@@ -1591,7 +1544,7 @@ block|}
 comment|/* 	 * Get a buffer that will hold the message 	 */
 name|buff
 operator|=
-name|UM_ALLOC
+name|malloc
 argument_list|(
 name|msg_hdr
 operator|.
@@ -1600,15 +1553,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|buff
+operator|==
+name|NULL
 condition|)
 name|atmarp_mem_err
 argument_list|(
 literal|"atmarp_scsp_read: msg_hdr.sh_len"
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|msg_hdr
@@ -1793,7 +1747,7 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|buff
 argument_list|)
@@ -1809,13 +1763,11 @@ if|if
 condition|(
 name|buff
 condition|)
-block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Error on socket to SCSP--close the socket and set the state 	 * so that we know to retry when the cache timer fires. 	 */
 name|atmarp_scsp_close
 argument_list|(
@@ -2119,7 +2071,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|sn
 argument_list|)
@@ -2268,7 +2220,7 @@ operator|=
 name|AI_STATE_UP
 expr_stmt|;
 comment|/* 	 * Send configuration information to SCSP 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|cfg_msg
@@ -2375,7 +2327,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|sn
 argument_list|)
@@ -2443,7 +2395,7 @@ operator|->
 name|ai_scsp_sockname
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|aip
 operator|->
@@ -2528,13 +2480,11 @@ name|aap
 operator|->
 name|aa_next
 control|)
-block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|aap
 argument_list|)
 expr_stmt|;
-block|}
 name|aip
 operator|->
 name|ai_arptbl
