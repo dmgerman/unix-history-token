@@ -950,6 +950,10 @@ name|tcps_sndrexmitbyte
 decl_stmt|;
 comment|/* data bytes retransmitted */
 name|u_long
+name|tcps_sndrexmitbad
+decl_stmt|;
+comment|/* unnecessary packet retransmissions */
+name|u_long
 name|tcps_sndacks
 decl_stmt|;
 comment|/* ack-only packets sent */

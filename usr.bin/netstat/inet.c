@@ -1898,6 +1898,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_sndrexmitbad
+argument_list|,
+literal|"\t\t%lu data packet%s unnecessarily retransmitted\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_mturesent
 argument_list|,
 literal|"\t\t%lu resend%s initiated by MTU discovery\n"

@@ -6869,6 +6869,11 @@ operator|->
 name|t_badrxtwin
 condition|)
 block|{
+operator|++
+name|tcpstat
+operator|.
+name|tcps_sndrexmitbad
+expr_stmt|;
 name|tp
 operator|->
 name|snd_cwnd
