@@ -11637,7 +11637,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|size_t
 name|buflen
 decl_stmt|;
 name|struct
