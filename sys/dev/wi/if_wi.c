@@ -1540,23 +1540,19 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"%s:wi_has_wep = %d\n"
-argument_list|,
-name|__func__
+literal|"wi_has_wep = %d\n"
 argument_list|,
 name|sc
 operator|->
 name|wi_has_wep
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*  	 * Find supported rates. 	 */
 name|gen
 operator|.
@@ -1799,9 +1795,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IFM_IEEE80211_HOSTAP
 if|if
 condition|(
 name|sc
@@ -1892,8 +1885,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 undef|#
 directive|undef
 name|ADD
@@ -13536,12 +13527,6 @@ name|wi_ptype
 operator|=
 name|WI_PORTTYPE_ADHOC
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IFM_IEEE80211_HOSTAP
-argument_list|)
 elseif|else
 if|if
 condition|(
@@ -13565,8 +13550,6 @@ name|wi_ptype
 operator|=
 name|WI_PORTTYPE_AP
 expr_stmt|;
-endif|#
-directive|endif
 else|else
 name|sc
 operator|->
@@ -13730,12 +13713,6 @@ name|ifm_active
 operator||=
 name|IFM_IEEE80211_ADHOC
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IFM_IEEE80211_HOSTAP
-argument_list|)
 elseif|else
 if|if
 condition|(
@@ -13751,8 +13728,6 @@ name|ifm_active
 operator||=
 name|IFM_IEEE80211_HOSTAP
 expr_stmt|;
-endif|#
-directive|endif
 name|wreq
 operator|.
 name|wi_type
