@@ -3876,7 +3876,7 @@ name|mediaSetFTPPassive
 block|}
 block|,
 block|{
-literal|"3b HTTP"
+literal|"4 HTTP"
 block|,
 literal|"Install from an FTP server through a http proxy"
 block|,
@@ -3886,7 +3886,7 @@ name|mediaSetHTTP
 block|}
 block|,
 block|{
-literal|"4 DOS"
+literal|"5 DOS"
 block|,
 literal|"Install from a DOS partition"
 block|,
@@ -3896,7 +3896,7 @@ name|mediaSetDOS
 block|}
 block|,
 block|{
-literal|"5 NFS"
+literal|"6 NFS"
 block|,
 literal|"Install over NFS"
 block|,
@@ -3906,7 +3906,7 @@ name|mediaSetNFS
 block|}
 block|,
 block|{
-literal|"6 File System"
+literal|"7 File System"
 block|,
 literal|"Install from an existing filesystem"
 block|,
@@ -3916,7 +3916,7 @@ name|mediaSetUFS
 block|}
 block|,
 block|{
-literal|"7 Floppy"
+literal|"8 Floppy"
 block|,
 literal|"Install from a floppy disk set"
 block|,
@@ -3926,7 +3926,7 @@ name|mediaSetFloppy
 block|}
 block|,
 block|{
-literal|"8 Tape"
+literal|"9 Tape"
 block|,
 literal|"Install from SCSI or QIC tape"
 block|,
@@ -3936,7 +3936,7 @@ name|mediaSetTape
 block|}
 block|,
 block|{
-literal|"9 Options"
+literal|"X Options"
 block|,
 literal|"Go to the Options screen"
 block|,
