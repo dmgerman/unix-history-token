@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ktrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2481,7 +2487,7 @@ name|code
 argument_list|,
 name|narg
 argument_list|,
-name|args
+name|argp
 argument_list|)
 expr_stmt|;
 block|}
