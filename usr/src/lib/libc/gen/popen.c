@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	8.1 (Berkeley) %G%"
+literal|"@(#)popen.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,20 +119,21 @@ name|FILE
 modifier|*
 name|popen
 parameter_list|(
-name|program
+name|command
 parameter_list|,
 name|type
 parameter_list|)
 specifier|const
 name|char
 modifier|*
-name|program
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
+name|command
+decl_stmt|,
+decl|*
 name|type
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|struct
 name|pid
@@ -168,11 +169,17 @@ index|[
 literal|1
 index|]
 condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -384,7 +391,7 @@ literal|"sh"
 argument_list|,
 literal|"-c"
 argument_list|,
-name|program
+name|command
 argument_list|,
 name|NULL
 argument_list|)
@@ -484,7 +491,7 @@ name|iop
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * pclose --  *	Pclose returns -1 if stream is not associated with a `popened' command,  *	if already `pclosed', or waitpid returns an error.  */
@@ -513,21 +520,12 @@ decl_stmt|;
 name|int
 name|omask
 decl_stmt|;
-name|union
-name|wait
+name|int
 name|pstat
 decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|iop
-argument_list|)
-expr_stmt|;
 comment|/* Find the appropriate file pointer. */
 for|for
 control|(
@@ -572,25 +570,12 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* Get the status of the process. */
-name|omask
-operator|=
-name|sigblock
+operator|(
+name|void
+operator|)
+name|fclose
 argument_list|(
-name|sigmask
-argument_list|(
-name|SIGINT
-argument_list|)
-operator||
-name|sigmask
-argument_list|(
-name|SIGQUIT
-argument_list|)
-operator||
-name|sigmask
-argument_list|(
-name|SIGHUP
-argument_list|)
+name|iop
 argument_list|)
 expr_stmt|;
 do|do
@@ -603,10 +588,6 @@ name|cur
 operator|->
 name|pid
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|pstat
 argument_list|,
@@ -626,14 +607,6 @@ operator|==
 name|EINTR
 condition|)
 do|;
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-name|omask
-argument_list|)
-expr_stmt|;
 comment|/* Remove the entry from the linked list. */
 if|if
 condition|(
@@ -672,8 +645,6 @@ operator|-
 literal|1
 else|:
 name|pstat
-operator|.
-name|w_status
 operator|)
 return|;
 block|}
