@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -574,7 +574,7 @@ name|fprintf
 argument_list|(
 name|Xscript
 argument_list|,
-literal|"*** %s\n"
+literal|"<<< %s\n"
 argument_list|,
 name|inp
 argument_list|)
