@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/msdosfs/msdosfsmount.h>
 end_include
 
