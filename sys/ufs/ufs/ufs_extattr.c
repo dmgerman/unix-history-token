@@ -1084,6 +1084,8 @@ expr_stmt|;
 comment|/* trim nul termination */
 name|vargs
 operator|.
+name|a_gen
+operator|.
 name|a_desc
 operator|=
 name|NULL
@@ -1584,6 +1586,8 @@ operator|=
 literal|0
 expr_stmt|;
 name|vargs
+operator|.
+name|a_gen
 operator|.
 name|a_desc
 operator|=
