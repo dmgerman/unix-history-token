@@ -35,6 +35,44 @@ name|TWEIO_COMMAND
 value|_IOWR('T', 100, struct twe_usercommand)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_struct
+struct|struct
+name|twe_usercommand32
+block|{
+name|TWE_Command
+name|tu_command
+decl_stmt|;
+comment|/* command ready for the controller */
+name|uint32_t
+name|tu_data
+decl_stmt|;
+comment|/* pointer to data in userspace */
+name|uint32_t
+name|tu_size
+decl_stmt|;
+comment|/* userspace data length */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TWEIO_COMMAND32
+value|_IOWR('T', 100, struct twe_usercommand32)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Command queue statistics  */
 end_comment
@@ -184,6 +222,51 @@ directive|define
 name|TWEIO_GET_PARAM
 value|_IOW ('T', 105, struct twe_paramcommand)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_struct
+struct|struct
+name|twe_paramcommand32
+block|{
+name|u_int16_t
+name|tp_table_id
+decl_stmt|;
+name|u_int8_t
+name|tp_param_id
+decl_stmt|;
+name|u_int32_t
+name|tp_data
+decl_stmt|;
+name|u_int8_t
+name|tp_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TWEIO_SET_PARAM32
+value|_IOW ('T', 104, struct twe_paramcommand32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TWEIO_GET_PARAM32
+value|_IOW ('T', 105, struct twe_paramcommand32)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Request a controller soft-reset  */
