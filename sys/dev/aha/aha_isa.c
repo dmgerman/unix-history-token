@@ -224,6 +224,12 @@ decl_stmt|;
 name|config_data_t
 name|config_data
 decl_stmt|;
+name|aha
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 comment|/* Check isapnp ids */
 if|if
 condition|(
@@ -574,6 +580,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|aha
+operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
 name|aha
 operator|->
 name|portrid

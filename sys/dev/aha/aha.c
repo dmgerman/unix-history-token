@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -114,7 +120,7 @@ name|PRVERB
 parameter_list|(
 name|x
 parameter_list|)
-value|if (bootverbose) printf x
+value|do { if (bootverbose) device_printf x; } while (0)
 end_define
 
 begin_comment
@@ -162,6 +168,16 @@ name|aha
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|aha_name
+parameter_list|(
+name|aha
+parameter_list|)
+value|device_get_nameunit(aha->dev)
+end_define
 
 begin_function
 specifier|static
@@ -972,12 +988,11 @@ block|{
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: status reg test failed %x\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"status reg test failed %x\n"
 operator|,
 name|status
 operator|)
@@ -1012,12 +1027,11 @@ block|{
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: Failed Intstat Reg Test\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"Failed Intstat Reg Test\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1048,12 +1062,11 @@ block|{
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: Failed Reset\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"Failed Reset\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1102,12 +1115,11 @@ block|{
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: INQUIRE failed %x\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"INQUIRE failed %x\n"
 operator|,
 name|error
 operator|)
@@ -1186,12 +1198,11 @@ block|{
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: Geometry Register test failed 0x%x\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"Geometry Register test failed %#x\n"
 operator|,
 name|status
 operator|)
@@ -1494,14 +1505,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: AOP_RETURN_EXT_BIOS_INFO - Failed."
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"AOP_RETURN_EXT_BIOS_INFO - Failed."
 argument_list|)
 expr_stmt|;
 return|return
@@ -1542,14 +1552,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: AOP_MBOX_IF_ENABLE - Failed."
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"AOP_MBOX_IF_ENABLE - Failed."
 argument_list|)
 expr_stmt|;
 return|return
@@ -1567,14 +1576,13 @@ name|boardid
 operator|<
 literal|0x41
 condition|)
-name|printf
-argument_list|(
-literal|"%s: Warning: aha-1542A won't likely work.\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Warning: aha-1542A won't work.\n"
 argument_list|)
 expr_stmt|;
 name|aha
@@ -1652,15 +1660,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: aha_fetch_adapter_info - Failed "
-literal|"Get Setup Info\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"aha_fetch_adapter_info - Failed "
+literal|"Get Setup Info\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1736,14 +1743,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: aha_fetch_adapter_info - Failed Get Config\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"aha_fetch_adapter_info - Failed Get Config\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1783,14 +1789,13 @@ name|aha
 parameter_list|)
 block|{
 comment|/* Announce the Adapter */
-name|printf
-argument_list|(
-literal|"%s: AHA-%s FW Rev. %c.%c (ID=%x) "
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"AHA-%s FW Rev. %c.%c (ID=%x) "
 argument_list|,
 name|aha
 operator|->
@@ -2327,14 +2332,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: aha_init - Unable to allocate initial ccbs\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"aha_init - Unable to allocate initial ccbs\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2535,48 +2539,6 @@ block|}
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|aha_name
-parameter_list|(
-name|struct
-name|aha_softc
-modifier|*
-name|aha
-parameter_list|)
-block|{
-specifier|static
-name|char
-name|name
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|snprintf
-argument_list|(
-name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-argument_list|,
-literal|"aha%d"
-argument_list|,
-name|aha
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|name
 operator|)
 return|;
 block|}
@@ -3105,14 +3067,13 @@ name|accb
 operator|==
 name|NULL
 condition|)
-name|printf
-argument_list|(
-literal|"%s: Can't malloc ACCB\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Can't malloc ACCB\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -4495,15 +4456,14 @@ name|error
 operator|!=
 name|EFBIG
 condition|)
-name|printf
-argument_list|(
-literal|"%s: Unexepected error 0x%x returned from "
-literal|"bus_dmamap_load\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Unexepected error 0x%x returned from "
+literal|"bus_dmamap_load\n"
 argument_list|,
 name|error
 argument_list|)
@@ -4904,15 +4864,14 @@ name|AMBO_FREE
 condition|)
 block|{
 comment|/* 		 * We should never encounter a busy mailbox. 		 * If we do, warn the user, and treat it as 		 * a resource shortage.  If the controller is 		 * hung, one of the pending transactions will 		 * timeout causing us to start recovery operations. 		 */
-name|printf
-argument_list|(
-literal|"%s: Encountered busy mailbox with %d out of %d "
-literal|"commands active!!!"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Encountered busy mailbox with %d out of %d "
+literal|"commands active!!!"
 argument_list|,
 name|aha
 operator|->
@@ -5275,14 +5234,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ahadone - Attempt to free non-active ACCB %p\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ahadone - Attempt to free non-active ACCB %p\n"
 argument_list|,
 operator|(
 name|void
@@ -5540,14 +5498,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
-argument_list|(
-literal|"%s: No longer in timeout\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"No longer in timeout\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5573,28 +5530,26 @@ block|{
 case|case
 name|AMBI_FREE
 case|:
-name|printf
-argument_list|(
-literal|"%s: ahadone - CCB completed with free status!\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ahadone - CCB completed with free status!\n"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AMBI_NOT_FOUND
 case|:
-name|printf
-argument_list|(
-literal|"%s: ahadone - CCB Abort failed to find CCB\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ahadone - CCB Abort failed to find CCB\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5846,14 +5801,13 @@ operator|->
 name|hccb
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: AHA-1540A detected, compensating\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"AHA-1540A detected, maybe compensating\n"
 argument_list|)
 expr_stmt|;
 name|aha
@@ -6195,13 +6149,12 @@ block|{
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: ahareset - Diagnostic Active failed to "
-literal|"assert. status = 0x%x\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"ahareset - Diagnostic Active failed to "
+literal|"assert. status = %#x\n"
 operator|,
 name|status
 operator|)
@@ -6328,15 +6281,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ahareset - Host adapter failed to come ready. "
-literal|"status = 0x%x\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ahareset - Host adapter failed to "
+literal|"come ready. status = 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -6367,14 +6319,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ahareset - Adapter failed diagnostics\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ahareset - Adapter failed diag\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6387,15 +6338,14 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"%s: ahareset - Host Adapter Error "
-literal|"code = 0x%x\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ahareset - Host Adapter "
+literal|"Error code = 0x%x\n"
 argument_list|,
 name|aha_inb
 argument_list|(
@@ -6649,14 +6599,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: aha_cmd: Timeout waiting for adapter idle\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"aha_cmd: Timeout waiting for adapter idle\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6744,15 +6693,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: aha_cmd: Timeout waiting for adapter ready, "
-literal|"status = 0x%x\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"aha_cmd: Timeout waiting for adapter"
+literal|" ready, status = 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -6918,15 +6866,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: aha_cmd: Timeout sending parameters, "
-literal|"status = 0x%x\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"aha_cmd: Timeout sending parameters, "
+literal|"status = 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -7064,15 +7011,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
-argument_list|(
-literal|"%s: aha_cmd - Discarded reply data "
-literal|"byte for opcode 0x%x\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"aha_cmd - Discarded reply data "
+literal|"byte for opcode 0x%x\n"
 argument_list|,
 name|opcode
 argument_list|)
@@ -7105,21 +7051,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: aha_cmd: Timeout waiting for reply data and "
-literal|"command complete.\n%s: status = 0x%x, intstat = 0x%x, "
-literal|"reply_len = %d\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
 argument_list|,
-name|aha_name
-argument_list|(
-name|aha
-argument_list|)
+literal|"aha_cmd: Timeout: status = 0x%x, "
+literal|"intstat = 0x%x, reply_len = %d\n"
 argument_list|,
 name|status
 argument_list|,
@@ -7176,12 +7115,11 @@ block|{
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: Invalid Command 0x%x\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"Invalid Command 0x%x\n"
 operator|,
 name|opcode
 operator|)
@@ -7265,13 +7203,12 @@ comment|/* The controller did not accept the full argument list */
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: Controller did not accept full argument list "
-literal|"(%d> 0)\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"Controller did not accept full argument "
+literal|"list (%d> 0)\n"
 operator|,
 name|param_len
 operator|)
@@ -7294,12 +7231,11 @@ comment|/* Too much or too little data received */
 name|PRVERB
 argument_list|(
 operator|(
-literal|"%s: Too much or too little data received (%d != %d)\n"
-operator|,
-name|aha_name
-argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+operator|,
+literal|"data received mismatch (%d != %d)\n"
 operator|,
 name|reply_len
 operator|,
@@ -7585,14 +7521,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: ahafetchtransinfo - Inquire Setup Info Failed %d\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"ahafetchtransinfo - Inquire Setup Info Failed %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -8144,14 +8079,13 @@ comment|/*hardreset*/
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: No longer in timeout\n"
-argument_list|,
-name|aha_name
+name|device_printf
 argument_list|(
 name|aha
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"No longer in timeout\n"
 argument_list|)
 expr_stmt|;
 block|}
