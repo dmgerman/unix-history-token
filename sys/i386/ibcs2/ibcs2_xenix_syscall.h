@@ -48,6 +48,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IBCS2_XENIX_xenix_eaccess
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
 name|IBCS2_XENIX_ibcs2_sigaction
 value|39
 end_define
