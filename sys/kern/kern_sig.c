@@ -8799,6 +8799,37 @@ operator|)
 operator|)
 condition|)
 return|return;
+comment|/* 	 * SIGKILL: Remove procfs STOPEVENTs. 	 */
+if|if
+condition|(
+name|sig
+operator|==
+name|SIGKILL
+condition|)
+block|{
+comment|/* from procfs_ioctl.c: PIOCBIC */
+name|p
+operator|->
+name|p_stops
+operator|=
+literal|0
+expr_stmt|;
+comment|/* from procfs_ioctl.c: PIOCCONT */
+name|p
+operator|->
+name|p_step
+operator|=
+literal|0
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_step
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Some signals have a process-wide effect and a per-thread 	 * component.  Most processing occurs when the process next 	 * tries to cross the user boundary, however there are some 	 * times when processing needs to be done immediatly, such as 	 * waking up threads so that they can cross the user boundary. 	 * We try do the per-process part here. 	 */
 if|if
 condition|(
