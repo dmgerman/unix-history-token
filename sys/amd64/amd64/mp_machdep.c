@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.6 1997/05/01 19:27:58 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.7 1997/05/03 17:42:01 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -3710,10 +3710,10 @@ comment|/*  *   */
 end_comment
 
 begin_function
-name|int
+name|u_int
 name|get_isa_apic_mask
 parameter_list|(
-name|int
+name|u_int
 name|isaMASK
 parameter_list|)
 block|{
@@ -4053,6 +4053,10 @@ directive|undef
 name|INTTYPE
 end_undef
 
+begin_comment
+comment|/*  * Reprogram the MB chipset to NOT redirect a PCI INTerrupt  */
+end_comment
+
 begin_function
 name|int
 name|undirect_pci_irq
@@ -4069,7 +4073,7 @@ name|READY
 argument_list|)
 name|printf
 argument_list|(
-literal|"Freeing irq %d for ISA cards.\n"
+literal|"Freeing redirected PCI irq %d.\n"
 argument_list|,
 name|rirq
 argument_list|)
@@ -4082,7 +4086,54 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"Freeing (NOT implemented) irq %d for ISA cards.\n"
+literal|"Freeing (NOT implemented) redirected PCI irq %d.\n"
+argument_list|,
+name|rirq
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+comment|/* READY */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reprogram the MB chipset to NOT redirect an ISA INTerrupt.  *  * XXX FIXME:  *  Exactly what this means is unclear at this point.  It is a solution  *  for motherboards that redirect the MBIRQ0 pin.  Generically a motherboard  *  could route any of the ISA INTs to upper (>15) IRQ values.  But most would  *  NOT be redirected via MBIRQ0, thus "undirect()ing" them would NOT be an  *  option.  */
+end_comment
+
+begin_function
+name|int
+name|undirect_isa_irq
+parameter_list|(
+name|int
+name|rirq
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|READY
+argument_list|)
+name|printf
+argument_list|(
+literal|"Freeing redirected ISA irq %d.\n"
+argument_list|,
+name|rirq
+argument_list|)
+expr_stmt|;
+comment|/** FIXME: tickle the MB redirector chip */
+return|return
+operator|???
+return|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"Freeing (NOT implemented) redirected ISA irq %d.\n"
 argument_list|,
 name|rirq
 argument_list|)
