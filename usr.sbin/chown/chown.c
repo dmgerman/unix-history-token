@@ -1159,15 +1159,16 @@ operator|!=
 literal|0
 operator|)
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* Check group membership; kernel just returns EPERM. */
 if|if
 condition|(
@@ -1232,15 +1233,16 @@ name|ngroups
 operator|<
 literal|0
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
 literal|"you are not a member of group %s"
 argument_list|,
 name|gname
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 block|}
 name|warn
 argument_list|(
