@@ -4171,7 +4171,7 @@ argument_list|,
 name|gd_allcpu
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialise the kernel lock. 	 */
+comment|/* 	 * Initialise mutexes. 	 */
 name|mtx_init
 argument_list|(
 operator|&
