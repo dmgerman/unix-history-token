@@ -4985,13 +4985,26 @@ name|fp
 operator|->
 name|LogLevel
 argument_list|,
-literal|"%s: RecvEchoReq: Error: His magic is bad!!\n"
+literal|"%s: RecvEchoReq: magic 0x%08lx is wrong,"
+literal|" expecting 0x%08lx\n"
 argument_list|,
 name|fp
 operator|->
 name|link
 operator|->
 name|name
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|magic
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|lcp
+operator|->
+name|his_magic
 argument_list|)
 expr_stmt|;
 comment|/* XXX: We should send terminate request */
