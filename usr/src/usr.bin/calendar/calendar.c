@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calendar.c	8.1 (Berkeley) %G%"
+literal|"@(#)calendar.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<tzfile.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -110,7 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
 end_include
 
 begin_include
@@ -122,21 +128,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -153,6 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -164,8 +158,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -535,7 +529,8 @@ init|=
 block|{
 literal|0
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 literal|30
 block|,
@@ -563,7 +558,8 @@ literal|364
 block|,
 literal|0
 block|,
-literal|0
+operator|-
+literal|1
 block|,
 literal|30
 block|,
@@ -930,7 +926,36 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* ASSUME THIS SHIT WORKS... %^&%&^%^& */
+if|if
+condition|(
+name|flags
+operator|&
+name|F_ISDAY
+condition|)
+name|day
+operator|=
+name|tp
+operator|->
+name|tm_mday
+operator|+
+operator|(
+operator|(
+operator|(
+name|day
+operator|-
+literal|1
+operator|)
+operator|-
+name|tp
+operator|->
+name|tm_wday
+operator|+
+literal|7
+operator|)
+operator|%
+literal|7
+operator|)
+expr_stmt|;
 name|day
 operator|=
 name|cumdays
@@ -1199,11 +1224,18 @@ operator||=
 name|F_ISDAY
 expr_stmt|;
 else|else
+block|{
+operator|*
+name|p
+operator|=
+name|savech
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 for|for
 control|(
 operator|*
