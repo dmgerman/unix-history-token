@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.32	83/05/27	*/
+comment|/*	ioctl.h	4.33	83/06/12	*/
 end_comment
 
 begin_comment
@@ -1720,7 +1720,7 @@ begin_define
 define|#
 directive|define
 name|SIOCADDRT
-value|_IOW(s, 10, struct rtentry)
+value|_IOW(r, 10, struct rtentry)
 end_define
 
 begin_comment
@@ -1731,7 +1731,7 @@ begin_define
 define|#
 directive|define
 name|SIOCDELRT
-value|_IOW(s, 11, struct rtentry)
+value|_IOW(r, 11, struct rtentry)
 end_define
 
 begin_comment
@@ -1742,7 +1742,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFADDR
-value|_IOW(s, 12, struct ifreq)
+value|_IOW(i, 12, struct ifreq)
 end_define
 
 begin_comment
@@ -1753,7 +1753,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFADDR
-value|_IOWR(s,13, struct ifreq)
+value|_IOWR(i,13, struct ifreq)
 end_define
 
 begin_comment
@@ -1764,7 +1764,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFDSTADDR
-value|_IOW(s, 14, struct ifreq)
+value|_IOW(i, 14, struct ifreq)
 end_define
 
 begin_comment
@@ -1775,7 +1775,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFDSTADDR
-value|_IOWR(s,15, struct ifreq)
+value|_IOWR(i,15, struct ifreq)
 end_define
 
 begin_comment
@@ -1786,7 +1786,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFFLAGS
-value|_IOW(s, 16, struct ifreq)
+value|_IOW(i, 16, struct ifreq)
 end_define
 
 begin_comment
@@ -1797,7 +1797,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFFLAGS
-value|_IOWR(s,17, struct ifreq)
+value|_IOWR(i,17, struct ifreq)
 end_define
 
 begin_comment
@@ -1808,7 +1808,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFCONF
-value|_IOWR(s,20, struct ifconf)
+value|_IOWR(i,20, struct ifconf)
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.10	83/05/27	*/
+comment|/*	uipc_usrreq.c	1.11	83/06/12	*/
 end_comment
 
 begin_include
@@ -754,11 +754,11 @@ comment|/* SOME AS YET UNIMPLEMENTED HOOKS */
 case|case
 name|PRU_CONTROL
 case|:
-name|error
-operator|=
+return|return
+operator|(
 name|EOPNOTSUPP
-expr_stmt|;
-break|break;
+operator|)
+return|;
 case|case
 name|PRU_SENSE
 case|:

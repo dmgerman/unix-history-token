@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.48	83/05/27	*/
+comment|/*	udp_usrreq.c	4.49	83/06/12	*/
 end_comment
 
 begin_include
@@ -1489,10 +1489,15 @@ name|req
 argument_list|)
 expr_stmt|;
 case|case
-name|PRU_RCVD
-case|:
-case|case
 name|PRU_CONTROL
+case|:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+case|case
+name|PRU_RCVD
 case|:
 case|case
 name|PRU_SENSE
