@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)list.c	2.1 %G%"
+literal|"@(#)list.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -509,6 +509,23 @@ condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
+operator|(
+name|message
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|.
+name|m_flag
+operator|&
+name|MDELETED
+operator|)
+operator|==
+name|f
+condition|)
 name|mark
 argument_list|(
 name|i
