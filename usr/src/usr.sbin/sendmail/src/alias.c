@@ -75,7 +75,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.33 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.34 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -90,7 +90,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.33 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.34 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,7 +116,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.33 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.34 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.33 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.34 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3720,6 +3720,58 @@ argument_list|)
 condition|)
 block|{
 comment|/* we have to suspend this message */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"forward: transient error on %s\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|2
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: forward %s: transient error: %e"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|message
+argument_list|(
+literal|"%s: %s: message queued"
+argument_list|,
+name|buf
+argument_list|,
+name|strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|user
 operator|->
 name|q_flags
