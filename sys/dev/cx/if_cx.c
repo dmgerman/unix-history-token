@@ -6168,6 +6168,34 @@ operator|==
 name|T_NONE
 condition|)
 continue|continue;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|502113
+if|if
+condition|(
+name|d
+operator|->
+name|tty
+condition|)
+block|{
+name|ttyrel
+argument_list|(
+name|d
+operator|->
+name|tty
+argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|tty
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NETGRAPH
@@ -9760,7 +9788,7 @@ name|callout
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Wake up bidirectional opens. */
+comment|/* 	 * Wake up bidirectional opens. 	 * Since we may be opened twice we couldn't call ttyrel() here. 	 * So just keep d->tty for future use. It would be freed by 	 * ttyrel() at cx_detach(). 	 */
 name|wakeup
 argument_list|(
 name|d
