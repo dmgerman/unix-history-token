@@ -1540,6 +1540,11 @@ operator|->
 name|sectorsize
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sbuf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -2123,6 +2128,11 @@ operator|)
 name|offset
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sbuf
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -2518,6 +2528,12 @@ argument_list|(
 name|cbuf
 argument_list|)
 condition|)
+block|{
+name|unlink
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
 name|errx
 argument_list|(
 literal|1
@@ -2525,6 +2541,7 @@ argument_list|,
 literal|"EDITOR is too long"
 argument_list|)
 expr_stmt|;
+block|}
 name|system
 argument_list|(
 name|cbuf
@@ -2568,6 +2585,11 @@ name|i
 argument_list|)
 expr_stmt|;
 name|unlink
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
+name|free
 argument_list|(
 name|q
 argument_list|)
