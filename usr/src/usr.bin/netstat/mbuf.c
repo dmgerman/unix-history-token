@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	4.2 82/12/05"
+literal|"@(#)mbuf.c	4.3 82/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,11 +210,9 @@ operator|(
 name|totmem
 operator|-
 name|totfree
-operator|+
-name|totmem
-operator|-
-literal|1
 operator|)
+operator|*
+literal|100
 operator|/
 name|totmem
 argument_list|)
