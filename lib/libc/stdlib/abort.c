@@ -91,6 +91,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* XXX - why are these declarations here? */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|int
@@ -136,7 +140,7 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
-comment|/* 	 * POSIX requires we flush stdio buffers on abort 	 */
+comment|/* 	 * POSIX requires we flush stdio buffers on abort. 	 * XXX ISO C requires that abort() be async-signal-safe. 	 */
 if|if
 condition|(
 name|__cleanup
@@ -155,7 +159,7 @@ operator|.
 name|sa_mask
 argument_list|)
 expr_stmt|;
-comment|/* 	 * don't block SIGABRT to give any handler a chance; we ignore 	 * any errors -- X311J doesn't allow abort to return anyway. 	 */
+comment|/* 	 * Don't block SIGABRT to give any handler a chance; we ignore 	 * any errors -- ISO C doesn't allow abort to return anyway. 	 */
 name|sigdelset
 argument_list|(
 operator|&
@@ -192,7 +196,7 @@ argument_list|,
 name|SIGABRT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if SIGABRT ignored, or caught and the handler returns, do 	 * it again, only harder. 	 */
+comment|/* 	 * If SIGABRT was ignored, or caught and the handler returns, do 	 * it again, only harder. 	 */
 name|act
 operator|.
 name|sa_handler
