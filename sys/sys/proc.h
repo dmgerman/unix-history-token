@@ -1109,7 +1109,7 @@ value|do {			\ 		(td)->td_flags&= ~TDF_ONSLEEPQ;	\ 		(td)->td_wchan = NULL;			\ 
 end_define
 
 begin_comment
-comment|/*  * Traps for young players:  * The main thread flag that controls whether a thread acts as a threaded  * or unthreaded thread is the TDF_UNBOUND flag.  * UPCALLS run with the UNBOUND flags clear, after they are first scheduled.  * i.e. they bind themselves to whatever thread thay are first scheduled with.  * You may see BOUND threads in KSE processes but you should never see  * UNBOUND threads in non KSE processes.  */
+comment|/*  * Traps for young players:  * The main thread variable that controls whether a thread acts as a threaded  * or unthreaded thread is the td_bound counter (0 == unbound).  * UPCALLS run with the UNBOUND flags clear, after they are first scheduled.  * i.e. they bind themselves to whatever thread thay are first scheduled with.  * You may see BOUND threads in KSE processes but you should never see  * UNBOUND threads in non KSE processes.  */
 end_comment
 
 begin_comment
@@ -1452,8 +1452,12 @@ name|char
 name|kg_nice
 decl_stmt|;
 comment|/* (j?/k?) Process "nice" value. */
-comment|/*	struct rtprio	kg_rtprio; */
-comment|/* (j) Realtime priority. */
+name|struct
+name|kse_thr_mailbox
+modifier|*
+name|kg_completed
+decl_stmt|;
+comment|/* (c) completed thread mboxes */
 define|#
 directive|define
 name|kg_endcopy
