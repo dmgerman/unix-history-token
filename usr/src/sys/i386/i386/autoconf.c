@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)autoconf.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)autoconf.c	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*	autoconf.c	1.13	87/04/02	*/
 end_comment
 
 begin_comment
@@ -197,7 +201,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" at 0x%x on iba0\n"
+literal|" at 0x%x on isa0\n"
 argument_list|,
 name|dvp
 operator|->
@@ -244,10 +248,6 @@ name|swapconf
 argument_list|()
 expr_stmt|;
 name|cold
-operator|=
-literal|0
-expr_stmt|;
-name|rootdev
 operator|=
 literal|0
 expr_stmt|;
