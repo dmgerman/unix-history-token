@@ -4841,8 +4841,8 @@ name|file_hdr
 operator|->
 name|c_mtime
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|HAVE_STRFTIME
 name|strftime
 argument_list|(
