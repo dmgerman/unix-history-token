@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2042,7 +2042,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		int *a_ncookies; 		u_long *a_cookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2112,6 +2112,17 @@ name|reclen
 decl_stmt|;
 name|u_short
 name|namelen
+decl_stmt|;
+name|int
+name|ncookies
+init|=
+literal|0
+decl_stmt|;
+name|u_long
+modifier|*
+name|cookies
+init|=
+name|NULL
 decl_stmt|;
 name|dp
 operator|=
@@ -2192,27 +2203,70 @@ name|uio
 operator|=
 name|uio
 expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+operator|==
+name|NULL
+condition|)
+block|{
 name|idp
 operator|->
-name|eofflag
+name|cookies
 operator|=
-literal|1
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Guess the number of cookies needed. 		 */
+name|ncookies
+operator|=
+name|uio
+operator|->
+name|uio_resid
+operator|/
+literal|16
+expr_stmt|;
+name|MALLOC
+argument_list|(
+name|cookies
+argument_list|,
+name|u_int
+operator|*
+argument_list|,
+name|ncookies
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_int
+argument_list|)
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+argument_list|)
 expr_stmt|;
 name|idp
 operator|->
 name|cookies
 operator|=
-name|ap
-operator|->
-name|a_cookies
+name|cookies
 expr_stmt|;
 name|idp
 operator|->
 name|ncookies
 operator|=
-name|ap
+name|ncookies
+expr_stmt|;
+block|}
+name|idp
 operator|->
-name|a_ncookies
+name|eofflag
+operator|=
+literal|1
 expr_stmt|;
 name|idp
 operator|->
@@ -2783,6 +2837,49 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|error
+condition|)
+name|free
+argument_list|(
+name|cookies
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* 			 * Work out the number of cookies actually used. 			 */
+operator|*
+name|ap
+operator|->
+name|a_ncookies
+operator|=
+name|ncookies
+operator|-
+name|idp
+operator|->
+name|ncookies
+expr_stmt|;
+operator|*
+name|ap
+operator|->
+name|a_cookies
+operator|=
+name|cookies
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|bp
@@ -4069,23 +4166,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unsupported operation  */
-end_comment
-
-begin_function
-name|int
-name|cd9660_enotsupp
-parameter_list|()
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Global vfs data structures for isofs  */
 end_comment
 
@@ -4094,14 +4174,14 @@ define|#
 directive|define
 name|cd9660_create
 define|\
-value|((int (*) __P((struct  vop_create_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_create_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_mknod
-value|((int (*) __P((struct  vop_mknod_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_mknod_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -4109,14 +4189,14 @@ define|#
 directive|define
 name|cd9660_setattr
 define|\
-value|((int (*) __P((struct  vop_setattr_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_setattr_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_write
-value|((int (*) __P((struct  vop_write_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_write_args *)))eopnotsupp)
 end_define
 
 begin_ifdef
@@ -4175,14 +4255,14 @@ define|#
 directive|define
 name|cd9660_remove
 define|\
-value|((int (*) __P((struct  vop_remove_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_remove_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_link
-value|((int (*) __P((struct  vop_link_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_link_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -4190,21 +4270,21 @@ define|#
 directive|define
 name|cd9660_rename
 define|\
-value|((int (*) __P((struct  vop_rename_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_rename_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_mkdir
-value|((int (*) __P((struct  vop_mkdir_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_mkdir_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_rmdir
-value|((int (*) __P((struct  vop_rmdir_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_rmdir_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -4212,7 +4292,7 @@ define|#
 directive|define
 name|cd9660_symlink
 define|\
-value|((int (*) __P((struct vop_symlink_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct vop_symlink_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -4220,21 +4300,21 @@ define|#
 directive|define
 name|cd9660_advlock
 define|\
-value|((int (*) __P((struct vop_advlock_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct vop_advlock_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_valloc
-value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) cd9660_enotsupp)
+value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cd9660_vfree
-value|((int (*) __P((struct  vop_vfree_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_vfree_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -4242,7 +4322,7 @@ define|#
 directive|define
 name|cd9660_truncate
 define|\
-value|((int (*) __P((struct  vop_truncate_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_truncate_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -4250,7 +4330,7 @@ define|#
 directive|define
 name|cd9660_update
 define|\
-value|((int (*) __P((struct  vop_update_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_update_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -4258,7 +4338,7 @@ define|#
 directive|define
 name|cd9660_bwrite
 define|\
-value|((int (*) __P((struct  vop_bwrite_args *)))cd9660_enotsupp)
+value|((int (*) __P((struct  vop_bwrite_args *)))eopnotsupp)
 end_define
 
 begin_comment
