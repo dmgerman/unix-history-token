@@ -288,7 +288,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|mtx
-name|smp_rv_mtx
+name|smp_ipi_mtx
 decl_stmt|;
 end_decl_stmt
 

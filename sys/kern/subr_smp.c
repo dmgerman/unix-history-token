@@ -473,7 +473,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|mtx
-name|smp_rv_mtx
+name|smp_ipi_mtx
 decl_stmt|;
 end_decl_stmt
 
@@ -555,7 +555,7 @@ block|}
 name|mtx_init
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|,
 literal|"smp rendezvous"
 argument_list|,
@@ -1157,7 +1157,7 @@ comment|/* obtain rendezvous lock */
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 comment|/* set static function pointers */
@@ -1205,7 +1205,7 @@ comment|/* release lock */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 block|}
