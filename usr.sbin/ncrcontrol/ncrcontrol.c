@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncrcontrol.c,v 1.8 1995/05/30 03:49:12 rgrimes Exp $ ** **  Utility for NCR 53C810 device driver. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncrcontrol.c,v 1.9 1995/09/14 18:14:28 se Exp $ ** **  Utility for NCR 53C810 device driver. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -591,18 +591,24 @@ name|__FreeBSD__
 operator|>=
 literal|2
 operator|)
+if|if
+condition|(
+operator|!
+name|vmunix
+condition|)
+block|{
 name|vmunix
 operator|=
 name|getbootfile
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
+block|}
+else|#
+directive|else
 if|if
 condition|(
+operator|!
 name|vmunix
-operator|==
-name|NULL
 condition|)
 block|{
 name|vmunix
@@ -610,6 +616,8 @@ operator|=
 name|_PATH_UNIX
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -9060,7 +9068,20 @@ name|prog
 argument_list|,
 name|_PATH_KMEM
 argument_list|,
+if|#
+directive|if
+operator|(
+name|__FreeBSD__
+operator|>=
+literal|2
+operator|)
+name|getbootfile
+argument_list|()
+else|#
+directive|else
 name|_PATH_UNIX
+endif|#
+directive|endif
 argument_list|)
 expr_stmt|;
 if|if
