@@ -12898,22 +12898,8 @@ operator|=
 name|RQSTYPE_REQUEST
 expr_stmt|;
 block|}
-name|reqp
-operator|->
-name|req_header
-operator|.
-name|rqs_flags
-operator|=
-literal|0
-expr_stmt|;
-name|reqp
-operator|->
-name|req_header
-operator|.
-name|rqs_seqno
-operator|=
-literal|0
-expr_stmt|;
+comment|/* reqp->req_header.rqs_flags = 0; */
+comment|/* reqp->req_header.rqs_seqno = 0; */
 if|if
 condition|(
 name|IS_FC
@@ -12923,13 +12909,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * See comment in isp_intr 		 */
-name|XS_RESID
-argument_list|(
-name|xs
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
+comment|/* XS_RESID(xs) = 0; */
 comment|/* 		 * Fibre Channel always requires some kind of tag. 		 * The Qlogic drivers seem be happy not to use a tag, 		 * but this breaks for some devices (IBM drives). 		 */
 if|if
 condition|(
@@ -13193,7 +13173,7 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGDEBUG1
+name|ISP_LOGDEBUG0
 argument_list|,
 literal|"out of xflist pointers"
 argument_list|)
@@ -15626,6 +15606,16 @@ name|xs
 argument_list|)
 condition|)
 block|{
+comment|/* 				 * ???? 				 */
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"Request Queue Entry bounced back"
+argument_list|)
+expr_stmt|;
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -18557,7 +18547,7 @@ name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
-name|ISP_LOGDEBUG1
+name|ISP_LOGDEBUG0
 argument_list|,
 literal|"internal queues full for %d.%d.%d status 0x%x"
 argument_list|,
@@ -18583,23 +18573,15 @@ name|xs
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If QFULL or some other status byte is set, then this 		 * isn't an error, per se. 		 */
-if|if
-condition|(
+comment|/* 		 * If QFULL or some other status byte is set, then this 		 * isn't an error, per se. 		 * 		 * Unfortunately, some QLogic f/w writers have, in 		 * some cases, ommitted to *set* status to QFULL. 		 *  		if (*XS_STSP(xs) != SCSI_GOOD&& XS_NOERR(xs)) { 			XS_SETERR(xs, HBA_NOERROR); 			return; 		}  		 * 		 * 		 */
 operator|*
 name|XS_STSP
 argument_list|(
 name|xs
 argument_list|)
-operator|!=
-name|SCSI_GOOD
-operator|&&
-name|XS_NOERR
-argument_list|(
-name|xs
-argument_list|)
-condition|)
-block|{
+operator|=
+name|SCSI_QFULL
+expr_stmt|;
 name|XS_SETERR
 argument_list|(
 name|xs
@@ -18608,8 +18590,6 @@ name|HBA_NOERROR
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
-break|break;
 case|case
 name|RQCS_PHASE_SKIPPED
 case|:
@@ -19927,7 +19907,7 @@ name|ISPOPMAP
 argument_list|(
 literal|0xcf
 argument_list|,
-literal|0xff
+literal|0x01
 argument_list|)
 block|,
 comment|/* 0x54: EXECUTE IOCB A64 */
