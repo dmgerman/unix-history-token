@@ -5400,6 +5400,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"status from is_newer() = %d\n"
+argument_list|,
+name|status
 argument_list|)
 expr_stmt|;
 if|if
