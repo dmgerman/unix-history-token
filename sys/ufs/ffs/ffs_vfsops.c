@@ -7695,6 +7695,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ffs_geom_strategy
 parameter_list|(
