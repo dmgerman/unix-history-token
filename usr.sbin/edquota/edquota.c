@@ -718,6 +718,16 @@ argument_list|(
 name|protoprivs
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|tmpfd
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|tmpfil
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
