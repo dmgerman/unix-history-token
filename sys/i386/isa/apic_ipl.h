@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|NHWI
-value|24
+value|32
 end_define
 
 begin_comment
@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|HWI_MASK
-value|0x00ffffff
+value|0xffffffff
 end_define
 
 begin_comment

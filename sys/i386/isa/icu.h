@@ -25,12 +25,6 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APIC_IO
-end_ifdef
-
 begin_comment
 comment|/* #define MP_SAFE  * Note:  *	Most of the SMP equivilants of the icu macros are coded  *	elsewhere in an MP-safe fashion.  *	In particular note that the 'imen' variable is opaque.  *	DO NOT access imen directly, use INTREN()/INTRDIS().  */
 end_comment
@@ -59,18 +53,38 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APIC_IO
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|apic_imen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* APIC interrupt mask enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_IMEN_BITS
+value|32
+end_define
+
+begin_comment
+comment|/* number of bits in apic_imen */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* APIC_IO */
-end_comment
-
-begin_comment
-comment|/*  * Interrupt "level" mechanism variables, masks, and macros  */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -86,159 +100,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTREN
-parameter_list|(
-name|s
-parameter_list|)
-value|(imen&= ~(s), SET_ICUS())
+name|IMEN_BITS
+value|16
 end_define
-
-begin_define
-define|#
-directive|define
-name|INTRDIS
-parameter_list|(
-name|s
-parameter_list|)
-value|(imen |= (s), SET_ICUS())
-end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SET_ICUS
-parameter_list|()
-value|(outb(IO_ICU1 + 2, imen), outb(IU_ICU2 + 2, imen>> 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRGET
-parameter_list|()
-value|((inb(IO_ICU2)<< 8 | inb(IO_ICU1))& 0xffff)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
-comment|/* IBM-PC */
+comment|/* number of bits in imen */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_ICUS
-parameter_list|()
-value|(outb(IO_ICU1 + 1, imen), outb(IU_ICU2 + 1, imen>> 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRGET
-parameter_list|()
-value|((inb(IO_ICU2)<< 8 | inb(IO_ICU1))& 0xffff)
-end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* PC98 */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*  * XXX - IO_ICU* are defined in isa.h, not icu.h, and nothing much bothers to  * include isa.h, while too many things include icu.h.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SET_ICUS
-parameter_list|()
-value|(outb(0x02, imen), outb(0x0a, imen>> 8))
-end_define
-
-begin_comment
-comment|/* XXX is this correct? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTRGET
-parameter_list|()
-value|((inb(0x0a)<< 8 | inb(0x02))& 0xffff)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SET_ICUS
-parameter_list|()
-value|(outb(0x21, imen), outb(0xa1, imen>> 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRGET
-parameter_list|()
-value|((inb(0xa1)<< 8 | inb(0x21))& 0xffff)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* APIC_IO */
-end_comment
 
 begin_endif
 endif|#

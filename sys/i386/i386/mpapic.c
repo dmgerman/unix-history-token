@@ -71,6 +71,16 @@ begin_comment
 comment|/* Xspuriousint() */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<i386/isa/icu.h>
+end_include
+
+begin_comment
+comment|/* apic_imen */
+end_comment
+
 begin_comment
 comment|/* EISA Edge/Level trigger control registers */
 end_comment
@@ -1489,17 +1499,6 @@ begin_comment
 comment|/*  * Print contents of apic_imen.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|apic_imen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* keep apic_imen 'opaque' */
-end_comment
-
 begin_function
 name|void
 name|imen_dump
@@ -1523,7 +1522,7 @@ literal|0
 init|;
 name|x
 operator|<
-literal|24
+name|APIC_IMEN_BITS
 condition|;
 operator|++
 name|x

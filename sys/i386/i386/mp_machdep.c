@@ -5589,7 +5589,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Assign interrupts on first 24 intpins on IOAPIC #0 */
+comment|/* Assign first set of interrupts to intpins on IOAPIC #0 */
 for|for
 control|(
 name|x
