@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/pcic_pci.h>
 end_include
 
@@ -49,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<pccard/i82365.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/pcicvar.h>
 end_include
 
 begin_include
