@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -860,6 +860,26 @@ parameter_list|)
 comment|/* segment number to disk address */
 define|\
 value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) + \ 	    (fs)->lfs_sboffs[0]))
+end_define
+
+begin_comment
+comment|/* Read in the block containing a specific inode from the ifile. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_IENTRY
+parameter_list|(
+name|I
+parameter_list|,
+name|F
+parameter_list|,
+name|IN
+parameter_list|,
+name|BP
+parameter_list|)
+value|{ \ 	if (bread((F)->lfs_ivnode, (IN) / IFPB(F) + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&BP)) \ 		panic("lfs: ifile read"); \ 	(I) = (IFILE *)BP->b_un.b_addr + IN % IFPB(F); \ }
 end_define
 
 end_unit
