@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_var.h	8.3 (Berkeley) 4/10/94  * $Id: tcp_var.h,v 1.11.4.2 1995/07/29 23:16:53 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_var.h	8.3 (Berkeley) 4/10/94  * $Id: tcp_var.h,v 1.11.4.3 1996/01/31 11:02:05 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -38,42 +38,42 @@ name|tcpiphdr
 modifier|*
 name|seg_prev
 decl_stmt|;
-name|short
+name|int
 name|t_state
 decl_stmt|;
 comment|/* state of this connection */
-name|short
+name|int
 name|t_timer
 index|[
 name|TCPT_NTIMERS
 index|]
 decl_stmt|;
 comment|/* tcp timers */
-name|short
+name|int
 name|t_rxtshift
 decl_stmt|;
 comment|/* log(2) of rexmt exp. backoff */
-name|short
+name|int
 name|t_rxtcur
 decl_stmt|;
 comment|/* current retransmit value */
-name|short
+name|int
 name|t_dupacks
 decl_stmt|;
 comment|/* consecutive dup acks recd */
-name|u_short
+name|u_int
 name|t_maxseg
 decl_stmt|;
 comment|/* maximum segment size */
-name|u_short
+name|u_int
 name|t_maxopd
 decl_stmt|;
 comment|/* mss plus options */
-name|char
+name|int
 name|t_force
 decl_stmt|;
 comment|/* 1 if forcing out a byte */
-name|u_short
+name|u_int
 name|t_flags
 decl_stmt|;
 define|#
@@ -236,11 +236,11 @@ name|snd_ssthresh
 decl_stmt|;
 comment|/* snd_cwnd size threshhold for 					 * for slow start exponential to 					 * linear switch 					 */
 comment|/*  * transmit timing stuff.  See below for scale of srtt and rttvar.  * "Variance" is actually smoothed difference.  */
-name|short
+name|u_int
 name|t_idle
 decl_stmt|;
 comment|/* inactivity time */
-name|short
+name|int
 name|t_rtt
 decl_stmt|;
 comment|/* round trip time */
@@ -248,15 +248,15 @@ name|tcp_seq
 name|t_rtseq
 decl_stmt|;
 comment|/* sequence number being timed */
-name|short
+name|int
 name|t_srtt
 decl_stmt|;
 comment|/* smoothed round-trip time */
-name|short
+name|int
 name|t_rttvar
 decl_stmt|;
 comment|/* variance in round-trip time */
-name|u_short
+name|u_int
 name|t_rttmin
 decl_stmt|;
 comment|/* minimum rtt allowed */
@@ -281,7 +281,7 @@ define|#
 directive|define
 name|TCPOOB_HADDATA
 value|0x02
-name|short
+name|int
 name|t_softerror
 decl_stmt|;
 comment|/* possible error not yet reported */
@@ -599,10 +599,6 @@ name|tcps_persisttimeo
 decl_stmt|;
 comment|/* persist timeouts */
 name|u_long
-name|tcps_persistdrop
-decl_stmt|;
-comment|/* conns dropped by persist timeout */
-name|u_long
 name|tcps_keeptimeo
 decl_stmt|;
 comment|/* keepalive timeouts */
@@ -777,6 +773,18 @@ name|u_long
 name|tcps_usedssthresh
 decl_stmt|;
 comment|/* times ssthresh initialized from rt*/
+name|u_long
+name|tcps_persistdrop
+decl_stmt|;
+comment|/* timeout in persist state */
+name|u_long
+name|tcps_badsyn
+decl_stmt|;
+comment|/* bogus SYN, e.g. premature ACK */
+name|u_long
+name|tcps_mturesent
+decl_stmt|;
+comment|/* resends due to MTU discovery */
 block|}
 struct|;
 end_struct
@@ -1263,6 +1271,22 @@ operator|(
 expr|struct
 name|tcpcb
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tcp_mtudisc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
