@@ -619,15 +619,6 @@ literal|':'
 block|,
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-literal|'e'
-block|,
-literal|':'
-block|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -745,16 +736,6 @@ name|nbackp
 operator|=
 name|netobuf
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-name|nclearto
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 name|progname
 operator|=
 operator|*
@@ -1071,42 +1052,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* DIAGNOSTICS */
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-case|case
-literal|'e'
-case|:
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|optarg
-argument_list|,
-literal|"debug"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-specifier|extern
-name|int
-name|encrypt_debug_mode
-decl_stmt|;
-name|encrypt_debug_mode
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
-name|usage
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
-break|break;
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 case|case
 literal|'h'
 case|:
@@ -2620,19 +2565,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-name|send_will
-argument_list|(
-name|TELOPT_ENCRYPT
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 name|send_do
 argument_list|(
 name|TELOPT_TTYPE
@@ -2670,17 +2602,6 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-name|his_do_dont_is_changing
-argument_list|(
-name|TELOPT_ENCRYPT
-argument_list|)
-operator|||
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 name|his_will_wont_is_changing
 argument_list|(
 name|TELOPT_TTYPE
@@ -2711,25 +2632,6 @@ name|ttloop
 argument_list|()
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-comment|/*      * Wait for the negotiation of what type of encryption we can      * send with.  If autoencrypt is not set, this will just return.      */
-if|if
-condition|(
-name|his_state_is_will
-argument_list|(
-name|TELOPT_ENCRYPT
-argument_list|)
-condition|)
-block|{
-name|encrypt_wait
-argument_list|()
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 if|if
 condition|(
 name|his_state_is_will
@@ -3769,11 +3671,6 @@ directive|if
 name|defined
 argument_list|(
 name|AUTHENTICATION
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ENCRYPTION
 argument_list|)
 name|auth_encrypt_init
 argument_list|(
