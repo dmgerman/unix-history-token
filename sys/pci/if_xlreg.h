@@ -3354,6 +3354,13 @@ name|TC_DEVICEID_HURRICANE_575C
 value|0x5257
 end_define
 
+begin_define
+define|#
+directive|define
+name|TC_DEVICEID_HURRICANE_656C
+value|0x6564
+end_define
+
 begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers. Note: some are only available on  * the 3c905B, in particular those that related to power management.  */
 end_comment
