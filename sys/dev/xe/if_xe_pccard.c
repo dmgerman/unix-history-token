@@ -1381,6 +1381,15 @@ init|=
 block|{
 name|PCMCIA_CARD
 argument_list|(
+name|ACCTON
+argument_list|,
+name|EN2226
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|COMPAQ2
 argument_list|,
 name|CPQ_10_100
