@@ -4,7 +4,7 @@ comment|/* tc-sparc.h - Macros and type defines for the sparc.    Copyright (C) 
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*  * $Id$  */
 end_comment
 
 begin_define

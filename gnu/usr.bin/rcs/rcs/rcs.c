@@ -646,7 +646,7 @@ argument|rcsId
 argument_list|,
 literal|"rcs"
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 

@@ -18,7 +18,7 @@ name|libId
 argument_list|(
 name|mapId
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 comment|/* map of character types */
 comment|/* ISO 8859/1 (Latin-1) */

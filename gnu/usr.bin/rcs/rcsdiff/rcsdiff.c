@@ -98,7 +98,7 @@ argument|rcsdiffId
 argument_list|,
 literal|"rcsdiff"
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 

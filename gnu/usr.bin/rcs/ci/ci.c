@@ -356,7 +356,7 @@ argument|ciId
 argument_list|,
 literal|"ci"
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 

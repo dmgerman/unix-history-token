@@ -94,7 +94,7 @@ argument|rcscleanId
 argument_list|,
 literal|"rcsclean"
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 

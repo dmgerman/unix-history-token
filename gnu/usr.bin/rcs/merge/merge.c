@@ -71,7 +71,7 @@ argument|mergeId
 argument_list|,
 literal|"merge"
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 

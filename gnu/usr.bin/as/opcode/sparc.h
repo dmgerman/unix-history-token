@@ -4,7 +4,7 @@ comment|/* Table of opcodes for the sparc. 	Copyright 1989, 1991, 1992 Free Soft
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*  * $Id$  */
 end_comment
 
 begin_comment

@@ -73,7 +73,7 @@ argument|identId
 argument_list|,
 literal|"ident"
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 

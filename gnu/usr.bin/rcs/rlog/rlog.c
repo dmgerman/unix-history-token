@@ -537,7 +537,7 @@ argument|rlogId
 argument_list|,
 literal|"rlog"
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 

@@ -269,7 +269,7 @@ argument|coId
 argument_list|,
 literal|"co"
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 

@@ -4,7 +4,7 @@ comment|/* read.h - of read.c     Copyright (C) 1986, 1990, 1992 Free Software F
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*  * $Id$  */
 end_comment
 
 begin_decl_stmt

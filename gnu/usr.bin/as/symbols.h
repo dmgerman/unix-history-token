@@ -4,7 +4,7 @@ comment|/* symbols.h -     Copyright (C) 1987, 1990, 1992 Free Software Foundati
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
+comment|/*  * $Id$  */
 end_comment
 
 begin_decl_stmt

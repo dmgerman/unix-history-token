@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"GNU assembler version 1.92.3, FreeBSD $Revision: 1.4 $\n"
+literal|"GNU assembler version 1.92.3, FreeBSD $Revision: 1.5 $\n"
 decl_stmt|;
 end_decl_stmt
 

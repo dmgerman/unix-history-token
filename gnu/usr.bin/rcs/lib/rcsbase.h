@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|RCSBASE
-value|"$FreeBSD$"
+value|"$Id$"
 end_define
 
 begin_comment

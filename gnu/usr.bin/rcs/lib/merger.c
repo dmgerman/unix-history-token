@@ -18,7 +18,7 @@ name|libId
 argument_list|(
 argument|mergerId
 argument_list|,
-literal|"$FreeBSD$"
+literal|"$Id$"
 argument_list|)
 end_macro
 
