@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.16 1994/11/17 19:44:49 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.17 1994/11/17 23:36:46 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -88,14 +88,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * XXX: utils: Mkdir must do "-p".  * XXX: stage2: do mkdir for msdos-mounts.  * XXX: label: Import dos-slice.  * XXX: mbr: edit geometry  */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|alloc_memory
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|void
@@ -274,18 +266,6 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|handle_intr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|alloc_memory
-argument_list|()
-operator|<
-literal|0
-condition|)
-name|Fatal
-argument_list|(
-literal|"No memory\n"
 argument_list|)
 expr_stmt|;
 if|if
