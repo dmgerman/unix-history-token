@@ -74,7 +74,7 @@ name|u_int
 name|sc_escape
 decl_stmt|;
 comment|/* =1 if last char input was FRAME_ESCAPE */
-name|long
+name|time_t
 name|sc_lasttime
 decl_stmt|;
 comment|/* last time a char arrived */
@@ -82,7 +82,7 @@ name|long
 name|sc_abortcount
 decl_stmt|;
 comment|/* number of abort escape chars */
-name|long
+name|time_t
 name|sc_starttime
 decl_stmt|;
 comment|/* time of first abort in window */
