@@ -425,32 +425,6 @@ value|(MCLBYTES - 1)
 end_define
 
 begin_comment
-comment|/*  * Size of kernel malloc arena in CLBYTES-sized logical pages  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKMEMCLUSTERS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKMEMCLUSTERS
-value|(4096*1024/CLBYTES)
-end_define
-
-begin_comment
-comment|/* XXX? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* pages ("clicks") to disk blocks */
 end_comment
 

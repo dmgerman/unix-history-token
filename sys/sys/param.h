@@ -521,28 +521,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing PAGE_SIZE (from machine/machparam.h) pages each.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|CLBYTES
-value|(CLSIZE*PAGE_SIZE)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
