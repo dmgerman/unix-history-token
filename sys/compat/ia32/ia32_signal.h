@@ -424,6 +424,7 @@ name|u_int32_t
 name|sf_ah
 decl_stmt|;
 comment|/* action/handler pointer */
+comment|/* Beware, hole due to ucontext being 16 byte aligned! */
 name|struct
 name|ia32_ucontext
 name|sf_uc
