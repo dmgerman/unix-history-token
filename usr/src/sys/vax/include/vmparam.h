@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	6.3	85/03/07	*/
+comment|/*	vmparam.h	6.4	85/03/07	*/
 end_comment
 
 begin_comment
@@ -304,6 +304,28 @@ define|#
 directive|define
 name|MINFREEFRACT
 value|2
+end_define
+
+begin_comment
+comment|/*  * There are two clock hands, initially separated by HANDSPREAD bytes  * (but at most all of user memory).  The amount of time to reclaim  * a page once the pageout process examines it increases with this  * distance and decreases as the scan rate rises.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDSPREAD
+value|(2 * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/*  * The number of times per second to recompute the desired paging rate  * and poke the pagedaemon.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RATETOSCHEDPAGING
+value|4
 end_define
 
 begin_comment
