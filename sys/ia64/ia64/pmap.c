@@ -6316,41 +6316,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make temporary mapping for a physical address. This is called  * during dump.  */
-end_comment
-
-begin_function
-name|void
-modifier|*
-name|pmap_kenter_temporary
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|,
-name|int
-name|i
-parameter_list|)
-block|{
-return|return
-operator|(
-name|void
-operator|*
-operator|)
-name|IA64_PHYS_TO_RR7
-argument_list|(
-name|pa
-operator|-
-operator|(
-name|i
-operator|*
-name|PAGE_SIZE
-operator|)
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * pmap_object_init_pt preloads the ptes for a given object  * into the specified pmap.  This eliminates the blast of soft  * faults on process startup and immediately after an mmap.  */
 end_comment
 
