@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.3 83/08/15	  */
+comment|/*  *	@(#)ww.h	3.4 83/08/16	  */
 end_comment
 
 begin_include
@@ -677,6 +677,17 @@ comment|/* the new (desired) screen */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|wwtouched
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* wwns changed flags */
+end_comment
+
+begin_decl_stmt
 name|int
 name|wwbaudmap
 index|[]
@@ -716,12 +727,18 @@ end_comment
 begin_decl_stmt
 name|int
 name|wwnwrite
+decl_stmt|,
+name|wwnwritec
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|wwnwritec
+name|wwnupdate
+decl_stmt|,
+name|wwntouched
+decl_stmt|,
+name|wwnmiss
 decl_stmt|;
 end_decl_stmt
 

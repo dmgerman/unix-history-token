@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwlabel.c	3.2 83/08/12"
+literal|"@(#)wwlabel.c	3.3 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,10 @@ specifier|register
 name|char
 modifier|*
 name|fmap
+decl_stmt|;
+name|char
+modifier|*
+name|touched
 decl_stmt|;
 if|if
 condition|(
@@ -224,6 +228,14 @@ index|[
 name|j
 index|]
 expr_stmt|;
+name|touched
+operator|=
+operator|&
+name|wwtouched
+index|[
+name|i
+index|]
+expr_stmt|;
 name|j
 operator|=
 name|MIN
@@ -338,6 +350,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|*
+name|touched
+operator|=
+literal|1
+expr_stmt|;
 name|ns
 operator|++
 operator|->

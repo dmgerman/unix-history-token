@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwredraw.c	3.3 83/08/15"
+literal|"@(#)wwredraw.c	3.4 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,13 @@ name|i
 operator|++
 control|)
 block|{
+name|wwtouched
+index|[
+name|i
+index|]
+operator|=
+literal|1
+expr_stmt|;
 name|os
 operator|=
 name|wwos

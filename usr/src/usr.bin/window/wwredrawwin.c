@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwredrawwin.c	3.1 83/08/12"
+literal|"@(#)wwredrawwin.c	3.2 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,42 +26,9 @@ directive|include
 file|"ww.h"
 end_include
 
-begin_expr_stmt
-name|wwredrawwin
-argument_list|(
-name|w
-argument_list|)
-specifier|register
-expr|struct
-name|ww
-operator|*
-name|w
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|wwredrawwin1
-argument_list|(
-name|w
-argument_list|,
-literal|0
-argument_list|,
-name|w
-operator|->
-name|ww_w
-operator|.
-name|nr
-operator|-
-literal|1
-argument_list|,
-name|w
-operator|->
-name|ww_scroll
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+begin_comment
+comment|/*			nobody calls it wwredrawwin(w) register struct ww *w; { 	wwredrawwin1(w, 0, w->ww_w.nr - 1, w->ww_scroll); } */
+end_comment
 
 begin_expr_stmt
 name|wwredrawwin1
@@ -122,6 +89,24 @@ name|ww_char
 modifier|*
 name|ns
 decl_stmt|;
+name|char
+modifier|*
+name|touched
+decl_stmt|;
+name|touched
+operator|=
+operator|&
+name|wwtouched
+index|[
+name|srow
+operator|+
+name|w
+operator|->
+name|ww_w
+operator|.
+name|t
+index|]
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -133,6 +118,9 @@ operator|<=
 name|erow
 condition|;
 name|i
+operator|++
+operator|,
+name|touched
 operator|++
 control|)
 block|{
@@ -234,6 +222,12 @@ name|buf
 operator|++
 expr_stmt|;
 else|else
+block|{
+operator|*
+name|touched
+operator|=
+literal|1
+expr_stmt|;
 name|ns
 operator|++
 operator|->
@@ -250,6 +244,7 @@ operator|++
 operator|<<
 name|WWC_MSHIFT
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

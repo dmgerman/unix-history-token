@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwwrite.c	3.1 83/08/11"
+literal|"@(#)wwwrite.c	3.2 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,18 +25,6 @@ include|#
 directive|include
 file|"ww.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|wwnwrite
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|wwnwritec
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|wwwrite
@@ -230,6 +218,13 @@ operator|->
 name|ww_index
 condition|)
 block|{
+name|wwtouched
+index|[
+name|i
+index|]
+operator|=
+literal|1
+expr_stmt|;
 name|cc
 operator|=
 name|wwns

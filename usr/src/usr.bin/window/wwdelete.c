@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwdelete.c	3.2 83/08/11"
+literal|"@(#)wwdelete.c	3.3 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,11 +45,8 @@ end_expr_stmt
 
 begin_block
 block|{
+block|{
 specifier|register
-name|i
-expr_stmt|;
-for|for
-control|(
 name|i
 operator|=
 name|w
@@ -57,6 +54,20 @@ operator|->
 name|ww_w
 operator|.
 name|t
+expr_stmt|;
+specifier|register
+name|char
+modifier|*
+name|touched
+init|=
+operator|&
+name|wwtouched
+index|[
+name|i
+index|]
+decl_stmt|;
+for|for
+control|(
 init|;
 name|i
 operator|<
@@ -67,6 +78,9 @@ operator|.
 name|b
 condition|;
 name|i
+operator|++
+operator|,
+name|touched
 operator|++
 control|)
 block|{
@@ -137,6 +151,11 @@ name|ww_index
 condition|)
 block|{
 operator|*
+name|touched
+operator|=
+literal|1
+expr_stmt|;
+operator|*
 name|smap
 operator|++
 operator|=
@@ -158,6 +177,7 @@ expr_stmt|;
 name|ns
 operator|++
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -202,6 +222,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|{
+specifier|register
+name|i
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -304,6 +328,7 @@ operator|++
 operator|=
 name|WWX_NOBODY
 expr_stmt|;
+block|}
 block|}
 block|}
 name|w

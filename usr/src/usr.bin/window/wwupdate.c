@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwupdate.c	3.3 83/08/15"
+literal|"@(#)wwupdate.c	3.4 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,17 @@ decl_stmt|,
 modifier|*
 name|os
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|touched
+decl_stmt|;
+specifier|register
+name|didit
+expr_stmt|;
+name|wwnupdate
+operator|++
+expr_stmt|;
 call|(
 modifier|*
 name|tt
@@ -68,6 +79,10 @@ control|(
 name|i
 operator|=
 literal|0
+operator|,
+name|touched
+operator|=
+name|wwtouched
 init|;
 name|i
 operator|<
@@ -75,8 +90,26 @@ name|wwnrow
 condition|;
 name|i
 operator|++
+operator|,
+name|touched
+operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+operator|*
+name|touched
+condition|)
+continue|continue;
+name|wwntouched
+operator|++
+expr_stmt|;
+operator|*
+name|touched
+operator|=
+literal|0
+expr_stmt|;
 name|ns
 operator|=
 name|wwns
@@ -90,6 +123,10 @@ name|wwos
 index|[
 name|i
 index|]
+expr_stmt|;
+name|didit
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -164,8 +201,19 @@ operator|=
 operator|*
 name|ns
 expr_stmt|;
+name|didit
+operator|++
+expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|didit
+condition|)
+name|wwnmiss
+operator|++
+expr_stmt|;
 block|}
 block|}
 end_block

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinschar.c	3.3 83/08/15"
+literal|"@(#)wwinschar.c	3.4 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,10 @@ name|char
 modifier|*
 name|smap
 decl_stmt|;
+name|char
+modifier|*
+name|touched
+decl_stmt|;
 name|nvis
 operator|=
 literal|0
@@ -301,6 +305,20 @@ operator|.
 name|l
 index|]
 expr_stmt|;
+name|touched
+operator|=
+operator|&
+name|wwtouched
+index|[
+name|row
+operator|+
+name|w
+operator|->
+name|ww_w
+operator|.
+name|t
+index|]
+expr_stmt|;
 name|c
 operator|=
 name|buf
@@ -352,6 +370,12 @@ operator|++
 expr_stmt|;
 block|}
 else|else
+block|{
+operator|*
+name|touched
+operator|=
+literal|1
+expr_stmt|;
 name|ns
 operator|++
 operator|->
@@ -369,8 +393,14 @@ operator|<<
 name|WWC_MSHIFT
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
+operator|*
+name|touched
+operator|=
+literal|1
+expr_stmt|;
 operator|*
 name|ns
 operator|++

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwunframe.c	3.3 83/08/12"
+literal|"@(#)wwunframe.c	3.4 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,6 +199,13 @@ operator|.
 name|c_w
 operator|=
 literal|' '
+expr_stmt|;
+name|wwtouched
+index|[
+name|i
+index|]
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}

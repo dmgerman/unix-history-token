@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclreol.c	3.4 83/08/15"
+literal|"@(#)wwclreol.c	3.5 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,10 @@ decl_stmt|,
 modifier|*
 name|win
 decl_stmt|;
+name|char
+modifier|*
+name|touched
+decl_stmt|;
 name|int
 name|nblank
 decl_stmt|,
@@ -238,6 +242,14 @@ name|srow
 index|]
 index|[
 name|scol
+index|]
+expr_stmt|;
+name|touched
+operator|=
+operator|&
+name|wwtouched
+index|[
+name|srow
 index|]
 expr_stmt|;
 name|win
@@ -331,6 +343,11 @@ operator|->
 name|c_w
 operator|=
 literal|' '
+expr_stmt|;
+operator|*
+name|touched
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(

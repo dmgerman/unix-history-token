@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.3 83/08/15"
+literal|"@(#)wwinit.c	3.4 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -533,6 +533,45 @@ name|c_w
 operator|=
 literal|' '
 expr_stmt|;
+name|wwtouched
+operator|=
+name|malloc
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|wwnrow
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wwtouched
+operator|==
+literal|0
+condition|)
+goto|goto
+name|bad
+goto|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|wwnrow
+condition|;
+name|i
+operator|++
+control|)
+name|wwtouched
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|wwindex
 index|[
 name|WWX_NOBODY
@@ -672,6 +711,7 @@ literal|0
 return|;
 name|bad
 label|:
+comment|/* 	 * Don't bother to free storage.  We're supposed 	 * to exit when wwinit fails anyway. 	 */
 operator|(
 name|void
 operator|)
