@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.6 83/07/01"
+literal|"@(#)rcp.c	4.7 83/07/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,7 +605,6 @@ name|src
 operator|==
 literal|0
 condition|)
-operator|*
 name|src
 operator|=
 literal|"."
