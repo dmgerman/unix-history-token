@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/conf.c,v 1.5 1993/08/20 12:51:53 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/conf.c,v 1.6 1993/08/28 03:06:59 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -735,15 +735,11 @@ argument_list|()
 decl_stmt|,
 name|fdstrategy
 argument_list|()
+decl_stmt|,
+name|fdioctl
+argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|fdioctl
-value|enxio
-end_define
 
 begin_define
 define|#
