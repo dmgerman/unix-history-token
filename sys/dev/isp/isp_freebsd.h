@@ -195,13 +195,23 @@ directive|include
 file|"opt_isp.h"
 end_include
 
-begin_comment
-comment|/*  * Not quite yet  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PAE
+end_ifdef
 
-begin_comment
-comment|/* #define	ISP_DAC_SUPPORTED	1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|ISP_DAC_SUPPORTED
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Efficiency- get rid of SBus code&& tests unless we need them.  */
