@@ -29,6 +29,17 @@ begin_struct
 struct|struct
 name|pcb
 block|{
+name|u_int32_t
+name|pcb_context
+index|[
+literal|18
+index|]
+decl_stmt|;
+comment|/* non-volatile r14-r31 */
+name|u_int32_t
+name|pcb_cr
+decl_stmt|;
+comment|/* Condition register */
 name|struct
 name|pmap
 modifier|*
