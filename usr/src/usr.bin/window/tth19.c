@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tth19.c	3.22 (Berkeley) %G%"
+literal|"@(#)tth19.c	3.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|"tt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
 end_include
 
 begin_comment
@@ -165,29 +171,11 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|pc
-parameter_list|(
-name|c
-parameter_list|)
-value|ttputc(c)
-end_define
-
-begin_define
-define|#
-directive|define
-name|esc
-parameter_list|()
-value|pc('\033')
-end_define
-
-begin_define
-define|#
-directive|define
 name|PAD
 parameter_list|(
 name|ms10
 parameter_list|)
-value|{ \ 	register i; \ 	for (i = ((ms10) + 5) / h19_msp10c; --i>= 0;) \ 		pc('\0'); \ }
+value|{ \ 	register i; \ 	for (i = ((ms10) + 5) / h19_msp10c; --i>= 0;) \ 		ttputc('\0'); \ }
 end_define
 
 begin_define
@@ -221,7 +209,7 @@ name|H19_SETINSERT
 parameter_list|(
 name|m
 parameter_list|)
-value|(esc(), (tt.tt_insert = (m)) ? pc('@') : pc('O'))
+value|ttesc((tt.tt_insert = (m)) ? '@' : 'O')
 end_define
 
 begin_expr_stmt
@@ -253,56 +241,34 @@ name|diff
 operator|&
 name|WWM_REV
 condition|)
-block|{
-name|esc
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
+name|ttesc
+argument_list|(
 name|new
 operator|&
 name|WWM_REV
-condition|)
-name|pc
-argument_list|(
+condition|?
 literal|'p'
-argument_list|)
-expr_stmt|;
-else|else
-name|pc
-argument_list|(
+else|:
 literal|'q'
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|diff
 operator|&
 name|WWM_GRP
 condition|)
-block|{
-name|esc
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
+name|ttesc
+argument_list|(
 name|new
 operator|&
-name|WWM_GRP
-condition|)
-name|pc
-argument_list|(
+name|WWM_REV
+condition|?
 literal|'F'
-argument_list|)
-expr_stmt|;
-else|else
-name|pc
-argument_list|(
+else|:
 literal|'G'
 argument_list|)
 expr_stmt|;
-block|}
 name|tt
 operator|.
 name|tt_modes
@@ -329,10 +295,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'L'
 argument_list|)
@@ -361,10 +324,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'M'
 argument_list|)
@@ -422,7 +382,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|pc
+name|ttputc
 argument_list|(
 name|c
 argument_list|)
@@ -576,9 +536,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pc
+name|ttctrl
 argument_list|(
-literal|'\r'
+literal|'m'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -596,10 +556,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'C'
 argument_list|)
@@ -619,9 +576,9 @@ operator|+
 literal|1
 condition|)
 block|{
-name|pc
+name|ttctrl
 argument_list|(
-literal|'\b'
+literal|'h'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -649,10 +606,7 @@ operator|+
 literal|1
 condition|)
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'A'
 argument_list|)
@@ -672,9 +626,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|pc
+name|ttctrl
 argument_list|(
-literal|'\n'
+literal|'j'
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -693,10 +647,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'H'
 argument_list|)
@@ -705,22 +656,19 @@ goto|goto
 name|out
 goto|;
 block|}
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'Y'
 argument_list|)
 expr_stmt|;
-name|pc
+name|ttputc
 argument_list|(
 literal|' '
 operator|+
 name|row
 argument_list|)
 expr_stmt|;
-name|pc
+name|ttputc
 argument_list|(
 literal|' '
 operator|+
@@ -760,18 +708,12 @@ argument_list|(
 name|gen_VS
 argument_list|)
 expr_stmt|;
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'w'
 argument_list|)
 expr_stmt|;
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'E'
 argument_list|)
@@ -832,10 +774,7 @@ argument_list|(
 name|gen_VE
 argument_list|)
 expr_stmt|;
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'v'
 argument_list|)
@@ -850,10 +789,7 @@ end_macro
 
 begin_block
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'K'
 argument_list|)
@@ -868,10 +804,7 @@ end_macro
 
 begin_block
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'J'
 argument_list|)
@@ -886,10 +819,7 @@ end_macro
 
 begin_block
 block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'E'
 argument_list|)
@@ -944,7 +874,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|pc
+name|ttputc
 argument_list|(
 name|c
 argument_list|)
@@ -994,16 +924,11 @@ name|n
 operator|>=
 literal|0
 condition|)
-block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'N'
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1032,9 +957,9 @@ name|n
 operator|>=
 literal|0
 condition|)
-name|pc
+name|ttctrl
 argument_list|(
-literal|'\n'
+literal|'j'
 argument_list|)
 expr_stmt|;
 block|}
@@ -1063,16 +988,11 @@ name|n
 operator|>=
 literal|0
 condition|)
-block|{
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'I'
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tth29.c	3.7 (Berkeley) %G%"
+literal|"@(#)tth29.c	3.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,27 +40,15 @@ directive|include
 file|"tt.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"char.h"
+end_include
+
 begin_comment
 comment|/*  * H29 Driver  *  * WWM_USR mode is alternate character set.  * kC|h29|heath-29|z29|zenith-29:\ 	:am:bc=\ED:bt=\E-:cr=^M:do=^J:nl=^J:bl=^G:\ 	:al=\EL:le=^H:bs:cd=\EJ:ce=\EK:cl=\EE:cm=\EY%+ %+ :co#80:dc=\EN:\ 	:dl=1*\EM:do=\EB:ei=\EO:ho=\EH:im=\E@:li#24:mi:nd=\EC:as=\EF:ae=\EG:\ 	:ms:ta=^I:pt:sr=\EI:se=\Eq:so=\Ep:up=\EA:vs=\Ex4:ve=\Ey4:\ 	:kb=^H:ku=\EA:kd=\EB:kl=\ED:kr=\EC:kh=\EH:kn#1:k0=\E~:l0=HOME:\ 	:k1=\ES:k2=\ET:k3=\EU:k4=\EV:k5=\EW:k6=\EP:k7=\EQ:k8=\ER:k9=\E01:\ 	:es:hs:ts=\Ej\Ex5\Ex1\EY8%+ \Eo:fs=\Ek\Ey5:ds=\Ey1:us=\Es8:ue=\Es0:  *  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|pc
-parameter_list|(
-name|c
-parameter_list|)
-value|ttputc(c)
-end_define
-
-begin_define
-define|#
-directive|define
-name|esc
-parameter_list|()
-value|pc('\033')
-end_define
 
 begin_expr_stmt
 name|h29_setmodes
@@ -129,15 +117,12 @@ name|modes
 operator|+=
 literal|0x10
 expr_stmt|;
-name|esc
-argument_list|()
-expr_stmt|;
-name|pc
+name|ttesc
 argument_list|(
 literal|'s'
 argument_list|)
 expr_stmt|;
-name|pc
+name|ttputc
 argument_list|(
 name|modes
 argument_list|)
@@ -161,10 +146,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|esc
-argument_list|()
-operator|,
-name|pc
+name|ttesc
 argument_list|(
 literal|'F'
 argument_list|)
@@ -179,10 +161,7 @@ name|tt_modes
 operator|&
 name|WWM_GRP
 condition|)
-name|esc
-argument_list|()
-operator|,
-name|pc
+name|ttesc
 argument_list|(
 literal|'G'
 argument_list|)

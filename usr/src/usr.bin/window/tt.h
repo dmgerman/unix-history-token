@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tt.h	3.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tt.h	3.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -368,7 +368,7 @@ value|ttwrite((s)->ts_str, (s)->ts_n)
 end_define
 
 begin_comment
-comment|/*  * Buffered output without stdio.  * These variables have different meanings from the ww_ob* variabels.  * But I'm too lazy to think up different names.  */
+comment|/*  * Buffered output without stdio.  * These variables have different meanings from the ww_ob* variables.  * But I'm too lazy to think up different names.  */
 end_comment
 
 begin_decl_stmt
@@ -402,6 +402,30 @@ parameter_list|(
 name|c
 parameter_list|)
 value|(tt_obp< tt_obe ? (*tt_obp++ = (c)) \ 				: (ttflush(), *tt_obp++ = (c)))
+end_define
+
+begin_comment
+comment|/*  * Convenience macros for the drivers  * They require char.h  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ttctrl
+parameter_list|(
+name|c
+parameter_list|)
+value|ttputc(ctrl(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ttesc
+parameter_list|(
+name|c
+parameter_list|)
+value|(ttctrl('['), ttputc(c))
 end_define
 
 end_unit
