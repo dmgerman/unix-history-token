@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * FreeSec: libcrypt for NetBSD  *  * Copyright (c) 1994 David Burren  * All rights reserved.  *  * Adapted for FreeBSD-2.0 by Geoffrey M. Rehmet  *	crypt.c should now *only* export crypt(), in order to make  *	binaries of libcrypt exportable from the USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the author nor the names of other contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * This is an original implementation of the DES and the crypt(3) interfaces  * by David Burren<davidb@werj.com.au>.  *  * An excellent reference on the underlying algorithm (and related  * algorithms) is:  *  *	B. Schneier, Applied Cryptography: protocols, algorithms,  *	and source code in C, John Wiley& Sons, 1994.  *  * Note that in that book's description of DES the lookups for the initial,  * pbox, and final permutations are inverted (this has been brought to the  * attention of the author).  A list of errata for this book has been  * posted to the sci.crypt newsgroup by the author and is available for FTP.  *  * ARCHITECTURE ASSUMPTIONS:  *	This code assumes that u_longs are 32 bits.  It will probably not  *	operate on 64-bit machines without modifications.  *	It is assumed that the 8-byte arrays passed by reference can be  *	addressed as arrays of u_longs (ie. the CPU is not picky about  *	alignment).  */
+comment|/*  * FreeSec: libcrypt for NetBSD  *  * Copyright (c) 1994 David Burren  * All rights reserved.  *  * Adapted for FreeBSD-2.0 by Geoffrey M. Rehmet  *	this file should now *only* export crypt(), in order to make  *	binaries of libcrypt exportable from the USA  *  * Adapted for FreeBSD-4.0 by Mark R V Murray  *	this file should now *only* export crypt_des(), in order to make  *	a module that can be optionally included in libcrypt.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of other contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * This is an original implementation of the DES and the crypt(3) interfaces  * by David Burren<davidb@werj.com.au>.  *  * An excellent reference on the underlying algorithm (and related  * algorithms) is:  *  *	B. Schneier, Applied Cryptography: protocols, algorithms,  *	and source code in C, John Wiley& Sons, 1994.  *  * Note that in that book's description of DES the lookups for the initial,  * pbox, and final permutations are inverted (this has been brought to the  * attention of the author).  A list of errata for this book has been  * posted to the sci.crypt newsgroup by the author and is available for FTP.  *  * ARCHITECTURE ASSUMPTIONS:  *	It is assumed that the 8-byte arrays passed by reference can be  *	addressed as arrays of u_int32_t's (ie. the CPU is not picky about  *	alignment).  */
 end_comment
 
 begin_include
@@ -27,23 +27,11 @@ directive|include
 file|<string.h>
 end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|crypt_md5
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|pw
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|salt
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"crypt.h"
+end_include
 
 begin_comment
 comment|/* We can't always assume gcc */
@@ -1673,7 +1661,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|bits32
 index|[
 literal|32
@@ -1777,7 +1765,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|saltbits
 decl_stmt|;
 end_decl_stmt
@@ -1791,7 +1779,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 modifier|*
 name|bits28
 decl_stmt|,
@@ -1817,7 +1805,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|en_keysl
 index|[
 literal|16
@@ -1832,7 +1820,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|de_keysl
 index|[
 literal|16
@@ -1869,7 +1857,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|psbox
 index|[
 literal|4
@@ -1882,7 +1870,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|ip_maskl
 index|[
 literal|8
@@ -1903,7 +1891,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|fp_maskl
 index|[
 literal|8
@@ -1924,7 +1912,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|key_perm_maskl
 index|[
 literal|8
@@ -1945,7 +1933,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|comp_maskl
 index|[
 literal|8
@@ -1966,7 +1954,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|u_int32_t
 name|old_rawkey0
 decl_stmt|,
 name|old_rawkey1
@@ -2104,7 +2092,7 @@ name|inbit
 decl_stmt|,
 name|obit
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|p
 decl_stmt|,
@@ -2965,7 +2953,7 @@ name|long
 name|salt
 parameter_list|)
 block|{
-name|u_long
+name|u_int32_t
 name|obit
 decl_stmt|,
 name|saltbit
@@ -3043,7 +3031,7 @@ modifier|*
 name|key
 parameter_list|)
 block|{
-name|u_long
+name|u_int32_t
 name|k0
 decl_stmt|,
 name|k1
@@ -3071,7 +3059,7 @@ name|ntohl
 argument_list|(
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|key
@@ -3083,7 +3071,7 @@ name|ntohl
 argument_list|(
 operator|*
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|(
@@ -3357,7 +3345,7 @@ name|round
 operator|++
 control|)
 block|{
-name|u_long
+name|u_int32_t
 name|t0
 decl_stmt|,
 name|t1
@@ -3651,17 +3639,17 @@ specifier|static
 name|int
 name|do_des
 parameter_list|(
-name|u_long
+name|u_int32_t
 name|l_in
 parameter_list|,
-name|u_long
+name|u_int32_t
 name|r_in
 parameter_list|,
-name|u_long
+name|u_int32_t
 modifier|*
 name|l_out
 parameter_list|,
-name|u_long
+name|u_int32_t
 modifier|*
 name|r_out
 parameter_list|,
@@ -3670,7 +3658,7 @@ name|count
 parameter_list|)
 block|{
 comment|/* 	 *	l_in, r_in, l_out, and r_out are in pseudo-"big-endian" format. 	 */
-name|u_long
+name|u_int32_t
 name|l
 decl_stmt|,
 name|r
@@ -3687,7 +3675,7 @@ decl_stmt|,
 modifier|*
 name|kr1
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|f
 decl_stmt|,
 name|r48l
@@ -4417,7 +4405,7 @@ name|int
 name|count
 parameter_list|)
 block|{
-name|u_long
+name|u_int32_t
 name|l_out
 decl_stmt|,
 name|r_out
@@ -4449,7 +4437,7 @@ argument_list|(
 operator|*
 operator|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|in
@@ -4464,7 +4452,7 @@ argument_list|(
 operator|*
 operator|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|in
@@ -4491,7 +4479,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|out
@@ -4506,7 +4494,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 name|out
@@ -4528,12 +4516,14 @@ end_function
 begin_function
 name|char
 modifier|*
-name|crypt
+name|crypt_des
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|setting
@@ -4542,7 +4532,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|count
 decl_stmt|,
 name|salt
@@ -4572,26 +4562,6 @@ index|[
 literal|21
 index|]
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|strncmp
-argument_list|(
-name|setting
-argument_list|,
-literal|"$1$"
-argument_list|,
-literal|3
-argument_list|)
-condition|)
-return|return
-name|crypt_md5
-argument_list|(
-name|key
-argument_list|,
-name|setting
-argument_list|)
-return|;
 if|if
 condition|(
 operator|!
