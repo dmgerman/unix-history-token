@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.17 81/10/30 */
+comment|/* tcp_usrreq.c 1.18 81/10/30 */
 end_comment
 
 begin_include
@@ -614,7 +614,7 @@ case|:
 comment|/* 40,41 */
 name|nstate
 operator|=
-name|sss_send
+name|tcp_usrsend
 argument_list|(
 name|tp
 argument_list|,
@@ -1334,7 +1334,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|sss_send
+name|tcp_usrsend
 argument_list|(
 name|tp
 argument_list|,
@@ -1633,7 +1633,7 @@ operator||=
 name|TC_SND_URG
 expr_stmt|;
 block|}
-name|send
+name|tcp_send
 argument_list|(
 name|tp
 argument_list|)
@@ -1834,7 +1834,7 @@ name|t_xmtime
 operator|=
 name|T_REMAX
 expr_stmt|;
-name|send
+name|tcp_send
 argument_list|(
 name|tp
 argument_list|)
@@ -1908,7 +1908,7 @@ name|tc_flags
 operator||=
 name|TC_FORCE_ONE
 expr_stmt|;
-name|send
+name|tcp_send
 argument_list|(
 name|tp
 argument_list|)

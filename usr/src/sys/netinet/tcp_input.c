@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.10 81/10/30 */
+comment|/* tcp_input.c 1.11 81/10/30 */
 end_comment
 
 begin_include
@@ -2876,7 +2876,7 @@ operator|)
 condition|)
 name|sent
 operator|=
-name|send
+name|tcp_send
 argument_list|(
 name|tp
 argument_list|)
