@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      if_css.c     4.4     82/10/23     */
+comment|/*      if_css.c     4.5     82/10/24     */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_css.h"
+file|"../vaxif/if_cssreg.h"
 end_include
 
 begin_include

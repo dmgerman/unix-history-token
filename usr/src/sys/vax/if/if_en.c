@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.70	82/10/17	*/
+comment|/*	if_en.c	4.71	82/10/24	*/
 end_comment
 
 begin_include
