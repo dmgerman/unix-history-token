@@ -344,6 +344,10 @@ name|selinfo
 name|rsel
 decl_stmt|;
 comment|/* process waiting in select */
+name|dev_t
+name|dev
+decl_stmt|;
+comment|/* specfs */
 block|}
 struct|;
 end_struct
@@ -1708,6 +1712,34 @@ name|si_pid
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|ums_cdevsw
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|self
+argument_list|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_OPERATOR
+argument_list|,
+literal|0644
+argument_list|,
+literal|"ums%d"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|self
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|USB_ATTACH_SUCCESS_RETURN
 expr_stmt|;
 block|}
@@ -1781,6 +1813,13 @@ comment|/* someone waiting for data */
 block|if (sc->state& UMS_ASLEEP) { 		sc->state&= ~UMS_ASLEEP; 		wakeup(sc); 	} 	if (sc->state& UMS_SELECT) { 		sc->state&= ~UMS_SELECT; 		selwakeup(&sc->rsel); 	}
 endif|#
 directive|endif
+name|remove_dev
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
