@@ -105,6 +105,19 @@ directive|include
 file|"pnp.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|NPNP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NPNP
+value|0
+end_define
+
 begin_if
 if|#
 directive|if
@@ -1762,7 +1775,7 @@ block|,
 block|{
 literal|"si"
 block|,
-literal|"Specialix SI/XIO async adapter"
+literal|"Specialix SI/XIO/SX async adapter"
 block|,
 literal|0
 block|,
