@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.30 (Berkeley) %G%"
+literal|"@(#)stty.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +117,7 @@ name|char
 modifier|*
 name|usage
 init|=
-literal|"usage: stty: [-aefg] [-f file] [options]"
+literal|"usage: stty: [-a|-e|-g] [-f file] [options]"
 decl_stmt|;
 end_decl_stmt
 
