@@ -5073,9 +5073,6 @@ name|partition
 modifier|*
 name|pp
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|unsigned
 name|int
 name|part
@@ -7158,10 +7155,6 @@ block|}
 block|}
 else|else
 block|{
-name|char
-modifier|*
-name|type
-decl_stmt|;
 name|off_t
 name|size
 decl_stmt|;
@@ -7398,14 +7391,6 @@ operator|==
 literal|'%'
 condition|)
 block|{
-name|unsigned
-name|long
-name|old_size
-init|=
-name|pp
-operator|->
-name|p_size
-decl_stmt|;
 comment|/* careful of overflows! and integer roundoff */
 name|pp
 operator|->
