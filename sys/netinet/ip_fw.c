@@ -6511,12 +6511,6 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-operator|*
-name|flow_id
-operator|=
-name|chain
-expr_stmt|;
-comment|/* XXX set flow id */
 comment|/* Update statistics */
 name|f
 operator|->
@@ -6669,6 +6663,11 @@ case|:
 case|case
 name|IP_FW_F_QUEUE
 case|:
+operator|*
+name|flow_id
+operator|=
+name|chain
+expr_stmt|;
 return|return
 operator|(
 name|f
