@@ -92,6 +92,11 @@ define|#
 directive|define
 name|OHCI_ADD_LEN
 value|0x0002
+define|#
+directive|define
+name|OHCI_TD_HANDLED
+value|0x0004
+comment|/* signal process_done has seen it */
 block|}
 name|ohci_soft_td_t
 typedef|;
@@ -267,6 +272,12 @@ decl_stmt|;
 name|int
 name|sc_id_vendor
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|void
 modifier|*
 name|sc_powerhook
@@ -276,6 +287,8 @@ modifier|*
 name|sc_shutdownhook
 decl_stmt|;
 comment|/* cookie from shutdown hook */
+endif|#
+directive|endif
 name|device_ptr_t
 name|sc_child
 decl_stmt|;
