@@ -857,6 +857,11 @@ name|bEndpointAddress
 decl_stmt|;
 define|#
 directive|define
+name|UE_DIR
+value|0x80
+comment|/* mask */
+define|#
+directive|define
 name|UE_IN
 value|0x80
 define|#
@@ -1344,12 +1349,20 @@ name|UCLASS_UNSPEC
 value|0
 end_define
 
+begin_comment
+comment|/* Unspecified */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UCLASS_AUDIO
 value|1
 end_define
+
+begin_comment
+comment|/* Audio */
+end_comment
 
 begin_define
 define|#
@@ -1373,7 +1386,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* communication */
+comment|/* Communication */
 end_comment
 
 begin_define
@@ -1397,6 +1410,10 @@ name|UCLASS_HID
 value|3
 end_define
 
+begin_comment
+comment|/* Human Interface Device */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1410,6 +1427,10 @@ directive|define
 name|UCLASS_PRINTER
 value|7
 end_define
+
+begin_comment
+comment|/* Printer/Parallel Port */
+end_comment
 
 begin_define
 define|#
@@ -1425,6 +1446,10 @@ name|UPROTO_PRINTER_UNI
 value|1
 end_define
 
+begin_comment
+comment|/* Unidirectional */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1432,12 +1457,123 @@ name|UPROTO_PRINTER_BI
 value|2
 end_define
 
+begin_comment
+comment|/* Bidirectional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UCLASS_MASS
+value|8
+end_define
+
+begin_comment
+comment|/* Mass Storage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_RBC
+value|1
+end_define
+
+begin_comment
+comment|/* Reduced Block comm. (e.g. Flash ) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_SFF8020I
+value|2
+end_define
+
+begin_comment
+comment|/* (e.g. CD ROM) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_QIC157
+value|3
+end_define
+
+begin_comment
+comment|/* (e.g. tape drives) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_UFI
+value|4
+end_define
+
+begin_comment
+comment|/* (e.g. floppy drives) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_SFF8070I
+value|5
+end_define
+
+begin_comment
+comment|/* (e.g. floppy drives) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_SCSI
+value|6
+end_define
+
+begin_comment
+comment|/* SCSI transparent comman set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_MASS_CBI_I
+value|0
+end_define
+
+begin_comment
+comment|/* CBI protocol with comm. compl. int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_MASS_CBI
+value|1
+end_define
+
+begin_comment
+comment|/* CBI protocol */
+end_comment
+
+begin_comment
+comment|/* unknown yet 1999-04-05 #define  UPROTO_MASS_BULK	??	/ * Bulk only transport * / */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UCLASS_HUB
 value|9
 end_define
+
+begin_comment
+comment|/* Hub */
+end_comment
 
 begin_define
 define|#
