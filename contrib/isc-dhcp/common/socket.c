@@ -23,7 +23,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: socket.c,v 1.26.2.11 1999/03/29 22:07:14 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: socket.c,v 1.26.2.12 1999/10/25 15:39:55 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,11 +48,15 @@ directive|ifdef
 name|USE_SOCKET_FALLBACK
 end_ifdef
 
-begin_define
-define|#
-directive|define
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|USE_SOCKET_SEND
-end_define
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -80,6 +84,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -93,11 +102,19 @@ begin_comment
 comment|/* Reinitializes the specified interface after an address change.   This    is not required for packet-filter APIs. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|USE_SOCKET_SEND
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_SOCKET_FALLBACK
+argument_list|)
+end_if
 
 begin_function
 name|void
@@ -171,9 +188,16 @@ argument_list|(
 name|USE_SOCKET_SEND
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|USE_SOCKET_RECEIVE
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|USE_SOCKET_FALLBACK
 argument_list|)
 end_if
 
@@ -445,14 +469,22 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_SOCKET_SEND || USE_SOCKET_RECEIVE */
+comment|/* USE_SOCKET_SEND || USE_SOCKET_RECEIVE || USE_SOCKET_FALLBACK */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|USE_SOCKET_SEND
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_SOCKET_FALLBACK
+argument_list|)
+end_if
 
 begin_function
 name|void
@@ -537,7 +569,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_SOCKET_SEND */
+comment|/* USE_SOCKET_SEND || USE_SOCKET_FALLBACK */
 end_comment
 
 begin_ifdef
@@ -618,11 +650,19 @@ begin_comment
 comment|/* USE_SOCKET_RECEIVE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|USE_SOCKET_SEND
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_SOCKET_FALLBACK
+argument_list|)
+end_if
 
 begin_function
 name|ssize_t
@@ -797,7 +837,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_SOCKET_SEND */
+comment|/* USE_SOCKET_SEND || USE_SOCKET_FALLBACK */
 end_comment
 
 begin_ifdef
@@ -938,11 +978,14 @@ begin_comment
 comment|/* USE_SOCKET_RECEIVE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_SOCKET_SEND
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_SOCKET_FALLBACK
+argument_list|)
+end_if
 
 begin_comment
 comment|/* This just reads in a packet and silently discards it. */
@@ -1035,7 +1078,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_SOCKET_SEND */
+comment|/* USE_SOCKET_FALLBACK */
 end_comment
 
 begin_if
@@ -1044,12 +1087,6 @@ directive|if
 name|defined
 argument_list|(
 name|USE_SOCKET_SEND
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|USE_SOCKET_FALLBACK
 argument_list|)
 end_if
 
@@ -1108,7 +1145,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|SO_BINDTODEVICE
+name|USE_SOCKET_FALLBACK
 argument_list|)
 name|struct
 name|interface_info
@@ -1159,7 +1196,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USE_SOCKET_SEND&& !USE_SOCKET_FALLBACK */
+comment|/* USE_SOCKET_SEND */
 end_comment
 
 end_unit

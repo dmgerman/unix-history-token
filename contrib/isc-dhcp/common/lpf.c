@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: lpf.c,v 1.1.2.9 1999/05/27 17:44:52 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: lpf.c,v 1.1.2.10 1999/10/25 15:39:02 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,6 +565,30 @@ name|int
 name|dhcp_bpf_tr_filter_len
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|lpf_gen_filter_setup
+parameter_list|(
+name|struct
+name|interface_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|lpf_tr_filter_setup
+parameter_list|(
+name|struct
+name|interface_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
