@@ -273,9 +273,6 @@ name|char
 modifier|*
 name|name_dir_end
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|argc
