@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.3	81/11/18	*/
+comment|/*	uipc_socket2.c	4.4	81/11/21	*/
 end_comment
 
 begin_include
@@ -696,13 +696,13 @@ operator|)
 return|;
 name|sb
 operator|->
-name|sb_cc
+name|sb_hiwat
 operator|=
 name|cc
 expr_stmt|;
 name|sb
 operator|->
-name|sb_mbcnt
+name|sb_mbmax
 operator|=
 operator|(
 name|cc
@@ -750,16 +750,16 @@ name|m_release
 argument_list|(
 name|sb
 operator|->
-name|sb_cc
+name|sb_hiwat
 argument_list|)
 expr_stmt|;
 name|sb
 operator|->
-name|sb_cc
+name|sb_hiwat
 operator|=
 name|sb
 operator|->
-name|sb_mbcnt
+name|sb_mbmax
 operator|=
 literal|0
 expr_stmt|;
