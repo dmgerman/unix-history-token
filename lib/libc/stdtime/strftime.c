@@ -676,7 +676,7 @@ goto|;
 case|case
 literal|'O'
 case|:
-comment|/* 				** POSIX locale extensions, a la 				** Arnold Robbins' strftime version 3.0. 				** The sequences 				**      %Ec %EC %Ex %EX %Ey %EY 				**	%Od %oe %OH %OI %Om %OM 				**	%OS %Ou %OU %OV %Ow %OW %Oy 				** are supposed to provide alternate 				** representations. 				** (ado, 5/24/93) 				** 				** FreeBSD extensions 				**      %OB %Ef %EF 				*/
+comment|/* 				** POSIX locale extensions, a la 				** Arnold Robbins' strftime version 3.0. 				** The sequences 				**      %Ec %EC %Ex %EX %Ey %EY 				**	%Od %oe %OH %OI %Om %OM 				**	%OS %Ou %OU %OV %Ow %OW %Oy 				** are supposed to provide alternate 				** representations. 				** (ado, 5/24/93) 				** 				** FreeBSD extension 				**      %OB 				*/
 if|if
 condition|(
 name|Ealternative
