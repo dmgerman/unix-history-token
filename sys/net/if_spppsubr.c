@@ -16336,8 +16336,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s"
 argument_list|,
 name|sppp_ipv6cp_opt_name
@@ -16384,8 +16387,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" [invalid]"
 argument_list|)
 expr_stmt|;
@@ -16417,8 +16423,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" [invalid]"
 argument_list|)
 expr_stmt|;
@@ -16431,8 +16440,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" [rej]"
 argument_list|)
 expr_stmt|;
@@ -16475,8 +16487,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send conf-rej\n"
 argument_list|)
 expr_stmt|;
@@ -16506,8 +16521,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -16595,8 +16613,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s"
 argument_list|,
 name|sppp_ipv6cp_opt_name
@@ -16736,8 +16757,11 @@ condition|(
 name|debug
 condition|)
 block|{
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s [%s]"
 argument_list|,
 name|ip6_sprintf
@@ -16830,8 +16854,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s [%s]"
 argument_list|,
 name|ip6_sprintf
@@ -16891,8 +16918,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send %s\n"
 argument_list|,
 name|sppp_cp_type_name
@@ -16944,8 +16974,11 @@ condition|(
 name|debug
 condition|)
 block|{
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" send %s suggest %s\n"
 argument_list|,
 name|sppp_cp_type_name
@@ -17128,8 +17161,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s"
 argument_list|,
 name|sppp_ipv6cp_opt_name
@@ -17191,8 +17227,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -17341,8 +17380,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" %s"
 argument_list|,
 name|sppp_ipv6cp_opt_name
@@ -17450,8 +17492,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" [suggestaddr %s]"
 argument_list|,
 name|ip6_sprintf
@@ -17502,8 +17547,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" [random]"
 argument_list|)
 expr_stmt|;
@@ -17530,8 +17578,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|" [agree]"
 argument_list|)
 expr_stmt|;
@@ -17566,8 +17617,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+operator|-
+literal|1
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
