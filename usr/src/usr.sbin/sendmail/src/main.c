@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.39 (Berkeley) %G%"
+literal|"@(#)main.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,6 +553,14 @@ name|environ
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|dumpstate
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* 	**  Check to see if we reentered. 	**	This would normally happen if e_putheader or e_putbody 	**	were NULL when invoked. 	*/
 end_comment
@@ -609,6 +617,31 @@ name|argv
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* arrange to dump state on signal */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGUSR1
+end_ifdef
+
+begin_expr_stmt
+name|setsignal
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|dumpstate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* in 4.4BSD, the table can be huge; impose a reasonable limit */
@@ -6036,6 +6069,57 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  DUMPSTATE -- dump state on user signal ** **	For debugging. */
+end_comment
+
+begin_function
+name|void
+name|dumpstate
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"--- dumping state on user signal: open file descriptors: ---"
+argument_list|)
+expr_stmt|;
+name|printopenfds
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"--- connection cache: ---"
+argument_list|)
+expr_stmt|;
+name|mci_dump_all
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"--- end of state dump ---"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
