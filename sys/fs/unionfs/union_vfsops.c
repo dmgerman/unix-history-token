@@ -1129,11 +1129,6 @@ literal|0
 condition|;
 control|)
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|int
 name|n
 decl_stmt|;
