@@ -9677,7 +9677,7 @@ continue|continue;
 endif|#
 directive|endif
 block|}
-comment|/* Givs are only updated once by definition.  Mark it so if this is 	 a splittable register.  Don't need to do anything for address givs 	 where this may not be a register.  */
+comment|/* Unreduced givs are only updated once by definition.  Reduced givs 	 are updated as many times as their biv is.  Mark it so if this is 	 a splittable register.  Don't need to do anything for address givs 	 where this may not be a register.  */
 if|if
 condition|(
 name|GET_CODE
@@ -9689,6 +9689,33 @@ argument_list|)
 operator|==
 name|REG
 condition|)
+block|{
+name|int
+name|count
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|v
+operator|->
+name|ignore
+condition|)
+name|count
+operator|=
+name|reg_biv_class
+index|[
+name|REGNO
+argument_list|(
+name|v
+operator|->
+name|src_reg
+argument_list|)
+index|]
+operator|->
+name|biv_count
+expr_stmt|;
 name|splittable_regs_updates
 index|[
 name|REGNO
@@ -9699,8 +9726,9 @@ name|new_reg
 argument_list|)
 index|]
 operator|=
-literal|1
+name|count
 expr_stmt|;
+block|}
 name|result
 operator|++
 expr_stmt|;

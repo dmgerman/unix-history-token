@@ -227,6 +227,12 @@ directive|undef
 name|CPP_SPEC
 end_undef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_GNULIBC_1
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -259,11 +265,55 @@ endif|#
 directive|endif
 end_endif
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not USE_GNULIBC_1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|"%(cpp_cpu) %[cpp_cpu] %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not USE_GNULIBC_1 */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LIBGCC_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LIBGCC_SPEC
+value|"-lgcc"
+end_define
+
 begin_undef
 undef|#
 directive|undef
 name|LIB_SPEC
 end_undef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_GNULIBC_1
+end_ifdef
 
 begin_if
 if|#
@@ -301,6 +351,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LIB_SPEC
+define|\
+value|"%{!shared: %{mieee-fp:-lieee} %{pthread:-lpthread} \ 	%{profile:-lc_p} %{!profile: -lc}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not USE_GNULIBC_1 */
+end_comment
+
 begin_comment
 comment|/* Provide a LINK_SPEC appropriate for Linux.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     I took out %{v:%{!V:-V}}. It is too much :-(. They can use    -Wl,-V.     When the -shared link option is used a final link is not being    done.  */
 end_comment
@@ -314,6 +386,12 @@ undef|#
 directive|undef
 name|LINK_SPEC
 end_undef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_GNULIBC_1
+end_ifdef
 
 begin_ifndef
 ifndef|#
@@ -344,6 +422,31 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not USE_GNULIBC_1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"-m elf_i386 %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \ 	%{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \ 	%{static:-static}}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not USE_GNULIBC_1 */
+end_comment
 
 begin_comment
 comment|/* Get perform_* macros to build libgcc.a.  */
