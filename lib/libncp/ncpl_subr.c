@@ -1191,7 +1191,7 @@ name|stderr
 argument_list|,
 literal|"%s: kernel module is old, please recompile it.\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1211,7 +1211,7 @@ name|stderr
 argument_list|,
 literal|"%s: kernel module version(%d) don't match library(%d).\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|kv
 argument_list|,
@@ -1242,7 +1242,7 @@ name|stderr
 argument_list|,
 literal|"%s: can't initialise recode\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -1269,7 +1269,7 @@ name|stderr
 argument_list|,
 literal|"%s: can't initialise locale\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return

@@ -47,7 +47,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s(%d): " fmt "\n", __FUNCTION__, __LINE__ , ##args)
+value|printf("%s(%d): " fmt "\n", __func__, __LINE__ , ##args)
 end_define
 
 begin_define
@@ -60,7 +60,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|{printf("%s(%d): " fmt "\n", __FUNCTION__, __LINE__ , ##args); getchar();}
+value|{printf("%s(%d): " fmt "\n", __func__, __LINE__ , ##args); getchar();}
 end_define
 
 begin_ifndef

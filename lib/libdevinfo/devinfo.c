@@ -177,7 +177,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|fprintf(stderr, "%s:" fmt "\n", __FUNCTION__ , ##args)
+value|fprintf(stderr, "%s:" fmt "\n", __func__ , ##args)
 end_define
 
 begin_else

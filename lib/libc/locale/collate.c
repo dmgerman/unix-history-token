@@ -916,7 +916,7 @@ name|__collate_err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|len
@@ -972,7 +972,7 @@ name|__collate_err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1188,7 +1188,7 @@ name|__collate_err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
