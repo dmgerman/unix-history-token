@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -72,11 +66,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|"resourcevar.h"
 end_include
 
 begin_comment
-comment|/*  * Socket operation routines.  * These routines are called by the routines in  * sys_socket.c or from a system process, and  * implement the semantics of socket operations by  * switching out to the protocol specific routines.  *  * TODO:  *	test socketpair  *	clean up async  *	out-of-band is a kludge  */
+comment|/*  * Socket operation routines.  * These routines are called by the routines in  * sys_socket.c or from a system process, and  * implement the semantics of socket operations by  * switching out to the protocol specific routines.  */
 end_comment
 
 begin_comment
@@ -120,6 +114,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|protosw
@@ -226,9 +228,11 @@ name|type
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 operator|==
 literal|0
 condition|)
@@ -1467,6 +1471,14 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|mbuf
 modifier|*
 modifier|*
@@ -1556,9 +1568,11 @@ operator|&
 name|PR_ATOMIC
 operator|)
 expr_stmt|;
-name|u
-operator|.
-name|u_ru
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
 operator|.
 name|ru_msgsnd
 operator|++
@@ -2351,6 +2365,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|mbuf
@@ -2923,9 +2945,11 @@ goto|;
 block|}
 name|dontblock
 label|:
-name|u
-operator|.
-name|u_ru
+name|p
+operator|->
+name|p_stats
+operator|->
+name|p_ru
 operator|.
 name|ru_msgrcv
 operator|++
