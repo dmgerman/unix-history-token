@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.24 (Berkeley) %G%"
+literal|"@(#)stty.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +235,24 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+name|strspn
+argument_list|(
+name|argv
+index|[
+name|optind
+index|]
+argument_list|,
+literal|"-aefg"
+argument_list|)
+operator|==
+name|strlen
+argument_list|(
+name|argv
+index|[
+name|optind
+index|]
+argument_list|)
+operator|&&
 operator|(
 name|ch
 operator|=
@@ -294,7 +312,14 @@ literal|0
 condition|)
 name|err
 argument_list|(
+literal|"%s: %s"
+argument_list|,
 name|optarg
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
