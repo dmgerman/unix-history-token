@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	5.4 (Berkeley) %G%"
+literal|"@(#)field.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: empty field"
+literal|"chpass: empty login field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -245,7 +245,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: empty field"
+literal|"chpass: empty uid field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -382,7 +382,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: empty field"
+literal|"chpass: empty gid field"
 argument_list|)
 expr_stmt|;
 return|return
@@ -537,20 +537,13 @@ operator|!
 operator|*
 name|p
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: empty field"
-argument_list|)
+name|pw
+operator|->
+name|pw_class
+operator|=
+literal|""
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -738,7 +731,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|p_save
+name|p_gecos
 argument_list|(
 argument|p
 argument_list|,
@@ -775,9 +768,19 @@ begin_block
 block|{
 if|if
 condition|(
+operator|!
 operator|*
 name|p
-operator|&&
+condition|)
+name|ep
+operator|->
+name|save
+operator|=
+literal|""
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|!
 operator|(
 name|ep
@@ -863,7 +866,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"chpass: empty field"
+literal|"chpass: empty home directory field"
 argument_list|)
 expr_stmt|;
 return|return

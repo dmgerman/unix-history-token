@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.4 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,7 +172,7 @@ name|int
 name|p_expire
 argument_list|()
 decl_stmt|,
-name|p_save
+name|p_gecos
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -263,7 +263,7 @@ value|6
 block|{
 literal|"Full Name"
 block|,
-name|p_save
+name|p_gecos
 block|,
 literal|0
 block|,
@@ -279,7 +279,7 @@ value|7
 block|{
 literal|"Office Phone"
 block|,
-name|p_save
+name|p_gecos
 block|,
 literal|0
 block|,
@@ -295,7 +295,7 @@ value|8
 block|{
 literal|"Home Phone"
 block|,
-name|p_save
+name|p_gecos
 block|,
 literal|0
 block|,
@@ -311,7 +311,7 @@ value|9
 block|{
 literal|"Location"
 block|,
-name|p_save
+name|p_gecos
 block|,
 literal|0
 block|,
@@ -826,15 +826,6 @@ name|E_NAME
 index|]
 operator|.
 name|save
-condition|?
-name|list
-index|[
-name|E_NAME
-index|]
-operator|.
-name|save
-else|:
-literal|""
 argument_list|,
 name|list
 index|[
@@ -842,15 +833,6 @@ name|E_LOCATE
 index|]
 operator|.
 name|save
-condition|?
-name|list
-index|[
-name|E_LOCATE
-index|]
-operator|.
-name|save
-else|:
-literal|""
 argument_list|,
 name|list
 index|[
@@ -858,15 +840,6 @@ name|E_BPHONE
 index|]
 operator|.
 name|save
-condition|?
-name|list
-index|[
-name|E_BPHONE
-index|]
-operator|.
-name|save
-else|:
-literal|""
 argument_list|,
 name|list
 index|[
@@ -874,15 +847,6 @@ name|E_HPHONE
 index|]
 operator|.
 name|save
-condition|?
-name|list
-index|[
-name|E_HPHONE
-index|]
-operator|.
-name|save
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 comment|/* root should have a 0 uid and a reasonable shell */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.4 (Berkeley) %G%"
+literal|"@(#)util.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,29 +127,29 @@ name|months
 index|[]
 init|=
 block|{
-literal|"Jan"
+literal|"January"
 block|,
-literal|"Feb"
+literal|"February"
 block|,
-literal|"Mar"
+literal|"March"
 block|,
-literal|"Apr"
+literal|"April"
 block|,
 literal|"May"
 block|,
-literal|"Jun"
+literal|"June"
 block|,
-literal|"Jul"
+literal|"July"
 block|,
-literal|"Aug"
+literal|"August"
 block|,
-literal|"Sep"
+literal|"September"
 block|,
-literal|"Oct"
+literal|"October"
 block|,
-literal|"Nov"
+literal|"November"
 block|,
-literal|"Dec"
+literal|"December"
 block|,
 name|NULL
 block|}
@@ -181,19 +181,8 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|tval
 condition|)
-name|bcopy
-argument_list|(
-literal|"None"
-argument_list|,
-name|tbuf
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 name|tp
 operator|=
@@ -229,6 +218,12 @@ name|tm_year
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+operator|*
+name|tbuf
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 operator|(
 name|tbuf
@@ -293,14 +288,8 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|strncasecmp
-argument_list|(
+operator|*
 name|p
-argument_list|,
-literal|"none"
-argument_list|,
-literal|4
-argument_list|)
 condition|)
 block|{
 operator|*
@@ -697,7 +686,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Change [dd month yy]: %s\n"
+literal|"Change [month day year]: %s\n"
 argument_list|,
 name|ttoa
 argument_list|(
@@ -711,7 +700,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Expire [dd month yy]: %s\n"
+literal|"Expire [month day year]: %s\n"
 argument_list|,
 name|ttoa
 argument_list|(
