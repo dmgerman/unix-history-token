@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -511,7 +511,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|setpgrp
+name|setpgid
 value|BSDsetpgrp
 end_define
 
@@ -932,6 +932,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_define
+define|#
+directive|define
 name|LA_TYPE
 value|LA_ZERO
 end_define
@@ -1099,6 +1106,13 @@ define|#
 directive|define
 name|ARBPTR_T
 value|char *
+end_define
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
 end_define
 
 begin_ifndef
@@ -1357,6 +1371,72 @@ directive|define
 name|_PATH_UNIX
 value|"/unix"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Linux 0.99pl10 and above... **	From Karl London<karl@borg.demon.co.uk>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|linux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BSD
+value|1
+end_define
+
+begin_comment
+comment|/* pretend to be BSD based today */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEEDVPRINTF
+name|1
+end_undef
+
+begin_comment
+comment|/* need a replacement for vprintf(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* need a replacement for getopt(3) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
