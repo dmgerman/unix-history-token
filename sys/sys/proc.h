@@ -1229,6 +1229,17 @@ begin_comment
 comment|/* Reserved for scheduler private use */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_GEOM
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* Settle GEOM before finishing syscall */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment

@@ -275,6 +275,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * If this thread tickled GEOM, we need to wait for the giggling to 	 * stop before we return to userland 	 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_GEOM
+condition|)
+name|g_waitidle
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Let the scheduler adjust our priority etc. 	 */
 name|sched_userret
 argument_list|(

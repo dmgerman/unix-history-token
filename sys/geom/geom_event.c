@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<geom/geom_int.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
 end_include
 
 begin_expr_stmt
@@ -215,6 +221,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|g_topology_assert_not
+argument_list|()
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|g_pending_events
@@ -232,6 +249,13 @@ name|hz
 operator|/
 literal|5
 argument_list|)
+expr_stmt|;
+name|curthread
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_GEOM
 expr_stmt|;
 block|}
 end_function
@@ -1220,6 +1244,12 @@ operator|*
 name|epp
 operator|=
 name|ep
+expr_stmt|;
+name|curthread
+operator|->
+name|td_pflags
+operator||=
+name|TDP_GEOM
 expr_stmt|;
 return|return
 operator|(
