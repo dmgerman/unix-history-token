@@ -26,6 +26,18 @@ directive|include
 file|"ww.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"char.h"
+end_include
+
 begin_comment
 comment|/*  * Sufficient but not necessary test for total visibility.  */
 end_comment
@@ -175,6 +187,24 @@ name|ww_i
 operator|.
 name|nc
 return|;
+block|}
+end_block
+
+begin_macro
+name|wwbell
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|ttputc
+argument_list|(
+name|ctrl
+argument_list|(
+name|g
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
