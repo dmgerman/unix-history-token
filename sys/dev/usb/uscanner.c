@@ -2021,10 +2021,6 @@ name|sc
 operator|->
 name|sc_bulkin_pipe
 argument_list|,
-name|sc
-operator|->
-name|sc_state
-operator|&
 name|USBD_SHORT_XFER_OK
 argument_list|,
 name|USBD_NO_TIMEOUT
