@@ -5146,7 +5146,7 @@ name|tmp
 operator|==
 literal|0
 condition|)
-return|return ;
+return|return;
 comment|/* nothing to do */
 name|tmp
 operator|&=
@@ -5240,7 +5240,7 @@ name|if_ipending
 operator|&
 name|IFF_POLLING
 condition|)
-return|return ;
+return|return;
 if|if
 condition|(
 name|ether_poll_register
@@ -5270,7 +5270,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 endif|#
 directive|endif
