@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.16 (Berkeley) %G%"
+literal|"@(#)tape.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2050,7 +2050,8 @@ block|{
 name|int
 name|mode
 decl_stmt|;
-name|time_t
+name|struct
+name|timeval
 name|timep
 index|[
 literal|2
@@ -2093,6 +2094,8 @@ name|timep
 index|[
 literal|0
 index|]
+operator|.
+name|tv_sec
 operator|=
 name|curfile
 operator|.
@@ -2102,14 +2105,34 @@ name|di_atime
 expr_stmt|;
 name|timep
 index|[
+literal|0
+index|]
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+name|timep
+index|[
 literal|1
 index|]
+operator|.
+name|tv_sec
 operator|=
 name|curfile
 operator|.
 name|dip
 operator|->
 name|di_mtime
+expr_stmt|;
+name|timep
+index|[
+literal|1
+index|]
+operator|.
+name|tv_usec
+operator|=
+literal|0
 expr_stmt|;
 name|mode
 operator|=
@@ -2399,7 +2422,7 @@ expr_stmt|;
 name|skipfile
 argument_list|()
 expr_stmt|;
-name|utime
+name|utimes
 argument_list|(
 name|name
 argument_list|,
@@ -2529,7 +2552,7 @@ argument_list|(
 name|ofile
 argument_list|)
 expr_stmt|;
-name|utime
+name|utimes
 argument_list|(
 name|name
 argument_list|,
@@ -4684,9 +4707,7 @@ name|buf
 operator|->
 name|c_dinode
 operator|.
-name|di_ic
-operator|.
-name|ic_size
+name|di_qsize
 operator|.
 name|val
 expr_stmt|;
