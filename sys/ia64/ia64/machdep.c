@@ -720,32 +720,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|totalphysmem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total amount of physical memory in system */
-end_comment
-
-begin_decl_stmt
-name|int
 name|physmem
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* physical memory used by NetBSD + some rsvd */
-end_comment
-
-begin_decl_stmt
-name|int
-name|resvmem
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* amount of memory reserved for PROM */
+comment|/* Physical conventional memory. */
 end_comment
 
 begin_decl_stmt
@@ -2708,26 +2688,8 @@ name|Type
 operator|!=
 name|EfiConventionalMemory
 condition|)
-block|{
-name|resvmem
-operator|+=
-operator|(
-name|pfn1
-operator|-
-name|pfn0
-operator|)
-expr_stmt|;
 continue|continue;
-block|}
-name|totalphysmem
-operator|+=
-operator|(
-name|pfn1
-operator|-
-name|pfn0
-operator|)
-expr_stmt|;
-comment|/* 		 * We have a memory descriptors available for system 		 * software use.  We must determine if this cluster 		 * holds the kernel. 		 */
+comment|/* 		 * We have a memory descriptor that describes conventional 		 * memory that is for general use. We must determine if the 		 * loader has put the kernel in this region. 		 */
 name|physmem
 operator|+=
 operator|(
