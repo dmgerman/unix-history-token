@@ -221,10 +221,6 @@ name|d_flags
 decl_stmt|;
 comment|/* flags for device init */
 name|int
-name|d_conflicts
-decl_stmt|;
-comment|/* I'm allowed to conflict */
-name|int
 name|d_disabled
 decl_stmt|;
 comment|/* nonzero to skip probe/attach */
