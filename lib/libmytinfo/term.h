@@ -4105,6 +4105,7 @@ name|tparm
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -4158,6 +4159,7 @@ name|tputs
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
