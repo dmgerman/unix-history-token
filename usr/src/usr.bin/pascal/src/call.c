@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.18 %G%"
+literal|"@(#)call.c 1.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1405,7 +1405,10 @@ name|long
 operator|)
 name|p
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 argument_list|)
 expr_stmt|;
 block|}

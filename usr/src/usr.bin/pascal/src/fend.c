@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.11 %G%"
+literal|"@(#)fend.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -292,7 +292,10 @@ name|patch4
 argument_list|(
 name|fp
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Put out the block entrance code and the block name. 	 * HDRSZE is the number of bytes of info in the static 	 * BEG data area exclusive of the proc name. It is 	 * currently defined as: 	/*	struct hdr { 	/*		long framesze;	/* number of bytes of local vars */
@@ -553,7 +556,10 @@ name|ftnno
 operator|=
 name|fp
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 expr_stmt|;
 name|putprintf
 argument_list|(
@@ -606,7 +612,10 @@ name|ftnno
 operator|=
 name|fp
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 expr_stmt|;
 name|putprintf
 argument_list|(

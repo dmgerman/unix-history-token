@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.11 %G%"
+literal|"@(#)lab.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,7 +319,10 @@ name|NOTYET
 expr_stmt|;
 name|p
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 operator|=
 name|l
 expr_stmt|;
@@ -523,7 +526,10 @@ name|long
 operator|)
 name|p
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 argument_list|)
 expr_stmt|;
 endif|#
@@ -804,7 +810,10 @@ name|patch4
 argument_list|(
 name|p
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 argument_list|)
 expr_stmt|;
 endif|#

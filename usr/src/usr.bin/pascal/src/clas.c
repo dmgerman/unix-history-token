@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clas.c 1.4 %G%"
+literal|"@(#)clas.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -728,7 +728,7 @@ argument|level
 argument_list|,
 argument|offset
 argument_list|,
-argument|extra_flags
+argument|other_flags
 argument_list|)
 end_macro
 
@@ -746,7 +746,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|extra_flags
+name|other_flags
 decl_stmt|;
 end_decl_stmt
 
@@ -774,7 +774,7 @@ directive|ifdef
 name|PC
 switch|switch
 condition|(
-name|extra_flags
+name|other_flags
 operator|&
 operator|(
 name|NGLOBAL

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fhdr.c 1.4 %G%"
+literal|"@(#)fhdr.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -972,7 +972,10 @@ block|}
 comment|/* 	 * Define a branch at 	 * the "entry point" of 	 * the prog/proc/func. 	 */
 name|p
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 operator|=
 name|getlab
 argument_list|()
@@ -1014,7 +1017,10 @@ name|long
 operator|)
 name|p
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 argument_list|)
 expr_stmt|;
 endif|#

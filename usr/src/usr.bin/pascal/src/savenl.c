@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savenl.c 1.4 %G%"
+literal|"@(#)savenl.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -964,7 +964,10 @@ name|codeloc
 operator|=
 name|p
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 expr_stmt|;
 block|}
 elseif|else

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.11 %G%"
+literal|"@(#)flvalue.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,7 +399,10 @@ name|long
 operator|)
 name|p
 operator|->
-name|entloc
+name|value
+index|[
+name|NL_ENTLOC
+index|]
 argument_list|)
 expr_stmt|;
 endif|#
