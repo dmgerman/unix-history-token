@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.55 %G%"
+literal|"@(#)sccs.c	1.56 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -641,7 +641,7 @@ name|CMACRO
 block|,
 name|NO_SDOT
 block|,
-literal|"delta:mysrp/get:ixbskcl -e -t"
+literal|"delta:mysrp -n/get:ixbskcl -e -t -g"
 block|,
 literal|"fix"
 block|,
