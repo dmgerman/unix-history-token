@@ -4143,6 +4143,73 @@ block|}
 block|, 		}
 block|, 	}
 block|,
+comment|/* 	 * Oxford Semiconductor OX9160/OX16PCI954 PCI UARTS 	 * second chip on Exsys EX-41098 8x cards 	 */
+block|{
+literal|"Oxford Semiconductor OX9160/OX16PCI954 UARTs (function 1)"
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x9511
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x08
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x10
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x18
+block|,
+name|COM_FREQ
+block|}
+block|, 	    }
+block|, 	}
+block|,
 comment|/* NetMos 2S1P PCI 16C650 : 2S, 1P */
 block|{
 literal|"NetMos NM9835 Dual UART and 1284 Printer port"
