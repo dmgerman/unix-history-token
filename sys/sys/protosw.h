@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)protosw.h	7.8 (Berkeley) 4/28/91  *	$Id: protosw.h,v 1.2 1993/10/16 17:17:22 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)protosw.h	7.8 (Berkeley) 4/28/91  *	$Id: protosw.h,v 1.3 1993/11/07 17:52:56 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -667,8 +667,85 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRC_REDIRECT_NET
+name|PRC_UNREACH_NETUNKNOWN
 value|14
+end_define
+
+begin_comment
+comment|/* network unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_UNREACH_HOSTUNKNOWN
+value|15
+end_define
+
+begin_comment
+comment|/* host unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_UNREACH_ISOLATED
+value|16
+end_define
+
+begin_comment
+comment|/* source host is isolated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_UNREACH_NETADMIN
+value|17
+end_define
+
+begin_comment
+comment|/* communication administratively */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_UNREACH_HOSTADMIN
+value|18
+end_define
+
+begin_comment
+comment|/* prohibited with net/host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_UNREACH_TOSNET
+value|19
+end_define
+
+begin_comment
+comment|/* net unreachable with this TOS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_UNREACH_TOSHOST
+value|20
+end_define
+
+begin_comment
+comment|/* host unreachable with this TOS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_REDIRECT_NET
+value|21
 end_define
 
 begin_comment
@@ -679,7 +756,7 @@ begin_define
 define|#
 directive|define
 name|PRC_REDIRECT_HOST
-value|15
+value|22
 end_define
 
 begin_comment
@@ -690,7 +767,7 @@ begin_define
 define|#
 directive|define
 name|PRC_REDIRECT_TOSNET
-value|16
+value|23
 end_define
 
 begin_comment
@@ -701,7 +778,7 @@ begin_define
 define|#
 directive|define
 name|PRC_REDIRECT_TOSHOST
-value|17
+value|24
 end_define
 
 begin_comment
@@ -712,7 +789,7 @@ begin_define
 define|#
 directive|define
 name|PRC_TIMXCEED_INTRANS
-value|18
+value|25
 end_define
 
 begin_comment
@@ -723,7 +800,7 @@ begin_define
 define|#
 directive|define
 name|PRC_TIMXCEED_REASS
-value|19
+value|26
 end_define
 
 begin_comment
@@ -734,7 +811,7 @@ begin_define
 define|#
 directive|define
 name|PRC_PARAMPROB
-value|20
+value|27
 end_define
 
 begin_comment
@@ -744,8 +821,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PRC_OPTION_MISSING
+value|28
+end_define
+
+begin_comment
+comment|/* required option missing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_MTUCHANGED
+value|29
+end_define
+
+begin_comment
+comment|/* lower layer MTU has changed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRC_NCMDS
-value|21
+value|30
 end_define
 
 begin_define
@@ -757,6 +856,17 @@ name|cmd
 parameter_list|)
 define|\
 value|((cmd)>= PRC_REDIRECT_NET&& (cmd)<= PRC_REDIRECT_TOSHOST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRC_IS_UNREACH
+parameter_list|(
+name|cmd
+parameter_list|)
+define|\
+value|((cmd)>= PRC_UNREACH_NET&& (cmd)<= PRC_UNREACH_TOSHOST)
 end_define
 
 begin_ifdef
@@ -800,6 +910,20 @@ literal|"#12"
 block|,
 literal|"SRCFAIL-UNREACH"
 block|,
+literal|"NET-UNKNOWN"
+block|,
+literal|"HOST-UNKNOWN"
+block|,
+literal|"HOST-ISOLATED"
+block|,
+literal|"NET-ADMIN-UNREACH"
+block|,
+literal|"HOST-ADMIN-UNREACH"
+block|,
+literal|"TOSNET-UNREACH"
+block|,
+literal|"TOSHOST-UNREACH"
+block|,
 literal|"NET-REDIRECT"
 block|,
 literal|"HOST-REDIRECT"
@@ -813,6 +937,10 @@ block|,
 literal|"TX-REASS"
 block|,
 literal|"PARAMPROB"
+block|,
+literal|"OPTION-MISSING"
+block|,
+literal|"MTU-CHANGED"
 block|}
 decl_stmt|;
 end_decl_stmt
