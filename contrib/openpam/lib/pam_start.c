@@ -542,6 +542,8 @@ argument_list|(
 name|buf
 index|[
 name|len
+operator|-
+literal|1
 index|]
 argument_list|)
 condition|)

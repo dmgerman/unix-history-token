@@ -38,6 +38,7 @@ name|char
 modifier|*
 name|module_data_name
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 modifier|*
