@@ -4790,10 +4790,12 @@ comment|/* 	 * Must insure that we do not cross an 8K (bytes) boundary 	 * for D
 name|PCI_SETBIT
 argument_list|(
 name|sc
+operator|->
+name|bge_dev
 argument_list|,
 name|BGE_PCI_DMA_RW_CTL
 argument_list|,
-name|BGE_PCI_READ_BNDRY_1024
+name|BGE_PCI_READ_BNDRY_1024BYTES
 argument_list|,
 literal|4
 argument_list|)
