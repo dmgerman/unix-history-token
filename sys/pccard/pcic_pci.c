@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcic_p.h>
+file|<pccard/pcic_pci.h>
 end_include
 
 begin_include
