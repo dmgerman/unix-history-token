@@ -6,8 +6,8 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|printf_id
-index|[]
 init|=
 literal|"@(#) printf.c:2.2 6/5/79"
 decl_stmt|;
@@ -23,7 +23,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printf.c	4.2 %G%"
+literal|"@(#)printf.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
