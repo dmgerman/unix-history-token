@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyget.c 1.5 %G%"
+literal|"@(#)yyget.c 1.4.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -24,6 +35,16 @@ include|#
 directive|include
 file|"0.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
 
 begin_include
 include|#
@@ -60,8 +81,6 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|i
-operator|,
 name|c
 expr_stmt|;
 if|if
@@ -373,7 +392,10 @@ operator|&&
 name|bracket
 condition|)
 block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|pstrcpy
 argument_list|(
 name|charbuf
 argument_list|,
@@ -530,8 +552,13 @@ condition|)
 name|setuflg
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PXP
 name|out
 label|:
+endif|#
+directive|endif
 name|bufp
 operator|=
 name|charbuf
@@ -705,6 +732,10 @@ name|error
 argument_list|(
 literal|"Missing closing %c for include file name - QUIT"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|ch
 argument_list|)
 expr_stmt|;
@@ -945,21 +976,17 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|skipbl
-argument_list|(
-argument|ocp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ocp
+parameter_list|)
 name|char
 modifier|*
 name|ocp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -991,7 +1018,7 @@ name|cp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1024,7 +1051,10 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*  *	left over from before stdio: becomes fclose ( ibp )  *  *	close(ibp[0]);  *	free(ibp);  *  */
+comment|/*  *	left over from before stdio: becomes fclose ( ibp )  *  *	(void) close(ibp[0]);  *	free(ibp);  *  */
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|ibp

@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.9 %G%"
+literal|"@(#)stab.c 1.8.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*      *	procedures to put out sdb symbol table information.      *	and stabs for separate compilation type checking.      *	these use the new .stabs, .stabn, and .stabd directives      */
@@ -91,6 +102,10 @@ begin_comment
 comment|/*      *	global variables      */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|stabgvar
 argument_list|(
@@ -146,6 +161,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|,
 name|N_PC
@@ -183,6 +201,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|)
 expr_stmt|;
@@ -210,6 +231,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|)
 expr_stmt|;
@@ -229,6 +253,10 @@ end_block
 
 begin_comment
 comment|/*      *	local variables      */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -303,6 +331,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|)
 expr_stmt|;
@@ -333,6 +364,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|)
 expr_stmt|;
@@ -418,6 +452,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|)
 expr_stmt|;
@@ -447,6 +484,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|)
 expr_stmt|;
@@ -467,116 +507,6 @@ end_block
 begin_comment
 comment|/*      *	fields      */
 end_comment
-
-begin_macro
-name|stabfield
-argument_list|(
-argument|name
-argument_list|,
-argument|type
-argument_list|,
-argument|offset
-argument_list|,
-argument|length
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|type
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|offset
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|length
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-operator|!
-name|opt
-argument_list|(
-literal|'g'
-argument_list|)
-condition|)
-block|{
-return|return;
-block|}
-name|putprintf
-argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0x%x,0x%x"
-argument_list|,
-literal|0
-argument_list|,
-name|N_SSYM
-argument_list|,
-name|type
-argument_list|,
-name|offset
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"	.stabs	\""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-name|NAMEFORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"\",0x%x,0,0,0x%x"
-argument_list|,
-literal|0
-argument_list|,
-name|N_LENG
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 begin_comment
 comment|/*      *	left brackets      */
@@ -710,12 +640,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|type
-decl_stmt|;
-name|long
-name|i
-decl_stmt|;
 name|char
 name|extname
 index|[
@@ -743,6 +667,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|,
 name|N_PC
@@ -770,6 +697,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|,
 name|N_PC
@@ -809,6 +739,9 @@ name|NAMEFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|)
 expr_stmt|;
@@ -818,6 +751,9 @@ name|extname
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|int
+operator|)
 name|level
 argument_list|)
 expr_stmt|;
@@ -831,6 +767,9 @@ name|N_FUN
 argument_list|,
 name|line
 argument_list|,
+operator|(
+name|int
+operator|)
 name|extname
 argument_list|)
 expr_stmt|;
@@ -1309,6 +1248,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|label
 argument_list|,
 name|N_PC
@@ -1358,6 +1300,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 specifier|const
 argument_list|,
 name|N_PC
@@ -1407,6 +1352,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|type
 argument_list|,
 name|N_PC
@@ -1496,6 +1444,9 @@ literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name
 argument_list|,
 name|N_PC
