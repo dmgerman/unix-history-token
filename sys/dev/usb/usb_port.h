@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb_port.h,v 1.5 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usb_port.h,v 1.8 1999/01/07 23:31:38 n_hibma Exp $	*/
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -89,10 +89,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_DECLARE_DRIVER_NAME_INIT
+name|USB_DECLARE_DRIVER_INIT
 parameter_list|(
-name|_1
-parameter_list|,
 name|dname
 parameter_list|,
 name|_2
@@ -319,17 +317,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|USB_DECLARE_DRIVER_NAME_INIT
+name|USB_DECLARE_DRIVER_INIT
 parameter_list|(
-name|name
-parameter_list|,
 name|dname
 parameter_list|,
 name|init
 modifier|...
 parameter_list|)
 define|\
-value|static device_probe_t __CONCAT(dname,_match); \ static device_attach_t __CONCAT(dname,_attach); \ static device_detach_t __CONCAT(dname,_detach); \ \ static devclass_t __CONCAT(dname,_devclass); \ \ static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ static driver_t __CONCAT(dname,_driver) = { \         name, \         __CONCAT(dname,_methods), \         DRIVER_TYPE_MISC, \         sizeof(struct __CONCAT(dname,_softc)) \ }
+value|static device_probe_t __CONCAT(dname,_match); \ static device_attach_t __CONCAT(dname,_attach); \ static device_detach_t __CONCAT(dname,_detach); \ \ static devclass_t __CONCAT(dname,_devclass); \ \ static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ static driver_t __CONCAT(dname,_driver) = { \         #dname, \         __CONCAT(dname,_methods), \         DRIVER_TYPE_MISC, \         sizeof(struct __CONCAT(dname,_softc)) \ }
 end_define
 
 begin_define
@@ -531,38 +527,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_DECLARE_DRIVER_NAME
-parameter_list|(
-name|name
-parameter_list|,
-name|dname
-parameter_list|)
-define|\
-value|USB_DECLARE_DRIVER_NAME_INIT(#name, dname, {0,0} )
-end_define
-
-begin_define
-define|#
-directive|define
-name|USB_DECLARE_DRIVER_INIT
-parameter_list|(
-name|dname
-parameter_list|,
-name|init
-parameter_list|)
-define|\
-value|USB_DECLARE_DRIVER_NAME_INIT(#dname, dname, init )
-end_define
-
-begin_define
-define|#
-directive|define
 name|USB_DECLARE_DRIVER
 parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|USB_DECLARE_DRIVER_NAME_INIT(#dname, dname, {0,0} )
+value|USB_DECLARE_DRIVER_INIT(dname, {0,0} )
 end_define
 
 end_unit
