@@ -2998,7 +2998,24 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*      * Poll the EC status register to detect completion of the last      * command.  First, wait up to 1 ms in chunks of sc->ec_polldelay      * microseconds.      */
+comment|/*      * If we're up and running, wait up to 1 ms.  Otherwise, burn the entire      * timeout value with delays since msleep() is a no-op.      */
+name|period
+operator|=
+literal|1000
+operator|/
+name|sc
+operator|->
+name|ec_polldelay
+expr_stmt|;
+if|if
+condition|(
+name|cold
+condition|)
+name|period
+operator|*=
+name|ec_poll_timeout
+expr_stmt|;
+comment|/*      * Poll the EC status register to detect completion of the last      * command in chunks of ec_polldelay.      */
 for|for
 control|(
 name|i
@@ -3007,11 +3024,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|1000
-operator|/
-name|sc
-operator|->
-name|ec_polldelay
+name|period
 condition|;
 name|i
 operator|++
@@ -3102,9 +3115,12 @@ name|ec_polldelay
 operator|=
 literal|100
 expr_stmt|;
-comment|/*      * If we still don't have a response, wait up to ec_poll_timeout ms      * for completion, sleeping for chunks of 10 ms.      */
+comment|/*      * If we still don't have a response and we're up and running, wait up      * to ec_poll_timeout ms for completion, sleeping for chunks of 10 ms.      */
 if|if
 condition|(
+operator|!
+name|cold
+operator|&&
 name|Status
 operator|!=
 name|AE_OK
