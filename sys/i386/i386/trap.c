@@ -975,9 +975,7 @@ name|sticks
 operator|=
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_sticks
+name|td_sticks
 expr_stmt|;
 name|td
 operator|->
@@ -3492,9 +3490,7 @@ name|sticks
 operator|=
 name|td
 operator|->
-name|td_kse
-operator|->
-name|ke_sticks
+name|td_sticks
 expr_stmt|;
 name|td
 operator|->

@@ -1990,26 +1990,12 @@ name|ke_thread
 operator|=
 name|td2
 expr_stmt|;
-name|ke2
-operator|->
-name|ke_owner
-operator|=
-name|td2
-expr_stmt|;
 name|td2
 operator|->
 name|td_kse
 operator|=
 name|ke2
 expr_stmt|;
-name|td2
-operator|->
-name|td_flags
-operator|&=
-operator|~
-name|TDF_UNBOUND
-expr_stmt|;
-comment|/* For the rest of this syscall. */
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_forkproc. 	 */
 name|p2
 operator|->

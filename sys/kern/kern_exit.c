@@ -478,7 +478,7 @@ literal|"Going nowhere without my init!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXXXKSE: MUST abort all other threads before proceeding past here. 	 */
+comment|/* 	 * XXXKSE: MUST abort all other threads before proceeding past here. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -498,13 +498,6 @@ name|thread_suspend_check
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-comment|/* 		 * Here is a trick.. 		 * We need to free up our KSE to process other threads 		 * so that we can safely set the UNBOUND flag 		 * (whether or not we have a mailbox) as we are NEVER 		 * going to return to the user. 		 * The flag will not be set yet if we are exiting 		 * because of a signal, pagefault, or similar 		 * (or even an exit(2) from the UTS). 		 */
-name|td
-operator|->
-name|td_flags
-operator||=
-name|TDF_UNBOUND
 expr_stmt|;
 comment|/* 		 * Kill off the other threads. This requires 		 * Some co-operation from other parts of the kernel 		 * so it may not be instant. 		 * With this state set: 		 * Any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediatly 		 * with EINTR or EWOULDBLOCK, which will hopefully force them 		 * to back out to userland, freeing resources as they go, and 		 * anything attempting to return to userland will thread_exit() 		 * from userret().  thread_exit() will unsuspend us 		 * when the last other thread exits. 		 */
 if|if
@@ -528,13 +521,6 @@ name|p_flag
 operator|&=
 operator|~
 name|P_KSES
-expr_stmt|;
-name|td
-operator|->
-name|td_flags
-operator|&=
-operator|~
-name|TDF_UNBOUND
 expr_stmt|;
 name|thread_single_end
 argument_list|()
@@ -681,7 +667,17 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|stopprofclock
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)

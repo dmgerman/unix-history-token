@@ -108,14 +108,6 @@ name|u_long
 name|pr_scale
 decl_stmt|;
 comment|/* pc scaling */
-name|u_long
-name|pr_addr
-decl_stmt|;
-comment|/* temp storage for addr until AST */
-name|u_int
-name|pr_ticks
-decl_stmt|;
-comment|/* temp storage for ticks until AST */
 block|}
 name|p_prof
 struct|;
@@ -252,9 +244,9 @@ name|void
 name|addupc_intr
 parameter_list|(
 name|struct
-name|kse
+name|thread
 modifier|*
-name|ke
+name|td
 parameter_list|,
 name|uintptr_t
 name|pc
@@ -270,9 +262,9 @@ name|void
 name|addupc_task
 parameter_list|(
 name|struct
-name|kse
+name|thread
 modifier|*
-name|ke
+name|td
 parameter_list|,
 name|uintptr_t
 name|pc

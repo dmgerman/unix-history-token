@@ -843,8 +843,10 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|pid_t
-name|pid
+name|struct
+name|thread
+modifier|*
+name|thr
 decl_stmt|;
 name|int
 name|extflags
@@ -881,18 +883,14 @@ name|td
 operator|==
 name|NULL
 condition|)
-name|pid
+name|thr
 operator|=
 name|LK_KERNPROC
 expr_stmt|;
 else|else
-name|pid
+name|thr
 operator|=
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -972,7 +970,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|!=
-name|pid
+name|thr
 condition|)
 block|{
 name|lockflags
@@ -1046,7 +1044,7 @@ name|lkp
 operator|->
 name|lk_slockholder
 operator|=
-name|pid
+name|thr
 expr_stmt|;
 name|lkp
 operator|->
@@ -1088,7 +1086,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|pid
+name|thr
 operator|&&
 name|lkp
 operator|->
@@ -1098,13 +1096,13 @@ literal|0
 argument_list|,
 operator|(
 literal|"lockmgr: not holding exclusive lock "
-literal|"(owner pid (%d) != pid (%d), exlcnt (%d) != 0"
+literal|"(owner thread (%p) != thread (%p), exlcnt (%d) != 0"
 operator|,
 name|lkp
 operator|->
 name|lk_lockholder
 operator|,
-name|pid
+name|thr
 operator|,
 name|lkp
 operator|->
@@ -1138,6 +1136,11 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|=
+operator|(
+expr|struct
+name|thread
+operator|*
+operator|)
 name|LK_NOPROC
 expr_stmt|;
 if|if
@@ -1194,7 +1197,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|pid
+name|thr
 operator|)
 operator|||
 operator|(
@@ -1303,7 +1306,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|=
-name|pid
+name|thr
 expr_stmt|;
 if|if
 condition|(
@@ -1388,9 +1391,9 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|pid
+name|thr
 operator|&&
-name|pid
+name|thr
 operator|!=
 name|LK_KERNPROC
 condition|)
@@ -1531,7 +1534,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|=
-name|pid
+name|thr
 expr_stmt|;
 if|if
 condition|(
@@ -1597,7 +1600,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|!=
-name|pid
+name|thr
 operator|&&
 name|lkp
 operator|->
@@ -1608,9 +1611,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"lockmgr: pid %d, not %s %d unlocking"
+literal|"lockmgr: thread %p, not %s %p unlocking"
 argument_list|,
-name|pid
+name|thr
 argument_list|,
 literal|"exclusive lock holder"
 argument_list|,
@@ -1702,7 +1705,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|pid
+name|thr
 condition|)
 name|panic
 argument_list|(
@@ -1735,7 +1738,7 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|=
-name|pid
+name|thr
 expr_stmt|;
 name|lkp
 operator|->
@@ -2424,10 +2427,6 @@ operator|->
 name|lk_lockholder
 operator|==
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
 condition|)
 name|lock_type
 operator|=
@@ -2564,7 +2563,7 @@ name|LK_HAVE_EXCL
 condition|)
 name|printf
 argument_list|(
-literal|" lock type %s: EXCL (count %d) by pid %d"
+literal|" lock type %s: EXCL (count %d) by thread %p"
 argument_list|,
 name|lkp
 operator|->
