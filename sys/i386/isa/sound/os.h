@@ -629,6 +629,12 @@ begin_comment
 comment|/*    * The outb(0, 0x80) is just for slowdown. It's bit unsafe since  * this address could be used for something usefull.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -638,7 +644,7 @@ name|addr
 parameter_list|,
 name|data
 parameter_list|)
-value|{outb(data, addr);outb(0, 0x80);}
+value|{outb(data, addr);outb(0x5f, 0);}
 end_define
 
 begin_define
@@ -650,8 +656,50 @@ name|addr
 parameter_list|,
 name|data
 parameter_list|)
-value|{outw(data, addr);outb(0, 0x80);}
+value|{outw(data, addr);outb(0x5f, 0);}
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* IBM-PC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OUTB
+parameter_list|(
+name|addr
+parameter_list|,
+name|data
+parameter_list|)
+value|{outb(data, addr);outb(0x80, 0);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTW
+parameter_list|(
+name|addr
+parameter_list|,
+name|data
+parameter_list|)
+value|{outw(data, addr);outb(0x80, 0);}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
 
 begin_else
 else|#
