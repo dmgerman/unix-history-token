@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	3.8.1.1	%G%"
+literal|"@(#)util.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -951,6 +951,16 @@ name|bp
 init|=
 name|buf
 decl_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'*'
+condition|)
+name|p
+operator|++
+expr_stmt|;
 while|while
 condition|(
 operator|*

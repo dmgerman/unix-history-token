@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	3.14	%G%"
+literal|"@(#)readcf.c	3.15	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -933,6 +933,10 @@ specifier|extern
 name|int
 name|NextMailer
 decl_stmt|;
+name|STAB
+modifier|*
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|NextMailer
@@ -1064,6 +1068,12 @@ name|m_sendq
 operator|=
 name|NULL
 expr_stmt|;
+name|m
+operator|->
+name|m_mno
+operator|=
+name|NextMailer
+expr_stmt|;
 name|Mailer
 index|[
 name|NextMailer
@@ -1165,6 +1175,25 @@ index|]
 operator|*
 name|i
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|stab
+argument_list|(
+name|m
+operator|->
+name|m_name
+argument_list|,
+name|ST_MAILER
+argument_list|,
+name|ST_ENTER
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|s_mailer
+operator|=
+name|m
 expr_stmt|;
 block|}
 end_block

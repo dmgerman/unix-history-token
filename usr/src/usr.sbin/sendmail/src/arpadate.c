@@ -34,26 +34,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"useful.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	3.6.1.1	%G%"
+literal|"@(#)arpadate.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		ud -- unix style date string.  if NULL, one is created. ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. ** **	Bugs: **		Timezone is computed from local time, rather than **		from whereever (and whenever) the message was sent. **		To do better is very hard. ** **		Some sites are now inserting the timezone into the **		local date.  This routine should figure out what **		the format is and work appropriately. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
 
 begin_struct
 struct|struct

@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	3.8	%G%"
+literal|"@(#)stab.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +154,7 @@ if|if
 condition|(
 name|Debug
 operator|>
-literal|15
+literal|5
 condition|)
 name|printf
 argument_list|(
@@ -203,7 +203,6 @@ operator|!=
 name|type
 operator|)
 condition|)
-block|{
 name|ps
 operator|=
 operator|&
@@ -211,13 +210,6 @@ name|s
 operator|->
 name|s_next
 expr_stmt|;
-name|s
-operator|=
-name|s
-operator|->
-name|s_next
-expr_stmt|;
-block|}
 comment|/* 	**  Dispose of the entry. 	*/
 if|if
 condition|(

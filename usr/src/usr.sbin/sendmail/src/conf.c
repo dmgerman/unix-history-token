@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.31.1.1	%G%"
+literal|"@(#)conf.c	3.32	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -593,28 +593,24 @@ begin_comment
 comment|/* **  INDEX -- Return pointer to character in string ** **	For V7 compatibility. ** **	Parameters: **		s -- a string to scan. **		c -- a character to look for. ** **	Returns: **		If c is in s, returns the address of the first **			instance of c in s. **		NULL if c is not in s. ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|char
+modifier|*
 name|index
-argument_list|(
+parameter_list|(
 name|s
-argument_list|,
+parameter_list|,
 name|c
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|char
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 while|while
 condition|(
@@ -645,7 +641,7 @@ name|NULL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -994,6 +990,11 @@ modifier|*
 name|to
 decl_stmt|;
 block|{
+specifier|register
+name|STAB
+modifier|*
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|to
@@ -1021,6 +1022,57 @@ name|FALSE
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|ING70
+name|s
+operator|=
+name|stab
+argument_list|(
+literal|"arpa"
+argument_list|,
+name|ST_MAILER
+argument_list|,
+name|ST_FIND
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|!=
+name|NULL
+operator|&&
+name|From
+operator|.
+name|q_mailer
+operator|!=
+name|MN_LOCAL
+operator|&&
+name|to
+operator|->
+name|q_mailer
+operator|==
+name|s
+operator|->
+name|st_mailer
+operator|->
+name|m_mno
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"No ARPA mail through this machine: see your system administration"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+endif|ING70
 return|return
 operator|(
 name|TRUE

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.3	%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.4	%G% */
 end_comment
 
 begin_ifndef
@@ -172,9 +172,45 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_else
+else|#
+directive|else
+else|V6
+end_else
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|u_short
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|long
+name|u_long
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+name|u_char
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|void
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
+endif|V6
 end_endif
 
 end_unit

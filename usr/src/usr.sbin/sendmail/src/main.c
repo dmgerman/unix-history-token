@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.39	%G%"
+literal|"@(#)main.c	3.40	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1130,6 +1130,9 @@ argument_list|,
 name|safecf
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|V6
 name|p
 operator|=
 name|getenv
@@ -1195,6 +1198,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|V6
 name|initaliases
 argument_list|(
 name|AliasFile
