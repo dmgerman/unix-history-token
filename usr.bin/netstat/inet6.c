@@ -735,6 +735,49 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|srcrule_str
+index|[]
+init|=
+block|{
+literal|"first candidate"
+block|,
+literal|"same address"
+block|,
+literal|"appropriate scope"
+block|,
+literal|"deprecated address"
+block|,
+literal|"home address"
+block|,
+literal|"outgoing interface"
+block|,
+literal|"matching label"
+block|,
+literal|"public/temporary address"
+block|,
+literal|"alive interface"
+block|,
+literal|"preferred interface"
+block|,
+literal|"rule #10"
+block|,
+literal|"rule #11"
+block|,
+literal|"rule #12"
+block|,
+literal|"rule #13"
+block|,
+literal|"longest match"
+block|,
+literal|"rule #15"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Dump IP6 statistics structure.  */
 end_comment
@@ -1550,6 +1593,52 @@ argument_list|,
 literal|"\t%llu forward cache miss\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tSource addresses selection rule applied:\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ip6stat
+operator|.
+name|ip6s_sources_rule
+index|[
+name|i
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|"\t\t%llu %s\n"
+argument_list|,
+name|ip6stat
+operator|.
+name|ip6s_sources_rule
+index|[
+name|i
+index|]
+argument_list|,
+name|srcrule_str
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 undef|#
 directive|undef
 name|p
