@@ -61,38 +61,12 @@ name|TULIP_PCI_CSROFFSET
 value|0
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_typedef
 typedef|typedef
 name|pci_port_t
 name|tulip_csrptr_t
 typedef|;
 end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|u_int16_t
-name|tulip_csrptr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -174,11 +148,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|__alpha__
 argument_list|)
 end_if
@@ -248,7 +217,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* __FreeBSD__&& __alpha__ */
+comment|/* __alpha__ */
 end_comment
 
 begin_typedef
@@ -296,7 +265,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __FreeBSD__&& __alpha__ */
+comment|/* __alpha__ */
 end_comment
 
 begin_endif
@@ -3345,15 +3314,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_typedef
 typedef|typedef
 name|void
@@ -3616,11 +3576,6 @@ directive|define
 name|loudprintf
 value|if (bootverbose) printf
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
