@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.7	%G%"
+literal|"@(#)ex_io.c	7.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2884,6 +2884,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|CRYPT
+if|if
+condition|(
+name|kflag
+condition|)
+block|{
 name|fp
 operator|=
 name|genbuf
@@ -2908,10 +2913,6 @@ operator|&
 literal|0200
 condition|)
 block|{
-if|if
-condition|(
-name|kflag
-condition|)
 name|crblock
 argument_list|(
 name|perm
@@ -2926,6 +2927,7 @@ name|cntch
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 endif|#
