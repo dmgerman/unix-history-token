@@ -1490,17 +1490,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|pir
 operator|!=
 name|NULL
-argument_list|,
-operator|(
-literal|"could not add pir0 device"
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|device_probe_and_attach
 argument_list|(
 name|pir
