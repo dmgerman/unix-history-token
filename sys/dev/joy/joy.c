@@ -139,7 +139,7 @@ name|joypart
 parameter_list|(
 name|d
 parameter_list|)
-value|minor(d)&1
+value|(minor(d)&1)
 end_define
 
 begin_define
@@ -149,7 +149,7 @@ name|UNIT
 parameter_list|(
 name|d
 parameter_list|)
-value|minor(d)>>1&3
+value|((minor(d)>>1)&3)
 end_define
 
 begin_ifndef
