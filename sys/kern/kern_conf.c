@@ -119,9 +119,9 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_DEVT
 argument_list|,
-literal|"struct cdev *"
+literal|"cdev"
 argument_list|,
-literal|"struct cdev *storage"
+literal|"cdev storage"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -286,7 +286,7 @@ argument_list|(
 operator|&
 name|devmtx
 argument_list|,
-literal|"struct cdev *"
+literal|"cdev"
 argument_list|,
 name|NULL
 argument_list|,
