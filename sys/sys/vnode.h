@@ -1777,7 +1777,7 @@ name|IS_LOCKING_VFS
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_tag == VT_UFS			\ 				 || (vp)->v_tag == VT_NFS		\ 				 || (vp)->v_tag == VT_LFS		\ 				 || (vp)->v_tag == VT_ISOFS		\ 				 || (vp)->v_tag == VT_MSDOSFS		\ 				 || (vp)->v_tag == VT_DEVFS		\ 				 || (vp)->v_tag == VT_UDF)
+value|(  ((vp)->v_tag == VT_UFS		\ 				 || (vp)->v_tag == VT_NFS		\ 				 || (vp)->v_tag == VT_LFS		\ 				 || (vp)->v_tag == VT_ISOFS		\ 				 || (vp)->v_tag == VT_MSDOSFS		\ 				 || (vp)->v_tag == VT_DEVFS		\ 				 || (vp)->v_tag == VT_UDF)		\&& ((vp)->v_type != VBLK		\&& (vp)->v_type != VCHR) )
 end_define
 
 begin_define
@@ -1790,7 +1790,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&& !VOP_ISLOCKED(_vp, NULL)) {	\ 		if (vfs_badlock_print)					\ 			printf("%s: %p is not locked but should be",	\ 			    str, _vp);					\ 		if (vfs_badlock_panic)					\ 			Debugger("Lock violation.\n");			\ 	}								\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&& !VOP_ISLOCKED(_vp, NULL)) {	\ 		if (vfs_badlock_print)					\ 			printf("%s: %p is not locked but should be\n",	\ 			    str, _vp);					\ 		if (vfs_badlock_panic)					\ 			Debugger("Lock violation.\n");			\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1803,7 +1803,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)) {				\ 		lockstate = VOP_ISLOCKED(_vp, curthread);		\ 		if (lockstate == LK_EXCLUSIVE) {			\ 			if (vfs_badlock_print)				\ 				printf("%s: %p is locked but should not be",	\ 				    str, _vp);				\ 			if (vfs_badlock_panic)				\ 				Debugger("Lock Violation.\n");		\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)) {				\ 		lockstate = VOP_ISLOCKED(_vp, curthread);		\ 		if (lockstate == LK_EXCLUSIVE) {			\ 			if (vfs_badlock_print)				\ 				printf("%s: %p is locked but should not be\n",	\ 				    str, _vp);				\ 			if (vfs_badlock_panic)				\ 				Debugger("Lock Violation.\n");		\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
