@@ -9,13 +9,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)local_passwd.c	5.5 (Berkeley) 5/6/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)local_passwd.c	5.5 (Berkeley) 5/6/91"
+literal|"$Id: local_passwd.c,v 1.5 1993/08/01 18:10:19 mycroft Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +122,20 @@ argument_list|)
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|YP
+specifier|extern
+name|int
+name|use_yp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|use_yp
+condition|)
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -130,11 +148,11 @@ argument_list|,
 name|uname
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|uid
 operator|=
@@ -167,11 +185,11 @@ name|EACCES
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|pw_init
 argument_list|()
@@ -230,11 +248,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

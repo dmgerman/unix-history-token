@@ -18,13 +18,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_comment
+comment|/* static char *sccsid = "from: @(#)getgrent.c	5.9 (Berkeley) 4/1/91"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
-index|[]
+modifier|*
+name|rcsid
 init|=
-literal|"@(#)getgrent.c	5.9 (Berkeley) 4/1/91"
+literal|"$Id: getgrent.c,v 1.6 1993/11/24 19:43:54 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,19 +526,6 @@ name|char
 modifier|*
 name|bp
 decl_stmt|;
-name|char
-modifier|*
-name|fgets
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strsep
-argument_list|()
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -776,7 +767,7 @@ comment|/* skip lines that are too big */
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
