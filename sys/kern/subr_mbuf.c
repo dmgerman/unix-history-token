@@ -134,6 +134,40 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * SMP and non-SMP kernels clearly have a different number of possible cpus.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NCPU_PRESENT
+value|mp_ncpus
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NCPU_PRESENT
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * The mbuf allocator is heavily based on Alfred Perlstein's  * (alfred@FreeBSD.org) "memcache" allocator which is itself based  * on concepts from several per-CPU memory allocators. The difference  * between this allocator and memcache is that, among other things:  *  * (i) We don't free back to the map from the free() routine - we leave the  *     option of implementing lazy freeing (from a kproc) in the future.   *  * (ii) We allocate from separate sub-maps of kmem_map, thus limiting the  *	maximum number of allocatable objects of a given type. Further,  *	we handle blocking on a cv in the case that the map is starved and  *	we have to rely solely on cached (circulating) objects.  *  * The mbuf allocator keeps all objects that it allocates in mb_buckets.  * The buckets keep a page worth of objects (an object can be an mbuf or an  * mbuf cluster) and facilitate moving larger sets of contiguous objects  * from the per-CPU lists to the main list for the given object. The buckets  * also have an added advantage in that after several moves from a per-CPU  * list to the main list and back to the per-CPU list, contiguous objects  * are kept together, thus trying to put the TLB cache to good use.  *  * The buckets are kept on singly-linked lists called "containers." A container  * is protected by a mutex lock in order to ensure consistency. The mutex lock  * itself is allocated seperately and attached to the container at boot time,  * thus allowing for certain containers to share the same mutex lock. Per-CPU  * containers for mbufs and mbuf clusters all share the same per-CPU  * lock whereas the "general system" containers (i.e. the "main lists") for  * these objects share one global lock.  *  */
 end_comment
 
@@ -1551,7 +1585,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|mp_ncpus
+name|NCPU_PRESENT
 condition|;
 name|i
 operator|++
@@ -2643,7 +2677,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|mp_ncpus
+name|NCPU_PRESENT
 condition|;
 name|i
 operator|++
