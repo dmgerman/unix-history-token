@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|FONTPATH
-value|"/usr/local/lib/groff/font:/usr/local/lib/font:/usr/lib/font"
+value|"/usr/local/share/groff/font:/usr/local/lib/font:/usr/lib/font"
 end_define
 
 begin_endif
@@ -80,18 +80,51 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|strtok
+end_ifndef
+
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|strtok
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|strchr
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|char
 modifier|*
 name|strchr
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|getenv
+end_ifndef
 
 begin_function_decl
 specifier|extern
@@ -101,6 +134,11 @@ name|getenv
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Name of environment variable containing path to be used for searching for device and font description files. */

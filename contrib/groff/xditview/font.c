@@ -1030,6 +1030,16 @@ condition|(
 name|fs
 operator|->
 name|font
+operator|&&
+name|fs
+operator|->
+name|font
+operator|!=
+name|dw
+operator|->
+name|dvi
+operator|.
+name|default_font
 condition|)
 block|{
 name|XUnloadFont
