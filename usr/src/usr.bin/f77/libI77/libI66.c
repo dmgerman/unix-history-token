@@ -1,43 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * set flag to initialize fortran-66 mods  *	@(#)libI66.c	1.2  * usage: f77 ... -lI66 ...  */
+comment|/*  * set flag to initialize fortran-66 mods  *	@(#)libI66.c	1.3  * usage: f77 ... -lI66 ...  */
 end_comment
 
-begin_decl_stmt
-name|short
-name|ccntrl_
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* carriage control on all units */
-end_comment
+begin_include
+include|#
+directive|include
+file|"fiodefs.h"
+end_include
 
 begin_decl_stmt
-name|short
-name|blzero_
+name|struct
+name|ioiflg
+name|ioiflg_
 init|=
+block|{
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* blanks are zero input, 0 => 0.0 on output */
-end_comment
-
-begin_decl_stmt
-name|short
-name|opnbof_
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|,
 comment|/* open files at beginning */
-end_comment
+literal|1
+block|,
+comment|/* carriage control on all units */
+literal|1
+block|,
+comment|/* blanks are zero on input; 0 => 0.0 on output */
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
