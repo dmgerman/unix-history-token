@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ip_input.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)ip_input.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -993,7 +993,18 @@ name|next
 goto|;
 name|ours
 label|:
-comment|/* 	 * Look for queue of fragments 	 * of this datagram. 	 */
+comment|/* 	 * If offset or IP_MF are set, must reassemble. 	 * Otherwise, nothing need be done. 	 * (We could look in the reassembly queue to see 	 * if the packet was previously fragmented, 	 * but it's not worth the time; just let them time out.) 	 */
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_off
+operator|&
+operator|~
+name|IP_DF
+condition|)
+block|{
+comment|/* 		 * Look for queue of fragments 		 * of this datagram. 		 */
 for|for
 control|(
 name|fp
@@ -1064,7 +1075,7 @@ literal|0
 expr_stmt|;
 name|found
 label|:
-comment|/* 	 * Adjust ip_len to not reflect header, 	 * set ip_mff if more fragments are expected, 	 * convert offset of this to bytes. 	 */
+comment|/* 		 * Adjust ip_len to not reflect header, 		 * set ip_mff if more fragments are expected, 		 * convert offset of this to bytes. 		 */
 name|ip
 operator|->
 name|ip_len
@@ -1111,7 +1122,7 @@ name|ip_off
 operator|<<=
 literal|3
 expr_stmt|;
-comment|/* 	 * If datagram marked as having more fragments 	 * or if this is not the first fragment, 	 * attempt reassembly; if it succeeds, proceed. 	 */
+comment|/* 		 * If datagram marked as having more fragments 		 * or if this is not the first fragment, 		 * attempt reassembly; if it succeeds, proceed. 		 */
 if|if
 condition|(
 operator|(
@@ -1175,6 +1186,14 @@ name|ip_freef
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|ip
+operator|->
+name|ip_len
+operator|-=
+name|hlen
 expr_stmt|;
 comment|/* 	 * Switch out to protocol's input routine. 	 */
 operator|(
