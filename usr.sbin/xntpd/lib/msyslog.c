@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* msyslog.c,v 3.1 1993/07/06 01:08:36 jbj Exp  * msyslog - either send a message to the terminal or print it on  *	     the standard output.  *  * Converted to use varargs, much better ... jks  */
+comment|/*  * msyslog - either send a message to the terminal or print it on  *	     the standard output.  *  * Converted to use varargs, much better ... jks  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_unixclock.c,v 3.1 1993/07/06 01:11:30 jbj Exp  * ntp_unixclock.c - routines for reading and adjusting a 4BSD-style  *		     system clock  */
+comment|/*  * ntp_unixclock.c - routines for reading and adjusting a 4BSD-style  *		     system clock  */
 end_comment
 
 begin_include
@@ -49,6 +49,11 @@ operator|||
 name|defined
 argument_list|(
 name|SYS_BSDI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_44BSD
 argument_list|)
 end_if
 
@@ -122,11 +127,19 @@ name|HAVE_LIBKVM
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYS_BSDI
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_44BSD
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -220,7 +233,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|LONG
+name|long
 name|adj_precision
 decl_stmt|;
 end_decl_stmt
@@ -231,7 +244,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|LONG
+name|long
 name|tvu_maxslew
 decl_stmt|;
 end_decl_stmt
@@ -242,13 +255,13 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|tsf_maxslew
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* same as above, as LONG format */
+comment|/* same as above, as long format */
 end_comment
 
 begin_decl_stmt
@@ -268,7 +281,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|LONG
+name|long
 name|sys_clock
 decl_stmt|;
 end_decl_stmt
@@ -280,10 +293,10 @@ name|clock_parms
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -299,13 +312,13 @@ name|void
 name|init_systime
 parameter_list|()
 block|{
-name|U_LONG
+name|u_long
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|tick
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|hz
 decl_stmt|;
 comment|/* 	 * Obtain the values 	 */
@@ -327,7 +340,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"kernel vars: tickadj = %d, tick = %d\n"
+literal|"kernel vars: tickadj = %ld, tick = %ld\n"
 argument_list|,
 name|tickadj
 argument_list|,
@@ -505,7 +518,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"adj_precision = %d, tvu_maxslew = %d, tsf_maxslew = 0.%08x\n"
+literal|"adj_precision = %ld, tvu_maxslew = %ld, tsf_maxslew = 0.%08lx\n"
 argument_list|,
 name|adj_precision
 argument_list|,
@@ -517,15 +530,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Set the current offset to 0 	 */
+name|L_CLR
+argument_list|(
+operator|&
 name|sys_clock_offset
-operator|.
-name|l_ui
-operator|=
-name|sys_clock_offset
-operator|.
-name|l_uf
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -549,11 +558,11 @@ name|tickadj
 parameter_list|,
 name|tick
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|tick
 decl_stmt|;
@@ -989,11 +998,11 @@ name|tickadj
 parameter_list|,
 name|tick
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|tick
 decl_stmt|;
@@ -1071,6 +1080,15 @@ directive|ifdef
 name|SYS_HPUX
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp9000s300
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1084,6 +1102,30 @@ directive|define
 name|K_TICK_NAME
 value|"_old_tick"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|K_TICKADJ_NAME
+value|"tickadj"
+end_define
+
+begin_define
+define|#
+directive|define
+name|K_TICK_NAME
+value|"old_tick"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1147,11 +1189,11 @@ name|tickadj
 parameter_list|,
 name|tick
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|tick
 decl_stmt|;
@@ -1598,7 +1640,7 @@ operator|*
 name|tickadj
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|vars
 index|[
@@ -1609,7 +1651,7 @@ operator|*
 name|tick
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|vars
 index|[
@@ -1658,11 +1700,11 @@ name|tickadj
 parameter_list|,
 name|tick
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|tick
 decl_stmt|;
@@ -1734,11 +1776,11 @@ name|tickadj
 parameter_list|,
 name|tick
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|tick
 decl_stmt|;
@@ -1778,11 +1820,11 @@ name|tickadj
 parameter_list|,
 name|tick
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|tick
 decl_stmt|;
@@ -1898,11 +1940,11 @@ name|tickadj
 parameter_list|,
 name|tick
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|tick
 decl_stmt|;
@@ -2310,7 +2352,7 @@ operator|*
 name|tickadj
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|vars
 index|[
@@ -2321,7 +2363,7 @@ operator|*
 name|tick
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 literal|1000000
@@ -2347,7 +2389,7 @@ directive|ifdef
 name|SYS_LINUX
 include|#
 directive|include
-file|<sys/timex.h>
+file|"sys/timex.h"
 specifier|static
 name|void
 name|clock_parms
@@ -2356,11 +2398,11 @@ name|tickadj
 parameter_list|,
 name|tick
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|tickadj
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|tick
 decl_stmt|;
@@ -2385,7 +2427,7 @@ operator|*
 name|tickadj
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 literal|1
 expr_stmt|;
@@ -2394,7 +2436,7 @@ operator|*
 name|tick
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|txc
 operator|.

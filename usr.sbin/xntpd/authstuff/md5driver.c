@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* md5driver.c,v 3.1 1993/07/06 01:05:07 jbj Exp  ***********************************************************************  ** md5driver.c -- sample test routines                               **  ** RSA Data Security, Inc. MD5 Message-Digest Algorithm              **  ** Created: 2/16/90 RLR                                              **  ** Updated: 1/91 SRD                                                 **  ** Updated: 7/91 SRD Removed file "foo" from test suite              **  ***********************************************************************  */
+comment|/*  ***********************************************************************  ** md5driver.c -- sample test routines                               **  ** RSA Data Security, Inc. MD5 Message-Digest Algorithm              **  ** Created: 2/16/90 RLR                                              **  ** Updated: 1/91 SRD                                                 **  ** Updated: 7/91 SRD Removed file "foo" from test suite              **  ***********************************************************************  */
 end_comment
 
 begin_comment
@@ -25,11 +25,19 @@ directive|include
 file|<time.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYS_BSDI
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_44BSD
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -156,16 +164,16 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|LONG
+name|long
 name|TEST_BYTES
 init|=
 operator|(
-name|LONG
+name|long
 operator|)
 name|TEST_BLOCK_SIZE
 operator|*
 operator|(
-name|LONG
+name|long
 operator|)
 name|TEST_BLOCKS
 decl_stmt|;
@@ -234,6 +242,9 @@ name|printf
 argument_list|(
 literal|"MD5 time trial. Processing %ld characters...\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|TEST_BYTES
 argument_list|)
 expr_stmt|;
@@ -301,20 +312,22 @@ name|printf
 argument_list|(
 literal|"Seconds to process test input: %ld\n"
 argument_list|,
-call|(
-name|LONG
-call|)
-argument_list|(
+operator|(
+name|long
+operator|)
 name|endTime
 operator|-
 name|startTime
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"Characters processed per second: %ld\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|TEST_BYTES
 operator|/
 operator|(
@@ -322,6 +335,7 @@ name|endTime
 operator|-
 name|startTime
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
