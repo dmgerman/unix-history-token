@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	1.3	%G% */
+comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	1.4	%G% */
 end_comment
 
 begin_comment
@@ -27,6 +27,17 @@ end_define
 
 begin_comment
 comment|/* maximum length of a name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXFIELD
+value|2500
+end_define
+
+begin_comment
+comment|/* maximum total length of a header field */
 end_comment
 
 begin_define
