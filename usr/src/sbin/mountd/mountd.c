@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mountd.c	5.15 (Berkeley) %G%"
+literal|"@(#)mountd.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -651,6 +651,31 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|SYSLOG
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|syslog
+value|SYSLOG
+end_define
 
 begin_else
 else|#
@@ -8090,6 +8115,63 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_function
+name|void
+name|SYSLOG
+parameter_list|(
+name|int
+name|pri
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 end_unit
 
