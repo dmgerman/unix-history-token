@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dz.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dz.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -893,13 +893,38 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tp
-operator|->
-name|t_ospeed
-operator|=
+ifndef|#
+directive|ifndef
+name|PORTSELECTOR
+if|if
+condition|(
 name|tp
 operator|->
 name|t_ispeed
+operator|==
+literal|0
+condition|)
+block|{
+else|#
+directive|else
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_HUPCLS
+expr_stmt|;
+endif|#
+directive|endif
+endif|PORTSELECTOR
+name|tp
+operator|->
+name|t_ispeed
+operator|=
+name|ISPEED
+expr_stmt|;
+name|tp
+operator|->
+name|t_ospeed
 operator|=
 name|ISPEED
 expr_stmt|;
@@ -909,7 +934,13 @@ name|t_flags
 operator|=
 name|IFLAGS
 expr_stmt|;
-comment|/* tp->t_state |= TS_HUPCLS; */
+ifndef|#
+directive|ifndef
+name|PORTSELECTOR
+block|}
+endif|#
+directive|endif
+endif|PORTSELECTOR
 name|dzparam
 argument_list|(
 name|unit
