@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fsdbutil.c,v 1.7 1998/06/15 07:12:20 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,6 +497,9 @@ name|printf
 argument_list|(
 literal|"I=%lu MODE=%o SIZE=%qu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|inum
 argument_list|,
 name|dp
