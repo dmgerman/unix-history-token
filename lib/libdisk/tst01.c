@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: tst01.c,v 1.4 1995/04/29 04:50:39 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: tst01.c,v 1.5 1995/04/29 07:21:13 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -24,8 +24,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|READLINE
+end_ifdef
 
 begin_include
 include|#
@@ -38,6 +50,11 @@ include|#
 directive|include
 file|<readline/history.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -83,6 +100,17 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|READLINE
+name|char
+name|input
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|p
@@ -152,7 +180,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Coudn't open disk %s"
+literal|"Couldn't open disk %s"
 argument_list|,
 name|argv
 index|[
@@ -217,6 +245,9 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|READLINE
 if|if
 condition|(
 name|q
@@ -235,6 +266,36 @@ argument_list|(
 name|myprompt
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+name|myprompt
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|q
+operator|=
+name|p
+operator|=
+name|fgets
+argument_list|(
+name|input
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|input
+argument_list|)
+argument_list|,
+name|stdin
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -256,7 +317,7 @@ argument_list|(
 operator|&
 name|p
 argument_list|,
-literal|" \t"
+literal|" \t\n"
 argument_list|)
 operator|)
 operator|!=
@@ -796,6 +857,37 @@ argument_list|(
 operator|*
 name|cmds
 argument_list|,
+literal|"boot"
+argument_list|)
+condition|)
+block|{
+specifier|extern
+name|u_char
+name|boot1
+index|[]
+decl_stmt|,
+name|boot2
+index|[]
+decl_stmt|;
+name|Set_Boot_Blocks
+argument_list|(
+name|d
+argument_list|,
+name|boot1
+argument_list|,
+name|boot2
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+operator|*
+name|cmds
+argument_list|,
 literal|"write"
 argument_list|)
 condition|)
@@ -808,6 +900,20 @@ name|Write_Disk
 argument_list|(
 name|d
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|Free_Disk
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+name|d
+operator|=
+name|Open_Disk
+argument_list|(
+name|d
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -840,6 +946,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\tbios cyl hd sect\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tboot\n"
 argument_list|)
 expr_stmt|;
 name|printf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.4 1995/04/29 04:50:38 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.5 1995/04/29 07:21:11 phk Exp $  *  */
 end_comment
 
 begin_define
@@ -60,10 +60,6 @@ define|#
 directive|define
 name|DISK_ON_TRACK
 value|1
-define|#
-directive|define
-name|DISK_REAL_GEOM
-value|2
 name|u_long
 name|real_cyl
 decl_stmt|;
@@ -136,18 +132,6 @@ decl_stmt|;
 name|int
 name|subtype
 decl_stmt|;
-define|#
-directive|define
-name|SUBTYPE_BSD_FS
-value|1
-define|#
-directive|define
-name|SUBTYPE_BSD_SWAP
-value|2
-define|#
-directive|define
-name|SUBTYPE_BSD_UNUSED
-value|3
 name|u_long
 name|flags
 decl_stmt|;
@@ -486,6 +470,120 @@ begin_comment
 comment|/* Write all the MBRs, disklabels, bootblocks and boot managers 	 */
 end_comment
 
+begin_function_decl
+name|int
+name|Cyl_Aligned
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|d
+parameter_list|,
+name|u_long
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Check if offset is aligned on a cylinder according to the 	 * bios geometry 	 */
+end_comment
+
+begin_function_decl
+name|u_long
+name|Next_Cyl_Aligned
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|d
+parameter_list|,
+name|u_long
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Round offset up to next cylinder according to the bios-geometry 	 */
+end_comment
+
+begin_function_decl
+name|u_long
+name|Prev_Cyl_Aligned
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|d
+parameter_list|,
+name|u_long
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Round offset down to previous cylinder according to the bios- 	 * geometry 	 */
+end_comment
+
+begin_function_decl
+name|int
+name|Track_Aligned
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|d
+parameter_list|,
+name|u_long
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Check if offset is aligned on a track according to the 	 * bios geometry 	 */
+end_comment
+
+begin_function_decl
+name|u_long
+name|Next_Track_Aligned
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|d
+parameter_list|,
+name|u_long
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Round offset up to next track according to the bios-geometry 	 */
+end_comment
+
+begin_function_decl
+name|u_long
+name|Prev_Track_Aligned
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|d
+parameter_list|,
+name|u_long
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Check if offset is aligned on a track according to the 	 * bios geometry 	 */
+end_comment
+
 begin_comment
 comment|/*   * Implementation details>>> DO NOT USE<<<  */
 end_comment
@@ -575,6 +673,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|write_block
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|daddr_t
+name|block
+parameter_list|,
+name|void
+modifier|*
+name|foo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|disklabel
 modifier|*
@@ -594,51 +709,6 @@ parameter_list|(
 name|struct
 name|disklabel
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|Aligned
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|d
-parameter_list|,
-name|u_long
-name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_long
-name|Next_Aligned
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|d
-parameter_list|,
-name|u_long
-name|offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_long
-name|Prev_Aligned
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|d
-parameter_list|,
-name|u_long
-name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -686,7 +756,7 @@ value|printf
 end_define
 
 begin_comment
-comment|/* TODO  *  * Need a error string mechanism from the functions instead of warn()  *   * Make sure only FreeBSD start at offset==0  *   * Make sure all MBR+extended children are aligned at create.  *   * Collapse must align.  *   * Make Write_Disk(struct disk*)  *   * Consider booting from OnTrack'ed disks.  *  * Get Bios-geom, ST506& OnTrack from driver (or otherwise)  *  * Make Create_DWIM().  *  * Make Is_Unchanged(struct disk *d1, struct chunk *c1)  *  *Sample output from tst01:  *  * Debug_Disk(wd0)  flags=0  real_geom=0/0/0  bios_geom=0/0/0  *>>        0x3d040          0    1411200    1411199 wd0      0 whole    0 0  *>>>>      0x3d080          0     960120     960119 wd0s1    3 freebsd  0 8  *>>>>>>    0x3d100          0      40960      40959 wd0s1a   5 part     0 0  *>>>>>>    0x3d180      40960     131072     172031 wd0s1b   5 part     0 0  *>>>>>>    0x3d1c0     172032     409600     581631 wd0s1e   5 part     0 0  *>>>>>>    0x3d200     581632     378488     960119 wd0s1f   5 part     0 0  *>>>>      0x3d140     960120       5670     965789 wd0s2    4 extended 0 8  *>>>>>>    0x3d240     960120          1     960120 -        7 reserved 0 8  *>>>>>>    0x3d2c0     960121         62     960182 -        6 unused   0 0  *>>>>>>    0x3d0c0     960183       5607     965789 wd0s5    2 fat      0 8  *>>>>      0x3d280     965790       1890     967679 wd0s3    1 foo      -2 8  *>>>>      0x3d300     967680     443520    1411199 wd0s4    3 freebsd  0 8  *>>>>>>    0x3d340     967680     443520    1411199 wd0s4a   5 part     0 0  *  * ^            ^           ^          ^          ^     ^      ^ ^        ^ ^  * level    chunkptr      start      size        end  name    type  subtype flags  *  * Underlying data structure:  *  *	Legend:  *<struct chunk> --> part  *			|  *			v next  *  *<wd0> --><wd0s1> --><wd0s1a>  *		     |           |  *		     |           v  *		     |<wd0s1b>  *		     |           |  *		     |           v  *		     |<wd0s1e>  *		     |           |  *		     |           v  *		     |<wd0s1f>  *		     |  *		     v  *<wd0s2> --><reserved>  *		     |           |  *		     |           v  *		     |<unused>  *		     |           |  *		     |           v  *		     |<wd0s5>  *		     |  *		     v  *<wd0s3>	  *		     |  *		     v  *<wd0s4> --><wd0s4a>  *  *  */
+comment|/* TODO  *  * Need a error string mechanism from the functions instead of warn()  *   * Make sure only FreeBSD start at offset==0  *   * Make sure all MBR+extended children are aligned at create.  *   * Collapse must align.  *   * Make Write_Disk(struct disk*)  *   * Consider booting from OnTrack'ed disks.  *  * Get Bios-geom, ST506& OnTrack from driver (or otherwise)  *  * Make Create_DWIM().  *  * Make Is_Unchanged(struct disk *d1, struct chunk *c1)  *   * Make Set_Active_Slice()  *  *Sample output from tst01:  *  * Debug_Disk(wd0)  flags=0  real_geom=0/0/0  bios_geom=0/0/0  *>>        0x3d040          0    1411200    1411199 wd0      0 whole    0 0  *>>>>      0x3d080          0     960120     960119 wd0s1    3 freebsd  0 8  *>>>>>>    0x3d100          0      40960      40959 wd0s1a   5 part     0 0  *>>>>>>    0x3d180      40960     131072     172031 wd0s1b   5 part     0 0  *>>>>>>    0x3d1c0     172032     409600     581631 wd0s1e   5 part     0 0  *>>>>>>    0x3d200     581632     378488     960119 wd0s1f   5 part     0 0  *>>>>      0x3d140     960120       5670     965789 wd0s2    4 extended 0 8  *>>>>>>    0x3d240     960120          1     960120 -        7 reserved 0 8  *>>>>>>    0x3d2c0     960121         62     960182 -        6 unused   0 0  *>>>>>>    0x3d0c0     960183       5607     965789 wd0s5    2 fat      0 8  *>>>>      0x3d280     965790       1890     967679 wd0s3    1 foo      -2 8  *>>>>      0x3d300     967680     443520    1411199 wd0s4    3 freebsd  0 8  *>>>>>>    0x3d340     967680     443520    1411199 wd0s4a   5 part     0 0  *  * ^            ^           ^          ^          ^     ^      ^ ^        ^ ^  * level    chunkptr      start      size        end  name    type  subtype flags  *  * Underlying data structure:  *  *	Legend:  *<struct chunk> --> part  *			|  *			v next  *  *<wd0> --><wd0s1> --><wd0s1a>  *		     |           |  *		     |           v  *		     |<wd0s1b>  *		     |           |  *		     |           v  *		     |<wd0s1e>  *		     |           |  *		     |           v  *		     |<wd0s1f>  *		     |  *		     v  *<wd0s2> --><reserved>  *		     |           |  *		     |           v  *		     |<unused>  *		     |           |  *		     |           v  *		     |<wd0s5>  *		     |  *		     v  *<wd0s3>	  *		     |  *		     v  *<wd0s4> --><wd0s4a>  *  *  */
 end_comment
 
 end_unit
