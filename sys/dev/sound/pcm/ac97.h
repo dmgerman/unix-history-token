@@ -90,7 +90,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AC97_MIX_PHONES
+name|AC97_MIX_AUXOUT
 value|0x04
 end_define
 
@@ -274,6 +274,13 @@ define|#
 directive|define
 name|AC97_EXTCAPS
 value|(AC97_EXTCAP_VRA | AC97_EXTCAP_DRA | AC97_EXTCAP_VRM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AC97_EXTCAP_SDAC
+value|(1<< 7)
 end_define
 
 begin_define

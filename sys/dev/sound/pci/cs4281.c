@@ -2898,7 +2898,7 @@ literal|0
 argument_list|,
 name|sc
 argument_list|,
-name|AC97_MIX_PHONES
+name|AC97_MIX_AUXOUT
 argument_list|,
 literal|0
 argument_list|)
