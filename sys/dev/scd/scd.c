@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.43 1999/05/06 18:54:19 peter Exp $ */
+comment|/* $Id: scd.c,v 1.44 1999/05/07 07:03:29 phk Exp $ */
 end_comment
 
 begin_comment
@@ -634,8 +634,8 @@ specifier|static
 name|int
 name|read_toc
 parameter_list|(
-name|dev_t
-name|dev
+name|unsigned
+name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1431,7 +1431,7 @@ name|rc
 operator|=
 name|read_toc
 argument_list|(
-name|dev
+name|unit
 argument_list|)
 operator|)
 operator|!=
@@ -6088,13 +6088,10 @@ specifier|static
 name|int
 name|read_toc
 parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
 name|unsigned
 name|unit
-decl_stmt|;
+parameter_list|)
+block|{
 name|struct
 name|scd_data
 modifier|*
@@ -6127,13 +6124,6 @@ name|first
 decl_stmt|,
 name|last
 decl_stmt|;
-name|unit
-operator|=
-name|scd_unit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|cd
 operator|=
 name|scd_data
