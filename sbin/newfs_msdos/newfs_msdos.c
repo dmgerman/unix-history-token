@@ -2122,11 +2122,9 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|errx
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
-literal|"%s is not a character device"
+literal|"warning: %s is not a character device"
 argument_list|,
 name|fname
 argument_list|)
