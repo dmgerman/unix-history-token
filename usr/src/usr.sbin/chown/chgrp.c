@@ -468,7 +468,7 @@ block|{
 comment|/* do stat for directory arguments */
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|argv
 index|[
@@ -482,10 +482,8 @@ condition|)
 block|{
 name|status
 operator|+=
-name|error
+name|Perror
 argument_list|(
-literal|"can't access %s"
-argument_list|,
 name|argv
 index|[
 name|c
@@ -557,9 +555,8 @@ index|[
 name|c
 index|]
 argument_list|,
-name|stbuf
-operator|.
-name|st_uid
+operator|-
+literal|1
 argument_list|,
 name|gid
 argument_list|)
@@ -567,10 +564,8 @@ condition|)
 block|{
 name|status
 operator|+=
-name|error
+name|Perror
 argument_list|(
-literal|"can't change %s"
-argument_list|,
 name|argv
 index|[
 name|c
@@ -707,17 +702,16 @@ name|chown
 argument_list|(
 name|dir
 argument_list|,
-name|uid
+operator|-
+literal|1
 argument_list|,
 name|gid
 argument_list|)
 operator|<
 literal|0
 operator|&&
-name|error
+name|Perror
 argument_list|(
-literal|"can't change %s"
-argument_list|,
 name|dir
 argument_list|)
 condition|)
@@ -735,14 +729,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
+block|{
 name|Perror
 argument_list|(
 name|dir
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -756,14 +754,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
 name|Perror
 argument_list|(
 name|dir
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
 operator|)
 return|;
+block|}
 name|dp
 operator|=
 name|readdir
@@ -806,7 +808,7 @@ control|)
 block|{
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|dp
 operator|->
@@ -821,10 +823,8 @@ condition|)
 block|{
 name|ecode
 operator|=
-name|error
+name|Perror
 argument_list|(
-literal|"can't access %s"
-argument_list|,
 name|dp
 operator|->
 name|d_name
@@ -900,9 +900,8 @@ name|dp
 operator|->
 name|d_name
 argument_list|,
-name|st
-operator|.
-name|st_uid
+operator|-
+literal|1
 argument_list|,
 name|gid
 argument_list|)
@@ -912,10 +911,8 @@ operator|&&
 operator|(
 name|ecode
 operator|=
-name|error
+name|Perror
 argument_list|(
-literal|"can't change %s"
-argument_list|,
 name|dp
 operator|->
 name|d_name
@@ -1082,6 +1079,12 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+operator|!
+name|fflag
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1094,9 +1097,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
-literal|1
+operator|!
+name|fflag
 operator|)
 return|;
 block|}
