@@ -4843,13 +4843,27 @@ operator|->
 name|d_conn
 operator|==
 literal|0
+operator|&&
+operator|(
+name|dp
+operator|->
+name|d_target
+operator|!=
+name|UNKNOWN
+operator|&&
+name|dp
+operator|->
+name|d_target
+operator|!=
+name|QUES
+operator|)
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%s: Warning, can't tell what is attached to scbus%s.\n"
+literal|"Warning: %s%s is configured at "
 argument_list|,
 name|dp
 operator|->
@@ -4861,6 +4875,17 @@ name|dp
 operator|->
 name|d_unit
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s%s which is not fixed at a single adapter.\n"
+argument_list|,
+name|mp
+operator|->
+name|d_name
 argument_list|,
 name|wnum
 argument_list|(
