@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.29	82/03/30	*/
+comment|/*	ip_output.c	1.30	82/03/30	*/
 end_comment
 
 begin_include
@@ -207,7 +207,7 @@ name|ip_id
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find interface for this packet in the routing 	 * table.  Note each interface has placed itself 	 * in there at boot time, so call on route degenerates 	 * to if_ifonnetof(ip->ip_dst.s_net). 	 */
+comment|/* 	 * Find interface for this packet in the routing 	 * table.  Note each interface has placed itself 	 * in there at boot time, so calls to rtalloc 	 * degenerate to if_ifonnetof(ip->ip_dst.s_net). 	 */
 if|if
 condition|(
 name|ro
@@ -274,6 +274,20 @@ name|rtalloc
 argument_list|(
 name|ro
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ro
+operator|!=
+operator|&
+name|iproute
+condition|)
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_refcnt
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -449,6 +463,13 @@ name|m
 argument_list|,
 name|hlen
 argument_list|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_use
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -785,6 +806,13 @@ name|mh
 argument_list|,
 name|hlen
 argument_list|)
+expr_stmt|;
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_use
+operator|++
 expr_stmt|;
 if|if
 condition|(

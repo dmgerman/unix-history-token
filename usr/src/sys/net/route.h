@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	4.5	82/03/30	*/
+comment|/*	route.h	4.6	82/03/30	*/
 end_comment
 
 begin_comment
@@ -13,11 +13,8 @@ name|rtentry
 block|{
 name|u_long
 name|rt_hash
-index|[
-literal|2
-index|]
 decl_stmt|;
-comment|/* [0] for net, [1] for host */
+comment|/* for net or for host */
 name|struct
 name|sockaddr
 name|rt_dst
@@ -97,6 +94,17 @@ begin_comment
 comment|/* destination is a neighbor */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTF_HOST
+value|0x4
+end_define
+
+begin_comment
+comment|/* host entry (net otherwise) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -111,14 +119,25 @@ begin_define
 define|#
 directive|define
 name|RTHASHSIZ
-value|16
+value|7
 end_define
 
 begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
-name|routehash
+name|rthost
+index|[
+name|RTHASHSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|rtnet
 index|[
 name|RTHASHSIZ
 index|]

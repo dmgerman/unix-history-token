@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.8	82/03/30	*/
+comment|/*	if_dmc.c	4.9	82/03/30	*/
 end_comment
 
 begin_include
@@ -1084,6 +1084,8 @@ operator|.
 name|if_addr
 argument_list|,
 name|RTF_DIRECT
+operator||
+name|RTF_HOST
 operator||
 name|RTF_UP
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.12	82/03/30	*/
+comment|/*	if.c	4.13	82/03/30	*/
 end_comment
 
 begin_include
@@ -739,7 +739,9 @@ operator|&
 name|sin
 argument_list|,
 operator|&
-name|sin
+name|ifp
+operator|->
+name|if_addr
 argument_list|,
 name|flags
 argument_list|)
