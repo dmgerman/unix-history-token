@@ -184,7 +184,7 @@ name|as_devnode
 decl_stmt|;
 comment|/* from make_dev */
 name|struct
-name|lock
+name|mtx
 name|as_lock
 decl_stmt|;
 comment|/* lock for access to GATT */
