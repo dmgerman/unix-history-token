@@ -173,6 +173,10 @@ define|#
 directive|define
 name|AR_F_FREEBSD_RAID
 value|0x4000
+define|#
+directive|define
+name|AR_F_TOGGLE
+value|0x8000
 name|int
 name|total_disks
 decl_stmt|;
