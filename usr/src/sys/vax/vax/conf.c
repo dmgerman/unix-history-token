@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.61	82/10/22	*/
+comment|/*	conf.c	4.62	82/10/31	*/
 end_comment
 
 begin_include
@@ -2868,6 +2868,8 @@ name|cons
 block|,
 name|ttselect
 block|,
+name|nodev
+block|,
 name|dzopen
 block|,
 name|dzclose
@@ -2886,6 +2888,8 @@ block|,
 name|dz_tty
 block|,
 name|ttselect
+block|,
+name|nodev
 block|,
 name|syopen
 block|,
@@ -2906,6 +2910,8 @@ literal|0
 block|,
 name|syselect
 block|,
+name|nodev
+block|,
 name|nulldev
 block|,
 name|nulldev
@@ -2924,6 +2930,8 @@ block|,
 literal|0
 block|,
 name|mmselect
+block|,
+name|nodev
 block|,
 name|hpopen
 block|,
@@ -2944,6 +2952,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|htopen
 block|,
 name|htclose
@@ -2962,6 +2972,8 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
 block|,
 name|vpopen
 block|,
@@ -2982,6 +2994,8 @@ literal|0
 block|,
 name|vpselect
 block|,
+name|nodev
+block|,
 name|nulldev
 block|,
 name|nulldev
@@ -2998,6 +3012,8 @@ block|,
 name|nulldev
 block|,
 literal|0
+block|,
+name|nodev
 block|,
 name|nodev
 block|,
@@ -3023,6 +3039,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 else|#
 directive|else
 name|nodev
@@ -3041,6 +3059,8 @@ block|,
 name|nodev
 block|,
 literal|0
+block|,
+name|nodev
 block|,
 name|nodev
 block|,
@@ -3065,6 +3085,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|vaopen
 block|,
 name|vaclose
@@ -3083,6 +3105,8 @@ block|,
 literal|0
 block|,
 name|vaselect
+block|,
+name|nodev
 block|,
 name|rkopen
 block|,
@@ -3103,6 +3127,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|dhopen
 block|,
 name|dhclose
@@ -3121,6 +3147,8 @@ block|,
 name|dh11
 block|,
 name|ttselect
+block|,
+name|nodev
 block|,
 name|upopen
 block|,
@@ -3141,6 +3169,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|tmopen
 block|,
 name|tmclose
@@ -3159,6 +3189,8 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
 block|,
 name|lpopen
 block|,
@@ -3179,6 +3211,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|tsopen
 block|,
 name|tsclose
@@ -3197,6 +3231,8 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
 block|,
 name|utopen
 block|,
@@ -3217,6 +3253,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|ctopen
 block|,
 name|ctclose
@@ -3235,6 +3273,8 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
 block|,
 name|mtopen
 block|,
@@ -3255,6 +3295,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|ptsopen
 block|,
 name|ptsclose
@@ -3273,6 +3315,8 @@ block|,
 name|pt_tty
 block|,
 name|ttselect
+block|,
+name|nodev
 block|,
 name|ptcopen
 block|,
@@ -3293,6 +3337,8 @@ name|pt_tty
 block|,
 name|ptcselect
 block|,
+name|nodev
+block|,
 name|dmfopen
 block|,
 name|dmfclose
@@ -3311,6 +3357,8 @@ block|,
 literal|0
 block|,
 name|ttselect
+block|,
+name|nodev
 block|,
 name|idcopen
 block|,
@@ -3331,6 +3379,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|dnopen
 block|,
 name|dnclose
@@ -3349,6 +3399,8 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
 block|,
 comment|/* 25-29 reserved to local sites */
 name|gpibopen
@@ -3370,6 +3422,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|lpaopen
 block|,
 name|lpaclose
@@ -3388,6 +3442,8 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
 block|,
 name|psopen
 block|,
@@ -3408,6 +3464,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|ibopen
 block|,
 name|ibclose
@@ -3426,6 +3484,8 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
 block|,
 name|adopen
 block|,
@@ -3446,6 +3506,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|efsopen
 block|,
 name|efsclose
@@ -3465,6 +3527,8 @@ literal|0
 block|,
 name|seltrue
 block|,
+name|nodev
+block|,
 name|ikopen
 block|,
 name|ikclose
@@ -3483,6 +3547,8 @@ block|,
 literal|0
 block|,
 name|seltrue
+block|,
+name|nodev
 block|, }
 decl_stmt|;
 end_decl_stmt
