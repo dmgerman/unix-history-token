@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.16	82/03/16	*/
+comment|/*	if_imp.c	4.17	82/03/19	*/
 end_comment
 
 begin_include
@@ -275,6 +275,12 @@ operator|->
 name|if_mtu
 operator|=
 name|IMP_MTU
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|imp_leader
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -616,7 +622,7 @@ argument_list|(
 name|IMPINPUT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Verify leader length.  Be careful with control 	 * message which don't get a length included. 	 * We should generate a "bad leader" message 	 * to the IMP about messages too short. 	 */
+comment|/* verify leader length. */
 if|if
 condition|(
 name|m
@@ -707,7 +713,7 @@ name|imp_leader
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check leader type -- should notify IMP 	 * in case of failure... 	 */
+comment|/* check leader type */
 if|if
 condition|(
 name|ip
@@ -805,31 +811,9 @@ operator|->
 name|il_mtype
 condition|)
 block|{
-comment|/* 	 * Data for a protocol.  Dispatch to the appropriate 	 * protocol routine (running at software interrupt). 	 * If this isn't a raw interface, advance pointer 	 * into mbuf past leader (done below). 	 */
 case|case
 name|IMPTYPE_DATA
 case|:
-name|ip
-operator|->
-name|il_length
-operator|=
-operator|(
-name|ntohs
-argument_list|(
-name|ip
-operator|->
-name|il_length
-argument_list|)
-operator|>>
-literal|3
-operator|)
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|imp_leader
-argument_list|)
-expr_stmt|;
 break|break;
 comment|/* 	 * IMP leader error.  Reset the IMP and discard the packet. 	 */
 case|case
@@ -1208,7 +1192,7 @@ goto|goto
 name|rawlinkin
 goto|;
 block|}
-comment|/* 	 * Queue on protocol's input queue. 	 */
+comment|/* 	 * Data for a protocol.  Dispatch to the appropriate 	 * protocol routine (running at software interrupt). 	 * If this isn't a raw interface, advance pointer 	 * into mbuf past leader. 	 */
 switch|switch
 condition|(
 name|ip
