@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pty.c	5.2 (Berkeley) %G%"
+literal|"@(#)pty.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,6 +153,13 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|char
+name|line
+index|[]
+init|=
+literal|"/dev/ptyXX"
+decl_stmt|;
 specifier|register
 specifier|const
 name|char
@@ -174,12 +181,6 @@ name|struct
 name|group
 modifier|*
 name|gr
-decl_stmt|;
-name|char
-name|line
-index|[]
-init|=
-literal|"/dev/ptyXX"
 decl_stmt|;
 if|if
 condition|(
