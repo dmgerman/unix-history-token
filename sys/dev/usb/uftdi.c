@@ -570,6 +570,12 @@ operator|->
 name|product
 operator|==
 name|USB_PRODUCT_FTDI_SERIAL_8U232AM
+operator|||
+name|uaa
+operator|->
+name|product
+operator|==
+name|USB_PRODUCT_FTDI_CFA_631
 operator|)
 condition|)
 return|return
@@ -812,6 +818,9 @@ expr_stmt|;
 break|break;
 case|case
 name|USB_PRODUCT_FTDI_SERIAL_8U232AM
+case|:
+case|case
+name|USB_PRODUCT_FTDI_CFA_631
 case|:
 name|sc
 operator|->
