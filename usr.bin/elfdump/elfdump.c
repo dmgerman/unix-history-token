@@ -1696,6 +1696,8 @@ block|,
 literal|"PT_SHLIB"
 block|,
 literal|"PT_PHDR"
+block|,
+literal|"PT_TLS"
 block|}
 decl_stmt|;
 end_decl_stmt
