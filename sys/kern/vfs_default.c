@@ -1148,7 +1148,7 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-comment|/* 	 * Return true for read/write.  If the user asked for something 	 * special, return POLLNVAL, so that clients have a way of 	 * determining reliably whether or not the extended 	 * functionality is present without hard-coding knowledge 	 * of specific filesystem implementations. 	 */
+comment|/* 	 * Return true for read/write.  If the user asked for something 	 * special, return POLLNVAL, so that clients have a way of 	 * determining reliably whether or not the extended 	 * functionality is present without hard-coding knowledge 	 * of specific filesystem implementations. 	 * Stay in sync with kern_conf.c::no_poll(). 	 */
 if|if
 condition|(
 name|ap

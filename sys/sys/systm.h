@@ -597,24 +597,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|seltrue
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|which
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ureadc
 parameter_list|(
 name|int

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ctype.h>
 end_include
 
@@ -222,9 +228,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Define a dead_cdevsw for use when devices leave unexpectedly. */
-end_comment
+begin_function
+name|int
+name|nullop
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|eopnotsupp
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -241,6 +273,26 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function
+specifier|static
+name|int
+name|enodev
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Define a dead_cdevsw for use when devices leave unexpectedly. */
+end_comment
 
 begin_define
 define|#
@@ -281,14 +333,14 @@ begin_define
 define|#
 directive|define
 name|dead_poll
-value|nopoll
+value|(d_poll_t *)enodev
 end_define
 
 begin_define
 define|#
 directive|define
 name|dead_mmap
-value|nommap
+value|(d_mmap_t *)enodev
 end_define
 
 begin_function
@@ -397,6 +449,156 @@ name|dead_kqfilter
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Default methods if driver does not specify method */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|null_open
+value|(d_open_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|null_close
+value|(d_close_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|no_read
+value|(d_read_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|no_write
+value|(d_write_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|no_ioctl
+value|(d_ioctl_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|no_mmap
+value|(d_mmap_t *)enodev
+end_define
+
+begin_function
+specifier|static
+name|int
+name|no_kqfilter
+parameter_list|(
+name|dev_t
+name|dev
+name|__unused
+parameter_list|,
+name|struct
+name|knote
+modifier|*
+name|kn
+name|__unused
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|no_strategy
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|biofinish
+argument_list|(
+name|bp
+argument_list|,
+name|NULL
+argument_list|,
+name|ENODEV
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|no_poll
+parameter_list|(
+name|dev_t
+name|dev
+name|__unused
+parameter_list|,
+name|int
+name|events
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+name|__unused
+parameter_list|)
+block|{
+comment|/* 	 * Return true for read/write.  If the user asked for something 	 * special, return POLLNVAL, so that clients have a way of 	 * determining reliably whether or not the extended 	 * functionality is present without hard-coding knowledge 	 * of specific filesystem implementations. 	 * Stay in sync with vop_nopoll(). 	 */
+if|if
+condition|(
+name|events
+operator|&
+operator|~
+name|POLLSTANDARD
+condition|)
+return|return
+operator|(
+name|POLLNVAL
+operator|)
+return|;
+return|return
+operator|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLOUT
+operator||
+name|POLLRDNORM
+operator||
+name|POLLWRNORM
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|no_dump
+value|(dumper_t *)enodev
+end_define
 
 begin_function
 name|struct
@@ -1161,7 +1363,7 @@ name|devsw
 operator|->
 name|d_open
 operator|=
-name|nullopen
+name|null_open
 expr_stmt|;
 if|if
 condition|(
@@ -1175,7 +1377,7 @@ name|devsw
 operator|->
 name|d_close
 operator|=
-name|nullclose
+name|null_close
 expr_stmt|;
 if|if
 condition|(
@@ -1189,7 +1391,7 @@ name|devsw
 operator|->
 name|d_read
 operator|=
-name|noread
+name|no_read
 expr_stmt|;
 if|if
 condition|(
@@ -1203,7 +1405,7 @@ name|devsw
 operator|->
 name|d_write
 operator|=
-name|nowrite
+name|no_write
 expr_stmt|;
 if|if
 condition|(
@@ -1217,7 +1419,7 @@ name|devsw
 operator|->
 name|d_ioctl
 operator|=
-name|noioctl
+name|no_ioctl
 expr_stmt|;
 if|if
 condition|(
@@ -1231,7 +1433,7 @@ name|devsw
 operator|->
 name|d_poll
 operator|=
-name|nopoll
+name|no_poll
 expr_stmt|;
 if|if
 condition|(
@@ -1245,7 +1447,7 @@ name|devsw
 operator|->
 name|d_mmap
 operator|=
-name|nommap
+name|no_mmap
 expr_stmt|;
 if|if
 condition|(
@@ -1259,7 +1461,7 @@ name|devsw
 operator|->
 name|d_strategy
 operator|=
-name|nostrategy
+name|no_strategy
 expr_stmt|;
 if|if
 condition|(
@@ -1273,7 +1475,7 @@ name|devsw
 operator|->
 name|d_dump
 operator|=
-name|nodump
+name|no_dump
 expr_stmt|;
 if|if
 condition|(
@@ -1287,7 +1489,7 @@ name|devsw
 operator|->
 name|d_kqfilter
 operator|=
-name|nokqfilter
+name|no_kqfilter
 expr_stmt|;
 if|if
 condition|(
