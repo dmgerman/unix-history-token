@@ -285,6 +285,13 @@ name|BIO_DONE
 value|0x02
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIO_ONQUEUE
+value|0x04
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
