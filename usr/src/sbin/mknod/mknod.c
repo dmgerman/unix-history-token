@@ -1,13 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mknod.c	4.1 (Berkeley) %G%"
+literal|"@(#)mknod.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_function
 name|main
@@ -141,11 +159,23 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+block|{
+name|fprintf
 argument_list|(
-literal|"mknod"
+name|stderr
+argument_list|,
+literal|"mknod: "
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
