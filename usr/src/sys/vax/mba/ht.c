@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ht.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ht.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -267,8 +267,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|H_1600BPI
-value|08
+name|H_DENS
+parameter_list|(
+name|dev
+parameter_list|)
+value|((minor(dev)>> 3)& 03)
 end_define
 
 begin_define
@@ -554,6 +557,25 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|htdens
+index|[
+literal|4
+index|]
+init|=
+block|{
+name|HTTC_800BPI
+block|,
+name|HTTC_1600BPI
+block|,
+name|HTTC_6250BPI
+block|,
+name|HTTC_800BPI
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|htopen
 argument_list|(
@@ -673,20 +695,13 @@ name|sc
 operator|->
 name|sc_dens
 operator|=
-operator|(
-operator|(
-name|minor
+name|htdens
+index|[
+name|H_DENS
 argument_list|(
 name|dev
 argument_list|)
-operator|&
-name|H_1600BPI
-operator|)
-condition|?
-name|HTTC_1600BPI
-else|:
-name|HTTC_800BPI
-operator|)
+index|]
 operator||
 name|HTTC_PDP11
 operator||
