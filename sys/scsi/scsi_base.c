@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 2.4 93/10/16 00:58:43 julian Exp Locker: julian $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.1 1993/11/18 05:02:51 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -482,11 +482,19 @@ name|SDEV_WAITING
 operator|)
 condition|)
 block|{
+name|sc_link
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SDEV_WAITING
+expr_stmt|;
 name|wakeup
 argument_list|(
 name|sc_link
 argument_list|)
 expr_stmt|;
+comment|/* remember, it wakes them ALL up */
 block|}
 else|else
 block|{
