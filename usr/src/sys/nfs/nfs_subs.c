@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3261,6 +3261,12 @@ name|nfs_nhinit
 argument_list|()
 expr_stmt|;
 comment|/* Init the nfsnode table */
+name|nfsrv_init
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Init server data structures */
 name|nfsrv_initcache
 argument_list|()
 expr_stmt|;
