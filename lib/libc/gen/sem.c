@@ -544,7 +544,7 @@ name|sem_check_validity
 argument_list|(
 name|sem
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 return|return
