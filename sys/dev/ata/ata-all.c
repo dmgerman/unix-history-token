@@ -1092,6 +1092,13 @@ name|irq1
 decl_stmt|,
 name|irq2
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|irq
+init|=
+name|NULL
+decl_stmt|;
 name|int32_t
 name|lun
 decl_stmt|;
@@ -1544,11 +1551,6 @@ endif|#
 directive|endif
 else|else
 block|{
-name|struct
-name|resource
-modifier|*
-name|irq
-decl_stmt|;
 name|int
 name|rid
 init|=
@@ -1701,11 +1703,6 @@ endif|#
 directive|endif
 else|else
 block|{
-name|struct
-name|resource
-modifier|*
-name|irq
-decl_stmt|;
 name|int
 name|rid
 init|=
@@ -1715,6 +1712,17 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
+if|if
+condition|(
+name|irq1
+operator|!=
+name|irq2
+operator|||
+name|irq
+operator|==
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -1748,6 +1756,7 @@ argument_list|(
 literal|"ata_pciattach: Unable to alloc interrupt\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -2705,7 +2714,6 @@ operator|)
 operator|==
 name|ATA_S_BUSY
 condition|)
-comment|/*XXX SOS*/
 return|return;
 comment|/* find& call the responsible driver to process this interrupt */
 switch|switch
@@ -2725,11 +2733,14 @@ name|ATA_ACTIVE_ATA
 case|:
 if|if
 condition|(
+operator|!
 name|scp
 operator|->
 name|running
-operator|&&
-operator|(
+condition|)
+return|return;
+if|if
+condition|(
 name|ad_interrupt
 argument_list|(
 name|scp
@@ -2738,7 +2749,6 @@ name|running
 argument_list|)
 operator|==
 name|ATA_OP_CONTINUES
-operator|)
 condition|)
 return|return;
 break|break;
@@ -2762,11 +2772,14 @@ name|ATA_ACTIVE_ATAPI
 case|:
 if|if
 condition|(
+operator|!
 name|scp
 operator|->
 name|running
-operator|&&
-operator|(
+condition|)
+return|return;
+if|if
+condition|(
 name|atapi_interrupt
 argument_list|(
 name|scp
@@ -2775,7 +2788,6 @@ name|running
 argument_list|)
 operator|==
 name|ATA_OP_CONTINUES
-operator|)
 condition|)
 return|return;
 break|break;
@@ -2794,13 +2806,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ATA_WAIT_READY
+case|:
+break|break;
+case|case
 name|ATA_REINITING
 case|:
 return|return;
-case|case
-name|ATA_IGNORE_INTR
-case|:
-break|break;
 default|default:
 case|case
 name|ATA_IDLE
@@ -4180,7 +4192,7 @@ name|ATA_IDLE
 condition|)
 name|printf
 argument_list|(
-literal|"DANGER wait_intr active=%s\n"
+literal|"WARNING: WAIT_INTR active=%s\n"
 argument_list|,
 name|active2str
 argument_list|(
@@ -4242,7 +4254,7 @@ return|;
 block|}
 break|break;
 case|case
-name|ATA_IGNORE_INTR
+name|ATA_WAIT_READY
 case|:
 if|if
 condition|(
@@ -4260,7 +4272,7 @@ name|ATA_REINITING
 condition|)
 name|printf
 argument_list|(
-literal|"DANGER ignore_intr active=%s\n"
+literal|"WARNING: WAIT_READY active=%s\n"
 argument_list|,
 name|active2str
 argument_list|(
@@ -4270,19 +4282,11 @@ name|active
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|scp
-operator|->
-name|active
-operator|!=
-name|ATA_REINITING
-condition|)
 name|scp
 operator|->
 name|active
 operator|=
-name|ATA_IGNORE_INTR
+name|ATA_WAIT_READY
 expr_stmt|;
 name|outb
 argument_list|(
@@ -4295,6 +4299,50 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ata_wait
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|,
+name|ATA_S_READY
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ata%d-%s: timeout waiting for command=%02x s=%02x e=%02x\n"
+argument_list|,
+name|scp
+operator|->
+name|lun
+argument_list|,
+name|device
+condition|?
+literal|"slave"
+else|:
+literal|"master"
+argument_list|,
+name|command
+argument_list|,
+name|scp
+operator|->
+name|status
+argument_list|,
+name|scp
+operator|->
+name|error
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 break|break;
 case|case
 name|ATA_IMMEDIATE
@@ -4314,7 +4362,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"DANGER illegal interrupt flag=%s\n"
+literal|"DANGER: illegal interrupt flag=%s\n"
 argument_list|,
 name|active2str
 argument_list|(
@@ -4420,14 +4468,6 @@ case|:
 return|return
 operator|(
 literal|"ATA_WAIT_INTR"
-operator|)
-return|;
-case|case
-name|ATA_IGNORE_INTR
-case|:
-return|return
-operator|(
-literal|"ATA_IGNORE_INTR"
 operator|)
 return|;
 case|case

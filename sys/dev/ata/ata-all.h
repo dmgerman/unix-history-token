@@ -858,7 +858,7 @@ name|ATA_WAIT_INTR
 value|0x1
 define|#
 directive|define
-name|ATA_IGNORE_INTR
+name|ATA_WAIT_READY
 value|0x2
 define|#
 directive|define

@@ -1836,6 +1836,11 @@ operator|>
 literal|0
 condition|)
 block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|is_physical_memory
@@ -2308,6 +2313,19 @@ literal|0
 condition|)
 block|{
 comment|/* start timeout for this transfer */
+if|if
+condition|(
+name|panicstr
+condition|)
+name|request
+operator|->
+name|timeout_handle
+operator|.
+name|callout
+operator|=
+name|NULL
+expr_stmt|;
+else|else
 name|request
 operator|->
 name|timeout_handle
@@ -3453,6 +3471,14 @@ name|request
 operator|->
 name|device
 decl_stmt|;
+name|adp
+operator|->
+name|controller
+operator|->
+name|running
+operator|=
+name|NULL
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ata%d-%s: ad_timeout: lost disk contact - resetting\n"

@@ -45,15 +45,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATAPI_P_ABORT
-value|0
+name|ATAPI_P_DONEDRQ
+value|(ATA_S_DRQ | ATA_I_CMD | ATA_I_IN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ATAPI_P_DONE
-value|(ATA_I_IN | ATA_I_CMD)
+value|(ATA_I_CMD | ATA_I_IN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATAPI_P_ABORT
+value|0
 end_define
 
 begin_comment
