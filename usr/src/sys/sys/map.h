@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	map.h	4.3	81/02/27	*/
+comment|/*	map.h	4.4	81/02/27	*/
 end_comment
 
 begin_comment
@@ -32,6 +32,12 @@ name|struct
 name|map
 modifier|*
 name|swapmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nswapmap
 decl_stmt|;
 end_decl_stmt
 
