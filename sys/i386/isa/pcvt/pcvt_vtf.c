@@ -8156,7 +8156,7 @@ operator|->
 name|scroll_lock
 operator|)
 argument_list|,
-name|PUSER
+name|PPAUSE
 argument_list|,
 literal|"scrlck"
 argument_list|,
@@ -8532,7 +8532,7 @@ operator|->
 name|scroll_lock
 operator|)
 argument_list|,
-name|PUSER
+name|PPAUSE
 argument_list|,
 literal|"scrlck"
 argument_list|,
