@@ -89,6 +89,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libc_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<spinlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"local.h"
 end_include
 
@@ -231,6 +243,31 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|spinlock_t
+name|thread_lock
+init|=
+name|_SPINLOCK_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCK
+parameter_list|()
+value|if (__isthreaded) _SPINLOCK(&thread_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_UNLOCK
+parameter_list|()
+value|if (__isthreaded) _SPINUNLOCK(&thread_lock)
+end_define
 
 begin_function
 specifier|static
@@ -382,6 +419,9 @@ condition|)
 name|__sinit
 argument_list|()
 expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|g
@@ -453,6 +493,9 @@ name|NULL
 condition|)
 break|break;
 block|}
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -467,6 +510,9 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* reserve this slot; caller sets real flags */
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|fp
 operator|->
 name|_p
