@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apropos.c	5.12 (Berkeley) %G%"
+literal|"@(#)apropos.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|MAXLINELEN
-value|256
+value|1024
 end_define
 
 begin_comment
@@ -598,11 +598,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
 name|lowstr
 argument_list|(
