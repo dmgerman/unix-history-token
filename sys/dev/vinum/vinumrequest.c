@@ -4,7 +4,7 @@ comment|/* XXX to do:   * Decide where we need splbio ()  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: request.c,v 1.5 1998/12/28 04:56:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.22 1999/01/17 06:15:46 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -42,19 +42,6 @@ include|#
 directive|include
 file|<sys/resourcevar.h>
 end_include
-
-begin_comment
-comment|/* pointer to ioctl p parameter, to save passing it around */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|proc
-modifier|*
-name|myproc
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|enum
@@ -236,18 +223,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sdio
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|sdio_done
 parameter_list|(
 name|struct
@@ -343,43 +318,12 @@ modifier|*
 name|ubp
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|s
 init|=
 name|splhigh
 argument_list|()
 decl_stmt|;
-name|vinum_conf
-operator|.
-name|rqipp
-operator|=
-operator|&
-name|rqip
-expr_stmt|;
-comment|/* XXX for broken gdb */
-name|vinum_conf
-operator|.
-name|rqinfop
-operator|=
-name|rqinfo
-expr_stmt|;
-comment|/* XXX for broken gdb */
-if|#
-directive|if
-name|__FreeBSD__
-operator|<
-literal|3
-name|rqip
-operator|->
-name|timestamp
-operator|=
-name|time
-expr_stmt|;
-comment|/* when did this happen? */
-else|#
-directive|else
 name|microtime
 argument_list|(
 operator|&
@@ -389,8 +333,6 @@ name|timestamp
 argument_list|)
 expr_stmt|;
 comment|/* when did this happen? */
-endif|#
-directive|endif
 name|rqip
 operator|->
 name|type
@@ -515,8 +457,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|volno
 decl_stmt|;
@@ -526,9 +466,6 @@ modifier|*
 name|vol
 init|=
 name|NULL
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|struct
 name|devcode
@@ -546,89 +483,6 @@ operator|->
 name|b_dev
 decl_stmt|;
 comment|/* decode device number */
-name|enum
-name|requeststatus
-name|status
-decl_stmt|;
-comment|/* We may have changed the configuration in      * an interrupt context.  Update it now.  It      * could change again, so do it in a loop.      * XXX this is broken and contains a race condition.      * The correct way is to hand it off the the Vinum      * daemon, but I haven't found a name for it yet */
-while|while
-condition|(
-name|vinum_conf
-operator|.
-name|flags
-operator|&
-name|VF_DIRTYCONFIG
-condition|)
-block|{
-comment|/* config is dirty, save it now */
-name|int
-name|driveno
-decl_stmt|;
-name|vinum_conf
-operator|.
-name|flags
-operator|&=
-operator|~
-name|VF_DIRTYCONFIG
-expr_stmt|;
-comment|/* turn it off */
-for|for
-control|(
-name|driveno
-operator|=
-literal|0
-init|;
-name|driveno
-operator|<
-name|vinum_conf
-operator|.
-name|drives_used
-condition|;
-name|driveno
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|(
-name|DRIVE
-index|[
-name|driveno
-index|]
-operator|.
-name|state
-operator|==
-name|drive_down
-operator|)
-comment|/* drive down */
-operator|&&
-operator|(
-name|DRIVE
-index|[
-name|driveno
-index|]
-operator|.
-name|vp
-operator|!=
-name|NULL
-operator|)
-condition|)
-comment|/* but still open */
-name|close_drive
-argument_list|(
-operator|&
-name|DRIVE
-index|[
-name|driveno
-index|]
-argument_list|)
-expr_stmt|;
-comment|/* close it now */
-block|}
-name|save_config
-argument_list|()
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|device
@@ -638,6 +492,9 @@ condition|)
 block|{
 case|case
 name|VINUM_SD_TYPE
+case|:
+case|case
+name|VINUM_RAWSD_TYPE
 case|:
 name|sdio
 argument_list|(
@@ -675,7 +532,7 @@ case|:
 comment|/* volume I/O */
 name|volno
 operator|=
-name|VOLNO
+name|Volno
 argument_list|(
 name|bp
 operator|->
@@ -746,6 +603,9 @@ comment|/* Plex I/O is pretty much the same as volume I/O 	 * for a single plex.
 case|case
 name|VINUM_PLEX_TYPE
 case|:
+case|case
+name|VINUM_RAWPLEX_TYPE
+case|:
 name|bp
 operator|->
 name|b_resid
@@ -784,8 +644,6 @@ name|int
 name|reviveok
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|plexno
 decl_stmt|;
@@ -799,27 +657,11 @@ modifier|*
 name|vol
 decl_stmt|;
 name|struct
-name|rqgroup
-modifier|*
-name|rqg
-decl_stmt|;
-comment|/* current plex's requests */
-name|struct
-name|rqelement
-modifier|*
-name|rqe
-decl_stmt|;
-comment|/* individual element */
-name|struct
 name|request
 modifier|*
 name|rq
 decl_stmt|;
 comment|/* build up our request here */
-name|int
-name|rqno
-decl_stmt|;
-comment|/* index in request list */
 name|enum
 name|requeststatus
 name|status
@@ -968,7 +810,7 @@ name|volplex
 operator|.
 name|volno
 operator|=
-name|VOLNO
+name|Volno
 argument_list|(
 name|bp
 operator|->
@@ -1016,7 +858,7 @@ name|volplex
 operator|.
 name|plexno
 operator|=
-name|PLEXNO
+name|Plexno
 argument_list|(
 name|bp
 operator|->
@@ -1299,7 +1141,7 @@ name|bre
 argument_list|(
 name|rq
 argument_list|,
-name|PLEXNO
+name|Plexno
 argument_list|(
 name|bp
 operator|->
@@ -1392,38 +1234,15 @@ operator|-
 literal|1
 return|;
 block|}
-block|{
-comment|/* XXX */
-name|int
-name|result
-decl_stmt|;
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
-name|result
-operator|=
+return|return
 name|launch_requests
 argument_list|(
 name|rq
 argument_list|,
 name|reviveok
 argument_list|)
-expr_stmt|;
-comment|/* now start the requests if we can */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|result
 return|;
-block|}
-comment|/*    return launch_requests (rq, reviveok);     */
-comment|/* start the requests */
+comment|/* now start the requests if we can */
 block|}
 block|}
 end_function
@@ -1483,92 +1302,42 @@ condition|)
 block|{
 comment|/* and we don't want to do it now, */
 name|struct
-name|volume
+name|sd
 modifier|*
-name|vol
-init|=
-operator|&
-name|VOL
-index|[
-name|VOLNO
-argument_list|(
-name|rq
-operator|->
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-index|]
+name|sd
 decl_stmt|;
-name|struct
-name|plex
-modifier|*
-name|plex
-decl_stmt|;
-name|int
-name|plexno
-decl_stmt|;
-for|for
-control|(
-name|plexno
-operator|=
-literal|0
-init|;
-name|plexno
-operator|<
-name|vol
-operator|->
-name|plexes
-condition|;
-name|plexno
-operator|++
-control|)
-block|{
-comment|/* find the reviving plex */
-name|plex
-operator|=
-operator|&
-name|PLEX
-index|[
-name|vol
-operator|->
-name|plex
-index|[
-name|plexno
-index|]
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|plex
-operator|->
-name|state
-operator|==
-name|plex_reviving
-condition|)
-comment|/* found it */
-break|break;
-block|}
-if|if
-condition|(
-name|plexno
-operator|<
-name|vol
-operator|->
-name|plexes
-condition|)
-block|{
-comment|/* found it? */
 name|struct
 name|request
 modifier|*
 name|waitlist
-init|=
-name|plex
+decl_stmt|;
+comment|/* point to the waitlist */
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|rq
+operator|->
+name|sdno
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|sd
 operator|->
 name|waitlist
-decl_stmt|;
-comment|/* point to the waiting list */
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* something there already, */
+name|waitlist
+operator|=
+name|sd
+operator|->
+name|waitlist
+expr_stmt|;
 while|while
 condition|(
 name|waitlist
@@ -1591,22 +1360,75 @@ operator|=
 name|rq
 expr_stmt|;
 comment|/* hook our request there */
+block|}
+else|else
+name|sd
+operator|->
+name|waitlist
+operator|=
+name|rq
+expr_stmt|;
+comment|/* hook our request at the front */
+if|#
+directive|if
+name|VINUMDEBUG
+if|if
+condition|(
+name|debug
+operator|&
+name|DEBUG_REVIVECONFLICT
+condition|)
+name|printf
+argument_list|(
+literal|"Revive conflict sd %d: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
+argument_list|,
+name|rq
+operator|->
+name|sdno
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|rq
+argument_list|,
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+condition|?
+literal|"Read"
+else|:
+literal|"Write"
+argument_list|,
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_dev
+argument_list|,
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
 comment|/* and get out of here */
-block|}
-else|else
-comment|/* bad vinum, bad */
-name|printf
-argument_list|(
-literal|"vinum: can't find reviving plex for volume %s\n"
-argument_list|,
-name|vol
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 block|}
 name|rq
 operator|->
@@ -1626,6 +1448,11 @@ name|NULL
 condition|)
 block|{
 comment|/* no request */
+name|printf
+argument_list|(
+literal|"vinum: null rqg"
+argument_list|)
+expr_stmt|;
 name|abortrequest
 argument_list|(
 name|rq
@@ -1804,20 +1631,6 @@ expr_stmt|;
 comment|/* one less active request */
 else|else
 block|{
-name|struct
-name|drive
-modifier|*
-name|drive
-init|=
-operator|&
-name|DRIVE
-index|[
-name|rqe
-operator|->
-name|driveno
-index|]
-decl_stmt|;
-comment|/* drive to access */
 if|if
 condition|(
 operator|(
@@ -2031,8 +1844,6 @@ name|daddr_t
 name|diskend
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|sdno
 decl_stmt|;
@@ -2181,21 +1992,11 @@ block|{
 comment|/* subdisk and ends after the start of this sd */
 if|if
 condition|(
-operator|(
 name|sd
 operator|->
 name|state
 operator|!=
 name|sd_up
-operator|)
-operator|||
-operator|(
-name|plex
-operator|->
-name|state
-operator|!=
-name|plex_up
-operator|)
 condition|)
 block|{
 name|enum
@@ -2221,11 +2022,10 @@ if|if
 condition|(
 name|s
 condition|)
-comment|/* give up? */
 return|return
 name|s
 return|;
-comment|/* yup */
+comment|/* XXX get this right */
 block|}
 name|rqg
 operator|=
@@ -2525,21 +2325,11 @@ expr_stmt|;
 comment|/* the subdisk in question */
 if|if
 condition|(
-operator|(
 name|sd
 operator|->
 name|state
 operator|!=
 name|sd_up
-operator|)
-operator|||
-operator|(
-name|plex
-operator|->
-name|state
-operator|!=
-name|plex_up
-operator|)
 condition|)
 block|{
 name|enum
@@ -2892,8 +2682,6 @@ name|plexindex
 parameter_list|)
 block|{
 comment|/* index in the volume's plex table */
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -3198,8 +2986,6 @@ name|rq
 parameter_list|)
 block|{
 comment|/* request */
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -3291,7 +3077,7 @@ expr_stmt|;
 comment|/* start offset of transfer */
 name|status
 operator|=
-name|min
+name|max
 argument_list|(
 name|status
 argument_list|,
@@ -3341,8 +3127,6 @@ modifier|*
 name|plex
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|sd
 modifier|*
@@ -3460,21 +3244,7 @@ operator||
 name|B_BUSY
 expr_stmt|;
 comment|/* inform us when it's done */
-if|if
-condition|(
-name|plex
-operator|->
-name|state
-operator|==
-name|plex_reviving
-condition|)
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ORDERED
-expr_stmt|;
-comment|/* keep request order if we're reviving */
+comment|/* XXX Should we check for reviving plexes here, and      * set B_ORDERED if so? */
 name|bp
 operator|->
 name|b_iodone
@@ -3761,7 +3531,7 @@ operator|=
 operator|&
 name|SD
 index|[
-name|SDNO
+name|Sdno
 argument_list|(
 name|bp
 operator|->
@@ -3790,16 +3560,40 @@ name|drive_up
 condition|)
 block|{
 comment|/* XXX until we get the states fixed */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_WRITE
+condition|)
+comment|/* writing, */
 name|set_sd_state
 argument_list|(
-name|SDNO
+name|Sdno
 argument_list|(
 name|bp
 operator|->
 name|b_dev
 argument_list|)
 argument_list|,
-name|sd_obsolete
+name|sd_stale
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
+else|else
+name|set_sd_state
+argument_list|(
+name|Sdno
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+argument_list|,
+name|sd_crashed
 argument_list|,
 name|setstate_force
 argument_list|)
@@ -3823,35 +3617,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* XXX decide which states we will really accept here.  up      * implies it could be involved with a plex, in which      * case we don't want to dick with it */
 if|if
 condition|(
-operator|(
 name|sd
 operator|->
 name|state
-operator|!=
-name|sd_up
-operator|)
-operator|&&
-operator|(
-name|sd
-operator|->
-name|state
-operator|!=
-name|sd_initializing
-operator|)
-operator|&&
-operator|(
-name|sd
-operator|->
-name|state
-operator|!=
-name|sd_reborn
-operator|)
+operator|<
+name|sd_empty
 condition|)
 block|{
-comment|/* we can't access it */
+comment|/* nothing to talk to, */
 name|bp
 operator|->
 name|b_flags
