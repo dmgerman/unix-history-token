@@ -186,12 +186,6 @@ index|[]
 init|=
 block|{
 block|{
-literal|"CCDF_SWAP"
-block|,
-name|CCDF_SWAP
-block|}
-block|,
-block|{
 literal|"CCDF_UNIFORM"
 block|,
 name|CCDF_UNIFORM
@@ -201,12 +195,6 @@ block|{
 literal|"CCDF_MIRROR"
 block|,
 name|CCDF_MIRROR
-block|}
-block|,
-block|{
-literal|"CCDF_PARITY"
-block|,
-name|CCDF_PARITY
 block|}
 block|,
 block|{
