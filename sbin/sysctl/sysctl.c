@@ -894,6 +894,14 @@ name|CTLTYPE
 operator|)
 operator|==
 name|CTLTYPE_ULONG
+operator|||
+operator|(
+name|kind
+operator|&
+name|CTLTYPE
+operator|)
+operator|==
+name|CTLTYPE_QUAD
 condition|)
 block|{
 if|if
