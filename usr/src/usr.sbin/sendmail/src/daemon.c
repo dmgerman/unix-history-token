@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.47 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.48 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.47 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.48 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2851,7 +2851,10 @@ name|CurEnv
 operator|->
 name|e_message
 operator|=
+name|newstr
+argument_list|(
 name|msg
+argument_list|)
 expr_stmt|;
 block|}
 operator|*
