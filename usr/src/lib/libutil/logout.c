@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logout.c	5.1 (Berkeley) %G%"
+literal|"@(#)logout.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,10 @@ directive|define
 name|UTMPFILE
 value|"/etc/utmp"
 end_define
+
+begin_comment
+comment|/* 0 on failure, 1 on success */
+end_comment
 
 begin_expr_stmt
 name|logout
@@ -125,7 +129,7 @@ operator|)
 return|;
 name|rval
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -278,7 +282,7 @@ argument_list|)
 expr_stmt|;
 name|rval
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 operator|(
