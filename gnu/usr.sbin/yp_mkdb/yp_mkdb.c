@@ -4,7 +4,7 @@ comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Rebe
 end_comment
 
 begin_comment
-comment|/*  * $Id: yp_mkdb.c,v 1.4 1995/10/11 14:30:51 wpaul Exp $  */
+comment|/*  * $Id: yp_mkdb.c,v 1.5 1995/10/23 16:03:41 wpaul Exp $  */
 end_comment
 
 begin_define
@@ -458,7 +458,7 @@ name|sprintf
 argument_list|(
 name|filename
 argument_list|,
-literal|"%s~.db"
+literal|"%s~"
 argument_list|,
 name|DbName
 argument_list|)
@@ -470,7 +470,7 @@ name|dp
 operator|=
 name|dbopen
 argument_list|(
-name|DbName
+name|filename
 argument_list|,
 name|O_RDWR
 operator||
@@ -1075,7 +1075,7 @@ name|sprintf
 argument_list|(
 name|filename
 argument_list|,
-literal|"%s.db"
+literal|"%s"
 argument_list|,
 name|DbName
 argument_list|)
@@ -1084,7 +1084,7 @@ name|sprintf
 argument_list|(
 name|filename2
 argument_list|,
-literal|"%s~.db"
+literal|"%s~"
 argument_list|,
 name|DbName
 argument_list|)
@@ -1094,13 +1094,38 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|rename
 argument_list|(
 name|filename2
 argument_list|,
 name|filename
 argument_list|)
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"rename"
+argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Cannot rename %s to %s\n"
+argument_list|,
+name|filename2
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
