@@ -893,7 +893,7 @@ condition|)
 block|{
 name|MAC_PERFORM
 argument_list|(
-name|destroy_socket_label
+name|destroy_socket_peer_label
 argument_list|,
 name|label
 argument_list|)
