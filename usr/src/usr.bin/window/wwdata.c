@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwdata.c	3.11 %G%"
+literal|"@(#)wwdata.c	3.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,13 @@ end_include
 begin_function_decl
 name|int
 name|tt_h19
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tt_h29
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -66,6 +73,14 @@ block|,
 literal|3
 block|,
 name|tt_h19
+block|}
+block|,
+block|{
+literal|"h29"
+block|,
+literal|3
+block|,
+name|tt_h29
 block|}
 block|,
 block|{
