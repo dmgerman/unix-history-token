@@ -1380,6 +1380,14 @@ name|setmedia
 block|}
 block|,
 block|{
+literal|"mode"
+block|,
+name|NEXTARG
+block|,
+name|setmediamode
+block|}
+block|,
+block|{
 literal|"mediaopt"
 block|,
 name|NEXTARG
