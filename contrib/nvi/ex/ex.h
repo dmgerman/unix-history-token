@@ -531,6 +531,16 @@ directive|define
 name|E_VISEARCH
 value|0x04000000
 comment|/* It's really a vi search command. */
+ifdef|#
+directive|ifdef
+name|GTAGS
+define|#
+directive|define
+name|E_REFERENCE
+value|0x08000000
+comment|/* locate function references */
+endif|#
+directive|endif
 name|u_int32_t
 name|flags
 decl_stmt|;

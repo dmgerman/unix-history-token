@@ -878,6 +878,26 @@ block|,
 literal|"re-edit all the files in the file argument list"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|GTAGS
+comment|/* C_RTAG */
+block|{
+literal|"rtag"
+block|,
+name|ex_rtag_push
+block|,
+name|E_NEWSCREEN
+block|,
+literal|"!w1o"
+block|,
+literal|"[Rr]ta[g][!] [string]"
+block|,
+literal|"edit the file containing the tag"
+block|}
+block|,
+endif|#
+directive|endif
 comment|/*  * !!!  * Adding new commands starting with 's' may break the substitute command code  * in ex_cmd() (the ex parser).  Read through the comments there, first.  */
 comment|/* C_SUBSTITUTE */
 block|{
