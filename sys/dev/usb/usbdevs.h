@@ -191,6 +191,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_KONICA
+value|0x04c8
+end_define
+
+begin_comment
+comment|/* Konica Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_SHUTTLE
 value|0x04e6
 end_define
@@ -296,6 +307,17 @@ end_define
 
 begin_comment
 comment|/* Chic Technology */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_MACALLY
+value|0x0618
+end_define
+
+begin_comment
+comment|/* Macally */
 end_comment
 
 begin_define
@@ -469,6 +491,17 @@ begin_comment
 comment|/* IntelliMouse */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MICROSOFT_KEYBOARD
+value|0x0009
+end_define
+
+begin_comment
+comment|/* Keyboard */
+end_comment
+
 begin_comment
 comment|/* Kensington products */
 end_comment
@@ -609,6 +642,21 @@ end_define
 
 begin_comment
 comment|/* U.S.Robotics 56000 Voice USB Modem */
+end_comment
+
+begin_comment
+comment|/* Konica Corporation Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_KONICA_CAMERA
+value|0x0720
+end_define
+
+begin_comment
+comment|/* Digital Color Camera */
 end_comment
 
 begin_comment
@@ -762,6 +810,21 @@ define|#
 directive|define
 name|USB_PRODUCT_CHIC_MOUSE1
 value|0x0001
+end_define
+
+begin_comment
+comment|/* mouse */
+end_comment
+
+begin_comment
+comment|/* Macally products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MACALLY_MOUSE1
+value|0x0101
 end_define
 
 begin_comment

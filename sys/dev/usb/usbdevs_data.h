@@ -115,6 +115,18 @@ literal|"IntelliMouse"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_MICROSOFT
+block|,
+name|USB_PRODUCT_MICROSOFT_KEYBOARD
+block|,
+literal|0
+block|,
+literal|"Microsoft"
+block|,
+literal|"Keyboard"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_KENSINGTON
 block|,
 name|USB_PRODUCT_KENSINGTON_MOUSEINABOX
@@ -232,6 +244,18 @@ block|,
 literal|"3Com"
 block|,
 literal|"U.S.Robotics 56000 Voice USB Modem"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_KONICA
+block|,
+name|USB_PRODUCT_KONICA_CAMERA
+block|,
+literal|0
+block|,
+literal|"Konica Corporation"
+block|,
+literal|"Digital Color Camera"
 block|, 	}
 block|,
 block|{
@@ -362,6 +386,18 @@ block|,
 literal|0
 block|,
 literal|"Chic Technology"
+block|,
+literal|"mouse"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MACALLY
+block|,
+name|USB_PRODUCT_MACALLY_MOUSE1
+block|,
+literal|0
+block|,
+literal|"Macally"
 block|,
 literal|"mouse"
 block|, 	}
@@ -619,6 +655,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_KONICA
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Konica Corporation"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_SHUTTLE
 block|,
 literal|0
@@ -734,6 +782,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Chic Technology"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MACALLY
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Macally"
 block|,
 name|NULL
 block|, 	}
