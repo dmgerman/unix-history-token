@@ -1283,6 +1283,25 @@ operator|&=
 operator|~
 name|MNT_ASYNC
 expr_stmt|;
+comment|/* 		 * Keep MNT_ACLS flag if it is stored in superblock. 		 */
+if|if
+condition|(
+operator|(
+name|fs
+operator|->
+name|fs_flags
+operator|&
+name|FS_ACLS
+operator|)
+operator|!=
+literal|0
+condition|)
+name|mp
+operator|->
+name|mnt_flag
+operator||=
+name|MNT_ACLS
+expr_stmt|;
 comment|/* 		 * If not updating name, process export requests. 		 */
 if|if
 condition|(
