@@ -450,6 +450,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"bge"
+block|,
+literal|"Broadcom BCM570x PCI gigabit ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"cue"
 block|,
 literal|"CATC USB ethernet adapter"
