@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.83	82/12/14	*/
+comment|/*	tcp_input.c	1.84	82/12/30	*/
 end_comment
 
 begin_include
@@ -1735,14 +1735,20 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If a segment is received on a connection after the 	 * user processes are gone, then RST the other end. 	 */
+comment|/* 	 * If data is received on a connection after the 	 * user processes are gone, then RST the other end. 	 */
 if|if
 condition|(
+operator|(
 name|so
 operator|->
 name|so_state
 operator|&
 name|SS_NOFDREF
+operator|)
+operator|&&
+name|ti
+operator|->
+name|ti_len
 condition|)
 block|{
 name|tcp_close
