@@ -527,6 +527,30 @@ literal|"3Com OfficeConnect 10/100B"
 block|}
 block|,
 block|{
+name|DC_VENDORID_MICROSOFT
+block|,
+name|DC_DEVICEID_MSMN120
+block|,
+literal|"Microsoft MN-120 CardBus 10/100"
+block|}
+block|,
+block|{
+name|DC_VENDORID_MICROSOFT
+block|,
+name|DC_DEVICEID_MSMN130
+block|,
+literal|"Microsoft MN-130 10/100"
+block|}
+block|,
+block|{
+name|DC_VENDORID_MICROSOFT
+block|,
+name|DC_DEVICEID_MSMN130_FAKE
+block|,
+literal|"Microsoft MN-130 10/100"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -7732,6 +7756,24 @@ condition|)
 name|t
 operator|++
 expr_stmt|;
+comment|/* 			 * The Microsoft MN-130 has a device ID of 0x0002, 			 * which happens to be the same as the PNIC 82c168. 			 * To keep dc_attach() from getting confused, we 			 * pretend its ID is something different. 			 * XXX: ideally, dc_attach() should be checking 			 * vendorid+deviceid together to avoid such 			 * collisions. 			 */
+if|if
+condition|(
+name|t
+operator|->
+name|dc_vid
+operator|==
+name|DC_VENDORID_MICROSOFT
+operator|&&
+name|t
+operator|->
+name|dc_did
+operator|==
+name|DC_DEVICEID_MSMN130
+condition|)
+name|t
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|t
@@ -9316,6 +9358,13 @@ case|:
 case|case
 name|DC_DEVICEID_3CSOHOB
 case|:
+case|case
+name|DC_DEVICEID_MSMN120
+case|:
+case|case
+name|DC_DEVICEID_MSMN130_FAKE
+case|:
+comment|/* XXX avoid collision with PNIC*/
 name|sc
 operator|->
 name|dc_type

@@ -4638,6 +4638,42 @@ value|0xab08
 end_define
 
 begin_comment
+comment|/*  * Microsoft device ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_MICROSOFT
+value|0x1414
+end_define
+
+begin_comment
+comment|/*  * Supported Microsoft PCI and cardbus NICs. These are really  * ADMtek parts in disguise.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_MSMN120
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_MSMN130
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_MSMN130_FAKE
+value|0xFFF2
+end_define
+
+begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
 

@@ -730,6 +730,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_MICROSOFT
+block|,
+name|USB_PRODUCT_MICROSOFT_MN110
+block|}
+block|,
+name|PII
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_MELCO
 block|,
 name|USB_PRODUCT_MELCO_LUATX1
