@@ -76,17 +76,17 @@ directive|define
 name|NOSUBEXECB
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|PAGE_SIZE
 value|4096
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
