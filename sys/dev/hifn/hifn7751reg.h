@@ -131,6 +131,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_PRODUCT_HIFN_7955
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 7954/7955 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_HIFN_7956
+value|0x001d
+end_define
+
+begin_comment
+comment|/* 7956 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_VENDOR_INVERTEX
 value|0x14e1
 end_define
@@ -1252,6 +1274,17 @@ end_define
 
 begin_comment
 comment|/* DMA Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_1_PLL
+value|0x4c
+end_define
+
+begin_comment
+comment|/* 795x: PLL config */
 end_comment
 
 begin_define
@@ -2673,6 +2706,21 @@ value|0xfc
 end_define
 
 begin_comment
+comment|/*  * PLL config register   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_PLL_7956
+value|0x00001d18
+end_define
+
+begin_comment
+comment|/* 7956 PLL config value */
+end_comment
+
+begin_comment
 comment|/*********************************************************************  * Structs for board commands   *  *********************************************************************/
 end_comment
 
@@ -2846,12 +2894,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HIFN_CRYPT_CMD_ALG_AES
+value|0x0003
+end_define
+
+begin_comment
+comment|/*   AES */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HIFN_CRYPT_CMD_MODE_MASK
 value|0x0018
 end_define
 
 begin_comment
-comment|/* DES mode: */
+comment|/* Encrypt mode: */
 end_comment
 
 begin_define
@@ -2944,6 +3003,50 @@ directive|define
 name|HIFN_CRYPT_CMD_SRCLEN_S
 value|14
 end_define
+
+begin_define
+define|#
+directive|define
+name|HIFN_CRYPT_CMD_KSZ_MASK
+value|0x0600
+end_define
+
+begin_comment
+comment|/* AES key size: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_CRYPT_CMD_KSZ_128
+value|0x0000
+end_define
+
+begin_comment
+comment|/*   128 bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_CRYPT_CMD_KSZ_192
+value|0x0200
+end_define
+
+begin_comment
+comment|/*   192 bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIFN_CRYPT_CMD_KSZ_256
+value|0x0400
+end_define
+
+begin_comment
+comment|/*   256 bit */
+end_comment
 
 begin_comment
 comment|/*  * Structure to help build up the command data structure.  */

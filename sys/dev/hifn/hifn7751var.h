@@ -109,6 +109,20 @@ name|HIFN_IV_LENGTH
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|HIFN_AES_IV_LENGTH
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIFN_MAX_IV_LENGTH
+value|HIFN_AES_IV_LENGTH
+end_define
+
 begin_comment
 comment|/*  *  Length values for authentication  */
 end_comment
@@ -277,7 +291,7 @@ comment|/* XXX collapse into hs_flags? */
 name|u_int8_t
 name|hs_iv
 index|[
-name|HIFN_IV_LENGTH
+name|HIFN_MAX_IV_LENGTH
 index|]
 decl_stmt|;
 block|}
@@ -536,9 +550,19 @@ value|0x2
 comment|/* includes public key support */
 define|#
 directive|define
-name|HIFN_IS_7811
+name|HIFN_HAS_AES
 value|0x4
+comment|/* includes AES support */
+define|#
+directive|define
+name|HIFN_IS_7811
+value|0x8
 comment|/* Hifn 7811 part */
+define|#
+directive|define
+name|HIFN_IS_7956
+value|0x10
+comment|/* Hifn 7956/7955 don't have SDRAM */
 name|struct
 name|callout
 name|sc_rngto
@@ -679,7 +703,7 @@ decl_stmt|;
 name|u_int8_t
 name|iv
 index|[
-name|HIFN_IV_LENGTH
+name|HIFN_MAX_IV_LENGTH
 index|]
 decl_stmt|,
 modifier|*
