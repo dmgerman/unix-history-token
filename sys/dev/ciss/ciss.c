@@ -10835,7 +10835,7 @@ name|i
 operator|<
 name|sc
 operator|->
-name|ciss_max_logical_bus
+name|ciss_max_physical_bus
 operator|+
 name|CISS_PHYSICAL_BASE
 condition|;
