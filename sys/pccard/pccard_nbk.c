@@ -1072,40 +1072,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|driver_t
-name|pccnbk_driver
-init|=
-block|{
-literal|"pccnbk"
-block|,
-name|pccnbk_methods
-block|,
-literal|1
-block|,
-comment|/* no softc */
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|pccnbk
-argument_list|,
-name|pccard
-argument_list|,
-name|pccnbk_driver
-argument_list|,
-name|pccnbk_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+unit|static driver_t pccnbk_driver = { 	"pccnbk", 	pccnbk_methods, 	1,
+comment|/* no softc */
+end_comment
+
+begin_endif
+unit|};  DRIVER_MODULE(pccnbk, pccard, pccnbk_driver, pccnbk_devclass, 0, 0);
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

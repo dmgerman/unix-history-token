@@ -16,7 +16,7 @@ parameter_list|,
 name|u_int
 name|flags
 parameter_list|,
-name|inthand2_t
+name|ointhand2_t
 name|handler
 parameter_list|,
 name|u_int
@@ -36,7 +36,7 @@ parameter_list|(
 name|int
 name|intr
 parameter_list|,
-name|inthand2_t
+name|ointhand2_t
 name|handler
 parameter_list|)
 function_decl|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * pccard driver interface.  * Bruce Evans, November 1995.  * This file is in the public domain.  */
+comment|/*-  * pccard driver interface.  * Bruce Evans, November 1995.  * This file is in the public domain.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -42,7 +42,7 @@ name|_I386_ISA_ISA_DEVICE_H_
 end_ifdef
 
 begin_comment
-comment|/* XXX actually if inthand2_t is declared */
+comment|/* XXX actually if ointhand2_t is declared */
 end_comment
 
 begin_decl_stmt
@@ -54,7 +54,7 @@ operator|(
 name|u_int
 name|imask
 operator|,
-name|inthand2_t
+name|ointhand2_t
 operator|*
 name|hand
 operator|,

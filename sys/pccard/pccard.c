@@ -397,7 +397,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|inthand2_t
+name|ointhand2_t
 name|slot_irq_handler
 decl_stmt|;
 end_decl_stmt
@@ -2332,7 +2332,7 @@ parameter_list|(
 name|u_int
 name|imask
 parameter_list|,
-name|inthand2_t
+name|ointhand2_t
 modifier|*
 name|hand
 parameter_list|,
@@ -3551,8 +3551,7 @@ specifier|static
 name|void
 name|slot_irq_handler
 parameter_list|(
-name|void
-modifier|*
+name|int
 name|arg
 parameter_list|)
 block|{
