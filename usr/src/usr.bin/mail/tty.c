@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)tty.c	1.1 %G%"
+literal|"@(#)tty.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,6 +733,11 @@ name|cp
 operator|=
 name|canonb
 expr_stmt|;
+operator|*
+name|cp
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 name|cp2
@@ -752,17 +757,25 @@ argument_list|,
 name|stdin
 argument_list|)
 expr_stmt|;
-name|canonb
-index|[
-name|strlen
+name|cp
+operator|=
+name|index
 argument_list|(
 name|canonb
+argument_list|,
+literal|'\n'
 argument_list|)
-operator|-
-literal|1
-index|]
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|NOSTR
+condition|)
+operator|*
+name|cp
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 ifndef|#
 directive|ifndef
