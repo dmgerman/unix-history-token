@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.23 (Berkeley) %G%"
+literal|"@(#)util.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1896,6 +1896,14 @@ condition|(
 name|uid
 operator|==
 literal|0
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|SFF_ROOTOK
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 name|mode
 operator|>>=
