@@ -412,7 +412,8 @@ begin_function_decl
 name|void
 name|mm_start_pam
 parameter_list|(
-name|char
+name|struct
+name|Authctxt
 modifier|*
 parameter_list|)
 function_decl|;

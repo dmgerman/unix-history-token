@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.46 2003/11/23 23:17:34 djm Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.47 2004/03/08 09:38:05 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2526,8 +2526,12 @@ parameter_list|)
 block|{
 name|int
 name|remote_major
+init|=
+literal|0
 decl_stmt|,
 name|remote_minor
+init|=
+literal|0
 decl_stmt|,
 name|n
 init|=

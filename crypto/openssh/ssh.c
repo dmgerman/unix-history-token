@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh.c,v 1.206 2003/12/16 15:49:51 markus Exp $"
+literal|"$OpenBSD: ssh.c,v 1.209 2004/03/11 10:21:17 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -425,280 +425,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [options] host [command]\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -l user     Log in using this user name.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -n          Redirect input from "
-name|_PATH_DEVNULL
-literal|".\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -F config   Config file (default: ~/%s).\n"
-argument_list|,
-name|_PATH_SSH_USER_CONFFILE
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -A          Enable authentication agent forwarding.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -a          Disable authentication agent forwarding (default).\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -X          Enable X11 connection forwarding.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -Y          Enable trusted X11 connection forwarding.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -x          Disable X11 connection forwarding (default).\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -i file     Identity for public key authentication "
-literal|"(default: ~/.ssh/identity)\n"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMARTCARD
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -I reader   Set smartcard reader.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -t          Tty; allocate a tty even if command is given.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -T          Do not allocate a tty.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -v          Verbose; display verbose debugging messages.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"              Multiple -v increases verbosity.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -V          Display version number only.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -q          Quiet; don't display any warning messages.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -f          Fork into background after authentication.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -e char     Set escape character; ``none'' = disable (default: ~).\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -c cipher   Select encryption algorithm\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -m macs     Specify MAC algorithms for protocol version 2.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -p port     Connect to this port.  Server must be on the same port.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -L listen-port:host:port   Forward local port to remote address\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -R listen-port:host:port   Forward remote port to local address\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"              These cause %s to listen for connections on a port, and\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"              forward them to the other side by connecting to host:port.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -D port     Enable dynamic application-level port forwarding.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -C          Enable compression.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -N          Do not execute a shell or command.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -g          Allow remote hosts to connect to forwarded ports.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -1          Force protocol version 1.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -2          Force protocol version 2.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -4          Use IPv4 only.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -6          Use IPv6 only.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -o 'option' Process the option as if it was read from a configuration file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -s          Invoke command (mandatory) as SSH2 subsystem.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -b addr     Local IP address.\n"
+literal|"usage: ssh [-1246AaCfghkNnqsTtVvXxY] [-b bind_address] [-c cipher_spec]\n"
+literal|"           [-D port] [-e escape_char] [-F configfile] [-i identity_file]\n"
+literal|"           [-L port:host:hostport] [-l login_name] [-m mac_spec] [-o option]\n"
+literal|"           [-p port] [-R port:host:hostport] [user@]hostname [command]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1267,17 +997,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, SSH protocols %d.%d/%d.%d, %s\n"
+literal|"%s, %s\n"
 argument_list|,
 name|SSH_VERSION
-argument_list|,
-name|PROTOCOL_MAJOR_1
-argument_list|,
-name|PROTOCOL_MINOR_1
-argument_list|,
-name|PROTOCOL_MAJOR_2
-argument_list|,
-name|PROTOCOL_MINOR_2
 argument_list|,
 name|SSLeay_version
 argument_list|(
@@ -3275,7 +2997,7 @@ argument_list|)
 argument_list|,
 literal|"%s -f %s generate %s "
 name|SSH_X11_PROTO
-literal|" untrusted timeout 120 2>"
+literal|" untrusted timeout 1200 2>"
 name|_PATH_DEVNULL
 argument_list|,
 name|options

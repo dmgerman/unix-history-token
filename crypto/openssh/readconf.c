@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: readconf.c,v 1.127 2003/12/16 15:49:51 markus Exp $"
+literal|"$OpenBSD: readconf.c,v 1.128 2004/03/05 10:53:58 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -210,6 +210,8 @@ block|,
 name|oServerAliveInterval
 block|,
 name|oServerAliveCountMax
+block|,
+name|oIdentitiesOnly
 block|,
 name|oDeprecated
 block|,
@@ -428,6 +430,12 @@ name|oIdentityFile
 block|}
 block|,
 comment|/* alias */
+block|{
+literal|"identitiesonly"
+block|,
+name|oIdentitiesOnly
+block|}
+block|,
 block|{
 literal|"hostname"
 block|,
@@ -3514,6 +3522,19 @@ goto|goto
 name|parse_flag
 goto|;
 case|case
+name|oIdentitiesOnly
+case|:
+name|intptr
+operator|=
+operator|&
+name|options
+operator|->
+name|identities_only
+expr_stmt|;
+goto|goto
+name|parse_flag
+goto|;
+case|case
 name|oServerAliveInterval
 case|:
 name|intptr
@@ -4125,6 +4146,13 @@ expr_stmt|;
 name|options
 operator|->
 name|no_host_authentication_for_localhost
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|options
+operator|->
+name|identities_only
 operator|=
 operator|-
 literal|1
@@ -4859,6 +4887,21 @@ condition|)
 name|options
 operator|->
 name|no_host_authentication_for_localhost
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|identities_only
+operator|==
+operator|-
+literal|1
+condition|)
+name|options
+operator|->
+name|identities_only
 operator|=
 literal|0
 expr_stmt|;

@@ -122,7 +122,7 @@ name|skey
 decl_stmt|;
 if|if
 condition|(
-name|skeychallenge
+name|_compat_skeychallenge
 argument_list|(
 operator|&
 name|skey
@@ -132,6 +132,11 @@ operator|->
 name|user
 argument_list|,
 name|challenge
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|challenge
+argument_list|)
 argument_list|)
 operator|==
 operator|-

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.173 2004/02/06 05:24:31 dtucker Exp $ */
+comment|/* $Id: acconfig.h,v 1.177 2004/04/15 23:22:40 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -164,6 +164,10 @@ comment|/* Define if your AIX loginfailed() function takes 4 arguments (AIX>= 5.
 undef|#
 directive|undef
 name|AIX_LOGINFAILED_4ARG
+comment|/* Define if your skeychallenge() function takes 4 arguments (eg NetBSD) */
+undef|#
+directive|undef
+name|SKEYCHALLENGE_4ARG
 comment|/* Define if you have/want arrays (cluster-wide session managment, not C arrays) */
 undef|#
 directive|undef
@@ -284,6 +288,10 @@ comment|/* Define if you don't want to use lastlog in session.c */
 undef|#
 directive|undef
 name|NO_SSH_LASTLOG
+comment|/* Define if have krb5_init_ets */
+undef|#
+directive|undef
+name|KRB5_INIT_ETS
 comment|/* Define if you don't want to use utmp */
 undef|#
 directive|undef
@@ -505,6 +513,10 @@ comment|/* getaddrinfo is broken (if present) */
 undef|#
 directive|undef
 name|BROKEN_GETADDRINFO
+comment|/* updwtmpx is broken (if present) */
+undef|#
+directive|undef
+name|BROKEN_UPDWTMPX
 comment|/* Workaround more Linux IPv6 quirks */
 undef|#
 directive|undef

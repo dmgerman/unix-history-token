@@ -628,6 +628,15 @@ name|user
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|authctxt
+operator|->
+name|user
+operator|=
+name|xstrdup
+argument_list|(
+name|user
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|authctxt
@@ -671,10 +680,6 @@ argument_list|(
 name|start_pam
 argument_list|(
 name|authctxt
-operator|->
-name|pw
-operator|->
-name|pw_name
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -710,7 +715,7 @@ name|PRIVSEP
 argument_list|(
 name|start_pam
 argument_list|(
-name|user
+name|authctxt
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -734,15 +739,6 @@ condition|?
 literal|" [net]"
 else|:
 literal|""
-argument_list|)
-expr_stmt|;
-name|authctxt
-operator|->
-name|user
-operator|=
-name|xstrdup
-argument_list|(
-name|user
 argument_list|)
 expr_stmt|;
 name|authctxt

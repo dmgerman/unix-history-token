@@ -951,6 +951,11 @@ name|loginmsg
 argument_list|)
 expr_stmt|;
 block|}
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2116,6 +2121,13 @@ name|err
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Clear loginmsg, since it's the child's responsibility to display 	 * it to the user, otherwise multiple sessions may accumulate 	 * multiple copies of the login messages. 	 */
+name|buffer_clear
+argument_list|(
+operator|&
+name|loginmsg
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Enter the interactive session.  Note: server_loop must be able to 	 * handle the case that fdin and fdout are the same. 	 */
@@ -4980,7 +4992,7 @@ name|s
 operator|->
 name|authctxt
 operator|->
-name|krb5_ticket_file
+name|krb5_ccname
 condition|)
 name|child_set_env
 argument_list|(
@@ -4996,7 +5008,7 @@ name|s
 operator|->
 name|authctxt
 operator|->
-name|krb5_ticket_file
+name|krb5_ccname
 argument_list|)
 expr_stmt|;
 endif|#

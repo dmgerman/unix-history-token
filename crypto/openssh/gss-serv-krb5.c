@@ -166,11 +166,16 @@ return|return
 literal|0
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|KRB5_INIT_ETS
 name|krb5_init_ets
 argument_list|(
 name|krb_context
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|1
 return|;

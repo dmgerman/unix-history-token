@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.59 2003/12/16 15:49:51 markus Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.60 2004/03/05 10:53:58 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -304,6 +304,9 @@ name|rekey_limit
 decl_stmt|;
 name|int
 name|no_host_authentication_for_localhost
+decl_stmt|;
+name|int
+name|identities_only
 decl_stmt|;
 name|int
 name|server_alive_interval

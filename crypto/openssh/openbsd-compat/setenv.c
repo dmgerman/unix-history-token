@@ -13,11 +13,21 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_SETENV
-end_ifndef
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|HAVE_UNSETENV
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -254,6 +264,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SETENV
+end_ifndef
 
 begin_comment
 comment|/*  * setenv --  *	Set the value of the environmental variable "name" to be  *	"value".  If rewrite is set, replace any current value.  */
@@ -665,6 +681,21 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SETENV */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_UNSETENV
+end_ifndef
+
 begin_comment
 comment|/*  * unsetenv(name) --  *	Delete environmental variable "name".  */
 end_comment
@@ -751,7 +782,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_SETENV */
+comment|/* HAVE_UNSETENV */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(HAVE_SETENV) || !defined(HAVE_UNSETENV) */
 end_comment
 
 end_unit

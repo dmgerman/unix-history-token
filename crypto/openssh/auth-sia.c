@@ -130,7 +130,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|auth_sia_password
+name|sys_auth_passwd
 parameter_list|(
 name|Authctxt
 modifier|*
