@@ -433,7 +433,7 @@ block|}
 define|#
 directive|define
 name|OPTIONS
-value|"468KLde:l:nt:w"
+value|"468Lde:l:nt:w"
 while|while
 condition|(
 operator|(
@@ -1793,7 +1793,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rsh [-46] [-nd] [-l login] [-t timeout] host [command]\n"
+literal|"usage: rsh [-46dn] [-l login] [-t timeout] host [command]\n"
 argument_list|)
 expr_stmt|;
 name|exit
