@@ -1110,7 +1110,7 @@ if|if
 condition|(
 name|mode
 operator|&
-name|S_IXGRP
+name|S_IXOTH
 condition|)
 name|bp
 index|[
