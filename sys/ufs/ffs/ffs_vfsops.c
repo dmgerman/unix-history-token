@@ -7614,7 +7614,7 @@ name|uma_ufs2
 argument_list|,
 name|ip
 operator|->
-name|i_din1
+name|i_din2
 argument_list|)
 expr_stmt|;
 name|uma_zfree
