@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.10 (Berkeley) %G%"
+literal|"@(#)io.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1846,52 +1846,35 @@ begin_comment
 comment|/* VARARGS1 */
 end_comment
 
-begin_if
+begin_function
+name|void
 if|#
 directive|if
 name|__STDC__
-end_if
-
-begin_macro
 name|msg
-argument_list|(
-argument|char *fmt
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_else
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 else|#
 directive|else
-end_else
-
-begin_macro
-name|msg
-argument_list|(
-argument|fmt
-argument_list|,
-argument|va_alist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+function|msg
+parameter_list|(
+name|fmt
+parameter_list|,
+name|va_alist
+parameter_list|)
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
+function|va_dcl
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|va_list
 name|ap
@@ -1940,7 +1923,7 @@ name|endmsg
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * addmsg:  *	Add things to the current message  */
@@ -1950,52 +1933,35 @@ begin_comment
 comment|/* VARARGS1 */
 end_comment
 
-begin_if
+begin_function
+name|void
 if|#
 directive|if
 name|__STDC__
-end_if
-
-begin_macro
 name|addmsg
-argument_list|(
-argument|char *fmt
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_else
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 else|#
 directive|else
-end_else
-
-begin_macro
-name|addmsg
-argument_list|(
-argument|fmt
-argument_list|,
-argument|va_alist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+function|addmsg
+parameter_list|(
+name|fmt
+parameter_list|,
+name|va_alist
+parameter_list|)
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
+function|va_dcl
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|va_list
 name|ap
@@ -2041,7 +2007,7 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * endmsg:  *	Display a new msg.  */
