@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)machdep.h	1.3 %G%";  */
+comment|/*  * sccsid = "@(#)machdep.h	1.4 %G%";  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LOGFILE
-value|"/usr/public/.shipslog"
+value|"/usr/public/lib/shipslog"
 end_define
 
 begin_define
