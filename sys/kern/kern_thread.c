@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (C) 2001 Julian Elischer<julian@freebsd.org>.  *  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer as  *    the first lines of this file unmodified other than the possible   *    addition of one or more copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  */
+comment|/*  * Copyright (C) 2001 Julian Elischer<julian@freebsd.org>.  *  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice(s), this list of conditions and the following disclaimer as  *    the first lines of this file unmodified other than the possible  *    addition of one or more copyright notices.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice(s), this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  */
 end_comment
 
 begin_include
@@ -1021,7 +1021,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * KSE is linked into kse group.  */
+comment|/*  * KSE is linked into kse group.  */
 end_comment
 
 begin_function
@@ -3220,7 +3220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * No new KSEG: first call: use current KSE, don't schedule an upcall  * All other situations, do allocate max new KSEs and schedule an upcall.  */
+comment|/*  * No new KSEG: first call: use current KSE, don't schedule an upcall  * All other situations, do allocate max new KSEs and schedule an upcall.  */
 end_comment
 
 begin_comment
@@ -3445,7 +3445,7 @@ operator|(
 name|EPROCLIM
 operator|)
 return|;
-comment|/*  		 * If we want a new KSEGRP it doesn't matter whether 		 * we have already fired up KSE mode before or not. 		 * We put the process in KSE mode and create a new KSEGRP. 		 */
+comment|/* 		 * If we want a new KSEGRP it doesn't matter whether 		 * we have already fired up KSE mode before or not. 		 * We put the process in KSE mode and create a new KSEGRP. 		 */
 name|newkg
 operator|=
 name|ksegrp_alloc
@@ -3591,7 +3591,7 @@ operator|=
 name|kg
 expr_stmt|;
 block|}
-comment|/* 	 * Creating upcalls more than number of physical cpu does 	 * not help performance.  	 */
+comment|/* 	 * Creating upcalls more than number of physical cpu does 	 * not help performance. 	 */
 if|if
 condition|(
 name|newkg
@@ -3614,7 +3614,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Initialize KSE group 		 * 		 * For multiplxed group, create KSEs as many as physical 		 * cpus. This increases concurrent even if userland 		 * is not MP safe and can only run on single CPU. 		 * In ideal world, every physical cpu should execute a thread. 		 * If there is enough KSEs, threads in kernel can be 		 * executed parallel on different cpus with full speed,  		 * Concurrent in kernel shouldn't be restricted by number of  		 * upcalls userland provides. Adding more upcall structures 		 * only increases concurrent in userland. 		 * 		 * For bound thread group, because there is only thread in the 		 * group, we only create one KSE for the group. Thread in this 		 * kind of group will never schedule an upcall when blocked, 		 * this intends to simulate pthread system scope thread. 		 */
+comment|/* 		 * Initialize KSE group 		 * 		 * For multiplxed group, create KSEs as many as physical 		 * cpus. This increases concurrent even if userland 		 * is not MP safe and can only run on single CPU. 		 * In ideal world, every physical cpu should execute a thread. 		 * If there is enough KSEs, threads in kernel can be 		 * executed parallel on different cpus with full speed, 		 * Concurrent in kernel shouldn't be restricted by number of 		 * upcalls userland provides. Adding more upcall structures 		 * only increases concurrent in userland. 		 * 		 * For bound thread group, because there is only thread in the 		 * group, we only create one KSE for the group. Thread in this 		 * kind of group will never schedule an upcall when blocked, 		 * this intends to simulate pthread system scope thread. 		 */
 while|while
 condition|(
 name|newkg
@@ -3861,7 +3861,7 @@ operator|->
 name|newgroup
 condition|)
 block|{
-comment|/*  		 * Because new ksegrp hasn't thread, 		 * create an initial upcall thread to own it. 		 */
+comment|/* 		 * Because new ksegrp hasn't thread, 		 * create an initial upcall thread to own it. 		 */
 name|newtd
 operator|=
 name|thread_schedule_upcall
@@ -5836,7 +5836,7 @@ name|ke_thread
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*  		 * Decide what to do with the KSE attached to this thread. 		 */
+comment|/* 		 * Decide what to do with the KSE attached to this thread. 		 */
 if|if
 condition|(
 name|ke
@@ -5961,7 +5961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Do any thread specific cleanups that may be needed in wait()  * called with Giant held, proc and schedlock not held.  */
+comment|/*  * Do any thread specific cleanups that may be needed in wait()  * called with Giant held, proc and schedlock not held.  */
 end_comment
 
 begin_function
@@ -5990,7 +5990,7 @@ literal|1
 operator|)
 argument_list|,
 operator|(
-literal|"Muliple threads in wait1()"
+literal|"Multiple threads in wait1()"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6005,7 +6005,7 @@ literal|1
 operator|)
 argument_list|,
 operator|(
-literal|"Muliple ksegrps in wait1()"
+literal|"Multiple ksegrps in wait1()"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6248,7 +6248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Purge a ksegrp resource. When a ksegrp is preparing to  * exit, it calls this function.   */
+comment|/*  * Purge a ksegrp resource. When a ksegrp is preparing to  * exit, it calls this function.  */
 end_comment
 
 begin_function
@@ -6377,7 +6377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Purge a process's KSE resource. When a process is preparing to   * exit, it calls kse_purge to release any extra KSE resources in   * the process.  */
+comment|/*  * Purge a process's KSE resource. When a process is preparing to  * exit, it calls kse_purge to release any extra KSE resources in  * the process.  */
 end_comment
 
 begin_function
@@ -6453,7 +6453,7 @@ operator|->
 name|p_numksegrps
 operator|--
 expr_stmt|;
-comment|/* 		 * There is no ownership for KSE, after all threads 		 * in the group exited, it is possible that some KSEs  		 * were left in idle queue, gc them now. 		 */
+comment|/* 		 * There is no ownership for KSE, after all threads 		 * in the group exited, it is possible that some KSEs 		 * were left in idle queue, gc them now. 		 */
 while|while
 condition|(
 operator|(
@@ -6750,7 +6750,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Schedule an upcall thread on specified kse_upcall, 	 * the kse_upcall must be free. 	 * td must have a spare thread. 	 */
+comment|/* 	 * Schedule an upcall thread on specified kse_upcall, 	 * the kse_upcall must be free. 	 * td must have a spare thread. 	 */
 name|KASSERT
 argument_list|(
 name|ku
@@ -7132,7 +7132,7 @@ name|td
 argument_list|)
 condition|)
 block|{
-comment|/*  		 * Release ownership of upcall, and schedule an upcall 		 * thread, this new upcall thread becomes the owner of 		 * the upcall structure. 		 */
+comment|/* 		 * Release ownership of upcall, and schedule an upcall 		 * thread, this new upcall thread becomes the owner of 		 * the upcall structure. 		 */
 name|ku
 operator|=
 name|td
@@ -7415,7 +7415,7 @@ operator|->
 name|tm_flags
 argument_list|)
 expr_stmt|;
-comment|/* 			 * On some architectures, TP register points to thread 			 * mailbox but not points to kse mailbox, and userland  			 * can not atomically clear km_curthread, but can  			 * use TP register, and set TMF_NOUPCALL in thread 			 * flag	to indicate a critical region. 			 */
+comment|/* 			 * On some architectures, TP register points to thread 			 * mailbox but not points to kse mailbox, and userland 			 * can not atomically clear km_curthread, but can 			 * use TP register, and set TMF_NOUPCALL in thread 			 * flag	to indicate a critical region. 			 */
 if|if
 condition|(
 name|tflags
@@ -7547,7 +7547,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Stat clock interrupt hit in userland, it  	 * is returning from interrupt, charge thread's 	 * userland time for UTS. 	 */
+comment|/* 	 * Stat clock interrupt hit in userland, it 	 * is returning from interrupt, charge thread's 	 * userland time for UTS. 	 */
 if|if
 condition|(
 name|td
@@ -7617,7 +7617,7 @@ operator|==
 name|NULL
 operator|)
 expr_stmt|;
-comment|/*  	 * Optimisation: 	 * This thread has not started any upcall. 	 * If there is no work to report other than ourself, 	 * then it can return direct to userland. 	 */
+comment|/* 	 * Optimisation: 	 * This thread has not started any upcall. 	 * If there is no work to report other than ourself, 	 * then it can return direct to userland. 	 */
 if|if
 condition|(
 name|TD_CAN_UNBIND
@@ -7796,7 +7796,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 		 * There are upcall threads waiting for 		 * work to do, wake one of them up. 		 * XXXKSE Maybe wake all of them up.  		 */
+comment|/* 		 * There are upcall threads waiting for 		 * work to do, wake one of them up. 		 * XXXKSE Maybe wake all of them up. 		 */
 if|if
 condition|(
 name|kg
@@ -8014,7 +8014,7 @@ name|kg
 operator|->
 name|kg_upquantum
 expr_stmt|;
-comment|/*  		 * There is no more work to do and we are going to ride 		 * this thread up to userland as an upcall. 		 * Do the last parts of the setup needed for the upcall. 		 */
+comment|/* 		 * There is no more work to do and we are going to ride 		 * this thread up to userland as an upcall. 		 * Do the last parts of the setup needed for the upcall. 		 */
 name|CTR3
 argument_list|(
 name|KTR_PROC
@@ -8114,7 +8114,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * Unhook the list of completed threads. 		 * anything that completes after this gets to  		 * come in next time. 		 * Put the list of completed thread mailboxes on 		 * this KSE's mailbox. 		 */
+comment|/* 		 * Unhook the list of completed threads. 		 * anything that completes after this gets to 		 * come in next time. 		 * Put the list of completed thread mailboxes on 		 * this KSE's mailbox. 		 */
 if|if
 condition|(
 operator|!
@@ -8233,7 +8233,7 @@ name|ku_mflags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Clear thread mailbox first, then clear system tick count. 	 * The order is important because thread_statclock() use  	 * mailbox pointer to see if it is an userland thread or 	 * an UTS kernel thread. 	 */
+comment|/* 	 * Clear thread mailbox first, then clear system tick count. 	 * The order is important because thread_statclock() use 	 * mailbox pointer to see if it is an userland thread or 	 * an UTS kernel thread. 	 */
 name|td
 operator|->
 name|td_mailbox
@@ -8527,7 +8527,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*  		 * Maybe we suspended some threads.. was it enough?  		 */
+comment|/* 		 * Maybe we suspended some threads.. was it enough? 		 */
 if|if
 condition|(
 operator|(
@@ -8631,7 +8631,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called in from locations that can safely check to see  * whether we have to suspend or at least throttle for a  * single-thread event (e.g. fork).  *  * Such locations include userret().  * If the "return_instead" argument is non zero, the thread must be able to  * accept 0 (caller may continue), or 1 (caller must abort) as a result.  *  * The 'return_instead' argument tells the function if it may do a  * thread_exit() or suspend, or whether the caller must abort and back  * out instead.  *  * If the thread that set the single_threading request has set the  * P_SINGLE_EXIT bit in the process flags then this call will never return  * if 'return_instead' is false, but will exit.  *  * P_SINGLE_EXIT | return_instead == 0| return_instead != 0  *---------------+--------------------+---------------------  *       0       | returns 0          |   returns 0 or 1  *               | when ST ends       |   immediatly  *---------------+--------------------+---------------------  *       1       | thread exits       |   returns 1  *               |                    |  immediatly  * 0 = thread_exit() or suspension ok,  * other = return error instead of stopping the thread.  *  * While a full suspension is under effect, even a single threading  * thread would be suspended if it made this call (but it shouldn't).  * This call should only be made from places where  * thread_exit() would be safe as that may be the outcome unless   * return_instead is set.  */
+comment|/*  * Called in from locations that can safely check to see  * whether we have to suspend or at least throttle for a  * single-thread event (e.g. fork).  *  * Such locations include userret().  * If the "return_instead" argument is non zero, the thread must be able to  * accept 0 (caller may continue), or 1 (caller must abort) as a result.  *  * The 'return_instead' argument tells the function if it may do a  * thread_exit() or suspend, or whether the caller must abort and back  * out instead.  *  * If the thread that set the single_threading request has set the  * P_SINGLE_EXIT bit in the process flags then this call will never return  * if 'return_instead' is false, but will exit.  *  * P_SINGLE_EXIT | return_instead == 0| return_instead != 0  *---------------+--------------------+---------------------  *       0       | returns 0          |   returns 0 or 1  *               | when ST ends       |   immediatly  *---------------+--------------------+---------------------  *       1       | thread exits       |   returns 1  *               |                    |  immediatly  * 0 = thread_exit() or suspension ok,  * other = return error instead of stopping the thread.  *  * While a full suspension is under effect, even a single threading  * thread would be suspended if it made this call (but it shouldn't).  * This call should only be made from places where  * thread_exit() would be safe as that may be the outcome unless  * return_instead is set.  */
 end_comment
 
 begin_function
@@ -8700,7 +8700,7 @@ literal|"singlethread not set"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * The only suspension in action is a 			 * single-threading. Single threader need not stop. 			 * XXX Should be safe to access unlocked  			 * as it can only be set to be true by us. 			 */
+comment|/* 			 * The only suspension in action is a 			 * single-threading. Single threader need not stop. 			 * XXX Should be safe to access unlocked 			 * as it can only be set to be true by us. 			 */
 if|if
 condition|(
 name|p
