@@ -4430,6 +4430,7 @@ name|fp
 operator|->
 name|f_data
 expr_stmt|;
+comment|/* 	 * If its not a disk, we don't want to return a positive error. 	 * It causes the aio code to not fall through to try the thread 	 * way when you're talking to a regular file. 	 */
 if|if
 condition|(
 operator|!
@@ -4441,11 +4442,26 @@ operator|&
 name|error
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|==
+name|ENOTBLK
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|cb
