@@ -81,12 +81,10 @@ name|int
 name|transfer_rate
 decl_stmt|;
 comment|/* FDC_???KBPS */
-union|union
-block|{
 struct|struct
 name|fd_form_data
 block|{
-comment|/* 			 * DO NOT CHANGE THE LAYOUT OF THIS STRUCTS 			 * it is hardware-dependent since it exactly 			 * matches the byte sequence to write to FDC 			 * during its `format track' operation 			 */
+comment|/* 		 * DO NOT CHANGE THE LAYOUT OF THIS STRUCTS 		 * it is hardware-dependent since it exactly 		 * matches the byte sequence to write to FDC 		 * during its `format track' operation 		 */
 name|u_char
 name|secshift
 decl_stmt|;
@@ -106,7 +104,7 @@ comment|/* usually 0xf6 */
 struct|struct
 name|fd_idfield_data
 block|{
-comment|/* 				 * data to write into id fields; 				 * for obscure formats, they mustn't match 				 * the real values (but mostly do) 				 */
+comment|/* 			 * data to write into id fields; 			 * for obscure formats, they mustn't match 			 * the real values (but mostly do) 			 */
 name|u_char
 name|cylno
 decl_stmt|;
@@ -131,18 +129,8 @@ index|]
 struct|;
 comment|/* 0<= idx< nsecs used */
 block|}
-name|structured
-struct|;
-name|u_char
-name|raw
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* to have continuous indexed access */
-block|}
 name|format_info
-union|;
+struct|;
 block|}
 struct|;
 end_struct
@@ -155,28 +143,28 @@ begin_define
 define|#
 directive|define
 name|fd_formb_secshift
-value|format_info.structured.secshift
+value|format_info.secshift
 end_define
 
 begin_define
 define|#
 directive|define
 name|fd_formb_nsecs
-value|format_info.structured.nsecs
+value|format_info.nsecs
 end_define
 
 begin_define
 define|#
 directive|define
 name|fd_formb_gaplen
-value|format_info.structured.gaplen
+value|format_info.gaplen
 end_define
 
 begin_define
 define|#
 directive|define
 name|fd_formb_fillbyte
-value|format_info.structured.fillbyte
+value|format_info.fillbyte
 end_define
 
 begin_comment
@@ -190,7 +178,7 @@ name|fd_formb_cylno
 parameter_list|(
 name|i
 parameter_list|)
-value|format_info.structured.idfields[i].cylno
+value|format_info.idfields[i].cylno
 end_define
 
 begin_define
@@ -200,7 +188,7 @@ name|fd_formb_headno
 parameter_list|(
 name|i
 parameter_list|)
-value|format_info.structured.idfields[i].headno
+value|format_info.idfields[i].headno
 end_define
 
 begin_define
@@ -210,7 +198,7 @@ name|fd_formb_secno
 parameter_list|(
 name|i
 parameter_list|)
-value|format_info.structured.idfields[i].secno
+value|format_info.idfields[i].secno
 end_define
 
 begin_define
@@ -220,7 +208,7 @@ name|fd_formb_secsize
 parameter_list|(
 name|i
 parameter_list|)
-value|format_info.structured.idfields[i].secsize
+value|format_info.idfields[i].secsize
 end_define
 
 begin_struct
@@ -290,6 +278,11 @@ directive|define
 name|FL_PERPND
 value|0x0004
 comment|/* perpendicular recording */
+define|#
+directive|define
+name|FL_AUTO
+value|0x0008
+comment|/* autodetect format */
 block|}
 struct|;
 end_struct
@@ -415,13 +408,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FD_DEBUG
-value|_IOW('F', 66, int)
-end_define
-
-begin_define
-define|#
-directive|define
 name|FD_CLRERR
 value|_IO('F', 67)
 end_define
@@ -500,6 +486,12 @@ begin_comment
 comment|/* do not indicate errors, caller will use 				   FD_GSTAT in order to obtain status */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -510,6 +502,11 @@ end_define
 begin_comment
 comment|/* read/only option: device performs media 				 * autoselection */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Transfer rate definitions.  Used in the structures above.  They  * represent the hardware encoding of bits 0 and 1 of the FDC control  * register when writing to the register.  * Transfer rates for FM encoding are half the values listed here  * (but we currently don't support FM encoding).  */
@@ -557,6 +554,133 @@ end_define
 
 begin_comment
 comment|/* 1MPBS MFM drive transfer rate */
+end_comment
+
+begin_comment
+comment|/*  * Parameters for common formats  *  * See struct fd_type for layout.  * XXX: Field 'size' must be calculated.  * XXX: Fields 'f_inter' and 'offset_side2' are unused by kernel.  *  * XXX: These should really go in a /etc/floppycap colon separated file  * XXX: but the kernel needs some of them for proper defaults and it would  * XXX: should have been done 20 years ago to make sense.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDF_3_2880
+value|36,2,0xFF,0x1B,80,0,FDC_1MBPS,002,0x4C,1,1,FL_MFM|FL_PERPND
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_3_1722
+value|21,2,0xFF,0x04,82,0,FDC_500KBPS,2,0x0C,2,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_3_1476
+value|18,2,0xFF,0x1B,82,0,FDC_500KBPS,2,0x6C,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_3_1440
+value|18,2,0xFF,0x1B,80,0,FDC_500KBPS,2,0x6C,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_3_1200
+value|15,2,0xFF,0x1B,80,0,FDC_500KBPS,2,0x54,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_3_820
+value|10,2,0xFF,0x10,82,0,FDC_250KBPS,2,0x2e,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_3_800
+value|10,2,0xFF,0x10,80,0,FDC_250KBPS,2,0x2e,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_3_720
+value|9,2,0xFF,0x20,80,0,FDC_250KBPS,2,0x50,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_1480
+value|18,2,0xFF,0x02,82,0,FDC_500KBPS,2,0x02,2,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_1440
+value|18,2,0xFF,0x02,80,0,FDC_500KBPS,2,0x02,2,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_1230
+value|8,3,0xFF,0x35,77,0,FDC_500KBPS,2,0x74,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_1200
+value|15,2,0xFF,0x1B,80,0,FDC_500KBPS,2,0x54,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_820
+value|10,2,0xFF,0x10,82,0,FDC_300KBPS,2,0x2e,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_800
+value|10,2,0xFF,0x10,80,0,FDC_300KBPS,2,0x2e,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_720
+value|9,2,0xFF,0x20,80,0,FDC_300KBPS,2,0x50,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_640
+value|8,2,0xFF,0x2A,80,0,FDC_300KBPS,2,0x50,1,0,FL_MFM
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDF_5_360
+value|9,2,0xFF,0x23,40,0,FDC_300KBPS,2,0x50,1,0,FL_MFM
+end_define
+
+begin_comment
+comment|/* XXX:                      0x2a ? */
 end_comment
 
 begin_endif
