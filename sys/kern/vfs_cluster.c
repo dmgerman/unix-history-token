@@ -3233,10 +3233,16 @@ operator|(
 name|B_CLUSTEROK
 operator||
 name|B_MALLOC
+operator||
+name|B_VMIO
 operator|)
 operator|)
 operator|!=
+operator|(
 name|B_CLUSTEROK
+operator||
+name|B_VMIO
+operator|)
 operator|)
 operator|||
 operator|(
