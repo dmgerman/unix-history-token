@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: tst01.c,v 1.15.2.3 1996/05/28 22:51:18 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: tst01.c,v 1.15.2.4 1996/07/09 12:19:03 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -2928,6 +2928,25 @@ argument_list|(
 operator|*
 name|cmds
 argument_list|,
+literal|"sanitize"
+argument_list|)
+condition|)
+block|{
+name|Sanitize_Bios_Geom
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+operator|*
+name|cmds
+argument_list|,
 literal|"bios"
 argument_list|)
 operator|&&
@@ -2979,18 +2998,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|#
-directive|if
-literal|0
-block|if (!strcasecmp(*cmds,"phys")&& ncmd == 4) { 			d = Set_Phys_Geom(d, 				strtol(cmds[1],0,0), 				strtol(cmds[2],0,0), 				strtol(cmds[3],0,0)); 			continue; 		}
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|if (!strcasecmp(*cmds,"collapse")) { 			if (cmds[1]) 				while (Collapse_Chunk(d, 				    (struct chunk *)strtol(cmds[1],0,0))) 					; 			else 				Collapse_Disk(d); 			continue; 		}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.22 1996/04/29 05:03:02 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.20.2.2 1996/05/28 22:51:14 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -1145,7 +1145,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"  bios_geom=%lu/%lu/%lu\n"
+literal|"  bios_geom=%lu/%lu/%lu = %lu\n"
 argument_list|,
 name|d
 operator|->
@@ -1155,6 +1155,18 @@ name|d
 operator|->
 name|bios_hd
 argument_list|,
+name|d
+operator|->
+name|bios_sect
+argument_list|,
+name|d
+operator|->
+name|bios_cyl
+operator|*
+name|d
+operator|->
+name|bios_hd
+operator|*
 name|d
 operator|->
 name|bios_sect
@@ -1464,6 +1476,8 @@ block|{
 literal|"wd"
 block|,
 literal|"sd"
+block|,
+literal|"od"
 block|,
 literal|0
 block|}
@@ -1888,6 +1902,196 @@ operator|*
 literal|512
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|slice_type_name
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|int
+name|subtype
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+literal|0
+case|:
+return|return
+literal|"whole"
+return|;
+case|case
+literal|1
+case|:
+switch|switch
+condition|(
+name|subtype
+condition|)
+block|{
+case|case
+literal|1
+case|:
+return|return
+literal|"fat (12-bit)"
+return|;
+case|case
+literal|2
+case|:
+return|return
+literal|"XENIX /"
+return|;
+case|case
+literal|3
+case|:
+return|return
+literal|"XENIX /usr"
+return|;
+case|case
+literal|4
+case|:
+return|return
+literal|"fat (16-bit)"
+return|;
+case|case
+literal|5
+case|:
+return|return
+literal|"extended DOS"
+return|;
+case|case
+literal|6
+case|:
+return|return
+literal|"fat (>32Mb)"
+return|;
+case|case
+literal|7
+case|:
+return|return
+literal|"NTFS/HPFS"
+return|;
+case|case
+literal|10
+case|:
+return|return
+literal|"OS/2 bootmgr"
+return|;
+case|case
+literal|84
+case|:
+return|return
+literal|"OnTrack diskmgr"
+return|;
+case|case
+literal|100
+case|:
+return|return
+literal|"Netware 2.x"
+return|;
+case|case
+literal|101
+case|:
+return|return
+literal|"Netware 3.x"
+return|;
+case|case
+literal|128
+case|:
+return|return
+literal|"Minix 1.1"
+return|;
+case|case
+literal|129
+case|:
+return|return
+literal|"Minix 1.5"
+return|;
+case|case
+literal|130
+case|:
+return|return
+literal|"linux_swap"
+return|;
+case|case
+literal|131
+case|:
+return|return
+literal|"ext2fs"
+return|;
+case|case
+literal|183
+case|:
+return|return
+literal|"bsd/os"
+return|;
+case|case
+literal|184
+case|:
+return|return
+literal|"bsd/os swap"
+return|;
+default|default:
+return|return
+literal|"unknown"
+return|;
+block|}
+case|case
+literal|2
+case|:
+return|return
+literal|"fat"
+return|;
+case|case
+literal|3
+case|:
+switch|switch
+condition|(
+name|subtype
+condition|)
+block|{
+case|case
+literal|165
+case|:
+return|return
+literal|"freebsd"
+return|;
+default|default:
+return|return
+literal|"unknown"
+return|;
+block|}
+case|case
+literal|4
+case|:
+return|return
+literal|"extended"
+return|;
+case|case
+literal|5
+case|:
+return|return
+literal|"part"
+return|;
+case|case
+literal|6
+case|:
+return|return
+literal|"unused"
+return|;
+default|default:
+return|return
+literal|"unknown"
+return|;
+block|}
 block|}
 end_function
 
