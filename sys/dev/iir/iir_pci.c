@@ -12,7 +12,7 @@ comment|/*  *  iir_pci.c:  PCI Bus Attachment for Intel Integrated RAID Controll
 end_comment
 
 begin_empty
-empty|#ident "$Id: iir_pci.c 1.1 2001/05/22 20:14:12 achim Exp $"
+empty|#ident "$Id: iir_pci.c,v 1.8 2003/07/01 15:51:58 scottl Exp $"
 end_empty
 
 begin_comment
@@ -106,13 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcireg.h>
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
