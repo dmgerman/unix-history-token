@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	3.7	%G%	*/
+comment|/*	conf.c	3.8	%G%	*/
 end_comment
 
 begin_include
@@ -945,108 +945,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|dev_t
-name|rootdev
-init|=
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dev_t
-name|pipedev
-init|=
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dev_t
-name|argdev
-init|=
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Swapdev is a fake device implemented  * in sw.c used only internally to get to swstrategy.  * It cannot be provided to the users, because the  * swstrategy routine munches the b_dev and b_blkno entries  * before calling the appropriate driver.  This would horribly  * confuse, e.g. the hashing routines as well as the placement  * of the block on the d_tab chains.  Instead, /dev/drum is  * provided as a character (raw) device.  */
-end_comment
-
-begin_decl_stmt
-name|dev_t
-name|swapdev
-init|=
-name|makedev
-argument_list|(
-literal|4
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Nswap is the basic number of blocks of swap per  * swap device, and is multipliet by nswdev after  * nswdev is determined at boot.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nswap
-init|=
-literal|33440
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|swdevt
-name|swdevt
-index|[]
-init|=
-block|{
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-block|,
-literal|0
-block|,
-comment|/* rp0b */
-name|makedev
-argument_list|(
-literal|2
-argument_list|,
-literal|9
-argument_list|)
-block|,
-literal|0
-block|,
-comment|/* up1b */
-literal|0
-block|,
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|buf
 name|buf
@@ -1152,6 +1050,23 @@ end_decl_stmt
 begin_comment
 comment|/* major device number of memory special file */
 end_comment
+
+begin_comment
+comment|/*  * Swapdev is a fake device implemented  * in sw.c used only internally to get to swstrategy.  * It cannot be provided to the users, because the  * swstrategy routine munches the b_dev and b_blkno entries  * before calling the appropriate driver.  This would horribly  * confuse, e.g. the hashing routines as well as the placement  * of the block on the d_tab chains.  Instead, /dev/drum is  * provided as a character (raw) device.  */
+end_comment
+
+begin_decl_stmt
+name|dev_t
+name|swapdev
+init|=
+name|makedev
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
