@@ -412,7 +412,7 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"Are you sure you wish to exit?  The system will reboot\n"
-literal|"(be sure to remove any floppies from the drives)."
+literal|"(be sure to remove any floppies/CDROMs from the drives)."
 argument_list|)
 endif|#
 directive|endif
