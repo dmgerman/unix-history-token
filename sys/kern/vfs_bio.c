@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.176 1998/09/15 10:05:18 gibbs Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.177 1998/09/25 17:34:49 peter Exp $  */
 end_comment
 
 begin_comment
@@ -2653,6 +2653,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * We must clear B_RELBUF if B_DELWRI is set.  If vfs_vmio_release()  	 * is called with B_DELWRI set, the underlying pages may wind up 	 * getting freed causing a previous write (bdwrite()) to get 'lost' 	 * because pages associated with a B_DELWRI bp are marked clean. 	 *  	 * We still allow the B_INVAL case to call vfs_vmio_release(), even 	 * if B_DELWRI is set. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DELWRI
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_RELBUF
+expr_stmt|;
 comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, so the B_INVAL flag is used to *invalidate* the buffer, 	 * but the VM object is kept around.  The B_NOCACHE flag is used to 	 * invalidate the pages in the VM object. 	 * 	 * If the buffer is a partially filled NFS buffer, keep it 	 * since invalidating it now will lose informatio.  The valid 	 * flags in the vm_pages have only DEV_BSIZE resolution but 	 * the b_validoff, b_validend fields have byte resolution. 	 * This can avoid unnecessary re-reads of the buffer. 	 * XXX this seems to cause performance problems. 	 */
 if|if
 condition|(
