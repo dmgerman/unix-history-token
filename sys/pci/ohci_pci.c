@@ -1097,8 +1097,8 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
-comment|/* XXX this code is not yet fit to be used as detach for 	 * the OHCI controller 	 */
-comment|/* disable interrupts that might have been switched on 	 * in ohci_init 	 */
+comment|/* 	 * XXX this code is not yet fit to be used as detach for the OHCI 	 * controller 	 */
+comment|/* 	 * disable interrupts that might have been switched on in ohci_init 	 */
 if|if
 condition|(
 name|sc
