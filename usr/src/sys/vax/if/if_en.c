@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.36	82/03/03	*/
+comment|/*	if_en.c	4.37	82/03/09	*/
 end_comment
 
 begin_include
@@ -572,6 +572,23 @@ name|if_host
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_broadaddr
+operator|=
+name|if_makeaddr
+argument_list|(
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_net
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|es

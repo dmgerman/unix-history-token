@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.30	82/02/15	*/
+comment|/*	ip_input.c	1.31	82/03/09	*/
 end_comment
 
 begin_include
@@ -518,12 +518,25 @@ name|m
 operator|->
 name|m_next
 control|)
+block|{
+if|if
+condition|(
+name|m
+operator|->
+name|m_free
+condition|)
+name|panic
+argument_list|(
+literal|"ipinput already free"
+argument_list|)
+expr_stmt|;
 name|i
 operator|+=
 name|m
 operator|->
 name|m_len
 expr_stmt|;
+block|}
 name|m
 operator|=
 name|m0
@@ -599,6 +612,18 @@ name|if_addr
 operator|.
 name|s_addr
 operator|&&
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+operator|!=
+name|ifnet
+operator|->
+name|if_broadaddr
+operator|.
+name|s_addr
+operator|&&
 name|if_ifwithaddr
 argument_list|(
 name|ip
@@ -622,6 +647,13 @@ operator|->
 name|ip_ttl
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
 if|if
 condition|(
 operator|--

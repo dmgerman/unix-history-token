@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.7	82/01/24	*/
+comment|/*	if.h	4.8	82/03/09	*/
 end_comment
 
 begin_comment
@@ -44,6 +44,11 @@ name|in_addr
 name|if_addr
 decl_stmt|;
 comment|/* internet address of interface */
+name|struct
+name|in_addr
+name|if_broadaddr
+decl_stmt|;
+comment|/* broadcast address of interface */
 struct|struct
 name|ifqueue
 block|{
@@ -142,7 +147,7 @@ name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(m)->m_act = (ifq)->ifq_head; \ 	(ifq)->ifq_head = (m); \ }
+value|{ \ 	(m)->m_act = (ifq)->ifq_head; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_tail = (m); \ 	(ifq)->ifq_head = (m); \ }
 end_define
 
 begin_define

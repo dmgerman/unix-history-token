@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.8	82/02/03	*/
+comment|/*	if.c	4.9	82/03/09	*/
 end_comment
 
 begin_include
@@ -232,15 +232,35 @@ name|if_next
 control|)
 if|if
 condition|(
+name|in
+operator|.
+name|s_addr
+operator|==
 name|ifp
 operator|->
 name|if_addr
 operator|.
 name|s_addr
-operator|==
+operator|||
+operator|(
+name|ifp
+operator|->
+name|if_broadaddr
+operator|.
+name|s_addr
+operator|!=
+literal|0
+operator|&&
 name|in
 operator|.
 name|s_addr
+operator|==
+name|ifp
+operator|->
+name|if_broadaddr
+operator|.
+name|s_addr
+operator|)
 condition|)
 break|break;
 return|return
