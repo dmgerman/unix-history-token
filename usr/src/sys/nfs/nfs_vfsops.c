@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -631,6 +631,8 @@ name|vp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|i
 decl_stmt|;
 comment|/* 	 * Do enough of ifconfig(8) so that the critical net interface can 	 * talk to the server. 	 */
 if|if
@@ -670,8 +672,11 @@ operator|&
 name|nfs_diskless
 operator|.
 name|myif
+argument_list|,
+name|curproc
 argument_list|)
 condition|)
+comment|/* XXX */
 name|panic
 argument_list|(
 literal|"nfs ifconf2"
@@ -1212,6 +1217,54 @@ expr_stmt|;
 name|rootvp
 operator|=
 name|vp
+expr_stmt|;
+comment|/* 	 * This is not really an nfs issue, but it is much easier to 	 * set hostname here and then let the "/etc/rc.xxx" files 	 * mount the right /var based upon its preset value. 	 */
+name|bcopy
+argument_list|(
+name|nfs_diskless
+operator|.
+name|my_hostnam
+argument_list|,
+name|hostname
+argument_list|,
+name|MAXHOSTNAMELEN
+argument_list|)
+expr_stmt|;
+name|hostname
+index|[
+name|MAXHOSTNAMELEN
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXHOSTNAMELEN
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|hostname
+index|[
+name|i
+index|]
+operator|==
+literal|'\0'
+condition|)
+break|break;
+name|hostnamelen
+operator|=
+name|i
 expr_stmt|;
 name|inittodr
 argument_list|(
