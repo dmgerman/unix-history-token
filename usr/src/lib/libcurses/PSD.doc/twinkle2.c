@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)twinkle2.c	5.1 (Berkeley) %G%"
+literal|"@(#)twinkle2.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,14 @@ directive|endif
 endif|not lint
 end_endif
 
+begin_function_decl
+specifier|extern
+name|int
+name|_putchar
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|()
@@ -33,18 +41,6 @@ name|reg
 name|char
 modifier|*
 name|sp
-decl_stmt|;
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-name|int
-name|_putchar
-argument_list|()
-decl_stmt|,
-name|die
-argument_list|()
 decl_stmt|;
 name|srand
 argument_list|(
@@ -66,12 +62,16 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sp
 operator|=
 name|getenv
 argument_list|(
 literal|"TERM"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|setterm
 argument_list|(
@@ -152,34 +152,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * _putchar defined for tputs() (and _puts())  */
-end_comment
-
-begin_macro
-name|_putchar
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
-name|char
-name|c
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|putchar
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_macro
 name|puton
 argument_list|(
@@ -195,12 +167,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|static
-name|int
-name|lasty
-decl_stmt|,
-name|lastx
-decl_stmt|;
 name|reg
 name|LOCS
 modifier|*
@@ -217,6 +183,12 @@ name|end
 decl_stmt|;
 name|LOCS
 name|temp
+decl_stmt|;
+specifier|static
+name|int
+name|lasty
+decl_stmt|,
+name|lastx
 decl_stmt|;
 name|end
 operator|=
