@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.23	82/12/17	*/
+comment|/*	Locore.c	4.24	83/05/27	*/
 end_comment
 
 begin_include
@@ -214,6 +214,15 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|dumpmag
+decl_stmt|;
+name|dumpmag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* used only by savecore */
 comment|/* 	 * Pseudo-uses of globals. 	 */
 name|lowinit
 argument_list|()
@@ -1481,6 +1490,10 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * Routines handled by asm.sed script.  */
+end_comment
+
+begin_comment
 comment|/*VARARGS1*/
 end_comment
 
@@ -1736,6 +1749,53 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
+name|scanc
+argument_list|(
+argument|size
+argument_list|,
+argument|cp
+argument_list|,
+argument|table
+argument_list|,
+argument|mask
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|unsigned
+name|size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|caddr_t
+name|cp
+decl_stmt|,
+name|table
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mask
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_macro
 name|ffs
 argument_list|(
 argument|i
@@ -1803,6 +1863,25 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Variables declared for savecore, or  * implicitly, such as by config or the loader.  */
+end_comment
+
+begin_decl_stmt
+name|char
+name|version
+index|[]
+init|=
+literal|"4.2 BSD UNIX ...."
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|etext
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

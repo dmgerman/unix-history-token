@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	5.5	83/05/18	*/
+comment|/*	vm_machdep.c	5.6	83/05/27	*/
 end_comment
 
 begin_include
@@ -181,13 +181,13 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int
 name|v
+decl_stmt|,
+name|pfnum
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pfnum
-decl_stmt|,
 name|count
 decl_stmt|,
 name|prot
@@ -288,26 +288,24 @@ begin_comment
 comment|/*  * Check for valid program size  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|chksize
 argument_list|(
-argument|ts
+name|ts
 argument_list|,
-argument|ds
+name|ds
 argument_list|,
-argument|ss
+name|ss
 argument_list|)
-end_macro
-
-begin_decl_stmt
+specifier|register
 name|unsigned
 name|ts
-decl_stmt|,
+operator|,
 name|ds
-decl_stmt|,
+operator|,
 name|ss
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -352,6 +350,7 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -714,6 +713,12 @@ index|]
 operator|.
 name|m_dev
 argument_list|,
+operator|(
+name|daddr_t
+operator|)
+operator|(
+name|u_long
+operator|)
 name|c
 operator|->
 name|c_blkno
