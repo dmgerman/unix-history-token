@@ -918,7 +918,7 @@ specifier|static
 name|int
 name|wi_txerate
 init|=
-literal|10
+literal|0
 decl_stmt|;
 end_decl_stmt
 
