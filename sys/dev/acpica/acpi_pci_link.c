@@ -1102,7 +1102,7 @@ index|[
 name|i
 index|]
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
