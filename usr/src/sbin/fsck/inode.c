@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.1 (Berkeley) %G%"
+literal|"@(#)inode.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -435,6 +435,12 @@ decl_stmt|;
 name|BUFAREA
 name|ib
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 specifier|extern
 name|int
 name|pass1check
@@ -657,13 +663,24 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"PARTIALLY TRUNCATED INODE I=%d"
+argument_list|,
+name|idesc
+operator|->
+name|id_number
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dofix
 argument_list|(
 name|idesc
 argument_list|,
-literal|"PARTIALLY TRUNCATED INODE"
+name|buf
 argument_list|)
 condition|)
 block|{
