@@ -8,10 +8,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)cmdtab.c	2.10 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	2.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,6 +213,9 @@ name|igfield
 argument_list|()
 decl_stmt|,
 name|Type
+argument_list|()
+decl_stmt|,
+name|retfield
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -887,6 +890,18 @@ block|,
 literal|"discard"
 block|,
 name|igfield
+block|,
+name|M
+operator||
+name|RAWLIST
+block|,
+literal|0
+block|,
+literal|1000
+block|,
+literal|"retain"
+block|,
+name|retfield
 block|,
 name|M
 operator||
