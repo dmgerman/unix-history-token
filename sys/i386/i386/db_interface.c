@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.13 1995/04/08 21:31:53 joerg Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.14 1995/05/30 07:59:22 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -149,14 +149,38 @@ literal|0
 block|if ((boothowto&RB_KDB) == 0) 	    return(0);
 endif|#
 directive|endif
-comment|/* XXX: do not block forever while the console is in graphics mode */
+comment|/* 	 * XXX try to do nothing if the console is in graphics mode. 	 * Handle trace traps (and hardware breakpoints...) by ignoring 	 * them except for forgetting about them.  Return 0 for other 	 * traps to say that we haven't done anything.  The trap handler 	 * will usually panic.  We should handle breakpoint traps for 	 * our breakpoints by disarming our breakpoints and fixing up 	 * %eip. 	 */
 if|if
 condition|(
 name|cons_unavail
 condition|)
+block|{
+if|if
+condition|(
+name|type
+operator|=
+name|T_TRCTRAP
+condition|)
+block|{
+name|regs
+operator|->
+name|tf_eflags
+operator|&=
+operator|~
+name|PSL_T
+expr_stmt|;
 return|return
-literal|0
+operator|(
+literal|1
+operator|)
 return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|type
@@ -773,7 +797,7 @@ specifier|volatile
 name|u_char
 name|in_Debugger
 decl_stmt|;
-comment|/* XXX: do not block forever while the console is in graphics mode */
+comment|/* 	 * XXX do nothing if the console is in graphics mode.  This is 	 * OK if the call is for the debugger hotkey but not if the call 	 * is a weak form of panicing. 	 */
 if|if
 condition|(
 name|cons_unavail
