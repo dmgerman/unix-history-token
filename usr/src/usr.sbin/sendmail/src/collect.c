@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.56
+literal|3.57
 operator|%
 name|G
 operator|%
@@ -705,6 +705,23 @@ operator|)
 name|fclose
 argument_list|(
 name|tf
+argument_list|)
+expr_stmt|;
+comment|/* An EOF when running SMTP is an error */
+if|if
+condition|(
+name|feof
+argument_list|(
+name|InChannel
+argument_list|)
+operator|&&
+name|OpMode
+operator|==
+name|MD_SMTP
+condition|)
+name|syserr
+argument_list|(
+literal|"collect: unexpected close"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
