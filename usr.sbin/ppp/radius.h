@@ -65,6 +65,16 @@ name|long
 name|mtu
 decl_stmt|;
 comment|/* FRAMED MTU */
+name|unsigned
+name|long
+name|sessiontime
+decl_stmt|;
+comment|/* Session-Timeout */
+name|char
+modifier|*
+name|filterid
+decl_stmt|;
+comment|/* FRAMED Filter Id */
 name|struct
 name|sticky_route
 modifier|*
