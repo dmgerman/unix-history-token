@@ -124,10 +124,6 @@ directive|ifdef
 name|_THREAD_SAFE
 name|_thread_flockfile
 argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
 name|fp
 argument_list|,
 name|__FILE__
@@ -180,7 +176,7 @@ condition|(
 name|pos
 operator|==
 operator|-
-literal|1L
+literal|1
 condition|)
 block|{
 ifdef|#
@@ -188,10 +184,6 @@ directive|ifdef
 name|_THREAD_SAFE
 name|_thread_funlockfile
 argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
 name|fp
 argument_list|)
 expr_stmt|;
@@ -269,10 +261,6 @@ directive|ifdef
 name|_THREAD_SAFE
 name|_thread_funlockfile
 argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
 name|fp
 argument_list|)
 expr_stmt|;
