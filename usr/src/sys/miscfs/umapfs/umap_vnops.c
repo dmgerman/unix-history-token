@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vnops.c	7.1 (Berkeley) %G%  *  * @(#)umap_vnops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vnops.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<umapfs/umap.h>
+file|<miscfs/umapfs/umap.h>
 end_include
 
 begin_decl_stmt
@@ -91,6 +91,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_generic_args
+comment|/* { 		struct vnodeop_desc *a_desc;<other random data follows, presumably> 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -918,6 +919,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -967,7 +969,9 @@ name|ap
 argument_list|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 comment|/* Requires that arguments be restored. */
 name|ap
@@ -1226,7 +1230,9 @@ operator|)
 name|NULLGROUP
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1239,13 +1245,16 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
 comment|/* 	 * Do nothing (and _don't_ bypass). 	 * Wait to vrele lowervp until reclaim, 	 * so that until then our umap_node is in the 	 * cache and reusable. 	 * 	 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1258,6 +1267,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_reclaim_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1323,7 +1333,9 @@ name|lowervp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1336,6 +1348,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_strategy_args
+comment|/* { 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1390,7 +1403,9 @@ operator|=
 name|savedvp
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1403,6 +1418,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bwrite_args
+comment|/* { 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1457,7 +1473,9 @@ operator|=
 name|savedvp
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1470,6 +1488,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1497,7 +1516,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1510,6 +1531,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_rename_args
+comment|/* { 		struct vnode *a_fdvp; 		struct vnode *a_fvp; 		struct componentname *a_fcnp; 		struct vnode *a_tdvp; 		struct vnode *a_tvp; 		struct componentname *a_tcnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1635,7 +1657,9 @@ name|ap
 argument_list|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 comment|/* Restore the additional mapped componentname cred structure. */
 name|crfree
