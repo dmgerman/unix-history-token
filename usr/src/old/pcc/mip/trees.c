@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.23 (Berkeley) %G%"
+literal|"@(#)trees.c	4.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1273,7 +1273,7 @@ condition|)
 block|{
 name|uerror
 argument_list|(
-literal|"illegal lhs of assignment operator"
+literal|"illegal lvalue operand of assignment operator"
 argument_list|)
 expr_stmt|;
 block|}
