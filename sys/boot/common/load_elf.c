@@ -810,6 +810,9 @@ name|resid
 decl_stmt|,
 name|chunk
 decl_stmt|;
+name|ssize_t
+name|result
+decl_stmt|;
 name|vm_offset_t
 name|dest
 decl_stmt|;
@@ -845,7 +848,7 @@ decl_stmt|;
 name|long
 name|size
 decl_stmt|;
-name|int
+name|u_int
 name|fpcopy
 decl_stmt|;
 name|dp

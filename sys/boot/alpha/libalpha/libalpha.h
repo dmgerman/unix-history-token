@@ -188,10 +188,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
+name|ssize_t
 name|alpha_copyin
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|src
@@ -199,6 +199,7 @@ parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -206,10 +207,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
+name|ssize_t
 name|alpha_copyout
 parameter_list|(
+specifier|const
 name|vm_offset_t
 name|src
 parameter_list|,
@@ -217,6 +218,7 @@ name|void
 modifier|*
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -224,16 +226,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
+name|ssize_t
 name|alpha_readin
 parameter_list|(
+specifier|const
 name|int
 name|fd
 parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)

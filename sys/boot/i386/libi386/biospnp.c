@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -265,7 +259,7 @@ decl_stmt|;
 name|u_int8_t
 name|dn_data
 index|[
-literal|0
+literal|1
 index|]
 name|__attribute__
 argument_list|(
@@ -373,6 +367,7 @@ parameter_list|(
 name|int
 name|func
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -392,33 +387,34 @@ parameter_list|)
 value|(((u_int32_t)VTOPSEG(vptr)<< 16) + VTOPOFF(vptr))
 end_define
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|void
-function_decl|(
-modifier|*
-name|v86bios
-function_decl|)
+name|v86bios_t
 parameter_list|(
 name|u_int32_t
-name|arg0
 parameter_list|,
 name|u_int32_t
-name|arg1
 parameter_list|,
 name|u_int32_t
-name|arg2
 parameter_list|,
 name|u_int32_t
-name|arg3
 parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+name|v86bios_t
+modifier|*
+name|v86bios
 init|=
 operator|(
-name|void
+name|v86bios_t
 operator|*
 operator|)
 name|v86int
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -820,7 +816,7 @@ modifier|*
 name|dn
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|tag
 decl_stmt|,
 name|i
@@ -1039,6 +1035,7 @@ parameter_list|(
 name|int
 name|func
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1049,6 +1046,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p

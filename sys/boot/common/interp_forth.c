@@ -146,7 +146,7 @@ decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|struct

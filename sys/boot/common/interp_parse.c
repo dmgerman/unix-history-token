@@ -15,22 +15,11 @@ directive|include
 file|<string.h>
 end_include
 
-begin_comment
-comment|/* Forward decls */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|backslash
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"bootstrap.h"
+end_include
 
 begin_function_decl
 specifier|static
@@ -128,7 +117,7 @@ specifier|static
 name|char
 name|isdelim
 parameter_list|(
-name|char
+name|int
 name|ch
 parameter_list|)
 block|{
@@ -162,7 +151,7 @@ specifier|static
 name|int
 name|isquote
 parameter_list|(
-name|char
+name|int
 name|ch
 parameter_list|)
 block|{
@@ -217,7 +206,7 @@ name|copy
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|size_t
 name|i
 init|=
 literal|0
@@ -578,7 +567,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen

@@ -20,9 +20,10 @@ file|"libalpha.h"
 end_include
 
 begin_function
-name|int
+name|ssize_t
 name|alpha_copyin
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|src
@@ -30,6 +31,7 @@ parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
@@ -38,6 +40,10 @@ name|bcopy
 argument_list|(
 name|src
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|dest
 argument_list|,
 name|len
@@ -52,9 +58,10 @@ block|}
 end_function
 
 begin_function
-name|int
+name|ssize_t
 name|alpha_copyout
 parameter_list|(
+specifier|const
 name|vm_offset_t
 name|src
 parameter_list|,
@@ -62,12 +69,17 @@ name|void
 modifier|*
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)
 block|{
 name|bcopy
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|src
 argument_list|,
 name|dest
@@ -84,15 +96,17 @@ block|}
 end_function
 
 begin_function
-name|int
+name|ssize_t
 name|alpha_readin
 parameter_list|(
+specifier|const
 name|int
 name|fd
 parameter_list|,
 name|vm_offset_t
 name|dest
 parameter_list|,
+specifier|const
 name|size_t
 name|len
 parameter_list|)

@@ -529,6 +529,9 @@ name|COMPORT
 operator|+
 name|com_data
 argument_list|,
+operator|(
+name|u_char
+operator|)
 name|c
 argument_list|)
 expr_stmt|;
