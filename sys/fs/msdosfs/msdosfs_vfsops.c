@@ -2660,7 +2660,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Next free cluster in FSInfo (%u) exceeds maxcluster (%u)\n"
+literal|"Next free cluster in FSInfo (%lu) exceeds maxcluster (%lu)\n"
 argument_list|,
 name|pmp
 operator|->
