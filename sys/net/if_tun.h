@@ -62,7 +62,7 @@ value|0x0100
 define|#
 directive|define
 name|TUN_READY
-value|(TUN_OPEN | TUN_INITED | TUN_IASET)
+value|(TUN_OPEN | TUN_INITED | TUN_DSTADDR)
 name|struct
 name|ifnet
 name|tun_if
