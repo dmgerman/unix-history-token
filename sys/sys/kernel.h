@@ -747,7 +747,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|static void __Tunable_ ## var (void *ignored)		\ {							\     char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strlcpy((var), tmp, (size));			\ }							\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL);
+value|static void __Tunable_ ## var (void *ignored)		\ {							\     char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strncpy((var), tmp, (size));			\     (var)[(size) - 1] = 0;				\ }							\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL);
 end_define
 
 begin_define
@@ -764,7 +764,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|static void __Tunable_ ## var (void *ignored)		\ {							\     char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strlcpy((var), tmp, (size));			\ }
+value|static void __Tunable_ ## var (void *ignored)		\ {							\     char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strncpy((var), tmp, (size));			\     (var)[(size) - 1] = 0;				\ }
 end_define
 
 begin_comment
