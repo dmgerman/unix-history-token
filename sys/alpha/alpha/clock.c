@@ -856,7 +856,9 @@ expr_stmt|;
 block|}
 name|stathz
 operator|=
-literal|128
+name|hz
+operator|/
+literal|8
 expr_stmt|;
 name|platform
 operator|.
