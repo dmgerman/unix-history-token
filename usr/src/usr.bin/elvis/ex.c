@@ -4,7 +4,7 @@ comment|/* ex.c */
 end_comment
 
 begin_comment
-comment|/* Author:  *	Steve Kirkendall  *	14407 SW Teal Blvd. #C  *	Beaverton, OR 97005  *	kirkenda@cs.pdx.edu  */
+comment|/* Author:  *	Steve Kirkendall  *	14407 SW Teal Blvd. #C  *	Beaverton, OR 97005  *	kirkenda@cs.pdx.edu  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00043  * --------------------         -----   ----------------------  *  * 27 Nov 1992	 Felix Gaehtgens	Fixed<ESC>:wq!  *  */
 end_comment
 
 begin_comment
@@ -969,6 +969,8 @@ name|CMD_WQUIT
 block|,
 name|cmd_xit
 block|,
+name|BANG
+operator|+
 name|NL
 block|}
 block|,
