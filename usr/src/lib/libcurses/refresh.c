@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.21 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2872,7 +2872,7 @@ name|startw
 argument_list|,
 name|curs
 argument_list|,
-name|curw
+name|bot
 argument_list|,
 name|top
 argument_list|)
@@ -2926,7 +2926,7 @@ operator|*
 name|__LDATASIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Perform the rotation to maintain the consistency of curscr. 	 * This is hairy since we are doing an *in place* rotation. 	 * Invariants of the loop: 	 * - I is the index of the current line. 	 * - Target is the index of the target of line i. 	 * - Tmp1 points to current line (i). 	 * - Tmp2 and points to target line (target); 	 * - Cur_period is the index of the end of the current period.  	 *   (see below). 	 * 	 * There are 2 major issues here that make this rotation non-trivial: 	 * 1.  Scrolling in a scrolling region bounded by the top 	 *     and bottom regions determined (whose size is sc_region). 	 * 2.  As a result of the use of the mod function, there may be a  	 *     period introduced, i.e., 2 maps to 4, 4 to 6, n-2 to 0, and 	 *     0 to 2, which then causes all odd lines not to be rotated. 	 *     To remedy this, an index of the end ( = beginning) of the  	 *     current 'period' is kept, cur_period, and when it is reached,  	 *     the next period is started from cur_period + 1 which is  	 *     guaranteed not to have been reached since that would mean that 	 *     all records would have been reached. (think about it...). 	 *  	 * Lines in the rotation can have 3 attributes which are marked on the 	 * line so that curscr is consistent with the visual screen. 	 * 1.  Not dirty -- lines inside the scrolling region, top region or 	 *                  bottom region. 	 * 2.  Blank lines -- lines in the differential of scrolled block  	 *                    between win and curscr in the scrolling region. 	 * 	 * 3.  Dirty line -- all other lines are marked dirty. 	 */
+comment|/* 	 * Perform the rotation to maintain the consistency of curscr. 	 * This is hairy since we are doing an *in place* rotation. 	 * Invariants of the loop: 	 * - I is the index of the current line. 	 * - Target is the index of the target of line i. 	 * - Tmp1 points to current line (i). 	 * - Tmp2 and points to target line (target); 	 * - Cur_period is the index of the end of the current period.  	 *   (see below). 	 * 	 * There are 2 major issues here that make this rotation non-trivial: 	 * 1.  Scrolling in a scrolling region bounded by the top 	 *     and bottom regions determined (whose size is sc_region). 	 * 2.  As a result of the use of the mod function, there may be a  	 *     period introduced, i.e., 2 maps to 4, 4 to 6, n-2 to 0, and 	 *     0 to 2, which then causes all odd lines not to be rotated. 	 *     To remedy this, an index of the end ( = beginning) of the  	 *     current 'period' is kept, cur_period, and when it is reached,  	 *     the next period is started from cur_period + 1 which is  	 *     guaranteed not to have been reached since that would mean that 	 *     all records would have been reached. (think about it...). 	 *  	 * Lines in the rotation can have 3 attributes which are marked on the 	 * line so that curscr is consistent with the visual screen. 	 * 1.  Not dirty -- lines inside the scrolled block, top region or 	 *                  bottom region. 	 * 2.  Blank lines -- lines in the differential of the scrolling  	 *		      region adjacent to top and bot regions  	 *                    depending on scrolling direction. 	 * 3.  Dirty line -- all other lines are marked dirty. 	 */
 name|sc_region
 operator|=
 name|bot
@@ -3079,30 +3079,34 @@ if|if
 condition|(
 operator|(
 name|n
-operator|<
-literal|0
-operator|&&
-name|target
-operator|>=
-name|curw
-operator|&&
-name|target
-operator|<
-name|curs
-operator|)
-operator|||
-operator|(
-name|n
 operator|>
 literal|0
 operator|&&
 name|target
-operator|<
-name|startw
+operator|>=
+name|top
 operator|&&
 name|target
-operator|>=
-name|starts
+operator|<
+name|top
+operator|+
+name|n
+operator|)
+operator|||
+operator|(
+name|n
+operator|<
+literal|0
+operator|&&
+name|target
+operator|<=
+name|bot
+operator|&&
+name|target
+operator|>
+name|bot
+operator|+
+name|n
 operator|)
 condition|)
 block|{
@@ -3185,6 +3189,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|__touchline
 argument_list|(
 name|win
@@ -3212,6 +3217,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 block|}
 else|else
 block|{
@@ -3431,7 +3437,7 @@ name|startw
 parameter_list|,
 name|curs
 parameter_list|,
-name|curw
+name|bot
 parameter_list|,
 name|top
 parameter_list|)
@@ -3446,7 +3452,7 @@ name|startw
 decl_stmt|,
 name|curs
 decl_stmt|,
-name|curw
+name|bot
 decl_stmt|,
 name|top
 decl_stmt|;
@@ -3545,7 +3551,11 @@ name|top
 argument_list|,
 literal|0
 argument_list|,
-name|curw
+name|bot
+operator|-
+name|n
+operator|+
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -3593,7 +3603,11 @@ argument_list|)
 expr_stmt|;
 name|mvcur
 argument_list|(
-name|curw
+name|bot
+operator|-
+name|n
+operator|+
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -3612,11 +3626,16 @@ name|oy
 argument_list|,
 name|ox
 argument_list|,
-name|curs
+name|bot
+operator|+
+name|n
+operator|+
+literal|1
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* n< 0 */
 if|if
 condition|(
 name|DL
@@ -3661,11 +3680,15 @@ argument_list|)
 expr_stmt|;
 name|mvcur
 argument_list|(
-name|curs
+name|bot
+operator|+
+name|n
+operator|+
+literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|starts
+name|top
 argument_list|,
 literal|0
 argument_list|)
@@ -3715,7 +3738,7 @@ argument_list|)
 expr_stmt|;
 name|mvcur
 argument_list|(
-name|starts
+name|top
 argument_list|,
 literal|0
 argument_list|,
