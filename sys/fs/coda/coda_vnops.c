@@ -4030,23 +4030,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|cnp
 operator|->
 name|cn_flags
 operator|&
-name|LOCKPARENT
-operator|)
-operator|||
-operator|!
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|ISLASTCN
-operator|)
+name|ISDOTDOT
 condition|)
 block|{
 if|if
@@ -4097,16 +4085,22 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|vn_lock
 argument_list|(
-literal|"coda_lookup: "
+name|dvp
+argument_list|,
+name|LK_RETRY
+operator||
+name|LK_EXCLUSIVE
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"unlocked parent but couldn't lock child"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 block|}
 block|}
@@ -4150,16 +4144,11 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"coda_lookup: "
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"unlocked parent but couldn't lock child"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 block|}
 block|}
