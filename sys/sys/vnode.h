@@ -886,6 +886,17 @@ begin_comment
 comment|/* bawrite rather then bdwrite */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IO_DIRECT
+value|0x100
+end_define
+
+begin_comment
+comment|/* attempt to bypass buffer cache */
+end_comment
+
 begin_comment
 comment|/*  *  Modes.  Some values same as Ixxx entries from inode.h for now.  */
 end_comment

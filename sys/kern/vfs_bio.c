@@ -4781,6 +4781,8 @@ operator||
 name|B_AGE
 operator||
 name|B_RELBUF
+operator||
+name|B_DIRECT
 operator|)
 expr_stmt|;
 name|bp
@@ -4824,7 +4826,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release a buffer back to the appropriate queue but do not try to free  * it.  The buffer is expected to be used again soon.  *  * bqrelse() is used by bdwrite() to requeue a delayed write, and used by  * biodone() to requeue an async I/O on completion.  It is also used when  * known good buffers need to be requeued but we think we may need the data  * again soon.  */
+comment|/*  * Release a buffer back to the appropriate queue but do not try to free  * it.  The buffer is expected to be used again soon.  *  * bqrelse() is used by bdwrite() to requeue a delayed write, and used by  * biodone() to requeue an async I/O on completion.  It is also used when  * known good buffers need to be requeued but we think we may need the data  * again soon.  *  * XXX we should be able to leave the B_RELBUF hint set on completion.  */
 end_comment
 
 begin_function
@@ -5237,7 +5239,7 @@ argument_list|,
 name|PG_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Might as well free the page if we can and it has 			 * no valid data. 			 */
+comment|/* 			 * Might as well free the page if we can and it has 			 * no valid data.  We also free the page if the 			 * buffer was used for direct I/O 			 */
 if|if
 condition|(
 operator|(
@@ -5275,6 +5277,22 @@ name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DIRECT
+condition|)
+block|{
+name|vm_page_try_to_free
 argument_list|(
 name|m
 argument_list|)

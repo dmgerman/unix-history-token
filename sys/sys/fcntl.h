@@ -297,6 +297,17 @@ begin_comment
 comment|/* don't assign controlling terminal */
 end_comment
 
+begin_comment
+comment|/* Attempt to bypass buffer cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|O_DIRECT
+value|0x00010000
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -335,7 +346,7 @@ begin_define
 define|#
 directive|define
 name|FMASK
-value|(FREAD|FWRITE|FAPPEND|FASYNC|FFSYNC|FNONBLOCK)
+value|(FREAD|FWRITE|FAPPEND|FASYNC|FFSYNC|FNONBLOCK|O_DIRECT)
 end_define
 
 begin_comment
@@ -346,7 +357,7 @@ begin_define
 define|#
 directive|define
 name|FCNTLFLAGS
-value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK|FPOSIXSHM)
+value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK|FPOSIXSHM|O_DIRECT)
 end_define
 
 begin_endif

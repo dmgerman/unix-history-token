@@ -992,6 +992,19 @@ name|NULL
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * If IO_DIRECT then set B_DIRECT for the buffer.  This 		 * will cause us to attempt to release the buffer later on 		 * and will cause the buffer cache to attempt to free the 		 * underlying pages. 		 */
+if|if
+condition|(
+name|ioflag
+operator|&
+name|IO_DIRECT
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_DIRECT
+expr_stmt|;
 comment|/* 		 * We should only get non-zero b_resid when an I/O error 		 * has occurred, which should cause us to break above. 		 * However, if the short read did not cause an error, 		 * then we want to ensure that we do not uiomove bad 		 * or uninitialized data. 		 */
 name|size
 operator|-=
@@ -1120,7 +1133,11 @@ condition|(
 operator|(
 name|ioflag
 operator|&
+operator|(
 name|IO_VMIO
+operator||
+name|IO_DIRECT
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -1136,7 +1153,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-comment|/* 			 * If there are no dependencies, and 			 * it's VMIO, then we don't need the buf, 			 * mark it available for freeing. The VM has the data. 			 */
+comment|/* 			 * If there are no dependencies, and it's VMIO, 			 * then we don't need the buf, mark it available 			 * for freeing. The VM has the data. 			 */
 name|bp
 operator|->
 name|b_flags
@@ -1172,7 +1189,11 @@ condition|(
 operator|(
 name|ioflag
 operator|&
+operator|(
 name|IO_VMIO
+operator||
+name|IO_DIRECT
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -1906,6 +1927,18 @@ condition|)
 break|break;
 if|if
 condition|(
+name|ioflag
+operator|&
+name|IO_DIRECT
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_DIRECT
+expr_stmt|;
+if|if
+condition|(
 name|uio
 operator|->
 name|uio_offset
@@ -1984,7 +2017,11 @@ condition|(
 operator|(
 name|ioflag
 operator|&
+operator|(
 name|IO_VMIO
+operator||
+name|IO_DIRECT
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -1999,12 +2036,15 @@ operator|==
 name|NULL
 operator|)
 condition|)
+block|{
 name|bp
 operator|->
 name|b_flags
 operator||=
 name|B_RELBUF
 expr_stmt|;
+block|}
+comment|/* 		 * If IO_SYNC each buffer is written synchronously.  Otherwise 		 * if we have a severe page deficiency write the buffer  		 * asynchronously.  Otherwise try to cluster, and if that 		 * doesn't do it then either do an async write (if O_DIRECT), 		 * or a delayed write (if not). 		 */
 if|if
 condition|(
 name|ioflag
@@ -2102,6 +2142,26 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|ioflag
+operator|&
+name|IO_DIRECT
+condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_CLUSTEROK
+expr_stmt|;
+name|bawrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

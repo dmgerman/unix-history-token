@@ -90,9 +90,9 @@ name|f_list
 expr_stmt|;
 comment|/* list of active files */
 name|short
-name|f_flag
+name|f_FILLER3
 decl_stmt|;
-comment|/* see fcntl.h */
+comment|/* (old f_flag) */
 define|#
 directive|define
 name|DTYPE_VNODE
@@ -340,6 +340,10 @@ name|caddr_t
 name|f_data
 decl_stmt|;
 comment|/* vnode or socket */
+name|u_int
+name|f_flag
+decl_stmt|;
+comment|/* see fcntl.h */
 block|}
 struct|;
 end_struct

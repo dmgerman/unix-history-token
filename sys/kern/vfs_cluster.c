@@ -2394,6 +2394,21 @@ operator|&=
 operator|~
 name|BIO_ERROR
 expr_stmt|;
+comment|/* 			 * XXX the bdwrite()/bqrelse() issued during 			 * cluster building clears B_RELBUF (see bqrelse() 			 * comment).  If direct I/O was specified, we have 			 * to restore it here to allow the buffer and VM 			 * to be freed. 			 */
+if|if
+condition|(
+name|tbp
+operator|->
+name|b_flags
+operator|&
+name|B_DIRECT
+condition|)
+name|tbp
+operator|->
+name|b_flags
+operator||=
+name|B_RELBUF
+expr_stmt|;
 block|}
 name|bufdone
 argument_list|(
