@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.23 (Berkeley) %G%"
+literal|"@(#)tape.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6352,6 +6352,65 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sunos
+end_ifdef
+
+begin_function
+name|char
+modifier|*
+name|strerror
+parameter_list|(
+name|errnum
+parameter_list|)
+name|int
+name|errnum
+decl_stmt|;
+block|{
+specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+if|if
+condition|(
+name|errnum
+operator|<
+name|sys_nerr
+condition|)
+block|{
+return|return
+operator|(
+name|sys_errlist
+index|[
+name|errnum
+index|]
+operator|)
+return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+literal|"bogus errno in strerror"
+operator|)
+return|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
