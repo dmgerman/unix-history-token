@@ -27,6 +27,36 @@ begin_comment
 comment|/*  * Prototypes for Openfirmware Interface Routines  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|cell_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|ihandle_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|phandle_t
+typedef|;
+end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -52,30 +82,6 @@ name|M_OFWPROP
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|cell_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|ihandle_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|phandle_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * Stuff that is used by the OpenFirmware code.  */
@@ -560,6 +566,15 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
