@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.4 (Berkeley) %G%"
+literal|"@(#)fio.c	5.5	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,7 +181,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TCSETA
+name|TCSETAF
 value|TIOCSETP
 end_define
 
@@ -213,9 +213,6 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|int
 name|ttbuf_flags
 decl_stmt|;
@@ -278,31 +275,34 @@ index|]
 operator|=
 literal|5
 expr_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|Ifn
 argument_list|,
-name|TCSETA
+name|TCSETAF
 argument_list|,
 operator|&
 name|ttbuf
 argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"STTY FAILED"
-argument_list|,
-literal|""
-argument_list|,
-name|ret
+literal|"ioctl(TCSETAF) failed: %m"
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|ttbuf
 operator|.
 name|c_iflag
@@ -326,31 +326,34 @@ name|ANYP
 operator||
 name|CBREAK
 expr_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|Ifn
 argument_list|,
-name|TCSETA
+name|TCSETAF
 argument_list|,
 operator|&
 name|ttbuf
 argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"STTY FAILED"
-argument_list|,
-literal|""
-argument_list|,
-name|ret
+literal|"ioctl(TCSETAF) failed: %m"
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* this is two seperate ioctls to set the x.29 params */
 name|ttbuf
 operator|.
@@ -358,31 +361,34 @@ name|sg_flags
 operator||=
 name|TANDEM
 expr_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|Ifn
 argument_list|,
-name|TCSETA
+name|TCSETAF
 argument_list|,
 operator|&
 name|ttbuf
 argument_list|)
-expr_stmt|;
-name|ASSERT
-argument_list|(
-name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"STTY FAILED"
-argument_list|,
-literal|""
-argument_list|,
-name|ret
+literal|"ioctl(TCSETAF) failed: %m"
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|ttbuf
 operator|.
 name|sg_flags
@@ -430,7 +436,7 @@ name|ioctl
 argument_list|(
 name|Ifn
 argument_list|,
-name|TCSETA
+name|TCSETAF
 argument_list|,
 operator|&
 name|ttbuf
@@ -1076,7 +1082,7 @@ argument_list|,
 name|ibuf
 argument_list|)
 expr_stmt|;
-name|syslog
+name|log_xferstats
 argument_list|(
 name|ibuf
 argument_list|)
@@ -1487,7 +1493,7 @@ argument_list|,
 name|ibuf
 argument_list|)
 expr_stmt|;
-name|syslog
+name|log_xferstats
 argument_list|(
 name|ibuf
 argument_list|)
