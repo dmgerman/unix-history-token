@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpoint.c	1.3	83/03/30  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines for manipulating the point data  * structures for the hard copy programs of the gremlin picture editor.  */
+comment|/*	hpoint.c	1.4	83/07/09  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains routines for manipulating the point data  * structures for the hard copy programs of the gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -29,6 +29,7 @@ name|PTInit
 parameter_list|()
 comment|/*  *      This routine creates a null point and returns  a pointer  * to it.  */
 block|{
+specifier|register
 name|POINT
 modifier|*
 name|pt
@@ -84,7 +85,11 @@ name|pointlist
 argument_list|)
 name|float
 name|x
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
 name|y
 decl_stmt|;
 end_decl_stmt
@@ -99,6 +104,7 @@ operator|)
 argument_list|;
 comment|/*  *      This routine creates a new point with coordinates x and y and   * links it into the pointlist.  */
 block|{
+specifier|register
 name|POINT
 modifier|*
 name|pt1
@@ -124,8 +130,6 @@ operator|->
 name|nextpt
 expr_stmt|;
 block|}
-comment|/* end while */
-empty_stmt|;
 name|pt1
 operator|->
 name|x
