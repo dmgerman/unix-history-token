@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND   *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to  *  Pavlin Ivanov Radoslavov (pavlin@catarina.usc.edu)  *  *  $Id: mld6.c,v 1.7 2000/01/04 17:17:21 jinmei Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Pavlin Ivanov Radoslavov (pavlin@catarina.usc.edu)  *  *  $Id: mld6.c,v 1.13 2000/04/12 07:34:38 jinmei Exp $  */
 end_comment
 
 begin_comment
@@ -173,25 +173,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_char
+modifier|*
 name|rcvcmsgbuf
-index|[
-name|CMSG_SPACE
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|in6_pktinfo
-argument_list|)
-argument_list|)
-operator|+
-name|CMSG_SPACE
-argument_list|(
-sizeof|sizeof
-argument_list|(
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
-argument_list|)
-argument_list|)
-index|]
+name|rcvcmsglen
 decl_stmt|;
 end_decl_stmt
 
@@ -316,6 +308,10 @@ directive|ifndef
 name|IP6OPT_ROUTER_ALERT
 end_ifndef
 
+begin_comment
+comment|/* XXX to be compatible older systems */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -373,7 +369,7 @@ name|LOG_ERR
 argument_list|,
 literal|0
 argument_list|,
-literal|"malloca failed"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -398,7 +394,52 @@ name|LOG_ERR
 argument_list|,
 literal|0
 argument_list|,
-literal|"malloca failed"
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|rcvcmsglen
+operator|=
+name|CMSG_SPACE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_pktinfo
+argument_list|)
+argument_list|)
+operator|+
+name|CMSG_SPACE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rcvcmsgbuf
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|rcvcmsgbuf
+operator|=
+name|malloc
+argument_list|(
+name|rcvcmsglen
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|0
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|IF_DEBUG
@@ -793,10 +834,7 @@ name|rcvmh
 operator|.
 name|msg_controllen
 operator|=
-sizeof|sizeof
-argument_list|(
-name|rcvcmsgbuf
-argument_list|)
+name|rcvcmsglen
 expr_stmt|;
 comment|/* initialize msghdr for sending packets */
 name|sndiov
@@ -1036,31 +1074,6 @@ name|rcvmh
 operator|.
 name|msg_name
 decl_stmt|;
-comment|/* 	 * If control length is zero, it must be an upcall from the kernel 	 * multicast forwarding engine. 	 * XXX: can we trust it? 	 */
-if|if
-condition|(
-name|rcvmh
-operator|.
-name|msg_controllen
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* XXX: msg_controllen must be reset in this case. */
-name|rcvmh
-operator|.
-name|msg_controllen
-operator|=
-sizeof|sizeof
-argument_list|(
-name|rcvcmsgbuf
-argument_list|)
-expr_stmt|;
-name|process_kernel_call
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|recvlen
@@ -1101,6 +1114,28 @@ index|]
 operator|.
 name|iov_base
 expr_stmt|;
+comment|/* 	 * Packets sent up from kernel to daemon have ICMPv6 type = 0. 	 * Note that we set filters on the mld6_socket, so we should never 	 * see a "normal" ICMPv6 packet with type 0 of ICMPv6 type. 	 */
+if|if
+condition|(
+name|mldh
+operator|->
+name|mld6_type
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* XXX: msg_controllen must be reset in this case. */
+name|rcvmh
+operator|.
+name|msg_controllen
+operator|=
+name|rcvcmsglen
+expr_stmt|;
+name|process_kernel_call
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
 name|group
 operator|=
 operator|&
