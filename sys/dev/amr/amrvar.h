@@ -738,9 +738,6 @@ block|{
 name|device_t
 name|amrd_dev
 decl_stmt|;
-name|dev_t
-name|amrd_dev_t
-decl_stmt|;
 name|struct
 name|amr_softc
 modifier|*

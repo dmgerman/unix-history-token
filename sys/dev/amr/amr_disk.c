@@ -130,82 +130,15 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|d_open_t
+name|disk_open_t
 name|amrd_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_strategy_t
+name|disk_strategy_t
 name|amrd_strategy
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|AMRD_CDEV_MAJOR
-value|133
-end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|amrd_cdevsw
-init|=
-block|{
-comment|/* open */
-name|amrd_open
-block|,
-comment|/* close */
-name|nullclose
-block|,
-comment|/* read */
-name|physread
-block|,
-comment|/* write */
-name|physwrite
-block|,
-comment|/* ioctl */
-name|noioctl
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|amrd_strategy
-block|,
-comment|/* name */
-literal|"amrd"
-block|,
-comment|/* maj */
-name|AMRD_CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-name|D_DISK
-block|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-comment|/* bmaj */
-operator|-
-literal|1
-endif|#
-directive|endif
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -213,14 +146,6 @@ begin_decl_stmt
 specifier|static
 name|devclass_t
 name|amrd_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|amrddisk_cdevsw
 decl_stmt|;
 end_decl_stmt
 
@@ -323,18 +248,10 @@ specifier|static
 name|int
 name|amrd_open
 parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|fmt
-parameter_list|,
-name|d_thread_t
+name|struct
+name|disk
 modifier|*
-name|td
+name|dp
 parameter_list|)
 block|{
 name|struct
@@ -347,9 +264,9 @@ expr|struct
 name|amrd_softc
 operator|*
 operator|)
-name|dev
+name|dp
 operator|->
-name|si_drv1
+name|d_drv1
 decl_stmt|;
 if|#
 directive|if
@@ -578,9 +495,9 @@ operator|*
 operator|)
 name|bio
 operator|->
-name|bio_dev
+name|bio_disk
 operator|->
-name|si_drv1
+name|d_drv1
 decl_stmt|;
 comment|/* bogus disk? */
 if|if
@@ -677,9 +594,9 @@ operator|*
 operator|)
 name|bio
 operator|->
-name|bio_dev
+name|bio_disk
 operator|->
-name|si_drv1
+name|d_drv1
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -909,8 +826,50 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|amrd_dev_t
+name|amrd_disk
+operator|.
+name|d_drv1
 operator|=
+name|sc
+expr_stmt|;
+name|sc
+operator|->
+name|amrd_disk
+operator|.
+name|d_maxsize
+operator|=
+operator|(
+name|AMR_NSEG
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
+name|sc
+operator|->
+name|amrd_disk
+operator|.
+name|d_open
+operator|=
+name|amrd_open
+expr_stmt|;
+name|sc
+operator|->
+name|amrd_disk
+operator|.
+name|d_strategy
+operator|=
+name|amrd_strategy
+expr_stmt|;
+name|sc
+operator|->
+name|amrd_disk
+operator|.
+name|d_name
+operator|=
+literal|"amrd"
+expr_stmt|;
 name|disk_create
 argument_list|(
 name|sc
@@ -924,20 +883,10 @@ name|amrd_disk
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|amrd_cdevsw
+name|NULL
 argument_list|,
-operator|&
-name|amrddisk_cdevsw
+name|NULL
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|amrd_dev_t
-operator|->
-name|si_drv1
-operator|=
-name|sc
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -947,21 +896,6 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* set maximum I/O size to match the maximum s/g size */
-name|sc
-operator|->
-name|amrd_dev_t
-operator|->
-name|si_iosize_max
-operator|=
-operator|(
-name|AMR_NSEG
-operator|-
-literal|1
-operator|)
-operator|*
-name|PAGE_SIZE
-expr_stmt|;
 return|return
 operator|(
 literal|0

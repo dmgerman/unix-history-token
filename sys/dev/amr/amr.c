@@ -3763,9 +3763,9 @@ operator|*
 operator|)
 name|bio
 operator|->
-name|bio_dev
+name|bio_disk
 operator|->
-name|si_drv1
+name|d_drv1
 expr_stmt|;
 name|driveno
 operator|=
