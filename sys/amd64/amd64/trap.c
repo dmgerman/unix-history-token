@@ -1727,7 +1727,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* 				 * Invalid %fs's and %gs's can be created using 				 * procfs or PT_SETREGS or by invalidating the 				 * underlying LDT entry.  This causes a fault 				 * in kernel mode when the kernel attempts to 				 * switch contexts.  Lose the bad context 				 * (XXX) so that we can continue, and generate 				 * a signal. 				 */
+comment|/* 			 * Invalid %fs's and %gs's can be created using 			 * procfs or PT_SETREGS or by invalidating the 			 * underlying LDT entry.  This causes a fault 			 * in kernel mode when the kernel attempts to 			 * switch contexts.  Lose the bad context 			 * (XXX) so that we can continue, and generate 			 * a signal. 			 */
 if|if
 condition|(
 name|frame
