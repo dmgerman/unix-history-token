@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"strfile.h"
 end_include
 
@@ -4476,10 +4482,6 @@ specifier|register
 name|int
 name|choice
 decl_stmt|;
-name|long
-name|random
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|File_list
