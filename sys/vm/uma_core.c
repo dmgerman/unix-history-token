@@ -4699,7 +4699,7 @@ modifier|*
 name|udata
 parameter_list|,
 name|int
-name|wait
+name|flags
 parameter_list|)
 block|{
 name|void
@@ -4853,6 +4853,21 @@ operator|->
 name|uz_size
 argument_list|,
 name|udata
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|M_ZERO
+condition|)
+name|bzero
+argument_list|(
+name|item
+argument_list|,
+name|zone
+operator|->
+name|uz_size
 argument_list|)
 expr_stmt|;
 return|return
@@ -5108,7 +5123,7 @@ name|bucketzone
 argument_list|,
 name|NULL
 argument_list|,
-name|wait
+name|flags
 argument_list|,
 name|NULL
 argument_list|)
@@ -5149,7 +5164,7 @@ name|zone
 argument_list|,
 name|udata
 argument_list|,
-name|wait
+name|flags
 argument_list|,
 name|bucket
 argument_list|)
@@ -5189,7 +5204,7 @@ name|zone
 argument_list|,
 name|udata
 argument_list|,
-name|wait
+name|flags
 argument_list|,
 name|NULL
 argument_list|)
@@ -5199,7 +5214,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates an item for an internal zone OR fills a bucket  *  * Arguments  *	zone   The zone to alloc for.  *	udata  The data to be passed to the constructor.  *	wait   M_WAITOK or M_NOWAIT.  *	bucket The bucket to fill or NULL  *  * Returns  *	NULL if there is no memory and M_NOWAIT is set  *	An item if called on an interal zone  *	Non NULL if called to fill a bucket and it was successful.  *  * Discussion:  *	This was much cleaner before it had to do per cpu caches.  It is  *	complicated now because it has to handle the simple internal case, and  *	the more involved bucket filling and allocation.  */
+comment|/*  * Allocates an item for an internal zone OR fills a bucket  *  * Arguments  *	zone   The zone to alloc for.  *	udata  The data to be passed to the constructor.  *	flags  M_WAITOK, M_NOWAIT, M_ZERO.  *	bucket The bucket to fill or NULL  *  * Returns  *	NULL if there is no memory and M_NOWAIT is set  *	An item if called on an interal zone  *	Non NULL if called to fill a bucket and it was successful.  *  * Discussion:  *	This was much cleaner before it had to do per cpu caches.  It is  *	complicated now because it has to handle the simple internal case, and  *	the more involved bucket filling and allocation.  */
 end_comment
 
 begin_function
@@ -5216,7 +5231,7 @@ modifier|*
 name|udata
 parameter_list|,
 name|int
-name|wait
+name|flags
 parameter_list|,
 name|uma_bucket_t
 name|bucket
@@ -5435,7 +5450,7 @@ name|UMA_ZFLAG_FULL
 expr_stmt|;
 if|if
 condition|(
-name|wait
+name|flags
 operator|&
 name|M_WAITOK
 condition|)
@@ -5474,7 +5489,7 @@ name|slab_zalloc
 argument_list|(
 name|zone
 argument_list|,
-name|wait
+name|flags
 argument_list|)
 expr_stmt|;
 name|zone
@@ -5692,9 +5707,14 @@ operator|->
 name|uz_count
 condition|)
 block|{
-name|wait
-operator|=
+name|flags
+operator||=
 name|M_NOWAIT
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|M_WAITOK
 expr_stmt|;
 goto|goto
 name|new_slab
@@ -5725,6 +5745,7 @@ name|uz_ctor
 operator|!=
 name|NULL
 condition|)
+block|{
 name|zone
 operator|->
 name|uz_ctor
@@ -5738,6 +5759,22 @@ argument_list|,
 name|udata
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|M_ZERO
+condition|)
+name|bzero
+argument_list|(
+name|item
+argument_list|,
+name|zone
+operator|->
+name|uz_size
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|item

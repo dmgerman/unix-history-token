@@ -383,7 +383,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocates an item out of a zone  *  * Arguments:  *	zone  The zone we are allocating from  *	arg   This data is passed to the ctor function  *	wait  This flag indicates whether or not we are allowed to block while  *		allocating memory for this zone should we run out.  *  * Returns:  *	A non null pointer to an initialized element from the zone is  *	garanteed if the wait flag is M_WAITOK, otherwise a null pointer may be  *	returned if the zone is empty or the ctor failed.  */
+comment|/*  * Allocates an item out of a zone  *  * Arguments:  *	zone  The zone we are allocating from  *	arg   This data is passed to the ctor function  *	flags See sys/malloc.h for available flags.  *  * Returns:  *	A non null pointer to an initialized element from the zone is  *	garanteed if the wait flag is M_WAITOK, otherwise a null pointer may be  *	returned if the zone is empty or the ctor failed.  */
 end_comment
 
 begin_function_decl
@@ -399,7 +399,7 @@ modifier|*
 name|arg
 parameter_list|,
 name|int
-name|wait
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -419,7 +419,7 @@ name|uma_zone_t
 name|zone
 parameter_list|,
 name|int
-name|wait
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -435,7 +435,7 @@ name|uma_zone_t
 name|zone
 parameter_list|,
 name|int
-name|wait
+name|flags
 parameter_list|)
 block|{
 return|return
@@ -445,7 +445,7 @@ name|zone
 argument_list|,
 name|NULL
 argument_list|,
-name|wait
+name|flags
 argument_list|)
 return|;
 block|}
