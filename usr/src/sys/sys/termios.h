@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)termios.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)termios.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ begin_comment
 comment|/* ICANON */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -54,6 +60,15 @@ end_define
 
 begin_comment
 comment|/* ICANON */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -67,6 +82,12 @@ begin_comment
 comment|/* ICANON */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -76,6 +97,15 @@ end_define
 
 begin_comment
 comment|/* ICANON */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -89,6 +119,12 @@ begin_comment
 comment|/* ICANON */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -98,6 +134,15 @@ end_define
 
 begin_comment
 comment|/* ICANON */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_comment
@@ -137,6 +182,12 @@ begin_comment
 comment|/* ISIG */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -146,6 +197,15 @@ end_define
 
 begin_comment
 comment|/* ISIG */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -169,6 +229,12 @@ end_define
 begin_comment
 comment|/* IXON, IXOFF */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -203,6 +269,15 @@ begin_comment
 comment|/* for sun */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -225,6 +300,12 @@ begin_comment
 comment|/* !ICANON */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -246,6 +327,15 @@ directive|define
 name|NCC
 value|20
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
+end_comment
 
 begin_define
 define|#
@@ -333,7 +423,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* disable checking of parity errors */
+comment|/* enable checking of parity errors */
 end_comment
 
 begin_define
@@ -394,23 +484,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFLOW
-value|IXON
-end_define
-
-begin_comment
-comment|/* "" */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IXOFF
 value|0x00000400
 end_define
 
 begin_comment
 comment|/* enable input flow control */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IFLOW
+value|IXON
+end_define
+
+begin_comment
+comment|/* enable output flow control */
 end_comment
 
 begin_define
@@ -421,7 +517,7 @@ value|IXOFF
 end_define
 
 begin_comment
-comment|/* "" */
+comment|/* enable input flow control */
 end_comment
 
 begin_define
@@ -446,6 +542,15 @@ begin_comment
 comment|/* ring bell on input queue full */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
+end_comment
+
 begin_comment
 comment|/*  * Output flags - software output processing  */
 end_comment
@@ -460,6 +565,12 @@ end_define
 begin_comment
 comment|/* enable following output processing */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -501,9 +612,24 @@ begin_comment
 comment|/* discard EOT's (^D) on output) */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
+end_comment
+
 begin_comment
 comment|/*  * Control flags - hardware control of terminal  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -514,6 +640,15 @@ end_define
 
 begin_comment
 comment|/* ignore control flags */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -615,6 +750,12 @@ begin_comment
 comment|/* odd parity, else even */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -624,6 +765,15 @@ end_define
 
 begin_comment
 comment|/* hang up on last close */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -637,20 +787,74 @@ begin_comment
 comment|/* ignore modem status lines */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|CRTSCTS
+name|CCTS_OFLOW
 value|0x00010000
 end_define
 
 begin_comment
-comment|/* RTS/CTS flow control */
+comment|/* CTS flow control of output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRTSCTS
+value|CCTS_OFLOW
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRTS_IFLOW
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* RTS flow control of input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDMBUF
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* flow control output via Carrier */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_comment
 comment|/*   * "Local" flags - dumping ground for other state  *  * Warning: some flags in this structure begin with  * the letter "I" and look like they belong in the  * input flag.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -661,6 +865,15 @@ end_define
 
 begin_comment
 comment|/* visual erase for line kill */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -707,6 +920,12 @@ begin_comment
 comment|/* echo NL even if ECHO is off */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -727,6 +946,15 @@ end_define
 
 begin_comment
 comment|/* echo control chars as ^(Char) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -751,6 +979,12 @@ begin_comment
 comment|/* canonicalize input lines */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -760,6 +994,15 @@ end_define
 
 begin_comment
 comment|/* use alternate WERASE algorithm */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -776,17 +1019,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MDMBUF
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* flow control output via Carrier */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TOSTOP
 value|0x00400000
 end_define
@@ -794,6 +1026,12 @@ end_define
 begin_comment
 comment|/* stop background jobs from output */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -820,12 +1058,32 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NOKERNINFO
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* no kernel output from VINFO */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PENDIN
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* retype pending input (state) */
+comment|/* XXX retype pending input (state) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -1047,6 +1305,12 @@ name|B38400
 value|38400
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1060,6 +1324,15 @@ directive|define
 name|EXTB
 value|38400
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
+end_comment
 
 begin_comment
 comment|/*  * END OF PROTECTED INCLUDE.  */
@@ -1112,6 +1385,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*_POSIX_SOURCE */
+end_comment
 
 end_unit
 
