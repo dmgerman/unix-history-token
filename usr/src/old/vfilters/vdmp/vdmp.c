@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  VDMP: version 4.1				updated %G%  *  *  reads raster file created by cifplot and dumps it onto the  *  Varian or Versatec plotter.  *  Must be called with vcontrol or by vpd/vad daemon since  *  it assumes plotter is already opened as device 3.  */
+comment|/*  VDMP: version 4.2				updated %G%  *  *  reads raster file created by cifplot and dumps it onto the  *  Varian or Versatec plotter.  *  Must be called with vcontrol or by vpd/vad daemon since  *  it assumes plotter is already opened as device 3.  */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ name|char
 modifier|*
 name|Sid
 init|=
-literal|"@(#)vdmp.c	4.1\t%G%"
+literal|"@(#)vdmp.c	4.2\t%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,6 +275,59 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* page feed */
+if|if
+condition|(
+name|device
+operator|==
+name|VARIAN
+condition|)
+block|{
+name|ioctl
+argument_list|(
+literal|3
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|prtmd
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|3
+argument_list|,
+literal|"\f"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|device
+operator|==
+name|VERSATEC
+condition|)
+block|{
+name|ioctl
+argument_list|(
+literal|3
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|prtmd
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|3
+argument_list|,
+literal|"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* write header */
 block|{
 name|char
@@ -297,7 +350,7 @@ name|sprintf
 argument_list|(
 name|str
 argument_list|,
-literal|"%s:%s%s\n\0"
+literal|"%s:%s%s\n \0"
 argument_list|,
 name|name
 argument_list|,
@@ -403,12 +456,49 @@ name|str
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|putplot
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|device
+operator|==
+name|VERSATEC
+condition|)
+block|{
+name|ioctl
+argument_list|(
+literal|3
+argument_list|,
+name|VSETSTATE
+argument_list|,
+name|prtmd
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|3
+argument_list|,
+literal|"\n\n\n\n\n\n\n"
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -419,9 +509,25 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|buf
+operator|=
+operator|&
+operator|(
+name|vpbuf
+index|[
+literal|0
+index|]
+operator|)
+expr_stmt|;
 comment|/* vpd has already opened the Versatec as device 3 */
 name|ioctl
 argument_list|(
@@ -441,7 +547,7 @@ name|read
 argument_list|(
 name|in
 argument_list|,
-name|vpbuf
+name|buf
 argument_list|,
 name|BUFSIZE
 argument_list|)
@@ -453,7 +559,7 @@ name|write
 argument_list|(
 literal|3
 argument_list|,
-name|vpbuf
+name|buf
 argument_list|,
 name|i
 argument_list|)
