@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dinode.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dinode.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -49,7 +49,7 @@ name|gid_t
 name|di_gid
 decl_stmt|;
 comment|/*  6: owner's group id */
-name|quad
+name|u_quad
 name|di_qsize
 decl_stmt|;
 comment|/*  8: number of bytes in file */
@@ -111,23 +111,22 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* ugh! -- must be fixed */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
 operator|||
 name|defined
 argument_list|(
 name|tahoe
 argument_list|)
 end_if
+
+begin_comment
+comment|/* ugh! -- must be fixed */
+end_comment
 
 begin_define
 define|#
@@ -140,6 +139,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* BYTE_ORDER == BIG_ENDIAN */
+end_comment
 
 begin_define
 define|#
