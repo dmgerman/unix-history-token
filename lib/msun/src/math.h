@@ -1148,18 +1148,13 @@ begin_comment
 comment|/*  * BSD math library entry points  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|double
 name|cabs
-name|__P
-argument_list|(
-operator|(
-name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -1923,18 +1918,13 @@ begin_comment
 comment|/*  * float versions of BSD math library entry points  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|float
 name|cabsf
-name|__P
-argument_list|(
-operator|(
-name|float
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
