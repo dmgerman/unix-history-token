@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
 end_include
 
@@ -695,11 +701,17 @@ operator|==
 name|IPPROTO_IPV4
 condition|)
 block|{
-name|ip_input
+name|m_adj
 argument_list|(
 name|m
 argument_list|,
 name|off
+argument_list|)
+expr_stmt|;
+name|ip_input
+argument_list|(
+name|m
+comment|/*, off */
 argument_list|)
 expr_stmt|;
 return|return;
