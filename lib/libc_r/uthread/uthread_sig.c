@@ -1806,6 +1806,17 @@ name|sa_flags
 operator|&
 name|SA_RESTART
 expr_stmt|;
+comment|/* Make sure this signal isn't still in the pending set: */
+name|sigdelset
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|sigpend
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Process according to thread state: 	 */
 switch|switch
 condition|(

@@ -523,28 +523,6 @@ literal|"Unable to restore alternate signal stack"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Are there pending signals for this thread? */
-if|if
-condition|(
-name|_thread_run
-operator|->
-name|check_pending
-operator|!=
-literal|0
-condition|)
-block|{
-name|_thread_run
-operator|->
-name|check_pending
-operator|=
-literal|0
-expr_stmt|;
-name|_thread_sig_check_pending
-argument_list|(
-name|_thread_run
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Enter a scheduling loop that finds the next thread that is 	 * ready to run. This loop completes when there are no more threads 	 * in the global list or when a thread has its state restored by 	 * either a sigreturn (if the state was saved as a sigcontext) or a 	 * longjmp (if the state was saved by a setjmp). 	 */
 while|while
 condition|(
@@ -820,6 +798,28 @@ name|_thread_run
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
+comment|/* 			 * Are there pending signals for this thread? 			 * 			 * This check has to be performed after the thread 			 * has been placed in the queue(s) appropriate for 			 * its state.  The process of adding pending signals 			 * can change a threads state, which in turn will 			 * attempt to add or remove the thread from any 			 * scheduling queue to which it belongs. 			 */
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|check_pending
+operator|!=
+literal|0
+condition|)
+block|{
+name|_thread_run
+operator|->
+name|check_pending
+operator|=
+literal|0
+expr_stmt|;
+name|_thread_sig_check_pending
+argument_list|(
+name|_thread_run
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 		 * Avoid polling file descriptors if there are none 		 * waiting: 		 */
