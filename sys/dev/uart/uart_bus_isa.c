@@ -89,12 +89,6 @@ directive|include
 file|<dev/uart/uart_bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/uart/uart_cpu.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|int
@@ -114,13 +108,6 @@ index|[]
 init|=
 block|{
 comment|/* Device interface */
-name|DEVMETHOD
-argument_list|(
-name|device_identify
-argument_list|,
-name|uart_cpu_identify
-argument_list|)
-block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe
