@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	5.2 (Berkeley) %G%  *  * from: $Header: sd.c,v 1.18 92/06/11 17:55:56 torek Exp $  */
+comment|/*  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	5.3 (Berkeley) %G%  *  * from: $Header: sd.c,v 1.18 92/06/11 17:55:56 torek Exp $  */
 end_comment
 
 begin_comment
@@ -10,97 +10,97 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/device.h"
+file|<sys/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/disklabel.h"
+file|<sys/disklabel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/dkstat.h"
+file|<sys/dkstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/disk.h"
+file|<sys/disk.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsi/scsi.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsi/disk.h"
+file|"scsi.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsi/scsivar.h"
+file|"disk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsi/scsi_ioctl.h"
+file|"scsivar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|"scsi_ioctl.h"
 end_include
 
 begin_include
@@ -109,11 +109,34 @@ directive|include
 file|"sdtrace.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sparc
+end_ifdef
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SUN_LABEL_HACK
 end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -124,7 +147,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sparc/sunos/sun_disklabel.h"
+file|<sparc/sunos/sun_disklabel.h>
 end_include
 
 begin_endif
