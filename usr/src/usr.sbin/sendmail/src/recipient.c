@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.22 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1112,6 +1112,8 @@ name|a
 operator|->
 name|q_flags
 operator||=
+name|QDONTSEND
+operator||
 name|QBADADDR
 expr_stmt|;
 name|usrerr
@@ -1271,6 +1273,8 @@ name|a
 operator|->
 name|q_flags
 operator||=
+name|QDONTSEND
+operator||
 name|QBADADDR
 expr_stmt|;
 name|giveresponse
@@ -1571,6 +1575,8 @@ name|a
 operator|->
 name|q_flags
 operator||=
+name|QDONTSEND
+operator||
 name|QBADADDR
 expr_stmt|;
 name|giveresponse
@@ -1618,6 +1624,14 @@ operator|>
 literal|3
 condition|)
 block|{
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
+operator||
+name|QBADADDR
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"554 aliasing/forwarding loop for %s broken"
