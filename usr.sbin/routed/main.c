@@ -528,7 +528,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sqdghmpAtT:F:P:"
+literal|"sqdghmAtT:F:P:"
 argument_list|)
 operator|)
 operator|!=
