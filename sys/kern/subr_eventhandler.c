@@ -138,6 +138,7 @@ name|eventhandler_list
 modifier|*
 name|_eventhandler_find_list
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -217,6 +218,7 @@ name|eventhandler_list
 modifier|*
 name|list
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -868,6 +870,7 @@ name|eventhandler_list
 modifier|*
 name|_eventhandler_find_list
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -927,6 +930,7 @@ name|eventhandler_list
 modifier|*
 name|eventhandler_find_list
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
