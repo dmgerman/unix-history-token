@@ -795,6 +795,9 @@ decl_stmt|;
 name|tcp_seq
 name|iss
 decl_stmt|;
+name|tcp_seq
+name|irs
+decl_stmt|;
 name|tcp_cc
 name|cc_recv
 decl_stmt|;
