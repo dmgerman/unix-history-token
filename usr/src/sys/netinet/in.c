@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.c	4.11	82/11/13	*/
+comment|/*	in.c	4.12	83/03/14	*/
 end_comment
 
 begin_include
@@ -145,17 +145,19 @@ begin_block
 block|{
 return|return
 operator|(
+name|in_netof
+argument_list|(
 name|sin1
 operator|->
 name|sin_addr
-operator|.
-name|s_net
+argument_list|)
 operator|==
+name|in_netof
+argument_list|(
 name|sin2
 operator|->
 name|sin_addr
-operator|.
-name|s_net
+argument_list|)
 operator|)
 return|;
 block|}
@@ -485,7 +487,7 @@ name|ifp
 operator|->
 name|if_net
 argument_list|,
-literal|0
+name|INADDR_ANY
 argument_list|)
 expr_stmt|;
 name|rtinit
