@@ -122,8 +122,16 @@ name|TH_URG
 value|0x20
 define|#
 directive|define
+name|TH_ECE
+value|0x40
+define|#
+directive|define
+name|TH_CWR
+value|0x80
+define|#
+directive|define
 name|TH_FLAGS
-value|(TH_FIN|TH_SYN|TH_RST|TH_ACK|TH_URG)
+value|(TH_FIN|TH_SYN|TH_RST|TH_ACK|TH_URG|TH_ECE|TH_CWR)
 name|u_short
 name|th_win
 decl_stmt|;

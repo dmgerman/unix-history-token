@@ -2328,9 +2328,9 @@ if|if
 condition|(
 name|chain
 operator|->
-name|fw_tcpf
+name|fw_ipflg
 operator|&
-name|IP_FW_TCPF_ESTAB
+name|IP_FW_IF_TCPEST
 condition|)
 name|printf
 argument_list|(
@@ -10220,9 +10220,9 @@ condition|)
 block|{
 name|rule
 operator|.
-name|fw_tcpf
+name|fw_ipflg
 operator||=
-name|IP_FW_TCPF_ESTAB
+name|IP_FW_IF_TCPEST
 expr_stmt|;
 name|av
 operator|++
