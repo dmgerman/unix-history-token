@@ -291,7 +291,7 @@ name|buf
 modifier|*
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 modifier|*
 parameter_list|)
@@ -307,12 +307,12 @@ name|struct
 name|udf_node
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|daddr64_t
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -976,10 +976,10 @@ modifier|*
 name|node
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|perm
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 name|mode_t
@@ -1347,7 +1347,7 @@ name|daysinyear
 decl_stmt|;
 union|union
 block|{
-name|u_int16_t
+name|uint16_t
 name|u_tz_offset
 decl_stmt|;
 name|int16_t
@@ -2065,7 +2065,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|data
 decl_stmt|;
@@ -2284,11 +2284,11 @@ argument_list|(
 literal|"0x%02x "
 argument_list|,
 call|(
-name|u_int8_t
+name|uint8_t
 call|)
 argument_list|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -2805,7 +2805,7 @@ name|cookies
 init|=
 name|NULL
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|data
 decl_stmt|;
@@ -3084,7 +3084,7 @@ name|fileid_desc
 modifier|*
 name|fid_buf
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -3099,7 +3099,7 @@ name|MALLOC
 argument_list|(
 name|buf
 argument_list|,
-name|u_int8_t
+name|uint8_t
 operator|*
 argument_list|,
 name|max
@@ -3275,7 +3275,7 @@ argument_list|,
 operator|&
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -3915,7 +3915,7 @@ name|udf_node
 modifier|*
 name|node
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|max_size
 decl_stmt|;
 name|int
@@ -4114,7 +4114,7 @@ name|id
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|data
 decl_stmt|;
@@ -4364,7 +4364,7 @@ name|fileid_desc
 modifier|*
 name|fid_buf
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -4384,7 +4384,7 @@ name|MALLOC
 argument_list|(
 name|buf
 argument_list|,
-name|u_int8_t
+name|uint8_t
 operator|*
 argument_list|,
 name|max
@@ -4564,7 +4564,7 @@ argument_list|,
 operator|&
 operator|(
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -5117,7 +5117,7 @@ modifier|*
 modifier|*
 name|bp
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 modifier|*
 name|data
@@ -5140,7 +5140,7 @@ name|buf
 modifier|*
 name|bp1
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|max_size
 decl_stmt|;
 name|daddr64_t
@@ -5314,7 +5314,7 @@ operator|*
 name|data
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -5351,14 +5351,14 @@ name|udf_node
 modifier|*
 name|node
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|offset
 parameter_list|,
 name|daddr64_t
 modifier|*
 name|sector
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|max_size
 parameter_list|)
@@ -5382,7 +5382,7 @@ name|icb_tag
 modifier|*
 name|tag
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|icblen
 init|=
 literal|0

@@ -75,13 +75,13 @@ decl_stmt|;
 name|int
 name|bmask
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|part_start
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|part_len
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|root_id
 decl_stmt|;
 name|struct
@@ -435,7 +435,7 @@ name|struct
 name|desc_tag
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
