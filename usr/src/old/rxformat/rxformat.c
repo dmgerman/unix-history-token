@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rxformat.c	4.3	83/05/08	*/
+comment|/*	rxformat.c	4.4	83/06/02	*/
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"/sys/vaxuba/rxreg.h"
+file|<vaxuba/rxreg.h>
 end_include
 
 begin_decl_stmt
@@ -37,7 +37,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * format floppy disks on RX02  */
+comment|/*  * Format RX02 floppy disks.  */
 end_comment
 
 begin_function
@@ -131,9 +131,7 @@ name|open
 argument_list|(
 name|devname
 argument_list|,
-name|FRDWR
-argument_list|,
-literal|0600
+name|O_RDWR
 argument_list|)
 operator|)
 operator|<
@@ -188,7 +186,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  	 * change the ioctl command when dkio.h has 	 * been finished 	 */
+comment|/*  	 * Change the ioctl command when dkio.h has 	 * been finished. 	 */
 if|if
 condition|(
 name|ioctl
