@@ -125,6 +125,64 @@ comment|/* Equivilent to any 					 * MAC_BIBA_TYPE_LABEL. */
 end_comment
 
 begin_comment
+comment|/*  * Structures and constants associated with a Biba Integrity policy.  * mac_biba represents a Biba label, with mb_type determining its properties,  * and mb_grade represents the hierarchal grade if valid for the current  * mb_type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAC_BIBA_MAX_COMPARTMENTS
+value|256
+end_define
+
+begin_struct
+struct|struct
+name|mac_biba_element
+block|{
+name|u_short
+name|mbe_type
+decl_stmt|;
+name|u_short
+name|mbe_grade
+decl_stmt|;
+name|u_char
+name|mbe_compartments
+index|[
+name|MAC_BIBA_MAX_COMPARTMENTS
+operator|>>
+literal|3
+index|]
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Biba labels consist of two components: a single label, and a label  * range.  Depending on the context, one or both may be used; the mb_flags  * field permits the provider to indicate what fields are intended for  * use.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mac_biba
+block|{
+name|int
+name|mb_flags
+decl_stmt|;
+name|struct
+name|mac_biba_element
+name|mb_single
+decl_stmt|;
+name|struct
+name|mac_biba_element
+name|mb_rangelow
+decl_stmt|,
+name|mb_rangehigh
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Biba compartments bit test/set macros.  * The range is 1 to MAC_BIBA_MAX_COMPARTMENTS.  */
 end_comment
 
