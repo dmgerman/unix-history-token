@@ -164,6 +164,11 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+name|argv
+index|[
+name|optind
+index|]
+operator|&&
 name|strspn
 argument_list|(
 name|argv
