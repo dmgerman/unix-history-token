@@ -1896,6 +1896,9 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
+name|va_list
+name|ap_copy
+decl_stmt|;
 name|int
 name|len
 decl_stmt|;
@@ -1939,6 +1942,13 @@ operator|)
 return|;
 do|do
 block|{
+name|va_copy
+argument_list|(
+name|ap_copy
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|vsnprintf
@@ -1962,7 +1972,12 @@ literal|1
 argument_list|,
 name|fmt
 argument_list|,
-name|ap
+name|ap_copy
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap_copy
 argument_list|)
 expr_stmt|;
 block|}
