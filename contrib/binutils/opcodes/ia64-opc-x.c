@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ia64-opc-x.c -- IA-64 `X' opcode table.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Timothy Wall<twall@cygnus.com>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ia64-opc-x.c -- IA-64 `X' opcode table.    Copyright 1998, 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Timothy Wall<twall@cygnus.com>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|"ia64-opc.h"
 end_include
 
 begin_comment
-comment|/* identify the specific X-unit type */
+comment|/* Identify the specific X-unit type.  */
 end_comment
 
 begin_define
@@ -28,7 +28,7 @@ value|IA64_TYPE_X, 1
 end_define
 
 begin_comment
-comment|/* instruction bit fields: */
+comment|/* Instruction bit fields:  */
 end_comment
 
 begin_define
@@ -114,6 +114,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|bY
+parameter_list|(
+name|x
+parameter_list|)
+value|(((ia64_insn) ((x)& 0x1))<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
 name|mBtype
 value|bBtype (-1)
 end_define
@@ -170,6 +180,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|mY
+value|bY (-1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OpX3X6
 parameter_list|(
 name|a
@@ -179,6 +196,22 @@ parameter_list|,
 name|c
 parameter_list|)
 value|(bOp (a) | bX3 (b) | bX6(c)), \ 				(mOp | mX3 | mX6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OpX3X6Y
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|(bOp (a) | bX3 (b) | bX6(c) | bY(d)), \ 				(mOp | mX3 | mX6 | mY)
 end_define
 
 begin_define
@@ -274,6 +307,12 @@ block|,
 block|{
 name|IMMU62
 block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -281,18 +320,53 @@ literal|"nop.x"
 block|,
 name|X0
 block|,
-name|OpX3X6
+name|OpX3X6Y
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
 literal|0x01
+argument_list|,
+literal|0
 argument_list|)
 block|,
 block|{
 name|IMMU62
 block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"hint.x"
+block|,
+name|X0
+block|,
+name|OpX3X6Y
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0x01
+argument_list|,
+literal|1
+argument_list|)
+block|,
+block|{
+name|IMMU62
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -312,6 +386,12 @@ name|R1
 block|,
 name|IMMU64
 block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 define|#
@@ -323,7 +403,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|X0, OpBtypePaWhaDPr (0xC, 0, a, 0, b, 0), {TGT64}, 0
+value|X0, OpBtypePaWhaDPr (0xC, 0, a, 0, b, 0), {TGT64}, PSEUDO, 0, NULL
 block|{
 literal|"brl.few"
 block|,
@@ -333,8 +413,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -346,8 +424,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -359,8 +435,6 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -372,8 +446,6 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -385,8 +457,6 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -398,8 +468,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 undef|#
@@ -416,7 +484,19 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|X0, OpBtypePaWhaD (0xC, 0, a, b, c), {TGT64}, 0
+value|X0, OpBtypePaWhaD (0xC, 0, a, b, c), {TGT64}, 0, 0, NULL
+define|#
+directive|define
+name|BRLP
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+define|\
+value|X0, OpBtypePaWhaD (0xC, 0, a, b, c), {TGT64}, PSEUDO, 0, NULL
 block|{
 literal|"brl.cond.sptk.few"
 block|,
@@ -433,7 +513,7 @@ block|,
 block|{
 literal|"brl.cond.sptk"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -441,8 +521,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -461,7 +539,7 @@ block|,
 block|{
 literal|"brl.cond.sptk.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -469,8 +547,6 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -489,7 +565,7 @@ block|,
 block|{
 literal|"brl.cond.spnt"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -497,8 +573,6 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -517,7 +591,7 @@ block|,
 block|{
 literal|"brl.cond.spnt.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -525,8 +599,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -545,7 +617,7 @@ block|,
 block|{
 literal|"brl.cond.dptk"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -553,8 +625,6 @@ literal|2
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -573,7 +643,7 @@ block|,
 block|{
 literal|"brl.cond.dptk.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -581,8 +651,6 @@ literal|2
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -601,7 +669,7 @@ block|,
 block|{
 literal|"brl.cond.dpnt"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -609,8 +677,6 @@ literal|3
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -629,7 +695,7 @@ block|,
 block|{
 literal|"brl.cond.dpnt.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -637,8 +703,6 @@ literal|3
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -761,7 +825,7 @@ block|,
 block|{
 literal|"brl.sptk"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -769,8 +833,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -789,7 +851,7 @@ block|,
 block|{
 literal|"brl.sptk.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -797,8 +859,6 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -817,7 +877,7 @@ block|,
 block|{
 literal|"brl.spnt"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -825,8 +885,6 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -845,7 +903,7 @@ block|,
 block|{
 literal|"brl.spnt.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -853,8 +911,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -873,7 +929,7 @@ block|,
 block|{
 literal|"brl.dptk"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -881,8 +937,6 @@ literal|2
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -901,7 +955,7 @@ block|,
 block|{
 literal|"brl.dptk.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -909,8 +963,6 @@ literal|2
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -929,7 +981,7 @@ block|,
 block|{
 literal|"brl.dpnt"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -937,8 +989,6 @@ literal|3
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -957,7 +1007,7 @@ block|,
 block|{
 literal|"brl.dpnt.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -965,8 +1015,6 @@ literal|3
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1076,6 +1124,9 @@ block|,
 undef|#
 directive|undef
 name|BRL
+undef|#
+directive|undef
+name|BRLP
 define|#
 directive|define
 name|BRL
@@ -1086,7 +1137,18 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|X, OpPaWhaD (0xD, a, b, c), {B1, TGT64}, 0
+value|X, OpPaWhaD (0xD, a, b, c), {B1, TGT64}, 0, 0, NULL
+define|#
+directive|define
+name|BRLP
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|X, OpPaWhaD (0xD, a, b, c), {B1, TGT64}, PSEUDO, 0, NULL
 block|{
 literal|"brl.call.sptk.few"
 block|,
@@ -1103,7 +1165,7 @@ block|,
 block|{
 literal|"brl.call.sptk"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -1111,8 +1173,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1131,7 +1191,7 @@ block|,
 block|{
 literal|"brl.call.sptk.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -1139,8 +1199,6 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1159,7 +1217,7 @@ block|,
 block|{
 literal|"brl.call.spnt"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -1167,8 +1225,6 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1187,7 +1243,7 @@ block|,
 block|{
 literal|"brl.call.spnt.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -1195,8 +1251,6 @@ literal|1
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1215,7 +1269,7 @@ block|,
 block|{
 literal|"brl.call.dptk"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -1223,8 +1277,6 @@ literal|2
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1243,7 +1295,7 @@ block|,
 block|{
 literal|"brl.call.dptk.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -1251,8 +1303,6 @@ literal|2
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1271,7 +1321,7 @@ block|,
 block|{
 literal|"brl.call.dpnt"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -1279,8 +1329,6 @@ literal|3
 argument_list|,
 literal|0
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1299,7 +1347,7 @@ block|,
 block|{
 literal|"brl.call.dpnt.clr"
 block|,
-name|BRL
+name|BRLP
 argument_list|(
 literal|0
 argument_list|,
@@ -1307,8 +1355,6 @@ literal|3
 argument_list|,
 literal|1
 argument_list|)
-operator||
-name|PSEUDO
 block|}
 block|,
 block|{
@@ -1418,8 +1464,29 @@ block|,
 undef|#
 directive|undef
 name|BRL
+undef|#
+directive|undef
+name|BRLP
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
 block|{
 literal|0
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* input_file.c - Deal with Input Files -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* input_file.c - Deal with Input Files -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"as.h"
 end_include
 
@@ -37,21 +43,18 @@ directive|include
 file|"safe-ctype.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|input_file_get
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This variable is non-zero if the file currently being read should be    preprocessed by app.  It is zero if the file can be read straight in.  */
@@ -127,13 +130,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* These hooks accomodate most operating systems.  */
+comment|/* These hooks accommodate most operating systems.  */
 end_comment
 
 begin_function
 name|void
 name|input_file_begin
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|f_in
 operator|=
@@ -149,7 +154,9 @@ end_function
 begin_function
 name|void
 name|input_file_end
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
@@ -161,7 +168,9 @@ begin_function
 name|unsigned
 name|int
 name|input_file_buffer_size
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -174,7 +183,9 @@ end_function
 begin_function
 name|int
 name|input_file_is_open
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|f_in
@@ -196,7 +207,9 @@ begin_function
 name|char
 modifier|*
 name|input_file_push
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -265,12 +278,10 @@ begin_function
 name|void
 name|input_file_pop
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -333,18 +344,14 @@ begin_function
 name|void
 name|input_file_open
 parameter_list|(
-name|filename
-parameter_list|,
-name|pre
-parameter_list|)
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 comment|/* "" means use stdin. Must not be 0.  */
 name|int
 name|pre
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -375,7 +382,6 @@ literal|0
 index|]
 condition|)
 block|{
-comment|/* We have a file name. Suck it and see.  */
 name|f_in
 operator|=
 name|fopen
@@ -392,11 +398,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* use stdin for the input file.  */
+comment|/* Use stdin for the input file.  */
 name|f_in
 operator|=
 name|stdin
 expr_stmt|;
+comment|/* For error messages.  */
 name|file_name
 operator|=
 name|_
@@ -404,38 +411,11 @@ argument_list|(
 literal|"{standard input}"
 argument_list|)
 expr_stmt|;
-comment|/* For error messages.  */
 block|}
 if|if
 condition|(
 name|f_in
-operator|==
-operator|(
-name|FILE
-operator|*
-operator|)
-literal|0
 condition|)
-block|{
-name|as_bad
-argument_list|(
-name|_
-argument_list|(
-literal|"can't open %s for reading"
-argument_list|)
-argument_list|,
-name|file_name
-argument_list|)
-expr_stmt|;
-name|as_perror
-argument_list|(
-literal|"%s"
-argument_list|,
-name|file_name
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|c
 operator|=
 name|getc
@@ -443,6 +423,55 @@ argument_list|(
 name|f_in
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f_in
+operator|==
+name|NULL
+operator|||
+name|ferror
+argument_list|(
+name|f_in
+argument_list|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|as_perror
+argument_list|(
+name|_
+argument_list|(
+literal|"Can't open %s for reading"
+argument_list|)
+argument_list|,
+name|file_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f_in
+condition|)
+block|{
+name|fclose
+argument_list|(
+name|f_in
+argument_list|)
+expr_stmt|;
+name|f_in
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+return|return;
+block|}
 if|if
 condition|(
 name|c
@@ -633,7 +662,9 @@ end_comment
 begin_function
 name|void
 name|input_file_close
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Don't close a null file pointer.  */
 if|if
@@ -663,17 +694,13 @@ specifier|static
 name|int
 name|input_file_get
 parameter_list|(
-name|buf
-parameter_list|,
-name|buflen
-parameter_list|)
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|buflen
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|size
@@ -701,6 +728,16 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|as_perror
 argument_list|(
 name|_
@@ -731,13 +768,11 @@ name|char
 modifier|*
 name|input_file_give_next_buffer
 parameter_list|(
-name|where
-parameter_list|)
 name|char
 modifier|*
 name|where
-decl_stmt|;
 comment|/* Where to place 1st character of new buffer.  */
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -801,6 +836,16 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|as_perror
 argument_list|(
 name|_
@@ -835,6 +880,17 @@ argument_list|(
 name|f_in
 argument_list|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+name|bfd_set_error
+argument_list|(
+name|bfd_error_system_call
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|as_perror
 argument_list|(
 name|_
@@ -845,6 +901,7 @@ argument_list|,
 name|file_name
 argument_list|)
 expr_stmt|;
+block|}
 name|f_in
 operator|=
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ia64-gen.c -- Generate a shrunk set of opcode tables    Copyright 1999, 2000, 2001 Free Software Foundation, Inc.    Written by Bob Manson, Cygnus Solutions,<manson@cygnus.com>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ia64-gen.c -- Generate a shrunk set of opcode tables    Copyright 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Bob Manson, Cygnus Solutions,<manson@cygnus.com>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -11,6 +11,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -35,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"getopt.h"
 end_include
 
 begin_include
@@ -85,6 +103,32 @@ directive|include
 file|"ia64-opc-d.c"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libintl.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|_
+parameter_list|(
+name|String
+parameter_list|)
+value|gettext (String)
+end_define
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|program_name
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|int
 name|debug
@@ -104,38 +148,38 @@ value|(X *) xmalloc (sizeof (X))
 end_define
 
 begin_comment
-comment|/* The main opcode table entry.  Each entry is a unique combination of    name and flags (no two entries in the table compare as being equal    via opcodes_eq). */
+comment|/* The main opcode table entry.  Each entry is a unique combination of    name and flags (no two entries in the table compare as being equal    via opcodes_eq).  */
 end_comment
 
 begin_struct
 struct|struct
 name|main_entry
 block|{
-comment|/* The base name of this opcode.  The names of its completers are      appended to it to generate the full instruction name. */
+comment|/* The base name of this opcode.  The names of its completers are      appended to it to generate the full instruction name.  */
 name|struct
 name|string_entry
 modifier|*
 name|name
 decl_stmt|;
-comment|/* The base opcode entry.  Which one to use is a fairly arbitrary choice;      it uses the first one passed to add_opcode_entry. */
+comment|/* The base opcode entry.  Which one to use is a fairly arbitrary choice;      it uses the first one passed to add_opcode_entry.  */
 name|struct
 name|ia64_opcode
 modifier|*
 name|opcode
 decl_stmt|;
-comment|/* The list of completers that can be applied to this opcode. */
+comment|/* The list of completers that can be applied to this opcode.  */
 name|struct
 name|completer_entry
 modifier|*
 name|completers
 decl_stmt|;
-comment|/* Next entry in the chain. */
+comment|/* Next entry in the chain.  */
 name|struct
 name|main_entry
 modifier|*
 name|next
 decl_stmt|;
-comment|/* Index in the  main table. */
+comment|/* Index in the  main table.  */
 name|int
 name|main_index
 decl_stmt|;
@@ -174,34 +218,34 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The set of possible completers for an opcode. */
+comment|/* The set of possible completers for an opcode.  */
 end_comment
 
 begin_struct
 struct|struct
 name|completer_entry
 block|{
-comment|/* This entry's index in the ia64_completer_table[] array. */
+comment|/* This entry's index in the ia64_completer_table[] array.  */
 name|int
 name|num
 decl_stmt|;
-comment|/* The name of the completer. */
+comment|/* The name of the completer.  */
 name|struct
 name|string_entry
 modifier|*
 name|name
 decl_stmt|;
-comment|/* This entry's parent. */
+comment|/* This entry's parent.  */
 name|struct
 name|completer_entry
 modifier|*
 name|parent
 decl_stmt|;
-comment|/* Set if this is a terminal completer (occurs at the end of an      opcode). */
+comment|/* Set if this is a terminal completer (occurs at the end of an      opcode).  */
 name|int
 name|is_terminal
 decl_stmt|;
-comment|/* An alternative completer. */
+comment|/* An alternative completer.  */
 name|struct
 name|completer_entry
 modifier|*
@@ -213,15 +257,15 @@ name|completer_entry
 modifier|*
 name|addl_entries
 decl_stmt|;
-comment|/* Before compute_completer_bits () is invoked, this contains the actual      instruction opcode for this combination of opcode and completers.      Afterwards, it contains those bits that are different from its      parent opcode. */
+comment|/* Before compute_completer_bits () is invoked, this contains the actual      instruction opcode for this combination of opcode and completers.      Afterwards, it contains those bits that are different from its      parent opcode.  */
 name|ia64_insn
 name|bits
 decl_stmt|;
-comment|/* Bits set to 1 correspond to those bits in this completer's opcode      that are different from its parent completer's opcode (or from      the base opcode if the entry is the root of the opcode's completer      list).  This field is filled in by compute_completer_bits (). */
+comment|/* Bits set to 1 correspond to those bits in this completer's opcode      that are different from its parent completer's opcode (or from      the base opcode if the entry is the root of the opcode's completer      list).  This field is filled in by compute_completer_bits ().  */
 name|ia64_insn
 name|mask
 decl_stmt|;
-comment|/* Index into the opcode dependency list, or -1 if none. */
+comment|/* Index into the opcode dependency list, or -1 if none.  */
 name|int
 name|dependencies
 decl_stmt|;
@@ -234,40 +278,40 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* One entry in the disassembler name table. */
+comment|/* One entry in the disassembler name table.  */
 end_comment
 
 begin_struct
 struct|struct
 name|disent
 block|{
-comment|/* The index into the ia64_name_dis array for this entry. */
+comment|/* The index into the ia64_name_dis array for this entry.  */
 name|int
 name|ournum
 decl_stmt|;
-comment|/* The index into the main_table[] array. */
+comment|/* The index into the main_table[] array.  */
 name|int
 name|insn
 decl_stmt|;
-comment|/* The disassmbly priority of this entry. */
+comment|/* The disassmbly priority of this entry.  */
 name|int
 name|priority
 decl_stmt|;
-comment|/* The completer_index value for this entry. */
+comment|/* The completer_index value for this entry.  */
 name|int
 name|completer_index
 decl_stmt|;
-comment|/* How many other entries share this decode. */
+comment|/* How many other entries share this decode.  */
 name|int
 name|nextcnt
 decl_stmt|;
-comment|/* The next entry sharing the same decode. */
+comment|/* The next entry sharing the same decode.  */
 name|struct
 name|disent
 modifier|*
 name|nexte
 decl_stmt|;
-comment|/* The next entry in the name list. */
+comment|/* The next entry in the name list.  */
 name|struct
 name|disent
 modifier|*
@@ -282,7 +326,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A state machine that will eventually be used to generate the    disassembler table. */
+comment|/* A state machine that will eventually be used to generate the    disassembler table.  */
 end_comment
 
 begin_struct
@@ -302,7 +346,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* 0, 1, and X (don't care) */
+comment|/* 0, 1, and X (don't care).  */
 name|int
 name|bits_to_skip
 decl_stmt|;
@@ -320,18 +364,18 @@ comment|/* The string table contains all opcodes and completers sorted in    alp
 end_comment
 
 begin_comment
-comment|/* One entry in the string table. */
+comment|/* One entry in the string table.  */
 end_comment
 
 begin_struct
 struct|struct
 name|string_entry
 block|{
-comment|/* The index in the ia64_strings[] array for this entry. */
+comment|/* The index in the ia64_strings[] array for this entry.  */
 name|int
 name|num
 decl_stmt|;
-comment|/* And the string. */
+comment|/* And the string.  */
 name|char
 modifier|*
 name|s
@@ -365,7 +409,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* resource dependency entries */
+comment|/* Resource dependency entries.  */
 end_comment
 
 begin_struct
@@ -376,61 +420,61 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* resource name */
+comment|/* Resource name.  */
 name|unsigned
 name|mode
 range|:
 literal|2
 decl_stmt|,
-comment|/* RAW, WAW, or WAR */
+comment|/* RAW, WAW, or WAR.  */
 name|semantics
 range|:
 literal|3
 decl_stmt|;
-comment|/* dependency semantics */
+comment|/* Dependency semantics.  */
 name|char
 modifier|*
 name|extra
 decl_stmt|;
-comment|/* additional semantics info */
+comment|/* Additional semantics info.  */
 name|int
 name|nchks
 decl_stmt|;
 name|int
 name|total_chks
 decl_stmt|;
-comment|/* total #of terminal insns */
+comment|/* Total #of terminal insns.  */
 name|int
 modifier|*
 name|chks
 decl_stmt|;
-comment|/* insn classes which read (RAW), write                                        (WAW), or write (WAR) this rsrc */
+comment|/* Insn classes which read (RAW), write                                        (WAW), or write (WAR) this rsrc.  */
 name|int
 modifier|*
 name|chknotes
 decl_stmt|;
-comment|/* dependency notes for each class */
+comment|/* Dependency notes for each class.  */
 name|int
 name|nregs
 decl_stmt|;
 name|int
 name|total_regs
 decl_stmt|;
-comment|/* total #of terminal insns */
+comment|/* Total #of terminal insns.  */
 name|int
 modifier|*
 name|regs
 decl_stmt|;
-comment|/* insn class which write (RAW), write2                                        (WAW), or read (WAR) this rsrc */
+comment|/* Insn class which write (RAW), write2                                        (WAW), or read (WAR) this rsrc.  */
 name|int
 modifier|*
 name|regnotes
 decl_stmt|;
-comment|/* dependency notes for each class */
+comment|/* Dependency notes for each class.  */
 name|int
 name|waw_special
 decl_stmt|;
-comment|/* special WAW dependency note */
+comment|/* Special WAW dependency note.  */
 block|}
 modifier|*
 modifier|*
@@ -459,7 +503,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* array of all instruction classes */
+comment|/* Array of all instruction classes.  */
 end_comment
 
 begin_struct
@@ -470,11 +514,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* instruction class name */
+comment|/* Instruction class name.  */
 name|int
 name|is_class
 decl_stmt|;
-comment|/* is a class, not a terminal */
+comment|/* Is a class, not a terminal.  */
 name|int
 name|nsubs
 decl_stmt|;
@@ -482,7 +526,7 @@ name|int
 modifier|*
 name|subs
 decl_stmt|;
-comment|/* other classes within this class */
+comment|/* Other classes within this class.  */
 name|int
 name|nxsubs
 decl_stmt|;
@@ -492,24 +536,24 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* exclusions */
+comment|/* Exclusions.  */
 name|char
 modifier|*
 name|comment
 decl_stmt|;
-comment|/* optional comment */
+comment|/* Optional comment.  */
 name|int
 name|note
 decl_stmt|;
-comment|/* optional note */
+comment|/* Optional note.  */
 name|int
 name|terminal_resolved
 decl_stmt|;
-comment|/* did we match this with anything? */
+comment|/* Did we match this with anything?  */
 name|int
 name|orphan
 decl_stmt|;
-comment|/* detect class orphans */
+comment|/* Detect class orphans.  */
 block|}
 modifier|*
 modifier|*
@@ -538,7 +582,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* an opcode dependency (chk/reg pair of dependency lists) */
+comment|/* An opcode dependency (chk/reg pair of dependency lists).  */
 end_comment
 
 begin_struct
@@ -579,7 +623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* a generic list of dependencies w/notes encoded.  these may be shared. */
+comment|/* A generic list of dependencies w/notes encoded.  These may be shared.  */
 end_comment
 
 begin_struct
@@ -619,8 +663,812 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|fail
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|warn
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|rdep
+modifier|*
+name|insert_resource
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|ia64_dependency_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|deplist_equals
+parameter_list|(
+name|struct
+name|deplist
+modifier|*
+parameter_list|,
+name|struct
+name|deplist
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|short
+name|insert_deplist
+parameter_list|(
+name|int
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|short
+name|insert_dependencies
+parameter_list|(
+name|int
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|unsigned
+name|short
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|mark_used
+parameter_list|(
+name|struct
+name|iclass
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fetch_insn_class
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|sub_compare
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|load_insn_classes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|parse_resource_users
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|parse_semantics
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|add_dep
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|load_depfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|ia64_dependency_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|load_dependencies
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|irf_operand
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|in_iclass_mov_x
+parameter_list|(
+name|struct
+name|ia64_opcode
+modifier|*
+parameter_list|,
+name|struct
+name|iclass
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|in_iclass
+parameter_list|(
+name|struct
+name|ia64_opcode
+modifier|*
+parameter_list|,
+name|struct
+name|iclass
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|lookup_regindex
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|lookup_specifier
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_dependency_table
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|string_entry
+modifier|*
+name|insert_string
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|gen_dis_table
+parameter_list|(
+name|struct
+name|bittree
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_dis_table
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|generate_disassembler
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_string_table
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|completer_entries_eq
+parameter_list|(
+name|struct
+name|completer_entry
+modifier|*
+parameter_list|,
+name|struct
+name|completer_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|completer_entry
+modifier|*
+name|insert_gclist
+parameter_list|(
+name|struct
+name|completer_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|get_prefix_len
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|compute_completer_bits
+parameter_list|(
+name|struct
+name|main_entry
+modifier|*
+parameter_list|,
+name|struct
+name|completer_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|collapse_redundant_completers
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|insert_opcode_dependencies
+parameter_list|(
+name|struct
+name|ia64_opcode
+modifier|*
+parameter_list|,
+name|struct
+name|completer_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|insert_completer_entry
+parameter_list|(
+name|struct
+name|ia64_opcode
+modifier|*
+parameter_list|,
+name|struct
+name|main_entry
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_completer_entry
+parameter_list|(
+name|struct
+name|completer_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_completer_table
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|opcodes_eq
+parameter_list|(
+name|struct
+name|ia64_opcode
+modifier|*
+parameter_list|,
+name|struct
+name|ia64_opcode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|add_opcode_entry
+parameter_list|(
+name|struct
+name|ia64_opcode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_main_table
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|shrink
+parameter_list|(
+name|struct
+name|ia64_opcode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|finish_distable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|insert_bit_table_ent
+parameter_list|(
+name|struct
+name|bittree
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|ia64_insn
+parameter_list|,
+name|ia64_insn
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|add_dis_entry
+parameter_list|(
+name|struct
+name|bittree
+modifier|*
+parameter_list|,
+name|ia64_insn
+parameter_list|,
+name|ia64_insn
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|completer_entry
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|compact_distree
+parameter_list|(
+name|struct
+name|bittree
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|bittree
+modifier|*
+name|make_bittree_entry
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|disent
+modifier|*
+name|add_dis_table_ent
+parameter_list|(
+name|struct
+name|disent
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
+
+begin_function
+specifier|static
+name|void
+name|fail
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|message
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|args
+decl_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|message
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"%s: Error: "
+argument_list|)
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|message
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+name|xexit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|warn
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|message
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|args
+decl_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|message
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"%s: Warning: "
+argument_list|)
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|message
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/* add NAME to the resource table, where TYPE is RAW or WAW */
+comment|/* Add NAME to the resource table, where TYPE is RAW or WAW.  */
 end_comment
 
 begin_function
@@ -747,7 +1595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* are the lists of dependency indexes equivalent? */
+comment|/* Are the lists of dependency indexes equivalent?  */
 end_comment
 
 begin_function
@@ -797,7 +1645,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|d1
@@ -817,7 +1664,6 @@ condition|)
 return|return
 literal|0
 return|;
-block|}
 return|return
 literal|1
 return|;
@@ -825,7 +1671,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add the list of dependencies to the list of dependency lists */
+comment|/* Add the list of dependencies to the list of dependency lists.  */
 end_comment
 
 begin_function
@@ -842,7 +1688,7 @@ modifier|*
 name|deps
 parameter_list|)
 block|{
-comment|/* sort the list, then see if an equivalent list exists already.      this results in a much smaller set of dependency lists    */
+comment|/* Sort the list, then see if an equivalent list exists already.      this results in a much smaller set of dependency lists.  */
 name|struct
 name|deplist
 modifier|*
@@ -986,7 +1832,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|set
@@ -994,7 +1839,6 @@ index|[
 name|i
 index|]
 condition|)
-block|{
 name|list
 operator|->
 name|deps
@@ -1005,9 +1849,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-block|}
-block|}
-comment|/* does this list exist already? */
+comment|/* Does this list exist already?  */
 for|for
 control|(
 name|i
@@ -1021,7 +1863,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|deplist_equals
@@ -1050,7 +1891,6 @@ expr_stmt|;
 return|return
 name|i
 return|;
-block|}
 block|}
 if|if
 condition|(
@@ -1102,7 +1942,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add the given pair of dependency lists to the opcode dependency list */
+comment|/* Add the given pair of dependency lists to the opcode dependency list.  */
 end_comment
 
 begin_function
@@ -1190,7 +2030,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|opdeps
@@ -1214,7 +2053,6 @@ condition|)
 return|return
 name|i
 return|;
-block|}
 name|pair
 operator|=
 name|tmalloc
@@ -1332,7 +2170,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|mark_used
 argument_list|(
 name|ics
@@ -1348,7 +2185,6 @@ argument_list|,
 name|clear_terminals
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -1364,7 +2200,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|mark_used
 argument_list|(
 name|ics
@@ -1381,11 +2216,10 @@ name|clear_terminals
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/* look up an instruction class; if CREATE make a new one if none found;    returns the index into the insn class array */
+comment|/* Look up an instruction class; if CREATE make a new one if none found;    returns the index into the insn class array.  */
 end_comment
 
 begin_function
@@ -1614,11 +2448,12 @@ name|nextnotestr
 operator|<
 name|xsect
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: multiple note %s not handled\n"
+name|_
+argument_list|(
+literal|"multiple note %s not handled\n"
+argument_list|)
 argument_list|,
 name|notestr
 argument_list|)
@@ -1757,7 +2592,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* doesn't exist, so make a new one */
+comment|/* Doesn't exist, so make a new one.  */
 if|if
 condition|(
 name|iclen
@@ -1915,7 +2750,7 @@ name|note
 operator|=
 name|note
 expr_stmt|;
-comment|/* if it's a composite class, there's a comment or note, look for an      existing class or terminal with the same name. */
+comment|/* If it's a composite class, there's a comment or note, look for an      existing class or terminal with the same name.  */
 if|if
 condition|(
 operator|(
@@ -2079,7 +2914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* for sorting a class's sub-class list only; make sure classes appear before    terminals  */
+comment|/* For sorting a class's sub-class list only; make sure classes appear before    terminals.  */
 end_comment
 
 begin_function
@@ -2176,7 +3011,9 @@ begin_function
 specifier|static
 name|void
 name|load_insn_classes
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -2201,21 +3038,15 @@ name|fp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|fail
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't find ia64-ic.tbl for reading\n"
+name|_
+argument_list|(
+literal|"can't find ia64-ic.tbl for reading\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* discard first line */
+comment|/* Discard first line.  */
 name|fgets
 argument_list|(
 name|buf
@@ -2380,7 +3211,7 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* for this class, record all sub-classes */
+comment|/* For this class, record all sub-classes.  */
 while|while
 condition|(
 operator|*
@@ -2576,7 +3407,7 @@ operator|=
 name|sub
 expr_stmt|;
 block|}
-comment|/* make sure classes come before terminals */
+comment|/* Make sure classes come before terminals.  */
 name|qsort
 argument_list|(
 operator|(
@@ -2615,7 +3446,6 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%d classes\n"
@@ -2624,11 +3454,10 @@ name|iclen
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/* extract the insn classes from the given line */
+comment|/* Extract the insn classes from the given line.  */
 end_comment
 
 begin_function
@@ -2644,6 +3473,7 @@ name|nusersp
 parameter_list|,
 name|notesp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|ref
@@ -2831,7 +3661,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* note 13 always implies note 1 */
+comment|/* Note 13 always implies note 1.  */
 if|if
 condition|(
 name|strcmp
@@ -2857,11 +3687,12 @@ name|nextnotestr
 operator|<
 name|xsect
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: multiple note %s not handled\n"
+name|_
+argument_list|(
+literal|"multiple note %s not handled\n"
+argument_list|)
 argument_list|,
 name|notestr
 argument_list|)
@@ -2883,7 +3714,7 @@ name|note
 operator|=
 literal|0
 expr_stmt|;
-comment|/* All classes are created when the insn class table is parsed;          Individual instructions might not appear until the dependency tables          are read.  Only create new classes if it's *not* an insn class,          or if it's a composite class (which wouldn't necessarily be in the IC          table).       */
+comment|/* All classes are created when the insn class table is parsed;          Individual instructions might not appear until the dependency tables          are read.  Only create new classes if it's *not* an insn class,          or if it's a composite class (which wouldn't necessarily be in the IC          table).  */
 if|if
 condition|(
 name|strncmp
@@ -3000,8 +3831,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|debug
@@ -3014,8 +3844,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* update the return values */
+comment|/* Update the return values.  */
 operator|*
 name|usersp
 operator|=
@@ -3307,22 +4136,16 @@ name|fp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|fail
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't find %s for reading\n"
+name|_
+argument_list|(
+literal|"can't find %s for reading\n"
+argument_list|)
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|fgets
 argument_list|(
 name|buf
@@ -3538,7 +4361,7 @@ argument_list|)
 else|:
 name|NULL
 expr_stmt|;
-comment|/* For WAW entries, if the chks and regs differ, we need to enter the          entries in both positions so that the tables will be parsed properly,          without a lot of extra work */
+comment|/* For WAW entries, if the chks and regs differ, we need to enter the          entries in both positions so that the tables will be parsed properly,          without a lot of extra work.  */
 if|if
 condition|(
 name|mode
@@ -3623,7 +4446,9 @@ begin_function
 specifier|static
 name|void
 name|load_dependencies
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|load_depfile
 argument_list|(
@@ -3661,7 +4486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* is the given operand an indirect register file operand? */
+comment|/* Is the given operand an indirect register file operand?  */
 end_comment
 
 begin_function
@@ -3832,7 +4657,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* handle mov_ar, mov_br, mov_cr, mov_indirect, mov_ip, mov_pr, mov_psr, and    mov_um insn classes */
+comment|/* Handle mov_ar, mov_br, mov_cr, mov_indirect, mov_ip, mov_pr, mov_psr, and    mov_um insn classes.  */
 end_comment
 
 begin_function
@@ -4565,7 +5390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* is the given opcode in the given insn class? */
+comment|/* Is the given opcode in the given insn class?  */
 end_comment
 
 begin_function
@@ -4628,7 +5453,7 @@ literal|6
 argument_list|)
 condition|)
 block|{
-comment|/* assume that the first format seen is the most restrictive, and              only keep a later one if it looks like it's more restrictive. */
+comment|/* Assume that the first format seen is the most restrictive, and              only keep a later one if it looks like it's more restrictive.  */
 if|if
 condition|(
 name|format
@@ -4649,12 +5474,12 @@ name|format
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: most recent format '%s'\n"
-literal|"appears more restrictive than '%s'\n"
+name|_
+argument_list|(
+literal|"most recent format '%s'\nappears more restrictive than '%s'\n"
+argument_list|)
 argument_list|,
 name|ic
 operator|->
@@ -4699,11 +5524,12 @@ if|if
 condition|(
 name|field
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Overlapping field %s->%s\n"
+name|_
+argument_list|(
+literal|"overlapping field %s->%s\n"
+argument_list|)
 argument_list|,
 name|ic
 operator|->
@@ -4720,7 +5546,7 @@ name|comment
 expr_stmt|;
 block|}
 block|}
-comment|/* an insn class matches anything that is the same followed by completers,      except when the absence and presence of completers constitutes different      instructions */
+comment|/* An insn class matches anything that is the same followed by completers,      except when the absence and presence of completers constitutes different      instructions.  */
 if|if
 condition|(
 name|ic
@@ -4817,7 +5643,7 @@ literal|'.'
 operator|)
 operator|)
 expr_stmt|;
-comment|/* all break and nop variations must match exactly */
+comment|/* All break, nop, and hint variations must match exactly.  */
 if|if
 condition|(
 name|resolved
@@ -4844,6 +5670,17 @@ literal|"nop"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|ic
+operator|->
+name|name
+argument_list|,
+literal|"hint"
+argument_list|)
+operator|==
+literal|0
 operator|)
 condition|)
 name|resolved
@@ -4861,7 +5698,7 @@ argument_list|)
 operator|==
 literal|0
 expr_stmt|;
-comment|/* assume restrictions in the FORMAT/FIELD negate resolution,          unless specifically allowed by clauses in this block */
+comment|/* Assume restrictions in the FORMAT/FIELD negate resolution,          unless specifically allowed by clauses in this block.  */
 if|if
 condition|(
 name|resolved
@@ -4869,7 +5706,7 @@ operator|&&
 name|field
 condition|)
 block|{
-comment|/* check Field(sf)==sN against opcode sN */
+comment|/* Check Field(sf)==sN against opcode sN.  */
 if|if
 condition|(
 name|strstr
@@ -4903,7 +5740,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|resolved
 operator|=
 name|strcmp
@@ -4925,8 +5761,7 @@ operator|==
 literal|0
 expr_stmt|;
 block|}
-block|}
-comment|/* check Field(lftype)==XXX */
+comment|/* Check Field(lftype)==XXX.  */
 elseif|else
 if|if
 condition|(
@@ -4977,7 +5812,7 @@ operator|==
 name|NULL
 expr_stmt|;
 block|}
-comment|/* handle Field(ctype)==XXX */
+comment|/* Handle Field(ctype)==XXX.  */
 elseif|else
 if|if
 condition|(
@@ -5468,7 +6303,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* misc brl variations ('.cond' is optional);           plain brl matches brl.cond */
+comment|/* Misc brl variations ('.cond' is optional);           plain brl matches brl.cond.  */
 if|if
 condition|(
 operator|!
@@ -5517,7 +6352,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* misc br variations ('.cond' is optional) */
+comment|/* Misc br variations ('.cond' is optional).  */
 if|if
 condition|(
 operator|!
@@ -5613,7 +6448,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* probe variations */
+comment|/* probe variations.  */
 if|if
 condition|(
 operator|!
@@ -5676,7 +6511,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-comment|/* mov variations */
+comment|/* mov variations.  */
 if|if
 condition|(
 operator|!
@@ -5690,7 +6525,7 @@ condition|(
 name|plain_mov
 condition|)
 block|{
-comment|/* mov alias for fmerge */
+comment|/* mov alias for fmerge.  */
 if|if
 condition|(
 name|strcmp
@@ -5726,7 +6561,7 @@ operator|==
 name|IA64_OPND_F3
 expr_stmt|;
 block|}
-comment|/* mov alias for adds (r3 or imm14) */
+comment|/* mov alias for adds (r3 or imm14).  */
 elseif|else
 if|if
 condition|(
@@ -5778,7 +6613,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-comment|/* mov alias for addl */
+comment|/* mov alias for addl.  */
 elseif|else
 if|if
 condition|(
@@ -5816,7 +6651,7 @@ name|IA64_OPND_IMM22
 expr_stmt|;
 block|}
 block|}
-comment|/* some variants of mov and mov.[im] */
+comment|/* Some variants of mov and mov.[im].  */
 if|if
 condition|(
 operator|!
@@ -5835,7 +6670,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|resolved
 operator|=
 name|in_iclass_mov_x
@@ -5850,20 +6684,17 @@ name|field
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* keep track of this so we can flag any insn classes which aren't           mapped onto at least one real insn */
+comment|/* Keep track of this so we can flag any insn classes which aren't           mapped onto at least one real insn.  */
 if|if
 condition|(
 name|resolved
 condition|)
-block|{
 name|ic
 operator|->
 name|terminal_resolved
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 else|else
 for|for
@@ -5924,7 +6755,6 @@ condition|;
 name|j
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|in_iclass
@@ -5951,7 +6781,6 @@ condition|)
 return|return
 literal|0
 return|;
-block|}
 if|if
 condition|(
 name|debug
@@ -5978,7 +6807,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* If it's in this IC, add the IC note (if any) to the insn */
+comment|/* If it's in this IC, add the IC note (if any) to the insn.  */
 if|if
 condition|(
 name|resolved
@@ -6005,13 +6834,12 @@ name|ic
 operator|->
 name|note
 condition|)
-block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: overwriting note %d with note %d"
-literal|"(IC:%s)\n"
+name|_
+argument_list|(
+literal|"overwriting note %d with note %d (IC:%s)\n"
+argument_list|)
 argument_list|,
 operator|*
 name|notep
@@ -6025,7 +6853,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|notep
 operator|=
@@ -6115,6 +6942,110 @@ argument_list|)
 condition|)
 return|return
 literal|19
+return|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|name
+argument_list|,
+literal|"[FCR]"
+argument_list|)
+condition|)
+return|return
+literal|21
+return|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|name
+argument_list|,
+literal|"[EFLAG]"
+argument_list|)
+condition|)
+return|return
+literal|24
+return|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|name
+argument_list|,
+literal|"[CSD]"
+argument_list|)
+condition|)
+return|return
+literal|25
+return|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|name
+argument_list|,
+literal|"[SSD]"
+argument_list|)
+condition|)
+return|return
+literal|26
+return|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|name
+argument_list|,
+literal|"[CFLG]"
+argument_list|)
+condition|)
+return|return
+literal|27
+return|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|name
+argument_list|,
+literal|"[FSR]"
+argument_list|)
+condition|)
+return|return
+literal|28
+return|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|name
+argument_list|,
+literal|"[FIR]"
+argument_list|)
+condition|)
+return|return
+literal|29
+return|;
+elseif|else
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|name
+argument_list|,
+literal|"[FDR]"
+argument_list|)
+condition|)
+return|return
+literal|30
 return|;
 elseif|else
 if|if
@@ -7083,11 +8014,12 @@ condition|)
 return|return
 name|IA64_RS_PRr
 return|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning! Don't know how to specify %% dependency %s\n"
+name|_
+argument_list|(
+literal|"don't know how to specify %% dependency %s\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -7216,11 +8148,12 @@ condition|)
 return|return
 name|IA64_RS_RR
 return|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning! Don't know how to specify # dependency %s\n"
+name|_
+argument_list|(
+literal|"Don't know how to specify # dependency %s\n"
+argument_list|)
 argument_list|,
 name|name
 argument_list|)
@@ -7376,6 +8309,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_dependency_table
 parameter_list|()
@@ -7425,20 +8359,6 @@ operator|->
 name|nsubs
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: IC:%s"
-argument_list|,
-name|ics
-index|[
-name|i
-index|]
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ics
@@ -7448,11 +8368,19 @@ index|]
 operator|->
 name|comment
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+name|_
+argument_list|(
+literal|"IC:%s [%s] has no terminals or sub-classes\n"
+argument_list|)
 argument_list|,
-literal|"[%s]"
+name|ics
+index|[
+name|i
+index|]
+operator|->
+name|name
 argument_list|,
 name|ics
 index|[
@@ -7462,11 +8390,20 @@ operator|->
 name|comment
 argument_list|)
 expr_stmt|;
-name|fprintf
+else|else
+name|warn
 argument_list|(
-name|stderr
+name|_
+argument_list|(
+literal|"IC:%s has no terminals or sub-classes\n"
+argument_list|)
 argument_list|,
-literal|" has no terminals or sub-classes\n"
+name|ics
+index|[
+name|i
+index|]
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -7492,21 +8429,6 @@ operator|->
 name|orphan
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: no insns mapped directly to "
-literal|"terminal IC %s"
-argument_list|,
-name|ics
-index|[
-name|i
-index|]
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ics
@@ -7516,11 +8438,19 @@ index|]
 operator|->
 name|comment
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+name|_
+argument_list|(
+literal|"no insns mapped directly to terminal IC %s [%s]"
+argument_list|)
 argument_list|,
-literal|"[%s] "
+name|ics
+index|[
+name|i
+index|]
+operator|->
+name|name
 argument_list|,
 name|ics
 index|[
@@ -7530,11 +8460,20 @@ operator|->
 name|comment
 argument_list|)
 expr_stmt|;
-name|fprintf
+else|else
+name|warn
 argument_list|(
-name|stderr
+name|_
+argument_list|(
+literal|"no insns mapped directly to terminal IC %s\n"
+argument_list|)
 argument_list|,
-literal|"\n"
+name|ics
+index|[
+name|i
+index|]
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -7574,11 +8513,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: class %s is defined but not used\n"
+name|_
+argument_list|(
+literal|"class %s is defined but not used\n"
+argument_list|)
 argument_list|,
 name|ics
 index|[
@@ -7636,12 +8576,12 @@ name|total_chks
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
+name|_
+argument_list|(
 literal|"Warning: rsrc %s (%s) has no chks%s\n"
+argument_list|)
 argument_list|,
 name|rdeps
 index|[
@@ -7672,7 +8612,6 @@ else|:
 literal|" or regs"
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -7685,12 +8624,12 @@ name|total_regs
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: rsrc %s (%s) has no regs\n"
+name|_
+argument_list|(
+literal|"rsrc %s (%s) has no regs\n"
+argument_list|)
 argument_list|,
 name|rdeps
 index|[
@@ -7712,8 +8651,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-comment|/* the dependencies themselves */
+comment|/* The dependencies themselves.  */
 name|printf
 argument_list|(
 literal|"static const struct ia64_dependency\ndependencies[] = {\n"
@@ -7733,7 +8671,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* '%', '#', AR[], CR[], or PSR. indicates we need to specify the actual          resource used */
+comment|/* '%', '#', AR[], CR[], or PSR. indicates we need to specify the actual          resource used.  */
 name|int
 name|specifier
 init|=
@@ -7838,7 +8776,7 @@ argument_list|(
 literal|"};\n\n"
 argument_list|)
 expr_stmt|;
-comment|/* and dependency lists */
+comment|/* And dependency lists.  */
 for|for
 control|(
 name|i
@@ -7925,7 +8863,7 @@ literal|"\n};\n\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* and opcode dependency list */
+comment|/* And opcode dependency list.  */
 name|printf
 argument_list|(
 literal|"#define NELS(X) (sizeof(X)/sizeof(X[0]))\n"
@@ -8052,7 +8990,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Add STR to the string table. */
+comment|/* Add STR to the string table.  */
 end_comment
 
 begin_function
@@ -8062,12 +9000,10 @@ name|string_entry
 modifier|*
 name|insert_string
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|start
@@ -8186,12 +9122,10 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-block|{
 name|i
 operator|=
 name|end
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -8209,12 +9143,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|i
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
 block|{
 while|while
@@ -8255,14 +9187,12 @@ name|c
 operator|<
 literal|0
 condition|)
-block|{
 name|end
 operator|=
 name|i
 operator|-
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -8270,32 +9200,26 @@ name|c
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 name|string_table
 index|[
 name|i
 index|]
 return|;
-block|}
 else|else
-block|{
 name|start
 operator|=
 name|i
 operator|+
 literal|1
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|start
 operator|>
 name|end
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 for|for
@@ -8312,7 +9236,6 @@ condition|;
 name|i
 operator|--
 control|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -8331,10 +9254,7 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-block|{
 break|break;
-block|}
-block|}
 for|for
 control|(
 init|;
@@ -8345,7 +9265,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -8362,10 +9281,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 break|break;
-block|}
-block|}
 for|for
 control|(
 name|x
@@ -8456,11 +9372,14 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|struct
 name|bittree
 modifier|*
 name|make_bittree_entry
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|bittree
@@ -8528,6 +9447,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|struct
 name|disent
 modifier|*
@@ -8590,14 +9510,12 @@ name|nexte
 operator|!=
 name|NULL
 condition|)
-block|{
 name|ent
 operator|=
 name|ent
 operator|->
 name|nexte
 expr_stmt|;
-block|}
 name|ent
 operator|=
 operator|(
@@ -8704,6 +9622,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|finish_distable
 parameter_list|()
@@ -8767,6 +9686,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|insert_bit_table_ent
 parameter_list|(
@@ -8870,7 +9790,6 @@ name|mask
 operator|&
 name|m
 condition|)
-block|{
 name|b
 operator|=
 operator|(
@@ -8883,14 +9802,11 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-block|}
 else|else
-block|{
 name|b
 operator|=
 literal|2
 expr_stmt|;
-block|}
 name|next
 operator|=
 name|curr_ent
@@ -8948,6 +9864,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|add_dis_entry
 parameter_list|(
@@ -8996,11 +9913,9 @@ operator|<<
 literal|20
 operator|)
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 while|while
 condition|(
 name|ent
@@ -9104,10 +10019,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This optimization pass combines multiple "don't care" nodes. */
+comment|/* This optimization pass combines multiple "don't care" nodes.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|compact_distree
 parameter_list|(
@@ -9309,13 +10225,11 @@ name|i
 operator|!=
 name|NULL
 condition|)
-block|{
 name|compact_distree
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -9355,6 +10269,7 @@ comment|/* Generate the disassembler state machine corresponding to the tree    
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|gen_dis_table
 parameter_list|(
@@ -9397,8 +10312,8 @@ name|zero_dest
 init|=
 literal|0
 decl_stmt|;
-comment|/* initialize this with 0 to keep gcc quiet... */
-comment|/* If this is a terminal entry, there's no point in skipping any      bits. */
+comment|/* Initialize this with 0 to keep gcc quiet...  */
+comment|/* If this is a terminal entry, there's no point in skipping any      bits.  */
 if|if
 condition|(
 name|ent
@@ -9441,13 +10356,10 @@ name|disent
 operator|==
 name|NULL
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ent
 operator|->
 name|skip_flag
@@ -9455,20 +10367,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-block|}
-comment|/* Calculate the amount of space needed for this entry, or at least      a conservatively large approximation. */
+comment|/* Calculate the amount of space needed for this entry, or at least      a conservatively large approximation.  */
 if|if
 condition|(
 name|ent
 operator|->
 name|skip_flag
 condition|)
-block|{
 name|totbits
 operator|+=
 literal|5
 expr_stmt|;
-block|}
 for|for
 control|(
 name|x
@@ -9482,7 +10391,6 @@ condition|;
 name|x
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|ent
@@ -9494,13 +10402,10 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{
 name|totbits
 operator|+=
 literal|16
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|ent
@@ -9521,17 +10426,15 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 name|totbits
 operator|+=
 literal|16
 expr_stmt|;
 block|}
-comment|/* Now allocate the space. */
+comment|/* Now allocate the space.  */
 name|needed_bytes
 operator|=
 operator|(
@@ -9590,7 +10493,7 @@ argument_list|,
 name|needed_bytes
 argument_list|)
 expr_stmt|;
-comment|/* Encode the skip entry by setting bit 6 set in the state op field,      and store the # of bits to skip immediately after. */
+comment|/* Encode the skip entry by setting bit 6 set in the state op field,      and store the # of bits to skip immediately after.  */
 if|if
 condition|(
 name|ent
@@ -9651,7 +10554,7 @@ name|ENT
 parameter_list|)
 define|\
 value|((ENT)->bits[0] != NULL&& (ENT)->bits[1] == NULL&& (ENT)->bits[2] == NULL \&& (ENT)->disent == NULL&& (ENT)->skip_flag == 0)
-comment|/* Store an "if (bit is zero)" instruction by setting bit 7 in the      state op field. */
+comment|/* Store an "if (bit is zero)" instruction by setting bit 7 in the      state op field.  */
 if|if
 condition|(
 name|ent
@@ -9858,7 +10761,6 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-block|{
 name|idest
 operator|=
 name|insn_list_len
@@ -9866,9 +10768,7 @@ operator|-
 name|our_offset
 expr_stmt|;
 block|}
-block|}
 else|else
-block|{
 name|idest
 operator|=
 name|ent
@@ -9877,8 +10777,7 @@ name|disent
 operator|->
 name|ournum
 expr_stmt|;
-block|}
-comment|/* If the destination offset for the if (bit is 1) test is less  	     than 256 bytes away, we can store it as 8-bits instead of 16; 	     the instruction has bit 5 set for the 16-bit address, and bit 	     4 for the 8-bit address.  Since we've already allocated 16 	     bits for the address we need to deallocate the space.  	     Note that branchings within the table are relative, and 	     there are no branches that branch past our instruction yet 	     so we do not need to adjust any other offsets. */
+comment|/* If the destination offset for the if (bit is 1) test is less  	     than 256 bytes away, we can store it as 8-bits instead of 16; 	     the instruction has bit 5 set for the 16-bit address, and bit 	     4 for the 8-bit address.  Since we've already allocated 16 	     bits for the address we need to deallocate the space.  	     Note that branchings within the table are relative, and 	     there are no branches that branch past our instruction yet 	     so we do not need to adjust any other offsets.  */
 if|if
 condition|(
 name|x
@@ -9951,7 +10850,6 @@ operator|--
 expr_stmt|;
 block|}
 else|else
-block|{
 name|insn_list
 index|[
 name|our_offset
@@ -9959,7 +10857,6 @@ index|]
 operator||=
 literal|0x20
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -10081,7 +10978,6 @@ literal|32768
 expr_stmt|;
 block|}
 else|else
-block|{
 name|insn_list
 index|[
 name|our_offset
@@ -10089,7 +10985,6 @@ index|]
 operator||=
 literal|0x08
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -10107,12 +11002,10 @@ name|i
 operator|==
 name|NULL
 condition|)
-block|{
 name|id
 operator||=
 literal|32768
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -10123,19 +11016,16 @@ operator|&
 literal|32768
 operator|)
 condition|)
-block|{
 name|id
 operator|+=
 name|our_offset
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|x
 operator|==
 literal|1
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%d: if (1) goto %d\n"
@@ -10145,9 +11035,7 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"%d: try %d\n"
@@ -10158,8 +11046,7 @@ name|id
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* Store the address of the entry being branched to. */
+comment|/* Store the address of the entry being branched to.  */
 while|while
 condition|(
 name|currbits
@@ -10189,7 +11076,6 @@ operator|<<
 name|currbits
 operator|)
 condition|)
-block|{
 operator|*
 name|byte
 operator||=
@@ -10207,7 +11093,6 @@ operator|)
 operator|)
 operator|)
 expr_stmt|;
-block|}
 name|bitsused
 operator|++
 expr_stmt|;
@@ -10215,20 +11100,18 @@ name|currbits
 operator|--
 expr_stmt|;
 block|}
-comment|/* Now generate the states for the entry being branched to. */
+comment|/* Now generate the states for the entry being branched to.  */
 if|if
 condition|(
 name|i
 operator|!=
 name|NULL
 condition|)
-block|{
 name|gen_dis_table
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -10242,7 +11125,6 @@ name|ent
 operator|->
 name|skip_flag
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%d: skipping %d\n"
@@ -10254,7 +11136,6 @@ operator|->
 name|bits_to_skip
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ent
@@ -10266,7 +11147,6 @@ index|]
 operator|!=
 name|NULL
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%d: if (0:%d) goto %d\n"
@@ -10281,18 +11161,15 @@ name|zero_dest
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|bitsused
 operator|!=
 name|totbits
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -10300,9 +11177,12 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|print_dis_table
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|x
@@ -10351,13 +11231,11 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"0x%02x, "
@@ -10455,9 +11333,12 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|generate_disassembler
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -10501,7 +11382,6 @@ name|type
 operator|!=
 name|IA64_TYPE_DYN
 condition|)
-block|{
 name|add_dis_entry
 argument_list|(
 name|bittree
@@ -10530,7 +11410,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|compact_distree
 argument_list|(
 name|bittree
@@ -10554,9 +11433,12 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|print_string_table
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|x
@@ -10579,7 +11461,7 @@ literal|0
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"static const char *ia64_strings[] = {\n"
+literal|"static const char * const ia64_strings[] = {\n"
 argument_list|)
 expr_stmt|;
 name|lbuf
@@ -10620,11 +11502,9 @@ argument_list|)
 operator|>
 literal|75
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 name|sprintf
 argument_list|(
 name|buf
@@ -10694,7 +11574,6 @@ name|blen
 operator|>
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|" %s\n"
@@ -10702,7 +11581,6 @@ argument_list|,
 name|lbuf
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"};\n\n"
@@ -10743,10 +11621,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If the completer trees ENT1 and ENT2 are equal, return 1. */
+comment|/* If the completer trees ENT1 and ENT2 are equal, return 1.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|completer_entries_eq
 parameter_list|(
@@ -10831,11 +11710,9 @@ name|ent2
 operator|->
 name|order
 condition|)
-block|{
 return|return
 literal|0
 return|;
-block|}
 if|if
 condition|(
 operator|!
@@ -10850,11 +11727,9 @@ operator|->
 name|addl_entries
 argument_list|)
 condition|)
-block|{
 return|return
 literal|0
 return|;
-block|}
 name|ent1
 operator|=
 name|ent1
@@ -10880,22 +11755,21 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Insert ENT into the global list of completers and return it.  If an    equivalent entry (according to completer_entries_eq) already exists,    it is returned instead. */
+comment|/* Insert ENT into the global list of completers and return it.  If an    equivalent entry (according to completer_entries_eq) already exists,    it is returned instead.  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|completer_entry
 modifier|*
 name|insert_gclist
 parameter_list|(
-name|ent
-parameter_list|)
 name|struct
 name|completer_entry
 modifier|*
 name|ent
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -11022,12 +11896,10 @@ name|name
 operator|->
 name|num
 condition|)
-block|{
 name|i
 operator|=
 literal|0
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -11048,12 +11920,10 @@ name|name
 operator|->
 name|num
 condition|)
-block|{
 name|i
 operator|=
 name|end
 expr_stmt|;
-block|}
 else|else
 block|{
 name|int
@@ -11097,14 +11967,12 @@ name|c
 operator|<
 literal|0
 condition|)
-block|{
 name|end
 operator|=
 name|i
 operator|-
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -11136,31 +12004,25 @@ name|name
 operator|->
 name|num
 condition|)
-block|{
 name|i
 operator|--
 expr_stmt|;
-block|}
 break|break;
 block|}
 else|else
-block|{
 name|start
 operator|=
 name|i
 operator|+
 literal|1
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|start
 operator|>
 name|end
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -11193,9 +12055,7 @@ name|name
 operator|->
 name|num
 condition|)
-block|{
 break|break;
-block|}
 if|if
 condition|(
 name|completer_entries_eq
@@ -11208,14 +12068,12 @@ name|i
 index|]
 argument_list|)
 condition|)
-block|{
 return|return
 name|glist
 index|[
 name|i
 index|]
 return|;
-block|}
 name|i
 operator|++
 expr_stmt|;
@@ -11236,7 +12094,6 @@ condition|;
 name|i
 operator|--
 control|)
-block|{
 if|if
 condition|(
 name|ent
@@ -11256,10 +12113,7 @@ name|name
 operator|->
 name|num
 condition|)
-block|{
 break|break;
-block|}
-block|}
 for|for
 control|(
 init|;
@@ -11270,7 +12124,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|ent
@@ -11288,10 +12141,7 @@ name|name
 operator|->
 name|num
 condition|)
-block|{
 break|break;
-block|}
-block|}
 for|for
 control|(
 name|x
@@ -11307,7 +12157,6 @@ condition|;
 name|x
 operator|--
 control|)
-block|{
 name|glist
 index|[
 name|x
@@ -11320,7 +12169,6 @@ index|[
 name|x
 index|]
 expr_stmt|;
-block|}
 name|glist
 index|[
 name|i
@@ -11367,11 +12215,9 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-block|{
 return|return
 literal|0
 return|;
-block|}
 name|c
 operator|=
 name|strchr
@@ -11387,22 +12233,18 @@ name|c
 operator|!=
 name|NULL
 condition|)
-block|{
 return|return
 name|c
 operator|-
 name|name
 return|;
-block|}
 else|else
-block|{
 return|return
 name|strlen
 argument_list|(
 name|name
 argument_list|)
 return|;
-block|}
 block|}
 end_function
 
@@ -11490,30 +12332,25 @@ name|p
 operator|->
 name|is_terminal
 condition|)
-block|{
 name|p
 operator|=
 name|p
 operator|->
 name|parent
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|p
 operator|!=
 name|NULL
 condition|)
-block|{
 name|p_bits
 operator|=
 name|p
 operator|->
 name|bits
 expr_stmt|;
-block|}
 else|else
-block|{
 name|p_bits
 operator|=
 name|ment
@@ -11522,7 +12359,6 @@ name|opcode
 operator|->
 name|opcode
 expr_stmt|;
-block|}
 for|for
 control|(
 name|x
@@ -11563,20 +12399,16 @@ operator|&
 name|m
 operator|)
 condition|)
-block|{
 name|mask
 operator||=
 name|m
 expr_stmt|;
-block|}
 else|else
-block|{
 name|our_bits
 operator|&=
 operator|~
 name|m
 expr_stmt|;
-block|}
 block|}
 name|ent
 operator|->
@@ -11620,13 +12452,16 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Find identical completer trees that are used in different    instructions and collapse their entries. */
+comment|/* Find identical completer trees that are used in different    instructions and collapse their entries.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|collapse_redundant_completers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|main_entry
@@ -11661,11 +12496,9 @@ name|completers
 operator|==
 name|NULL
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 name|compute_completer_bits
 argument_list|(
 name|ptr
@@ -11701,7 +12534,6 @@ condition|;
 name|x
 operator|++
 control|)
-block|{
 name|glist
 index|[
 name|x
@@ -11712,17 +12544,17 @@ operator|=
 name|x
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* attach two lists of dependencies to each opcode.    1) all resources which, when already marked in use, conflict with this    opcode (chks)     2) all resources which must be marked in use when this opcode is used    (regs)  */
+comment|/* Attach two lists of dependencies to each opcode.    1) all resources which, when already marked in use, conflict with this    opcode (chks)     2) all resources which must be marked in use when this opcode is used    (regs).  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|insert_opcode_dependencies
 parameter_list|(
@@ -11742,7 +12574,7 @@ name|cmp
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-comment|/* note all resources which point to this opcode.  rfi has the most chks      (79) and cmpxchng has the most regs (54) so 100 here should be enough */
+comment|/* Note all resources which point to this opcode.  rfi has the most chks      (79) and cmpxchng has the most regs (54) so 100 here should be enough.  */
 name|int
 name|i
 decl_stmt|;
@@ -11770,7 +12602,7 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-comment|/* flag insns for which no class matched; there should be none */
+comment|/* Flag insns for which no class matched; there should be none.  */
 name|int
 name|no_class_found
 init|=
@@ -11885,7 +12717,7 @@ name|ic_note
 argument_list|)
 condition|)
 block|{
-comment|/* We can ignore ic_note 11 for non PR resources */
+comment|/* We can ignore ic_note 11 for non PR resources.  */
 if|if
 condition|(
 name|ic_note
@@ -11949,12 +12781,12 @@ operator|==
 literal|1
 operator|)
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: IC note %d in opcode %s (IC:%s)"
-literal|" conflicts with resource %s note %d\n"
+name|_
+argument_list|(
+literal|"IC note %d in opcode %s (IC:%s) conflicts with resource %s note %d\n"
+argument_list|)
 argument_list|,
 name|ic_note
 argument_list|,
@@ -11986,7 +12818,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Instruction class notes override resource notes.                  So far, only note 11 applies to an IC instead of a resource,                  and note 11 implies note 1.                */
+comment|/* Instruction class notes override resource notes.                  So far, only note 11 applies to an IC instead of a resource,                  and note 11 implies note 1.  */
 if|if
 condition|(
 name|ic_note
@@ -12080,7 +12912,7 @@ name|ic_note
 argument_list|)
 condition|)
 block|{
-comment|/* We can ignore ic_note 11 for non PR resources */
+comment|/* We can ignore ic_note 11 for non PR resources.  */
 if|if
 condition|(
 name|ic_note
@@ -12144,12 +12976,12 @@ operator|==
 literal|1
 operator|)
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: IC note %d for opcode %s (IC:%s)"
-literal|" conflicts with resource %s note %d\n"
+name|_
+argument_list|(
+literal|"IC note %d for opcode %s (IC:%s) conflicts with resource %s note %d\n"
+argument_list|)
 argument_list|,
 name|ic_note
 argument_list|,
@@ -12233,11 +13065,12 @@ if|if
 condition|(
 name|no_class_found
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: opcode %s has no class (ops %d %d %d)\n"
+name|_
+argument_list|(
+literal|"opcode %s has no class (ops %d %d %d)\n"
+argument_list|)
 argument_list|,
 name|opc
 operator|->
@@ -12284,6 +13117,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|insert_completer_entry
 parameter_list|(
@@ -12350,11 +13184,9 @@ argument_list|)
 operator|>
 literal|128
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 name|pcopy
@@ -12382,11 +13214,9 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-block|{
 name|prefix
 operator|++
 expr_stmt|;
-block|}
 while|while
 condition|(
 operator|!
@@ -12474,7 +13304,6 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-block|{
 name|ptr
 operator|=
 operator|&
@@ -12487,7 +13316,6 @@ operator|->
 name|alternative
 operator|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -12589,11 +13417,9 @@ operator|)
 operator|->
 name|is_terminal
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 operator|(
 operator|*
 name|ptr
@@ -12658,6 +13484,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|print_completer_entry
 parameter_list|(
@@ -12726,11 +13553,9 @@ name|bits
 operator|&
 literal|0xffffffff00000000LL
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 name|printf
 argument_list|(
@@ -12804,6 +13629,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|print_completer_table
 parameter_list|()
@@ -12829,7 +13655,6 @@ condition|;
 name|x
 operator|++
 control|)
-block|{
 name|print_completer_entry
 argument_list|(
 name|glist
@@ -12838,7 +13663,6 @@ name|x
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"};\n\n"
@@ -12851,6 +13675,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|int
 name|opcodes_eq
 parameter_list|(
@@ -12919,11 +13744,9 @@ operator|->
 name|flags
 operator|)
 condition|)
-block|{
 return|return
 literal|0
 return|;
-block|}
 for|for
 control|(
 name|x
@@ -12937,7 +13760,6 @@ condition|;
 name|x
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|opc1
@@ -12954,12 +13776,9 @@ index|[
 name|x
 index|]
 condition|)
-block|{
 return|return
 literal|0
 return|;
-block|}
-block|}
 name|plen1
 operator|=
 name|get_prefix_len
@@ -13001,11 +13820,9 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 return|return
 literal|1
 return|;
-block|}
 return|return
 literal|0
 return|;
@@ -13016,6 +13833,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|add_opcode_entry
 parameter_list|(
@@ -13060,11 +13878,9 @@ argument_list|)
 operator|>
 literal|128
 condition|)
-block|{
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 name|place
 operator|=
 operator|&
@@ -13096,7 +13912,7 @@ argument_list|(
 name|prefix
 argument_list|)
 expr_stmt|;
-comment|/* Walk the list of opcode table entries.  If it's a new      instruction, allocate and fill in a new entry.  Note       the main table is alphabetical by opcode name. */
+comment|/* Walk the list of opcode table entries.  If it's a new      instruction, allocate and fill in a new entry.  Note       the main table is alphabetical by opcode name.  */
 while|while
 condition|(
 operator|*
@@ -13154,9 +13970,7 @@ name|name
 operator|->
 name|num
 condition|)
-block|{
 break|break;
-block|}
 name|place
 operator|=
 operator|&
@@ -13278,9 +14092,12 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|print_main_table
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|main_entry
@@ -13444,6 +14261,7 @@ begin_escape
 end_escape
 
 begin_function
+specifier|static
 name|void
 name|shrink
 parameter_list|(
@@ -13476,7 +14294,6 @@ condition|;
 name|curr_opcode
 operator|++
 control|)
-block|{
 name|add_opcode_entry
 argument_list|(
 name|table
@@ -13485,42 +14302,289 @@ name|curr_opcode
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Program options.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTION_SRCDIR
+value|200
+end_define
+
+begin_decl_stmt
+name|struct
+name|option
+name|long_options
+index|[]
+init|=
+block|{
+block|{
+literal|"srcdir"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_SRCDIR
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'d'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'V'
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'h'
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|print_version
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: version 1.0\n"
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|xexit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|FILE
+modifier|*
+name|stream
+parameter_list|,
+name|int
+name|status
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"Usage: %s [-V | --version] [-d | --debug] [--srcdir=dirname] [--help]\n"
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|xexit
+argument_list|(
+name|status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
-if|if
+specifier|extern
+name|int
+name|chdir
+argument_list|(
+name|char
+operator|*
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|srcdir
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
+name|program_name
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+name|xmalloc_set_program_name
+argument_list|(
+name|program_name
+argument_list|)
+expr_stmt|;
+while|while
 condition|(
+operator|(
+name|c
+operator|=
+name|getopt_long
+argument_list|(
 name|argc
-operator|>
-literal|1
+argument_list|,
+name|argv
+argument_list|,
+literal|"vVdh"
+argument_list|,
+name|long_options
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+name|c
 condition|)
 block|{
+case|case
+name|OPTION_SRCDIR
+case|:
+name|srcdir
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+case|case
+literal|'v'
+case|:
+name|print_version
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
 name|debug
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+case|case
+literal|'?'
+case|:
+name|usage
+argument_list|(
+name|stderr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+default|default:
+case|case
+literal|0
+case|:
+break|break;
 block|}
+if|if
+condition|(
+name|optind
+operator|!=
+name|argc
+condition|)
+name|usage
+argument_list|(
+name|stdout
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|srcdir
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|srcdir
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fail
+argument_list|(
+name|_
+argument_list|(
+literal|"unable to change directory to \"%s\", errno = %s\n"
+argument_list|)
+argument_list|,
+name|srcdir
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|load_insn_classes
 argument_list|()
 expr_stmt|;
@@ -13567,7 +14631,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"/* This file is automatically generated by ia64-gen.  Do not edit! */\n"
+literal|"/* This file is automatically generated by ia64-gen.  Do not edit!  */\n"
 argument_list|)
 expr_stmt|;
 name|print_string_table

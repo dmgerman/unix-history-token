@@ -9,11 +9,11 @@ begin_define
 define|#
 directive|define
 name|LEX_AT
-value|1
+value|(LEX_BEGIN_NAME | LEX_NAME)
 end_define
 
 begin_comment
-comment|/* can have @'s inside labels */
+comment|/* Can have @'s inside labels.  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for core files which use the ptrace_user structure    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2001, 2002    Free Software Foundation, Inc.    The structure of this file is based on trad-core.c written by John Gilmore    of Cygnus Support.    Modified to work with the ptrace_user structure by Kevin A. Buettner.    (Longterm it may be better to merge this file with trad-core.c)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for core files which use the ptrace_user structure    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    The structure of this file is based on trad-core.c written by John Gilmore    of Cygnus Support.    Modified to work with the ptrace_user structure by Kevin A. Buettner.    (Longterm it may be better to merge this file with trad-core.c)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifdef
@@ -165,7 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|ptrace_unix_core_file_matches_executable_p
 name|PARAMS
 argument_list|(
@@ -194,10 +194,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|const
@@ -657,10 +653,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|ptrace_unix_core_file_failing_signal
@@ -688,12 +680,8 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
-name|boolean
+name|bfd_boolean
 name|ptrace_unix_core_file_matches_executable_p
 parameter_list|(
 name|core_bfd
@@ -713,7 +701,7 @@ begin_block
 block|{
 comment|/* FIXME: Use pt_timdat field of the ptrace_user structure to match      the date of the executable */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -742,22 +730,42 @@ begin_define
 define|#
 directive|define
 name|NO_GET
-value|((bfd_vma (*) PARAMS ((   const bfd_byte *))) swap_abort )
+value|((bfd_vma (*) (const void *)) swap_abort)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_PUT
-value|((void    (*) PARAMS ((bfd_vma, bfd_byte *))) swap_abort )
+value|((void (*) (bfd_vma, void *)) swap_abort)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NO_SIGNED_GET
-define|\
-value|((bfd_signed_vma (*) PARAMS ((const bfd_byte *))) swap_abort )
+name|NO_GETS
+value|((bfd_signed_vma (*) (const void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_GET64
+value|((bfd_uint64_t (*) (const void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_PUT64
+value|((void (*) (bfd_uint64_t, void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_GETS64
+value|((bfd_int64_t (*) (const void *)) swap_abort)
 end_define
 
 begin_decl_stmt
@@ -815,44 +823,44 @@ comment|/* ar_pad_char */
 literal|16
 block|,
 comment|/* ar_max_namelen */
-name|NO_GET
+name|NO_GET64
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS64
 block|,
-name|NO_PUT
+name|NO_PUT64
 block|,
 comment|/* 64 bit data */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
 comment|/* 32 bit data */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
 comment|/* 16 bit data */
-name|NO_GET
+name|NO_GET64
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS64
 block|,
-name|NO_PUT
+name|NO_PUT64
 block|,
 comment|/* 64 bit hdrs */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
 comment|/* 32 bit hdrs */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,

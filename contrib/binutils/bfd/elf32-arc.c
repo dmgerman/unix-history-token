@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ARC-specific support for 32-bit ELF    Copyright 1994, 1995, 1997, 1999, 2001 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ARC-specific support for 32-bit ELF    Copyright 1994, 1995, 1997, 1999, 2001, 2002    Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -71,7 +71,7 @@ operator|,
 name|arelent
 operator|*
 operator|,
-name|Elf32_Internal_Rel
+name|Elf_Internal_Rela
 operator|*
 operator|)
 argument_list|)
@@ -80,7 +80,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|arc_elf_object_p
 name|PARAMS
 argument_list|(
@@ -102,7 +102,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -148,6 +148,7 @@ begin_define
 define|#
 directive|define
 name|USE_REL
+value|1
 end_define
 
 begin_decl_stmt
@@ -172,7 +173,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long)  */
 literal|32
 argument_list|,
 comment|/* bitsize  */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative  */
 literal|0
@@ -187,7 +188,7 @@ comment|/* special_function  */
 literal|"R_ARC_NONE"
 argument_list|,
 comment|/* name  */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace  */
 literal|0
@@ -196,7 +197,7 @@ comment|/* src_mask  */
 literal|0
 argument_list|,
 comment|/* dst_mask  */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset  */
@@ -215,7 +216,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long)  */
 literal|32
 argument_list|,
 comment|/* bitsize  */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative  */
 literal|0
@@ -230,7 +231,7 @@ comment|/* special_function  */
 literal|"R_ARC_32"
 argument_list|,
 comment|/* name  */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace  */
 literal|0xffffffff
@@ -239,7 +240,7 @@ comment|/* src_mask  */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask  */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset  */
@@ -258,7 +259,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long)  */
 literal|26
 argument_list|,
 comment|/* bitsize  */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative  */
 literal|0
@@ -273,7 +274,7 @@ comment|/* special_function  */
 literal|"R_ARC_B26"
 argument_list|,
 comment|/* name  */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace  */
 literal|0x00ffffff
@@ -282,7 +283,7 @@ comment|/* src_mask  */
 literal|0x00ffffff
 argument_list|,
 comment|/* dst_mask  */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset  */
@@ -301,7 +302,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long)  */
 literal|22
 argument_list|,
 comment|/* bitsize  */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative  */
 literal|7
@@ -316,7 +317,7 @@ comment|/* special_function  */
 literal|"R_ARC_B22_PCREL"
 argument_list|,
 comment|/* name  */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace  */
 literal|0x07ffff80
@@ -325,7 +326,7 @@ comment|/* src_mask  */
 literal|0x07ffff80
 argument_list|,
 comment|/* dst_mask  */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset  */
@@ -481,7 +482,7 @@ name|arelent
 modifier|*
 name|cache_ptr
 decl_stmt|;
-name|Elf32_Internal_Rel
+name|Elf_Internal_Rela
 modifier|*
 name|dst
 decl_stmt|;
@@ -529,7 +530,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|arc_elf_object_p
 parameter_list|(
 name|abfd
@@ -640,7 +641,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|linker
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
@@ -760,7 +761,7 @@ modifier|*
 name|error_message
 decl_stmt|;
 block|{
-comment|/* If linking, back up the final symbol address by the address of the      reloc.  This cannot be accomplished by setting the pcrel_offset      field to true, as bfd_install_relocation will detect this and refuse      to install the offset in the first place, but bfd_perform_relocation      will still insist on removing it.  */
+comment|/* If linking, back up the final symbol address by the address of the      reloc.  This cannot be accomplished by setting the pcrel_offset      field to TRUE, as bfd_install_relocation will detect this and refuse      to install the offset in the first place, but bfd_perform_relocation      will still insist on removing it.  */
 if|if
 condition|(
 name|output_bfd

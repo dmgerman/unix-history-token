@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD ECOFF object file private structure.    Copyright 1993, 1994, 1995, 1996, 1999, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD ECOFF object file private structure.    Copyright 1993, 1994, 1995, 1996, 1999, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -64,8 +64,8 @@ comment|/* The page boundary used to align sections in a demand-paged      execu
 name|bfd_vma
 name|round
 decl_stmt|;
-comment|/* True if the .rdata section is part of the text segment, as on the      Alpha.  False if .rdata is part of the data segment, as on the      MIPS.  */
-name|boolean
+comment|/* TRUE if the .rdata section is part of the text segment, as on the      Alpha.  FALSE if .rdata is part of the data segment, as on the      MIPS.  */
+name|bfd_boolean
 name|rdata_in_text
 decl_stmt|;
 comment|/* Bitsize of constructor entries.  */
@@ -167,7 +167,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Relocate section contents while linking.  */
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*relocate_section
 argument_list|)
@@ -200,7 +200,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Do final adjustments to filehdr and aouthdr.  */
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*adjust_headers
 argument_list|)
@@ -330,12 +330,12 @@ modifier|*
 modifier|*
 name|symndx_to_section
 decl_stmt|;
-comment|/* True if this BFD was written by the backend linker.  */
-name|boolean
+comment|/* TRUE if this BFD was written by the backend linker.  */
+name|bfd_boolean
 name|linker
 decl_stmt|;
-comment|/* True if a warning that multiple global pointer values are      needed in the output binary was issued already.  */
-name|boolean
+comment|/* TRUE if a warning that multiple global pointer values are      needed in the output binary was issued already.  */
+name|bfd_boolean
 name|issued_multiple_gp_warning
 decl_stmt|;
 comment|/* Used by find_nearest_line entry point.  The structure could be      included directly in this one, but there's no point to wasting      the memory just for the infrequently called find_nearest_line.  */
@@ -345,7 +345,7 @@ modifier|*
 name|find_line_info
 decl_stmt|;
 comment|/* Whether the .rdata section is in the text segment for this      particular ECOFF file.  This is not valid until      ecoff_compute_section_file_positions is called.  */
-name|boolean
+name|bfd_boolean
 name|rdata_in_text
 decl_stmt|;
 block|}
@@ -371,8 +371,8 @@ name|FDR
 modifier|*
 name|fdr
 decl_stmt|;
-comment|/* true if this is a local symbol rather than an external one.  */
-name|boolean
+comment|/* TRUE if this is a local symbol rather than an external one.  */
+name|bfd_boolean
 name|local
 decl_stmt|;
 comment|/* A pointer to the unswapped hidden information for this symbol.      This is either a struct sym_ext or a struct ext_ext, depending on      the value of the local field above.  */
@@ -530,7 +530,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_mkobject
 name|PARAMS
 argument_list|(
@@ -548,7 +548,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_slurp_symbolic_info
 name|PARAMS
 argument_list|(
@@ -573,7 +573,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_write_object_contents
 name|PARAMS
 argument_list|(
@@ -619,7 +619,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_new_section_hook
 name|PARAMS
 argument_list|(
@@ -636,7 +636,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_get_section_contents
 name|PARAMS
 argument_list|(
@@ -667,7 +667,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_bfd_copy_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -723,7 +723,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_slurp_armap
 name|PARAMS
 argument_list|(
@@ -760,7 +760,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_write_armap
 name|PARAMS
 argument_list|(
@@ -838,7 +838,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|long
-name|_bfd_ecoff_get_symtab
+name|_bfd_ecoff_canonicalize_symtab
 name|PARAMS
 argument_list|(
 operator|(
@@ -915,7 +915,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_bfd_is_local_label_name
 name|PARAMS
 argument_list|(
@@ -940,7 +940,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_find_nearest_line
 name|PARAMS
 argument_list|(
@@ -1039,7 +1039,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_set_arch_mach
 name|PARAMS
 argument_list|(
@@ -1059,7 +1059,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_set_section_contents
 name|PARAMS
 argument_list|(
@@ -1070,6 +1070,7 @@ operator|,
 name|asection
 operator|*
 operator|,
+specifier|const
 name|PTR
 name|location
 operator|,
@@ -1092,7 +1093,7 @@ name|bfd
 operator|*
 name|abfd
 operator|,
-name|boolean
+name|bfd_boolean
 name|reloc
 operator|)
 argument_list|)
@@ -1132,7 +1133,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_bfd_link_add_symbols
 name|PARAMS
 argument_list|(
@@ -1157,7 +1158,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_bfd_final_link
 name|PARAMS
 argument_list|(
@@ -1207,7 +1208,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_set_arch_mach_hook
 name|PARAMS
 argument_list|(
@@ -1225,7 +1226,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_styp_to_sec_flags
 name|PARAMS
 argument_list|(
@@ -1251,7 +1252,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_slurp_symbol_table
 name|PARAMS
 argument_list|(

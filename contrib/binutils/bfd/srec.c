@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for s-record objects.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for s-record objects.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_mkobject
 name|PARAMS
 argument_list|(
@@ -115,7 +115,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -137,7 +137,7 @@ name|int
 operator|,
 name|int
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -145,7 +145,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_scan
 name|PARAMS
 argument_list|(
@@ -191,7 +191,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_read_section
 name|PARAMS
 argument_list|(
@@ -211,7 +211,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_record
 name|PARAMS
 argument_list|(
@@ -238,7 +238,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_header
 name|PARAMS
 argument_list|(
@@ -252,7 +252,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_symbols
 name|PARAMS
 argument_list|(
@@ -266,7 +266,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_new_symbol
 name|PARAMS
 argument_list|(
@@ -286,7 +286,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_get_section_contents
 name|PARAMS
 argument_list|(
@@ -309,7 +309,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_set_arch_mach
 name|PARAMS
 argument_list|(
@@ -329,7 +329,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_set_section_contents
 name|PARAMS
 argument_list|(
@@ -339,6 +339,7 @@ operator|*
 operator|,
 name|sec_ptr
 operator|,
+specifier|const
 name|PTR
 operator|,
 name|file_ptr
@@ -351,7 +352,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|internal_srec_write_object_contents
 name|PARAMS
 argument_list|(
@@ -367,7 +368,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_object_contents
 name|PARAMS
 argument_list|(
@@ -381,7 +382,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|symbolsrec_write_object_contents
 name|PARAMS
 argument_list|(
@@ -403,7 +404,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -426,7 +427,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|long
-name|srec_get_symtab
+name|srec_canonicalize_symtab
 name|PARAMS
 argument_list|(
 operator|(
@@ -512,10 +513,10 @@ name|srec_init
 parameter_list|()
 block|{
 specifier|static
-name|boolean
+name|bfd_boolean
 name|inited
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 if|if
 condition|(
@@ -525,7 +526,7 @@ condition|)
 block|{
 name|inited
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|hex_init
 argument_list|()
@@ -574,10 +575,10 @@ comment|/* The type of srec output (free or forced to S3).    This variable can 
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|S3Forced
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -683,7 +684,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_section
 name|PARAMS
 argument_list|(
@@ -703,7 +704,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_terminator
 name|PARAMS
 argument_list|(
@@ -724,7 +725,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_mkobject
 parameter_list|(
 name|abfd
@@ -771,7 +772,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|abfd
 operator|->
@@ -818,7 +819,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -840,7 +841,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|errorptr
 decl_stmt|;
@@ -876,7 +877,7 @@ condition|)
 operator|*
 name|errorptr
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
 name|EOF
@@ -923,7 +924,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|error
 decl_stmt|;
 block|{
@@ -1026,7 +1027,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_new_symbol
 parameter_list|(
 name|abfd
@@ -1083,7 +1084,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|n
 operator|->
@@ -1154,7 +1155,7 @@ operator|->
 name|symcount
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1165,7 +1166,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_scan
 parameter_list|(
 name|abfd
@@ -1184,10 +1185,10 @@ name|lineno
 init|=
 literal|1
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|error
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 name|bfd_byte
 modifier|*
@@ -1248,7 +1249,7 @@ operator|!=
 name|EOF
 condition|)
 block|{
-comment|/* We only build sections from contiguous S-records, so if this          is not an S-record, then stop building a section.  */
+comment|/* We only build sections from contiguous S-records, so if this 	 is not an S-record, then stop building a section.  */
 if|if
 condition|(
 name|c
@@ -2033,7 +2034,7 @@ case|:
 case|case
 literal|'5'
 case|:
-comment|/* Prologue--ignore the file name, but stop building a                    section at this point.  */
+comment|/* Prologue--ignore the file name, but stop building a 		   section at this point.  */
 name|sec
 operator|=
 name|NULL
@@ -2139,7 +2140,7 @@ operator|==
 name|address
 condition|)
 block|{
-comment|/* This data goes at the end of the section we are                        currently building.  */
+comment|/* This data goes at the end of the section we are 		       currently building.  */
 name|sec
 operator|->
 name|_raw_size
@@ -2351,7 +2352,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
@@ -2377,7 +2378,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -2404,7 +2405,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -2785,7 +2786,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_read_section
 parameter_list|(
 name|abfd
@@ -2815,10 +2816,10 @@ name|sofar
 init|=
 literal|0
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|error
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 name|bfd_byte
 modifier|*
@@ -2894,7 +2895,7 @@ operator|==
 literal|'\n'
 condition|)
 continue|continue;
-comment|/* This is called after srec_scan has already been called, so we          ought to know the exact format.  */
+comment|/* This is called after srec_scan has already been called, so we 	 ought to know the exact format.  */
 name|BFD_ASSERT
 argument_list|(
 name|c
@@ -3062,7 +3063,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 case|case
 literal|'3'
@@ -3180,7 +3181,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Don't consider checksum.  */
@@ -3244,7 +3245,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -3260,7 +3261,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -3271,7 +3272,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_get_section_contents
 parameter_list|(
 name|abfd
@@ -3339,7 +3340,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -3356,7 +3357,7 @@ name|used_by_bfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|memcpy
@@ -3380,7 +3381,7 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3391,7 +3392,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_set_arch_mach
 parameter_list|(
 name|abfd
@@ -3428,7 +3429,7 @@ operator|&
 name|bfd_default_arch_struct
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 return|return
@@ -3450,7 +3451,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_set_section_contents
 parameter_list|(
 name|abfd
@@ -3470,6 +3471,7 @@ decl_stmt|;
 name|sec_ptr
 name|section
 decl_stmt|;
+specifier|const
 name|PTR
 name|location
 decl_stmt|;
@@ -3523,7 +3525,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -3570,7 +3572,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|memcpy
 argument_list|(
@@ -3587,7 +3589,7 @@ operator|)
 name|bytes_to_do
 argument_list|)
 expr_stmt|;
-comment|/* Ff S3Forced is true then always select S3 records, 	 regardless of the siez of the addresses.  */
+comment|/* Ff S3Forced is TRUE then always select S3 records, 	 regardless of the siez of the addresses.  */
 if|if
 condition|(
 name|S3Forced
@@ -3675,7 +3677,7 @@ name|size
 operator|=
 name|bytes_to_do
 expr_stmt|;
-comment|/* Sort the records by address.  Optimize for the common case of          adding a record to the end of the list.  */
+comment|/* Sort the records by address.  Optimize for the common case of 	 adding a record to the end of the list.  */
 if|if
 condition|(
 name|tdata
@@ -3789,7 +3791,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3800,7 +3802,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_record
 parameter_list|(
 name|abfd
@@ -4091,17 +4093,17 @@ operator|!=
 name|wrlen
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_header
 parameter_list|(
 name|abfd
@@ -4122,7 +4124,7 @@ operator|->
 name|filename
 argument_list|)
 decl_stmt|;
-comment|/* I'll put an arbitary 40 char limit on header size.  */
+comment|/* I'll put an arbitrary 40 char limit on header size.  */
 if|if
 condition|(
 name|len
@@ -4161,7 +4163,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_section
 parameter_list|(
 name|abfd
@@ -4297,7 +4299,7 @@ name|octets_this_chunk
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|octets_written
 operator|+=
@@ -4309,14 +4311,14 @@ name|octets_this_chunk
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_terminator
 parameter_list|(
 name|abfd
@@ -4357,7 +4359,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_symbols
 parameter_list|(
 name|abfd
@@ -4450,7 +4452,7 @@ operator|!=
 literal|2
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -4500,7 +4502,7 @@ comment|/* Just dump out non debug symbols.  */
 name|char
 name|buf
 index|[
-literal|42
+literal|43
 index|]
 decl_stmt|,
 modifier|*
@@ -4545,13 +4547,13 @@ operator|!=
 name|len
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|sprintf_vma
 argument_list|(
 name|buf
 operator|+
-literal|1
+literal|2
 argument_list|,
 operator|(
 name|s
@@ -4578,7 +4580,7 @@ name|p
 operator|=
 name|buf
 operator|+
-literal|1
+literal|2
 expr_stmt|;
 while|while
 condition|(
@@ -4626,11 +4628,17 @@ operator|*
 operator|--
 name|p
 operator|=
+literal|'$'
+expr_stmt|;
+operator|*
+operator|--
+name|p
+operator|=
 literal|' '
 expr_stmt|;
 name|len
 operator|+=
-literal|3
+literal|4
 expr_stmt|;
 if|if
 condition|(
@@ -4646,7 +4654,7 @@ operator|!=
 name|len
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -4667,18 +4675,18 @@ operator|!=
 literal|5
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|internal_srec_write_object_contents
 parameter_list|(
 name|abfd
@@ -4721,7 +4729,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -4733,7 +4741,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Now wander though all the sections provided and output them.  */
 name|list
@@ -4766,7 +4774,7 @@ name|list
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|list
 operator|=
@@ -4788,7 +4796,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|srec_write_object_contents
 parameter_list|(
 name|abfd
@@ -4811,7 +4819,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|symbolsrec_write_object_contents
 parameter_list|(
 name|abfd
@@ -4846,7 +4854,7 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|exec
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
@@ -4899,7 +4907,7 @@ end_comment
 begin_function
 specifier|static
 name|long
-name|srec_get_symtab
+name|srec_canonicalize_symtab
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -4986,10 +4994,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-operator|(
-name|long
-operator|)
-name|false
+literal|0
 return|;
 name|abfd
 operator|->

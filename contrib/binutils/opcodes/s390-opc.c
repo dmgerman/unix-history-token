@@ -383,8 +383,23 @@ block|}
 block|,
 define|#
 directive|define
-name|L4_8
+name|D20_20
 value|26
+comment|/* 20 bit displacement starting at 20 */
+block|{
+literal|20
+block|,
+literal|20
+block|,
+name|S390_OPERAND_DISP
+operator||
+name|S390_OPERAND_SIGNED
+block|}
+block|,
+define|#
+directive|define
+name|L4_8
+value|27
 comment|/* 4 bit length starting at position 8 */
 block|{
 literal|4
@@ -397,7 +412,7 @@ block|,
 define|#
 directive|define
 name|L4_12
-value|27
+value|28
 comment|/* 4 bit length starting at position 12 */
 block|{
 literal|4
@@ -410,7 +425,7 @@ block|,
 define|#
 directive|define
 name|L8_8
-value|28
+value|29
 comment|/* 8 bit length starting at position 8 */
 block|{
 literal|8
@@ -423,7 +438,7 @@ block|,
 define|#
 directive|define
 name|U4_8
-value|29
+value|30
 comment|/* 4 bit unsigned value starting at 8 */
 block|{
 literal|4
@@ -436,7 +451,7 @@ block|,
 define|#
 directive|define
 name|U4_12
-value|30
+value|31
 comment|/* 4 bit unsigned value starting at 12 */
 block|{
 literal|4
@@ -449,7 +464,7 @@ block|,
 define|#
 directive|define
 name|U4_16
-value|31
+value|32
 comment|/* 4 bit unsigned value starting at 16 */
 block|{
 literal|4
@@ -462,7 +477,7 @@ block|,
 define|#
 directive|define
 name|U4_20
-value|32
+value|33
 comment|/* 4 bit unsigned value starting at 20 */
 block|{
 literal|4
@@ -475,7 +490,7 @@ block|,
 define|#
 directive|define
 name|U8_8
-value|33
+value|34
 comment|/* 8 bit unsigned value starting at 8 */
 block|{
 literal|8
@@ -488,7 +503,7 @@ block|,
 define|#
 directive|define
 name|U8_16
-value|34
+value|35
 comment|/* 8 bit unsigned value starting at 16 */
 block|{
 literal|8
@@ -501,7 +516,7 @@ block|,
 define|#
 directive|define
 name|I16_16
-value|35
+value|36
 comment|/* 16 bit signed value starting at 16 */
 block|{
 literal|16
@@ -514,7 +529,7 @@ block|,
 define|#
 directive|define
 name|U16_16
-value|36
+value|37
 comment|/* 16 bit unsigned value starting at 16 */
 block|{
 literal|16
@@ -527,7 +542,7 @@ block|,
 define|#
 directive|define
 name|J16_16
-value|37
+value|38
 comment|/* PC relative jump offset at 16 */
 block|{
 literal|16
@@ -540,7 +555,7 @@ block|,
 define|#
 directive|define
 name|J32_16
-value|38
+value|39
 comment|/* PC relative long offset at 16 */
 block|{
 literal|32
@@ -851,6 +866,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_RRF_R0RR
+value|4, { R_24,R_28,R_16,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. idte  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSTR_RRF_U0FF
 value|4, { F_24,U4_16,F_28,0,0,0 }
 end_define
@@ -972,12 +998,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_RSL_R0RD
+value|6, { R_8,D_20,B_16,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. tp    */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSTR_RSI_RRP
 value|4, { R_8,R_12,J16_16,0,0,0 }
 end_define
 
 begin_comment
 comment|/* e.g. brxh  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RSY_RRRD
+value|6, { R_8,R_12,D20_20,B_16,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. stmy  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RSY_RURD
+value|6, { R_8,U4_12,D20_20,B_16,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. icmh  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RSY_AARD
+value|6, { A_8,A_12,D20_20,B_16,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. lamy  */
 end_comment
 
 begin_define
@@ -1082,6 +1152,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_RXY_RRRD
+value|6, { R_8,D20_20,X_12,B_16,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. ly    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RXY_FRRD
+value|6, { F_8,D20_20,X_12,B_16,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. ley   */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSTR_RX_0RRD
 value|4, { D_20,X_12,B_16,0,0,0 }
 end_define
@@ -1132,6 +1224,17 @@ end_define
 
 begin_comment
 comment|/* e.g. cli   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_SIY_URD
+value|6, { D20_20,B_16,U8_8,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. tmy   */
 end_comment
 
 begin_define
@@ -1397,6 +1500,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MASK_RRF_R0RR
+value|{ 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MASK_RRF_U0FF
 value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
 end_define
@@ -1474,6 +1584,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MASK_RSL_R0RD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MASK_RSI_RRP
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 }
 end_define
@@ -1516,6 +1633,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|MASK_RSY_RRRD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RSY_RURD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RSY_AARD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MASK_RXE_FRRD
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
 end_define
@@ -1538,6 +1676,20 @@ begin_define
 define|#
 directive|define
 name|MASK_RXF_RRRDR
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RXY_RRRD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RXY_FRRD
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
 end_define
 
@@ -1574,6 +1726,13 @@ define|#
 directive|define
 name|MASK_SI_URD
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_SIY_URD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0xff }
 end_define
 
 begin_define
@@ -1664,6 +1823,8 @@ block|,
 name|INSTR_E
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1679,6 +1840,8 @@ block|,
 name|INSTR_RI_RI
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1694,6 +1857,8 @@ block|,
 name|INSTR_RIE_RRP
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1709,6 +1874,8 @@ block|,
 name|INSTR_RIL_RP
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1724,6 +1891,8 @@ block|,
 name|INSTR_RR_RR
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1739,6 +1908,8 @@ block|,
 name|INSTR_RRE_RR
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1754,6 +1925,8 @@ block|,
 name|INSTR_RRF_RURR
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1769,6 +1942,8 @@ block|,
 name|INSTR_RS_RRRD
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1784,6 +1959,8 @@ block|,
 name|INSTR_RSE_RRRD
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1797,6 +1974,25 @@ block|,
 name|MASK_RSI_RRP
 block|,
 name|INSTR_RSI_RRP
+block|,
+literal|3
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rsy"
+block|,
+name|OP8
+argument_list|(
+literal|0x00LL
+argument_list|)
+block|,
+name|MASK_RSY_RRRD
+block|,
+name|INSTR_RSY_RRRD
+block|,
+literal|3
 block|,
 literal|3
 block|}
@@ -1814,6 +2010,8 @@ block|,
 name|INSTR_RX_RRRD
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1829,6 +2027,8 @@ block|,
 name|INSTR_RXE_RRRD
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1842,6 +2042,25 @@ block|,
 name|MASK_RXF_RRRDR
 block|,
 name|INSTR_RXF_RRRDR
+block|,
+literal|3
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rxy"
+block|,
+name|OP8
+argument_list|(
+literal|0x00LL
+argument_list|)
+block|,
+name|MASK_RXY_RRRD
+block|,
+name|INSTR_RXY_RRRD
+block|,
+literal|3
 block|,
 literal|3
 block|}
@@ -1859,6 +2078,8 @@ block|,
 name|INSTR_S_RD
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1872,6 +2093,25 @@ block|,
 name|MASK_SI_URD
 block|,
 name|INSTR_SI_URD
+block|,
+literal|3
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"siy"
+block|,
+name|OP8
+argument_list|(
+literal|0x00LL
+argument_list|)
+block|,
+name|MASK_SIY_URD
+block|,
+name|INSTR_SIY_URD
+block|,
+literal|3
 block|,
 literal|3
 block|}
@@ -1889,6 +2129,8 @@ block|,
 name|INSTR_SS_RRRDRD
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -1904,6 +2146,8 @@ block|,
 name|INSTR_SSE_RDRD
 block|,
 literal|3
+block|,
+literal|0
 block|}
 block|, }
 decl_stmt|;

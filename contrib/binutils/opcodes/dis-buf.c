@@ -285,7 +285,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Just return the given address.  */
+comment|/* Just return true.  */
 end_comment
 
 begin_function
@@ -309,6 +309,32 @@ decl_stmt|;
 block|{
 return|return
 literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Just return TRUE.  */
+end_comment
+
+begin_function
+name|bfd_boolean
+name|generic_symbol_is_valid
+parameter_list|(
+name|asymbol
+modifier|*
+name|sym
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|struct
+name|disassemble_info
+modifier|*
+name|info
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+return|return
+name|TRUE
 return|;
 block|}
 end_function

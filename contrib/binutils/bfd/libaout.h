@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end data structures for a.out (and similar) files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end data structures for a.out (and similar) files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -26,52 +26,28 @@ file|"bfdlink.h"
 end_include
 
 begin_comment
-comment|/* Macros for accessing components in an aout header.  Saves cluttering    the source with (bfd_vma) and (bfd_byte *) casts.  */
+comment|/* Macros for accessing components in an aout header.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|H_PUT_64
-parameter_list|(
-name|abfd
-parameter_list|,
-name|val
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_put_64 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+value|bfd_h_put_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_PUT_32
-parameter_list|(
-name|abfd
-parameter_list|,
-name|val
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_put_32 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+value|bfd_h_put_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_PUT_16
-parameter_list|(
-name|abfd
-parameter_list|,
-name|val
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_put_16 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+value|bfd_h_put_16
 end_define
 
 begin_define
@@ -85,45 +61,21 @@ begin_define
 define|#
 directive|define
 name|H_PUT_S64
-parameter_list|(
-name|abfd
-parameter_list|,
-name|val
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_put_signed_64 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+value|bfd_h_put_signed_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_PUT_S32
-parameter_list|(
-name|abfd
-parameter_list|,
-name|val
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_put_signed_32 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+value|bfd_h_put_signed_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_PUT_S16
-parameter_list|(
-name|abfd
-parameter_list|,
-name|val
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_put_signed_16 ((abfd), (bfd_vma) (val), (bfd_byte *) (where))
+value|bfd_h_put_signed_16
 end_define
 
 begin_define
@@ -137,39 +89,21 @@ begin_define
 define|#
 directive|define
 name|H_GET_64
-parameter_list|(
-name|abfd
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_get_64 ((abfd), (bfd_byte *) (where))
+value|bfd_h_get_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_GET_32
-parameter_list|(
-name|abfd
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_get_32 ((abfd), (bfd_byte *) (where))
+value|bfd_h_get_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_GET_16
-parameter_list|(
-name|abfd
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_get_16 ((abfd), (bfd_byte *) (where))
+value|bfd_h_get_16
 end_define
 
 begin_define
@@ -183,39 +117,21 @@ begin_define
 define|#
 directive|define
 name|H_GET_S64
-parameter_list|(
-name|abfd
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_get_signed_64 ((abfd), (bfd_byte *) (where))
+value|bfd_h_get_signed_64
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_GET_S32
-parameter_list|(
-name|abfd
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_get_signed_32 ((abfd), (bfd_byte *) (where))
+value|bfd_h_get_signed_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_GET_S16
-parameter_list|(
-name|abfd
-parameter_list|,
-name|where
-parameter_list|)
-define|\
-value|bfd_h_get_signed_16 ((abfd), (bfd_byte *) (where))
+value|bfd_h_get_signed_16
 end_define
 
 begin_define
@@ -550,7 +466,7 @@ name|bfd_link_hash_entry
 name|root
 decl_stmt|;
 comment|/* Whether this symbol has been written out.  */
-name|boolean
+name|bfd_boolean
 name|written
 decl_stmt|;
 comment|/* Symbol index in output file.  */
@@ -616,7 +532,7 @@ parameter_list|,
 name|info
 parameter_list|)
 define|\
-value|(bfd_link_hash_traverse						\    (&(table)->root,							\     (boolean (*) PARAMS ((struct bfd_link_hash_entry *, PTR))) (func),	\     (info)))
+value|(bfd_link_hash_traverse						\    (&(table)->root,							\     (bfd_boolean (*) PARAMS ((struct bfd_link_hash_entry *, PTR))) (func), \     (info)))
 end_define
 
 begin_comment
@@ -670,7 +586,7 @@ name|bfd_vma
 name|default_text_vma
 decl_stmt|;
 comment|/* Callback for setting the page and segment sizes, if they can't be      trivially determined from the architecture.  */
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*set_sizes
 argument_list|)
@@ -688,7 +604,7 @@ name|char
 name|exec_header_not_counted
 decl_stmt|;
 comment|/* Callback from the add symbols phase of the linker code to handle      a dynamic object.  */
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*add_dynamic_symbols
 argument_list|)
@@ -717,7 +633,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Callback from the add symbols phase of the linker code to handle      adding a single symbol to the global linker hash table.  */
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*add_one_symbol
 argument_list|)
@@ -746,9 +662,9 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 expr|struct
 name|bfd_link_hash_entry
@@ -758,7 +674,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Called to handle linking a dynamic object.  */
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*link_dynamic_object
 argument_list|)
@@ -775,7 +691,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Called for each global symbol being written out by the linker.      This should write out the dynamic symbol information.  */
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*write_dynamic_symbol
 argument_list|)
@@ -795,8 +711,8 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* If this callback is not NULL, the linker calls it for each reloc.      RELOC is a pointer to the unswapped reloc.  If *SKIP is set to      true, the reloc will be skipped.  *RELOCATION may be changed to      change the effects of the relocation.  */
-name|boolean
+comment|/* If this callback is not NULL, the linker calls it for each reloc.      RELOC is a pointer to the unswapped reloc.  If *SKIP is set to      TRUE, the reloc will be skipped.  *RELOCATION may be changed to      change the effects of the relocation.  */
+name|bfd_boolean
 argument_list|(
 argument|*check_dynamic_reloc
 argument_list|)
@@ -828,7 +744,7 @@ name|bfd_byte
 operator|*
 name|contents
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 name|skip
 operator|,
@@ -839,7 +755,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Called at the end of a link to finish up any dynamic linking      information.  */
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*finish_dynamic_link
 argument_list|)
@@ -970,8 +886,8 @@ name|M_SPARC
 init|=
 literal|3
 block|,
-comment|/* skip a bunch so we don't run into any of suns numbers */
-comment|/* make these up for the ns32k*/
+comment|/* Skip a bunch so we don't run into any of SUN's numbers.  */
+comment|/* Make these up for the ns32k.  */
 name|M_NS32032
 init|=
 operator|(
@@ -1377,7 +1293,7 @@ modifier|*
 name|symbols
 decl_stmt|;
 comment|/* symtab for input bfd */
-comment|/* For ease, we do this */
+comment|/* For ease, we do this.  */
 name|asection
 modifier|*
 name|textsec
@@ -1397,20 +1313,20 @@ decl_stmt|;
 name|file_ptr
 name|str_filepos
 decl_stmt|;
-comment|/* Size of a relocation entry in external form */
+comment|/* Size of a relocation entry in external form.  */
 name|unsigned
 name|reloc_entry_size
 decl_stmt|;
-comment|/* Size of a symbol table entry in external form */
+comment|/* Size of a symbol table entry in external form.  */
 name|unsigned
 name|symbol_entry_size
 decl_stmt|;
-comment|/* Page size - needed for alignment of demand paged files. */
+comment|/* Page size - needed for alignment of demand paged files.  */
 name|unsigned
 name|long
 name|page_size
 decl_stmt|;
-comment|/* Segment size - needed for alignment of demand paged files. */
+comment|/* Segment size - needed for alignment of demand paged files.  */
 name|unsigned
 name|long
 name|segment_size
@@ -1428,7 +1344,7 @@ name|vma_adjusted
 range|:
 literal|1
 decl_stmt|;
-comment|/* used when a bfd supports several highly similar formats */
+comment|/* Used when a bfd supports several highly similar formats.  */
 enum|enum
 block|{
 name|default_format
@@ -1710,7 +1626,7 @@ value|(adata(bfd).dynamic_info)
 end_define
 
 begin_comment
-comment|/* We take the address of the first element of an asymbol to ensure that the    macro is only ever applied to an asymbol */
+comment|/* We take the address of the first element of an asymbol to ensure that the    macro is only ever applied to an asymbol.  */
 end_comment
 
 begin_define
@@ -1764,12 +1680,12 @@ value|((s)->used_by_bfd = (PTR)&(v)->relocs)
 end_define
 
 begin_comment
-comment|/* Prototype declarations for functions defined in aoutx.h  */
+comment|/* Prototype declarations for functions defined in aoutx.h.  */
 end_comment
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -1790,7 +1706,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -1844,7 +1760,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -1880,7 +1796,7 @@ decl_stmt|,
 name|unsigned
 name|long
 decl_stmt|,
-name|boolean
+name|bfd_boolean
 modifier|*
 decl_stmt|)
 end_function_decl
@@ -1892,7 +1808,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -1915,7 +1831,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -1936,7 +1852,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -1949,7 +1865,7 @@ function_decl|(bfd *
 operator|,
 function_decl|sec_ptr
 operator|,
-function_decl|PTR
+function_decl|const PTR
 operator|,
 function_decl|file_ptr
 operator|,
@@ -1983,7 +1899,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2004,7 +1920,7 @@ function_decl|char *
 operator|,
 function_decl|bfd_size_type
 operator|,
-function_decl|boolean
+function_decl|bfd_boolean
 end_function_decl
 
 begin_empty_stmt
@@ -2014,7 +1930,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2033,7 +1949,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2095,7 +2011,7 @@ name|NAME
 parameter_list|(
 name|aout
 parameter_list|,
-name|get_symtab
+name|canonicalize_symtab
 parameter_list|)
 function_decl|PARAMS
 parameter_list|(
@@ -2187,7 +2103,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2347,7 +2263,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2389,7 +2305,7 @@ function_decl|PARAMS
 parameter_list|(
 function_decl|(bfd *
 operator|,
-function_decl|boolean
+function_decl|bfd_boolean
 operator|,
 function_decl|PTR *
 operator|,
@@ -2415,7 +2331,7 @@ function_decl|PARAMS
 parameter_list|(
 function_decl|(bfd *
 operator|,
-function_decl|boolean
+function_decl|bfd_boolean
 operator|,
 function_decl|const PTR
 operator|,
@@ -2440,7 +2356,7 @@ function_decl|PARAMS
 parameter_list|(
 function_decl|(bfd *
 operator|,
-function_decl|boolean
+function_decl|bfd_boolean
 end_function_decl
 
 begin_empty_stmt
@@ -2450,7 +2366,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2544,7 +2460,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2607,7 +2523,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2628,7 +2544,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2670,7 +2586,7 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|NAME
 parameter_list|(
 name|aout
@@ -2688,7 +2604,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* A.out uses the generic versions of these routines... */
+comment|/* A.out uses the generic versions of these routines...  */
 end_comment
 
 begin_define
@@ -2766,15 +2682,32 @@ parameter_list|)
 define|\
 value|{									      \ 	bfd_size_type text_size;
 comment|/* dummy vars */
-value|\ 	file_ptr text_end;						      \ 	if (adata(abfd).magic == undecided_magic)			      \ 	  NAME(aout,adjust_sizes_and_vmas) (abfd,&text_size,&text_end);     \     									      \ 	execp->a_syms = bfd_get_symcount (abfd) * EXTERNAL_NLIST_SIZE;	      \ 	execp->a_entry = bfd_get_start_address (abfd);			      \     									      \ 	execp->a_trsize = ((obj_textsec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	execp->a_drsize = ((obj_datasec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	NAME(aout,swap_exec_header_out) (abfd, execp,&exec_bytes);	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0		      \ 	    || bfd_bwrite ((PTR)&exec_bytes, (bfd_size_type) EXEC_BYTES_SIZE, \ 			  abfd) != EXEC_BYTES_SIZE)			      \ 	  return false;							      \
-comment|/* Now write out reloc info, followed by syms and strings */
-value|\   									      \ 	if (bfd_get_outsymbols (abfd) != (asymbol **) NULL		      \&& bfd_get_symcount (abfd) != 0) 				      \ 	  {								      \ 	    if (bfd_seek (abfd, (file_ptr) (N_SYMOFF(*execp)), SEEK_SET) != 0)\ 	      return false;						      \ 									      \ 	    if (! NAME(aout,write_syms) (abfd))				      \ 	      return false;						      \ 	  }								      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_TRELOFF(*execp)), SEEK_SET) != 0)   \ 	  return false;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_textsec (abfd)))         \ 	  return false;						      	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_DRELOFF(*execp)), SEEK_SET) != 0)   \ 	  return false;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_datasec (abfd)))         \ 	  return false;						      	      \       }
+value|\ 	file_ptr text_end;						      \ 	if (adata(abfd).magic == undecided_magic)			      \ 	  NAME(aout,adjust_sizes_and_vmas) (abfd,&text_size,&text_end);     \     									      \ 	execp->a_syms = bfd_get_symcount (abfd) * EXTERNAL_NLIST_SIZE;	      \ 	execp->a_entry = bfd_get_start_address (abfd);			      \     									      \ 	execp->a_trsize = ((obj_textsec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	execp->a_drsize = ((obj_datasec (abfd)->reloc_count) *		      \ 			   obj_reloc_entry_size (abfd));		      \ 	NAME(aout,swap_exec_header_out) (abfd, execp,&exec_bytes);	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0		      \ 	    || bfd_bwrite ((PTR)&exec_bytes, (bfd_size_type) EXEC_BYTES_SIZE, \ 			  abfd) != EXEC_BYTES_SIZE)			      \ 	  return FALSE;							      \
+comment|/* Now write out reloc info, followed by syms and strings.  */
+value|\   									      \ 	if (bfd_get_outsymbols (abfd) != (asymbol **) NULL		      \&& bfd_get_symcount (abfd) != 0) 				      \ 	  {								      \ 	    if (bfd_seek (abfd, (file_ptr) (N_SYMOFF(*execp)), SEEK_SET) != 0)\ 	      return FALSE;						      \ 									      \ 	    if (! NAME(aout,write_syms) (abfd))				      \ 	      return FALSE;						      \ 	  }								      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_TRELOFF(*execp)), SEEK_SET) != 0)   \ 	  return FALSE;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_textsec (abfd)))         \ 	  return FALSE;						      	      \ 									      \ 	if (bfd_seek (abfd, (file_ptr) (N_DRELOFF(*execp)), SEEK_SET) != 0)   \ 	  return FALSE;						      	      \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_datasec (abfd)))         \ 	  return FALSE;						      	      \       }
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Test if a read-only section can be merged with .text.  This is    possible if:     1. Section has file contents and is read-only.    2. The VMA of the section is after the end of .text and before       the start of .data.    3. The image is demand-pageable (otherwise, a_text in the header       will not reflect the gap between .text and .data).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|aout_section_merge_with_text_p
+parameter_list|(
+name|abfd
+parameter_list|,
+name|sec
+parameter_list|)
+define|\
+value|(((sec)->flags& (SEC_HAS_CONTENTS | SEC_READONLY)) ==		\       (SEC_HAS_CONTENTS | SEC_READONLY)					\&& obj_textsec (abfd) != NULL					\&& obj_datasec (abfd) != NULL					\&& (sec)->vma>= (obj_textsec (abfd)->vma +				\ 		     obj_textsec (abfd)->_cooked_size)			\&& ((sec)->vma + (sec)->_cooked_size)<= obj_datasec (abfd)->vma	\&& ((abfd)->flags& D_PAGED) != 0)
+end_define
 
 begin_endif
 endif|#

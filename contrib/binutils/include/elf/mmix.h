@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MMIX support for BFD.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MMIX support for BFD.    Copyright 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ file|"elf/reloc-macros.h"
 end_include
 
 begin_comment
-comment|/* Relocations.  */
+comment|/* Relocations.  See the reloc table in bfd/elf64-mmix.c for details.  */
 end_comment
 
 begin_macro
@@ -412,6 +412,19 @@ literal|35
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* A PUSHJ instruction, generating a stub if it does not reach.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_MMIX_PUSHJ_STUBBABLE
+argument_list|,
+literal|36
+argument_list|)
+end_macro
+
 begin_macro
 name|END_RELOC_NUMBERS
 argument_list|(
@@ -607,59 +620,50 @@ directive|ifdef
 name|BFD_ARCH_SIZE
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|boolean
-name|_bfd_mmix_prepare_linker_allocated_gregs
-name|PARAMS
-argument_list|(
-operator|(
+name|bfd_boolean
+name|_bfd_mmix_before_linker_allocation
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|boolean
-name|_bfd_mmix_finalize_linker_allocated_gregs
-name|PARAMS
-argument_list|(
-operator|(
+name|bfd_boolean
+name|_bfd_mmix_after_linker_allocation
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_mmix_check_all_relocs
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Stabs in sections linking support.    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Stabs in sections linking support.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* A linked list of totals that we have found for a particular header    file.  */
+comment|/* A linked list of totals that we have found for a particular header    file.  A total is a unique identifier for a particular BINCL...EINCL    sequence of STABs that can be used to identify duplicate sequences.    It consists of three fields, 'sum_chars' which is the sum of all the    STABS characters; 'num_chars' which is the number of these charactes    and 'symb' which is a buffer of all the symbols in the sequence.  This    buffer is only checked as a last resort.  */
 end_comment
 
 begin_struct
@@ -113,8 +113,19 @@ modifier|*
 name|next
 decl_stmt|;
 name|bfd_vma
-name|total
+name|sum_chars
 decl_stmt|;
+comment|/* Accumulated sum of STABS characters.  */
+name|bfd_vma
+name|num_chars
+decl_stmt|;
+comment|/* Number of STABS characters.  */
+specifier|const
+name|char
+modifier|*
+name|symb
+decl_stmt|;
+comment|/* The STABS characters themselves.  */
 block|}
 struct|;
 end_struct
@@ -430,7 +441,7 @@ comment|/* This function is called for each input file from the add_symbols    p
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_link_section_stabs
 parameter_list|(
 name|abfd
@@ -442,6 +453,8 @@ parameter_list|,
 name|stabstrsec
 parameter_list|,
 name|psecinfo
+parameter_list|,
+name|pstring_offset
 parameter_list|)
 name|bfd
 modifier|*
@@ -463,8 +476,12 @@ name|PTR
 modifier|*
 name|psecinfo
 decl_stmt|;
+name|bfd_size_type
+modifier|*
+name|pstring_offset
+decl_stmt|;
 block|{
-name|boolean
+name|bfd_boolean
 name|first
 decl_stmt|;
 name|struct
@@ -529,7 +546,7 @@ condition|)
 block|{
 comment|/* This file does not contain stabs debugging information.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -543,9 +560,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Something is wrong with the format of these stab symbols.          Don't try to optimize them.  */
+comment|/* Something is wrong with the format of these stab symbols. 	 Don't try to optimize them.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -561,9 +578,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* We shouldn't see relocations in the strings, and we aren't          prepared to handle them.  */
+comment|/* We shouldn't see relocations in the strings, and we aren't 	 prepared to handle them.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -599,14 +616,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* At least one of the sections is being discarded from the          link, so we should just ignore them.  */
+comment|/* At least one of the sections is being discarded from the 	 link, so we should just ignore them.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|first
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -619,7 +636,7 @@ block|{
 comment|/* Initialize the stabs information we need to keep track of.  */
 name|first
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|amt
 operator|=
@@ -692,9 +709,9 @@ name|strings
 argument_list|,
 literal|""
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -930,8 +947,14 @@ name|stroff
 operator|=
 literal|0
 expr_stmt|;
+comment|/* The stabs sections can be split when      -split-by-reloc/-split-by-file is used.  We must keep track of      each stab section's place in the single concatenated string      table.  */
 name|next_stroff
 operator|=
+name|pstring_offset
+condition|?
+operator|*
+name|pstring_offset
+else|:
 literal|0
 expr_stmt|;
 name|skip
@@ -1006,7 +1029,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Special type 0 stabs indicate the offset to the next              string table.  We only copy the very first one.  */
+comment|/* Special type 0 stabs indicate the offset to the next 	     string table.  We only copy the very first one.  */
 name|stroff
 operator|=
 name|next_stroff
@@ -1021,6 +1044,15 @@ name|sym
 operator|+
 literal|8
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pstring_offset
+condition|)
+operator|*
+name|pstring_offset
+operator|=
+name|next_stroff
 expr_stmt|;
 if|if
 condition|(
@@ -1044,7 +1076,7 @@ continue|continue;
 block|}
 name|first
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 comment|/* Store the string in the hash table, and record the index.  */
@@ -1132,9 +1164,9 @@ name|strings
 argument_list|,
 name|string
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* An N_BINCL symbol indicates the start of the stabs entries 	 for a header file.  We need to scan ahead to the next N_EINCL 	 symbol, ignoring nesting, adding up all the characters in the 	 symbol names, not including the file numbers in types (the 	 first number after an open parenthesis).  */
@@ -1149,7 +1181,23 @@ name|N_BINCL
 condition|)
 block|{
 name|bfd_vma
-name|val
+name|sum_chars
+decl_stmt|;
+name|bfd_vma
+name|num_chars
+decl_stmt|;
+name|bfd_vma
+name|buf_len
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|symb
+decl_stmt|;
+name|char
+modifier|*
+name|symb_rover
 decl_stmt|;
 name|int
 name|nest
@@ -1173,7 +1221,15 @@ name|stab_excl_list
 modifier|*
 name|ne
 decl_stmt|;
-name|val
+name|symb
+operator|=
+name|symb_rover
+operator|=
+name|NULL
+expr_stmt|;
+name|sum_chars
+operator|=
+name|num_chars
 operator|=
 literal|0
 expr_stmt|;
@@ -1215,6 +1271,17 @@ operator|==
 literal|0
 condition|)
 break|break;
+elseif|else
+if|if
+condition|(
+name|incl_type
+operator|==
+operator|(
+name|int
+operator|)
+name|N_EXCL
+condition|)
+continue|continue;
 elseif|else
 if|if
 condition|(
@@ -1296,10 +1363,58 @@ name|str
 operator|++
 control|)
 block|{
-name|val
+if|if
+condition|(
+name|num_chars
+operator|>=
+name|buf_len
+condition|)
+block|{
+name|buf_len
+operator|+=
+literal|32
+operator|*
+literal|1024
+expr_stmt|;
+name|symb
+operator|=
+name|bfd_realloc
+argument_list|(
+name|symb
+argument_list|,
+name|buf_len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|symb
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|error_return
+goto|;
+name|symb_rover
+operator|=
+name|symb
+operator|+
+name|num_chars
+expr_stmt|;
+block|}
+operator|*
+name|symb_rover
+operator|++
+operator|=
+operator|*
+name|str
+expr_stmt|;
+name|sum_chars
 operator|+=
 operator|*
 name|str
+expr_stmt|;
+name|num_chars
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -1331,6 +1446,20 @@ block|}
 block|}
 block|}
 block|}
+name|BFD_ASSERT
+argument_list|(
+name|num_chars
+operator|==
+call|(
+name|bfd_vma
+call|)
+argument_list|(
+name|symb_rover
+operator|-
+name|symb
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* If we have already included a header file with the same 	     value, then replaced this one with an N_EXCL symbol.  */
 name|incl_entry
 operator|=
@@ -1343,9 +1472,9 @@ name|includes
 argument_list|,
 name|string
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1379,12 +1508,31 @@ if|if
 condition|(
 name|t
 operator|->
-name|total
+name|sum_chars
 operator|==
-name|val
+name|sum_chars
+operator|&&
+name|t
+operator|->
+name|num_chars
+operator|==
+name|num_chars
+operator|&&
+name|memcmp
+argument_list|(
+name|t
+operator|->
+name|symb
+argument_list|,
+name|symb
+argument_list|,
+name|num_chars
+argument_list|)
+operator|==
+literal|0
 condition|)
 break|break;
-comment|/* Record this symbol, so that we can set the value              correctly.  */
+comment|/* Record this symbol, so that we can set the value 	     correctly.  */
 name|amt
 operator|=
 sizeof|sizeof
@@ -1426,7 +1574,7 @@ name|ne
 operator|->
 name|val
 operator|=
-name|val
+name|sum_chars
 expr_stmt|;
 name|ne
 operator|->
@@ -1493,10 +1641,28 @@ name|error_return
 goto|;
 name|t
 operator|->
-name|total
+name|sum_chars
 operator|=
-name|val
+name|sum_chars
 expr_stmt|;
+name|t
+operator|->
+name|num_chars
+operator|=
+name|num_chars
+expr_stmt|;
+name|t
+operator|->
+name|symb
+operator|=
+name|bfd_realloc
+argument_list|(
+name|symb
+argument_list|,
+name|num_chars
+argument_list|)
+expr_stmt|;
+comment|/* Trim data down.  */
 name|t
 operator|->
 name|next
@@ -1527,6 +1693,12 @@ operator|(
 name|int
 operator|)
 name|N_EXCL
+expr_stmt|;
+comment|/* Free off superfluous symbols.  */
+name|free
+argument_list|(
+name|symb
+argument_list|)
 expr_stmt|;
 comment|/* Mark the skipped symbols.  */
 name|nest
@@ -1617,6 +1789,18 @@ condition|)
 operator|++
 name|nest
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|incl_type
+operator|==
+operator|(
+name|int
+operator|)
+name|N_EXCL
+condition|)
+comment|/* Keep existing exclusion marks.  */
+continue|continue;
 elseif|else
 if|if
 condition|(
@@ -1824,7 +2008,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -1851,7 +2035,7 @@ name|stabstrbuf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -1860,11 +2044,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function is called for each input file before the stab    section is relocated.  It discards stab entries for discarded    functions and variables.  The function returns true iff    any entries have been deleted. */
+comment|/* This function is called for each input file before the stab    section is relocated.  It discards stab entries for discarded    functions and variables.  The function returns TRUE iff    any entries have been deleted. */
 end_comment
 
 begin_function_decl
-name|boolean
+name|bfd_boolean
 name|_bfd_discard_section_stabs
 parameter_list|(
 name|abfd
@@ -1888,7 +2072,7 @@ decl_stmt|;
 name|PTR
 name|psecinfo
 decl_stmt|;
-function_decl|boolean
+function_decl|bfd_boolean
 parameter_list|(
 function_decl|*reloc_symbol_deleted_p
 end_function_decl
@@ -1958,7 +2142,7 @@ condition|)
 block|{
 comment|/* This file does not contain stabs debugging information.  */
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -1972,9 +2156,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Something is wrong with the format of these stab symbols.          Don't try to optimize them.  */
+comment|/* Something is wrong with the format of these stab symbols. 	 Don't try to optimize them.  */
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -1995,9 +2179,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* At least one of the sections is being discarded from the          link, so we should just ignore them.  */
+comment|/* At least one of the sections is being discarded from the 	 link, so we should just ignore them.  */
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* We should have initialized our data in _bfd_link_stab_sections.      If there was some bizarre error reading the string sections, though,      we might not have.  Bail rather than asserting.  */
@@ -2008,7 +2192,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|count
 operator|=
@@ -2450,14 +2634,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-call|(
-name|boolean
-call|)
-argument_list|(
 name|skip
 operator|>
 literal|0
-argument_list|)
 return|;
 name|error_return
 label|:
@@ -2473,7 +2652,7 @@ name|stabbuf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_block
@@ -2483,7 +2662,7 @@ comment|/* Write out the stab section.  This is called with the relocated    con
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_write_section_stabs
 parameter_list|(
 name|output_bfd
@@ -2747,7 +2926,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* This is the header symbol for the stabs section.  We                  don't really need one, since we have merged all the                  input stabs sections into one, but we generate one                  for the benefit of readers which expect to see one.  */
+comment|/* This is the header symbol for the stabs section.  We 		 don't really need one, since we have merged all the 		 input stabs sections into one, but we generate one 		 for the benefit of readers which expect to see one.  */
 name|BFD_ASSERT
 argument_list|(
 name|sym
@@ -2844,7 +3023,7 @@ comment|/* Write out the .stabstr section.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_write_stab_strings
 parameter_list|(
 name|output_bfd
@@ -2882,7 +3061,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -2898,7 +3077,7 @@ condition|)
 block|{
 comment|/* The section was discarded from the link.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|BFD_ASSERT
@@ -2958,7 +3137,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2973,7 +3152,7 @@ name|strings
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* We no longer need the stabs information.  */
 name|_bfd_stringtab_free
@@ -2994,7 +3173,7 @@ name|root
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

@@ -19,8 +19,38 @@ directive|include
 file|"libiberty.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"safe-ctype.h"
+end_include
+
 begin_comment
-comment|/*  @deftypefn Extension void hex_init (void)  Initializes the array mapping the current character set to corresponding hex values.  This function must be called before any call to @code{hex_p} or @code{hex_value}.  If you fail to call it, a default ASCII-based table will normally be used on ASCII systems.  @end deftypefn  @deftypefn Extension int hex_p (int @var{c})  Evaluates to non-zero if the given character is a valid hex character, or zero if it is not.  Note that the value you pass will be cast to @code{unsigned char} within the macro.  @end deftypefn  @deftypefn Extension int hex_value (int @var{c})  Returns the numeric equivalent of the given character when interpreted as a hexidecimal digit.  The result is undefined if you pass an invalid hex digit.  Note that the value you pass will be cast to @code{unsigned char} within the macro.  @end deftypefn  @undocumented _hex_array_size @undocumented _hex_bad @undocumented _hex_value  */
+comment|/* for HOST_CHARSET_ASCII */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|EOF
+operator|!=
+operator|-
+literal|1
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"hex.c requires EOF == -1"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  @deftypefn Extension void hex_init (void)  Initializes the array mapping the current character set to corresponding hex values.  This function must be called before any call to @code{hex_p} or @code{hex_value}.  If you fail to call it, a default ASCII-based table will normally be used on ASCII systems.  @end deftypefn  @deftypefn Extension int hex_p (int @var{c})  Evaluates to non-zero if the given character is a valid hex character, or zero if it is not.  Note that the value you pass will be cast to @code{unsigned char} within the macro.  @end deftypefn  @deftypefn Extension unsigned int hex_value (int @var{c})  Returns the numeric equivalent of the given character when interpreted as a hexidecimal digit.  The result is undefined if you pass an invalid hex digit.  Note that the value you pass will be cast to @code{unsigned char} within the macro.  The @code{hex_value} macro returns @code{unsigned int}, rather than signed @code{int}, to make it easier to use in parsing addresses from hex dump files: a signed @code{int} would be sign-extended when converted to a wider unsigned type --- like @code{bfd_vma}, on some systems.  @end deftypefn  @undocumented _hex_array_size @undocumented _hex_bad @undocumented _hex_value  */
 end_comment
 
 begin_comment
@@ -30,40 +60,14 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|'\n'
+name|HOST_CHARSET
 operator|==
-literal|0x0A
-operator|&&
-literal|' '
-operator|==
-literal|0x20
-operator|&&
-literal|'0'
-operator|==
-literal|0x30
-expr|\
-operator|&&
-literal|'A'
-operator|==
-literal|0x41
-operator|&&
-literal|'a'
-operator|==
-literal|0x61
-operator|&&
-literal|'!'
-operator|==
-literal|0x21
-expr|\
-operator|&&
-name|EOF
-operator|==
-operator|-
-literal|1
+name|HOST_CHARSET_ASCII
 end_if
 
 begin_decl_stmt
 specifier|const
+name|unsigned
 name|char
 name|_hex_value
 index|[
@@ -631,6 +635,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|_hex_value
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MIPS-specific support for 64-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Ian Lance Taylor, Cygnus Support    Linker support added by Mark Mitchell, CodeSourcery, LLC.<mark@codesourcery.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MIPS-specific support for 64-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Ian Lance Taylor, Cygnus Support    Linker support added by Mark Mitchell, CodeSourcery, LLC.<mark@codesourcery.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -35,58 +35,50 @@ begin_comment
 comment|/* Irix 6 defines a 64bit archive map format, so that they can    have archives more than 4 GB in size.  */
 end_comment
 
-begin_decl_stmt
-name|boolean
+begin_function_decl
+name|bfd_boolean
 name|bfd_elf64_archive_slurp_armap
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-name|boolean
+begin_function_decl
+name|bfd_boolean
 name|bfd_elf64_archive_write_armap
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|orl
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Read an Irix 6 armap.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_elf64_archive_slurp_armap
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|artdata
@@ -166,14 +158,8 @@ name|i
 operator|=
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|nextname
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
 literal|16
 argument_list|,
 name|abfd
@@ -186,7 +172,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -195,7 +181,7 @@ operator|!=
 literal|16
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -215,7 +201,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Archives with traditional armaps are still permitted.  */
 if|if
@@ -256,10 +242,10 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|mapdata
@@ -281,7 +267,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|parsed_size
 operator|=
@@ -293,9 +279,6 @@ name|bfd_release
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|PTR
-operator|)
 name|mapdata
 argument_list|)
 expr_stmt|;
@@ -305,9 +288,6 @@ name|bfd_bread
 argument_list|(
 name|int_buf
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
 literal|8
 argument_list|,
 name|abfd
@@ -329,7 +309,7 @@ name|bfd_error_malformed_archive
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|nsymz
@@ -376,10 +356,6 @@ name|ardata
 operator|->
 name|symdefs
 operator|=
-operator|(
-name|carsym
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -396,7 +372,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|carsyms
 operator|=
@@ -420,10 +396,6 @@ name|carsym_size
 expr_stmt|;
 name|raw_armap
 operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -565,7 +537,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|bfd_release
 argument_list|(
@@ -575,7 +547,7 @@ name|raw_armap
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|release_raw_armap
 label|:
@@ -598,7 +570,7 @@ name|symdefs
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -608,39 +580,29 @@ comment|/* Write out an Irix 6 armap.  The Irix 6 tools are supposed to be    ab
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_elf64_archive_write_armap
 parameter_list|(
-name|arch
-parameter_list|,
-name|elength
-parameter_list|,
-name|map
-parameter_list|,
-name|symbol_count
-parameter_list|,
-name|stridx
-parameter_list|)
 name|bfd
 modifier|*
 name|arch
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|elength
-decl_stmt|;
+parameter_list|,
 name|struct
 name|orl
 modifier|*
 name|map
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|symbol_count
-decl_stmt|;
+parameter_list|,
 name|int
 name|stridx
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -734,14 +696,8 @@ operator|)
 expr_stmt|;
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
 operator|&
 name|hdr
-operator|)
 argument_list|,
 literal|0
 argument_list|,
@@ -904,15 +860,9 @@ if|if
 condition|(
 name|bfd_bwrite
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|hdr
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -929,7 +879,7 @@ name|ar_hdr
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|bfd_putb64
 argument_list|(
@@ -947,9 +897,6 @@ name|bfd_bwrite
 argument_list|(
 name|buf
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
 literal|8
 argument_list|,
 name|arch
@@ -958,7 +905,7 @@ operator|!=
 literal|8
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Two passes, first write the file offsets for each symbol -      remembering that each offset is on a two byte boundary.  */
 comment|/* Write out the file offset for the file associated with each      symbol, and remember to keep the offsets padded out.  */
@@ -976,10 +923,6 @@ while|while
 condition|(
 name|current
 operator|!=
-operator|(
-name|bfd
-operator|*
-operator|)
 name|NULL
 operator|&&
 name|count
@@ -1018,9 +961,6 @@ name|bfd_bwrite
 argument_list|(
 name|buf
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
 literal|8
 argument_list|,
 name|arch
@@ -1029,7 +969,7 @@ operator|!=
 literal|8
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|count
 operator|++
@@ -1108,9 +1048,6 @@ index|]
 operator|.
 name|name
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
 name|len
 argument_list|,
 name|arch
@@ -1119,7 +1056,7 @@ operator|!=
 name|len
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* The spec says that this should be padded to an 8 byte boundary.      However, the Irix 6.2 tools do not appear to do this.  */
@@ -1136,9 +1073,6 @@ name|bfd_bwrite
 argument_list|(
 literal|""
 argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
 literal|1
 argument_list|,
 name|arch
@@ -1147,14 +1081,14 @@ operator|!=
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|--
 name|padding
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

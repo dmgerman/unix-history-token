@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ppc.h -- Header file for PowerPC opcode table    Copyright 1994, 1995, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ppc.h -- Header file for PowerPC opcode table    Copyright 1994, 1995, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_PPC
-value|(01)
+value|1
 end_define
 
 begin_comment
@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_POWER
-value|(02)
+value|2
 end_define
 
 begin_comment
@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_POWER2
-value|(04)
+value|4
 end_define
 
 begin_comment
@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_32
-value|(010)
+value|8
 end_define
 
 begin_comment
@@ -134,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_64
-value|(020)
+value|0x10
 end_define
 
 begin_comment
@@ -145,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_601
-value|(040)
+value|0x20
 end_define
 
 begin_comment
@@ -156,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_COMMON
-value|(0100)
+value|0x40
 end_define
 
 begin_comment
@@ -167,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_ANY
-value|(0200)
+value|0x80
 end_define
 
 begin_comment
@@ -178,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_64_BRIDGE
-value|(0400)
+value|0x100
 end_define
 
 begin_comment
@@ -189,7 +189,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_ALTIVEC
-value|(01000)
+value|0x200
 end_define
 
 begin_comment
@@ -200,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_403
-value|(02000)
+value|0x400
 end_define
 
 begin_comment
@@ -211,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_BOOKE
-value|(04000)
+value|0x800
 end_define
 
 begin_comment
@@ -222,7 +222,18 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_BOOKE64
-value|(010000)
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Opcode is supported by PowerPC 440 processor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_440
+value|0x2000
 end_define
 
 begin_comment
@@ -233,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_POWER4
-value|(020000)
+value|0x4000
 end_define
 
 begin_comment
@@ -244,7 +255,95 @@ begin_define
 define|#
 directive|define
 name|PPC_OPCODE_NOPOWER4
-value|(040000)
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Opcode is only supported by POWERPC Classic architecture.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_CLASSIC
+value|0x10000
+end_define
+
+begin_comment
+comment|/* Opcode is only supported by e500x2 Core.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_SPE
+value|0x20000
+end_define
+
+begin_comment
+comment|/* Opcode is supported by e500x2 Integer select APU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_ISEL
+value|0x40000
+end_define
+
+begin_comment
+comment|/* Opcode is an e500 SPE floating point instruction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_EFS
+value|0x80000
+end_define
+
+begin_comment
+comment|/* Opcode is supported by branch locking APU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_BRLOCK
+value|0x100000
+end_define
+
+begin_comment
+comment|/* Opcode is supported by performance monitor APU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_PMR
+value|0x200000
+end_define
+
+begin_comment
+comment|/* Opcode is supported by cache locking APU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_CACHELCK
+value|0x400000
+end_define
+
+begin_comment
+comment|/* Opcode is supported by machine check APU.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPCODE_RFMCI
+value|0x800000
 end_define
 
 begin_comment
@@ -280,55 +379,50 @@ comment|/* How far the operand is left shifted in the instruction.  */
 name|int
 name|shift
 decl_stmt|;
-comment|/* Insertion function.  This is used by the assembler.  To insert an      operand value into an instruction, check this field.       If it is NULL, execute          i |= (op& ((1<< o->bits) - 1))<< o->shift;      (i is the instruction which we are filling in, o is a pointer to      this structure, and op is the opcode value; this assumes twos      complement arithmetic).       If this field is not NULL, then simply call it with the      instruction and the operand value.  It will return the new value      of the instruction.  If the ERRMSG argument is not NULL, then if      the operand value is illegal, *ERRMSG will be set to a warning      string (the operand will be inserted in any case).  If the      operand value is legal, *ERRMSG will be unchanged (most operands      can accept any value).  */
+comment|/* Insertion function.  This is used by the assembler.  To insert an      operand value into an instruction, check this field.       If it is NULL, execute 	 i |= (op& ((1<< o->bits) - 1))<< o->shift;      (i is the instruction which we are filling in, o is a pointer to      this structure, and op is the opcode value; this assumes twos      complement arithmetic).       If this field is not NULL, then simply call it with the      instruction and the operand value.  It will return the new value      of the instruction.  If the ERRMSG argument is not NULL, then if      the operand value is illegal, *ERRMSG will be set to a warning      string (the operand will be inserted in any case).  If the      operand value is legal, *ERRMSG will be unchanged (most operands      can accept any value).  */
 name|unsigned
 name|long
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|insert
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|)
+parameter_list|(
 name|unsigned
 name|long
 name|instruction
-operator|,
+parameter_list|,
 name|long
 name|op
-operator|,
+parameter_list|,
 name|int
 name|dialect
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|errmsg
-operator|)
-argument_list|)
-decl_stmt|;
-comment|/* Extraction function.  This is used by the disassembler.  To      extract this operand type from an instruction, check this field.       If it is NULL, compute          op = ((i)>> o->shift)& ((1<< o->bits) - 1); 	 if ((o->flags& PPC_OPERAND_SIGNED) != 0&& (op& (1<< (o->bits - 1))) != 0) 	   op -= 1<< o->bits;      (i is the instruction, o is a pointer to this structure, and op      is the result; this assumes twos complement arithmetic).       If this field is not NULL, then simply call it with the      instruction value.  It will return the value of the operand.  If      the INVALID argument is not NULL, *INVALID will be set to      non-zero if this operand type can not actually be extracted from      this operand (i.e., the instruction does not match).  If the      operand is valid, *INVALID will not be changed.  */
+parameter_list|)
+function_decl|;
+comment|/* Extraction function.  This is used by the disassembler.  To      extract this operand type from an instruction, check this field.       If it is NULL, compute 	 op = ((i)>> o->shift)& ((1<< o->bits) - 1); 	 if ((o->flags& PPC_OPERAND_SIGNED) != 0&& (op& (1<< (o->bits - 1))) != 0) 	   op -= 1<< o->bits;      (i is the instruction, o is a pointer to this structure, and op      is the result; this assumes twos complement arithmetic).       If this field is not NULL, then simply call it with the      instruction value.  It will return the value of the operand.  If      the INVALID argument is not NULL, *INVALID will be set to      non-zero if this operand type can not actually be extracted from      this operand (i.e., the instruction does not match).  If the      operand is valid, *INVALID will not be changed.  */
 name|long
-argument_list|(
-argument|*extract
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|extract
+function_decl|)
+parameter_list|(
 name|unsigned
 name|long
 name|instruction
-operator|,
+parameter_list|,
 name|int
 name|dialect
-operator|,
+parameter_list|,
 name|int
-operator|*
+modifier|*
 name|invalid
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* One bit syntax flags.  */
 name|unsigned
 name|long
@@ -423,6 +517,17 @@ value|(040)
 end_define
 
 begin_comment
+comment|/* Like PPC_OPERAND_GPR, but don't print a leading 'r' for r0.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPERAND_GPR_0
+value|(0100)
+end_define
+
+begin_comment
 comment|/* This operand names a floating point register.  The disassembler    prints these with a leading 'f'.  */
 end_comment
 
@@ -430,7 +535,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPERAND_FPR
-value|(0100)
+value|(0200)
 end_define
 
 begin_comment
@@ -441,7 +546,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPERAND_RELATIVE
-value|(0200)
+value|(0400)
 end_define
 
 begin_comment
@@ -452,7 +557,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPERAND_ABSOLUTE
-value|(0400)
+value|(01000)
 end_define
 
 begin_comment
@@ -463,7 +568,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPERAND_OPTIONAL
-value|(01000)
+value|(02000)
 end_define
 
 begin_comment
@@ -474,7 +579,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPERAND_NEXT
-value|(02000)
+value|(04000)
 end_define
 
 begin_comment
@@ -485,7 +590,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPERAND_NEGATIVE
-value|(04000)
+value|(010000)
 end_define
 
 begin_comment
@@ -496,7 +601,7 @@ begin_define
 define|#
 directive|define
 name|PPC_OPERAND_VR
-value|(010000)
+value|(020000)
 end_define
 
 begin_comment
@@ -507,7 +612,18 @@ begin_define
 define|#
 directive|define
 name|PPC_OPERAND_DS
-value|(020000)
+value|(040000)
+end_define
+
+begin_comment
+comment|/* This operand is for the DQ field in a DQ form instruction.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPC_OPERAND_DQ
+value|(0100000)
 end_define
 
 begin_escape

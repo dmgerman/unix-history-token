@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GAS interface for targets using CGEN: Cpu tools GENerator.    Copyright 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GAS interface for targets using CGEN: Cpu tools GENerator.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -63,23 +63,20 @@ directive|include
 file|"dwarf2dbg.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|queue_fixup
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|expressionS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Opcode table descriptor, must be set by md_begin.  */
@@ -261,7 +258,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following functions allow fixup chains to be stored, retrieved,    and swapped.  They are a generalization of a pre-existing scheme    for storing, restoring and swapping fixup chains that was used by    the m32r port.  The functionality is essentially the same, only    instead of only being able to store a single fixup chain, an entire    array of fixup chains can be stored.  It is the user's responsibility    to keep track of how many fixup chains have been stored and which    elements of the array they are in.     The algorithms used are the same as in the old scheme.  Other than the    "array-ness" of the whole thing, the functionality is identical to the    old scheme.     gas_cgen_initialize_saved_fixups_array():       Sets num_fixups_in_chain to 0 for each element. Call this from       md_begin() if you plan to use these functions and you want the       fixup count in each element to be set to 0 intially.  This is       not necessary, but it's included just in case.  It performs       the same function for each element in the array of fixup chains       that gas_init_parse() performs for the current fixups.     gas_cgen_save_fixups (element):       element - element number of the array you wish to store the fixups                 to.  No mechanism is built in for tracking what element                 was last stored to.     gas_cgen_restore_fixups (element):       element - element number of the array you wish to restore the fixups                 from.     gas_cgen_swap_fixups(int element):        element - swap the current fixups with those in this element number. */
+comment|/* The following functions allow fixup chains to be stored, retrieved,    and swapped.  They are a generalization of a pre-existing scheme    for storing, restoring and swapping fixup chains that was used by    the m32r port.  The functionality is essentially the same, only    instead of only being able to store a single fixup chain, an entire    array of fixup chains can be stored.  It is the user's responsibility    to keep track of how many fixup chains have been stored and which    elements of the array they are in.     The algorithms used are the same as in the old scheme.  Other than the    "array-ness" of the whole thing, the functionality is identical to the    old scheme.     gas_cgen_initialize_saved_fixups_array():       Sets num_fixups_in_chain to 0 for each element. Call this from       md_begin() if you plan to use these functions and you want the       fixup count in each element to be set to 0 initially.  This is       not necessary, but it's included just in case.  It performs       the same function for each element in the array of fixup chains       that gas_init_parse() performs for the current fixups.     gas_cgen_save_fixups (element):       element - element number of the array you wish to store the fixups                 to.  No mechanism is built in for tracking what element                 was last stored to.     gas_cgen_restore_fixups (element):       element - element number of the array you wish to restore the fixups                 from.     gas_cgen_swap_fixups(int element):        element - swap the current fixups with those in this element number. */
 end_comment
 
 begin_struct
@@ -1243,7 +1240,7 @@ name|CGEN_INSN_ATTR_VALUE
 argument_list|(
 name|insn
 argument_list|,
-name|CGEN_INSN_RELAX
+name|CGEN_INSN_RELAXED
 argument_list|)
 condition|)
 comment|/* These currently shouldn't get here.  */
@@ -1587,7 +1584,7 @@ operator|.
 name|opindex
 argument_list|)
 decl_stmt|;
-comment|/* Don't create fixups for these.  That's done during relaxation. 	 We don't need to test for CGEN_INSN_RELAX as they can't get here 	 (see above).  */
+comment|/* Don't create fixups for these.  That's done during relaxation. 	 We don't need to test for CGEN_INSN_RELAXED as they can't get here 	 (see above).  */
 if|if
 condition|(
 name|relax_p
@@ -1742,7 +1739,6 @@ name|cd
 init|=
 name|gas_cgen_cpu_desc
 decl_stmt|;
-comment|/* FIXME FIXME FIXME: The value we are passed in *valuep includes      the symbol values.  Since we are using BFD_ASSEMBLER, if we are      doing this relocation the code in write.c is going to call      bfd_install_relocation, which is also going to use the symbol      value.  That means that if the reloc is fully resolved we want to      use *valuep since bfd_install_relocation is not being used.      However, if the reloc is not fully resolved we do not want to use      *valuep, and must use fx_offset instead.  However, if the reloc      is PC relative, we do want to use *valuep since it includes the      result of md_pcrel_from.  This is confusing.  */
 if|if
 condition|(
 name|fixP
@@ -1761,22 +1757,7 @@ name|fx_done
 operator|=
 literal|1
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fixP
-operator|->
-name|fx_pcrel
-condition|)
-empty_stmt|;
-else|else
-block|{
-name|value
-operator|=
-name|fixP
-operator|->
-name|fx_offset
-expr_stmt|;
+comment|/* We don't actually support subtracting a symbol.  */
 if|if
 condition|(
 name|fixP
@@ -1789,30 +1770,6 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|S_GET_SEGMENT
-argument_list|(
-name|fixP
-operator|->
-name|fx_subsy
-argument_list|)
-operator|==
-name|absolute_section
-condition|)
-name|value
-operator|-=
-name|S_GET_VALUE
-argument_list|(
-name|fixP
-operator|->
-name|fx_subsy
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-comment|/* We don't actually support subtracting a symbol.  */
 name|as_bad_where
 argument_list|(
 name|fixP
@@ -1829,9 +1786,6 @@ literal|"expression too complex"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-block|}
 if|if
 condition|(
 operator|(
@@ -2401,6 +2355,33 @@ expr_stmt|;
 return|return
 name|reloc
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Perform any cgen specific initialisation.    Called after gas_cgen_cpu_desc has been created.  */
+end_comment
+
+begin_function
+name|void
+name|gas_cgen_begin
+parameter_list|()
+block|{
+if|if
+condition|(
+name|flag_signed_overflow_ok
+condition|)
+name|cgen_set_signed_overflow_ok
+argument_list|(
+name|gas_cgen_cpu_desc
+argument_list|)
+expr_stmt|;
+else|else
+name|cgen_clear_signed_overflow_ok
+argument_list|(
+name|gas_cgen_cpu_desc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

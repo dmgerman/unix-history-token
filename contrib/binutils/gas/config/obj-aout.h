@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* obj-aout.h, a.out object file format for gas, the assembler.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000,    2002, 2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -309,9 +309,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|obj_frob_file
+name|obj_frob_file_before_fix
 parameter_list|()
-value|obj_aout_frob_file ()
+value|obj_aout_frob_file_before_fix ()
 end_define
 
 begin_decl_stmt
@@ -334,7 +334,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|obj_aout_frob_file
+name|obj_aout_frob_file_before_fix
 name|PARAMS
 argument_list|(
 operator|(
@@ -371,7 +371,7 @@ value|char
 end_define
 
 begin_comment
-comment|/*  *  Macros to extract information from a symbol table entry.  *  This syntaxic indirection allows independence regarding a.out or coff.  *  The argument (s) of all these macros is a pointer to a symbol table entry.  */
+comment|/*  *  Macros to extract information from a symbol table entry.  *  This syntactic indirection allows independence regarding a.out or coff.  *  The argument (s) of all these macros is a pointer to a symbol table entry.  */
 end_comment
 
 begin_comment
@@ -412,6 +412,23 @@ name|s
 parameter_list|)
 define|\
 value|(S_GET_TYPE (s) == N_UNDF&& S_GET_VALUE (s) != 0)
+end_define
+
+begin_comment
+comment|/* Return true for symbols that should not be reduced to section    symbols or eliminated from expressions, because they may be    overridden by the linker.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_FORCE_RELOC
+parameter_list|(
+name|s
+parameter_list|,
+name|strict
+parameter_list|)
+define|\
+value|(!SEG_NORMAL (S_GET_SEGMENT (s)))
 end_define
 
 begin_define

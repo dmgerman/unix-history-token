@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bfdver.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sysdep.h"
 end_include
 
@@ -67,11 +73,9 @@ begin_function
 name|void
 name|ldversion
 parameter_list|(
-name|noisy
-parameter_list|)
 name|int
 name|noisy
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Output for noisy == 2 is intended to follow the GNU standards.  */
 name|fprintf

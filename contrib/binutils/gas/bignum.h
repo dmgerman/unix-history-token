@@ -87,29 +87,26 @@ begin_comment
 comment|/* lengths are in sizeof(littlenum)s */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|bignum_copy
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|LITTLENUM_TYPE
-operator|*
+modifier|*
 name|in
-operator|,
+parameter_list|,
 name|int
 name|in_length
-operator|,
+parameter_list|,
 name|LITTLENUM_TYPE
-operator|*
+modifier|*
 name|out
-operator|,
+parameter_list|,
 name|int
 name|out_length
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* end of bignum.h */

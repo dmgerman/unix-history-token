@@ -49,7 +49,7 @@ literal|"sparc:sparclet"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -82,7 +82,7 @@ literal|"sparc:sparclite"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -115,7 +115,7 @@ literal|"sparc:v8plus"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -148,7 +148,7 @@ literal|"sparc:v8plusa"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -181,7 +181,7 @@ literal|"sparc:sparclite_le"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -214,7 +214,7 @@ literal|"sparc:v9"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -247,7 +247,7 @@ literal|"sparc:v9a"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -280,7 +280,7 @@ literal|"sparc:v8plusb"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -313,7 +313,7 @@ literal|"sparc:v9b"
 block|,
 literal|3
 block|,
-name|false
+name|FALSE
 block|,
 name|bfd_default_compatible
 block|,
@@ -350,7 +350,7 @@ literal|"sparc"
 block|,
 literal|3
 block|,
-name|true
+name|TRUE
 block|,
 comment|/* the default */
 name|bfd_default_compatible

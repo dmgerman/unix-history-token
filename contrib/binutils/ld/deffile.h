@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deffile.h - header for .DEF file parser    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Written by DJ Delorie dj@cygnus.com     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* deffile.h - header for .DEF file parser    Copyright 1998, 1999, 2000, 2002, 2003 Free Software Foundation, Inc.    Written by DJ Delorie dj@cygnus.com     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,12 +14,6 @@ define|#
 directive|define
 name|DEFFILE_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"ansidecl.h"
-end_include
 
 begin_comment
 comment|/* DEF storage definitions.  Note that any ordinal may be zero, and    any pointer may be NULL, if not defined by the DEF file.  */
@@ -140,6 +134,10 @@ name|int
 name|ordinal
 decl_stmt|;
 comment|/* may be -1 */
+name|int
+name|data
+decl_stmt|;
+comment|/* = 1 if data */
 block|}
 name|def_file_import
 typedef|;
@@ -150,7 +148,7 @@ typedef|typedef
 struct|struct
 name|def_file
 block|{
-comment|/* from the NAME or LIBRARY command */
+comment|/* From the NAME or LIBRARY command.  */
 name|char
 modifier|*
 name|name
@@ -163,12 +161,12 @@ name|bfd_vma
 name|base_address
 decl_stmt|;
 comment|/* (bfd_vma)(-1) if unspecified */
-comment|/* from the DESCRIPTION command */
+comment|/* From the DESCRIPTION command.  */
 name|char
 modifier|*
 name|description
 decl_stmt|;
-comment|/* from the STACK/HEAP command, -1 if unspecified */
+comment|/* From the STACK/HEAP command, -1 if unspecified.  */
 name|int
 name|stack_reserve
 decl_stmt|,
@@ -179,7 +177,7 @@ name|heap_reserve
 decl_stmt|,
 name|heap_commit
 decl_stmt|;
-comment|/* from the SECTION/SEGMENT commands */
+comment|/* From the SECTION/SEGMENT commands.  */
 name|int
 name|num_section_defs
 decl_stmt|;
@@ -187,7 +185,7 @@ name|def_file_section
 modifier|*
 name|section_defs
 decl_stmt|;
-comment|/* from the EXPORTS commands */
+comment|/* From the EXPORTS commands.  */
 name|int
 name|num_exports
 decl_stmt|;
@@ -195,12 +193,12 @@ name|def_file_export
 modifier|*
 name|exports
 decl_stmt|;
-comment|/* used by imports for module names */
+comment|/* Used by imports for module names.  */
 name|def_file_module
 modifier|*
 name|modules
 decl_stmt|;
-comment|/* from the IMPORTS commands */
+comment|/* From the IMPORTS commands.  */
 name|int
 name|num_imports
 decl_stmt|;
@@ -208,7 +206,7 @@ name|def_file_import
 modifier|*
 name|imports
 decl_stmt|;
-comment|/* from the VERSION command, -1 if not specified */
+comment|/* From the VERSION command, -1 if not specified.  */
 name|int
 name|version_major
 decl_stmt|,
@@ -219,145 +217,128 @@ name|def_file
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|def_file
 modifier|*
 name|def_file_empty
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* add_to may be NULL.  If not, this .def is appended to it */
+comment|/* The second arg may be NULL.  If not, this .def is appended to it.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|def_file
 modifier|*
 name|def_file_parse
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-name|_filename
-operator|,
+modifier|*
+parameter_list|,
 name|def_file
-operator|*
-name|_add_to
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|def_file_free
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|def_file
-operator|*
-name|_def
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|def_file_export
 modifier|*
 name|def_file_add_export
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|def_file
-operator|*
-name|_def
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|_name
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|_internal_name
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|_ordinal
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|def_file_import
 modifier|*
 name|def_file_add_import
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|def_file
-operator|*
-name|_def
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|_name
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|_from
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|_ordinal
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|_imported_name
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|def_file_add_directive
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|def_file
-operator|*
-name|_def
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|param
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|len
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|def_file_module
+modifier|*
+name|def_get_module
+parameter_list|(
+name|def_file
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -365,24 +346,19 @@ directive|ifdef
 name|DEF_FILE_PRINT
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|def_file_print
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-name|_file
-operator|,
+modifier|*
+parameter_list|,
 name|def_file
-operator|*
-name|_def
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -63,20 +63,17 @@ directive|ifdef
 name|TRACE
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|flonum_print
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|FLONUM_TYPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -101,35 +98,27 @@ begin_function
 name|int
 name|atof_generic
 parameter_list|(
-name|address_of_string_pointer
-parameter_list|,
-name|string_of_decimal_marks
-parameter_list|,
-name|string_of_decimal_exponent_marks
-parameter_list|,
-name|address_of_generic_floating_point_number
-parameter_list|)
 comment|/* return pointer to just AFTER number we read.  */
 name|char
 modifier|*
 modifier|*
 name|address_of_string_pointer
-decl_stmt|;
+parameter_list|,
 comment|/* At most one per number.  */
 specifier|const
 name|char
 modifier|*
 name|string_of_decimal_marks
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|string_of_decimal_exponent_marks
-decl_stmt|;
+parameter_list|,
 name|FLONUM_TYPE
 modifier|*
 name|address_of_generic_floating_point_number
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|return_value
@@ -1228,7 +1217,7 @@ operator|=
 literal|'+'
 expr_stmt|;
 block|{
-comment|/* 	 * Compute the mantssa (& exponent) of the power of 10. 	 * If sucessful, then multiply the power of 10 by the digits 	 * giving return_binary_mantissa and return_binary_exponent. 	 */
+comment|/* 	 * Compute the mantssa (& exponent) of the power of 10. 	 * If successful, then multiply the power of 10 by the digits 	 * giving return_binary_mantissa and return_binary_exponent. 	 */
 name|LITTLENUM_TYPE
 modifier|*
 name|power_binary_low

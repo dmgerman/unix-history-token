@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* strings -- print the strings of printable characters in files    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* strings -- print the strings of printable characters in files    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Usage: strings [options] file...     Options:    --all    -a    -		Do not scan only the initialized data section of object files.     --print-file-name    -f		Print the name of the file before each string.     --bytes=min-len    -n min-len    -min-len	Print graphic char sequences, MIN-LEN or more bytes long, 		that are followed by a NUL or a newline.  Default is 4.     --radix={o,x,d}    -t {o,x,d}	Print the offset within the file before each string, 		in octal/hex/decimal.     -o		Like -to.  (Some other implementations have -o like -to, 		others like -td.  We chose one arbitrarily.)     --encoding={s,b,l,B,L}    -e {s,b,l,B,L} 		Select character encoding: single-byte, bigendian 16-bit, 		littleendian 16-bit, bigendian 32-bit, littleendian 32-bit     --target=BFDNAME 		Specify a non-default object file format.     --help    -h		Print the usage message on the standard output.     --version    -v		Print the program version number.     Written by Richard Stallman<rms@gnu.ai.mit.edu>    and David MacKenzie<djm@gnu.ai.mit.edu>.  */
+comment|/* Usage: strings [options] file...     Options:    --all    -a    -		Do not scan only the initialized data section of object files.     --print-file-name    -f		Print the name of the file before each string.     --bytes=min-len    -n min-len    -min-len	Print graphic char sequences, MIN-LEN or more bytes long, 		that are followed by a NUL or a newline.  Default is 4.     --radix={o,x,d}    -t {o,x,d}	Print the offset within the file before each string, 		in octal/hex/decimal.     -o		Like -to.  (Some other implementations have -o like -to, 		others like -td.  We chose one arbitrarily.)     --encoding={s,S,b,l,B,L}    -e {s,S,b,l,B,L} 		Select character encoding: 7-bit-character, 8-bit-character, 		bigendian 16-bit, littleendian 16-bit, bigendian 32-bit, 		littleendian 32-bit.     --target=BFDNAME 		Specify a non-default object file format.     --help    -h		Print the usage message on the standard output.     --version    -v		Print the program version number.     Written by Richard Stallman<rms@gnu.ai.mit.edu>    and David MacKenzie<djm@gnu.ai.mit.edu>.  */
 end_comment
 
 begin_ifdef
@@ -146,7 +146,7 @@ name|SET_BINARY
 parameter_list|(
 name|f
 parameter_list|)
-value|do { if (!isatty(f)) setmode(f,O_BINARY); } while (0)
+value|do { if (!isatty (f)) setmode (f,O_BINARY); } while (0)
 end_define
 
 begin_endif
@@ -162,11 +162,12 @@ end_endif
 begin_define
 define|#
 directive|define
-name|isgraphic
+name|STRING_ISGRAPHIC
 parameter_list|(
 name|c
 parameter_list|)
-value|(ISPRINT (c) || (c) == '\t')
+define|\
+value|(   (c)>= 0 \&& (c)<= 255 \&& ((c) == '\t' || ISPRINT (c) || (encoding == 'S'&& (c)> 127)))
 end_define
 
 begin_ifndef
@@ -220,7 +221,7 @@ name|s
 parameter_list|,
 name|m
 parameter_list|)
-value|fopen64(s,m)
+value|fopen64(s, m)
 end_define
 
 begin_else
@@ -244,7 +245,7 @@ name|s
 parameter_list|,
 name|m
 parameter_list|)
-value|fopen(s,m)
+value|fopen(s, m)
 end_define
 
 begin_endif
@@ -275,45 +276,45 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true means print address within file for each string.  */
+comment|/* TRUE means print address within file for each string.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|print_addresses
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true means print filename for each string.  */
+comment|/* TRUE means print filename for each string.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|print_filenames
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true means for object files scan only the data section.  */
+comment|/* TRUE means for object files scan only the data section.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|datasection_only
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true if we found an initialized data section in the current file.  */
+comment|/* TRUE if we found an initialized data section in the current file.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|got_a_section
 decl_stmt|;
 end_decl_stmt
@@ -449,184 +450,145 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|strings_a_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|asection
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|boolean
+name|bfd_boolean
 name|strings_object_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|boolean
+name|bfd_boolean
 name|strings_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|file
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|integer_arg
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|s
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_strings
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-name|filename
-operator|,
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-name|stream
-operator|,
+modifier|*
+parameter_list|,
 name|file_off
-name|address
-operator|,
+parameter_list|,
 name|int
-name|stop_point
-operator|,
+parameter_list|,
 name|int
-name|magiccount
-operator|,
+parameter_list|,
 name|char
-operator|*
-name|magic
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-name|stream
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|status
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|long
 name|get_char
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-name|stream
-operator|,
+modifier|*
+parameter_list|,
 name|file_off
-operator|*
-name|address
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-name|magiccount
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-name|magic
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
 
-begin_decl_stmt
+begin_function_decl
 name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|optc
@@ -636,10 +598,10 @@ name|exit_status
 init|=
 literal|0
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|files_given
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 if|#
 directive|if
@@ -687,15 +649,15 @@ literal|1
 expr_stmt|;
 name|print_addresses
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|print_filenames
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|datasection_only
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|target
 operator|=
@@ -741,7 +703,7 @@ literal|'a'
 case|:
 name|datasection_only
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -749,7 +711,7 @@ literal|'f'
 case|:
 name|print_filenames
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -781,7 +743,6 @@ name|string_min
 operator|<
 literal|1
 condition|)
-block|{
 name|fatal
 argument_list|(
 name|_
@@ -792,14 +753,13 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'o'
 case|:
 name|print_addresses
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|address_radix
 operator|=
@@ -811,7 +771,7 @@ literal|'t'
 case|:
 name|print_addresses
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -971,6 +931,9 @@ name|encoding
 condition|)
 block|{
 case|case
+literal|'S'
+case|:
+case|case
 literal|'s'
 case|:
 name|encoding_bytes
@@ -1024,7 +987,7 @@ condition|)
 block|{
 name|datasection_only
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1060,7 +1023,7 @@ argument_list|)
 expr_stmt|;
 name|files_given
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 else|else
@@ -1092,17 +1055,16 @@ literal|0
 condition|)
 name|datasection_only
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 else|else
 block|{
 name|files_given
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|exit_status
 operator||=
-operator|(
 name|strings_file
 argument_list|(
 name|argv
@@ -1111,17 +1073,15 @@ name|optind
 index|]
 argument_list|)
 operator|==
-name|false
-operator|)
+name|FALSE
 expr_stmt|;
 block|}
 block|}
 block|}
 if|if
 condition|(
+operator|!
 name|files_given
-operator|==
-name|false
 condition|)
 name|usage
 argument_list|(
@@ -1150,23 +1110,18 @@ specifier|static
 name|void
 name|strings_a_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sect
-parameter_list|,
-name|filearg
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sect
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|filearg
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1201,7 +1156,8 @@ argument_list|(
 name|sect
 argument_list|)
 decl_stmt|;
-name|PTR
+name|void
+modifier|*
 name|mem
 init|=
 name|xmalloc
@@ -1230,7 +1186,7 @@ condition|)
 block|{
 name|got_a_section
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|print_strings
 argument_list|(
@@ -1264,21 +1220,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* Scan all of the sections in FILE, and print the strings    in the initialized data section(s).     Return true if successful,    false if not (such as if FILE is not an object file).  */
+comment|/* Scan all of the sections in FILE, and print the strings    in the initialized data section(s).     Return TRUE if successful,    FALSE if not (such as if FILE is not an object file).  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|strings_object_file
 parameter_list|(
-name|file
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -1297,23 +1251,20 @@ name|abfd
 operator|==
 name|NULL
 condition|)
-block|{
 comment|/* Treat the file as a non-object file.  */
 return|return
-name|false
+name|FALSE
 return|;
-block|}
 comment|/* This call is mainly for its side effect of reading in the sections.      We follow the traditional behavior of `strings' in that we don't      complain if we don't recognize a file to be an object file.  */
 if|if
 condition|(
+operator|!
 name|bfd_check_format
 argument_list|(
 name|abfd
 argument_list|,
 name|bfd_object
 argument_list|)
-operator|==
-name|false
 condition|)
 block|{
 name|bfd_close
@@ -1322,12 +1273,12 @@ name|abfd
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|got_a_section
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|bfd_map_over_sections
 argument_list|(
@@ -1336,7 +1287,8 @@ argument_list|,
 name|strings_a_section
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|file
 argument_list|)
@@ -1356,7 +1308,7 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
@@ -1366,21 +1318,31 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print the strings in FILE.  Return true if ok, false if an error occurs.  */
+comment|/* Print the strings in FILE.  Return TRUE if ok, FALSE if an error occurs.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|strings_file
 parameter_list|(
-name|file
-parameter_list|)
 name|char
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
+if|if
+condition|(
+name|get_file_size
+argument_list|(
+name|file
+argument_list|)
+operator|<
+literal|1
+condition|)
+return|return
+name|FALSE
+return|;
 comment|/* If we weren't told to scan the whole file,      try to open it as an object file and only look at      initialized data sections.  If that fails, fall back to the      whole file.  */
 if|if
 condition|(
@@ -1429,7 +1391,7 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|print_strings
@@ -1479,12 +1441,12 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1501,31 +1463,23 @@ specifier|static
 name|long
 name|get_char
 parameter_list|(
-name|stream
-parameter_list|,
-name|address
-parameter_list|,
-name|magiccount
-parameter_list|,
-name|magic
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|file_off
 modifier|*
 name|address
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|magiccount
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|magic
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -1641,6 +1595,9 @@ condition|(
 name|encoding
 condition|)
 block|{
+case|case
+literal|'S'
+case|:
 case|case
 literal|'s'
 case|:
@@ -1814,40 +1771,28 @@ specifier|static
 name|void
 name|print_strings
 parameter_list|(
-name|filename
-parameter_list|,
-name|stream
-parameter_list|,
-name|address
-parameter_list|,
-name|stop_point
-parameter_list|,
-name|magiccount
-parameter_list|,
-name|magic
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|file_off
 name|address
-decl_stmt|;
+parameter_list|,
 name|int
 name|stop_point
-decl_stmt|;
+parameter_list|,
 name|int
 name|magiccount
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|magic
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1940,16 +1885,8 @@ condition|)
 return|return;
 if|if
 condition|(
-name|c
-operator|>
-literal|255
-operator|||
-name|c
-operator|<
-literal|0
-operator|||
 operator|!
-name|isgraphic
+name|STRING_ISGRAPHIC
 argument_list|(
 name|c
 argument_list|)
@@ -2297,16 +2234,8 @@ condition|)
 break|break;
 if|if
 condition|(
-name|c
-operator|>
-literal|255
-operator|||
-name|c
-operator|<
-literal|0
-operator|||
 operator|!
-name|isgraphic
+name|STRING_ISGRAPHIC
 argument_list|(
 name|c
 argument_list|)
@@ -2339,12 +2268,10 @@ specifier|static
 name|int
 name|integer_arg
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|value
@@ -2507,7 +2434,6 @@ condition|(
 operator|*
 name|p
 condition|)
-block|{
 name|fatal
 argument_list|(
 name|_
@@ -2518,7 +2444,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|value
 return|;
@@ -2530,17 +2455,13 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|stream
-parameter_list|,
-name|status
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|int
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -2570,7 +2491,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|" The options are:\n\   -a - --all                Scan the entire file, not just the data section\n\   -f --print-file-name      Print the name of the file before each string\n\   -n --bytes=[number]       Locate& print any NUL-terminated sequence of at\n\   -<number>                 least [number] characters (default 4).\n\   -t --radix={o,x,d}        Print the location of the string in base 8, 10 or 16\n\   -o                        An alias for --radix=o\n\   -T --target=<BFDNAME>     Specify the binary file format\n\   -e --encoding={s,b,l,B,L} Select character size and endianness:\n\                             s = 8-bit, {b,l} = 16-bit, {B,L} = 32-bit\n\   -h --help                 Display this information\n\   -v --version              Print the program's version number\n"
+literal|" The options are:\n\   -a - --all                Scan the entire file, not just the data section\n\   -f --print-file-name      Print the name of the file before each string\n\   -n --bytes=[number]       Locate& print any NUL-terminated sequence of at\n\   -<number>                 least [number] characters (default 4).\n\   -t --radix={o,x,d}        Print the location of the string in base 8, 10 or 16\n\   -o                        An alias for --radix=o\n\   -T --target=<BFDNAME>     Specify the binary file format\n\   -e --encoding={s,S,b,l,B,L} Select character size and endianness:\n\                             s = 7-bit, S = 8-bit, {b,l} = 16-bit, {B,L} = 32-bit\n\   -h --help                 Display this information\n\   -v --version              Print the program's version number\n"
 argument_list|)
 argument_list|)
 expr_stmt|;

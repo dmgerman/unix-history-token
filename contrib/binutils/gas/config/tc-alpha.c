@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-alpha.c - Processor-specific code for the DEC Alpha AXP CPU.    Copyright 1989, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002 Free Software Foundation, Inc.    Contributed by Carnegie Mellon University, 1993.    Written by Alessandro Forin, based on earlier gas-1.38 target CPU files.    Modified by Ken Raeburn for gas-2.x and ECOFF support.    Modified by Richard Henderson for ELF support.    Modified by Klaus K"ampf for EVAX (OpenVMS/Alpha) support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-alpha.c - Processor-specific code for the DEC Alpha AXP CPU.    Copyright 1989, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Carnegie Mellon University, 1993.    Written by Alessandro Forin, based on earlier gas-1.38 target CPU files.    Modified by Ken Raeburn for gas-2.x and ECOFF support.    Modified by Richard Henderson for ELF support.    Modified by Klaus K"ampf for EVAX (OpenVMS/Alpha) support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -55,6 +55,12 @@ directive|include
 file|"dwarf2dbg.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"dw2gencfi.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -70,7 +76,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Local types */
+comment|/* Local types.  */
 end_comment
 
 begin_define
@@ -158,7 +164,7 @@ block|,
 name|MACRO_FPR
 block|,
 name|MACRO_EXP
-block|, }
+block|,   }
 enum|;
 end_enum
 
@@ -529,7 +535,7 @@ value|((R)>= O_literal&& (R)<= O_tprel)
 end_define
 
 begin_comment
-comment|/* Macros for extracting the type and number of encoded register tokens */
+comment|/* Macros for extracting the type and number of encoded register tokens.  */
 end_comment
 
 begin_define
@@ -563,7 +569,7 @@ value|((x)& 31)
 end_define
 
 begin_comment
-comment|/* Something odd inherited from the old assembler */
+comment|/* Something odd inherited from the old assembler.  */
 end_comment
 
 begin_define
@@ -717,7 +723,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Macros to build tokens */
+comment|/* Macros to build tokens.  */
 end_comment
 
 begin_define
@@ -798,7 +804,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Prototypes for all local functions */
+comment|/* Prototypes for all local functions.  */
 end_comment
 
 begin_decl_stmt
@@ -819,7 +825,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|alpha_adjust_symtab_relocs
+name|alpha_adjust_relocs
 name|PARAMS
 argument_list|(
 operator|(
@@ -1591,6 +1597,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|s_alpha_usepv
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2167,7 +2186,7 @@ comment|/* OBJ_EVAX  */
 end_comment
 
 begin_comment
-comment|/* The cpu for which we are generating code */
+comment|/* The cpu for which we are generating code.  */
 end_comment
 
 begin_decl_stmt
@@ -2191,7 +2210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The hash table of instruction opcodes */
+comment|/* The hash table of instruction opcodes.  */
 end_comment
 
 begin_decl_stmt
@@ -2204,7 +2223,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The hash table of macro opcodes */
+comment|/* The hash table of macro opcodes.  */
 end_comment
 
 begin_decl_stmt
@@ -2223,7 +2242,7 @@ name|OBJ_ECOFF
 end_ifdef
 
 begin_comment
-comment|/* The $gp relocation symbol */
+comment|/* The $gp relocation symbol.  */
 end_comment
 
 begin_decl_stmt
@@ -2250,7 +2269,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The current $gp register */
+comment|/* The current $gp register.  */
 end_comment
 
 begin_decl_stmt
@@ -2263,7 +2282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* A table of the register symbols */
+comment|/* A table of the register symbols.  */
 end_comment
 
 begin_decl_stmt
@@ -2278,7 +2297,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Constant sections, or sections of constants */
+comment|/* Constant sections, or sections of constants.  */
 end_comment
 
 begin_ifdef
@@ -2291,13 +2310,6 @@ begin_decl_stmt
 specifier|static
 name|segT
 name|alpha_lita_section
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|segT
-name|alpha_lit4_section
 decl_stmt|;
 end_decl_stmt
 
@@ -2363,14 +2375,6 @@ name|alpha_lita_symbol
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|symbolS
-modifier|*
-name|alpha_lit4_symbol
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -2420,7 +2424,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Literal for .litX+0x8000 within .lita */
+comment|/* Literal for .litX+0x8000 within .lita.  */
 end_comment
 
 begin_ifdef
@@ -2428,13 +2432,6 @@ ifdef|#
 directive|ifdef
 name|OBJ_ECOFF
 end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|offsetT
-name|alpha_lit4_literal
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2448,31 +2445,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
-end_ifdef
-
 begin_comment
-comment|/* The active .ent symbol.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|symbolS
-modifier|*
-name|alpha_cur_ent_sym
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Is the assembler not allowed to use $at? */
+comment|/* Is the assembler not allowed to use $at?  */
 end_comment
 
 begin_decl_stmt
@@ -2485,7 +2459,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Are macros enabled? */
+comment|/* Are macros enabled?  */
 end_comment
 
 begin_decl_stmt
@@ -2498,7 +2472,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Are floats disabled? */
+comment|/* Are floats disabled?  */
 end_comment
 
 begin_decl_stmt
@@ -2511,7 +2485,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Are addresses 32 bit? */
+comment|/* Are addresses 32 bit?  */
 end_comment
 
 begin_decl_stmt
@@ -2714,7 +2688,7 @@ comment|/* -H */
 end_comment
 
 begin_comment
-comment|/* If the -+ switch is given, then a hash is appended to any name that is  * longer than 64 characters, else longer symbol names are truncated.  */
+comment|/* If the -+ switch is given, then a hash is appended to any name that is    longer than 64 characters, else longer symbol names are truncated.  */
 end_comment
 
 begin_endif
@@ -3097,7 +3071,7 @@ value|25
 end_define
 
 begin_comment
-comment|/* Structure to hold explict sequence information.  */
+comment|/* Structure to hold explicit sequence information.  */
 end_comment
 
 begin_struct
@@ -4662,7 +4636,7 @@ name|O_max
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Create the opcode hash table */
+comment|/* Create the opcode hash table.  */
 name|alpha_opcode_hash
 operator|=
 name|hash_new
@@ -4843,7 +4817,7 @@ operator|)
 condition|)
 continue|continue;
 block|}
-comment|/* Create the macro hash table */
+comment|/* Create the macro hash table.  */
 name|alpha_macro_hash
 operator|=
 name|hash_new
@@ -4945,7 +4919,7 @@ operator|)
 condition|)
 continue|continue;
 block|}
-comment|/* Construct symbols for each of the registers */
+comment|/* Construct symbols for each of the registers.  */
 for|for
 control|(
 name|i
@@ -5039,7 +5013,7 @@ name|zero_address_frag
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Create the special symbols and sections we'll be using */
+comment|/* Create the special symbols and sections we'll be using.  */
 comment|/* So .sbss will get used for tiny objects.  */
 name|bfd_set_gp_size
 argument_list|(
@@ -5177,7 +5151,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* current maximum is 13 */
+comment|/* Current maximum is 13.  */
 name|expressionS
 name|tok
 index|[
@@ -5192,7 +5166,7 @@ decl_stmt|;
 name|size_t
 name|opnamelen
 decl_stmt|;
-comment|/* split off the opcode */
+comment|/* Split off the opcode.  */
 name|opnamelen
 operator|=
 name|strspn
@@ -5240,7 +5214,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* tokenize the rest of the line */
+comment|/* Tokenize the rest of the line.  */
 if|if
 condition|(
 operator|(
@@ -5277,7 +5251,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* finish it off */
+comment|/* Finish it off.  */
 name|assemble_tokens
 argument_list|(
 name|opname
@@ -5353,7 +5327,7 @@ comment|/* Turn a string in input_line_pointer into a floating point constant   
 end_comment
 
 begin_comment
-comment|/* Equal to MAX_PRECISION in atof-ieee.c */
+comment|/* Equal to MAX_PRECISION in atof-ieee.c.  */
 end_comment
 
 begin_define
@@ -5857,23 +5831,21 @@ name|fx_r_type
 condition|)
 block|{
 case|case
-name|BFD_RELOC_ALPHA_GPDISP
+name|BFD_RELOC_23_PCREL_S2
 case|:
 case|case
-name|BFD_RELOC_ALPHA_GPDISP_HI16
+name|BFD_RELOC_ALPHA_HINT
 case|:
 case|case
-name|BFD_RELOC_ALPHA_GPDISP_LO16
+name|BFD_RELOC_ALPHA_BRSGP
 case|:
 return|return
 name|addr
+operator|+
+literal|4
 return|;
 default|default:
 return|return
-name|fixP
-operator|->
-name|fx_size
-operator|+
 name|addr
 return|;
 block|}
@@ -5939,7 +5911,7 @@ operator|->
 name|fx_r_type
 condition|)
 block|{
-comment|/* The GPDISP relocations are processed internally with a symbol 	 referring to the current function; we need to drop in a value 	 which, when added to the address of the start of the function, 	 gives the desired GP.  */
+comment|/* The GPDISP relocations are processed internally with a symbol 	 referring to the current function's section;  we need to drop 	 in a value which, when added to the address of the start of 	 the function, gives the desired GP.  */
 case|case
 name|BFD_RELOC_ALPHA_GPDISP_HI16
 case|:
@@ -6307,6 +6279,7 @@ name|OBJ_ELF
 case|case
 name|BFD_RELOC_ALPHA_BRSGP
 case|:
+return|return;
 case|case
 name|BFD_RELOC_ALPHA_TLSGD
 case|:
@@ -6337,6 +6310,19 @@ case|:
 case|case
 name|BFD_RELOC_ALPHA_TPREL16
 case|:
+if|if
+condition|(
+name|fixP
+operator|->
+name|fx_addsy
+condition|)
+name|S_SET_THREAD_LOCAL
+argument_list|(
+name|fixP
+operator|->
+name|fx_addsy
+argument_list|)
+expr_stmt|;
 return|return;
 endif|#
 directive|endif
@@ -7021,12 +7007,6 @@ case|case
 name|BFD_RELOC_ALPHA_BRSGP
 case|:
 case|case
-name|BFD_RELOC_VTABLE_INHERIT
-case|:
-case|case
-name|BFD_RELOC_VTABLE_ENTRY
-case|:
-case|case
 name|BFD_RELOC_ALPHA_TLSGD
 case|:
 case|case
@@ -7059,26 +7039,15 @@ case|:
 return|return
 literal|1
 return|;
-case|case
-name|BFD_RELOC_23_PCREL_S2
-case|:
-case|case
-name|BFD_RELOC_32
-case|:
-case|case
-name|BFD_RELOC_64
-case|:
-case|case
-name|BFD_RELOC_ALPHA_HINT
-case|:
-return|return
-literal|0
-return|;
 default|default:
-return|return
-literal|0
-return|;
+break|break;
 block|}
+return|return
+name|generic_force_reloc
+argument_list|(
+name|f
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -7097,31 +7066,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
-comment|/* Prevent all adjustments to global symbols */
-if|if
-condition|(
-name|S_IS_EXTERN
-argument_list|(
-name|f
-operator|->
-name|fx_addsy
-argument_list|)
-operator|||
-name|S_IS_WEAK
-argument_list|(
-name|f
-operator|->
-name|fx_addsy
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-endif|#
-directive|endif
 comment|/* Are there any relocation types for which we must generate a reloc      but we can adjust the values contained within it?  */
 switch|switch
 condition|(
@@ -7230,6 +7174,9 @@ comment|/* ??? No idea why we can't return a reference to .tbss+10, but 	 we're 
 return|return
 literal|0
 return|;
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
 case|case
 name|BFD_RELOC_ALPHA_BRSGP
 case|:
@@ -7255,10 +7202,9 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|S_IS_DEFINED
+name|generic_force_reloc
 argument_list|(
-name|sym
+name|f
 argument_list|)
 condition|)
 return|return
@@ -7342,6 +7288,8 @@ return|return
 literal|1
 return|;
 block|}
+endif|#
+directive|endif
 default|default:
 return|return
 literal|1
@@ -7556,7 +7504,7 @@ operator|==
 name|BFD_RELOC_ALPHA_LITERAL
 condition|)
 block|{
-comment|/* fake out bfd_perform_relocation. sigh */
+comment|/* Fake out bfd_perform_relocation. sigh.  */
 name|reloc
 operator|->
 name|addend
@@ -7580,7 +7528,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
-comment|/*        * Ohhh, this is ugly.  The problem is that if this is a local global        * symbol, the relocation will entirely be performed at link time, not        * at assembly time.  bfd_perform_reloc doesn't know about this sort        * of thing, and as a result we need to fake it out here.        */
+comment|/* Ohhh, this is ugly.  The problem is that if this is a local global          symbol, the relocation will entirely be performed at link time, not          at assembly time.  bfd_perform_reloc doesn't know about this sort          of thing, and as a result we need to fake it out here.  */
 if|if
 condition|(
 operator|(
@@ -7947,7 +7895,7 @@ end_comment
 
 begin_function
 name|void
-name|alpha_adjust_symtab
+name|alpha_before_fix
 parameter_list|()
 block|{
 if|if
@@ -7958,7 +7906,7 @@ name|bfd_map_over_sections
 argument_list|(
 name|stdoutput
 argument_list|,
-name|alpha_adjust_symtab_relocs
+name|alpha_adjust_relocs
 argument_list|,
 name|NULL
 argument_list|)
@@ -7969,7 +7917,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|alpha_adjust_symtab_relocs
+name|alpha_adjust_relocs
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -8034,7 +7982,7 @@ operator|->
 name|fix_root
 condition|)
 return|return;
-comment|/* First rebuild the fixup chain without the expicit lituse and      gpdisp_lo16 relocs.  */
+comment|/* First rebuild the fixup chain without the explicit lituse and      gpdisp_lo16 relocs.  */
 name|prevP
 operator|=
 operator|&
@@ -8119,6 +8067,9 @@ operator|->
 name|sequence
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RELOC_OP_P
 if|if
 condition|(
 name|fixp
@@ -8210,6 +8161,8 @@ name|sequence
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 break|break;
 case|case
 name|BFD_RELOC_ALPHA_GPDISP_LO16
@@ -9229,6 +9182,9 @@ name|tok
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|RELOC_OP_P
 name|char
 modifier|*
 name|p
@@ -9252,6 +9208,8 @@ name|reloc_found_p
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 name|memset
 argument_list|(
 name|tok
@@ -9267,7 +9225,7 @@ operator|*
 name|ntok
 argument_list|)
 expr_stmt|;
-comment|/* Save and restore input_line_pointer around this function */
+comment|/* Save and restore input_line_pointer around this function.  */
 name|old_input_line_pointer
 operator|=
 name|input_line_pointer
@@ -9330,7 +9288,7 @@ condition|(
 name|reloc_found_p
 condition|)
 block|{
-comment|/* only support one relocation op per insn */
+comment|/* Only support one relocation op per insn.  */
 name|as_bad
 argument_list|(
 name|_
@@ -9366,7 +9324,7 @@ operator|=
 name|get_symbol_end
 argument_list|()
 expr_stmt|;
-comment|/* Parse !relocation_type */
+comment|/* Parse !relocation_type.  */
 name|len
 operator|=
 name|input_line_pointer
@@ -9532,7 +9490,7 @@ block|}
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* Parse !sequence_number */
+comment|/* Parse !sequence_number.  */
 name|expression
 argument_list|(
 name|tok
@@ -9671,7 +9629,7 @@ name|tok
 expr_stmt|;
 break|break;
 block|}
-comment|/* ... then fall through to plain expression */
+comment|/* ... then fall through to plain expression.  */
 name|input_line_pointer
 operator|=
 name|hold
@@ -9805,11 +9763,11 @@ expr_stmt|;
 return|return
 name|TOKENIZE_ERROR
 return|;
-name|err_report
-label|:
 ifdef|#
 directive|ifdef
 name|RELOC_OP_P
+name|err_report
+label|:
 name|is_end_of_line
 index|[
 operator|(
@@ -9905,7 +9863,7 @@ name|tokidx
 init|=
 literal|0
 decl_stmt|;
-comment|/* Don't match opcodes that don't exist on this architecture */
+comment|/* Don't match opcodes that don't exist on this architecture.  */
 if|if
 condition|(
 operator|!
@@ -9952,7 +9910,7 @@ operator|*
 name|opidx
 index|]
 decl_stmt|;
-comment|/* only take input from real operands */
+comment|/* Only take input from real operands.  */
 if|if
 condition|(
 name|operand
@@ -9962,7 +9920,7 @@ operator|&
 name|AXP_OPERAND_FAKE
 condition|)
 continue|continue;
-comment|/* when we expect input, make sure we have it */
+comment|/* When we expect input, make sure we have it.  */
 if|if
 condition|(
 name|tokidx
@@ -9987,7 +9945,7 @@ name|match_failed
 goto|;
 continue|continue;
 block|}
-comment|/* match operand type with expression type */
+comment|/* Match operand type with expression type.  */
 switch|switch
 condition|(
 name|operand
@@ -10161,7 +10119,7 @@ break|break;
 block|}
 break|break;
 default|default:
-comment|/* everything else should have been fake */
+comment|/* Everything else should have been fake.  */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -10170,7 +10128,7 @@ operator|++
 name|tokidx
 expr_stmt|;
 block|}
-comment|/* possible match -- did we use all of our input? */
+comment|/* Possible match -- did we use all of our input?  */
 if|if
 condition|(
 name|tokidx
@@ -10198,6 +10156,9 @@ name|opcode
 operator|-
 name|alpha_opcodes
 operator|<
+operator|(
+name|int
+operator|)
 name|alpha_num_opcodes
 operator|&&
 operator|!
@@ -10324,7 +10285,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* index register */
+comment|/* Index register.  */
 case|case
 name|MACRO_IR
 case|:
@@ -10361,7 +10322,7 @@ operator|++
 name|tokidx
 expr_stmt|;
 break|break;
-comment|/* parenthesized index register */
+comment|/* Parenthesized index register.  */
 case|case
 name|MACRO_PIR
 case|:
@@ -10398,7 +10359,7 @@ operator|++
 name|tokidx
 expr_stmt|;
 break|break;
-comment|/* optional parenthesized index register */
+comment|/* Optional parenthesized index register.  */
 case|case
 name|MACRO_OPIR
 case|:
@@ -10431,7 +10392,7 @@ operator|++
 name|tokidx
 expr_stmt|;
 break|break;
-comment|/* leading comma with a parenthesized index register */
+comment|/* Leading comma with a parenthesized index register.  */
 case|case
 name|MACRO_CPIR
 case|:
@@ -10468,7 +10429,7 @@ operator|++
 name|tokidx
 expr_stmt|;
 break|break;
-comment|/* floating point register */
+comment|/* Floating point register.  */
 case|case
 name|MACRO_FPR
 case|:
@@ -10505,7 +10466,7 @@ operator|++
 name|tokidx
 expr_stmt|;
 break|break;
-comment|/* normal expression */
+comment|/* Normal expression.  */
 case|case
 name|MACRO_EXP
 case|:
@@ -10610,6 +10571,9 @@ name|macro
 operator|-
 name|alpha_macros
 operator|<
+operator|(
+name|int
+operator|)
 name|alpha_num_macros
 operator|&&
 operator|!
@@ -10900,7 +10864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Turn an opcode description and a set of arguments into  * an instruction and a fixup.  */
+comment|/* Turn an opcode description and a set of arguments into    an instruction and a fixup.  */
 end_comment
 
 begin_function
@@ -11489,7 +11453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Actually output an instruction with its fixup.  */
+comment|/* Actually output an instruction with its fixup.  */
 end_comment
 
 begin_function
@@ -11579,7 +11543,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Apply the fixups in order */
+comment|/* Apply the fixups in order.  */
 for|for
 control|(
 name|i
@@ -11639,7 +11603,7 @@ name|fixS
 modifier|*
 name|fixP
 decl_stmt|;
-comment|/* Some fixups are only used internally and so have no howto */
+comment|/* Some fixups are only used internally and so have no howto.  */
 if|if
 condition|(
 operator|(
@@ -12062,6 +12026,9 @@ operator|=
 name|info
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|RELOC_OP_P
 case|case
 name|DUMMY_RELOC_LITUSE_ADDR
 case|:
@@ -12436,6 +12403,8 @@ operator|=
 name|info
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 if|if
 condition|(
@@ -12787,7 +12756,7 @@ return|return;
 block|}
 block|}
 block|}
-comment|/* search opcodes */
+comment|/* Search opcodes.  */
 name|opcode
 operator|=
 operator|(
@@ -12928,7 +12897,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Some instruction sets indexed by lg(size) */
+comment|/* Some instruction sets indexed by lg(size).  */
 end_comment
 
 begin_decl_stmt
@@ -13626,7 +13595,7 @@ comment|/* OBJ_EVAX */
 end_comment
 
 begin_comment
-comment|/* Load a (partial) expression into a target register.     If poffset is not null, after the call it will either contain    O_constant 0, or a 16-bit offset appropriate for any MEM format    instruction.  In addition, pbasereg will be modified to point to    the base register to use in that MEM format instruction.     In any case, *pbasereg should contain a base register to add to the    expression.  This will normally be either AXP_REG_ZERO or    alpha_gp_register.  Symbol addresses will always be loaded via $gp,    so "foo($0)" is interpreted as adding the address of foo to $0;    i.e. "ldq $targ, LIT($gp); addq $targ, $0, $targ".  Odd, perhaps,    but this is what OSF/1 does.     If explicit relocations of the form !literal!<number> are allowed,    and used, then explict_reloc with be an expression pointer.     Finally, the return value is nonzero if the calling macro may emit    a LITUSE reloc if otherwise appropriate; the return value is the    sequence number to use.  */
+comment|/* Load a (partial) expression into a target register.     If poffset is not null, after the call it will either contain    O_constant 0, or a 16-bit offset appropriate for any MEM format    instruction.  In addition, pbasereg will be modified to point to    the base register to use in that MEM format instruction.     In any case, *pbasereg should contain a base register to add to the    expression.  This will normally be either AXP_REG_ZERO or    alpha_gp_register.  Symbol addresses will always be loaded via $gp,    so "foo($0)" is interpreted as adding the address of foo to $0;    i.e. "ldq $targ, LIT($gp); addq $targ, $0, $targ".  Odd, perhaps,    but this is what OSF/1 does.     If explicit relocations of the form !literal!<number> are allowed,    and used, then explicit_reloc with be an expression pointer.     Finally, the return value is nonzero if the calling macro may emit    a LITUSE reloc if otherwise appropriate; the return value is the    sequence number to use.  */
 end_comment
 
 begin_function
@@ -13704,7 +13673,7 @@ name|OBJ_ECOFF
 name|offsetT
 name|lit
 decl_stmt|;
-comment|/* attempt to reduce .lit load by splitting the offset from 	   its symbol when possible, but don't create a situation in 	   which we'd fail.  */
+comment|/* Attempt to reduce .lit load by splitting the offset from 	   its symbol when possible, but don't create a situation in 	   which we'd fail.  */
 if|if
 condition|(
 operator|!
@@ -15183,7 +15152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The lda macro differs from the lda instruction in that it handles    most simple expressions, particualrly symbol address loads and    large constants.  */
+comment|/* The lda macro differs from the lda instruction in that it handles    most simple expressions, particularly symbol address loads and    large constants.  */
 end_comment
 
 begin_function
@@ -17848,7 +17817,7 @@ name|PTR
 name|symname
 decl_stmt|;
 block|{
-comment|/* DIVISION and MODULUS. Yech.    *    * Convert    *    OP x,y,result    * to    *    mov x,R16	# if x != R16    *    mov y,R17	# if y != R17    *    lda AT,__OP    *    jsr AT,(AT),0    *    mov R0,result    *    * with appropriate optimizations if R0,R16,R17 are the registers    * specified by the compiler.    */
+comment|/* DIVISION and MODULUS. Yech.          Convert         OP x,y,result      to         mov x,R16	# if x != R16         mov y,R17	# if y != R17         lda AT,__OP         jsr AT,(AT),0         mov R0,result           with appropriate optimizations if R0,R16,R17 are the registers      specified by the compiler.  */
 name|int
 name|xr
 decl_stmt|,
@@ -17913,7 +17882,7 @@ operator|.
 name|X_add_number
 argument_list|)
 expr_stmt|;
-comment|/* Move the operands into the right place */
+comment|/* Move the operands into the right place.  */
 if|if
 condition|(
 name|yr
@@ -17925,7 +17894,7 @@ operator|==
 name|AXP_REG_R17
 condition|)
 block|{
-comment|/* They are in exactly the wrong order -- swap through AT */
+comment|/* They are in exactly the wrong order -- swap through AT.  */
 if|if
 condition|(
 name|alpha_noat_on
@@ -18201,7 +18170,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Call the division routine */
+comment|/* Call the division routine.  */
 name|set_tok_reg
 argument_list|(
 name|newtok
@@ -18243,7 +18212,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Move the result to the right place */
+comment|/* Move the result to the right place.  */
 if|if
 condition|(
 name|rr
@@ -18319,7 +18288,7 @@ name|PTR
 name|symname
 decl_stmt|;
 block|{
-comment|/* DIVISION and MODULUS. Yech.    * Convert    *    OP x,y,result    * to    *    lda pv,__OP    *    mov x,t10    *    mov y,t11    *    jsr t9,(pv),__OP    *    mov t12,result    *    * with appropriate optimizations if t10,t11,t12 are the registers    * specified by the compiler.    */
+comment|/* DIVISION and MODULUS. Yech.      Convert         OP x,y,result      to         lda pv,__OP         mov x,t10         mov y,t11         jsr t9,(pv),__OP         mov t12,result           with appropriate optimizations if t10,t11,t12 are the registers      specified by the compiler.  */
 name|int
 name|xr
 decl_stmt|,
@@ -18396,7 +18365,7 @@ operator|)
 name|symname
 argument_list|)
 expr_stmt|;
-comment|/* Move the operands into the right place */
+comment|/* Move the operands into the right place.  */
 if|if
 condition|(
 name|yr
@@ -18408,7 +18377,7 @@ operator|==
 name|AXP_REG_T11
 condition|)
 block|{
-comment|/* They are in exactly the wrong order -- swap through AT */
+comment|/* They are in exactly the wrong order -- swap through AT.  */
 if|if
 condition|(
 name|alpha_noat_on
@@ -18639,7 +18608,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Call the division routine */
+comment|/* Call the division routine.  */
 name|set_tok_reg
 argument_list|(
 name|newtok
@@ -18673,7 +18642,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Reload the GP register */
+comment|/* Reload the GP register.  */
 ifdef|#
 directive|ifdef
 name|OBJ_AOUT
@@ -18734,7 +18703,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Move the result to the right place */
+comment|/* Move the result to the right place.  */
 if|if
 condition|(
 name|rr
@@ -19299,7 +19268,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Assembler directives */
+comment|/* Assembler directives.  */
 end_comment
 
 begin_comment
@@ -19423,6 +19392,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 specifier|register
@@ -19853,6 +19823,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -19912,6 +19883,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|int
@@ -19958,6 +19930,85 @@ directive|ifdef
 name|OBJ_ELF
 end_ifdef
 
+begin_struct
+struct|struct
+name|alpha_elf_frame_data
+block|{
+name|symbolS
+modifier|*
+name|func_sym
+decl_stmt|;
+name|symbolS
+modifier|*
+name|func_end_sym
+decl_stmt|;
+name|symbolS
+modifier|*
+name|prologue_sym
+decl_stmt|;
+name|unsigned
+name|int
+name|mask
+decl_stmt|;
+name|unsigned
+name|int
+name|fmask
+decl_stmt|;
+name|int
+name|fp_regno
+decl_stmt|;
+name|int
+name|ra_regno
+decl_stmt|;
+name|offsetT
+name|frame_size
+decl_stmt|;
+name|offsetT
+name|mask_offset
+decl_stmt|;
+name|offsetT
+name|fmask_offset
+decl_stmt|;
+name|struct
+name|alpha_elf_frame_data
+modifier|*
+name|next
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|alpha_elf_frame_data
+modifier|*
+name|all_frame_data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|alpha_elf_frame_data
+modifier|*
+modifier|*
+name|plast_frame_data
+init|=
+operator|&
+name|all_frame_data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|alpha_elf_frame_data
+modifier|*
+name|cur_frame_data
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Handle the .section pseudo-op.  This is like the usual one, but it    clears alpha_insn_label and restores auto alignment.  */
 end_comment
@@ -19971,6 +20022,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|obj_elf_section
@@ -20063,7 +20115,7 @@ name|sym
 decl_stmt|;
 if|if
 condition|(
-name|alpha_cur_ent_sym
+name|cur_frame_data
 condition|)
 name|as_warn
 argument_list|(
@@ -20089,9 +20141,51 @@ name|flags
 operator||=
 name|BSF_FUNCTION
 expr_stmt|;
-name|alpha_cur_ent_sym
+name|cur_frame_data
+operator|=
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|cur_frame_data
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cur_frame_data
+operator|->
+name|func_sym
 operator|=
 name|sym
+expr_stmt|;
+comment|/* Provide sensible defaults.  */
+name|cur_frame_data
+operator|->
+name|fp_regno
+operator|=
+literal|30
+expr_stmt|;
+comment|/* sp */
+name|cur_frame_data
+operator|->
+name|ra_regno
+operator|=
+literal|26
+expr_stmt|;
+comment|/* ra */
+operator|*
+name|plast_frame_data
+operator|=
+name|cur_frame_data
+expr_stmt|;
+name|plast_frame_data
+operator|=
+operator|&
+name|cur_frame_data
+operator|->
+name|next
 expr_stmt|;
 comment|/* The .ent directive is sometimes followed by a number.  Not sure 	     what it really means, but ignore it.  */
 operator|*
@@ -20221,9 +20315,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|cur_frame_data
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".end directive without matching .ent"
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|sym
 operator|!=
-name|alpha_cur_ent_sym
+name|cur_frame_data
+operator|->
+name|func_sym
 condition|)
 name|as_warn
 argument_list|(
@@ -20237,19 +20347,23 @@ comment|/* Create an expression to calculate the size of the function.  */
 if|if
 condition|(
 name|sym
+operator|&&
+name|cur_frame_data
 condition|)
 block|{
+name|OBJ_SYMFIELD_TYPE
+modifier|*
+name|obj
+init|=
 name|symbol_get_obj
 argument_list|(
 name|sym
 argument_list|)
-operator|->
-name|size
-operator|=
-operator|(
+decl_stmt|;
 name|expressionS
-operator|*
-operator|)
+modifier|*
+name|exp
+init|=
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -20257,63 +20371,48 @@ argument_list|(
 name|expressionS
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|symbol_get_obj
-argument_list|(
-name|sym
-argument_list|)
+decl_stmt|;
+name|obj
 operator|->
 name|size
+operator|=
+name|exp
+expr_stmt|;
+name|exp
 operator|->
 name|X_op
 operator|=
 name|O_subtract
 expr_stmt|;
-name|symbol_get_obj
-argument_list|(
-name|sym
-argument_list|)
-operator|->
-name|size
+name|exp
 operator|->
 name|X_add_symbol
 operator|=
-name|symbol_new
-argument_list|(
-literal|"L0\001"
-argument_list|,
-name|now_seg
-argument_list|,
-name|frag_now_fix
+name|symbol_temp_new_now
 argument_list|()
-argument_list|,
-name|frag_now
-argument_list|)
 expr_stmt|;
-name|symbol_get_obj
-argument_list|(
-name|sym
-argument_list|)
-operator|->
-name|size
+name|exp
 operator|->
 name|X_op_symbol
 operator|=
 name|sym
 expr_stmt|;
-name|symbol_get_obj
-argument_list|(
-name|sym
-argument_list|)
-operator|->
-name|size
+name|exp
 operator|->
 name|X_add_number
 operator|=
 literal|0
 expr_stmt|;
+name|cur_frame_data
+operator|->
+name|func_end_sym
+operator|=
+name|exp
+operator|->
+name|X_add_symbol
+expr_stmt|;
 block|}
-name|alpha_cur_ent_sym
+name|cur_frame_data
 operator|=
 name|NULL
 expr_stmt|;
@@ -20363,9 +20462,127 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|long
+name|val
+decl_stmt|;
+name|offsetT
+name|offset
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cur_frame_data
+condition|)
+block|{
+if|if
+condition|(
+name|fp
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".fmask outside of .ent"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".mask outside of .ent"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|discard_rest_of_line
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|get_absolute_expression_and_terminator
+argument_list|(
+operator|&
+name|val
+argument_list|)
+operator|!=
+literal|','
+condition|)
+block|{
+if|if
+condition|(
+name|fp
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"bad .fmask directive"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"bad .mask directive"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|--
+name|input_line_pointer
+expr_stmt|;
+name|discard_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+name|offset
+operator|=
+name|get_absolute_expression
+argument_list|()
+expr_stmt|;
+name|demand_empty_rest_of_line
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|fp
+condition|)
+block|{
+name|cur_frame_data
+operator|->
+name|fmask
+operator|=
+name|val
+expr_stmt|;
+name|cur_frame_data
+operator|->
+name|fmask_offset
+operator|=
+name|offset
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cur_frame_data
+operator|->
+name|mask
+operator|=
+name|val
+expr_stmt|;
+name|cur_frame_data
+operator|->
+name|mask_offset
+operator|=
+name|offset
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -20391,9 +20608,96 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|long
+name|val
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cur_frame_data
+condition|)
+block|{
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".frame outside of .ent"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|discard_rest_of_line
 argument_list|()
 expr_stmt|;
+return|return;
+block|}
+name|cur_frame_data
+operator|->
+name|fp_regno
+operator|=
+name|tc_get_register
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|++
+operator|!=
+literal|','
+operator|||
+name|get_absolute_expression_and_terminator
+argument_list|(
+operator|&
+name|val
+argument_list|)
+operator|!=
+literal|','
+condition|)
+block|{
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"bad .frame directive"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|--
+name|input_line_pointer
+expr_stmt|;
+name|discard_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+name|cur_frame_data
+operator|->
+name|frame_size
+operator|=
+name|val
+expr_stmt|;
+name|cur_frame_data
+operator|->
+name|ra_regno
+operator|=
+name|tc_get_register
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Next comes the "offset of saved $a0 from $sp".  In gcc terms 	 this is current_function_pretend_args_size.  There's no place 	 to put this value, so ignore it.  */
+name|s_ignore
+argument_list|(
+literal|42
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -20436,7 +20740,13 @@ expr_stmt|;
 else|else
 name|sym
 operator|=
-name|alpha_cur_ent_sym
+name|cur_frame_data
+condition|?
+name|cur_frame_data
+operator|->
+name|func_sym
+else|:
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -20522,6 +20832,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|cur_frame_data
+condition|)
+name|cur_frame_data
+operator|->
+name|prologue_sym
+operator|=
+name|symbol_temp_new_now
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -20845,6 +21166,533 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Called at the end of assembly.  Here we emit unwind info for frames    unless the compiler has done it for us.  */
+end_comment
+
+begin_function
+name|void
+name|alpha_elf_md_end
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|alpha_elf_frame_data
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+name|cur_frame_data
+condition|)
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|".ent directive without matching .end"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* If someone has generated the unwind info themselves, great.  */
+if|if
+condition|(
+name|bfd_get_section_by_name
+argument_list|(
+name|stdoutput
+argument_list|,
+literal|".eh_frame"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return;
+comment|/* Generate .eh_frame data for the unwind directives specified.  */
+for|for
+control|(
+name|p
+operator|=
+name|all_frame_data
+init|;
+name|p
+condition|;
+name|p
+operator|=
+name|p
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|p
+operator|->
+name|prologue_sym
+condition|)
+block|{
+comment|/* Create a temporary symbol at the same location as our 	   function symbol.  This prevents problems with globals.  */
+name|cfi_new_fde
+argument_list|(
+name|symbol_temp_new
+argument_list|(
+name|S_GET_SEGMENT
+argument_list|(
+name|p
+operator|->
+name|func_sym
+argument_list|)
+argument_list|,
+name|S_GET_VALUE
+argument_list|(
+name|p
+operator|->
+name|func_sym
+argument_list|)
+argument_list|,
+name|symbol_get_frag
+argument_list|(
+name|p
+operator|->
+name|func_sym
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cfi_set_return_column
+argument_list|(
+name|p
+operator|->
+name|ra_regno
+argument_list|)
+expr_stmt|;
+name|cfi_add_CFA_def_cfa_register
+argument_list|(
+literal|30
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|fp_regno
+operator|!=
+literal|30
+operator|||
+name|p
+operator|->
+name|mask
+operator|||
+name|p
+operator|->
+name|fmask
+operator|||
+name|p
+operator|->
+name|frame_size
+condition|)
+block|{
+name|unsigned
+name|int
+name|mask
+decl_stmt|;
+name|offsetT
+name|offset
+decl_stmt|;
+name|cfi_add_advance_loc
+argument_list|(
+name|p
+operator|->
+name|prologue_sym
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|fp_regno
+operator|!=
+literal|30
+condition|)
+if|if
+condition|(
+name|p
+operator|->
+name|frame_size
+operator|!=
+literal|0
+condition|)
+name|cfi_add_CFA_def_cfa
+argument_list|(
+name|p
+operator|->
+name|fp_regno
+argument_list|,
+name|p
+operator|->
+name|frame_size
+argument_list|)
+expr_stmt|;
+else|else
+name|cfi_add_CFA_def_cfa_register
+argument_list|(
+name|p
+operator|->
+name|fp_regno
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|frame_size
+operator|!=
+literal|0
+condition|)
+name|cfi_add_CFA_def_cfa_offset
+argument_list|(
+name|p
+operator|->
+name|frame_size
+argument_list|)
+expr_stmt|;
+name|mask
+operator|=
+name|p
+operator|->
+name|mask
+expr_stmt|;
+name|offset
+operator|=
+name|p
+operator|->
+name|mask_offset
+expr_stmt|;
+comment|/* Recall that $26 is special-cased and stored first.  */
+if|if
+condition|(
+operator|(
+name|mask
+operator|>>
+literal|26
+operator|)
+operator|&
+literal|1
+condition|)
+block|{
+name|cfi_add_CFA_offset
+argument_list|(
+literal|26
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+literal|8
+expr_stmt|;
+name|mask
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+literal|26
+operator|)
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|mask
+condition|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+name|mask
+operator|&
+operator|-
+name|mask
+expr_stmt|;
+name|mask
+operator|^=
+name|i
+expr_stmt|;
+name|i
+operator|=
+name|ffs
+argument_list|(
+name|i
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|cfi_add_CFA_offset
+argument_list|(
+name|i
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+literal|8
+expr_stmt|;
+block|}
+name|mask
+operator|=
+name|p
+operator|->
+name|fmask
+expr_stmt|;
+name|offset
+operator|=
+name|p
+operator|->
+name|fmask_offset
+expr_stmt|;
+while|while
+condition|(
+name|mask
+condition|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
+name|mask
+operator|&
+operator|-
+name|mask
+expr_stmt|;
+name|mask
+operator|^=
+name|i
+expr_stmt|;
+name|i
+operator|=
+name|ffs
+argument_list|(
+name|i
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|cfi_add_CFA_offset
+argument_list|(
+name|i
+operator|+
+literal|32
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+literal|8
+expr_stmt|;
+block|}
+block|}
+name|cfi_end_fde
+argument_list|(
+name|p
+operator|->
+name|func_end_sym
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|s_alpha_usepv
+parameter_list|(
+name|int
+name|unused
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|,
+name|name_end
+decl_stmt|;
+name|char
+modifier|*
+name|which
+decl_stmt|,
+name|which_end
+decl_stmt|;
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+name|int
+name|other
+decl_stmt|;
+name|name
+operator|=
+name|input_line_pointer
+expr_stmt|;
+name|name_end
+operator|=
+name|get_symbol_end
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|is_name_beginner
+argument_list|(
+operator|*
+name|name
+argument_list|)
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|".usepv directive has no name"
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|input_line_pointer
+operator|=
+name|name_end
+expr_stmt|;
+name|ignore_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+name|sym
+operator|=
+name|symbol_find_or_make
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+operator|*
+name|input_line_pointer
+operator|++
+operator|=
+name|name_end
+expr_stmt|;
+if|if
+condition|(
+name|name_end
+operator|!=
+literal|','
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|".usepv directive has no type"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ignore_rest_of_line
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+name|which
+operator|=
+name|input_line_pointer
+expr_stmt|;
+name|which_end
+operator|=
+name|get_symbol_end
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|which
+argument_list|,
+literal|"no"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|other
+operator|=
+name|STO_ALPHA_NOPV
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|which
+argument_list|,
+literal|"std"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|other
+operator|=
+name|STO_ALPHA_STD_GPLOAD
+expr_stmt|;
+else|else
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"unknown argument for .usepv"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|other
+operator|=
+literal|0
+expr_stmt|;
+block|}
+operator|*
+name|input_line_pointer
+operator|=
+name|which_end
+expr_stmt|;
+name|demand_empty_rest_of_line
+argument_list|()
+expr_stmt|;
+name|S_SET_OTHER
+argument_list|(
+name|sym
+argument_list|,
+name|other
+operator||
+operator|(
+name|S_GET_OTHER
+argument_list|(
+name|sym
+argument_list|)
+operator|&
+operator|~
+name|STO_ALPHA_STD_GPLOAD
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
@@ -20853,6 +21701,23 @@ end_endif
 begin_comment
 comment|/* OBJ_ELF */
 end_comment
+
+begin_comment
+comment|/* Standard calling conventions leaves the CFA at $30 on entry.  */
+end_comment
+
+begin_function
+name|void
+name|alpha_cfi_frame_initial_instructions
+parameter_list|()
+block|{
+name|cfi_add_CFA_def_cfa_register
+argument_list|(
+literal|30
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#
@@ -20980,6 +21845,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -21105,7 +21971,6 @@ expr_stmt|;
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -21122,6 +21987,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -21221,7 +22087,6 @@ operator|=
 name|get_absolute_expression
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -21234,6 +22099,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -21919,7 +22785,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -21936,6 +22801,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 specifier|register
@@ -22056,7 +22922,6 @@ argument_list|,
 name|BFD_RELOC_64
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -22069,6 +22934,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|expressionS
@@ -22152,7 +23018,6 @@ block|}
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -22165,6 +23030,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|expressionS
@@ -22248,7 +23114,6 @@ block|}
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -22261,6 +23126,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|alpha_evax_proc
@@ -22275,7 +23141,6 @@ expr_stmt|;
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -22288,6 +23153,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -22334,7 +23200,6 @@ block|}
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -22347,6 +23212,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|long
@@ -22393,7 +23259,6 @@ block|}
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -22406,6 +23271,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|char
@@ -22430,7 +23296,6 @@ name|symbol
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -22443,6 +23308,7 @@ name|ignore
 parameter_list|)
 name|int
 name|ignore
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|symbolS
@@ -22458,19 +23324,6 @@ name|case_hack
 index|[
 literal|32
 index|]
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|demand_copy_string
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|*
-name|lenP
-operator|)
-argument_list|)
 decl_stmt|;
 name|sprintf
 argument_list|(
@@ -22525,7 +23378,6 @@ expr_stmt|;
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -23744,7 +24596,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -24043,18 +24894,6 @@ block|,
 block|{
 literal|"file"
 block|,
-operator|(
-name|void
-argument_list|(
-argument|*
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-operator|)
 name|s_alpha_file
 block|,
 literal|5
@@ -24082,6 +24921,14 @@ block|,
 name|s_alpha_stab
 block|,
 literal|'n'
+block|}
+block|,
+block|{
+literal|"usepv"
+block|,
+name|s_alpha_usepv
+block|,
+literal|0
 block|}
 block|,
 comment|/* COFF debugging related pseudos.  */
@@ -24576,6 +25423,21 @@ begin_comment
 comment|/* @@@ GP selection voodoo.  All of this seems overly complicated and    unnecessary; which is the primary reason it's for ECOFF only.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|inline
+name|void
+name|maybe_set_gp
+name|PARAMS
+argument_list|(
+operator|(
+name|asection
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 specifier|inline
@@ -24744,7 +25606,8 @@ literal|"Bad .section directive: want a,s,w,x,M,S,G,T in string"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF swapping routines, for BFD.    Copyright 1992, 1993, 1994, 1995, 1996, 2000, 2001    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic ECOFF swapping routines, for BFD.    Copyright 1992, 1993, 1994, 1995, 1996, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1667,7 +1667,7 @@ operator|->
 name|f_crfd
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff...  */
+comment|/* Now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -1972,13 +1972,13 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* Make it reasonable to do in-place.  */
 operator|*
 name|intern
 operator|=
 operator|*
 name|intern_copy
 expr_stmt|;
-comment|/* Make it reasonable to do in-place.  */
 name|ECOFF_PUT_OFF
 argument_list|(
 name|abfd
@@ -2239,7 +2239,7 @@ operator|->
 name|f_crfd
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff...  */
+comment|/* Now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -2750,6 +2750,44 @@ name|defined
 argument_list|(
 name|ECOFF_SIGNED_64
 argument_list|)
+if|if
+condition|(
+name|intern
+operator|->
+name|isym
+operator|==
+operator|(
+name|signed
+name|long
+operator|)
+literal|0xffffffff
+condition|)
+name|intern
+operator|->
+name|isym
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|intern
+operator|->
+name|iline
+operator|==
+operator|(
+name|signed
+name|long
+operator|)
+literal|0xffffffff
+condition|)
+name|intern
+operator|->
+name|iline
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|intern
 operator|->
 name|gp_prologue
@@ -3046,13 +3084,13 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* Make it reasonable to do in-place.  */
 operator|*
 name|intern
 operator|=
 operator|*
 name|intern_copy
 expr_stmt|;
-comment|/* Make it reasonable to do in-place.  */
 name|ECOFF_PUT_OFF
 argument_list|(
 name|abfd
@@ -3784,13 +3822,13 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* Make it reasonable to do in-place.  */
 operator|*
 name|intern
 operator|=
 operator|*
 name|intern_copy
 expr_stmt|;
-comment|/* Make it reasonable to do in-place.  */
 name|ECOFF_PUT_OFF
 argument_list|(
 name|abfd
@@ -4089,7 +4127,39 @@ operator|->
 name|s_value
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff...  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ECOFF_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ECOFF_SIGNED_64
+argument_list|)
+if|if
+condition|(
+name|intern
+operator|->
+name|iss
+operator|==
+operator|(
+name|signed
+name|long
+operator|)
+literal|0xffffffff
+condition|)
+name|intern
+operator|->
+name|iss
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -4406,13 +4476,13 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* Make it reasonable to do in-place.  */
 operator|*
 name|intern
 operator|=
 operator|*
 name|intern_copy
 expr_stmt|;
-comment|/* Make it reasonable to do in-place.  */
 name|H_PUT_32
 argument_list|(
 name|abfd
@@ -4439,7 +4509,7 @@ operator|->
 name|s_value
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff...  */
+comment|/* Now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -4753,7 +4823,7 @@ operator|*
 operator|)
 name|ext_copy
 expr_stmt|;
-comment|/* now the fun stuff...  */
+comment|/* Now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -5023,14 +5093,14 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* Make it reasonable to do in-place.  */
 operator|*
 name|intern
 operator|=
 operator|*
 name|intern_copy
 expr_stmt|;
-comment|/* Make it reasonable to do in-place.  */
-comment|/* now the fun stuff...  */
+comment|/* Now the fun stuff...  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -5761,13 +5831,13 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* Make it reasonable to do in-place.  */
 operator|*
 name|intern
 operator|=
 operator|*
 name|intern_copy
 expr_stmt|;
-comment|/* Make it reasonable to do in-place.  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -6100,13 +6170,13 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* Make it reasonable to do in-place.  */
 operator|*
 name|intern
 operator|=
 operator|*
 name|intern_copy
 expr_stmt|;
-comment|/* Make it reasonable to do in-place.  */
 name|H_PUT_32
 argument_list|(
 name|abfd

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic BFD support for file formats.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic BFD support for file formats.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -38,24 +38,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* FUNCTION 	bfd_check_format  SYNOPSIS 	boolean bfd_check_format(bfd *abfd, bfd_format format);  DESCRIPTION 	Verify if the file attached to the BFD @var{abfd} is compatible 	with the format @var{format} (i.e., one of<<bfd_object>>,<<bfd_archive>> or<<bfd_core>>).  	If the BFD has been set to a specific target before the 	call, only the named target and format combination is 	checked. If the target has not been set, or has been set to<<default>>, then all the known target backends is 	interrogated to determine a match.  If the default target 	matches, it is used.  If not, exactly one target must recognize 	the file, or an error results.  	The function returns<<true>> on success, otherwise<<false>> 	with one of the following error codes:  	o<<bfd_error_invalid_operation>> - 	if<<format>> is not one of<<bfd_object>>,<<bfd_archive>> or<<bfd_core>>.  	o<<bfd_error_system_call>> - 	if an error occured during a read - even some file mismatches 	can cause bfd_error_system_calls.  	o<<file_not_recognised>> - 	none of the backends recognised the file format.  	o<<bfd_error_file_ambiguously_recognized>> - 	more than one backend recognised the file format. */
+comment|/* FUNCTION 	bfd_check_format  SYNOPSIS 	bfd_boolean bfd_check_format (bfd *abfd, bfd_format format);  DESCRIPTION 	Verify if the file attached to the BFD @var{abfd} is compatible 	with the format @var{format} (i.e., one of<<bfd_object>>,<<bfd_archive>> or<<bfd_core>>).  	If the BFD has been set to a specific target before the 	call, only the named target and format combination is 	checked. If the target has not been set, or has been set to<<default>>, then all the known target backends is 	interrogated to determine a match.  If the default target 	matches, it is used.  If not, exactly one target must recognize 	the file, or an error results.  	The function returns<<TRUE>> on success, otherwise<<FALSE>> 	with one of the following error codes:  	o<<bfd_error_invalid_operation>> - 	if<<format>> is not one of<<bfd_object>>,<<bfd_archive>> or<<bfd_core>>.  	o<<bfd_error_system_call>> - 	if an error occured during a read - even some file mismatches 	can cause bfd_error_system_calls.  	o<<file_not_recognised>> - 	none of the backends recognised the file format.  	o<<bfd_error_file_ambiguously_recognized>> - 	more than one backend recognised the file format. */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_check_format
 parameter_list|(
-name|abfd
-parameter_list|,
-name|format
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_format
 name|format
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|bfd_check_format_matches
@@ -71,32 +67,26 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_check_format_matches  SYNOPSIS 	boolean bfd_check_format_matches(bfd *abfd, bfd_format format, char ***matching);  DESCRIPTION 	Like<<bfd_check_format>>, except when it returns false with<<bfd_errno>> set to<<bfd_error_file_ambiguously_recognized>>.  In that 	case, if @var{matching} is not NULL, it will be filled in with 	a NULL-terminated list of the names of the formats that matched, 	allocated with<<malloc>>. 	Then the user may choose a format and try again.  	When done with the list that @var{matching} points to, the caller 	should free it. */
+comment|/* FUNCTION 	bfd_check_format_matches  SYNOPSIS 	bfd_boolean bfd_check_format_matches 	  (bfd *abfd, bfd_format format, char ***matching);  DESCRIPTION 	Like<<bfd_check_format>>, except when it returns FALSE with<<bfd_errno>> set to<<bfd_error_file_ambiguously_recognized>>.  In that 	case, if @var{matching} is not NULL, it will be filled in with 	a NULL-terminated list of the names of the formats that matched, 	allocated with<<malloc>>. 	Then the user may choose a format and try again.  	When done with the list that @var{matching} points to, the caller 	should free it. */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_check_format_matches
 parameter_list|(
-name|abfd
-parameter_list|,
-name|format
-parameter_list|,
-name|matching
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_format
 name|format
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 modifier|*
 name|matching
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|extern
 specifier|const
@@ -109,7 +99,17 @@ modifier|*
 specifier|const
 modifier|*
 name|target
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|bfd_target
+modifier|*
+modifier|*
+name|matching_vector
+init|=
+name|NULL
+decl_stmt|;
+specifier|const
+name|bfd_target
 modifier|*
 name|save_targ
 decl_stmt|,
@@ -118,13 +118,6 @@ name|right_targ
 decl_stmt|,
 modifier|*
 name|ar_right_targ
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|matching_vector
-init|=
-name|NULL
 decl_stmt|;
 name|int
 name|match_count
@@ -161,7 +154,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -173,16 +166,11 @@ operator|!=
 name|bfd_unknown
 condition|)
 return|return
-call|(
-name|boolean
-call|)
-argument_list|(
 name|abfd
 operator|->
 name|format
 operator|==
 name|format
-argument_list|)
 return|;
 comment|/* Since the target type was defaulted, check them      all in the hope that one will be uniquely recognized.  */
 name|save_targ
@@ -216,8 +204,8 @@ name|amt
 operator|=
 sizeof|sizeof
 argument_list|(
-name|char
 operator|*
+name|matching_vector
 argument_list|)
 operator|*
 literal|2
@@ -226,11 +214,6 @@ name|_bfd_target_vector_entries
 expr_stmt|;
 name|matching_vector
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|bfd_malloc
 argument_list|(
 name|amt
@@ -242,7 +225,7 @@ operator|!
 name|matching_vector
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|right_targ
@@ -286,9 +269,20 @@ operator|!=
 literal|0
 condition|)
 comment|/* rewind! */
+block|{
+if|if
+condition|(
+name|matching
+condition|)
+name|free
+argument_list|(
+name|matching_vector
+argument_list|)
+expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
+block|}
 name|right_targ
 operator|=
 name|BFD_SEND_FMT
@@ -324,7 +318,7 @@ name|matching_vector
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* File position has moved, BTW.  */
 block|}
@@ -368,7 +362,7 @@ name|bfd_error_file_not_recognized
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -411,7 +405,7 @@ operator|=
 operator|*
 name|target
 expr_stmt|;
-comment|/* Change BFD's target temporarily */
+comment|/* Change BFD's target temporarily.  */
 if|if
 condition|(
 name|bfd_seek
@@ -428,9 +422,20 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|matching
+condition|)
+name|free
+argument_list|(
+name|matching_vector
+argument_list|)
+expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
+block|}
 comment|/* If _bfd_check_format neglects to set bfd_error, assume 	 bfd_error_wrong_format.  We didn't used to even pay any 	 attention to bfd_error, so I suspect that some 	 _bfd_check_format might have this problem.  */
 name|bfd_set_error
 argument_list|(
@@ -487,8 +492,6 @@ name|match_count
 index|]
 operator|=
 name|temp
-operator|->
-name|name
 expr_stmt|;
 name|match_count
 operator|++
@@ -542,12 +545,8 @@ index|[
 name|ar_match_index
 index|]
 operator|=
-operator|(
 operator|*
 name|target
-operator|)
-operator|->
-name|name
 expr_stmt|;
 name|ar_match_index
 operator|++
@@ -583,7 +582,7 @@ name|matching_vector
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -630,7 +629,6 @@ name|match_count
 operator|>
 literal|1
 condition|)
-block|{
 name|memcpy
 argument_list|(
 name|matching_vector
@@ -641,13 +639,84 @@ name|_bfd_target_vector_entries
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|char
 operator|*
+name|matching_vector
 argument_list|)
 operator|*
 name|match_count
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|match_count
+operator|>
+literal|1
+operator|&&
+name|bfd_associated_vector
+operator|!=
+name|NULL
+operator|&&
+name|matching
+condition|)
+block|{
+specifier|const
+name|bfd_target
+modifier|*
+specifier|const
+modifier|*
+name|assoc
+init|=
+name|bfd_associated_vector
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|right_targ
+operator|=
+operator|*
+name|assoc
+operator|++
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|int
+name|i
+init|=
+name|match_count
+decl_stmt|;
+while|while
+condition|(
+operator|--
+name|i
+operator|>=
+literal|0
+condition|)
+if|if
+condition|(
+name|matching_vector
+index|[
+name|i
+index|]
+operator|==
+name|right_targ
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|>=
+literal|0
+condition|)
+block|{
+name|match_count
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 block|}
 block|}
@@ -675,7 +744,7 @@ name|matching_vector
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* File position has moved, BTW.  */
 block|}
@@ -730,6 +799,11 @@ block|{
 operator|*
 name|matching
 operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|matching_vector
 expr_stmt|;
 name|matching_vector
@@ -739,33 +813,66 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Return target names.  This is a little nasty.  Maybe we 	     should do another bfd_malloc?  */
+while|while
+condition|(
+operator|--
+name|match_count
+operator|>=
+literal|0
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+init|=
+name|matching_vector
+index|[
+name|match_count
+index|]
+operator|->
+name|name
+decl_stmt|;
+operator|*
+operator|(
+specifier|const
+name|char
+operator|*
+operator|*
+operator|)
+operator|&
+name|matching_vector
+index|[
+name|match_count
+index|]
+operator|=
+name|name
+expr_stmt|;
+block|}
 block|}
 block|}
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_set_format  SYNOPSIS 	boolean bfd_set_format(bfd *abfd, bfd_format format);  DESCRIPTION 	This function sets the file format of the BFD @var{abfd} to the 	format @var{format}. If the target set in the BFD does not 	support the format requested, the format is invalid, or the BFD 	is not open for writing, then an error occurs. */
+comment|/* FUNCTION 	bfd_set_format  SYNOPSIS 	bfd_boolean bfd_set_format (bfd *abfd, bfd_format format);  DESCRIPTION 	This function sets the file format of the BFD @var{abfd} to the 	format @var{format}. If the target set in the BFD does not 	support the format requested, the format is invalid, or the BFD 	is not open for writing, then an error occurs. */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_set_format
 parameter_list|(
-name|abfd
-parameter_list|,
-name|format
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_format
 name|format
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -795,7 +902,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -807,16 +914,11 @@ operator|!=
 name|bfd_unknown
 condition|)
 return|return
-call|(
-name|boolean
-call|)
-argument_list|(
 name|abfd
 operator|->
 name|format
 operator|==
 name|format
-argument_list|)
 return|;
 comment|/* Presume the answer is yes.  */
 name|abfd
@@ -847,17 +949,17 @@ operator|=
 name|bfd_unknown
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_format_string  SYNOPSIS 	const char *bfd_format_string(bfd_format format);  DESCRIPTION 	Return a pointer to a const string<<invalid>>,<<object>>,<<archive>>,<<core>>, or<<unknown>>, 	depending upon the value of @var{format}. */
+comment|/* FUNCTION 	bfd_format_string  SYNOPSIS 	const char *bfd_format_string (bfd_format format);  DESCRIPTION 	Return a pointer to a const string<<invalid>>,<<object>>,<<archive>>,<<core>>, or<<unknown>>, 	depending upon the value of @var{format}. */
 end_comment
 
 begin_function
@@ -866,11 +968,9 @@ name|char
 modifier|*
 name|bfd_format_string
 parameter_list|(
-name|format
-parameter_list|)
 name|bfd_format
 name|format
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -912,7 +1012,7 @@ case|:
 return|return
 literal|"object"
 return|;
-comment|/* Linker/assember/compiler output.  */
+comment|/* Linker/assembler/compiler output.  */
 case|case
 name|bfd_archive
 case|:

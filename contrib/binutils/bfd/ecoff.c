@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 1991, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 1991, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -155,7 +155,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_slurp_symbolic_header
 name|PARAMS
 argument_list|(
@@ -169,7 +169,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_set_symbol_info
 name|PARAMS
 argument_list|(
@@ -243,7 +243,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_slurp_reloc_table
 name|PARAMS
 argument_list|(
@@ -281,7 +281,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_compute_section_file_positions
 name|PARAMS
 argument_list|(
@@ -309,7 +309,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_get_extr
 name|PARAMS
 argument_list|(
@@ -403,6 +403,31 @@ literal|0
 block|,
 literal|0
 block|,
+comment|/* sec_info_type, use_rela_p, has_tls_reloc,                     */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* need_finalize_relax, has_gp_reloc,                            */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* flag13, flag14, flag15, flag16, flag20, flag24,               */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
 comment|/* vma, lma, _cooked_size, _raw_size,                            */
 literal|0
 block|,
@@ -441,8 +466,10 @@ name|NULL
 block|,
 literal|0
 block|,
-comment|/* entsize, comdat, moving_line_filepos,                         */
+comment|/* entsize, comdat, kept_section, moving_line_filepos,           */
 literal|0
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -460,7 +487,7 @@ block|,
 comment|/* symbol,                                                       */
 operator|(
 expr|struct
-name|symbol_cache_entry
+name|bfd_symbol
 operator|*
 operator|)
 name|NULL
@@ -468,7 +495,7 @@ block|,
 comment|/* symbol_ptr_ptr,                                               */
 operator|(
 expr|struct
-name|symbol_cache_entry
+name|bfd_symbol
 operator|*
 operator|*
 operator|)
@@ -487,7 +514,7 @@ comment|/* Create an ECOFF object.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_mkobject
 parameter_list|(
 name|abfd
@@ -534,10 +561,10 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -751,7 +778,7 @@ comment|/* Initialize a new section.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_new_section_hook
 parameter_list|(
 name|abfd
@@ -978,7 +1005,7 @@ name|SEC_COFF_SHARED_LIBRARY
 expr_stmt|;
 comment|/* Probably any other section name is SEC_NEVER_LOAD, but I'm      uncertain about .init on some systems and I don't know how shared      libraries work.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -988,7 +1015,7 @@ comment|/* Determine the machine architecture and type.  This is called from    
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_set_arch_mach_hook
 parameter_list|(
 name|abfd
@@ -1045,7 +1072,7 @@ name|bfd_arch_mips
 expr_stmt|;
 name|mach
 operator|=
-literal|3000
+name|bfd_mach_mips3000
 expr_stmt|;
 break|break;
 case|case
@@ -1061,7 +1088,7 @@ name|bfd_arch_mips
 expr_stmt|;
 name|mach
 operator|=
-literal|6000
+name|bfd_mach_mips6000
 expr_stmt|;
 break|break;
 case|case
@@ -1077,7 +1104,7 @@ name|bfd_arch_mips
 expr_stmt|;
 name|mach
 operator|=
-literal|4000
+name|bfd_mach_mips4000
 expr_stmt|;
 break|break;
 case|case
@@ -1161,7 +1188,7 @@ case|case
 literal|0
 case|:
 case|case
-literal|3000
+name|bfd_mach_mips3000
 case|:
 name|big
 operator|=
@@ -1173,7 +1200,7 @@ name|MIPS_MAGIC_LITTLE
 expr_stmt|;
 break|break;
 case|case
-literal|6000
+name|bfd_mach_mips6000
 case|:
 name|big
 operator|=
@@ -1185,7 +1212,7 @@ name|MIPS_MAGIC_LITTLE2
 expr_stmt|;
 break|break;
 case|case
-literal|4000
+name|bfd_mach_mips4000
 case|:
 name|big
 operator|=
@@ -1713,7 +1740,7 @@ comment|/* Get the BFD flags to use for a section.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_styp_to_sec_flags
 parameter_list|(
 name|abfd
@@ -2041,7 +2068,7 @@ operator|=
 name|sec_flags
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2055,7 +2082,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_slurp_symbolic_header
 parameter_list|(
 name|abfd
@@ -2110,7 +2137,7 @@ operator|.
 name|sym_magic
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* See whether there is a symbolic header.  */
 if|if
@@ -2133,7 +2160,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* At this point bfd_get_symcount (abfd) holds the number of symbols      as read from the file header, but on ECOFF this is always the      size of the symbolic information header.  It would be cleaner to      handle this when we first read the file in coffgen.c.  */
@@ -2161,7 +2188,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Read the symbolic information header.  */
@@ -2294,7 +2321,7 @@ name|raw
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -2310,7 +2337,7 @@ name|raw
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -2320,7 +2347,7 @@ comment|/* Read in and swap the important symbolic information for an ECOFF    o
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_slurp_symbolic_info
 parameter_list|(
 name|abfd
@@ -2426,7 +2453,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -2448,7 +2475,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -2460,7 +2487,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|internal_symhdr
 operator|=
@@ -2671,7 +2698,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|raw
@@ -2693,7 +2720,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|pos
 operator|=
@@ -2745,7 +2772,7 @@ name|raw
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ecoff_data
@@ -2916,7 +2943,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|external_fdr_size
 operator|=
@@ -2986,7 +3013,7 @@ name|fdr_ptr
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3108,7 +3135,7 @@ name|new
 operator|->
 name|local
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|new
 operator|->
@@ -3139,7 +3166,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_set_symbol_info
 parameter_list|(
 name|abfd
@@ -3242,7 +3269,7 @@ operator|=
 name|BSF_DEBUGGING
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 break|break;
@@ -3254,7 +3281,7 @@ operator|=
 name|BSF_DEBUGGING
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -3868,9 +3895,9 @@ directive|if
 literal|0
 block|const char *name; 	    asection *section; 	    arelent_chain *reloc_chain; 	    unsigned int bitsize; 	    bfd_size_type amt;
 comment|/* Get a section with the same name as the symbol (usually 	       __CTOR_LIST__ or __DTOR_LIST__).  FIXME: gcc uses the 	       name ___CTOR_LIST (three underscores).  We need 	       __CTOR_LIST (two underscores), since ECOFF doesn't use 	       a leading underscore.  This should be handled by gcc, 	       but instead we do it here.  Actually, this should all 	       be done differently anyhow.  */
-block|name = bfd_asymbol_name (asym); 	    if (name[0] == '_'&& name[1] == '_'&& name[2] == '_') 	      { 		++name; 		asym->name = name; 	      } 	    section = bfd_get_section_by_name (abfd, name); 	    if (section == (asection *) NULL) 	      { 		char *copy;  		amt = strlen (name) + 1; 		copy = (char *) bfd_alloc (abfd, amt); 		if (!copy) 		  return false; 		strcpy (copy, name); 		section = bfd_make_section (abfd, copy); 	      }
+block|name = bfd_asymbol_name (asym); 	    if (name[0] == '_'&& name[1] == '_'&& name[2] == '_') 	      { 		++name; 		asym->name = name; 	      } 	    section = bfd_get_section_by_name (abfd, name); 	    if (section == (asection *) NULL) 	      { 		char *copy;  		amt = strlen (name) + 1; 		copy = (char *) bfd_alloc (abfd, amt); 		if (!copy) 		  return FALSE; 		strcpy (copy, name); 		section = bfd_make_section (abfd, copy); 	      }
 comment|/* Build a reloc pointing to this constructor.  */
-block|amt = sizeof (arelent_chain); 	    reloc_chain = (arelent_chain *) bfd_alloc (abfd, amt); 	    if (!reloc_chain) 	      return false; 	    reloc_chain->relent.sym_ptr_ptr = 	      bfd_get_section (asym)->symbol_ptr_ptr; 	    reloc_chain->relent.address = section->_raw_size; 	    reloc_chain->relent.addend = asym->value; 	    reloc_chain->relent.howto = 	      ecoff_backend (abfd)->constructor_reloc;
+block|amt = sizeof (arelent_chain); 	    reloc_chain = (arelent_chain *) bfd_alloc (abfd, amt); 	    if (!reloc_chain) 	      return FALSE; 	    reloc_chain->relent.sym_ptr_ptr = 	      bfd_get_section (asym)->symbol_ptr_ptr; 	    reloc_chain->relent.address = section->_raw_size; 	    reloc_chain->relent.addend = asym->value; 	    reloc_chain->relent.howto = 	      ecoff_backend (abfd)->constructor_reloc;
 comment|/* Set up the constructor section to hold the reloc.  */
 block|section->flags = SEC_CONSTRUCTOR; 	    ++section->reloc_count;
 comment|/* Constructor sections must be rounded to a boundary 	       based on the bitsize.  These are not real sections-- 	       they are handled specially by the linker--so the ECOFF 	       16 byte alignment restriction does not apply.  */
@@ -3890,7 +3917,7 @@ break|break;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3900,7 +3927,7 @@ comment|/* Read an ECOFF symbol table.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_slurp_symbol_table
 parameter_list|(
 name|abfd
@@ -4028,7 +4055,7 @@ operator|!=
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Get the symbolic information.  */
 if|if
@@ -4054,7 +4081,7 @@ name|debug_info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -4066,7 +4093,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|internal_size
 operator|=
@@ -4102,7 +4129,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|internal_ptr
 operator|=
@@ -4226,7 +4253,7 @@ name|weakext
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The alpha uses a negative ifd field for section symbols.  */
 if|if
@@ -4267,7 +4294,7 @@ name|internal_ptr
 operator|->
 name|local
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|internal_ptr
 operator|->
@@ -4438,7 +4465,7 @@ literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|internal_ptr
 operator|->
@@ -4450,7 +4477,7 @@ name|internal_ptr
 operator|->
 name|local
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|internal_ptr
 operator|->
@@ -4473,7 +4500,7 @@ operator|=
 name|internal
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -4558,7 +4585,7 @@ end_comment
 
 begin_function
 name|long
-name|_bfd_ecoff_get_symtab
+name|_bfd_ecoff_canonicalize_symtab
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -6271,7 +6298,7 @@ comment|/* Return whether this is a local label.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_bfd_is_local_label_name
 parameter_list|(
 name|abfd
@@ -7261,7 +7288,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_slurp_reloc_table
 parameter_list|(
 name|abfd
@@ -7347,7 +7374,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -7358,7 +7385,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|amt
 operator|=
@@ -7432,7 +7459,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -7450,7 +7477,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -7466,7 +7493,7 @@ operator|!=
 name|amt
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -7823,7 +7850,7 @@ operator|=
 name|internal_relocs
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7994,7 +8021,7 @@ comment|/* Provided a BFD, a section and an offset into the section, calculate  
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_find_nearest_line
 parameter_list|(
 name|abfd
@@ -8105,7 +8132,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -8159,7 +8186,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|line_info
@@ -8204,7 +8231,7 @@ comment|/* Copy private BFD data.  This is called by objcopy and strip.  We    u
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_bfd_copy_private_bfd_data
 parameter_list|(
 name|ibfd
@@ -8258,7 +8285,7 @@ decl_stmt|;
 name|size_t
 name|c
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|local
 decl_stmt|;
 comment|/* We only want to copy information over if both BFD's use ECOFF      format.  */
@@ -8279,7 +8306,7 @@ operator|!=
 name|bfd_target_ecoff_flavour
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Copy the GP value and the register masks.  */
 name|ecoff_data
@@ -8401,12 +8428,12 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* See if there are any local symbols.  */
 name|local
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -8435,7 +8462,7 @@ condition|)
 block|{
 name|local
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -8746,7 +8773,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -8759,7 +8786,7 @@ comment|/* Set the architecture.  The supported architecture is stored in the   
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_set_arch_mach
 parameter_list|(
 name|abfd
@@ -8819,7 +8846,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|reloc
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
@@ -8900,7 +8927,7 @@ comment|/* Get the contents of a section.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_get_section_contents
 parameter_list|(
 name|abfd
@@ -9087,7 +9114,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_compute_section_file_positions
 parameter_list|(
 name|abfd
@@ -9118,10 +9145,10 @@ decl_stmt|;
 name|file_ptr
 name|old_sofar
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|rdata_in_text
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|first_data
 decl_stmt|,
 name|first_nonalloc
@@ -9146,7 +9173,7 @@ name|_bfd_ecoff_sizeof_headers
 argument_list|(
 name|abfd
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|file_sofar
@@ -9187,7 +9214,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -9336,7 +9363,7 @@ condition|)
 block|{
 name|rdata_in_text
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 block|}
@@ -9353,11 +9380,11 @@ name|rdata_in_text
 expr_stmt|;
 name|first_data
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|first_nonalloc
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 for|for
 control|(
@@ -9527,7 +9554,7 @@ operator|)
 expr_stmt|;
 name|first_data
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 elseif|else
@@ -9610,7 +9637,7 @@ block|{
 comment|/* Skip up to the next page for an unallocated section, such              as the .comment section on the Alpha.  This leaves room              for the .bss section.  */
 name|first_nonalloc
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|sofar
 operator|=
@@ -9855,7 +9882,7 @@ operator|=
 name|file_sofar
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9923,7 +9950,7 @@ name|abfd
 operator|->
 name|output_has_begun
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 name|reloc_base
@@ -10088,7 +10115,7 @@ comment|/* Set the contents of a section.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_set_section_contents
 parameter_list|(
 name|abfd
@@ -10109,6 +10136,7 @@ name|asection
 modifier|*
 name|section
 decl_stmt|;
+specifier|const
 name|PTR
 name|location
 decl_stmt|;
@@ -10122,7 +10150,7 @@ block|{
 name|file_ptr
 name|pos
 decl_stmt|;
-comment|/* This must be done first, because bfd_set_section_contents is      going to set output_has_begun to true.  */
+comment|/* This must be done first, because bfd_set_section_contents is      going to set output_has_begun to TRUE.  */
 if|if
 condition|(
 operator|!
@@ -10140,7 +10168,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Handle the .lib section specially so that Irix 4 shared libraries      work out.  See coff_set_section_contents in coffcode.h.  */
@@ -10218,7 +10246,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|pos
 operator|=
@@ -10253,10 +10281,10 @@ operator|!=
 name|count
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10318,7 +10346,7 @@ comment|/* Set the GP value for an ECOFF file.  This is a hook used by the    as
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_ecoff_set_gp_value
 parameter_list|(
 name|abfd
@@ -10356,7 +10384,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ecoff_data
@@ -10369,7 +10397,7 @@ operator|=
 name|gp_value
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10379,7 +10407,7 @@ comment|/* Set the register masks for an ECOFF file.  This is a hook used by    
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_ecoff_set_regmasks
 parameter_list|(
 name|abfd
@@ -10435,7 +10463,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|tdata
@@ -10499,7 +10527,7 @@ index|]
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10510,7 +10538,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_get_extr
 parameter_list|(
 name|sym
@@ -10587,7 +10615,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|esym
 operator|->
@@ -10661,7 +10689,7 @@ operator|=
 name|indexNil
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|ecoff_sym_ptr
@@ -10678,7 +10706,7 @@ operator|->
 name|local
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|input_bfd
 operator|=
@@ -10814,7 +10842,7 @@ index|]
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10855,7 +10883,7 @@ comment|/* Write out an ECOFF file.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_write_object_contents
 parameter_list|(
 name|abfd
@@ -11018,7 +11046,7 @@ decl_stmt|;
 name|bfd_vma
 name|text_start
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|set_text_start
 decl_stmt|;
 name|bfd_size_type
@@ -11027,7 +11055,7 @@ decl_stmt|;
 name|bfd_vma
 name|data_start
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|set_data_start
 decl_stmt|;
 name|bfd_size_type
@@ -11117,7 +11145,7 @@ name|_bfd_ecoff_sizeof_headers
 argument_list|(
 name|abfd
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 else|else
@@ -11131,7 +11159,7 @@ literal|0
 expr_stmt|;
 name|set_text_start
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|data_size
 operator|=
@@ -11143,7 +11171,7 @@ literal|0
 expr_stmt|;
 name|set_data_start
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|bss_size
 operator|=
@@ -11617,7 +11645,7 @@ name|vma
 expr_stmt|;
 name|set_text_start
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 block|}
@@ -11724,7 +11752,7 @@ name|vma
 expr_stmt|;
 name|set_data_start
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 block|}
@@ -13149,7 +13177,7 @@ name|buff
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -13178,7 +13206,7 @@ name|buff
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -13394,7 +13422,7 @@ comment|/* Read in the armap.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_slurp_armap
 parameter_list|(
 name|abfd
@@ -13476,7 +13504,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -13485,7 +13513,7 @@ operator|!=
 literal|16
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -13505,7 +13533,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Irix 4.0.5F apparently can use either an ECOFF armap or a      standard COFF armap.  We could move the ECOFF armap stuff into      bfd_slurp_armap, but that seems inappropriate since no other      target uses this format.  Instead, we check directly for a COFF      armap.  */
 if|if
@@ -13614,10 +13642,10 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Make sure we have the right byte ordering.  */
@@ -13666,7 +13694,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Read in the armap.  */
@@ -13701,7 +13729,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|parsed_size
 operator|=
@@ -13743,7 +13771,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -13785,7 +13813,7 @@ name|raw_armap
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|ardata
@@ -14109,7 +14137,7 @@ operator|!
 name|symdef_ptr
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|ardata
 operator|->
@@ -14225,10 +14253,10 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -14238,7 +14266,7 @@ comment|/* Write out an armap.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_write_armap
 parameter_list|(
 name|abfd
@@ -14695,7 +14723,7 @@ name|ar_hdr
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|H_PUT_32
 argument_list|(
@@ -14726,7 +14754,7 @@ operator|!=
 literal|4
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|hashtable
 operator|=
@@ -14747,7 +14775,7 @@ operator|!
 name|hashtable
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|current
 operator|=
@@ -15011,7 +15039,7 @@ operator|!=
 name|symdefsize
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|bfd_release
 argument_list|(
@@ -15050,7 +15078,7 @@ operator|!=
 literal|4
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -15109,7 +15137,7 @@ operator|!=
 name|len
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* The spec sez this should be a newline.  But in order to be      bug-compatible for DECstation ar we use a null.  */
@@ -15135,11 +15163,11 @@ operator|!=
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -15436,7 +15464,7 @@ name|first
 operator|->
 name|target_defaulted
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -15527,7 +15555,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_add_archive_symbols
 name|PARAMS
 argument_list|(
@@ -15545,7 +15573,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_check_archive_element
 name|PARAMS
 argument_list|(
@@ -15557,7 +15585,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 name|pneeded
 operator|)
@@ -15567,7 +15595,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_add_object_symbols
 name|PARAMS
 argument_list|(
@@ -15585,7 +15613,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_add_externals
 name|PARAMS
 argument_list|(
@@ -15912,7 +15940,7 @@ parameter_list|,
 name|info
 parameter_list|)
 define|\
-value|(bfd_link_hash_traverse						\    (&(table)->root,							\     (boolean (*) PARAMS ((struct bfd_link_hash_entry *, PTR))) (func),	\     (info)))
+value|(bfd_link_hash_traverse						\    (&(table)->root,							\     (bfd_boolean (*) PARAMS ((struct bfd_link_hash_entry *, PTR))) (func), \     (info)))
 end_define
 
 begin_comment
@@ -15934,7 +15962,7 @@ comment|/* Given an ECOFF BFD, add symbols to the global hash table as    approp
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_bfd_link_add_symbols
 parameter_list|(
 name|abfd
@@ -15988,7 +16016,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -16000,7 +16028,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_add_archive_symbols
 parameter_list|(
 name|abfd
@@ -16088,7 +16116,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|bfd_set_error
 argument_list|(
@@ -16096,7 +16124,7 @@ name|bfd_error_no_armap
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* If we don't have any raw data for this archive, as can happen on      Irix 4.0.5F, we call the generic routine.      FIXME: We should be more clever about this, since someday tdata      may get to something for a generic archive.  */
@@ -16282,7 +16310,7 @@ operator|*
 name|pundef
 operator|)
 operator|->
-name|next
+name|und_next
 expr_stmt|;
 else|else
 name|pundef
@@ -16293,7 +16321,7 @@ operator|*
 name|pundef
 operator|)
 operator|->
-name|next
+name|und_next
 expr_stmt|;
 continue|continue;
 block|}
@@ -16315,7 +16343,7 @@ operator|*
 name|pundef
 operator|)
 operator|->
-name|next
+name|und_next
 expr_stmt|;
 continue|continue;
 block|}
@@ -16371,7 +16399,7 @@ operator|*
 name|pundef
 operator|)
 operator|->
-name|next
+name|und_next
 expr_stmt|;
 continue|continue;
 block|}
@@ -16426,13 +16454,13 @@ name|unsigned
 name|int
 name|srch
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|found
 decl_stmt|;
 comment|/* That was the wrong symbol.  Try rehashing.  */
 name|found
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -16542,7 +16570,7 @@ condition|)
 block|{
 name|found
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -16561,7 +16589,7 @@ operator|*
 name|pundef
 operator|)
 operator|->
-name|next
+name|und_next
 expr_stmt|;
 continue|continue;
 block|}
@@ -16598,7 +16626,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -16611,7 +16639,7 @@ name|bfd_object
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Unlike the generic linker, we know that this element provides 	 a definition for an undefined symbol and we know that we want 	 to include it.  We don't need to check anything.  */
 if|if
@@ -16634,7 +16662,7 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -16647,7 +16675,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|pundef
 operator|=
@@ -16657,11 +16685,11 @@ operator|*
 name|pundef
 operator|)
 operator|->
-name|next
+name|und_next
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -16672,7 +16700,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_check_archive_element
 parameter_list|(
 name|abfd
@@ -16690,7 +16718,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|pneeded
 decl_stmt|;
@@ -16762,7 +16790,7 @@ decl_stmt|;
 operator|*
 name|pneeded
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -16977,7 +17005,7 @@ block|{
 name|EXTR
 name|esym
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|def
 decl_stmt|;
 specifier|const
@@ -17081,13 +17109,13 @@ name|scRConst
 case|:
 name|def
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 default|default:
 name|def
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 block|}
@@ -17117,11 +17145,11 @@ name|hash
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* Unlike the generic linker, we do not pull in elements because 	 of common symbols.  */
@@ -17186,7 +17214,7 @@ goto|;
 operator|*
 name|pneeded
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 goto|goto
 name|successful_return
@@ -17217,7 +17245,7 @@ name|ssext
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -17244,7 +17272,7 @@ name|ssext
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -17255,7 +17283,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_add_object_symbols
 parameter_list|(
 name|abfd
@@ -17293,7 +17321,7 @@ name|ssext
 init|=
 name|NULL
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|result
 decl_stmt|;
 if|if
@@ -17305,7 +17333,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* If there are no symbols, we don't want it.  */
 if|if
@@ -17318,7 +17346,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|symhdr
 operator|=
@@ -17545,7 +17573,7 @@ name|external_ext
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -17556,7 +17584,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_add_externals
 parameter_list|(
 name|abfd
@@ -17696,7 +17724,7 @@ operator|!
 name|sym_hash
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|ecoff_data
 argument_list|(
@@ -17747,7 +17775,7 @@ block|{
 name|EXTR
 name|esym
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|skip
 decl_stmt|;
 name|bfd_vma
@@ -17791,7 +17819,7 @@ expr_stmt|;
 comment|/* Skip debugging symbols.  */
 name|skip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 switch|switch
 condition|(
@@ -17821,7 +17849,7 @@ break|break;
 default|default:
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -18248,16 +18276,16 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|sym_hash
 argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|h
 operator|=
@@ -18461,7 +18489,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -18475,7 +18503,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_final_link_debug_accumulate
 name|PARAMS
 argument_list|(
@@ -18501,7 +18529,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_write_external
 name|PARAMS
 argument_list|(
@@ -18518,7 +18546,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_indirect_link_order
 name|PARAMS
 argument_list|(
@@ -18543,7 +18571,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_reloc_link_order
 name|PARAMS
 argument_list|(
@@ -18592,7 +18620,7 @@ comment|/* ECOFF final link routine.  This looks through all the input BFDs    a
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_ecoff_bfd_final_link
 parameter_list|(
 name|abfd
@@ -18847,7 +18875,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Accumulate the debugging symbols from each input BFD.  */
 for|for
@@ -18873,7 +18901,7 @@ operator|->
 name|link_next
 control|)
 block|{
-name|boolean
+name|bfd_boolean
 name|ret
 decl_stmt|;
 if|if
@@ -18886,7 +18914,7 @@ operator|==
 name|bfd_target_ecoff_flavour
 condition|)
 block|{
-comment|/* Abitrarily set the symbolic header vstamp to the vstamp 	     of the first object file in the link.  */
+comment|/* Arbitrarily set the symbolic header vstamp to the vstamp 	     of the first object file in the link.  */
 if|if
 condition|(
 name|symhdr
@@ -18951,7 +18979,7 @@ operator|!
 name|ret
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Combine the register masks.  */
 name|ecoff_data
@@ -19096,7 +19124,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 comment|/* We need to make a pass over the link_orders to count up the 	 number of relocations we will need to output, so that we know 	 how much space they will take up.  */
@@ -19230,7 +19258,7 @@ name|sym_filepos
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|bfd_ecoff_debug_free
 argument_list|(
@@ -19252,7 +19280,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 comment|/* Now reset the reloc_count field of the sections in the output 	 BFD to 0, so that we can use them to keep track of how many 	 relocs we have output thus far.  */
@@ -19313,11 +19341,11 @@ name|hash
 argument_list|,
 literal|"_gp"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -19381,7 +19409,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|bfd_vma
@@ -19596,7 +19624,7 @@ name|p
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 elseif|else
@@ -19630,7 +19658,7 @@ name|p
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -19650,7 +19678,7 @@ name|p
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -19675,10 +19703,10 @@ argument_list|)
 operator|->
 name|linker
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -19689,7 +19717,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_final_link_debug_accumulate
 parameter_list|(
 name|output_bfd
@@ -19755,7 +19783,7 @@ name|debug
 operator|->
 name|symbolic_header
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|ret
 decl_stmt|;
 define|#
@@ -19773,7 +19801,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|if (symhdr->count == 0)						 \     debug->ptr = NULL;							 \   else									 \     {									 \       bfd_size_type amt = (bfd_size_type) size * symhdr->count;		 \       debug->ptr = (type) bfd_malloc (amt);				 \       if (debug->ptr == NULL)						 \ 	{								 \           ret = false;							 \           goto return_something;					 \ 	}								 \       if (bfd_seek (input_bfd, (file_ptr) symhdr->offset, SEEK_SET) != 0 \ 	  || bfd_bread (debug->ptr, amt, input_bfd) != amt)		 \ 	{								 \           ret = false;							 \           goto return_something;					 \ 	}								 \     }
+value|if (symhdr->count == 0)						 \     debug->ptr = NULL;							 \   else									 \     {									 \       bfd_size_type amt = (bfd_size_type) size * symhdr->count;		 \       debug->ptr = (type) bfd_malloc (amt);				 \       if (debug->ptr == NULL)						 \ 	{								 \           ret = FALSE;							 \           goto return_something;					 \ 	}								 \       if (bfd_seek (input_bfd, (file_ptr) symhdr->offset, SEEK_SET) != 0 \ 	  || bfd_bread (debug->ptr, amt, input_bfd) != amt)		 \ 	{								 \           ret = FALSE;							 \           goto return_something;					 \ 	}								 \     }
 comment|/* If raw_syments is not NULL, then the data was already by read by      _bfd_ecoff_slurp_symbolic_info.  */
 if|if
 condition|(
@@ -20183,7 +20211,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_link_write_external
 parameter_list|(
 name|h
@@ -20219,7 +20247,7 @@ name|einfo
 operator|->
 name|abfd
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|strip
 decl_stmt|;
 if|if
@@ -20261,7 +20289,7 @@ operator|==
 name|bfd_link_hash_new
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* We need to check if this symbol is being stripped.  */
@@ -20285,7 +20313,7 @@ name|bfd_link_hash_undefweak
 condition|)
 name|strip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 elseif|else
 if|if
@@ -20323,9 +20351,9 @@ name|root
 operator|.
 name|string
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|==
 name|NULL
@@ -20333,12 +20361,12 @@ operator|)
 condition|)
 name|strip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 else|else
 name|strip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -20349,7 +20377,7 @@ operator|->
 name|written
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -21082,7 +21110,7 @@ name|bfd_link_hash_indirect
 case|:
 comment|/* We ignore these symbols, since the indirected symbol is 	 already in the hash table.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* bfd_ecoff_debug_one_external uses iextMax to keep track of the      symbol number.  */
@@ -21153,7 +21181,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_indirect_link_order
 parameter_list|(
 name|output_bfd
@@ -21244,7 +21272,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|input_section
 operator|=
@@ -21579,12 +21607,12 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-comment|/* If we are producing relocateable output, the relocs were      modified, and we write them out now.  We use the reloc_count      field of output_section to keep track of the number of relocs we      have output so far.  */
+comment|/* If we are producing relocatable output, the relocs were      modified, and we write them out now.  We use the reloc_count      field of output_section to keep track of the number of relocs we      have output so far.  */
 if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|file_ptr
@@ -21667,7 +21695,7 @@ name|external_relocs
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -21698,7 +21726,7 @@ name|external_relocs
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -21709,7 +21737,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ecoff_reloc_link_order
 parameter_list|(
 name|output_bfd
@@ -21764,7 +21792,7 @@ name|bfd_byte
 modifier|*
 name|rbuf
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|ok
 decl_stmt|;
 name|file_ptr
@@ -21835,7 +21863,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -21896,11 +21924,11 @@ name|u
 operator|.
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -22032,7 +22060,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|rstat
 operator|=
@@ -22147,7 +22175,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 break|break;
@@ -22186,7 +22214,7 @@ operator|!
 name|ok
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|rel
@@ -22261,11 +22289,11 @@ name|u
 operator|.
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 expr_stmt|;
@@ -22344,7 +22372,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|in
 operator|.
@@ -22708,7 +22736,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|(
 operator|*

@@ -4,7 +4,7 @@ comment|/*  * This file is te-generic.h and is intended to be a template for  * 
 end_comment
 
 begin_comment
-comment|/* Added these, because if we don't know what we're targetting we may    need an assembler version of libgcc, and that will use local    labels.  */
+comment|/* Added these, because if we don't know what we're targeting we may    need an assembler version of libgcc, and that will use local    labels.  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* rename.c -- rename a file, preserving symlinks.    Copyright 1999 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* rename.c -- rename a file, preserving symlinks.    Copyright 1999, 2002, 2003 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -94,24 +94,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|simple_copy
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The number of bytes to copy at once.  */
@@ -133,20 +130,16 @@ specifier|static
 name|int
 name|simple_copy
 parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|from
 parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|to
 parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|from
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|to
-decl_stmt|;
 block|{
 name|int
 name|fromfd
@@ -344,21 +337,17 @@ begin_function
 name|void
 name|set_times
 parameter_list|(
-name|destination
-parameter_list|,
-name|statbuf
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|destination
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|stat
 modifier|*
 name|statbuf
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|result
@@ -588,27 +577,21 @@ begin_function
 name|int
 name|smart_rename
 parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|,
-name|preserve_dates
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|from
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|to
-decl_stmt|;
+parameter_list|,
 name|int
 name|preserve_dates
-decl_stmt|;
+parameter_list|)
 block|{
-name|boolean
+name|bfd_boolean
 name|exists
 decl_stmt|;
 name|struct
@@ -675,7 +658,7 @@ name|non_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: rename: %s"
+literal|"unable to rename '%s' reason: %s"
 argument_list|)
 argument_list|,
 name|to
@@ -694,7 +677,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* Use rename only if TO is not a symbolic link and has      only one hard link.  */
+comment|/* Use rename only if TO is not a symbolic link and has      only one hard link, and we have permission to write to it.  */
 if|if
 condition|(
 operator|!
@@ -708,6 +691,21 @@ name|s
 operator|.
 name|st_mode
 argument_list|)
+operator|&&
+name|S_ISREG
+argument_list|(
+name|s
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
+operator|(
+name|s
+operator|.
+name|st_mode
+operator|&
+name|S_IWUSR
+operator|)
 operator|&&
 name|s
 operator|.
@@ -787,7 +785,7 @@ name|non_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: rename: %s"
+literal|"unable to rename '%s' reason: %s"
 argument_list|)
 argument_list|,
 name|to
@@ -826,7 +824,7 @@ name|non_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: simple_copy: %s"
+literal|"unable to copy file '%s' reason: %s"
 argument_list|)
 argument_list|,
 name|to

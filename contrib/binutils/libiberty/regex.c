@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Extended regular expression matching and search library,    version 0.12.    (Implements POSIX draft P1003.2/D11.2, except for some of the    internationalization features.)    Copyright (C) 1993-1999, 2000, 2001 Free Software Foundation, Inc.    This file is part of the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Lesser General Public    License as published by the Free Software Foundation; either    version 2.1 of the License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Lesser General Public License for more details.     You should have received a copy of the GNU Lesser General Public    License along with the GNU C Library; if not, write to the Free    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307 USA.  */
+comment|/* Extended regular expression matching and search library,    version 0.12.    (Implements POSIX draft P1003.2/D11.2, except for some of the    internationalization features.)    Copyright (C) 1993-1999, 2000, 2001, 2002 Free Software Foundation, Inc.    This file is part of the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Lesser General Public    License as published by the Free Software Foundation; either    version 2.1 of the License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Lesser General Public License for more details.     You should have received a copy of the GNU Lesser General Public    License along with the GNU C Library; if not, write to the Free    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307 USA.  */
 end_comment
 
 begin_comment
@@ -16,6 +16,10 @@ if|#
 directive|if
 name|defined
 name|_AIX
+operator|&&
+operator|!
+name|defined
+name|__GNUC__
 operator|&&
 operator|!
 name|defined
@@ -61,6 +65,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<ansidecl.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -5900,224 +5910,112 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
+modifier|*
 name|re_error_msgid
 index|[]
 init|=
 block|{
-define|#
-directive|define
-name|REG_NOERROR_IDX
-value|0
 name|gettext_noop
 argument_list|(
 literal|"Success"
 argument_list|)
+block|,
 comment|/* REG_NOERROR */
-literal|"\0"
-define|#
-directive|define
-name|REG_NOMATCH_IDX
-value|(REG_NOERROR_IDX + sizeof "Success")
 name|gettext_noop
 argument_list|(
 literal|"No match"
 argument_list|)
+block|,
 comment|/* REG_NOMATCH */
-literal|"\0"
-define|#
-directive|define
-name|REG_BADPAT_IDX
-value|(REG_NOMATCH_IDX + sizeof "No match")
 name|gettext_noop
 argument_list|(
 literal|"Invalid regular expression"
 argument_list|)
+block|,
 comment|/* REG_BADPAT */
-literal|"\0"
-define|#
-directive|define
-name|REG_ECOLLATE_IDX
-value|(REG_BADPAT_IDX + sizeof "Invalid regular expression")
 name|gettext_noop
 argument_list|(
 literal|"Invalid collation character"
 argument_list|)
+block|,
 comment|/* REG_ECOLLATE */
-literal|"\0"
-define|#
-directive|define
-name|REG_ECTYPE_IDX
-value|(REG_ECOLLATE_IDX + sizeof "Invalid collation character")
 name|gettext_noop
 argument_list|(
 literal|"Invalid character class name"
 argument_list|)
+block|,
 comment|/* REG_ECTYPE */
-literal|"\0"
-define|#
-directive|define
-name|REG_EESCAPE_IDX
-value|(REG_ECTYPE_IDX + sizeof "Invalid character class name")
 name|gettext_noop
 argument_list|(
 literal|"Trailing backslash"
 argument_list|)
+block|,
 comment|/* REG_EESCAPE */
-literal|"\0"
-define|#
-directive|define
-name|REG_ESUBREG_IDX
-value|(REG_EESCAPE_IDX + sizeof "Trailing backslash")
 name|gettext_noop
 argument_list|(
 literal|"Invalid back reference"
 argument_list|)
+block|,
 comment|/* REG_ESUBREG */
-literal|"\0"
-define|#
-directive|define
-name|REG_EBRACK_IDX
-value|(REG_ESUBREG_IDX + sizeof "Invalid back reference")
 name|gettext_noop
 argument_list|(
 literal|"Unmatched [ or [^"
 argument_list|)
+block|,
 comment|/* REG_EBRACK */
-literal|"\0"
-define|#
-directive|define
-name|REG_EPAREN_IDX
-value|(REG_EBRACK_IDX + sizeof "Unmatched [ or [^")
 name|gettext_noop
 argument_list|(
 literal|"Unmatched ( or \\("
 argument_list|)
+block|,
 comment|/* REG_EPAREN */
-literal|"\0"
-define|#
-directive|define
-name|REG_EBRACE_IDX
-value|(REG_EPAREN_IDX + sizeof "Unmatched ( or \\(")
 name|gettext_noop
 argument_list|(
 literal|"Unmatched \\{"
 argument_list|)
+block|,
 comment|/* REG_EBRACE */
-literal|"\0"
-define|#
-directive|define
-name|REG_BADBR_IDX
-value|(REG_EBRACE_IDX + sizeof "Unmatched \\{")
 name|gettext_noop
 argument_list|(
 literal|"Invalid content of \\{\\}"
 argument_list|)
+block|,
 comment|/* REG_BADBR */
-literal|"\0"
-define|#
-directive|define
-name|REG_ERANGE_IDX
-value|(REG_BADBR_IDX + sizeof "Invalid content of \\{\\}")
 name|gettext_noop
 argument_list|(
 literal|"Invalid range end"
 argument_list|)
+block|,
 comment|/* REG_ERANGE */
-literal|"\0"
-define|#
-directive|define
-name|REG_ESPACE_IDX
-value|(REG_ERANGE_IDX + sizeof "Invalid range end")
 name|gettext_noop
 argument_list|(
 literal|"Memory exhausted"
 argument_list|)
+block|,
 comment|/* REG_ESPACE */
-literal|"\0"
-define|#
-directive|define
-name|REG_BADRPT_IDX
-value|(REG_ESPACE_IDX + sizeof "Memory exhausted")
 name|gettext_noop
 argument_list|(
 literal|"Invalid preceding regular expression"
 argument_list|)
+block|,
 comment|/* REG_BADRPT */
-literal|"\0"
-define|#
-directive|define
-name|REG_EEND_IDX
-value|(REG_BADRPT_IDX + sizeof "Invalid preceding regular expression")
 name|gettext_noop
 argument_list|(
 literal|"Premature end of regular expression"
 argument_list|)
+block|,
 comment|/* REG_EEND */
-literal|"\0"
-define|#
-directive|define
-name|REG_ESIZE_IDX
-value|(REG_EEND_IDX + sizeof "Premature end of regular expression")
 name|gettext_noop
 argument_list|(
 literal|"Regular expression too big"
 argument_list|)
+block|,
 comment|/* REG_ESIZE */
-literal|"\0"
-define|#
-directive|define
-name|REG_ERPAREN_IDX
-value|(REG_ESIZE_IDX + sizeof "Regular expression too big")
 name|gettext_noop
 argument_list|(
 literal|"Unmatched ) or \\)"
 argument_list|)
 comment|/* REG_ERPAREN */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|size_t
-name|re_error_msgid_idx
-index|[]
-init|=
-block|{
-name|REG_NOERROR_IDX
-block|,
-name|REG_NOMATCH_IDX
-block|,
-name|REG_BADPAT_IDX
-block|,
-name|REG_ECOLLATE_IDX
-block|,
-name|REG_ECTYPE_IDX
-block|,
-name|REG_EESCAPE_IDX
-block|,
-name|REG_ESUBREG_IDX
-block|,
-name|REG_EBRACK_IDX
-block|,
-name|REG_EPAREN_IDX
-block|,
-name|REG_EBRACE_IDX
-block|,
-name|REG_BADBR_IDX
-block|,
-name|REG_ERANGE_IDX
-block|,
-name|REG_ESPACE_IDX
-block|,
-name|REG_BADRPT_IDX
-block|,
-name|REG_EEND_IDX
-block|,
-name|REG_ESIZE_IDX
-block|,
-name|REG_ERPAREN_IDX
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -16973,6 +16871,9 @@ operator|||
 operator|*
 name|p
 operator|==
+operator|(
+name|UCHAR_T
+operator|)
 name|succeed
 condition|)
 block|{
@@ -28578,8 +28479,6 @@ return|return
 name|gettext
 argument_list|(
 name|re_error_msgid
-operator|+
-name|re_error_msgid_idx
 index|[
 operator|(
 name|int
@@ -28724,8 +28623,6 @@ operator|)
 name|gettext
 argument_list|(
 name|re_error_msgid
-operator|+
-name|re_error_msgid_idx
 index|[
 operator|(
 name|int
@@ -28771,8 +28668,6 @@ operator|)
 name|gettext
 argument_list|(
 name|re_error_msgid
-operator|+
-name|re_error_msgid_idx
 index|[
 operator|(
 name|int
@@ -28853,8 +28748,6 @@ operator|)
 name|gettext
 argument_list|(
 name|re_error_msgid
-operator|+
-name|re_error_msgid_idx
 index|[
 operator|(
 name|int
@@ -29096,6 +28989,9 @@ argument_list|(
 name|i
 argument_list|)
 else|:
+operator|(
+name|int
+operator|)
 name|i
 expr_stmt|;
 block|}
@@ -29591,6 +29487,7 @@ specifier|const
 name|regex_t
 modifier|*
 name|preg
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|char
 modifier|*
@@ -29622,12 +29519,12 @@ call|)
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|re_error_msgid_idx
+name|re_error_msgid
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|re_error_msgid_idx
+name|re_error_msgid
 index|[
 literal|0
 index|]
@@ -29643,8 +29540,6 @@ operator|=
 name|gettext
 argument_list|(
 name|re_error_msgid
-operator|+
-name|re_error_msgid_idx
 index|[
 name|errcode
 index|]
@@ -29687,7 +29582,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|__mempcpy
+name|mempcpy
 argument_list|(
 name|errbuf
 argument_list|,

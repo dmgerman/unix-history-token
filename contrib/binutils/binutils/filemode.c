@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* filemode.c -- make a string describing file modes    Copyright 1985, 1990, 1991, 1994, 1995, 1997    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* filemode.c -- make a string describing file modes    Copyright 1985, 1990, 1991, 1994, 1995, 1997, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -18,36 +18,30 @@ directive|include
 file|"bucomm.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 name|ftypelet
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|setst
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* filemodestring - fill in string STR with an ls-style ASCII    representation of the st_mode field of file stats block STATP.    10 characters are stored in STR; no terminating null is added.    The characters stored in STR are:     0	File type.  'd' for directory, 'c' for character 	special, 'b' for block special, 'm' for multiplex, 	'l' for symbolic link, 's' for socket, 'p' for fifo, 	'-' for any other file type     1	'r' if the owner may read, '-' otherwise.     2	'w' if the owner may write, '-' otherwise.     3	'x' if the owner may execute, 's' if the file is 	set-user-id, '-' otherwise. 	'S' if the file is set-user-id, but the execute 	bit isn't set.     4	'r' if group members may read, '-' otherwise.     5	'w' if group members may write, '-' otherwise.     6	'x' if group members may execute, 's' if the file is 	set-group-id, '-' otherwise. 	'S' if it is set-group-id but not executable.     7	'r' if any user may read, '-' otherwise.     8	'w' if any user may write, '-' otherwise.     9	'x' if any user may execute, 't' if the file is "sticky" 	(will be retained in swap space after execution), '-' 	otherwise. 	'T' if the file is sticky but not executable.  */
@@ -64,7 +58,7 @@ comment|/* This is not used; only mode_string is used.  */
 end_comment
 
 begin_endif
-unit|void filemodestring (statp, str)      struct stat *statp;      char *str; {   mode_string ((unsigned long) statp->st_mode, str); }
+unit|void filemodestring (struct stat *statp, char *str) {   mode_string ((unsigned long) statp->st_mode, str); }
 endif|#
 directive|endif
 end_endif
@@ -297,18 +291,14 @@ begin_function
 name|void
 name|mode_string
 parameter_list|(
-name|mode
-parameter_list|,
-name|str
-parameter_list|)
 name|unsigned
 name|long
 name|mode
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|str
 index|[
@@ -492,7 +482,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a character indicating the type of file described by    file mode BITS:    'd' for directories    'b' for block special files    'c' for character special files    'm' for multiplexor files    'l' for symbolic links    's' for sockets    'p' for fifos    '-' for any other file type.  */
+comment|/* Return a character indicating the type of file described by    file mode BITS:    'd' for directories    'b' for block special files    'c' for character special files    'm' for multiplexer files    'l' for symbolic links    's' for sockets    'p' for fifos    '-' for any other file type.  */
 end_comment
 
 begin_ifndef
@@ -854,12 +844,10 @@ specifier|static
 name|char
 name|ftypelet
 parameter_list|(
-name|bits
-parameter_list|)
 name|unsigned
 name|long
 name|bits
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -985,20 +973,16 @@ specifier|static
 name|void
 name|setst
 parameter_list|(
-name|bits
-parameter_list|,
-name|chars
-parameter_list|)
 name|unsigned
 name|long
 name|bits
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|chars
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef

@@ -36,7 +36,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
+name|ANSI_PROTOTYPES
 end_ifdef
 
 begin_include
@@ -63,7 +63,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__STDC__ */
+comment|/* !ANSI_PROTOTYPES */
 end_comment
 
 begin_if
@@ -164,7 +164,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __STDC__ */
+comment|/* ANSI_PROTOTYPES */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* V850 ELF support for BFD.    Copyright 1997, 1998, 2000 Free Software Foundation, Inc.    Created by Michael Meissner, Cygnus Support<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* V850 ELF support for BFD.    Copyright 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.    Created by Michael Meissner, Cygnus Support<meissner@cygnus.com>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -57,18 +57,18 @@ value|0x10000000
 end_define
 
 begin_comment
-comment|/* v850ea code.  */
+comment|/* v850e1 code.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|E_V850EA_ARCH
+name|E_V850E1_ARCH
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* Flags for the st_other field */
+comment|/* Flags for the st_other field.  */
 end_comment
 
 begin_define
@@ -79,7 +79,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* symbol had SDA relocations */
+comment|/* Symbol had SDA relocations.  */
 end_comment
 
 begin_define
@@ -90,7 +90,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* symbol had ZDA relocations */
+comment|/* Symbol had ZDA relocations.  */
 end_comment
 
 begin_define
@@ -101,7 +101,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* symbol had TDA relocations */
+comment|/* Symbol had TDA relocations.  */
 end_comment
 
 begin_define
@@ -112,7 +112,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* symbol had TDA byte relocations */
+comment|/* Symbol had TDA byte relocations.  */
 end_comment
 
 begin_define
@@ -123,11 +123,11 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* symbol had an error reported */
+comment|/* Symbol had an error reported.  */
 end_comment
 
 begin_comment
-comment|/* V850 relocations */
+comment|/* V850 relocations.  */
 end_comment
 
 begin_include
@@ -200,7 +200,7 @@ end_macro
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
-argument|R_V850_32
+argument|R_V850_ABS32
 argument_list|,
 literal|6
 argument_list|)
@@ -425,6 +425,42 @@ argument_list|)
 end_macro
 
 begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_V850_LONGCALL
+argument_list|,
+literal|25
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_V850_LONGJUMP
+argument_list|,
+literal|26
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_V850_ALIGN
+argument_list|,
+literal|27
+argument_list|)
+end_macro
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_V850_REL32
+argument_list|,
+literal|28
+argument_list|)
+end_macro
+
+begin_macro
 name|END_RELOC_NUMBERS
 argument_list|(
 argument|R_V850_max
@@ -509,6 +545,43 @@ define|#
 directive|define
 name|SHT_V850_ZCOMMON
 value|0x70000002
+end_define
+
+begin_comment
+comment|/* Processor specific section flags.  */
+end_comment
+
+begin_comment
+comment|/* This section must be in the small data area (pointed to by GP).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_V850_GPREL
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* This section must be in the tiny data area (pointed to by EP).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_V850_EPREL
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* This section must be in the zero data area (pointed to by R0).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHF_V850_R0REL
+value|0x40000000
 end_define
 
 begin_endif

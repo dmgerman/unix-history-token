@@ -51,31 +51,31 @@ block|,
 comment|/* (X_add_symbol / X_op_symbol) + X_add_number.  */
 name|O_divide
 block|,
-comment|/* X_add_symbol % X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol % X_op_symbol) + X_add_number.  */
 name|O_modulus
 block|,
-comment|/* X_add_symbol<< X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol<< X_op_symbol) + X_add_number.  */
 name|O_left_shift
 block|,
-comment|/* X_add_symbol>> X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol>> X_op_symbol) + X_add_number.  */
 name|O_right_shift
 block|,
-comment|/* X_add_symbol | X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol | X_op_symbol) + X_add_number.  */
 name|O_bit_inclusive_or
 block|,
-comment|/* X_add_symbol |~ X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol |~ X_op_symbol) + X_add_number.  */
 name|O_bit_or_not
 block|,
-comment|/* X_add_symbol ^ X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol ^ X_op_symbol) + X_add_number.  */
 name|O_bit_exclusive_or
 block|,
-comment|/* X_add_symbol& X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol& X_op_symbol) + X_add_number.  */
 name|O_bit_and
 block|,
-comment|/* X_add_symbol + X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol + X_op_symbol) + X_add_number.  */
 name|O_add
 block|,
-comment|/* X_add_symbol - X_op_symbol) + X_add_number.  */
+comment|/* (X_add_symbol - X_op_symbol) + X_add_number.  */
 name|O_subtract
 block|,
 comment|/* (X_add_symbol == X_op_symbol) + X_add_number.  */
@@ -290,179 +290,146 @@ name|operator_rankT
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 name|get_symbol_end
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|expr_begin
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|expr_set_precedence
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|segT
 name|expr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|rank
-operator|,
+parameter_list|,
 name|expressionS
-operator|*
+modifier|*
 name|resultP
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|unsigned
 name|int
 name|get_single_number
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|symbolS
 modifier|*
 name|make_expr_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|expressionS
-operator|*
+modifier|*
 name|expressionP
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|expr_symbol_where
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symbolS
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|symbolS
 modifier|*
 name|expr_build_uconstant
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|offsetT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|symbolS
 modifier|*
 name|expr_build_unary
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|operatorT
-operator|,
+parameter_list|,
 name|symbolS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|symbolS
 modifier|*
 name|expr_build_binary
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|operatorT
-operator|,
+parameter_list|,
 name|symbolS
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|symbolS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|symbolS
 modifier|*
 name|expr_build_dot
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

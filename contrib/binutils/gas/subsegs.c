@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* subsegs.c - subsegments -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* subsegs.c - subsegments -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2002    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -258,20 +258,17 @@ begin_comment
 comment|/* BFD_ASSEMBLER */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|subseg_set_rest
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|segT
-operator|,
+parameter_list|,
 name|subsegT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -293,7 +290,9 @@ end_escape
 begin_function
 name|void
 name|subsegs_begin
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Check table(s) seg_name[], seg_N_TYPE[] is in correct order */
 if|#
@@ -574,18 +573,14 @@ begin_function
 name|void
 name|subseg_change
 parameter_list|(
-name|seg
-parameter_list|,
-name|subseg
-parameter_list|)
 specifier|register
 name|segT
 name|seg
-decl_stmt|;
+parameter_list|,
 specifier|register
 name|int
 name|subseg
-decl_stmt|;
+parameter_list|)
 block|{
 name|now_seg
 operator|=
@@ -819,16 +814,12 @@ specifier|static
 name|void
 name|subseg_set_rest
 parameter_list|(
-name|seg
-parameter_list|,
-name|subseg
-parameter_list|)
 name|segT
 name|seg
-decl_stmt|;
+parameter_list|,
 name|subsegT
 name|subseg
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|frchainS
@@ -1494,18 +1485,14 @@ begin_function
 name|segT
 name|subseg_get
 parameter_list|(
-name|segname
-parameter_list|,
-name|force_new
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|segname
-decl_stmt|;
+parameter_list|,
 name|int
 name|force_new
-decl_stmt|;
+parameter_list|)
 block|{
 name|segT
 name|secptr
@@ -1580,6 +1567,18 @@ argument_list|,
 name|segname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|obj_sec_set_private_data
+name|obj_sec_set_private_data
+argument_list|(
+name|stdoutput
+argument_list|,
+name|secptr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|seginfo
 operator|=
 name|seg_info
@@ -1593,7 +1592,7 @@ operator|!
 name|seginfo
 condition|)
 block|{
-comment|/* Check whether output_section is set first because secptr may          be bfd_abs_section_ptr.  */
+comment|/* Check whether output_section is set first because secptr may 	 be bfd_abs_section_ptr.  */
 if|if
 condition|(
 name|secptr
@@ -1730,18 +1729,14 @@ begin_function
 name|segT
 name|subseg_new
 parameter_list|(
-name|segname
-parameter_list|,
-name|subseg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|segname
-decl_stmt|;
+parameter_list|,
 name|subsegT
 name|subseg
-decl_stmt|;
+parameter_list|)
 block|{
 name|segT
 name|secptr
@@ -1800,18 +1795,14 @@ begin_function
 name|segT
 name|subseg_force_new
 parameter_list|(
-name|segname
-parameter_list|,
-name|subseg
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|segname
-decl_stmt|;
+parameter_list|,
 name|subsegT
 name|subseg
-decl_stmt|;
+parameter_list|)
 block|{
 name|segT
 name|secptr
@@ -1866,16 +1857,12 @@ begin_function
 name|void
 name|subseg_set
 parameter_list|(
-name|secptr
-parameter_list|,
-name|subseg
-parameter_list|)
 name|segT
 name|secptr
-decl_stmt|;
+parameter_list|,
 name|subsegT
 name|subseg
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1934,11 +1921,9 @@ name|segment_info_type
 modifier|*
 name|seg_info
 parameter_list|(
-name|sec
-parameter_list|)
 name|segT
 name|sec
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1980,11 +1965,9 @@ name|symbolS
 modifier|*
 name|section_symbol
 parameter_list|(
-name|sec
-parameter_list|)
 name|segT
 name|sec
-decl_stmt|;
+parameter_list|)
 block|{
 name|segment_info_type
 modifier|*
@@ -2032,13 +2015,8 @@ if|if
 condition|(
 operator|!
 name|EMIT_SECTION_SYMBOLS
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
 operator|||
 name|symbol_table_frozen
-endif|#
-directive|endif
 condition|)
 block|{
 comment|/* Here we know it won't be going into the symbol table.  */
@@ -2047,6 +2025,8 @@ operator|=
 name|symbol_create
 argument_list|(
 name|sec
+operator|->
+name|symbol
 operator|->
 name|name
 argument_list|,
@@ -2067,6 +2047,8 @@ name|symbol_find_base
 argument_list|(
 name|sec
 operator|->
+name|symbol
+operator|->
 name|name
 argument_list|,
 literal|0
@@ -2083,6 +2065,8 @@ operator|=
 name|symbol_new
 argument_list|(
 name|sec
+operator|->
+name|symbol
 operator|->
 name|name
 argument_list|,
@@ -2145,6 +2129,16 @@ name|sec
 operator|->
 name|symbol
 argument_list|)
+expr_stmt|;
+else|else
+name|symbol_get_bfdsym
+argument_list|(
+name|s
+argument_list|)
+operator|->
+name|flags
+operator||=
+name|BSF_SECTION_SYM
 expr_stmt|;
 name|seginfo
 operator|->
@@ -2222,11 +2216,9 @@ begin_function
 name|int
 name|subseg_text_p
 parameter_list|(
-name|sec
-parameter_list|)
 name|segT
 name|sec
-decl_stmt|;
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -2342,12 +2334,10 @@ begin_function
 name|void
 name|subsegs_print_statistics
 parameter_list|(
-name|file
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|)
 block|{
 name|frchainS
 modifier|*

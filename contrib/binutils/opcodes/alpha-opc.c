@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* alpha-opc.c -- Alpha AXP opcode list    Copyright 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@cygnus.com>,    patterned after the PPC opcode handling written by Ian Lance Taylor.     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* alpha-opc.c -- Alpha AXP opcode list    Copyright 1996, 1997, 1998, 1999, 2000, 2003 Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@cygnus.com>,    patterned after the PPC opcode handling written by Ian Lance Taylor.     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -995,10 +995,6 @@ begin_comment
 comment|/* The RB field when it is the same as the RA field in the same insn.    This operand is marked fake.  The insertion function just copies    the RA field into the RB field, and the extraction function just    checks that the fields are the same. */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|unsigned
@@ -1107,10 +1103,6 @@ begin_comment
 comment|/* The same for the RC field */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|unsigned
@@ -1211,10 +1203,6 @@ begin_comment
 comment|/* Fake arguments in which the registers must be set to ZERO */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|unsigned
@@ -1303,10 +1291,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|unsigned
@@ -1394,10 +1378,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 specifier|static
@@ -1549,10 +1529,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1661,10 +1637,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -1772,10 +1744,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 specifier|static
@@ -2493,6 +2461,21 @@ name|ARG_NONE
 block|}
 block|,
 block|{
+literal|"bugchk"
+block|,
+name|SPCD
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x0081
+argument_list|)
+block|,
+name|BASE
+block|,
+name|ARG_NONE
+block|}
+block|,
+block|{
 literal|"callsys"
 block|,
 name|SPCD
@@ -2530,6 +2513,51 @@ argument_list|(
 literal|0x00
 argument_list|,
 literal|0x0086
+argument_list|)
+block|,
+name|BASE
+block|,
+name|ARG_NONE
+block|}
+block|,
+block|{
+literal|"rduniq"
+block|,
+name|SPCD
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x009e
+argument_list|)
+block|,
+name|BASE
+block|,
+name|ARG_NONE
+block|}
+block|,
+block|{
+literal|"wruniq"
+block|,
+name|SPCD
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x009f
+argument_list|)
+block|,
+name|BASE
+block|,
+name|ARG_NONE
+block|}
+block|,
+block|{
+literal|"gentrap"
+block|,
+name|SPCD
+argument_list|(
+literal|0x00
+argument_list|,
+literal|0x00aa
 argument_list|)
 block|,
 name|BASE
@@ -10996,9 +11024,31 @@ name|BASE
 block|,
 block|{
 name|RA
+block|,
+name|ZB
 block|}
 block|}
 block|,
+block|{
+literal|"rpcc"
+block|,
+name|MFC
+argument_list|(
+literal|0x18
+argument_list|,
+literal|0xC000
+argument_list|)
+block|,
+name|BASE
+block|,
+block|{
+name|RA
+block|,
+name|RB
+block|}
+block|}
+block|,
+comment|/* ev6 una */
 block|{
 literal|"rc"
 block|,

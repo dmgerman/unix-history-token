@@ -55,19 +55,15 @@ directive|ifdef
 name|SIG_SETMASK
 end_ifdef
 
-begin_decl_stmt
+begin_function
 name|int
-name|DEFUN
-argument_list|(
 name|sigsetmask
-argument_list|,
-operator|(
+parameter_list|(
 name|set
-operator|)
-argument_list|,
+parameter_list|)
 name|int
 name|set
-argument_list|)
+decl_stmt|;
 block|{
 name|sigset_t
 name|new
@@ -109,7 +105,7 @@ literal|1
 return|;
 comment|/* FIXME, we always return 1 as old value.  */
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#

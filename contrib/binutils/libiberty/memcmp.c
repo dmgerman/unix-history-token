@@ -16,7 +16,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
+name|ANSI_PROTOTYPES
 end_ifdef
 
 begin_include
@@ -42,31 +42,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function
 name|int
-name|DEFUN
-argument_list|(
 name|memcmp
-argument_list|,
-operator|(
+parameter_list|(
 name|str1
-operator|,
+parameter_list|,
 name|str2
-operator|,
+parameter_list|,
 name|count
-operator|)
-argument_list|,
+parameter_list|)
 specifier|const
 name|PTR
 name|str1
-name|AND
+decl_stmt|;
 specifier|const
 name|PTR
 name|str2
-name|AND
+decl_stmt|;
 name|size_t
 name|count
-argument_list|)
+decl_stmt|;
 block|{
 specifier|register
 specifier|const
@@ -139,7 +135,7 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

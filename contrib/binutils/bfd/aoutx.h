@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD semi-generic back-end for a.out binaries.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD semi-generic back-end for a.out binaries.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_get_external_symbols
 name|PARAMS
 argument_list|(
@@ -88,7 +88,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|translate_from_native_sym_flags
 name|PARAMS
 argument_list|(
@@ -105,7 +105,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|translate_to_native_sym_flags
 name|PARAMS
 argument_list|(
@@ -360,7 +360,7 @@ name|howto_table_ext
 index|[]
 init|=
 block|{
-comment|/* type           rs   size bsz  pcrel bitpos ovrf                  sf name          part_inpl readmask setmask pcdone */
+comment|/* type           rs   size bsz  pcrel bitpos ovrf                  sf name          part_inpl readmask setmask pcdone.  */
 name|HOWTO
 argument_list|(
 name|RELOC_8
@@ -371,7 +371,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -381,13 +381,13 @@ literal|0
 argument_list|,
 literal|"8"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x000000ff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -400,7 +400,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -410,13 +410,13 @@ literal|0
 argument_list|,
 literal|"16"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -429,7 +429,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -439,13 +439,13 @@ literal|0
 argument_list|,
 literal|"32"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -458,7 +458,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -468,13 +468,13 @@ literal|0
 argument_list|,
 literal|"DISP8"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x000000ff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -487,7 +487,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -497,13 +497,13 @@ literal|0
 argument_list|,
 literal|"DISP16"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -516,7 +516,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -526,13 +526,13 @@ literal|0
 argument_list|,
 literal|"DISP32"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -545,7 +545,7 @@ literal|2
 argument_list|,
 literal|30
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -555,13 +555,13 @@ literal|0
 argument_list|,
 literal|"WDISP30"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x3fffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -574,7 +574,7 @@ literal|2
 argument_list|,
 literal|22
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -584,13 +584,13 @@ literal|0
 argument_list|,
 literal|"WDISP22"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x003fffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -603,7 +603,7 @@ literal|2
 argument_list|,
 literal|22
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -613,13 +613,13 @@ literal|0
 argument_list|,
 literal|"HI22"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x003fffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -632,7 +632,7 @@ literal|2
 argument_list|,
 literal|22
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -642,13 +642,13 @@ literal|0
 argument_list|,
 literal|"22"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x003fffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -661,7 +661,7 @@ literal|2
 argument_list|,
 literal|13
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -671,13 +671,13 @@ literal|0
 argument_list|,
 literal|"13"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00001fff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -690,7 +690,7 @@ literal|2
 argument_list|,
 literal|10
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -700,13 +700,13 @@ literal|0
 argument_list|,
 literal|"LO10"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x000003ff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -719,7 +719,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -729,13 +729,13 @@ literal|0
 argument_list|,
 literal|"SFA_BASE"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -748,7 +748,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -758,13 +758,13 @@ literal|0
 argument_list|,
 literal|"SFA_OFF13"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -777,7 +777,7 @@ literal|2
 argument_list|,
 literal|10
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -787,13 +787,13 @@ literal|0
 argument_list|,
 literal|"BASE10"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x000003ff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -806,7 +806,7 @@ literal|2
 argument_list|,
 literal|13
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -816,13 +816,13 @@ literal|0
 argument_list|,
 literal|"BASE13"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00001fff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -835,7 +835,7 @@ literal|2
 argument_list|,
 literal|22
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -845,13 +845,13 @@ literal|0
 argument_list|,
 literal|"BASE22"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x003fffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -864,7 +864,7 @@ literal|2
 argument_list|,
 literal|10
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -874,13 +874,13 @@ literal|0
 argument_list|,
 literal|"PC10"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x000003ff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -893,7 +893,7 @@ literal|2
 argument_list|,
 literal|22
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -903,13 +903,13 @@ literal|0
 argument_list|,
 literal|"PC22"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x003fffff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -922,7 +922,7 @@ literal|2
 argument_list|,
 literal|30
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -932,13 +932,13 @@ literal|0
 argument_list|,
 literal|"JMP_TBL"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x3fffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -951,7 +951,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -961,13 +961,13 @@ literal|0
 argument_list|,
 literal|"SEGOFF16"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -980,7 +980,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -990,13 +990,13 @@ literal|0
 argument_list|,
 literal|"GLOB_DAT"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1009,7 +1009,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1019,13 +1019,13 @@ literal|0
 argument_list|,
 literal|"JMP_SLOT"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1038,7 +1038,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1048,13 +1048,13 @@ literal|0
 argument_list|,
 literal|"RELATIVE"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1067,7 +1067,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1077,13 +1077,13 @@ literal|0
 argument_list|,
 literal|"R_SPARC_NONE"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -1096,7 +1096,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1106,13 +1106,13 @@ literal|0
 argument_list|,
 literal|"R_SPARC_NONE"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 define|#
@@ -1129,7 +1129,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1139,13 +1139,13 @@ literal|0
 argument_list|,
 literal|"R_SPARC_REV32"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|, }
 decl_stmt|;
@@ -1161,7 +1161,7 @@ name|howto_table_std
 index|[]
 init|=
 block|{
-comment|/* type              rs size bsz  pcrel bitpos ovrf                     sf name     part_inpl readmask  setmask    pcdone */
+comment|/* type              rs size bsz  pcrel bitpos ovrf                     sf name     part_inpl readmask  setmask    pcdone.  */
 name|HOWTO
 argument_list|(
 literal|0
@@ -1172,7 +1172,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1182,13 +1182,13 @@ literal|0
 argument_list|,
 literal|"8"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x000000ff
 argument_list|,
 literal|0x000000ff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1201,7 +1201,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1211,13 +1211,13 @@ literal|0
 argument_list|,
 literal|"16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1230,7 +1230,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1240,13 +1240,13 @@ literal|0
 argument_list|,
 literal|"32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1259,7 +1259,7 @@ literal|4
 argument_list|,
 literal|64
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1269,13 +1269,13 @@ literal|0
 argument_list|,
 literal|"64"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xdeaddead
 argument_list|,
 literal|0xdeaddead
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1288,7 +1288,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1298,13 +1298,13 @@ literal|0
 argument_list|,
 literal|"DISP8"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x000000ff
 argument_list|,
 literal|0x000000ff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1317,7 +1317,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1327,13 +1327,13 @@ literal|0
 argument_list|,
 literal|"DISP16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1346,7 +1346,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1356,13 +1356,13 @@ literal|0
 argument_list|,
 literal|"DISP32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1375,7 +1375,7 @@ literal|4
 argument_list|,
 literal|64
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1385,13 +1385,13 @@ literal|0
 argument_list|,
 literal|"DISP64"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xfeedface
 argument_list|,
 literal|0xfeedface
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1404,7 +1404,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1414,13 +1414,13 @@ literal|0
 argument_list|,
 literal|"GOT_REL"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1433,7 +1433,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1443,13 +1443,13 @@ literal|0
 argument_list|,
 literal|"BASE16"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1462,7 +1462,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1472,13 +1472,13 @@ literal|0
 argument_list|,
 literal|"BASE32"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|EMPTY_HOWTO
@@ -1521,7 +1521,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1531,13 +1531,13 @@ literal|0
 argument_list|,
 literal|"JMP_TABLE"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|EMPTY_HOWTO
@@ -1640,7 +1640,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1650,13 +1650,13 @@ literal|0
 argument_list|,
 literal|"RELATIVE"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|EMPTY_HOWTO
@@ -1711,7 +1711,7 @@ literal|2
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1721,13 +1721,13 @@ literal|0
 argument_list|,
 literal|"BASEREL"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0x00000000
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|, }
 decl_stmt|;
@@ -1963,12 +1963,19 @@ name|NULL
 return|;
 block|}
 else|else
-comment|/* std relocs */
+comment|/* std relocs.  */
 switch|switch
 condition|(
 name|code
 condition|)
 block|{
+name|STD
+argument_list|(
+name|BFD_RELOC_8
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|STD
 argument_list|(
 name|BFD_RELOC_16
@@ -2400,7 +2407,7 @@ comment|/* Make all the section for an a.out file.  */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -2445,7 +2452,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2474,7 +2481,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2503,10 +2510,10 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -2659,6 +2666,7 @@ name|rawptr
 operator|->
 name|e
 expr_stmt|;
+comment|/* Copy in the internal_exec struct.  */
 operator|*
 operator|(
 name|abfd
@@ -2675,7 +2683,6 @@ operator|=
 operator|*
 name|execp
 expr_stmt|;
-comment|/* Copy in the internal_exec struct */
 name|execp
 operator|=
 name|abfd
@@ -2688,7 +2695,7 @@ name|a
 operator|.
 name|hdr
 expr_stmt|;
-comment|/* Set the file flags */
+comment|/* Set the file flags.  */
 name|abfd
 operator|->
 name|flags
@@ -2711,7 +2718,7 @@ name|flags
 operator||=
 name|HAS_RELOC
 expr_stmt|;
-comment|/* Setting of EXEC_P has been deferred to the bottom of this function */
+comment|/* Setting of EXEC_P has been deferred to the bottom of this function.  */
 if|if
 condition|(
 name|execp
@@ -3132,8 +3139,8 @@ operator|*
 name|execp
 argument_list|)
 expr_stmt|;
-comment|/* data and bss are already filled in since they're so standard */
-comment|/* The virtual memory addresses of the sections */
+comment|/* Data and bss are already filled in since they're so standard.  */
+comment|/* The virtual memory addresses of the sections.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -3173,7 +3180,7 @@ operator|*
 name|execp
 argument_list|)
 expr_stmt|;
-comment|/* The file offsets of the sections */
+comment|/* The file offsets of the sections.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -3200,7 +3207,7 @@ operator|*
 name|execp
 argument_list|)
 expr_stmt|;
-comment|/* The file offsets of the relocation info */
+comment|/* The file offsets of the relocation info.  */
 name|obj_textsec
 argument_list|(
 name|abfd
@@ -3479,11 +3486,11 @@ block|}
 end_block
 
 begin_comment
-comment|/* FUNCTION 	aout_@var{size}_mkobject  SYNOPSIS 	boolean aout_@var{size}_mkobject, (bfd *abfd);  DESCRIPTION 	Initialize BFD @var{abfd} for use with a.out files. */
+comment|/* FUNCTION 	aout_@var{size}_mkobject  SYNOPSIS 	bfd_boolean aout_@var{size}_mkobject, (bfd *abfd);  DESCRIPTION 	Initialize BFD @var{abfd} for use with a.out files. */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -3541,7 +3548,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|abfd
 operator|->
@@ -3597,7 +3604,7 @@ operator|)
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -3636,7 +3643,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 modifier|*
 name|unknown
 decl_stmt|;
@@ -3655,7 +3662,7 @@ expr_stmt|;
 operator|*
 name|unknown
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 switch|switch
 condition|(
@@ -3729,7 +3736,7 @@ expr_stmt|;
 operator|*
 name|unknown
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -3764,6 +3771,14 @@ condition|(
 name|machine
 operator|==
 literal|0
+operator|||
+name|machine
+operator|==
+name|bfd_mach_i386_i386
+operator|||
+name|machine
+operator|==
+name|bfd_mach_i386_i386_intel_syntax
 condition|)
 name|arch_flags
 operator|=
@@ -3865,10 +3880,16 @@ case|case
 name|bfd_mach_mipsisa32
 case|:
 case|case
+name|bfd_mach_mipsisa32r2
+case|:
+case|case
 name|bfd_mach_mips5
 case|:
 case|case
 name|bfd_mach_mipsisa64
+case|:
+case|case
+name|bfd_mach_mipsisa64r2
 case|:
 case|case
 name|bfd_mach_mips_sb1
@@ -3933,7 +3954,7 @@ case|:
 operator|*
 name|unknown
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -3969,7 +3990,7 @@ condition|)
 operator|*
 name|unknown
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 return|return
 name|arch_flags
@@ -3978,11 +3999,11 @@ block|}
 end_block
 
 begin_comment
-comment|/* FUNCTION 	aout_@var{size}_set_arch_mach  SYNOPSIS 	boolean aout_@var{size}_set_arch_mach, 	 (bfd *, 	  enum bfd_architecture arch, 	  unsigned long machine));  DESCRIPTION 	Set the architecture and the machine of the BFD @var{abfd} to the 	values @var{arch} and @var{machine}.  Verify that @var{abfd}'s format 	can support the architecture required. */
+comment|/* FUNCTION 	aout_@var{size}_set_arch_mach  SYNOPSIS 	bfd_boolean aout_@var{size}_set_arch_mach, 	 (bfd *, 	  enum bfd_architecture arch, 	  unsigned long machine));  DESCRIPTION 	Set the architecture and the machine of the BFD @var{abfd} to the 	values @var{arch} and @var{machine}.  Verify that @var{abfd}'s format 	can support the architecture required. */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -4031,7 +4052,7 @@ name|machine
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -4040,7 +4061,7 @@ operator|!=
 name|bfd_arch_unknown
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|unknown
 decl_stmt|;
 name|NAME
@@ -4063,10 +4084,10 @@ condition|(
 name|unknown
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
-comment|/* Determine the size of a relocation entry */
+comment|/* Determine the size of a relocation entry.  */
 switch|switch
 condition|(
 name|arch
@@ -4227,7 +4248,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* ?? Does alignment in the file image really matter? */
+comment|/* ?? Does alignment in the file image really matter?  */
 block|pad = align_power (vma, obj_datasec (abfd)->alignment_power) - vma;
 endif|#
 directive|endif
@@ -5361,7 +5382,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -5422,7 +5443,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -5436,7 +5457,7 @@ operator|!=
 name|undecided_magic
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|obj_textsec
 argument_list|(
@@ -5683,17 +5704,17 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/* FUNCTION 	aout_@var{size}_new_section_hook  SYNOPSIS         boolean aout_@var{size}_new_section_hook, 	   (bfd *abfd, 	    asection *newsect));  DESCRIPTION 	Called by the BFD in response to a @code{bfd_make_section} 	request. */
+comment|/* FUNCTION 	aout_@var{size}_new_section_hook  SYNOPSIS         bfd_boolean aout_@var{size}_new_section_hook, 	   (bfd *abfd, 	    asection *newsect));  DESCRIPTION 	Called by the BFD in response to a @code{bfd_make_section} 	request. */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -5720,7 +5741,7 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* align to double at least */
+comment|/* Align to double at least.  */
 name|newsect
 operator|->
 name|alignment_power
@@ -5776,7 +5797,7 @@ operator|=
 name|N_TEXT
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -5813,7 +5834,7 @@ operator|=
 name|N_DATA
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -5850,19 +5871,19 @@ operator|=
 name|N_BSS
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
-comment|/* We allow more than three sections internally */
+comment|/* We allow more than three sections internally.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -5893,6 +5914,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|PTR
 name|location
 decl_stmt|;
@@ -5946,7 +5968,7 @@ name|text_end
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -5965,7 +5987,7 @@ name|bfd_error_no_contents
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -5984,6 +6006,41 @@ argument_list|(
 name|abfd
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|aout_section_merge_with_text_p
+argument_list|(
+name|abfd
+argument_list|,
+name|section
+argument_list|)
+condition|)
+name|section
+operator|->
+name|filepos
+operator|=
+name|obj_textsec
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|filepos
+operator|+
+operator|(
+name|section
+operator|->
+name|vma
+operator|-
+name|obj_textsec
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|vma
+operator|)
+expr_stmt|;
+else|else
 block|{
 call|(
 modifier|*
@@ -6014,8 +6071,9 @@ name|bfd_error_nonrepresentable_section
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -6053,11 +6111,11 @@ operator|!=
 name|count
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -6071,7 +6129,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_get_external_symbols
 parameter_list|(
 name|abfd
@@ -6146,11 +6204,11 @@ argument_list|(
 name|abfd
 argument_list|)
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|syms
 operator|=
@@ -6201,7 +6259,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|amt
 operator|=
@@ -6246,7 +6304,7 @@ name|syms
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 endif|#
@@ -6336,7 +6394,7 @@ operator|!=
 name|amt
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|stringsize
 operator|=
@@ -6370,11 +6428,11 @@ argument_list|(
 name|abfd
 argument_list|)
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|strings
 operator|=
@@ -6411,7 +6469,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Skip space for the string count in the buffer for convenience 	 when using indexes.  */
 name|amt
@@ -6442,7 +6500,7 @@ name|strings
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 endif|#
@@ -6480,7 +6538,7 @@ name|stringsize
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -6491,7 +6549,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|translate_from_native_sym_flags
 parameter_list|(
 name|abfd
@@ -6617,7 +6675,7 @@ operator|->
 name|vma
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Get the default visibility.  This does not apply to all types, so      we just hold it in a local variable to use if wanted.  */
@@ -6903,7 +6961,7 @@ directive|if
 literal|0
 block|asection *section; 	arelent_chain *reloc; 	asection *into_section; 	bfd_size_type amt;
 comment|/* This is a set symbol.  The name of the symbol is the name 	   of the set (e.g., __CTOR_LIST__).  The value of the symbol 	   is the value to add to the set.  We create a section with 	   the same name as the symbol, and add a reloc to insert the 	   appropriate value into the section.  	   This action is actually obsolete; it used to make the 	   linker do the right thing, but the linker no longer uses 	   this function.  */
-block|section = bfd_get_section_by_name (abfd, cache_ptr->symbol.name); 	if (section == NULL) 	  { 	    char *copy;  	    amt = strlen (cache_ptr->symbol.name) + 1; 	    copy = bfd_alloc (abfd, amt); 	    if (copy == NULL) 	      return false;  	    strcpy (copy, cache_ptr->symbol.name); 	    section = bfd_make_section (abfd, copy); 	    if (section == NULL) 	      return false; 	  }  	amt = sizeof (arelent_chain); 	reloc = (arelent_chain *) bfd_alloc (abfd, amt); 	if (reloc == NULL) 	  return false;
+block|section = bfd_get_section_by_name (abfd, cache_ptr->symbol.name); 	if (section == NULL) 	  { 	    char *copy;  	    amt = strlen (cache_ptr->symbol.name) + 1; 	    copy = bfd_alloc (abfd, amt); 	    if (copy == NULL) 	      return FALSE;  	    strcpy (copy, cache_ptr->symbol.name); 	    section = bfd_make_section (abfd, copy); 	    if (section == NULL) 	      return FALSE; 	  }  	amt = sizeof (arelent_chain); 	reloc = (arelent_chain *) bfd_alloc (abfd, amt); 	if (reloc == NULL) 	  return FALSE;
 comment|/* Build a relocation entry for the constructor.  */
 block|switch (cache_ptr->type& N_TYPE) 	  { 	  case N_SETA: 	    into_section = bfd_abs_section_ptr; 	    cache_ptr->type = N_ABS; 	    break; 	  case N_SETT: 	    into_section = obj_textsec (abfd); 	    cache_ptr->type = N_TEXT; 	    break; 	  case N_SETD: 	    into_section = obj_datasec (abfd); 	    cache_ptr->type = N_DATA; 	    break; 	  case N_SETB: 	    into_section = obj_bsssec (abfd); 	    cache_ptr->type = N_BSS; 	    break; 	  }
 comment|/* Build a relocation pointing into the constructor section 	   pointing at the symbol in the set vector specified.  */
@@ -7196,7 +7254,7 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7207,7 +7265,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|translate_to_native_sym_flags
 parameter_list|(
 name|abfd
@@ -7311,7 +7369,7 @@ name|bfd_error_nonrepresentable_section
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -7466,6 +7524,26 @@ name|N_EXT
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|aout_section_merge_with_text_p
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|)
+condition|)
+name|sym_pointer
+operator|->
+name|e_type
+index|[
+literal|0
+index|]
+operator||=
+name|N_TEXT
+expr_stmt|;
+else|else
+block|{
 call|(
 modifier|*
 name|_bfd_error_handler
@@ -7495,10 +7573,11 @@ name|bfd_error_nonrepresentable_section
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
-comment|/* Turn the symbol from section relative to absolute again */
+block|}
+comment|/* Turn the symbol from section relative to absolute again.  */
 name|value
 operator|+=
 name|sec
@@ -7768,7 +7847,7 @@ name|e_value
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7853,7 +7932,7 @@ comment|/* Translate a set of internal symbols into external symbols.  */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -7916,7 +7995,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|dynamic
 decl_stmt|;
 end_decl_stmt
@@ -8007,7 +8086,7 @@ name|x
 expr_stmt|;
 else|else
 return|return
-name|false
+name|FALSE
 return|;
 name|in
 operator|->
@@ -8084,7 +8163,7 @@ name|in
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -8100,7 +8179,7 @@ name|BSF_DYNAMIC
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -8110,7 +8189,7 @@ comment|/* We read the symbols into a buffer, which is discarded when this    fu
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -8140,7 +8219,7 @@ decl_stmt|;
 name|bfd_size_type
 name|cached_size
 decl_stmt|;
-comment|/* If there's no work to be done, don't do any */
+comment|/* If there's no work to be done, don't do any.  */
 if|if
 condition|(
 name|obj_aout_symbols
@@ -8155,7 +8234,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|old_external_syms
 operator|=
@@ -8173,7 +8252,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|cached_size
 operator|=
@@ -8211,7 +8290,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Convert from external symbol information to internal.  */
 if|if
@@ -8249,7 +8328,7 @@ argument_list|(
 name|abfd
 argument_list|)
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|)
 condition|)
@@ -8260,7 +8339,7 @@ name|cached
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|bfd_get_symcount
@@ -8338,7 +8417,7 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -8368,7 +8447,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8376,7 +8455,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|emit_stringtab
 name|PARAMS
 argument_list|(
@@ -8424,11 +8503,11 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|;
 block|{
-name|boolean
+name|bfd_boolean
 name|hash
 decl_stmt|;
 name|bfd_size_type
@@ -8452,7 +8531,7 @@ return|;
 comment|/* Don't hash if BFD_TRADITIONAL_FORMAT is set, because SunOS dbx      doesn't understand a hashed string table.  */
 name|hash
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -8468,7 +8547,7 @@ literal|0
 condition|)
 name|hash
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|index
 operator|=
@@ -8512,7 +8591,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|emit_stringtab
 parameter_list|(
 name|abfd
@@ -8573,7 +8652,7 @@ operator|!=
 name|amt
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
 name|_bfd_stringtab_emit
@@ -8590,7 +8669,7 @@ begin_escape
 end_escape
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -8639,7 +8718,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -8689,7 +8768,7 @@ name|g
 operator|->
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -8886,7 +8965,7 @@ name|strtab
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -8896,7 +8975,7 @@ name|strtab
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_block
@@ -8910,7 +8989,7 @@ name|NAME
 argument_list|(
 name|aout
 argument_list|,
-name|get_symtab
+name|canonicalize_symtab
 argument_list|)
 argument_list|(
 name|abfd
@@ -9012,7 +9091,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Standard reloc stuff */
+comment|/* Standard reloc stuff.  */
 end_comment
 
 begin_comment
@@ -9142,7 +9221,7 @@ name|howto
 operator|->
 name|size
 expr_stmt|;
-comment|/* Size as a power of two */
+comment|/* Size as a power of two.  */
 name|r_pcrel
 operator|=
 operator|(
@@ -9154,7 +9233,7 @@ name|howto
 operator|->
 name|pc_relative
 expr_stmt|;
-comment|/* Relative to PC? */
+comment|/* Relative to PC?  */
 comment|/* XXX This relies on relocs coming from a.out files.  */
 name|r_baserel
 operator|=
@@ -9205,8 +9284,8 @@ comment|/* For a standard reloc, the addend is in the object file.  */
 block|r_addend = g->addend + (*(g->sym_ptr_ptr))->section->output_section->vma;
 endif|#
 directive|endif
-comment|/* name was clobbered by aout_write_syms to be symbol index */
-comment|/* If this relocation is relative to a symbol then set the      r_index to the symbols index, and the r_extern bit.       Absolute symbols can come in in two ways, either as an offset      from the abs section, or as a symbol which has an abs value.      check for that here      */
+comment|/* Name was clobbered by aout_write_syms to be symbol index.  */
+comment|/* If this relocation is relative to a symbol then set the      r_index to the symbols index, and the r_extern bit.       Absolute symbols can come in in two ways, either as an offset      from the abs section, or as a symbol which has an abs value.      check for that here.  */
 if|if
 condition|(
 name|bfd_is_com_section
@@ -9234,7 +9313,7 @@ operator|==
 name|sym
 condition|)
 block|{
-comment|/* Whoops, looked like an abs symbol, but is really an offset 	   from the abs section */
+comment|/* Whoops, looked like an abs symbol, but is 	     really an offset from the abs section.  */
 name|r_index
 operator|=
 name|N_ABS
@@ -9246,7 +9325,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Fill in symbol */
+comment|/* Fill in symbol.  */
 name|r_extern
 operator|=
 literal|1
@@ -9268,7 +9347,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Just an ordinary section */
+comment|/* Just an ordinary section.  */
 name|r_extern
 operator|=
 literal|0
@@ -9280,7 +9359,7 @@ operator|->
 name|target_index
 expr_stmt|;
 block|}
-comment|/* now the fun stuff */
+comment|/* Now the fun stuff.  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -9469,7 +9548,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Extended stuff */
+comment|/* Extended stuff.  */
 end_comment
 
 begin_comment
@@ -9712,7 +9791,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Just an ordinary section */
+comment|/* Just an ordinary section.  */
 name|r_extern
 operator|=
 literal|0
@@ -9724,7 +9803,7 @@ operator|->
 name|target_index
 expr_stmt|;
 block|}
-comment|/* now the fun stuff */
+comment|/* Now the fun stuff.  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -9976,7 +10055,7 @@ name|r_address
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* now the fun stuff */
+comment|/* Now the fun stuff.  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -10322,7 +10401,7 @@ operator|->
 name|r_address
 argument_list|)
 expr_stmt|;
-comment|/* now the fun stuff */
+comment|/* Now the fun stuff.  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -10718,7 +10797,7 @@ comment|/* Read and swap the relocs for a section.  */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -10790,7 +10869,7 @@ operator|->
 name|relocation
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -10801,7 +10880,7 @@ operator|&
 name|SEC_CONSTRUCTOR
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -10862,7 +10941,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -10881,7 +10960,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|each_size
 operator|=
@@ -10927,7 +11006,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|relocs
 operator|=
@@ -10953,7 +11032,7 @@ name|reloc_cache
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -10981,7 +11060,7 @@ name|reloc_cache
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|cache_ptr
@@ -11113,7 +11192,7 @@ operator|-
 name|reloc_cache
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -11123,7 +11202,7 @@ comment|/* Write out a relocation section into an object file.  */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -11190,7 +11269,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|each_size
 operator|=
@@ -11228,7 +11307,7 @@ operator|!
 name|native
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|generic
 operator|=
@@ -11342,7 +11421,7 @@ name|native
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|bfd_release
@@ -11353,13 +11432,13 @@ name|native
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/* This is stupid.  This function should be a boolean predicate */
+comment|/* This is stupid.  This function should be a boolean predicate.  */
 end_comment
 
 begin_decl_stmt
@@ -11615,7 +11694,6 @@ name|flags
 operator|&
 name|SEC_CONSTRUCTOR
 condition|)
-block|{
 return|return
 operator|(
 sizeof|sizeof
@@ -11633,7 +11711,6 @@ literal|1
 operator|)
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|asect
@@ -12280,7 +12357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|dynamic
 decl_stmt|;
 end_decl_stmt
@@ -12416,7 +12493,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|dynamic
 decl_stmt|;
 end_decl_stmt
@@ -12514,7 +12591,7 @@ argument_list|(
 name|abfd
 argument_list|)
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|)
 condition|)
@@ -12528,11 +12605,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  provided a BFD, a section and an offset into the section, calculate  and return the name of the source file and the line nearest to the  wanted location. */
+comment|/* Provided a BFD, a section and an offset into the section, calculate    and return the name of the source file and the line nearest to the    wanted location.  */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -12609,7 +12686,7 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Run down the file looking for the filename, function and linenumber */
+comment|/* Run down the file looking for the filename, function and linenumber.  */
 name|asymbol
 modifier|*
 modifier|*
@@ -13059,7 +13136,7 @@ case|case
 name|N_FUN
 case|:
 block|{
-comment|/* We'll keep this if it is nearer than the one we have already */
+comment|/* We'll keep this if it is nearer than the one we have already.  */
 if|if
 condition|(
 name|q
@@ -13260,7 +13337,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -13369,7 +13446,7 @@ name|function
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Have to remove : stuff */
+comment|/* Have to remove : stuff.  */
 name|colon
 operator|=
 name|strchr
@@ -13397,7 +13474,7 @@ name|buf
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -13422,7 +13499,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|execable
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
@@ -13446,7 +13523,7 @@ comment|/* Free all information we have cached for this BFD.  We can always    r
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -13486,7 +13563,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 define|#
 directive|define
@@ -13591,7 +13668,7 @@ undef|#
 directive|undef
 name|BFCI_FREE
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -13605,7 +13682,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_add_object_symbols
 name|PARAMS
 argument_list|(
@@ -13623,7 +13700,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_check_archive_element
 name|PARAMS
 argument_list|(
@@ -13635,7 +13712,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -13644,7 +13721,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_free_symbols
 name|PARAMS
 argument_list|(
@@ -13658,7 +13735,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_check_ar_symbols
 name|PARAMS
 argument_list|(
@@ -13670,7 +13747,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 name|pneeded
 operator|)
@@ -13680,7 +13757,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_add_symbols
 name|PARAMS
 argument_list|(
@@ -13839,7 +13916,7 @@ name|ret
 operator|->
 name|written
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|ret
 operator|->
@@ -13865,7 +13942,7 @@ comment|/* Initialize an a.out link hash table.  */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -13984,10 +14061,8 @@ expr|struct
 name|aout_link_hash_table
 operator|*
 operator|)
-name|bfd_alloc
+name|bfd_malloc
 argument_list|(
-name|abfd
-argument_list|,
 name|amt
 argument_list|)
 expr_stmt|;
@@ -14056,7 +14131,7 @@ comment|/* Given an a.out BFD, add symbols to the global hash table as    approp
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -14123,7 +14198,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -14135,7 +14210,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_add_object_symbols
 parameter_list|(
 name|abfd
@@ -14161,7 +14236,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -14174,7 +14249,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -14193,11 +14268,11 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -14208,7 +14283,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_check_archive_element
 parameter_list|(
 name|abfd
@@ -14226,7 +14301,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|pneeded
 decl_stmt|;
@@ -14240,7 +14315,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -14255,7 +14330,7 @@ name|pneeded
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -14274,7 +14349,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -14298,11 +14373,11 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -14313,7 +14388,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_free_symbols
 parameter_list|(
 name|abfd
@@ -14432,7 +14507,7 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -14443,7 +14518,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_check_ar_symbols
 parameter_list|(
 name|abfd
@@ -14461,7 +14536,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|pneeded
 decl_stmt|;
@@ -14484,7 +14559,7 @@ decl_stmt|;
 operator|*
 name|pneeded
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 comment|/* Look through all the symbols.  */
 name|p
@@ -14623,11 +14698,11 @@ name|hash
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* We are only interested in symbols that are currently 	 undefined or common.  */
@@ -14715,7 +14790,76 @@ name|N_EXT
 operator|)
 condition|)
 block|{
-comment|/* This object file defines this symbol.  We must link it 	     in.  This is true regardless of whether the current 	     definition of the symbol is undefined or common.  If the 	     current definition is common, we have a case in which we 	     have already seen an object file including 	         int a; 	     and this object file from the archive includes 	         int a = 5; 	     In such a case we must include this object file.  	     FIXME: The SunOS 4.1.3 linker will pull in the archive 	     element if the symbol is defined in the .data section, 	     but not if it is defined in the .text section.  That 	     seems a bit crazy to me, and I haven't implemented it. 	     However, it might be correct.  */
+comment|/* This object file defines this symbol.  We must link it 	     in.  This is true regardless of whether the current 	     definition of the symbol is undefined or common.               If the current definition is common, we have a case in 	     which we have already seen an object file including: 	         int a; 	     and this object file from the archive includes: 	         int a = 5; 	     In such a case, whether to include this object is target              dependant for backward compatibility.  	     FIXME: The SunOS 4.1.3 linker will pull in the archive 	     element if the symbol is defined in the .data section, 	     but not if it is defined in the .text section.  That 	     seems a bit crazy to me, and it has not been implemented 	     yet.  However, it might be correct.  */
+if|if
+condition|(
+name|h
+operator|->
+name|type
+operator|==
+name|bfd_link_hash_common
+condition|)
+block|{
+name|int
+name|skip
+init|=
+literal|0
+decl_stmt|;
+switch|switch
+condition|(
+name|info
+operator|->
+name|common_skip_ar_aymbols
+condition|)
+block|{
+case|case
+name|bfd_link_common_skip_text
+case|:
+name|skip
+operator|=
+operator|(
+name|type
+operator|==
+operator|(
+name|N_TEXT
+operator||
+name|N_EXT
+operator|)
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|bfd_link_common_skip_data
+case|:
+name|skip
+operator|=
+operator|(
+name|type
+operator|==
+operator|(
+name|N_DATA
+operator||
+name|N_EXT
+operator|)
+operator|)
+expr_stmt|;
+break|break;
+default|default:
+case|case
+name|bfd_link_common_skip_all
+case|:
+name|skip
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|skip
+condition|)
+continue|continue;
+block|}
 if|if
 condition|(
 operator|!
@@ -14736,15 +14880,15 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|pneeded
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -14839,15 +14983,15 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|pneeded
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Turn the current link symbol into a common 		     symbol.  It is already on the undefs list.  */
@@ -14901,7 +15045,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|h
 operator|->
@@ -15048,22 +15192,22 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|pneeded
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
 block|}
 comment|/* We do not need this object file.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -15074,7 +15218,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_add_symbols
 parameter_list|(
 name|abfd
@@ -15091,7 +15235,7 @@ modifier|*
 name|info
 decl_stmt|;
 block|{
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*add_one_symbol
 argument_list|)
@@ -15120,9 +15264,9 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 expr|struct
 name|bfd_link_hash_entry
@@ -15143,7 +15287,7 @@ name|char
 modifier|*
 name|strings
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|;
 name|struct
@@ -15195,12 +15339,12 @@ name|keep_memory
 condition|)
 name|copy
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 else|else
 name|copy
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -15244,7 +15388,7 @@ operator|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* We keep a list of the linker hash table entries that correspond      to particular symbols.  We could just look them up in the hash      table, but keeping the list is more efficient.  Perhaps this      should be conditional on info->keep_memory.  */
@@ -15285,7 +15429,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|obj_aout_sym_hashes
 argument_list|(
@@ -15896,7 +16040,7 @@ name|string
 argument_list|,
 name|copy
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 operator|(
 expr|struct
@@ -15909,7 +16053,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Restrict the maximum alignment of a common symbol based on 	 the architecture, since a.out has no way to represent 	 alignment requirements of a section in a .o file.  FIXME: 	 This isn't quite right: it should use the architecture of the 	 output file, not the input files.  */
 if|if
@@ -16022,7 +16166,7 @@ name|sym_hash
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -16200,7 +16344,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_input_bfd
 name|PARAMS
 argument_list|(
@@ -16219,7 +16363,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_write_symbols
 name|PARAMS
 argument_list|(
@@ -16238,7 +16382,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_write_other_symbol
 name|PARAMS
 argument_list|(
@@ -16255,7 +16399,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_input_section
 name|PARAMS
 argument_list|(
@@ -16285,7 +16429,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_input_section_std
 name|PARAMS
 argument_list|(
@@ -16319,7 +16463,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_input_section_ext
 name|PARAMS
 argument_list|(
@@ -16371,7 +16515,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_reloc_link_order
 name|PARAMS
 argument_list|(
@@ -16540,7 +16684,7 @@ comment|/* Do the final link step.  This is called on the output BFD.  The    IN
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bfd_boolean
 name|NAME
 argument_list|(
 name|aout
@@ -16601,10 +16745,10 @@ name|struct
 name|aout_final_link_info
 name|aout_info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|includes_hash_initialized
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 specifier|register
 name|bfd
@@ -16641,7 +16785,7 @@ name|asection
 modifier|*
 name|o
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|have_link_order_relocs
 decl_stmt|;
 if|if
@@ -16714,9 +16858,9 @@ name|error_return
 goto|;
 name|includes_hash_initialized
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
-comment|/* Figure out the largest section size.  Also, if generating      relocateable output, count the relocs.  */
+comment|/* Figure out the largest section size.  Also, if generating      relocatable output, count the relocs.  */
 name|trsize
 operator|=
 literal|0
@@ -16763,7 +16907,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 if|if
@@ -16805,7 +16949,7 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: relocateable link from %s to %s not supported"
+literal|"%s: relocatable link from %s to %s not supported"
 argument_list|)
 argument_list|,
 name|bfd_get_filename
@@ -16951,7 +17095,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 if|if
@@ -17290,11 +17434,11 @@ argument_list|)
 argument_list|,
 literal|"__DYNAMIC"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -17339,7 +17483,7 @@ name|sub
 operator|->
 name|output_has_begun
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 comment|/* Mark all sections which are to be included in the link.  This      will normally be every section.  We need to do this so that we      can identify any sections which the linker has decided to not      include.  */
 for|for
@@ -17379,7 +17523,6 @@ name|p
 operator|->
 name|next
 control|)
-block|{
 if|if
 condition|(
 name|p
@@ -17398,17 +17541,12 @@ name|section
 operator|->
 name|linker_mark
 operator|=
-operator|(
-name|unsigned
-name|int
-operator|)
-name|true
+name|TRUE
 expr_stmt|;
-block|}
 block|}
 name|have_link_order_relocs
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -17525,7 +17663,7 @@ name|input_bfd
 operator|->
 name|output_has_begun
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 block|}
@@ -17548,7 +17686,7 @@ block|{
 comment|/* These are handled below.  */
 name|have_link_order_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 else|else
@@ -17787,7 +17925,7 @@ argument_list|)
 expr_stmt|;
 name|includes_hash_initialized
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 comment|/* Finish up any dynamic linking we may be doing.  */
@@ -18026,7 +18164,7 @@ name|error_return
 goto|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -18105,7 +18243,7 @@ name|root
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_block
@@ -18116,7 +18254,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_input_bfd
 parameter_list|(
 name|finfo
@@ -18190,7 +18328,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/* Get the symbols.  We probably have them already, unless      finfo->info->keep_memory is false.  */
+comment|/* Get the symbols.  We probably have them already, unless      finfo->info->keep_memory is FALSE.  */
 if|if
 condition|(
 operator|!
@@ -18200,7 +18338,7 @@ name|input_bfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|sym_count
 operator|=
@@ -18221,7 +18359,7 @@ name|input_bfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Relocate and write out the sections.  These functions use the      symbol map created by aout_link_write_symbols.  The linker_mark      field will be set if these sections are to be included in the      link, which will normally be the case.  */
 if|if
@@ -18262,7 +18400,7 @@ name|a_trsize
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -18303,7 +18441,7 @@ name|a_drsize
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* If we are not keeping memory, we don't need the symbols any      longer.  We still need them if we are keeping memory, because the      strings in the hash table point into them.  */
@@ -18326,11 +18464,11 @@ name|input_bfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -18341,7 +18479,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_write_symbols
 parameter_list|(
 name|finfo
@@ -18406,10 +18544,10 @@ name|int
 modifier|*
 name|symbol_map
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|pass
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|skip_next
 decl_stmt|;
 name|output_bfd
@@ -18478,9 +18616,9 @@ name|input_bfd
 operator|->
 name|filename
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|!=
 name|NULL
@@ -18538,7 +18676,7 @@ name|input_bfd
 operator|->
 name|filename
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -18552,7 +18690,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|PUT_WORD
 argument_list|(
@@ -18607,11 +18745,11 @@ expr_stmt|;
 block|}
 name|pass
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|skip_next
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|sym
 operator|=
@@ -18685,7 +18823,7 @@ name|aout_link_hash_entry
 modifier|*
 name|h
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|skip
 decl_stmt|;
 name|asection
@@ -18697,7 +18835,7 @@ name|val
 init|=
 literal|0
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|;
 comment|/* We set *symbol_map to 0 above for all symbols.  If it has          already been set to -1 for this symbol, it means that we are          discarding it because it appears in a duplicate header file.          See the N_BINCL code below.  */
@@ -18764,7 +18902,7 @@ argument_list|)
 expr_stmt|;
 name|pass
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 elseif|else
@@ -18776,7 +18914,7 @@ block|{
 comment|/* Skip this symbol, which is the target of an indirect 	     symbol that we have changed to no longer be an indirect 	     symbol.  */
 name|skip_next
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 continue|continue;
 block|}
@@ -18946,7 +19084,7 @@ name|N_WARNING
 condition|)
 name|skip_next
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 operator|*
 name|symbol_map
@@ -18960,7 +19098,7 @@ block|}
 comment|/* See if we are stripping this symbol.  */
 name|skip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 switch|switch
 condition|(
@@ -18986,7 +19124,7 @@ literal|0
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -19004,16 +19142,16 @@ name|keep_hash
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|==
 name|NULL
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -19021,7 +19159,7 @@ name|strip_all
 case|:
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -19045,7 +19183,7 @@ name|h
 operator|->
 name|written
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
@@ -19192,7 +19330,7 @@ block|{
 comment|/* Pass the next symbol through unchanged.  The 		 condition above for indirect symbols is so that if 		 the indirect symbol was defined, we output it with 		 the correct definition so the debugger will 		 understand it.  */
 name|pass
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|val
 operator|=
@@ -19253,7 +19391,7 @@ name|N_INDR
 condition|)
 name|skip_next
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|symsec
 operator|=
@@ -19643,7 +19781,7 @@ name|h
 operator|->
 name|written
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|h
 operator|->
@@ -19725,7 +19863,7 @@ argument_list|)
 condition|)
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -19733,7 +19871,7 @@ name|discard_all
 case|:
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -19744,7 +19882,7 @@ condition|)
 block|{
 name|pass
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 continue|continue;
 block|}
@@ -19927,7 +20065,7 @@ comment|/* If we have already included a header file with the                  s
 name|copy
 operator|=
 call|(
-name|boolean
+name|bfd_boolean
 call|)
 argument_list|(
 operator|!
@@ -19949,7 +20087,7 @@ name|includes
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|copy
 argument_list|)
@@ -19961,7 +20099,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -20028,7 +20166,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|t
 operator|->
@@ -20217,7 +20355,7 @@ argument_list|)
 expr_stmt|;
 name|copy
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -20254,7 +20392,7 @@ expr_stmt|;
 else|else
 name|copy
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 name|strtab_index
@@ -20283,7 +20421,7 @@ operator|-
 literal|1
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|PUT_WORD
 argument_list|(
@@ -20354,7 +20492,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|outsym_size
 operator|=
@@ -20387,7 +20525,7 @@ operator|!=
 name|outsym_size
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|finfo
 operator|->
@@ -20397,7 +20535,7 @@ name|outsym_size
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -20408,7 +20546,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_write_other_symbol
 parameter_list|(
 name|h
@@ -20495,7 +20633,7 @@ operator|==
 name|bfd_link_hash_new
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|output_bfd
@@ -20554,13 +20692,13 @@ operator|->
 name|written
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|h
 operator|->
 name|written
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* An indx of -2 means the symbol must be written.  */
 if|if
@@ -20606,9 +20744,9 @@ name|root
 operator|.
 name|string
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|==
 name|NULL
@@ -20616,7 +20754,7 @@ operator|)
 operator|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 switch|switch
 condition|(
@@ -20636,14 +20774,14 @@ argument_list|()
 expr_stmt|;
 comment|/* Avoid variable not initialized warnings.  */
 return|return
-name|true
+name|TRUE
 return|;
 case|case
 name|bfd_link_hash_new
 case|:
 comment|/* This can happen for set symbols when sets are not being          built.  */
 return|return
-name|true
+name|TRUE
 return|;
 case|case
 name|bfd_link_hash_undefined
@@ -20858,7 +20996,7 @@ name|bfd_link_hash_indirect
 case|:
 comment|/* We ignore these symbols, since the indirected symbol is 	 already in the hash table.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|H_PUT_8
@@ -20912,7 +21050,7 @@ name|root
 operator|.
 name|string
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -21015,7 +21153,7 @@ name|output_bfd
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -21026,7 +21164,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_input_section
 parameter_list|(
 name|finfo
@@ -21101,7 +21239,7 @@ name|input_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Read in the relocs if we haven't already done it.  */
 if|if
@@ -21173,7 +21311,7 @@ operator|!=
 name|rel_size
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -21214,7 +21352,7 @@ name|contents
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -21245,7 +21383,7 @@ name|contents
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Write out the section contents.  */
@@ -21280,16 +21418,16 @@ name|input_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* If we are producing relocateable output, the relocs were      modified, and we now write them out.  */
+comment|/* If we are producing relocatable output, the relocs were      modified, and we now write them out.  */
 if|if
 condition|(
 name|finfo
 operator|->
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 name|rel_size
 operator|>
@@ -21313,7 +21451,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -21331,7 +21469,7 @@ operator|!=
 name|rel_size
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|reloff_ptr
@@ -21377,7 +21515,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -21466,7 +21604,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_input_section_std
 parameter_list|(
 name|finfo
@@ -21507,7 +21645,7 @@ modifier|*
 name|contents
 decl_stmt|;
 block|{
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*check_dynamic_reloc
 argument_list|)
@@ -21533,7 +21671,7 @@ operator|,
 name|bfd_byte
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|,
 name|bfd_vma
@@ -21545,8 +21683,8 @@ name|bfd
 modifier|*
 name|output_bfd
 decl_stmt|;
-name|boolean
-name|relocateable
+name|bfd_boolean
+name|relocatable
 decl_stmt|;
 name|struct
 name|external_nlist
@@ -21621,13 +21759,13 @@ operator|->
 name|header_byteorder
 argument_list|)
 expr_stmt|;
-name|relocateable
+name|relocatable
 operator|=
 name|finfo
 operator|->
 name|info
 operator|->
-name|relocateable
+name|relocatable
 expr_stmt|;
 name|syms
 operator|=
@@ -22103,10 +22241,10 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 block|{
-comment|/* We are generating a relocateable output file, and must 	     modify the reloc accordingly.  */
+comment|/* We are generating a relocatable output file, and must 	     modify the reloc accordingly.  */
 if|if
 condition|(
 name|r_extern
@@ -22322,7 +22460,7 @@ name|h
 operator|->
 name|written
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -22338,7 +22476,7 @@ name|finfo
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|r_index
@@ -22401,7 +22539,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|r_index
 operator|=
@@ -22611,13 +22749,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|boolean
+name|bfd_boolean
 name|hundef
 decl_stmt|;
 comment|/* We are generating an executable, and must do a full 	     relocation.  */
 name|hundef
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -22730,7 +22868,7 @@ else|else
 block|{
 name|hundef
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|relocation
 operator|=
@@ -22789,7 +22927,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|skip
 decl_stmt|;
 if|if
@@ -22827,7 +22965,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -22916,12 +23054,12 @@ name|input_section
 argument_list|,
 name|r_addr
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|r
@@ -23076,7 +23214,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 break|break;
@@ -23084,7 +23222,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -23095,7 +23233,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_input_section_ext
 parameter_list|(
 name|finfo
@@ -23136,7 +23274,7 @@ modifier|*
 name|contents
 decl_stmt|;
 block|{
-name|boolean
+name|bfd_boolean
 argument_list|(
 argument|*check_dynamic_reloc
 argument_list|)
@@ -23162,7 +23300,7 @@ operator|,
 name|bfd_byte
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|,
 name|bfd_vma
@@ -23174,8 +23312,8 @@ name|bfd
 modifier|*
 name|output_bfd
 decl_stmt|;
-name|boolean
-name|relocateable
+name|bfd_boolean
+name|relocatable
 decl_stmt|;
 name|struct
 name|external_nlist
@@ -23250,13 +23388,13 @@ operator|->
 name|header_byteorder
 argument_list|)
 expr_stmt|;
-name|relocateable
+name|relocatable
 operator|=
 name|finfo
 operator|->
 name|info
 operator|->
-name|relocateable
+name|relocatable
 expr_stmt|;
 name|syms
 operator|=
@@ -23540,10 +23678,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 block|{
-comment|/* We are generating a relocateable output file, and must 	     modify the reloc accordingly.  */
+comment|/* We are generating a relocatable output file, and must 	     modify the reloc accordingly.  */
 if|if
 condition|(
 name|r_extern
@@ -23815,7 +23953,7 @@ name|h
 operator|->
 name|written
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -23831,7 +23969,7 @@ name|finfo
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|r_index
@@ -23894,7 +24032,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|r_index
 operator|=
@@ -24091,7 +24229,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|boolean
+name|bfd_boolean
 name|hundef
 decl_stmt|;
 name|bfd_reloc_status_type
@@ -24100,7 +24238,7 @@ decl_stmt|;
 comment|/* We are generating an executable, and must do a full 	     relocation.  */
 name|hundef
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -24213,7 +24351,7 @@ else|else
 block|{
 name|hundef
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|relocation
 operator|=
@@ -24446,7 +24584,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|boolean
+name|bfd_boolean
 name|skip
 decl_stmt|;
 if|if
@@ -24484,7 +24622,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -24594,12 +24732,12 @@ name|input_section
 argument_list|,
 name|r_addr
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -24825,7 +24963,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 break|break;
@@ -24834,7 +24972,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -24845,7 +24983,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|aout_link_reloc_link_order
 parameter_list|(
 name|finfo
@@ -25017,11 +25155,11 @@ name|u
 operator|.
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 expr_stmt|;
@@ -25068,7 +25206,7 @@ name|h
 operator|->
 name|written
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -25084,7 +25222,7 @@ name|finfo
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|r_index
 operator|=
@@ -25140,7 +25278,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|r_index
 operator|=
@@ -25174,7 +25312,7 @@ name|bfd_error_bad_value
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -25554,7 +25692,7 @@ name|bfd_byte
 modifier|*
 name|buf
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|ok
 decl_stmt|;
 name|size
@@ -25586,7 +25724,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|r
 operator|=
@@ -25707,7 +25845,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 break|break;
@@ -25748,7 +25886,7 @@ operator|!
 name|ok
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -25991,7 +26129,7 @@ operator|!=
 name|amt
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|reloff_ptr
@@ -26041,7 +26179,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

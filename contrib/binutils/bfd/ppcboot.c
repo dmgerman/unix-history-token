@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for PPCbug boot records.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Michael Meissner, Cygnus Support,<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for PPCbug boot records.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Michael Meissner, Cygnus Support,<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -238,7 +238,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_mkobject
 name|PARAMS
 argument_list|(
@@ -268,7 +268,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_set_arch_mach
 name|PARAMS
 argument_list|(
@@ -288,7 +288,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_get_section_contents
 name|PARAMS
 argument_list|(
@@ -344,7 +344,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|long
-name|ppcboot_get_symtab
+name|ppcboot_canonicalize_symtab
 name|PARAMS
 argument_list|(
 operator|(
@@ -381,7 +381,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_set_section_contents
 name|PARAMS
 argument_list|(
@@ -392,6 +392,7 @@ operator|,
 name|asection
 operator|*
 operator|,
+specifier|const
 name|PTR
 operator|,
 name|file_ptr
@@ -412,7 +413,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -420,7 +421,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_bfd_print_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -465,7 +466,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_mkobject
 parameter_list|(
 name|abfd
@@ -506,7 +507,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -520,7 +521,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_set_arch_mach
 parameter_list|(
 name|abfd
@@ -560,7 +561,7 @@ operator|!=
 name|bfd_arch_powerpc
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
 name|bfd_default_set_arch_mach
@@ -977,7 +978,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_get_section_contents
 parameter_list|(
 name|abfd
@@ -1042,10 +1043,10 @@ operator|!=
 name|count
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1222,7 +1223,7 @@ end_comment
 begin_function
 specifier|static
 name|long
-name|ppcboot_get_symtab
+name|ppcboot_canonicalize_symtab
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -1287,7 +1288,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Start symbol.  */
 name|syms
@@ -1637,7 +1638,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_set_section_contents
 parameter_list|(
 name|abfd
@@ -1658,6 +1659,7 @@ name|asection
 modifier|*
 name|sec
 decl_stmt|;
+specifier|const
 name|PTR
 name|data
 decl_stmt|;
@@ -1758,7 +1760,7 @@ name|abfd
 operator|->
 name|output_has_begun
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 return|return
@@ -1795,7 +1797,7 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|exec
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
@@ -1818,7 +1820,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|ppcboot_bfd_print_private_bfd_data
 parameter_list|(
 name|abfd
@@ -2337,7 +2339,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

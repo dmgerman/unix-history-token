@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Intel 386 COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Intel 386 COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -178,7 +178,7 @@ comment|/* For some reason when using i386 COFF the value stored in the .text   
 end_comment
 
 begin_comment
-comment|/* If we are producing relocateable output, we need to do some    adjustments to the object file that are not done by the    bfd_perform_relocation function.  This function is called by every    reloc type to make any required adjustments.  */
+comment|/* If we are producing relocatable output, we need to do some    adjustments to the object file that are not done by the    bfd_perform_relocation function.  This function is called by every    reloc type to make any required adjustments.  */
 end_comment
 
 begin_function
@@ -290,7 +290,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* For some reason bfd_perform_relocation always effectively 	 ignores the addend for a COFF target when producing 	 relocateable output.  This seems to be always wrong for 386 	 COFF, so we handle the addend here instead.  */
+comment|/* For some reason bfd_perform_relocation always effectively 	 ignores the addend for a COFF target when producing 	 relocatable output.  This seems to be always wrong for 386 	 COFF, so we handle the addend here instead.  */
 ifdef|#
 directive|ifdef
 name|COFF_WITH_PE
@@ -554,12 +554,12 @@ name|COFF_WITH_PE
 end_ifdef
 
 begin_comment
-comment|/* Return true if this relocation should appear in the output .reloc    section.  */
+comment|/* Return TRUE if this relocation should appear in the output .reloc    section.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|in_reloc_p
 name|PARAMS
 argument_list|(
@@ -576,7 +576,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|in_reloc_p
 parameter_list|(
 name|abfd
@@ -627,7 +627,7 @@ begin_define
 define|#
 directive|define
 name|PCRELOFFSET
-value|false
+value|FALSE
 end_define
 
 begin_endif
@@ -686,7 +686,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -701,7 +701,7 @@ comment|/* special_function */
 literal|"dir32"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -710,7 +710,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -729,7 +729,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -744,7 +744,7 @@ comment|/* special_function */
 literal|"rva32"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -753,7 +753,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -807,7 +807,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|8
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -822,7 +822,7 @@ comment|/* special_function */
 literal|"8"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000000ff
@@ -850,7 +850,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -865,7 +865,7 @@ comment|/* special_function */
 literal|"16"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x0000ffff
@@ -893,7 +893,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -908,7 +908,7 @@ comment|/* special_function */
 literal|"32"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -936,7 +936,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|8
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -951,7 +951,7 @@ comment|/* special_function */
 literal|"DISP8"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000000ff
@@ -979,7 +979,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -994,7 +994,7 @@ comment|/* special_function */
 literal|"DISP16"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x0000ffff
@@ -1022,7 +1022,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-argument|true
+argument|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1037,7 +1037,7 @@ comment|/* special_function */
 literal|"DISP32"
 argument_list|,
 comment|/* name */
-argument|true
+argument|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -1161,12 +1161,12 @@ comment|/* COFF_WITH_PE */
 end_comment
 
 begin_comment
-comment|/* The PE relocate section routine.  The only difference between this    and the regular routine is that we don't want to do anything for a    relocateable link.  */
+comment|/* The PE relocate section routine.  The only difference between this    and the regular routine is that we don't want to do anything for a    relocatable link.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_pe_i386_relocate_section
 name|PARAMS
 argument_list|(
@@ -1205,7 +1205,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_pe_i386_relocate_section
 parameter_list|(
 name|output_bfd
@@ -1265,10 +1265,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 return|return
 name|_bfd_coff_generic_relocate_section
@@ -1469,7 +1469,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|COFF_WITH_PE
-comment|/* If the output symbol is common (in which case this must be a      relocateable link), we need to add in the final size of the      common symbol.  */
+comment|/* If the output symbol is common (in which case this must be a      relocatable link), we need to add in the final size of the      common symbol.  */
 if|if
 condition|(
 name|h
@@ -1699,7 +1699,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_i386_is_local_label_name
 name|PARAMS
 argument_list|(
@@ -1717,7 +1717,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_i386_is_local_label_name
 parameter_list|(
 name|abfd
@@ -1744,7 +1744,7 @@ operator|==
 literal|'L'
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 return|return
 name|_bfd_coff_is_local_label_name

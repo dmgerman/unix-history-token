@@ -117,7 +117,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 block|{

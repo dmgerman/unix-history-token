@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic symbol-table support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic symbol-table support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* SECTION 	Symbols  	BFD tries to maintain as much symbol information as it can when 	it moves information from file to file. BFD passes information 	to applications though the<<asymbol>> structure. When the 	application requests the symbol table, BFD reads the table in 	the native form and translates parts of it into the internal 	format. To maintain more than the information passed to 	applications, some targets keep some information ``behind the 	scenes'' in a structure only the particular back end knows 	about. For example, the coff back end keeps the original 	symbol table structure as well as the canonical structure when 	a BFD is read in. On output, the coff back end can reconstruct 	the output symbol table so that no information is lost, even 	information unique to coff which BFD doesn't know or 	understand. If a coff symbol table were read, but were written 	through an a.out back end, all the coff specific information 	would be lost. The symbol table of a BFD 	is not necessarily read in until a canonicalize request is 	made. Then the BFD back end fills in a table provided by the 	application with pointers to the canonical information.  To 	output symbols, the application provides BFD with a table of 	pointers to pointers to<<asymbol>>s. This allows applications 	like the linker to output a symbol as it was read, since the ``behind 	the scenes'' information will be still available. @menu @* Reading Symbols:: @* Writing Symbols:: @* Mini Symbols:: @* typedef asymbol:: @* symbol handling functions:: @end menu  INODE Reading Symbols, Writing Symbols, Symbols, Symbols SUBSECTION 	Reading symbols  	There are two stages to reading a symbol table from a BFD: 	allocating storage, and the actual reading process. This is an 	excerpt from an application which reads the symbol table:  |	  long storage_needed; |	  asymbol **symbol_table; |	  long number_of_symbols; |	  long i; | |	  storage_needed = bfd_get_symtab_upper_bound (abfd); | |         if (storage_needed< 0) |           FAIL | |	  if (storage_needed == 0) { |	     return ; |	  } |	  symbol_table = (asymbol **) xmalloc (storage_needed); |	    ... |	  number_of_symbols = |	     bfd_canonicalize_symtab (abfd, symbol_table); | |         if (number_of_symbols< 0) |           FAIL | |	  for (i = 0; i< number_of_symbols; i++) { |	     process_symbol (symbol_table[i]); |	  }  	All storage for the symbols themselves is in an objalloc 	connected to the BFD; it is freed when the BFD is closed.  INODE Writing Symbols, Mini Symbols, Reading Symbols, Symbols SUBSECTION 	Writing symbols  	Writing of a symbol table is automatic when a BFD open for 	writing is closed. The application attaches a vector of 	pointers to pointers to symbols to the BFD being written, and 	fills in the symbol count. The close and cleanup code reads 	through the table provided and performs all the necessary 	operations. The BFD output code must always be provided with an 	``owned'' symbol: one which has come from another BFD, or one 	which has been created using<<bfd_make_empty_symbol>>.  Here is an 	example showing the creation of a symbol table with only one element:  |	#include "bfd.h" |	main() |	{ |	  bfd *abfd; |	  asymbol *ptrs[2]; |	  asymbol *new; | |	  abfd = bfd_openw("foo","a.out-sunos-big"); |	  bfd_set_format(abfd, bfd_object); |	  new = bfd_make_empty_symbol(abfd); |	  new->name = "dummy_symbol"; |	  new->section = bfd_make_section_old_way(abfd, ".text"); |	  new->flags = BSF_GLOBAL; |	  new->value = 0x12345; | |	  ptrs[0] = new; |	  ptrs[1] = (asymbol *)0; | |	  bfd_set_symtab(abfd, ptrs, 1); |	  bfd_close(abfd); |	} | |	./makesym |	nm foo |	00012345 A dummy_symbol  	Many formats cannot represent arbitary symbol information; for  	instance, the<<a.out>> object format does not allow an 	arbitary number of sections. A symbol pointing to a section 	which is not one  of<<.text>>,<<.data>> or<<.bss>> cannot 	be described.  INODE Mini Symbols, typedef asymbol, Writing Symbols, Symbols SUBSECTION 	Mini Symbols  	Mini symbols provide read-only access to the symbol table. 	They use less memory space, but require more time to access. 	They can be useful for tools like nm or objdump, which may 	have to handle symbol tables of extremely large executables.  	The<<bfd_read_minisymbols>> function will read the symbols 	into memory in an internal form.  It will return a<<void *>> 	pointer to a block of memory, a symbol count, and the size of 	each symbol.  The pointer is allocated using<<malloc>>, and 	should be freed by the caller when it is no longer needed.  	The function<<bfd_minisymbol_to_symbol>> will take a pointer 	to a minisymbol, and a pointer to a structure returned by<<bfd_make_empty_symbol>>, and return a<<asymbol>> structure. 	The return value may or may not be the same as the value from<<bfd_make_empty_symbol>> which was passed in.  */
+comment|/* SECTION 	Symbols  	BFD tries to maintain as much symbol information as it can when 	it moves information from file to file. BFD passes information 	to applications though the<<asymbol>> structure. When the 	application requests the symbol table, BFD reads the table in 	the native form and translates parts of it into the internal 	format. To maintain more than the information passed to 	applications, some targets keep some information ``behind the 	scenes'' in a structure only the particular back end knows 	about. For example, the coff back end keeps the original 	symbol table structure as well as the canonical structure when 	a BFD is read in. On output, the coff back end can reconstruct 	the output symbol table so that no information is lost, even 	information unique to coff which BFD doesn't know or 	understand. If a coff symbol table were read, but were written 	through an a.out back end, all the coff specific information 	would be lost. The symbol table of a BFD 	is not necessarily read in until a canonicalize request is 	made. Then the BFD back end fills in a table provided by the 	application with pointers to the canonical information.  To 	output symbols, the application provides BFD with a table of 	pointers to pointers to<<asymbol>>s. This allows applications 	like the linker to output a symbol as it was read, since the ``behind 	the scenes'' information will be still available. @menu @* Reading Symbols:: @* Writing Symbols:: @* Mini Symbols:: @* typedef asymbol:: @* symbol handling functions:: @end menu  INODE Reading Symbols, Writing Symbols, Symbols, Symbols SUBSECTION 	Reading symbols  	There are two stages to reading a symbol table from a BFD: 	allocating storage, and the actual reading process. This is an 	excerpt from an application which reads the symbol table:  |	  long storage_needed; |	  asymbol **symbol_table; |	  long number_of_symbols; |	  long i; | |	  storage_needed = bfd_get_symtab_upper_bound (abfd); | |         if (storage_needed< 0) |           FAIL | |	  if (storage_needed == 0) |	    return; |	   |	  symbol_table = xmalloc (storage_needed); |	    ... |	  number_of_symbols = |	     bfd_canonicalize_symtab (abfd, symbol_table); | |         if (number_of_symbols< 0) |           FAIL | |	  for (i = 0; i< number_of_symbols; i++) |	    process_symbol (symbol_table[i]);  	All storage for the symbols themselves is in an objalloc 	connected to the BFD; it is freed when the BFD is closed.  INODE Writing Symbols, Mini Symbols, Reading Symbols, Symbols SUBSECTION 	Writing symbols  	Writing of a symbol table is automatic when a BFD open for 	writing is closed. The application attaches a vector of 	pointers to pointers to symbols to the BFD being written, and 	fills in the symbol count. The close and cleanup code reads 	through the table provided and performs all the necessary 	operations. The BFD output code must always be provided with an 	``owned'' symbol: one which has come from another BFD, or one 	which has been created using<<bfd_make_empty_symbol>>.  Here is an 	example showing the creation of a symbol table with only one element:  |	#include "bfd.h" |	int main (void) |	{ |	  bfd *abfd; |	  asymbol *ptrs[2]; |	  asymbol *new; | |	  abfd = bfd_openw ("foo","a.out-sunos-big"); |	  bfd_set_format (abfd, bfd_object); |	  new = bfd_make_empty_symbol (abfd); |	  new->name = "dummy_symbol"; |	  new->section = bfd_make_section_old_way (abfd, ".text"); |	  new->flags = BSF_GLOBAL; |	  new->value = 0x12345; | |	  ptrs[0] = new; |	  ptrs[1] = 0; | |	  bfd_set_symtab (abfd, ptrs, 1); |	  bfd_close (abfd); |	  return 0; |	} | |	./makesym |	nm foo |	00012345 A dummy_symbol  	Many formats cannot represent arbitrary symbol information; for  	instance, the<<a.out>> object format does not allow an 	arbitrary number of sections. A symbol pointing to a section 	which is not one  of<<.text>>,<<.data>> or<<.bss>> cannot 	be described.  INODE Mini Symbols, typedef asymbol, Writing Symbols, Symbols SUBSECTION 	Mini Symbols  	Mini symbols provide read-only access to the symbol table. 	They use less memory space, but require more time to access. 	They can be useful for tools like nm or objdump, which may 	have to handle symbol tables of extremely large executables.  	The<<bfd_read_minisymbols>> function will read the symbols 	into memory in an internal form.  It will return a<<void *>> 	pointer to a block of memory, a symbol count, and the size of 	each symbol.  The pointer is allocated using<<malloc>>, and 	should be freed by the caller when it is no longer needed.  	The function<<bfd_minisymbol_to_symbol>> will take a pointer 	to a minisymbol, and a pointer to a structure returned by<<bfd_make_empty_symbol>>, and return a<<asymbol>> structure. 	The return value may or may not be the same as the value from<<bfd_make_empty_symbol>> which was passed in.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/* SUBSECTION 	typedef asymbol  	An<<asymbol>> has the form:  */
 end_comment
 
 begin_comment
-comment|/* CODE_FRAGMENT  . .typedef struct symbol_cache_entry .{ .  {* A pointer to the BFD which owns the symbol. This information .     is necessary so that a back end can work out what additional .     information (invisible to the application writer) is carried .     with the symbol. . .     This field is *almost* redundant, since you can use section->owner .     instead, except that some symbols point to the global sections .     bfd_{abs,com,und}_section.  This could be fixed by making .     these globals be per-bfd (or per-target-flavor).  FIXME.  *} .  struct _bfd *the_bfd; {* Use bfd_asymbol_bfd(sym) to access this field.  *} . .  {* The text of the symbol. The name is left alone, and not copied; the .     application may not alter it.  *} .  const char *name; . .  {* The value of the symbol.  This really should be a union of a .     numeric value with a pointer, since some flags indicate that .     a pointer to another symbol is stored here.  *} .  symvalue value; . .  {* Attributes of a symbol.  *} .#define BSF_NO_FLAGS    0x00 . .  {* The symbol has local scope;<<static>> in<<C>>. The value .     is the offset into the section of the data.  *} .#define BSF_LOCAL	0x01 . .  {* The symbol has global scope; initialized data in<<C>>. The .     value is the offset into the section of the data.  *} .#define BSF_GLOBAL	0x02 . .  {* The symbol has global scope and is exported. The value is .     the offset into the section of the data.  *} .#define BSF_EXPORT	BSF_GLOBAL {* No real difference.  *} . .  {* A normal C symbol would be one of: .<<BSF_LOCAL>>,<<BSF_FORT_COMM>>,<<BSF_UNDEFINED>> or .<<BSF_GLOBAL>>.  *} . .  {* The symbol is a debugging record. The value has an arbitary .     meaning, unless BSF_DEBUGGING_RELOC is also set.  *} .#define BSF_DEBUGGING	0x08 . .  {* The symbol denotes a function entry point.  Used in ELF, .     perhaps others someday.  *} .#define BSF_FUNCTION    0x10 . .  {* Used by the linker.  *} .#define BSF_KEEP        0x20 .#define BSF_KEEP_G      0x40 . .  {* A weak global symbol, overridable without warnings by .     a regular global symbol of the same name.  *} .#define BSF_WEAK        0x80 . .  {* This symbol was created to point to a section, e.g. ELF's .     STT_SECTION symbols.  *} .#define BSF_SECTION_SYM 0x100 . .  {* The symbol used to be a common symbol, but now it is .     allocated.  *} .#define BSF_OLD_COMMON  0x200 . .  {* The default value for common data.  *} .#define BFD_FORT_COMM_DEFAULT_VALUE 0 . .  {* In some files the type of a symbol sometimes alters its .     location in an output file - ie in coff a<<ISFCN>> symbol .     which is also<<C_EXT>> symbol appears where it was .     declared and not at the end of a section.  This bit is set .     by the target BFD part to convey this information.  *} .#define BSF_NOT_AT_END    0x400 . .  {* Signal that the symbol is the label of constructor section.  *} .#define BSF_CONSTRUCTOR   0x800 . .  {* Signal that the symbol is a warning symbol.  The name is a .     warning.  The name of the next symbol is the one to warn about; .     if a reference is made to a symbol with the same name as the next .     symbol, a warning is issued by the linker.  *} .#define BSF_WARNING       0x1000 . .  {* Signal that the symbol is indirect.  This symbol is an indirect .     pointer to the symbol with the same name as the next symbol.  *} .#define BSF_INDIRECT      0x2000 . .  {* BSF_FILE marks symbols that contain a file name.  This is used .     for ELF STT_FILE symbols.  *} .#define BSF_FILE          0x4000 . .  {* Symbol is from dynamic linking information.  *} .#define BSF_DYNAMIC	   0x8000 . .  {* The symbol denotes a data object.  Used in ELF, and perhaps .     others someday.  *} .#define BSF_OBJECT	   0x10000 . .  {* This symbol is a debugging symbol.  The value is the offset .     into the section of the data.  BSF_DEBUGGING should be set .     as well.  *} .#define BSF_DEBUGGING_RELOC 0x20000 . .  {* This symbol is thread local.  Used in ELF.  *} .#define BSF_THREAD_LOCAL  0x40000 . .  flagword flags; . .  {* A pointer to the section to which this symbol is .     relative.  This will always be non NULL, there are special .     sections for undefined and absolute symbols.  *} .  struct sec *section; . .  {* Back end special data.  *} .  union .    { .      PTR p; .      bfd_vma i; .    } .  udata; .} .asymbol; . */
+comment|/* CODE_FRAGMENT  . .typedef struct bfd_symbol .{ .  {* A pointer to the BFD which owns the symbol. This information .     is necessary so that a back end can work out what additional .     information (invisible to the application writer) is carried .     with the symbol. . .     This field is *almost* redundant, since you can use section->owner .     instead, except that some symbols point to the global sections .     bfd_{abs,com,und}_section.  This could be fixed by making .     these globals be per-bfd (or per-target-flavor).  FIXME.  *} .  struct bfd *the_bfd; {* Use bfd_asymbol_bfd(sym) to access this field.  *} . .  {* The text of the symbol. The name is left alone, and not copied; the .     application may not alter it.  *} .  const char *name; . .  {* The value of the symbol.  This really should be a union of a .     numeric value with a pointer, since some flags indicate that .     a pointer to another symbol is stored here.  *} .  symvalue value; . .  {* Attributes of a symbol.  *} .#define BSF_NO_FLAGS    0x00 . .  {* The symbol has local scope;<<static>> in<<C>>. The value .     is the offset into the section of the data.  *} .#define BSF_LOCAL	0x01 . .  {* The symbol has global scope; initialized data in<<C>>. The .     value is the offset into the section of the data.  *} .#define BSF_GLOBAL	0x02 . .  {* The symbol has global scope and is exported. The value is .     the offset into the section of the data.  *} .#define BSF_EXPORT	BSF_GLOBAL {* No real difference.  *} . .  {* A normal C symbol would be one of: .<<BSF_LOCAL>>,<<BSF_FORT_COMM>>,<<BSF_UNDEFINED>> or .<<BSF_GLOBAL>>.  *} . .  {* The symbol is a debugging record. The value has an arbitrary .     meaning, unless BSF_DEBUGGING_RELOC is also set.  *} .#define BSF_DEBUGGING	0x08 . .  {* The symbol denotes a function entry point.  Used in ELF, .     perhaps others someday.  *} .#define BSF_FUNCTION    0x10 . .  {* Used by the linker.  *} .#define BSF_KEEP        0x20 .#define BSF_KEEP_G      0x40 . .  {* A weak global symbol, overridable without warnings by .     a regular global symbol of the same name.  *} .#define BSF_WEAK        0x80 . .  {* This symbol was created to point to a section, e.g. ELF's .     STT_SECTION symbols.  *} .#define BSF_SECTION_SYM 0x100 . .  {* The symbol used to be a common symbol, but now it is .     allocated.  *} .#define BSF_OLD_COMMON  0x200 . .  {* The default value for common data.  *} .#define BFD_FORT_COMM_DEFAULT_VALUE 0 . .  {* In some files the type of a symbol sometimes alters its .     location in an output file - ie in coff a<<ISFCN>> symbol .     which is also<<C_EXT>> symbol appears where it was .     declared and not at the end of a section.  This bit is set .     by the target BFD part to convey this information.  *} .#define BSF_NOT_AT_END    0x400 . .  {* Signal that the symbol is the label of constructor section.  *} .#define BSF_CONSTRUCTOR   0x800 . .  {* Signal that the symbol is a warning symbol.  The name is a .     warning.  The name of the next symbol is the one to warn about; .     if a reference is made to a symbol with the same name as the next .     symbol, a warning is issued by the linker.  *} .#define BSF_WARNING       0x1000 . .  {* Signal that the symbol is indirect.  This symbol is an indirect .     pointer to the symbol with the same name as the next symbol.  *} .#define BSF_INDIRECT      0x2000 . .  {* BSF_FILE marks symbols that contain a file name.  This is used .     for ELF STT_FILE symbols.  *} .#define BSF_FILE          0x4000 . .  {* Symbol is from dynamic linking information.  *} .#define BSF_DYNAMIC	   0x8000 . .  {* The symbol denotes a data object.  Used in ELF, and perhaps .     others someday.  *} .#define BSF_OBJECT	   0x10000 . .  {* This symbol is a debugging symbol.  The value is the offset .     into the section of the data.  BSF_DEBUGGING should be set .     as well.  *} .#define BSF_DEBUGGING_RELOC 0x20000 . .  {* This symbol is thread local.  Used in ELF.  *} .#define BSF_THREAD_LOCAL  0x40000 . .  flagword flags; . .  {* A pointer to the section to which this symbol is .     relative.  This will always be non NULL, there are special .     sections for undefined and absolute symbols.  *} .  struct bfd_section *section; . .  {* Back end special data.  *} .  union .    { .      void *p; .      bfd_vma i; .    } .  udata; .} .asymbol; . */
 end_comment
 
 begin_include
@@ -55,54 +55,6 @@ directive|include
 file|"aout/stab_gnu.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|coff_section_type
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|decode_section_type
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|sec
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|cmpindexentry
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|PTR
-operator|,
-specifier|const
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* DOCDD INODE symbol handling functions,  , typedef asymbol, Symbols SUBSECTION 	Symbol handling functions */
 end_comment
@@ -112,25 +64,21 @@ comment|/* FUNCTION 	bfd_get_symtab_upper_bound  DESCRIPTION 	Return the number 
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_is_local_label  SYNOPSIS         boolean bfd_is_local_label(bfd *abfd, asymbol *sym);  DESCRIPTION 	Return true if the given symbol @var{sym} in the BFD @var{abfd} is 	a compiler generated local label, else return false. */
+comment|/* FUNCTION 	bfd_is_local_label  SYNOPSIS         bfd_boolean bfd_is_local_label (bfd *abfd, asymbol *sym);  DESCRIPTION 	Return TRUE if the given symbol @var{sym} in the BFD @var{abfd} is 	a compiler generated local label, else return FALSE. */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_is_local_label
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sym
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* The BSF_SECTION_SYM check is needed for IA-64, where every label that      starts with '.' is local.  This would accidentally catch section names      if we didn't reject them here.  */
 if|if
@@ -152,7 +100,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -163,7 +111,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
 name|bfd_is_local_label_name
@@ -179,57 +127,47 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_is_local_label_name  SYNOPSIS         boolean bfd_is_local_label_name(bfd *abfd, const char *name);  DESCRIPTION 	Return true if a symbol with the name @var{name} in the BFD 	@var{abfd} is a compiler generated local label, else return 	false.  This just checks whether the name has the form of a 	local label.  .#define bfd_is_local_label_name(abfd, name) \ .     BFD_SEND (abfd, _bfd_is_local_label_name, (abfd, name)) . */
+comment|/* FUNCTION 	bfd_is_local_label_name  SYNOPSIS         bfd_boolean bfd_is_local_label_name (bfd *abfd, const char *name);  DESCRIPTION 	Return TRUE if a symbol with the name @var{name} in the BFD 	@var{abfd} is a compiler generated local label, else return 	FALSE.  This just checks whether the name has the form of a 	local label.  .#define bfd_is_local_label_name(abfd, name) \ .  BFD_SEND (abfd, _bfd_is_local_label_name, (abfd, name)) . */
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_canonicalize_symtab  DESCRIPTION 	Read the symbols from the BFD @var{abfd}, and fills in 	the vector @var{location} with pointers to the symbols and 	a trailing NULL. 	Return the actual number of symbol pointers, not 	including the NULL.  .#define bfd_canonicalize_symtab(abfd, location) \ .     BFD_SEND (abfd, _bfd_canonicalize_symtab,\ .                  (abfd, location)) . */
+comment|/* FUNCTION 	bfd_canonicalize_symtab  DESCRIPTION 	Read the symbols from the BFD @var{abfd}, and fills in 	the vector @var{location} with pointers to the symbols and 	a trailing NULL. 	Return the actual number of symbol pointers, not 	including the NULL.  .#define bfd_canonicalize_symtab(abfd, location) \ .  BFD_SEND (abfd, _bfd_canonicalize_symtab, (abfd, location)) . */
 end_comment
 
 begin_comment
-comment|/* FUNCTION 	bfd_set_symtab  SYNOPSIS 	boolean bfd_set_symtab (bfd *abfd, asymbol **location, unsigned int count);  DESCRIPTION 	Arrange that when the output BFD @var{abfd} is closed, 	the table @var{location} of @var{count} pointers to symbols 	will be written. */
+comment|/* FUNCTION 	bfd_set_symtab  SYNOPSIS 	bfd_boolean bfd_set_symtab 	  (bfd *abfd, asymbol **location, unsigned int count);  DESCRIPTION 	Arrange that when the output BFD @var{abfd} is closed, 	the table @var{location} of @var{count} pointers to symbols 	will be written. */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_set_symtab
 parameter_list|(
-name|abfd
-parameter_list|,
-name|location
-parameter_list|,
-name|symcount
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|location
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|symcount
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
 name|abfd
 operator|->
 name|format
 operator|!=
 name|bfd_object
-operator|)
 operator|||
-operator|(
 name|bfd_read_p
 argument_list|(
 name|abfd
 argument_list|)
-operator|)
 condition|)
 block|{
 name|bfd_set_error
@@ -238,7 +176,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|bfd_get_outsymbols
@@ -256,45 +194,36 @@ operator|=
 name|symcount
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_print_symbol_vandf  SYNOPSIS 	void bfd_print_symbol_vandf(bfd *abfd, PTR file, asymbol *symbol);  DESCRIPTION 	Print the value and flags of the @var{symbol} supplied to the 	stream @var{file}. */
+comment|/* FUNCTION 	bfd_print_symbol_vandf  SYNOPSIS 	void bfd_print_symbol_vandf (bfd *abfd, void *file, asymbol *symbol);  DESCRIPTION 	Print the value and flags of the @var{symbol} supplied to the 	stream @var{file}. */
 end_comment
 
 begin_function
 name|void
 name|bfd_print_symbol_vandf
 parameter_list|(
-name|abfd
-parameter_list|,
-name|arg
-parameter_list|,
-name|symbol
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
 name|file
 init|=
-operator|(
-name|FILE
-operator|*
-operator|)
 name|arg
 decl_stmt|;
 name|flagword
@@ -310,13 +239,8 @@ name|symbol
 operator|->
 name|section
 operator|!=
-operator|(
-name|asection
-operator|*
-operator|)
 name|NULL
 condition|)
-block|{
 name|bfd_fprintf_vma
 argument_list|(
 name|abfd
@@ -334,9 +258,7 @@ operator|->
 name|vma
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|bfd_fprintf_vma
 argument_list|(
 name|abfd
@@ -348,7 +270,6 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* This presumes that a symbol can not be both BSF_DEBUGGING and      BSF_DYNAMIC, nor more than one of BSF_FUNCTION, BSF_FILE, and      BSF_OBJECT.  */
 name|fprintf
 argument_list|(
@@ -479,7 +400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_make_empty_symbol  DESCRIPTION 	Create a new<<asymbol>> structure for the BFD @var{abfd} 	and return a pointer to it.  	This routine is necessary because each back end has private 	information surrounding the<<asymbol>>. Building your own<<asymbol>> and pointing to it will not create the private 	information, and will cause problems later on.  .#define bfd_make_empty_symbol(abfd) \ .     BFD_SEND (abfd, _bfd_make_empty_symbol, (abfd)) . */
+comment|/* FUNCTION 	bfd_make_empty_symbol  DESCRIPTION 	Create a new<<asymbol>> structure for the BFD @var{abfd} 	and return a pointer to it.  	This routine is necessary because each back end has private 	information surrounding the<<asymbol>>. Building your own<<asymbol>> and pointing to it will not create the private 	information, and will cause problems later on.  .#define bfd_make_empty_symbol(abfd) \ .  BFD_SEND (abfd, _bfd_make_empty_symbol, (abfd)) . */
 end_comment
 
 begin_comment
@@ -491,12 +412,10 @@ name|asymbol
 modifier|*
 name|_bfd_generic_make_empty_symbol
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_size_type
 name|amt
@@ -510,10 +429,6 @@ name|asymbol
 modifier|*
 name|new
 init|=
-operator|(
-name|asymbol
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -538,7 +453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_make_debug_symbol  DESCRIPTION 	Create a new<<asymbol>> structure for the BFD @var{abfd}, 	to be used as a debugging symbol.  Further details of its use have 	yet to be worked out.  .#define bfd_make_debug_symbol(abfd,ptr,size) \ .        BFD_SEND (abfd, _bfd_make_debug_symbol, (abfd, ptr, size)) . */
+comment|/* FUNCTION 	bfd_make_debug_symbol  DESCRIPTION 	Create a new<<asymbol>> structure for the BFD @var{abfd}, 	to be used as a debugging symbol.  Further details of its use have 	yet to be worked out.  .#define bfd_make_debug_symbol(abfd,ptr,size) \ .  BFD_SEND (abfd, _bfd_make_debug_symbol, (abfd, ptr, size)) . */
 end_comment
 
 begin_struct
@@ -717,13 +632,11 @@ specifier|static
 name|char
 name|coff_section_type
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -787,14 +700,12 @@ specifier|static
 name|char
 name|decode_section_type
 parameter_list|(
-name|section
-parameter_list|)
 specifier|const
 name|struct
-name|sec
+name|bfd_section
 modifier|*
 name|section
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -884,6 +795,27 @@ condition|)
 return|return
 literal|'N'
 return|;
+if|if
+condition|(
+operator|(
+name|section
+operator|->
+name|flags
+operator|&
+name|SEC_HAS_CONTENTS
+operator|)
+operator|&&
+operator|(
+name|section
+operator|->
+name|flags
+operator|&
+name|SEC_READONLY
+operator|)
+condition|)
+return|return
+literal|'n'
+return|;
 return|return
 literal|'?'
 return|;
@@ -891,19 +823,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_decode_symclass  DESCRIPTION 	Return a character corresponding to the symbol 	class of @var{symbol}, or '?' for an unknown class.  SYNOPSIS 	int bfd_decode_symclass(asymbol *symbol); */
+comment|/* FUNCTION 	bfd_decode_symclass  DESCRIPTION 	Return a character corresponding to the symbol 	class of @var{symbol}, or '?' for an unknown class.  SYNOPSIS 	int bfd_decode_symclass (asymbol *symbol); */
 end_comment
 
 begin_function
 name|int
 name|bfd_decode_symclass
 parameter_list|(
-name|symbol
-parameter_list|)
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|c
@@ -1092,24 +1022,18 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_is_undefined_symclass  DESCRIPTION 	Returns non-zero if the class symbol returned by 	bfd_decode_symclass represents an undefined symbol. 	Returns zero otherwise.  SYNOPSIS 	boolean bfd_is_undefined_symclass (int symclass); */
+comment|/* FUNCTION 	bfd_is_undefined_symclass  DESCRIPTION 	Returns non-zero if the class symbol returned by 	bfd_decode_symclass represents an undefined symbol. 	Returns zero otherwise.  SYNOPSIS 	bfd_boolean bfd_is_undefined_symclass (int symclass); */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_is_undefined_symclass
 parameter_list|(
-name|symclass
-parameter_list|)
 name|int
 name|symclass
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
-call|(
-name|boolean
-call|)
-argument_list|(
 name|symclass
 operator|==
 literal|'U'
@@ -1121,31 +1045,26 @@ operator|||
 name|symclass
 operator|==
 literal|'v'
-argument_list|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_symbol_info  DESCRIPTION 	Fill in the basic info about symbol that nm needs. 	Additional info may be added by the back-ends after 	calling this function.  SYNOPSIS 	void bfd_symbol_info(asymbol *symbol, symbol_info *ret); */
+comment|/* FUNCTION 	bfd_symbol_info  DESCRIPTION 	Fill in the basic info about symbol that nm needs. 	Additional info may be added by the back-ends after 	calling this function.  SYNOPSIS 	void bfd_symbol_info (asymbol *symbol, symbol_info *ret); */
 end_comment
 
 begin_function
 name|void
 name|bfd_symbol_info
 parameter_list|(
-name|symbol
-parameter_list|,
-name|ret
-parameter_list|)
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|symbol_info
 modifier|*
 name|ret
-decl_stmt|;
+parameter_list|)
 block|{
 name|ret
 operator|->
@@ -1198,7 +1117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_copy_private_symbol_data  SYNOPSIS 	boolean bfd_copy_private_symbol_data(bfd *ibfd, asymbol *isym, bfd *obfd, asymbol *osym);  DESCRIPTION 	Copy private symbol information from @var{isym} in the BFD 	@var{ibfd} to the symbol @var{osym} in the BFD @var{obfd}. 	Return<<true>> on success,<<false>> on error.  Possible error 	returns are:  	o<<bfd_error_no_memory>> - 	Not enough memory exists to create private data for @var{osec}.  .#define bfd_copy_private_symbol_data(ibfd, isymbol, obfd, osymbol) \ .     BFD_SEND (obfd, _bfd_copy_private_symbol_data, \ .		(ibfd, isymbol, obfd, osymbol)) . */
+comment|/* FUNCTION 	bfd_copy_private_symbol_data  SYNOPSIS 	bfd_boolean bfd_copy_private_symbol_data 	  (bfd *ibfd, asymbol *isym, bfd *obfd, asymbol *osym);  DESCRIPTION 	Copy private symbol information from @var{isym} in the BFD 	@var{ibfd} to the symbol @var{osym} in the BFD @var{obfd}. 	Return<<TRUE>> on success,<<FALSE>> on error.  Possible error 	returns are:  	o<<bfd_error_no_memory>> - 	Not enough memory exists to create private data for @var{osec}.  .#define bfd_copy_private_symbol_data(ibfd, isymbol, obfd, osymbol) \ .  BFD_SEND (obfd, _bfd_copy_private_symbol_data, \ .            (ibfd, isymbol, obfd, osymbol)) . */
 end_comment
 
 begin_comment
@@ -1209,30 +1128,23 @@ begin_function
 name|long
 name|_bfd_generic_read_minisymbols
 parameter_list|(
-name|abfd
-parameter_list|,
-name|dynamic
-parameter_list|,
-name|minisymsp
-parameter_list|,
-name|sizep
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-name|boolean
+parameter_list|,
+name|bfd_boolean
 name|dynamic
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 modifier|*
 name|minisymsp
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 modifier|*
 name|sizep
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|storage
@@ -1286,16 +1198,8 @@ literal|0
 return|;
 name|syms
 operator|=
-operator|(
-name|asymbol
-operator|*
-operator|*
-operator|)
 name|bfd_malloc
 argument_list|(
-operator|(
-name|bfd_size_type
-operator|)
 name|storage
 argument_list|)
 expr_stmt|;
@@ -1343,9 +1247,6 @@ goto|;
 operator|*
 name|minisymsp
 operator|=
-operator|(
-name|PTR
-operator|)
 name|syms
 expr_stmt|;
 operator|*
@@ -1362,6 +1263,11 @@ name|symcount
 return|;
 name|error_return
 label|:
+name|bfd_set_error
+argument_list|(
+name|bfd_error_no_symbols
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|syms
@@ -1384,41 +1290,30 @@ begin_comment
 comment|/* The generic version of the function which converts a minisymbol to    an asymbol.  We don't worry about the sym argument we are passed;    we just return the asymbol the minisymbol points to.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|asymbol
 modifier|*
 name|_bfd_generic_minisymbol_to_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|dynamic
-parameter_list|,
-name|minisym
-parameter_list|,
-name|sym
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|boolean
+parameter_list|,
+name|bfd_boolean
 name|dynamic
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|minisym
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|*
@@ -1433,7 +1328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Look through stabs debugging information in .stab and .stabstr    sections to find the source file and line closest to a desired    location.  This is used by COFF and ELF targets.  It sets *pfound    to true if it finds some information.  The *pinfo field is used to    pass cached information in and out of this routine; this first time    the routine is called for a BFD, *pinfo should be NULL.  The value    placed in *pinfo should be saved with the BFD, and passed back each    time this function is called.  */
+comment|/* Look through stabs debugging information in .stab and .stabstr    sections to find the source file and line closest to a desired    location.  This is used by COFF and ELF targets.  It sets *pfound    to TRUE if it finds some information.  The *pinfo field is used to    pass cached information in and out of this routine; this first time    the routine is called for a BFD, *pinfo should be NULL.  The value    placed in *pinfo should be saved with the BFD, and passed back each    time this function is called.  */
 end_comment
 
 begin_comment
@@ -1490,18 +1385,16 @@ specifier|static
 name|int
 name|cmpindexentry
 parameter_list|(
+specifier|const
+name|void
+modifier|*
 name|a
 parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|b
 parameter_list|)
-specifier|const
-name|PTR
-name|a
-decl_stmt|;
-specifier|const
-name|PTR
-name|b
-decl_stmt|;
 block|{
 specifier|const
 name|struct
@@ -1509,12 +1402,6 @@ name|indexentry
 modifier|*
 name|contestantA
 init|=
-operator|(
-specifier|const
-expr|struct
-name|indexentry
-operator|*
-operator|)
 name|a
 decl_stmt|;
 specifier|const
@@ -1523,12 +1410,6 @@ name|indexentry
 modifier|*
 name|contestantB
 init|=
-operator|(
-specifier|const
-expr|struct
-name|indexentry
-operator|*
-operator|)
 name|b
 decl_stmt|;
 if|if
@@ -1636,68 +1517,51 @@ struct|;
 end_struct
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_stab_section_find_nearest_line
 parameter_list|(
-name|abfd
-parameter_list|,
-name|symbols
-parameter_list|,
-name|section
-parameter_list|,
-name|offset
-parameter_list|,
-name|pfound
-parameter_list|,
-name|pfilename
-parameter_list|,
-name|pfnname
-parameter_list|,
-name|pline
-parameter_list|,
-name|pinfo
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|offset
-decl_stmt|;
-name|boolean
+parameter_list|,
+name|bfd_boolean
 modifier|*
 name|pfound
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|pfilename
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|pfnname
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 modifier|*
 name|pline
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 modifier|*
 name|pinfo
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stab_find_info
@@ -1741,7 +1605,7 @@ decl_stmt|;
 name|int
 name|saw_fun
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|saw_line
 decl_stmt|,
 name|saw_func
@@ -1749,7 +1613,7 @@ decl_stmt|;
 operator|*
 name|pfound
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 operator|*
 name|pfilename
@@ -1796,11 +1660,6 @@ name|STABSIZE
 value|(12)
 name|info
 operator|=
-operator|(
-expr|struct
-name|stab_find_info
-operator|*
-operator|)
 operator|*
 name|pinfo
 expr_stmt|;
@@ -1828,7 +1687,7 @@ condition|)
 block|{
 comment|/* No stabs debugging information.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|stabsize
@@ -1880,11 +1739,6 @@ name|info
 decl_stmt|;
 name|info
 operator|=
-operator|(
-expr|struct
-name|stab_find_info
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -1899,7 +1753,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* FIXME: When using the linker --split-by-file or 	 --split-by-reloc options, it is possible for the .stab and 	 .stabstr sections to be split.  We should handle that.  */
 name|info
@@ -1943,13 +1797,10 @@ comment|/* No stabs debugging information.  Set *pinfo so that we              c
 operator|*
 name|pinfo
 operator|=
-operator|(
-name|PTR
-operator|)
 name|info
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|stabsize
@@ -1972,10 +1823,6 @@ name|info
 operator|->
 name|stabs
 operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -1987,10 +1834,6 @@ name|info
 operator|->
 name|strs
 operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2013,7 +1856,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2060,9 +1903,9 @@ name|strsize
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* If this is a relocateable object file, we have to relocate 	 the entries in .stab.  This should always be simple 32 bit 	 relocations against symbols defined in this object file, so 	 this should be no big deal.  */
+comment|/* If this is a relocatable object file, we have to relocate 	 the entries in .stab.  This should always be simple 32 bit 	 relocations against symbols defined in this object file, so 	 this should be no big deal.  */
 name|reloc_size
 operator|=
 name|bfd_get_reloc_upper_bound
@@ -2081,20 +1924,12 @@ operator|<
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|reloc_vector
 operator|=
-operator|(
-name|arelent
-operator|*
-operator|*
-operator|)
 name|bfd_malloc
 argument_list|(
-operator|(
-name|bfd_size_type
-operator|)
 name|reloc_size
 argument_list|)
 expr_stmt|;
@@ -2109,7 +1944,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|reloc_count
 operator|=
@@ -2145,7 +1980,7 @@ name|reloc_vector
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -2269,7 +2104,7 @@ name|reloc_vector
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|val
@@ -2504,7 +2339,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 operator|++
 name|info
@@ -2529,11 +2364,6 @@ name|info
 operator|->
 name|indextable
 operator|=
-operator|(
-expr|struct
-name|indexentry
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2550,7 +2380,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|file_name
 operator|=
@@ -3193,9 +3023,6 @@ expr_stmt|;
 operator|*
 name|pinfo
 operator|=
-operator|(
-name|PTR
-operator|)
 name|info
 expr_stmt|;
 block|}
@@ -3262,7 +3089,6 @@ else|else
 endif|#
 directive|endif
 block|{
-comment|/* Cache non-existant or invalid.  Do binary search on          indextable.  */
 name|long
 name|low
 decl_stmt|,
@@ -3274,6 +3100,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+comment|/* Cache non-existent or invalid.  Do binary search on          indextable.  */
 name|indexentry
 operator|=
 name|NULL
@@ -3378,7 +3205,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|stab
 operator|=
@@ -3409,11 +3236,11 @@ name|str
 expr_stmt|;
 name|saw_line
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|saw_func
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -3433,7 +3260,7 @@ operator|+=
 name|STABSIZE
 control|)
 block|{
-name|boolean
+name|bfd_boolean
 name|done
 decl_stmt|;
 name|bfd_vma
@@ -3441,7 +3268,7 @@ name|val
 decl_stmt|;
 name|done
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 switch|switch
 condition|(
@@ -3506,12 +3333,21 @@ case|:
 case|case
 name|N_BSLINE
 case|:
-comment|/* A line number.  The value is relative to the start of the              current function.  */
+comment|/* A line number.  If the function was specified, then the value 	     is relative to the start of the function.  Otherwise, the 	     value is an absolute address.  */
 name|val
 operator|=
+operator|(
+operator|(
+name|indexentry
+operator|->
+name|function_name
+condition|?
 name|indexentry
 operator|->
 name|val
+else|:
+literal|0
+operator|)
 operator|+
 name|bfd_get_32
 argument_list|(
@@ -3521,6 +3357,7 @@ name|stab
 operator|+
 name|VALOFF
 argument_list|)
+operator|)
 expr_stmt|;
 comment|/* If this line starts before our desired offset, or if it's 	     the first line we've been able to find, use it.  The 	     !saw_line check works around a bug in GCC 2.95.3, which emits 	     the first N_SLINE late.  */
 if|if
@@ -3583,11 +3420,11 @@ name|offset
 condition|)
 name|done
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|saw_line
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -3604,11 +3441,11 @@ name|saw_line
 condition|)
 name|done
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|saw_func
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -3621,7 +3458,7 @@ block|}
 operator|*
 name|pfound
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -3721,15 +3558,8 @@ name|info
 operator|->
 name|filename
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|bfd_malloc
 argument_list|(
-operator|(
-name|bfd_size_type
-operator|)
 name|dirlen
 operator|+
 name|len
@@ -3744,7 +3574,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|memcpy
 argument_list|(
@@ -3824,7 +3654,7 @@ name|function_name
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A.out "format 1" file handling code for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* A.out "format 1" file handling code for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -141,7 +141,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_merge_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -189,7 +189,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_write_object_contents
 name|PARAMS
 argument_list|(
@@ -248,7 +248,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos4_core_file_matches_executable_p
 name|PARAMS
 argument_list|(
@@ -265,7 +265,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos4_set_sizes
 name|PARAMS
 argument_list|(
@@ -290,7 +290,7 @@ end_define
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_merge_private_bfd_data
 parameter_list|(
 name|ibfd
@@ -325,7 +325,7 @@ operator|!=
 name|bfd_target_aout_flavour
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -363,7 +363,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -615,7 +615,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_write_object_contents
 parameter_list|(
 name|abfd
@@ -823,7 +823,7 @@ name|execp
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3143,7 +3143,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos4_core_file_matches_executable_p
 parameter_list|(
 name|core_bfd
@@ -3176,7 +3176,7 @@ name|bfd_error_system_call
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Solaris core files do not include an aouthdr.  */
@@ -3196,7 +3196,7 @@ operator|==
 name|SOLARIS_BCP_CORE_LEN
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 return|return
 operator|(
@@ -3251,7 +3251,7 @@ end_define
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos4_set_sizes
 parameter_list|(
 name|abfd
@@ -3271,7 +3271,7 @@ condition|)
 block|{
 default|default:
 return|return
-name|false
+name|FALSE
 return|;
 case|case
 name|bfd_arch_sparc
@@ -3304,7 +3304,7 @@ operator|=
 name|EXEC_BYTES_SIZE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 case|case
 name|bfd_arch_m68k
@@ -3337,7 +3337,7 @@ operator|=
 name|EXEC_BYTES_SIZE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 block|}
@@ -3575,7 +3575,7 @@ define|#
 directive|define
 name|MY_bfd_debug_info_accumulate
 define|\
-value|(void (*) PARAMS ((bfd *, struct sec *))) bfd_void
+value|(void (*) PARAMS ((bfd *, struct bfd_section *))) bfd_void
 end_define
 
 begin_define

@@ -34,13 +34,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|md_number_to_chars
-value|number_to_chars_bigendian
-end_define
-
-begin_define
-define|#
-directive|define
 name|TARGET_BYTES_BIG_ENDIAN
 value|1
 end_define
@@ -56,13 +49,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|md_number_to_chars
-value|number_to_chars_littleendian
-end_define
 
 begin_define
 define|#
@@ -86,6 +72,120 @@ end_endif
 begin_comment
 comment|/* TE_HPUX */
 end_comment
+
+begin_extern
+extern|extern void (*ia64_number_to_chars
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|valueT
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|md_number_to_chars
+value|(*ia64_number_to_chars)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ia64_elf_section_change_hook
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|md_elf_section_change_hook
+value|ia64_elf_section_change_hook
+end_define
+
+begin_comment
+comment|/* We record the endian for this section. 0 means default, 1 means    big endian and 2 means little endian.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ia64_segment_info_type
+block|{
+name|unsigned
+name|int
+name|endian
+range|:
+literal|2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TC_SEGMENT_INFO_TYPE
+value|struct ia64_segment_info_type
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ia64_adjust_symtab
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tc_adjust_symtab
+parameter_list|()
+value|ia64_adjust_symtab ()
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ia64_frob_file
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tc_frob_file
+parameter_list|()
+value|ia64_frob_file ()
+end_define
 
 begin_comment
 comment|/* We need to set the default object file format in ia64_init and not in    md_begin.  This is because parse_args is called before md_begin, and we    do not want md_begin to wipe out the flag settings set by options parsed in    md_parse_args.  */
@@ -233,6 +333,18 @@ begin_comment
 comment|/* allow `#' ending a name */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SUB_SEGMENT_ALIGN
+parameter_list|(
+name|SEG
+parameter_list|,
+name|FRCHAIN
+parameter_list|)
+value|0
+end_define
+
 begin_struct
 struct|struct
 name|ia64_fix
@@ -248,20 +360,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ia64_do_align
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-name|n
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -318,6 +416,33 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_HPUX
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ia64_frob_symbol
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|symbol
+operator|*
+name|sym
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -603,6 +728,62 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|ia64_dwarf2_emit_offset
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ia64_check_label
+name|PARAMS
+argument_list|(
+operator|(
+name|symbolS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|ia64_estimate_size_before_relax
+parameter_list|(
+name|fragS
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ia64_convert_frag
+parameter_list|(
+name|fragS
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -639,6 +820,33 @@ parameter_list|)
 value|ia64_frob_label (s)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_HPUX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|tc_frob_symbol
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
+value|p |= ia64_frob_symbol (s)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TE_HPUX */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -665,6 +873,16 @@ begin_define
 define|#
 directive|define
 name|tc_canonicalize_symbol_name
+parameter_list|(
+name|s
+parameter_list|)
+value|ia64_canonicalize_symbol_name (s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tc_canonicalize_section_name
 parameter_list|(
 name|s
 parameter_list|)
@@ -718,6 +936,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|MD_APPLY_SYM_VALUE
+parameter_list|(
+name|FIX
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|md_convert_frag
 parameter_list|(
 name|b
@@ -726,7 +954,7 @@ name|s
 parameter_list|,
 name|f
 parameter_list|)
-value|as_fatal ("ia64_convert_frag")
+value|ia64_convert_frag (f)
 end_define
 
 begin_define
@@ -776,7 +1004,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|(as_fatal ("ia64_estimate_size_before_relax"), 1)
+value|ia64_estimate_size_before_relax(f,s)
 end_define
 
 begin_define
@@ -855,6 +1083,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|md_section_align
+parameter_list|(
+name|seg
+parameter_list|,
+name|size
+parameter_list|)
+value|(size)
+end_define
+
+begin_define
+define|#
+directive|define
 name|md_do_align
 parameter_list|(
 name|n
@@ -903,6 +1143,44 @@ end_define
 begin_define
 define|#
 directive|define
+name|TC_DWARF2_EMIT_OFFSET
+value|ia64_dwarf2_emit_offset
+end_define
+
+begin_define
+define|#
+directive|define
+name|tc_check_label
+parameter_list|(
+name|l
+parameter_list|)
+value|ia64_check_label (l)
+end_define
+
+begin_comment
+comment|/* Record if an alignment frag should end with a stop bit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FRAG_TYPE
+value|int
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_FRAG_INIT
+parameter_list|(
+name|FRAGP
+parameter_list|)
+value|do {(FRAGP)->tc_frag_data = 0;}while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_MEM_FOR_RS_ALIGN_CODE
 value|(15 + 16)
 end_define
@@ -916,14 +1194,6 @@ end_define
 begin_comment
 comment|/* don't do broken word processing for now */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ELF_TC_SPECIAL_SECTIONS
-define|\
-value|{ ".sbss",	SHT_NOBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT }, \ { ".sdata",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT },
-end_define
 
 begin_define
 define|#
@@ -1232,6 +1502,8 @@ block|,
 name|spill_reg_p
 block|,
 name|unwabi
+block|,
+name|endp
 block|}
 name|unw_record_type
 typedef|;
@@ -1453,7 +1725,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* This expression evaluates to false if the relocation is for a local    object for which we still want to do the relocation at runtime.    True if we are willing to perform this relocation while building    the .o file.  This is only used for pcrel relocations.  */
+comment|/* This expression evaluates to true if the relocation is for a local    object for which we still want to do the relocation at runtime.    False if we are willing to perform this relocation while building    the .o file.  */
 end_comment
 
 begin_comment
@@ -1463,12 +1735,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TC_RELOC_RTSYM_LOC_FIXUP
+name|TC_FORCE_RELOCATION_LOCAL
 parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|((FIX)->fx_addsy == NULL					\    || (FIX)->fx_r_type == BFD_RELOC_UNUSED			\    || (! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy)				\&& S_IS_DEFINED ((FIX)->fx_addsy)			\&& ! S_IS_COMMON ((FIX)->fx_addsy)))
+value|((FIX)->fx_r_type != BFD_RELOC_UNUSED			\&& (!(FIX)->fx_pcrel					\        || (FIX)->fx_plt					\        || TC_FORCE_RELOCATION (FIX)))
 end_define
 
 end_unit

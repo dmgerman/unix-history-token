@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for SunOS binaries.    Copyright 1990, 1991, 1992, 1994, 1995, 1996, 1997, 1998, 2000, 2001,    2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for SunOS binaries.    Copyright 1990, 1991, 1992, 1994, 1995, 1996, 1997, 1998, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -48,7 +48,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_read_dynamic_info
 name|PARAMS
 argument_list|(
@@ -76,7 +76,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_slurp_dynamic_symtab
 name|PARAMS
 argument_list|(
@@ -185,7 +185,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_create_dynamic_sections
 name|PARAMS
 argument_list|(
@@ -197,7 +197,7 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -205,7 +205,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_add_dynamic_symbols
 name|PARAMS
 argument_list|(
@@ -235,7 +235,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_add_one_symbol
 name|PARAMS
 argument_list|(
@@ -262,9 +262,9 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
-name|boolean
+name|bfd_boolean
 operator|,
 expr|struct
 name|bfd_link_hash_entry
@@ -277,7 +277,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_scan_relocs
 name|PARAMS
 argument_list|(
@@ -300,7 +300,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_scan_std_relocs
 name|PARAMS
 argument_list|(
@@ -328,7 +328,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_scan_ext_relocs
 name|PARAMS
 argument_list|(
@@ -356,7 +356,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_link_dynamic_object
 name|PARAMS
 argument_list|(
@@ -374,7 +374,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_write_dynamic_symbol
 name|PARAMS
 argument_list|(
@@ -396,7 +396,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_check_dynamic_reloc
 name|PARAMS
 argument_list|(
@@ -420,7 +420,7 @@ operator|,
 name|bfd_byte
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|,
 name|bfd_vma
@@ -432,7 +432,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_finish_dynamic_link
 name|PARAMS
 argument_list|(
@@ -569,7 +569,7 @@ struct|struct
 name|sunos_dynamic_info
 block|{
 comment|/* Whether we found any dynamic information.  */
-name|boolean
+name|bfd_boolean
 name|valid
 decl_stmt|;
 comment|/* Dynamic information.  */
@@ -628,12 +628,12 @@ value|(2 * BYTES_IN_WORD)
 end_define
 
 begin_comment
-comment|/* Read in the basic dynamic information.  This locates the __DYNAMIC    structure and uses it to find the dynamic_link structure.  It    creates and saves a sunos_dynamic_info structure.  If it can't find    __DYNAMIC, it sets the valid field of the sunos_dynamic_info    structure to false to avoid doing this work again.  */
+comment|/* Read in the basic dynamic information.  This locates the __DYNAMIC    structure and uses it to find the dynamic_link structure.  It    creates and saves a sunos_dynamic_info structure.  If it can't find    __DYNAMIC, it sets the valid field of the sunos_dynamic_info    structure to FALSE to avoid doing this work again.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_read_dynamic_info
 parameter_list|(
 name|abfd
@@ -683,7 +683,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -704,7 +704,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|amt
@@ -735,13 +735,13 @@ operator|!
 name|info
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|info
 operator|->
 name|valid
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|info
 operator|->
@@ -797,7 +797,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -830,7 +830,7 @@ name|dyninfo
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|dynver
 operator|=
@@ -854,7 +854,7 @@ operator|!=
 literal|3
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|dynoff
 operator|=
@@ -918,7 +918,7 @@ name|dynsec
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* This executable appears to be dynamically linked in a way that we      can understand.  */
 if|if
@@ -949,7 +949,7 @@ name|linkinfo
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Swap in the dynamic link information.  */
 name|info
@@ -1345,10 +1345,10 @@ name|info
 operator|->
 name|valid
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1440,7 +1440,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_slurp_dynamic_symtab
 parameter_list|(
 name|abfd
@@ -1478,7 +1478,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|info
@@ -1507,7 +1507,7 @@ name|bfd_error_no_symbols
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Get the dynamic nlist structures.  */
@@ -1567,7 +1567,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -1632,7 +1632,7 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -1690,7 +1690,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -1755,12 +1755,12 @@ name|NULL
 expr_stmt|;
 block|}
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2171,7 +2171,7 @@ name|dynstr
 argument_list|,
 name|strsize
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 condition|)
 block|{
@@ -3076,15 +3076,15 @@ modifier|*
 name|dynobj
 decl_stmt|;
 comment|/* Whether we have created the dynamic sections.  */
-name|boolean
+name|bfd_boolean
 name|dynamic_sections_created
 decl_stmt|;
 comment|/* Whether we need the dynamic sections.  */
-name|boolean
+name|bfd_boolean
 name|dynamic_sections_needed
 decl_stmt|;
 comment|/* Whether we need the .got table.  */
-name|boolean
+name|bfd_boolean
 name|got_needed
 decl_stmt|;
 comment|/* The number of dynamic symbols.  */
@@ -3394,19 +3394,19 @@ name|ret
 operator|->
 name|dynamic_sections_created
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|ret
 operator|->
 name|dynamic_sections_needed
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|ret
 operator|->
 name|got_needed
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|ret
 operator|->
@@ -3482,7 +3482,7 @@ parameter_list|,
 name|info
 parameter_list|)
 define|\
-value|(aout_link_hash_traverse						\    (&(table)->root,							\     (boolean (*) PARAMS ((struct aout_link_hash_entry *, PTR))) (func),	\     (info)))
+value|(aout_link_hash_traverse						\    (&(table)->root,							\     (bfd_boolean (*) PARAMS ((struct aout_link_hash_entry *, PTR))) (func), \     (info)))
 end_define
 
 begin_comment
@@ -3501,7 +3501,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_scan_dynamic_symbol
 name|PARAMS
 argument_list|(
@@ -3522,7 +3522,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_create_dynamic_sections
 parameter_list|(
 name|abfd
@@ -3540,7 +3540,7 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|needed
 decl_stmt|;
 block|{
@@ -3622,7 +3622,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The .got section holds the global offset table.  The address 	 is put in the ld_got field.  */
 name|s
@@ -3661,7 +3661,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The .plt section holds the procedure linkage table.  The 	 address is put in the ld_plt field.  */
 name|s
@@ -3702,7 +3702,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The .dynrel section holds the dynamic relocs.  The address is 	 put in the ld_rel field.  */
 name|s
@@ -3743,7 +3743,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The .hash section holds the dynamic hash table.  The address 	 is put in the ld_hash field.  */
 name|s
@@ -3784,7 +3784,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The .dynsym section holds the dynamic symbols.  The address 	 is put in the ld_stab field.  */
 name|s
@@ -3825,7 +3825,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The .dynstr section holds the dynamic symbol string table. 	 The address is put in the ld_symbols field.  */
 name|s
@@ -3866,7 +3866,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|sunos_hash_table
 argument_list|(
@@ -3875,7 +3875,7 @@ argument_list|)
 operator|->
 name|dynamic_sections_created
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -3940,7 +3940,7 @@ argument_list|)
 operator|->
 name|dynamic_sections_needed
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|sunos_hash_table
 argument_list|(
@@ -3949,11 +3949,11 @@ argument_list|)
 operator|->
 name|got_needed
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -3964,7 +3964,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_add_dynamic_symbols
 parameter_list|(
 name|abfd
@@ -4045,7 +4045,6 @@ name|info
 argument_list|,
 operator|(
 operator|(
-operator|(
 name|abfd
 operator|->
 name|flags
@@ -4058,17 +4057,12 @@ operator|&&
 operator|!
 name|info
 operator|->
-name|relocateable
-operator|)
-condition|?
-name|true
-else|:
-name|false
+name|relocatable
 operator|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* There is nothing else to do for a normal object.  */
@@ -4085,7 +4079,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|dynobj
 operator|=
@@ -4156,10 +4150,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* There's no hope of using a dynamic object which does not exactly      match the format of the output file.  */
 if|if
@@ -4181,7 +4175,7 @@ name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Make sure we have a .need and a .rules sections.  These are only      needed if there really is a dynamic object in the link, so they      are not added by sunos_create_dynamic_sections.  */
@@ -4246,7 +4240,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -4310,7 +4304,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Pick up the dynamic symbols and return them to the caller.  */
@@ -4323,7 +4317,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|dinfo
 operator|=
@@ -4449,9 +4443,9 @@ operator|!=
 literal|16
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* For the format of an ld_need entry, see aout/sun4.h.  We          should probably define structs for this manipulation.  */
+comment|/* For the format of an ld_need entry, see aout/sun4.h.  We 	 should probably define structs for this manipulation.  */
 name|name
 operator|=
 name|bfd_get_32
@@ -4542,7 +4536,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|needed
 operator|->
@@ -4575,7 +4569,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|p
 operator|=
@@ -4628,7 +4622,7 @@ name|namebuf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 do|do
@@ -4657,7 +4651,7 @@ name|namebuf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -4710,7 +4704,7 @@ name|namebuf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|p
@@ -4870,7 +4864,7 @@ name|namebuf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|p
@@ -4933,7 +4927,7 @@ name|namebuf
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|strcpy
@@ -4995,7 +4989,7 @@ name|needed
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -5006,7 +5000,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_add_one_symbol
 parameter_list|(
 name|info
@@ -5058,10 +5052,10 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|copy
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|collect
 decl_stmt|;
 name|struct
@@ -5112,11 +5106,11 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|copy
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 else|else
@@ -5136,11 +5130,11 @@ name|info
 argument_list|,
 name|name
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 name|copy
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|)
 expr_stmt|;
@@ -5151,7 +5145,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -5455,7 +5449,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* The existing symbol is a constructor symbol, and this symbol          is from a dynamic object.  A constructor symbol is actually a          definition, although the type will be bfd_link_hash_undefined          at this point.  We want to ignore the definition from the          dynamic object.  */
+comment|/* The existing symbol is a constructor symbol, and this symbol 	 is from a dynamic object.  A constructor symbol is actually a 	 definition, although the type will be bfd_link_hash_undefined 	 at this point.  We want to ignore the definition from the 	 dynamic object.  */
 name|section
 operator|=
 name|bfd_und_section_ptr
@@ -5531,7 +5525,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* The existing symbol is defined by a dynamic object, and this          is a constructor symbol.  As above, we want to force the use          of the constructor symbol from the regular object.  */
+comment|/* The existing symbol is defined by a dynamic object, and this 	 is a constructor symbol.  As above, we want to force the use 	 of the constructor symbol from the regular object.  */
 name|h
 operator|->
 name|root
@@ -5571,7 +5565,7 @@ name|hashp
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -5710,17 +5704,13 @@ name|SUNOS_CONSTRUCTOR
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
 comment|/* Return the list of objects needed by BFD.  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
 end_comment
 
 begin_function
@@ -5777,7 +5767,7 @@ comment|/* Record an assignment made to a symbol by a linker script.  We need   
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_sunos_record_link_assignment
 parameter_list|(
 name|output_bfd
@@ -5819,7 +5809,7 @@ name|vec
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* This is called after we have examined all the input objects.  If      the symbol does not exist, it merely means that no object refers      to it, and we can just ignore it at this point.  */
 name|h
@@ -5833,11 +5823,11 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5847,7 +5837,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* In a shared library, the __DYNAMIC symbol does not appear in the      dynamic symbol table.  */
 if|if
@@ -5901,17 +5891,17 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Set up the sizes and contents of the dynamic sections created in    sunos_add_dynamic_symbols.  This is called by the SunOS linker    emulation before_allocation routine.  We must set the sizes of the    sections before the linker sets the addresses of the various    sections.  This unfortunately requires reading all the relocs so    that we can work out which ones need to become dynamic relocs.  If    info->keep_memory is true, we keep the relocs in memory; otherwise,    we discard them, and will read them again later.  */
+comment|/* Set up the sizes and contents of the dynamic sections created in    sunos_add_dynamic_symbols.  This is called by the SunOS linker    emulation before_allocation routine.  We must set the sizes of the    sections before the linker sets the addresses of the various    sections.  This unfortunately requires reading all the relocs so    that we can work out which ones need to become dynamic relocs.  If    info->keep_memory is TRUE, we keep the relocs in memory; otherwise,    we discard them, and will read them again later.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_sunos_size_dynamic_sections
 parameter_list|(
 name|output_bfd
@@ -5997,10 +5987,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -6015,7 +6005,7 @@ name|vec
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Look through all the input BFD's and read their relocs.  It would      be better if we didn't have to do this, but there is no other way      to determine the number of dynamic relocs we need, and, more      importantly, there is no other way to know which symbols should      get an entry in the procedure linkage table.  */
 for|for
@@ -6101,7 +6091,7 @@ name|a_drsize
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -6143,7 +6133,7 @@ operator|->
 name|got_needed
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* If __GLOBAL_OFFSET_TABLE_ was mentioned, define it.  */
 name|h
@@ -6157,11 +6147,11 @@ argument_list|)
 argument_list|,
 literal|"__GLOBAL_OFFSET_TABLE_"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -6242,7 +6232,7 @@ argument_list|,
 literal|".got"
 argument_list|)
 expr_stmt|;
-comment|/* If the .got section is more than 0x1000 bytes, we set          __GLOBAL_OFFSET_TABLE_ to be 0x1000 bytes into the section,          so that 13 bit relocations have a greater chance of working.  */
+comment|/* If the .got section is more than 0x1000 bytes, we set 	 __GLOBAL_OFFSET_TABLE_ to be 0x1000 bytes into the section, 	 so that 13 bit relocations have a greater chance of working.  */
 name|s
 operator|=
 name|bfd_get_section_by_name
@@ -6431,7 +6421,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The number of buckets is just the number of symbols divided 	 by four.  To compute the final size of the hash table, we 	 must actually compute the hash table.  Normally we need 	 exactly as many entries in the hash table as there are 	 dynamic symbols, but if some of the buckets are not used we 	 will need additional entries.  In the worst case, every 	 symbol will hash to the same bucket, and we will need 	 BUCKETCOUNT - 1 extra entries.  */
 if|if
@@ -6518,7 +6508,7 @@ operator|>
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 for|for
 control|(
@@ -6681,7 +6671,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|memset
 argument_list|(
@@ -6765,7 +6755,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Fill in the first entry in the table.  */
 switch|switch
@@ -6856,7 +6846,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* We use the reloc_count field to keep track of how many of the      relocs we have output so far.  */
@@ -6902,7 +6892,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 operator|*
 name|sneedptr
@@ -6925,7 +6915,7 @@ literal|".rules"
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -6936,7 +6926,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_scan_relocs
 parameter_list|(
 name|info
@@ -6979,7 +6969,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -7071,7 +7061,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -7176,7 +7166,7 @@ name|free_relocs
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -7192,7 +7182,7 @@ name|free_relocs
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -7203,7 +7193,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_scan_std_relocs
 parameter_list|(
 name|info
@@ -7288,7 +7278,7 @@ name|bfd_error_invalid_target
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|dynobj
@@ -7553,11 +7543,11 @@ name|abfd
 argument_list|,
 name|info
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|dynobj
 operator|=
@@ -7634,7 +7624,7 @@ argument_list|)
 operator|->
 name|got_needed
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 name|BFD_ASSERT
@@ -7930,7 +7920,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7941,7 +7931,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_scan_ext_relocs
 parameter_list|(
 name|info
@@ -8035,7 +8025,7 @@ name|bfd_error_invalid_target
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|dynobj
@@ -8264,7 +8254,7 @@ comment|/* This should not normally happen, but it will in any 		 case be caught
 continue|continue;
 block|}
 block|}
-comment|/* If this is a base relative reloc, we need to make an entry in          the .got section.  */
+comment|/* If this is a base relative reloc, we need to make an entry in 	 the .got section.  */
 if|if
 condition|(
 name|r_type
@@ -8296,11 +8286,11 @@ name|abfd
 argument_list|,
 name|info
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|dynobj
 operator|=
@@ -8375,7 +8365,7 @@ argument_list|)
 operator|->
 name|got_needed
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -8472,7 +8462,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -8552,14 +8542,14 @@ name|RELOC_EXT_SIZE
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Otherwise, we are only interested in relocs against symbols          defined in dynamic objects but not in regular objects.  We          only need to consider relocs against external symbols.  */
+comment|/* Otherwise, we are only interested in relocs against symbols 	 defined in dynamic objects but not in regular objects.  We 	 only need to consider relocs against external symbols.  */
 if|if
 condition|(
 operator|!
 name|r_extern
 condition|)
 block|{
-comment|/* But, if we are creating a shared library, we need to              generate an absolute reloc.  */
+comment|/* But, if we are creating a shared library, we need to 	     generate an absolute reloc.  */
 if|if
 condition|(
 name|info
@@ -8583,11 +8573,11 @@ name|abfd
 argument_list|,
 name|info
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|dynobj
 operator|=
@@ -8750,7 +8740,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* This symbol is apparently undefined.  Don't do anything              here; just let the relocation routine report an undefined              symbol.  */
+comment|/* This symbol is apparently undefined.  Don't do anything 	     here; just let the relocation routine report an undefined 	     symbol.  */
 continue|continue;
 block|}
 if|if
@@ -8789,11 +8779,11 @@ name|abfd
 argument_list|,
 name|info
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|dynobj
 operator|=
@@ -8868,7 +8858,7 @@ argument_list|)
 operator|->
 name|got_needed
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 name|BFD_ASSERT
@@ -9201,7 +9191,7 @@ name|_raw_size
 operator|+=
 name|SPARC_PLT_ENTRY_SIZE
 expr_stmt|;
-comment|/* We will also need a dynamic reloc entry, unless this                  is a JMP_TBL reloc produced by linking PIC compiled                  code, and we are not making a shared library.  */
+comment|/* We will also need a dynamic reloc entry, unless this 		 is a JMP_TBL reloc produced by linking PIC compiled 		 code, and we are not making a shared library.  */
 if|if
 condition|(
 name|info
@@ -9225,7 +9215,7 @@ operator|+=
 name|RELOC_EXT_SIZE
 expr_stmt|;
 block|}
-comment|/* If we are creating a shared library, we need to copy over              any reloc other than a jump table reloc.  */
+comment|/* If we are creating a shared library, we need to copy over 	     any reloc other than a jump table reloc.  */
 if|if
 condition|(
 name|info
@@ -9245,7 +9235,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9256,7 +9246,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_scan_dynamic_symbol
 parameter_list|(
 name|h
@@ -9361,7 +9351,7 @@ name|root
 operator|.
 name|written
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* If this symbol is defined by a dynamic object and referenced by a      regular object, see whether we gave it a reasonable value while      scanning the relocs.  */
 if|if
@@ -9649,7 +9639,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|s
 operator|->
@@ -9889,7 +9879,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9898,13 +9888,9 @@ begin_comment
 comment|/* Link a dynamic object.  We actually don't have anything to do at    this point.  This entry point exists to prevent the regular linker    code from doing anything with the object.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_link_dynamic_object
 parameter_list|(
 name|info
@@ -9924,7 +9910,7 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9935,7 +9921,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_write_dynamic_symbol
 parameter_list|(
 name|output_bfd
@@ -10326,7 +10312,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* We also need to add a jump table reloc, unless this is the          result of a JMP_TBL reloc from PIC compiled code.  */
+comment|/* We also need to add a jump table reloc, unless this is the 	 result of a JMP_TBL reloc from PIC compiled code.  */
 if|if
 condition|(
 name|info
@@ -10765,7 +10751,7 @@ operator|<
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 switch|switch
 condition|(
@@ -10787,7 +10773,7 @@ argument_list|()
 expr_stmt|;
 comment|/* Avoid variable not initialized warnings.  */
 return|return
-name|true
+name|TRUE
 return|;
 case|case
 name|bfd_link_hash_undefined
@@ -11061,7 +11047,7 @@ name|bfd_link_hash_warning
 case|:
 comment|/* FIXME: Ignore these for now.  The circumstances under which 	 they should be written out are not clear to me.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|s
@@ -11165,7 +11151,7 @@ name|e_value
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -11174,13 +11160,9 @@ begin_comment
 comment|/* This is called for each reloc against an external symbol.  If this    is a reloc which are are going to copy as a dynamic reloc, then    copy it over, and tell the caller to not bother processing this    reloc.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_check_dynamic_reloc
 parameter_list|(
 name|info
@@ -11225,7 +11207,7 @@ modifier|*
 name|contents
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|skip
 decl_stmt|;
@@ -11250,13 +11232,13 @@ name|bfd
 modifier|*
 name|dynobj
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|baserel
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|jmptbl
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|pcrel
 decl_stmt|;
 name|asection
@@ -11273,7 +11255,7 @@ decl_stmt|;
 operator|*
 name|skip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|dynobj
 operator|=
@@ -11593,7 +11575,7 @@ operator|==
 name|RELOC_WDISP22
 operator|)
 expr_stmt|;
-comment|/* We don't consider the PC10 and PC22 types to be PC relative,          because they are pcrel_offset.  */
+comment|/* We don't consider the PC10 and PC22 types to be PC relative, 	 because they are pcrel_offset.  */
 block|}
 if|if
 condition|(
@@ -11976,7 +11958,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* We need to create a GLOB_DAT or 32 reloc to tell the                  dynamic linker to fill in this entry in the table.  */
+comment|/* We need to create a GLOB_DAT or 32 reloc to tell the 		 dynamic linker to fill in this entry in the table.  */
 name|s
 operator|=
 name|bfd_get_section_by_name
@@ -12533,7 +12515,7 @@ operator|)
 expr_stmt|;
 comment|/* There is nothing else to do for a base relative reloc.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 if|if
@@ -12547,7 +12529,7 @@ operator|->
 name|dynamic_sections_needed
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -12621,7 +12603,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 else|else
@@ -12661,7 +12643,7 @@ literal|0
 operator|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* It looks like this is a reloc we are supposed to copy.  */
@@ -12897,7 +12879,7 @@ operator|)
 name|indx
 expr_stmt|;
 block|}
-comment|/* FIXME: We may have to change the addend for a PC relative          reloc.  */
+comment|/* FIXME: We may have to change the addend for a PC relative 	 reloc.  */
 block|}
 else|else
 block|{
@@ -13107,10 +13089,10 @@ condition|)
 operator|*
 name|skip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -13121,7 +13103,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|sunos_finish_dynamic_link
 parameter_list|(
 name|abfd
@@ -13173,7 +13155,7 @@ operator|->
 name|got_needed
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|dynobj
 operator|=
@@ -13452,7 +13434,7 @@ name|_raw_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -13568,7 +13550,7 @@ name|esd
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|PUT_WORD
 argument_list|(
@@ -14038,7 +14020,7 @@ name|esdl
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|abfd
 operator|->
@@ -14048,7 +14030,7 @@ name|DYNAMIC
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function

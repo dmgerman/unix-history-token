@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for ARM COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for ARM COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -217,7 +217,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_relocate_section
 name|PARAMS
 argument_list|(
@@ -474,7 +474,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_adjust_symndx
 name|PARAMS
 argument_list|(
@@ -496,7 +496,7 @@ expr|struct
 name|internal_reloc
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 operator|)
 argument_list|)
@@ -715,7 +715,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_merge_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -732,7 +732,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_print_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -748,7 +748,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_arm_set_private_flags
 name|PARAMS
 argument_list|(
@@ -764,7 +764,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_copy_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -781,7 +781,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_is_local_label_name
 name|PARAMS
 argument_list|(
@@ -799,7 +799,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_link_output_has_begun
 name|PARAMS
 argument_list|(
@@ -817,7 +817,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_final_link_postscript
 name|PARAMS
 argument_list|(
@@ -1152,7 +1152,7 @@ begin_define
 define|#
 directive|define
 name|PCRELOFFSET
-value|true
+value|TRUE
 end_define
 
 begin_endif
@@ -1305,6 +1305,13 @@ end_undef
 begin_define
 define|#
 directive|define
+name|ARM_26D
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARM_32
 value|1
 end_define
@@ -1328,13 +1335,6 @@ define|#
 directive|define
 name|ARM_THUMB12
 value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM_26D
-value|5
 end_define
 
 begin_define
@@ -1366,10 +1366,33 @@ block|{
 ifdef|#
 directive|ifdef
 name|ARM_WINCE
-name|EMPTY_HOWTO
+name|HOWTO
 argument_list|(
-operator|-
-literal|1
+name|ARM_26D
+argument_list|,
+literal|2
+argument_list|,
+literal|2
+argument_list|,
+literal|24
+argument_list|,
+name|TRUE
+argument_list|,
+literal|0
+argument_list|,
+name|complain_overflow_dont
+argument_list|,
+name|aoutarm_fix_pcrel_26_done
+argument_list|,
+literal|"ARM_26D"
+argument_list|,
+name|FALSE
+argument_list|,
+literal|0x00ffffff
+argument_list|,
+literal|0x0
+argument_list|,
+name|PCRELOFFSET
 argument_list|)
 block|,
 name|HOWTO
@@ -1382,7 +1405,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1392,7 +1415,7 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_32"
 argument_list|,
-name|true
+name|FALSE
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -1411,7 +1434,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1421,7 +1444,7 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_RVA32"
 argument_list|,
-name|true
+name|FALSE
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -1440,7 +1463,7 @@ literal|2
 argument_list|,
 literal|24
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1450,7 +1473,7 @@ name|aoutarm_fix_pcrel_26
 argument_list|,
 literal|"ARM_26"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0x00ffffff
 argument_list|,
@@ -1469,7 +1492,7 @@ literal|1
 argument_list|,
 literal|11
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1479,7 +1502,7 @@ name|coff_thumb_pcrel_12
 argument_list|,
 literal|"ARM_THUMB12"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0x000007ff
 argument_list|,
@@ -1488,33 +1511,10 @@ argument_list|,
 name|PCRELOFFSET
 argument_list|)
 block|,
-name|HOWTO
+name|EMPTY_HOWTO
 argument_list|(
-name|ARM_26D
-argument_list|,
-literal|2
-argument_list|,
-literal|2
-argument_list|,
-literal|24
-argument_list|,
-name|false
-argument_list|,
-literal|0
-argument_list|,
-name|complain_overflow_dont
-argument_list|,
-name|aoutarm_fix_pcrel_26_done
-argument_list|,
-literal|"ARM_26D"
-argument_list|,
-name|true
-argument_list|,
-literal|0x00ffffff
-argument_list|,
-literal|0x0
-argument_list|,
-name|false
+operator|-
+literal|1
 argument_list|)
 block|,
 name|EMPTY_HOWTO
@@ -1575,7 +1575,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1583,9 +1583,9 @@ name|complain_overflow_bitfield
 argument_list|,
 name|coff_arm_reloc
 argument_list|,
-literal|"ARM_16"
+literal|"ARM_SECTION"
 argument_list|,
-name|true
+name|FALSE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
@@ -1604,7 +1604,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1612,9 +1612,9 @@ name|complain_overflow_bitfield
 argument_list|,
 name|coff_arm_reloc
 argument_list|,
-literal|"ARM_32"
+literal|"ARM_SECREL"
 argument_list|,
-name|true
+name|FALSE
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -1640,7 +1640,7 @@ comment|/* size */
 literal|8
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1655,7 +1655,7 @@ comment|/* special_function */
 literal|"ARM_8"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x000000ff
@@ -1678,7 +1678,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1688,7 +1688,7 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
@@ -1707,7 +1707,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1717,7 +1717,7 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -1736,7 +1736,7 @@ literal|2
 argument_list|,
 literal|24
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1746,7 +1746,7 @@ name|aoutarm_fix_pcrel_26
 argument_list|,
 literal|"ARM_26"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0x00ffffff
 argument_list|,
@@ -1765,7 +1765,7 @@ literal|0
 argument_list|,
 literal|8
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1775,13 +1775,13 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_DISP8"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x000000ff
 argument_list|,
 literal|0x000000ff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -1794,7 +1794,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1804,13 +1804,13 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_DISP16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -1823,7 +1823,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1833,13 +1833,13 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_DISP32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 name|HOWTO
@@ -1852,7 +1852,7 @@ literal|2
 argument_list|,
 literal|24
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1862,13 +1862,13 @@ name|aoutarm_fix_pcrel_26_done
 argument_list|,
 literal|"ARM_26D"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x00ffffff
 argument_list|,
 literal|0x0
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* 8 is unused */
@@ -1889,7 +1889,7 @@ literal|1
 argument_list|,
 literal|16
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1899,13 +1899,13 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_NEG16"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0x0000ffff
 argument_list|,
 literal|0x0000ffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1919,7 +1919,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1929,13 +1929,13 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_NEG32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
 literal|0xffffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 block|,
 name|HOWTO
@@ -1948,7 +1948,7 @@ literal|2
 argument_list|,
 literal|32
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -1958,7 +1958,7 @@ name|coff_arm_reloc
 argument_list|,
 literal|"ARM_RVA32"
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0xffffffff
 argument_list|,
@@ -1977,7 +1977,7 @@ literal|1
 argument_list|,
 literal|8
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -1987,7 +1987,7 @@ name|coff_thumb_pcrel_9
 argument_list|,
 literal|"ARM_THUMB9"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0x000000ff
 argument_list|,
@@ -2006,7 +2006,7 @@ literal|1
 argument_list|,
 literal|11
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -2016,7 +2016,7 @@ name|coff_thumb_pcrel_12
 argument_list|,
 literal|"ARM_THUMB12"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0x000007ff
 argument_list|,
@@ -2035,7 +2035,7 @@ literal|2
 argument_list|,
 literal|22
 argument_list|,
-argument|true
+argument|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -2045,7 +2045,7 @@ argument|coff_thumb_pcrel_23
 argument_list|,
 literal|"ARM_THUMB23"
 argument_list|,
-argument|false
+argument|FALSE
 argument_list|,
 literal|0x07ff07ff
 argument_list|,
@@ -2075,7 +2075,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|in_reloc_p
 name|PARAMS
 argument_list|(
@@ -2091,12 +2091,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return true if this relocation should    appear in the output .reloc section.  */
+comment|/* Return TRUE if this relocation should    appear in the output .reloc section.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|in_reloc_p
 parameter_list|(
 name|abfd
@@ -3682,15 +3682,15 @@ name|struct
 name|coff_link_hash_table
 name|root
 decl_stmt|;
-comment|/* The size in bytes of the section containg the Thumb-to-ARM glue.  */
+comment|/* The size in bytes of the section containing the Thumb-to-ARM glue.  */
 name|bfd_size_type
 name|thumb_glue_size
 decl_stmt|;
-comment|/* The size in bytes of the section containg the ARM-to-Thumb glue.  */
+comment|/* The size in bytes of the section containing the ARM-to-Thumb glue.  */
 name|bfd_size_type
 name|arm_glue_size
 decl_stmt|;
-comment|/* An arbitary input BFD chosen to hold the glue sections.  */
+comment|/* An arbitrary input BFD chosen to hold the glue sections.  */
 name|bfd
 modifier|*
 name|bfd_of_glue_owner
@@ -3938,7 +3938,7 @@ name|ARM_WINCE
 end_ifndef
 
 begin_comment
-comment|/* The thumb form of a long branch is a bit finicky, because the offset    encoding is split over two fields, each in it's own instruction. They    can occur in any order. So given a thumb form of long branch, and an    offset, insert the offset into the thumb branch and return finished    instruction.     It takes two thumb instructions to encode the target address. Each has    11 bits to invest. The upper 11 bits are stored in one (identifed by    H-0.. see below), the lower 11 bits are stored in the other (identified    by H-1).     Combine together and shifted left by 1 (it's a half word address) and    there you have it.       Op: 1111 = F,      H-0, upper address-0 = 000      Op: 1111 = F,      H-1, lower address-0 = 800     They can be ordered either way, but the arm tools I've seen always put    the lower one first. It probably doesn't matter. krk@cygnus.com     XXX:  Actually the order does matter.  The second instruction (H-1)    moves the computed address into the PC, so it must be the second one    in the sequence.  The problem, however is that whilst little endian code    stores the instructions in HI then LOW order, big endian code does the    reverse.  nickc@cygnus.com.  */
+comment|/* The thumb form of a long branch is a bit finicky, because the offset    encoding is split over two fields, each in it's own instruction. They    can occur in any order. So given a thumb form of long branch, and an    offset, insert the offset into the thumb branch and return finished    instruction.     It takes two thumb instructions to encode the target address. Each has    11 bits to invest. The upper 11 bits are stored in one (identified by    H-0.. see below), the lower 11 bits are stored in the other (identified    by H-1).     Combine together and shifted left by 1 (it's a half word address) and    there you have it.       Op: 1111 = F,      H-0, upper address-0 = 000      Op: 1111 = F,      H-1, lower address-0 = 800     They can be ordered either way, but the arm tools I've seen always put    the lower one first. It probably doesn't matter. krk@cygnus.com     XXX:  Actually the order does matter.  The second instruction (H-1)    moves the computed address into the PC, so it must be the second one    in the sequence.  The problem, however is that whilst little endian code    stores the instructions in HI then LOW order, big endian code does the    reverse.  nickc@cygnus.com.  */
 end_comment
 
 begin_define
@@ -4161,11 +4161,11 @@ argument_list|)
 argument_list|,
 name|tmp_name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4300,11 +4300,11 @@ argument_list|)
 argument_list|,
 name|tmp_name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4498,7 +4498,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_relocate_section
 parameter_list|(
 name|output_bfd
@@ -4713,9 +4713,9 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
-comment|/* The relocation_section function will skip pcrel_offset relocs          when doing a relocateable link.  However, we want to convert          ARM26 to ARM26D relocs if possible.  We return a fake howto in          this case without pcrel_offset set, and adjust the addend to          compensate.  */
+comment|/* The relocation_section function will skip pcrel_offset relocs          when doing a relocatable link.  However, we want to convert          ARM_26 to ARM_26D relocs if possible.  We return a fake howto in          this case without pcrel_offset set, and adjust the addend to          compensate.  'partial_inplace' is also set, since we want 'done'          relocations to be reflected in section's data.  */
 if|if
 condition|(
 name|rel
@@ -4730,7 +4730,7 @@ name|NULL
 operator|&&
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 operator|(
 name|h
@@ -4783,7 +4783,7 @@ literal|2
 argument_list|,
 literal|24
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
 literal|0
 argument_list|,
@@ -4793,13 +4793,13 @@ name|aoutarm_fix_pcrel_26
 argument_list|,
 literal|"ARM_26"
 argument_list|,
-name|false
+name|TRUE
 argument_list|,
 literal|0x00ffffff
 argument_list|,
 literal|0x00ffffff
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 decl_stmt|;
 name|addend
@@ -4812,6 +4812,16 @@ name|input_section
 operator|->
 name|vma
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_WINCE
+comment|/* FIXME: I don't know why, but the hack is necessary for correct                     generation of bl's instruction offset. */
+name|addend
+operator|-=
+literal|8
+expr_stmt|;
+endif|#
+directive|endif
 name|howto
 operator|=
 operator|&
@@ -4822,24 +4832,16 @@ ifdef|#
 directive|ifdef
 name|ARM_WINCE
 comment|/* MS ARM-CE makes the reloc relative to the opcode's pc, not 	 the next opcode's pc, so is off by one.  */
-if|if
-condition|(
-name|howto
-operator|->
-name|pc_relative
-operator|&&
-operator|!
-name|info
-operator|->
-name|relocateable
-condition|)
-name|addend
-operator|-=
-literal|8
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* This appears to have been true for WINCE 2.0, but it is not 	 true for WINCE 3.0.  */
+block|if (howto->pc_relative&& !info->relocatable) 	addend -= 8;
 endif|#
 directive|endif
-comment|/* If we are doing a relocateable link, then we can just ignore          a PC relative reloc that is pcrel_offset.  It will already          have the correct value.  If this is not a relocateable link,          then we should ignore the symbol value.  */
+endif|#
+directive|endif
+comment|/* If we are doing a relocatable link, then we can just ignore          a PC relative reloc that is pcrel_offset.  It will already          have the correct value.  If this is not a relocatable link,          then we should ignore the symbol value.  */
 if|if
 condition|(
 name|howto
@@ -4855,10 +4857,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 continue|continue;
-comment|/* FIXME - it is not clear which targets need this next test 	     and which do not.  It is known that it is needed for the 	     VxWorks and EPOC-PE targets, but it is also known that it 	     was supressed for other ARM targets.  This ought to be 	     sorted out one day.  */
+comment|/* FIXME - it is not clear which targets need this next test 	     and which do not.  It is known that it is needed for the 	     VxWorks and EPOC-PE targets, but it is also known that it 	     was suppressed for other ARM targets.  This ought to be 	     sorted out one day.  */
 ifdef|#
 directive|ifdef
 name|ARM_COFF_BUGFIX
@@ -4961,7 +4963,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 operator|(
 name|h
@@ -5103,7 +5105,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|globals
 operator|=
@@ -5518,7 +5520,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|globals
 operator|=
@@ -6100,7 +6102,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 if|if
@@ -6138,12 +6140,12 @@ name|input_section
 operator|->
 name|vma
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -6207,7 +6209,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 name|howto
 operator|->
@@ -6257,10 +6259,10 @@ argument_list|(
 name|howto
 argument_list|)
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|overflow
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 name|bfd_byte
 modifier|*
@@ -6539,7 +6541,7 @@ name|reloc_signed_min
 condition|)
 name|overflow
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* Put the relocation into the correct bits. 		 For a BLX instruction, make sure that the relocation is rounded up 		 to a word boundary.  This follows the semantics of the instruction 		 which specifies that bit 1 of the target address will come from bit 		 1 of the base address.  */
 if|if
@@ -6680,10 +6682,26 @@ block|}
 block|}
 endif|#
 directive|endif
-else|else
+elseif|else
 endif|#
 directive|endif
 comment|/* THUMBEXTENSION */
+if|if
+condition|(
+name|info
+operator|->
+name|relocatable
+operator|&&
+operator|!
+name|howto
+operator|->
+name|partial_inplace
+condition|)
+name|rstat
+operator|=
+name|bfd_reloc_ok
+expr_stmt|;
+else|else
 name|rstat
 operator|=
 name|_bfd_final_link_relocate
@@ -6720,7 +6738,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 operator|(
 name|rel
@@ -6741,7 +6759,7 @@ comment|/* Determine if we need to set the bottom bit of a relocated address 	  
 name|int
 name|patchit
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 if|if
 condition|(
@@ -6766,7 +6784,7 @@ condition|)
 block|{
 name|patchit
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 elseif|else
@@ -6800,7 +6818,7 @@ name|C_THUMBEXTFUNC
 condition|)
 name|patchit
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -6896,7 +6914,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 case|case
 name|bfd_reloc_overflow
@@ -6963,7 +6981,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -7007,13 +7025,13 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7025,7 +7043,7 @@ name|COFF_IMAGE_WITH_PE
 end_ifndef
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_arm_allocate_interworking_sections
 parameter_list|(
 name|info
@@ -7226,7 +7244,7 @@ name|foo
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7385,11 +7403,11 @@ argument_list|)
 argument_list|,
 name|tmp_name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7438,9 +7456,9 @@ name|val
 argument_list|,
 name|NULL
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 operator|&
 name|bh
@@ -7621,11 +7639,11 @@ argument_list|)
 argument_list|,
 name|tmp_name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -7673,9 +7691,9 @@ name|val
 argument_list|,
 name|NULL
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 operator|&
 name|bh
@@ -7794,9 +7812,9 @@ name|val
 argument_list|,
 name|NULL
 argument_list|,
-name|true
+name|TRUE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 operator|&
 name|bh
@@ -7831,7 +7849,7 @@ comment|/* Select a BFD to be used to hold the sections used by the glue code.  
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_arm_get_bfd_for_interworking
 parameter_list|(
 name|abfd
@@ -7865,10 +7883,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|globals
 operator|=
@@ -7893,7 +7911,7 @@ operator|!=
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|sec
 operator|=
@@ -7961,7 +7979,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|sec
@@ -8030,7 +8048,7 @@ literal|2
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Save the bfd for later use.  */
@@ -8041,13 +8059,13 @@ operator|=
 name|abfd
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|bfd_arm_process_before_allocation
 parameter_list|(
 name|abfd
@@ -8083,10 +8101,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Here we have a bfd that is to be included on the link.  We have a hook      to do reloc rummaging, before section sizes are nailed down.  */
 name|_bfd_coff_get_external_symbols
@@ -8137,7 +8155,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 for|for
 control|(
@@ -8361,7 +8379,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -8453,12 +8471,12 @@ value|coff_arm_link_hash_table_create
 end_define
 
 begin_comment
-comment|/* When doing a relocateable link, we want to convert ARM26 relocs    into ARM26D relocs.  */
+comment|/* When doing a relocatable link, we want to convert ARM_26 relocs    into ARM_26D relocs.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_adjust_symndx
 parameter_list|(
 name|obfd
@@ -8497,7 +8515,7 @@ name|internal_reloc
 modifier|*
 name|irel
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|adjustedp
 decl_stmt|;
@@ -8508,7 +8526,7 @@ name|irel
 operator|->
 name|r_type
 operator|==
-literal|3
+name|ARM_26
 condition|)
 block|{
 name|struct
@@ -8572,27 +8590,27 @@ name|irel
 operator|->
 name|r_type
 operator|=
-literal|7
+name|ARM_26D
 expr_stmt|;
 block|}
 operator|*
 name|adjustedp
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Called when merging the private data areas of two BFDs.    This is important as it allows us to detect if we are    attempting to merge binaries compiled for different ARM    targets, eg different CPUs or differents APCS's.     */
+comment|/* Called when merging the private data areas of two BFDs.    This is important as it allows us to detect if we are    attempting to merge binaries compiled for different ARM    targets, eg different CPUs or different APCS's.     */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_merge_private_bfd_data
 parameter_list|(
 name|ibfd
@@ -8626,7 +8644,7 @@ operator|==
 name|obfd
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* If the two formats are different we cannot merge anything.      This is not an error, since it is permissable to change the      input and output formats.  */
 if|if
@@ -8648,9 +8666,23 @@ operator|!=
 name|bfd_target_coff_flavour
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
-comment|/* Verify that the APCS is the same for the two BFDs */
+comment|/* Determine what should happen if the input ARM architecture      does not match the output ARM architecture.  */
+if|if
+condition|(
+operator|!
+name|bfd_arm_merge_machines
+argument_list|(
+name|ibfd
+argument_list|,
+name|obfd
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+comment|/* Verify that the APCS is the same for the two BFDs.  */
 if|if
 condition|(
 name|APCS_SET
@@ -8724,7 +8756,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -8790,7 +8822,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -8856,7 +8888,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -8992,7 +9024,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9003,7 +9035,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_print_private_bfd_data
 parameter_list|(
 name|abfd
@@ -9065,7 +9097,7 @@ name|abfd
 argument_list|)
 condition|)
 block|{
-comment|/* xgettext: APCS is ARM Prodecure Call Standard, it should not be translated.  */
+comment|/* xgettext: APCS is ARM Procedure Call Standard, it should not be translated.  */
 name|fprintf
 argument_list|(
 name|file
@@ -9194,7 +9226,7 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9205,7 +9237,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|_bfd_coff_arm_set_private_flags
 parameter_list|(
 name|abfd
@@ -9288,7 +9320,7 @@ operator|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|flag
 operator||=
@@ -9381,7 +9413,7 @@ name|flag
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9392,7 +9424,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_copy_private_bfd_data
 parameter_list|(
 name|src
@@ -9426,7 +9458,7 @@ operator|==
 name|dest
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* If the destination is not in the same format as the source, do not do      the copy.  */
 if|if
@@ -9440,7 +9472,7 @@ operator|->
 name|xvec
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* copy the flags field */
 if|if
@@ -9473,7 +9505,7 @@ name|src
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -9488,7 +9520,7 @@ name|src
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -9503,7 +9535,7 @@ name|src
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 else|else
@@ -9609,7 +9641,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -9649,7 +9681,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_is_local_label_name
 parameter_list|(
 name|abfd
@@ -9697,7 +9729,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 endif|#
@@ -9738,7 +9770,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Perform the checks below for the rest of the name.  */
 name|name
@@ -9765,7 +9797,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_link_output_has_begun
 parameter_list|(
 name|sub
@@ -9805,7 +9837,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|coff_arm_final_link_postscript
 parameter_list|(
 name|abfd
@@ -9866,7 +9898,7 @@ name|bfd_of_glue_owner
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|globals
 operator|->
@@ -9874,11 +9906,16 @@ name|bfd_of_glue_owner
 operator|->
 name|output_has_begun
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 return|return
-name|true
+name|bfd_arm_update_notes
+argument_list|(
+name|abfd
+argument_list|,
+name|ARM_NOTE_SECTION
+argument_list|)
 return|;
 block|}
 end_function
@@ -9995,7 +10032,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_S_FLAGS
-value|(SEC_LINK_ONCE | SEC_LINK_DUPLICATES)
+value|(SEC_CODE | SEC_LINK_ONCE | SEC_LINK_DUPLICATES)
 end_define
 
 begin_else
@@ -10007,7 +10044,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_S_FLAGS
-value|0
+value|SEC_CODE
 end_define
 
 begin_endif
@@ -10050,6 +10087,8 @@ argument_list|,
 argument|TARGET_UNDERSCORE
 argument_list|,
 argument|& TARGET_BIG_SYM
+argument_list|,
+argument|COFF_SWAP_TABLE
 argument_list|)
 end_macro
 
@@ -10067,6 +10106,8 @@ argument_list|,
 argument|TARGET_UNDERSCORE
 argument_list|,
 argument|& TARGET_LITTLE_SYM
+argument_list|,
+argument|COFF_SWAP_TABLE
 argument_list|)
 end_macro
 

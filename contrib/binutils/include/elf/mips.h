@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MIPS ELF support for BFD.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     By Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>, from    information in the System V Application Binary Interface, MIPS    Processor Supplement.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* MIPS ELF support for BFD.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.     By Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>, from    information in the System V Application Binary Interface, MIPS    Processor Supplement.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -549,6 +549,17 @@ value|0x00000004
 end_define
 
 begin_comment
+comment|/* ???  Unknown flag, set in IRIX 6's BSDdup2.o in libbsd.a.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_MIPS_XGOT
+value|0x00000008
+end_define
+
+begin_comment
 comment|/* Code in file uses UCODE (obsolete) */
 end_comment
 
@@ -714,6 +725,28 @@ value|0x60000000
 end_define
 
 begin_comment
+comment|/* -mips32r2 code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_ARCH_32R2
+value|0x70000000
+end_define
+
+begin_comment
+comment|/* -mips64r2 code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_ARCH_64R2
+value|0x80000000
+end_define
+
+begin_comment
 comment|/* The ABI of the file.  Also see EF_MIPS_ABI2 above. */
 end_comment
 
@@ -814,6 +847,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E_MIPS_MACH_4120
+value|0x00870000
+end_define
+
+begin_define
+define|#
+directive|define
 name|E_MIPS_MACH_4111
 value|0x00880000
 end_define
@@ -823,6 +863,20 @@ define|#
 directive|define
 name|E_MIPS_MACH_SB1
 value|0x008a0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_MACH_5400
+value|0x00910000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_MIPS_MACH_5500
+value|0x00980000
 end_define
 
 begin_escape
@@ -1686,47 +1740,41 @@ begin_comment
 comment|/* MIPS ELF .reginfo swapping routines.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bfd_mips_elf32_swap_reginfo_in
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|Elf32_External_RegInfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Elf32_RegInfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bfd_mips_elf32_swap_reginfo_out
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|Elf32_RegInfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Elf32_External_RegInfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -2962,47 +3010,41 @@ begin_comment
 comment|/* MIPS ELF option header swapping routines.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bfd_mips_elf_swap_options_in
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|Elf_External_Options
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Elf_Internal_Options
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bfd_mips_elf_swap_options_out
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|Elf_Internal_Options
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Elf_External_Options
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Values which may appear in the kind field of an Elf_Options    structure.  */
@@ -3288,47 +3330,41 @@ begin_comment
 comment|/* MIPS ELF reginfo swapping routines.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bfd_mips_elf64_swap_reginfo_in
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|Elf64_External_RegInfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Elf64_Internal_RegInfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bfd_mips_elf64_swap_reginfo_out
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|Elf64_Internal_RegInfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Elf64_External_RegInfo
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Masks for the info work of an ODK_EXCEPTIONS descriptor.  */

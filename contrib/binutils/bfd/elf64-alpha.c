@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Alpha specific support for 64-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Alpha specific support for 64-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Richard Henderson<rth@tamu.edu>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -127,7 +127,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|int
+name|bfd_boolean
 name|alpha_elf_dynamic_symbol_p
 name|PARAMS
 argument_list|(
@@ -333,7 +333,7 @@ operator|,
 name|arelent
 operator|*
 operator|,
-name|Elf64_Internal_Rela
+name|Elf_Internal_Rela
 operator|*
 operator|)
 argument_list|)
@@ -342,7 +342,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_mkobject
 name|PARAMS
 argument_list|(
@@ -356,7 +356,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_object_p
 name|PARAMS
 argument_list|(
@@ -370,7 +370,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_section_from_shdr
 name|PARAMS
 argument_list|(
@@ -378,7 +378,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|Elf64_Internal_Shdr
+name|Elf_Internal_Shdr
 operator|*
 operator|,
 specifier|const
@@ -391,7 +391,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_section_flags
 name|PARAMS
 argument_list|(
@@ -399,7 +399,7 @@ operator|(
 name|flagword
 operator|*
 operator|,
-name|Elf64_Internal_Shdr
+name|Elf_Internal_Shdr
 operator|*
 operator|)
 argument_list|)
@@ -408,7 +408,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_fake_sections
 name|PARAMS
 argument_list|(
@@ -416,7 +416,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|Elf64_Internal_Shdr
+name|Elf_Internal_Shdr
 operator|*
 operator|,
 name|asection
@@ -428,7 +428,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_create_got_section
 name|PARAMS
 argument_list|(
@@ -446,7 +446,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_create_dynamic_sections
 name|PARAMS
 argument_list|(
@@ -464,7 +464,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_read_ecoff_info
 name|PARAMS
 argument_list|(
@@ -485,7 +485,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_is_local_label_name
 name|PARAMS
 argument_list|(
@@ -503,7 +503,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_find_nearest_line
 name|PARAMS
 argument_list|(
@@ -565,7 +565,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_output_extsym
 name|PARAMS
 argument_list|(
@@ -582,7 +582,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_can_merge_gots
 name|PARAMS
 argument_list|(
@@ -616,7 +616,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_calc_got_offsets_for_symbol
 name|PARAMS
 argument_list|(
@@ -648,7 +648,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_got_sections
 name|PARAMS
 argument_list|(
@@ -663,7 +663,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_plt_section
 name|PARAMS
 argument_list|(
@@ -678,7 +678,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_plt_section_1
 name|PARAMS
 argument_list|(
@@ -695,7 +695,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_always_size_sections
 name|PARAMS
 argument_list|(
@@ -730,7 +730,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_calc_dynrel_sizes
 name|PARAMS
 argument_list|(
@@ -749,7 +749,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_rela_got_section
 name|PARAMS
 argument_list|(
@@ -764,7 +764,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_rela_got_1
 name|PARAMS
 argument_list|(
@@ -783,7 +783,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_add_symbol_hook
 name|PARAMS
 argument_list|(
@@ -795,7 +795,6 @@ expr|struct
 name|bfd_link_info
 operator|*
 operator|,
-specifier|const
 name|Elf_Internal_Sym
 operator|*
 operator|,
@@ -848,7 +847,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_check_relocs
 name|PARAMS
 argument_list|(
@@ -874,7 +873,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_adjust_dynamic_symbol
 name|PARAMS
 argument_list|(
@@ -893,7 +892,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_dynamic_sections
 name|PARAMS
 argument_list|(
@@ -911,7 +910,39 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|void
+name|elf64_alpha_emit_dynrel
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|bfd_vma
+operator|,
+name|long
+operator|,
+name|long
+operator|,
+name|bfd_vma
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|bfd_boolean
 name|elf64_alpha_relocate_section_r
 name|PARAMS
 argument_list|(
@@ -948,7 +979,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relocate_section
 name|PARAMS
 argument_list|(
@@ -985,7 +1016,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_finish_dynamic_symbol
 name|PARAMS
 argument_list|(
@@ -1010,7 +1041,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_finish_dynamic_sections
 name|PARAMS
 argument_list|(
@@ -1028,7 +1059,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_final_link
 name|PARAMS
 argument_list|(
@@ -1046,7 +1077,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_merge_ind_symbols
 name|PARAMS
 argument_list|(
@@ -1151,6 +1182,18 @@ define|#
 directive|define
 name|ALPHA_ELF_LINK_HASH_TLS_IE
 value|0x40
+define|#
+directive|define
+name|ALPHA_ELF_LINK_HASH_PLT_LOC
+value|0x80
+comment|/* Used to undo the localization of a plt symbol.  */
+name|asection
+modifier|*
+name|plt_old_section
+decl_stmt|;
+name|bfd_vma
+name|plt_old_value
+decl_stmt|;
 comment|/* Used to implement multiple .got subsections.  */
 struct|struct
 name|alpha_elf_got_entry
@@ -1160,16 +1203,16 @@ name|alpha_elf_got_entry
 modifier|*
 name|next
 decl_stmt|;
-comment|/* which .got subsection?  */
+comment|/* Which .got subsection?  */
 name|bfd
 modifier|*
 name|gotobj
 decl_stmt|;
-comment|/* the addend in effect for this entry.  */
+comment|/* The addend in effect for this entry.  */
 name|bfd_vma
 name|addend
 decl_stmt|;
-comment|/* the .got offset for this entry.  */
+comment|/* The .got offset for this entry.  */
 name|int
 name|got_offset
 decl_stmt|;
@@ -1201,7 +1244,7 @@ block|}
 modifier|*
 name|got_entries
 struct|;
-comment|/* used to count non-got, non-plt relocations for delayed sizing      of relocation sections.  */
+comment|/* Used to count non-got, non-plt relocations for delayed sizing      of relocation sections.  */
 struct|struct
 name|alpha_elf_reloc_entry
 block|{
@@ -1210,24 +1253,24 @@ name|alpha_elf_reloc_entry
 modifier|*
 name|next
 decl_stmt|;
-comment|/* which .reloc section? */
+comment|/* Which .reloc section? */
 name|asection
 modifier|*
 name|srel
 decl_stmt|;
-comment|/* what kind of relocation? */
+comment|/* What kind of relocation? */
 name|unsigned
 name|int
 name|rtype
 decl_stmt|;
-comment|/* is this against read-only section? */
+comment|/* Is this against read-only section? */
 name|unsigned
 name|int
 name|reltext
 range|:
 literal|1
 decl_stmt|;
-comment|/* how many did we find?  */
+comment|/* How many did we find?  */
 name|unsigned
 name|long
 name|count
@@ -1300,7 +1343,7 @@ parameter_list|,
 name|info
 parameter_list|)
 define|\
-value|(elf_link_hash_traverse						\    (&(table)->root,							\     (boolean (*) PARAMS ((struct elf_link_hash_entry *, PTR))) (func),	\     (info)))
+value|(elf_link_hash_traverse						\    (&(table)->root,							\     (bfd_boolean (*) PARAMS ((struct elf_link_hash_entry *, PTR))) (func), \     (info)))
 end_define
 
 begin_comment
@@ -1334,12 +1377,13 @@ value|((struct alpha_elf_link_hash_entry **)elf_sym_hashes(abfd))
 end_define
 
 begin_comment
-comment|/* Should we do dynamic things to this symbol?  */
+comment|/* Should we do dynamic things to this symbol?  This differs from the     generic version in that we never need to consider function pointer    equality wrt PLT entries -- we don't create a PLT entry if a symbol's    address is ever taken.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+specifier|inline
+name|bfd_boolean
 name|alpha_elf_dynamic_symbol_p
 parameter_list|(
 name|h
@@ -1357,160 +1401,15 @@ modifier|*
 name|info
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|h
-operator|==
-name|NULL
-condition|)
 return|return
-name|false
-return|;
-while|while
-condition|(
-name|h
-operator|->
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_indirect
-operator|||
-name|h
-operator|->
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_warning
-condition|)
-name|h
-operator|=
-operator|(
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|)
-name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|i
-operator|.
-name|link
-expr_stmt|;
-if|if
-condition|(
-name|h
-operator|->
-name|dynindx
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-name|false
-return|;
-if|if
-condition|(
-name|h
-operator|->
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_undefweak
-operator|||
-name|h
-operator|->
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_defweak
-condition|)
-return|return
-name|true
-return|;
-switch|switch
-condition|(
-name|ELF_ST_VISIBILITY
+name|_bfd_elf_dynamic_symbol_p
 argument_list|(
 name|h
-operator|->
-name|other
+argument_list|,
+name|info
+argument_list|,
+literal|0
 argument_list|)
-condition|)
-block|{
-case|case
-name|STV_DEFAULT
-case|:
-break|break;
-case|case
-name|STV_HIDDEN
-case|:
-case|case
-name|STV_INTERNAL
-case|:
-return|return
-name|false
-return|;
-case|case
-name|STV_PROTECTED
-case|:
-if|if
-condition|(
-name|h
-operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-condition|)
-return|return
-name|false
-return|;
-break|break;
-block|}
-if|if
-condition|(
-operator|(
-name|info
-operator|->
-name|shared
-operator|&&
-operator|!
-name|info
-operator|->
-name|symbolic
-operator|)
-operator|||
-operator|(
-operator|(
-name|h
-operator|->
-name|elf_link_hash_flags
-operator|&
-operator|(
-name|ELF_LINK_HASH_DEF_DYNAMIC
-operator||
-name|ELF_LINK_HASH_REF_REGULAR
-operator|)
-operator|)
-operator|==
-operator|(
-name|ELF_LINK_HASH_DEF_DYNAMIC
-operator||
-name|ELF_LINK_HASH_REF_REGULAR
-operator|)
-operator|)
-condition|)
-return|return
-name|true
-return|;
-return|return
-name|false
 return|;
 block|}
 end_function
@@ -1864,7 +1763,7 @@ end_define
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_mkobject
 parameter_list|(
 name|abfd
@@ -1907,17 +1806,17 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_object_p
 parameter_list|(
 name|abfd
@@ -1927,58 +1826,6 @@ modifier|*
 name|abfd
 decl_stmt|;
 block|{
-comment|/* Allocate our special target data.  */
-name|struct
-name|alpha_elf_obj_tdata
-modifier|*
-name|new_tdata
-decl_stmt|;
-name|bfd_size_type
-name|amt
-init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|alpha_elf_obj_tdata
-argument_list|)
-decl_stmt|;
-name|new_tdata
-operator|=
-name|bfd_zalloc
-argument_list|(
-name|abfd
-argument_list|,
-name|amt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|new_tdata
-operator|==
-name|NULL
-condition|)
-return|return
-name|false
-return|;
-name|new_tdata
-operator|->
-name|root
-operator|=
-operator|*
-name|abfd
-operator|->
-name|tdata
-operator|.
-name|elf_obj_data
-expr_stmt|;
-name|abfd
-operator|->
-name|tdata
-operator|.
-name|any
-operator|=
-name|new_tdata
-expr_stmt|;
 comment|/* Set the right machine number for an Alpha ELF file.  */
 return|return
 name|bfd_default_set_arch_mach
@@ -2039,7 +1886,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|8
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2054,7 +1901,7 @@ comment|/* special_function */
 literal|"NONE"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -2063,7 +1910,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2082,7 +1929,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2097,7 +1944,7 @@ comment|/* special_function */
 literal|"REFLONG"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -2106,7 +1953,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2125,7 +1972,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|64
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2140,7 +1987,7 @@ comment|/* special_function */
 literal|"REFQUAD"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 name|MINUS_ONE
@@ -2149,7 +1996,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2168,7 +2015,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2183,7 +2030,7 @@ comment|/* special_function */
 literal|"GPREL32"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -2192,7 +2039,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2211,7 +2058,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2226,7 +2073,7 @@ comment|/* special_function */
 literal|"ELF_LITERAL"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -2235,7 +2082,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2254,7 +2101,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2269,7 +2116,7 @@ comment|/* special_function */
 literal|"LITUSE"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -2278,7 +2125,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2297,7 +2144,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2312,7 +2159,7 @@ comment|/* special_function */
 literal|"GPDISP"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -2321,7 +2168,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2340,7 +2187,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|21
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2355,7 +2202,7 @@ comment|/* special_function */
 literal|"BRADDR"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x1fffff
@@ -2364,7 +2211,7 @@ comment|/* src_mask */
 literal|0x1fffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2383,7 +2230,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|14
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2398,7 +2245,7 @@ comment|/* special_function */
 literal|"HINT"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x3fff
@@ -2407,7 +2254,7 @@ comment|/* src_mask */
 literal|0x3fff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2426,7 +2273,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2441,7 +2288,7 @@ comment|/* special_function */
 literal|"SREL16"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -2450,7 +2297,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2469,7 +2316,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2484,7 +2331,7 @@ comment|/* special_function */
 literal|"SREL32"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -2493,7 +2340,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2512,7 +2359,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|64
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2527,7 +2374,7 @@ comment|/* special_function */
 literal|"SREL64"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 name|MINUS_ONE
@@ -2536,7 +2383,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2580,7 +2427,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2595,7 +2442,7 @@ comment|/* special_function */
 literal|"GPRELHIGH"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -2604,7 +2451,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2622,7 +2469,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2637,7 +2484,7 @@ comment|/* special_function */
 literal|"GPRELLOW"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -2646,7 +2493,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2664,7 +2511,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2679,7 +2526,7 @@ comment|/* special_function */
 literal|"GPREL16"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -2688,7 +2535,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2726,7 +2573,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -2736,13 +2583,13 @@ name|bfd_elf_generic_reloc
 argument_list|,
 literal|"COPY"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* A dynamic relocation for a .got entry.  */
@@ -2756,7 +2603,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -2766,13 +2613,13 @@ name|bfd_elf_generic_reloc
 argument_list|,
 literal|"GLOB_DAT"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* A dynamic relocation for a .plt entry.  */
@@ -2786,7 +2633,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -2796,13 +2643,13 @@ name|bfd_elf_generic_reloc
 argument_list|,
 literal|"JMP_SLOT"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* A dynamic relocation to add the base of the DSO to a 64-bit field.  */
@@ -2816,7 +2663,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
@@ -2826,13 +2673,13 @@ name|bfd_elf_generic_reloc
 argument_list|,
 literal|"RELATIVE"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* A 21 bit branch that adjusts for gp loads.  */
@@ -2850,7 +2697,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|21
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2865,7 +2712,7 @@ comment|/* special_function */
 literal|"BRSGP"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x1fffff
@@ -2874,7 +2721,7 @@ comment|/* src_mask */
 literal|0x1fffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2893,7 +2740,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2908,7 +2755,7 @@ comment|/* special_function */
 literal|"TLSGD"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -2917,7 +2764,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2936,7 +2783,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2951,7 +2798,7 @@ comment|/* special_function */
 literal|"TLSLDM"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -2960,7 +2807,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -2979,7 +2826,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|64
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -2994,7 +2841,7 @@ comment|/* special_function */
 literal|"DTPMOD64"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 name|MINUS_ONE
@@ -3003,7 +2850,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3022,7 +2869,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3037,7 +2884,7 @@ comment|/* special_function */
 literal|"GOTDTPREL"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -3046,7 +2893,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3065,7 +2912,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|64
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3080,7 +2927,7 @@ comment|/* special_function */
 literal|"DTPREL64"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 name|MINUS_ONE
@@ -3089,7 +2936,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3108,7 +2955,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3123,7 +2970,7 @@ comment|/* special_function */
 literal|"DTPRELHI"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -3132,7 +2979,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3151,7 +2998,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3166,7 +3013,7 @@ comment|/* special_function */
 literal|"DTPRELLO"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -3175,7 +3022,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3194,7 +3041,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3209,7 +3056,7 @@ comment|/* special_function */
 literal|"DTPREL16"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -3218,7 +3065,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3237,7 +3084,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3252,7 +3099,7 @@ comment|/* special_function */
 literal|"GOTTPREL"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -3261,7 +3108,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3280,7 +3127,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|64
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3295,7 +3142,7 @@ comment|/* special_function */
 literal|"TPREL64"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 name|MINUS_ONE
@@ -3304,7 +3151,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3323,7 +3170,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3338,7 +3185,7 @@ comment|/* special_function */
 literal|"TPRELHI"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -3347,7 +3194,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3366,7 +3213,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3381,7 +3228,7 @@ comment|/* special_function */
 literal|"TPRELLO"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -3390,7 +3237,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -3409,7 +3256,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -3424,7 +3271,7 @@ comment|/* special_function */
 literal|"TPREL16"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -3433,7 +3280,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -4335,7 +4182,7 @@ name|arelent
 modifier|*
 name|cache_ptr
 decl_stmt|;
-name|Elf64_Internal_Rela
+name|Elf_Internal_Rela
 modifier|*
 name|dst
 decl_stmt|;
@@ -4400,10 +4247,10 @@ define|#
 directive|define
 name|alpha_get_dtprel_base
 parameter_list|(
-name|tlss
+name|info
 parameter_list|)
 define|\
-value|((tlss)->start)
+value|(elf_hash_table (info)->tls_sec->vma)
 end_define
 
 begin_comment
@@ -4415,10 +4262,10 @@ define|#
 directive|define
 name|alpha_get_tprel_base
 parameter_list|(
-name|tlss
+name|info
 parameter_list|)
 define|\
-value|((tlss)->start - align_power ((bfd_vma) 16, (tlss)->align))
+value|(elf_hash_table (info)->tls_sec->vma					\    - align_power ((bfd_vma) 16,						\ 		  elf_hash_table (info)->tls_sec->alignment_power))
 end_define
 
 begin_escape
@@ -4530,11 +4377,6 @@ name|bfd_link_info
 modifier|*
 name|link_info
 decl_stmt|;
-name|struct
-name|elf_link_tls_segment
-modifier|*
-name|tls_segment
-decl_stmt|;
 name|bfd_vma
 name|gp
 decl_stmt|;
@@ -4562,10 +4404,10 @@ name|alpha_elf_got_entry
 modifier|*
 name|gotent
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|changed_contents
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|changed_relocs
 decl_stmt|;
 name|unsigned
@@ -4578,7 +4420,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_with_lituse
 name|PARAMS
 argument_list|(
@@ -4620,7 +4462,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_got_load
 name|PARAMS
 argument_list|(
@@ -4646,7 +4488,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_gprelhilo
 name|PARAMS
 argument_list|(
@@ -4663,7 +4505,7 @@ name|Elf_Internal_Rela
 operator|*
 name|irel
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4671,7 +4513,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_tls_get_addr
 name|PARAMS
 argument_list|(
@@ -4688,7 +4530,7 @@ name|Elf_Internal_Rela
 operator|*
 name|irel
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4696,28 +4538,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|elf_link_tls_segment
-modifier|*
-name|elf64_alpha_relax_find_tls_segment
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|alpha_relax_info
-operator|*
-operator|,
-expr|struct
-name|elf_link_tls_segment
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_section
 name|PARAMS
 argument_list|(
@@ -4735,7 +4556,7 @@ name|bfd_link_info
 operator|*
 name|link_info
 operator|,
-name|boolean
+name|bfd_boolean
 operator|*
 name|again
 operator|)
@@ -4823,7 +4644,7 @@ end_block
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_with_lituse
 parameter_list|(
 name|info
@@ -4866,21 +4687,21 @@ decl_stmt|;
 name|bfd_signed_vma
 name|disp
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|fits16
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|fits32
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|lit_reused
 init|=
-name|false
+name|FALSE
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|all_optimized
 init|=
-name|true
+name|TRUE
 decl_stmt|;
 name|unsigned
 name|int
@@ -4944,7 +4765,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Can't relax dynamic symbols.  */
@@ -4965,7 +4786,7 @@ name|link_info
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Summarize how this particular LITERAL is used.  */
 for|for
@@ -5095,7 +4916,7 @@ default|default:
 comment|/* This type is really just a placeholder to note that all 	     uses cannot be optimized, but to still allow some.  */
 name|all_optimized
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -5207,7 +5028,7 @@ name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|bfd_put_32
 argument_list|(
@@ -5233,7 +5054,7 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 comment|/* If all mem+byte, we can optimize 32-bit mem displacements.  */
@@ -5304,13 +5125,13 @@ argument_list|)
 expr_stmt|;
 name|lit_reused
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|urel
 operator|->
@@ -5340,13 +5161,13 @@ name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 else|else
 name|all_optimized
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -5397,7 +5218,7 @@ name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|bfd_put_32
 argument_list|(
@@ -5423,7 +5244,7 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -5585,7 +5406,7 @@ expr_stmt|;
 else|else
 name|all_optimized
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|bfd_put_32
 argument_list|(
@@ -5648,19 +5469,19 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 else|else
 name|all_optimized
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 comment|/* Even if the target is not in range for a direct branch, 	       if we share a GP, we can eliminate the gp reload.  */
 if|if
@@ -5799,13 +5620,13 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 block|}
@@ -5893,7 +5714,7 @@ name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|bfd_put_32
 argument_list|(
@@ -5919,12 +5740,12 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -6032,7 +5853,7 @@ block|{
 name|tsec_relocs
 operator|=
 operator|(
-name|_bfd_elf64_link_read_relocs
+name|_bfd_elf_link_read_relocs
 argument_list|(
 name|info
 operator|->
@@ -6214,7 +6035,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_got_load
 parameter_list|(
 name|info
@@ -6320,7 +6141,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Can't relax dynamic symbols.  */
@@ -6341,7 +6162,7 @@ name|link_info
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Can't use local-exec relocations in shared libraries.  */
 if|if
@@ -6357,7 +6178,7 @@ operator|->
 name|shared
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -6382,9 +6203,14 @@ name|tp_base
 decl_stmt|;
 name|BFD_ASSERT
 argument_list|(
+name|elf_hash_table
+argument_list|(
 name|info
 operator|->
-name|tls_segment
+name|link_info
+argument_list|)
+operator|->
+name|tls_sec
 operator|!=
 name|NULL
 argument_list|)
@@ -6395,7 +6221,7 @@ name|alpha_get_dtprel_base
 argument_list|(
 name|info
 operator|->
-name|tls_segment
+name|link_info
 argument_list|)
 expr_stmt|;
 name|tp_base
@@ -6404,7 +6230,7 @@ name|alpha_get_tprel_base
 argument_list|(
 name|info
 operator|->
-name|tls_segment
+name|link_info
 argument_list|)
 expr_stmt|;
 name|disp
@@ -6434,7 +6260,7 @@ operator|>=
 literal|0x8000
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Exchange LDQ for LDA.  In the case of the TLS relocs, we're loading      a constant, so force the base register to be $31.  */
 if|if
@@ -6506,68 +6332,7 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
-expr_stmt|;
-switch|switch
-condition|(
-name|r_type
-condition|)
-block|{
-case|case
-name|R_ALPHA_LITERAL
-case|:
-name|r_type
-operator|=
-name|R_ALPHA_GPREL16
-expr_stmt|;
-break|break;
-case|case
-name|R_ALPHA_GOTDTPREL
-case|:
-name|r_type
-operator|=
-name|R_ALPHA_DTPREL16
-expr_stmt|;
-break|break;
-case|case
-name|R_ALPHA_GOTTPREL
-case|:
-name|r_type
-operator|=
-name|R_ALPHA_TPREL16
-expr_stmt|;
-break|break;
-default|default:
-name|BFD_ASSERT
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-name|false
-return|;
-block|}
-name|irel
-operator|->
-name|r_info
-operator|=
-name|ELF64_R_INFO
-argument_list|(
-name|ELF64_R_SYM
-argument_list|(
-name|irel
-operator|->
-name|r_info
-argument_list|)
-argument_list|,
-name|r_type
-argument_list|)
-expr_stmt|;
-name|info
-operator|->
-name|changed_relocs
-operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* Reduce the use count on this got entry by one, possibly      eliminating it.  */
 if|if
@@ -6620,16 +6385,78 @@ operator|-=
 name|sz
 expr_stmt|;
 block|}
+comment|/* Smash the existing GOT relocation for its 16-bit immediate pair.  */
+switch|switch
+condition|(
+name|r_type
+condition|)
+block|{
+case|case
+name|R_ALPHA_LITERAL
+case|:
+name|r_type
+operator|=
+name|R_ALPHA_GPREL16
+expr_stmt|;
+break|break;
+case|case
+name|R_ALPHA_GOTDTPREL
+case|:
+name|r_type
+operator|=
+name|R_ALPHA_DTPREL16
+expr_stmt|;
+break|break;
+case|case
+name|R_ALPHA_GOTTPREL
+case|:
+name|r_type
+operator|=
+name|R_ALPHA_TPREL16
+expr_stmt|;
+break|break;
+default|default:
+name|BFD_ASSERT
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+name|irel
+operator|->
+name|r_info
+operator|=
+name|ELF64_R_INFO
+argument_list|(
+name|ELF64_R_SYM
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+argument_list|,
+name|r_type
+argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|changed_relocs
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* ??? Search forward through this basic block looking for insns      that use the target register.  Stop after an insn modifying the      register is seen, or after a branch or call.       Any such memory load insn may be substituted by a load directly      off the GP.  This allows the memory load insn to be issued before      the calculated GP register would otherwise be ready.       Any such jsr insn can be replaced by a bsr if it is in range.       This would mean that we'd have to _add_ relocations, the pain of      which gives one pause.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_gprelhilo
 parameter_list|(
 name|info
@@ -6652,7 +6479,7 @@ name|Elf_Internal_Rela
 modifier|*
 name|irel
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|hi
 decl_stmt|;
 block|{
@@ -6677,7 +6504,7 @@ name|r_offset
 decl_stmt|;
 comment|/* ??? This assumes that the compiler doesn't render  	array[i]      as 	ldah	t, array(gp)	!gprelhigh 	s8addl	i, t, t 	ldq	r, array(t)	!gprellow       which would indeed be the most efficient way to implement this.  */
 return|return
-name|true
+name|TRUE
 return|;
 name|disp
 operator|=
@@ -6699,7 +6526,7 @@ operator|>=
 literal|0x8000
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -6725,7 +6552,7 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|irel
 operator|->
@@ -6748,7 +6575,7 @@ name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 else|else
@@ -6797,7 +6624,7 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|irel
 operator|->
@@ -6819,18 +6646,18 @@ name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_tls_get_addr
 parameter_list|(
 name|info
@@ -6853,7 +6680,7 @@ name|Elf_Internal_Rela
 modifier|*
 name|irel
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|is_gd
 decl_stmt|;
 block|{
@@ -6875,10 +6702,16 @@ decl_stmt|,
 modifier|*
 name|hint
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|dynamic
 decl_stmt|,
 name|use_gottprel
+decl_stmt|,
+name|pos1_unusable
+decl_stmt|;
+name|unsigned
+name|long
+name|new_symndx
 decl_stmt|;
 name|dynamic
 operator|=
@@ -6896,15 +6729,6 @@ operator|->
 name|link_info
 argument_list|)
 expr_stmt|;
-comment|/* ??? For LD relaxation, we need a symbol referencing the beginning      of the TLS segment.  */
-if|if
-condition|(
-operator|!
-name|is_gd
-condition|)
-return|return
-name|true
-return|;
 comment|/* If a TLS symbol is accessed using IE at least once, there is no point      to use dynamic model for it.  */
 if|if
 condition|(
@@ -6960,7 +6784,7 @@ operator|->
 name|shared
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* The TLSGD/TLSLDM relocation must be followed by a LITERAL and      the matching LITUSE_TLS relocations.  */
 if|if
@@ -6974,7 +6798,7 @@ operator|->
 name|relend
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -7018,7 +6842,7 @@ name|LITUSE_ALPHA_TLSLDM
 operator|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* There must be a GPDISP relocation positioned immediately after the      LITUSE relocation.  */
 name|gpdisp
@@ -7051,7 +6875,7 @@ operator|!
 name|gpdisp
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|pos
 index|[
@@ -7128,14 +6952,20 @@ name|gpdisp
 operator|->
 name|r_addend
 expr_stmt|;
-comment|/* Only positions 0 and 1 are allowed to be out of order.  */
+name|pos1_unusable
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Generally, the positions are not allowed to be out of order, lest the      modified insn sequence have different register lifetimes.  We can make      an exception when pos 1 is adjacent to pos 0.  */
 if|if
 condition|(
 name|pos
 index|[
 literal|1
 index|]
-operator|<
+operator|+
+literal|4
+operator|==
 name|pos
 index|[
 literal|0
@@ -7169,6 +6999,23 @@ operator|=
 name|tmp
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|pos
+index|[
+literal|1
+index|]
+operator|<
+name|pos
+index|[
+literal|0
+index|]
+condition|)
+name|pos1_unusable
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 name|pos
@@ -7190,19 +7037,9 @@ name|pos
 index|[
 literal|3
 index|]
-operator|||
-name|pos
-index|[
-literal|3
-index|]
-operator|>=
-name|pos
-index|[
-literal|4
-index|]
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* Reduce the use count on the LITERAL relocation.  Do this before we      smash the symndx when we adjust the relocations below.  */
 block|{
@@ -7393,7 +7230,20 @@ block|}
 comment|/* Change  	lda	$16,x($gp)		!tlsgd!1 	ldq	$27,__tls_get_addr($gp)	!literal!1 	jsr	$26,($27)__tls_get_addr	!lituse_tlsgd!1 	ldah	$29,0($26)		!gpdisp!2 	lda	$29,0($29)		!gpdisp!2      to 	ldq	$16,x($gp)		!gottprel 	unop 	call_pal rduniq 	addq	$16,$0,$0 	unop      or the first pair to 	lda	$16,x($gp)		!tprel 	unop      or 	ldah	$16,x($gp)		!tprelhi 	lda	$16,x($16)		!tprello       as appropriate.  */
 name|use_gottprel
 operator|=
-name|false
+name|FALSE
+expr_stmt|;
+name|new_symndx
+operator|=
+name|is_gd
+condition|?
+name|ELF64_R_SYM
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+else|:
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -7420,9 +7270,14 @@ name|disp
 decl_stmt|;
 name|BFD_ASSERT
 argument_list|(
+name|elf_hash_table
+argument_list|(
 name|info
 operator|->
-name|tls_segment
+name|link_info
+argument_list|)
+operator|->
+name|tls_sec
 operator|!=
 name|NULL
 argument_list|)
@@ -7433,7 +7288,7 @@ name|alpha_get_tprel_base
 argument_list|(
 name|info
 operator|->
-name|tls_segment
+name|link_info
 argument_list|)
 expr_stmt|;
 name|disp
@@ -7533,12 +7388,7 @@ name|r_info
 operator|=
 name|ELF64_R_INFO
 argument_list|(
-name|ELF64_R_SYM
-argument_list|(
-name|irel
-operator|->
-name|r_info
-argument_list|)
+name|new_symndx
 argument_list|,
 name|R_ALPHA_TPREL16
 argument_list|)
@@ -7576,6 +7426,9 @@ operator|(
 name|bfd_signed_vma
 operator|)
 literal|0x7fff8000
+operator|&&
+operator|!
+name|pos1_unusable
 condition|)
 block|{
 name|insn
@@ -7677,12 +7530,7 @@ name|r_info
 operator|=
 name|ELF64_R_INFO
 argument_list|(
-name|ELF64_R_SYM
-argument_list|(
-name|irel
-operator|->
-name|r_info
-argument_list|)
+name|new_symndx
 argument_list|,
 name|R_ALPHA_TPRELHI
 argument_list|)
@@ -7712,12 +7560,7 @@ name|r_info
 operator|=
 name|ELF64_R_INFO
 argument_list|(
-name|ELF64_R_SYM
-argument_list|(
-name|irel
-operator|->
-name|r_info
-argument_list|)
+name|new_symndx
 argument_list|,
 name|R_ALPHA_TPRELLO
 argument_list|)
@@ -7729,7 +7572,7 @@ comment|/* FALLTHRU */
 default|default:
 name|use_gottprel
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|insn
 operator|=
@@ -7810,12 +7653,7 @@ name|r_info
 operator|=
 name|ELF64_R_INFO
 argument_list|(
-name|ELF64_R_SYM
-argument_list|(
-name|irel
-operator|->
-name|r_info
-argument_list|)
+name|new_symndx
 argument_list|,
 name|R_ALPHA_GOTTPREL
 argument_list|)
@@ -7975,13 +7813,13 @@ name|info
 operator|->
 name|changed_contents
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|info
 operator|->
 name|changed_relocs
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* Reduce the use count on the TLSGD/TLSLDM relocation.  */
 if|if
@@ -8146,7 +7984,7 @@ operator|!
 name|tprel_gotent
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|tprel_gotent
 operator|->
@@ -8215,264 +8053,14 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|struct
-name|elf_link_tls_segment
-modifier|*
-name|elf64_alpha_relax_find_tls_segment
-parameter_list|(
-name|info
-parameter_list|,
-name|seg
-parameter_list|)
-name|struct
-name|alpha_relax_info
-modifier|*
-name|info
-decl_stmt|;
-name|struct
-name|elf_link_tls_segment
-modifier|*
-name|seg
-decl_stmt|;
-block|{
-name|bfd
-modifier|*
-name|output_bfd
-init|=
-name|info
-operator|->
-name|sec
-operator|->
-name|output_section
-operator|->
-name|owner
-decl_stmt|;
-name|asection
-modifier|*
-name|o
-decl_stmt|;
-name|unsigned
-name|int
-name|align
-decl_stmt|;
-name|bfd_vma
-name|base
-decl_stmt|,
-name|end
-decl_stmt|;
-for|for
-control|(
-name|o
-operator|=
-name|output_bfd
-operator|->
-name|sections
-init|;
-name|o
-condition|;
-name|o
-operator|=
-name|o
-operator|->
-name|next
-control|)
-if|if
-condition|(
-operator|(
-name|o
-operator|->
-name|flags
-operator|&
-name|SEC_THREAD_LOCAL
-operator|)
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|o
-operator|->
-name|flags
-operator|&
-name|SEC_LOAD
-operator|)
-operator|!=
-literal|0
-condition|)
-break|break;
-if|if
-condition|(
-operator|!
-name|o
-condition|)
-return|return
-name|NULL
-return|;
-name|base
-operator|=
-name|o
-operator|->
-name|vma
-expr_stmt|;
-name|align
-operator|=
-literal|0
-expr_stmt|;
-do|do
-block|{
-name|bfd_vma
-name|size
-decl_stmt|;
-if|if
-condition|(
-name|bfd_get_section_alignment
-argument_list|(
-name|output_bfd
-argument_list|,
-name|o
-argument_list|)
-operator|>
-name|align
-condition|)
-name|align
-operator|=
-name|bfd_get_section_alignment
-argument_list|(
-name|output_bfd
-argument_list|,
-name|o
-argument_list|)
-expr_stmt|;
-name|size
-operator|=
-name|o
-operator|->
-name|_raw_size
-expr_stmt|;
-if|if
-condition|(
-name|size
-operator|==
-literal|0
-operator|&&
-operator|(
-name|o
-operator|->
-name|flags
-operator|&
-name|SEC_HAS_CONTENTS
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|struct
-name|bfd_link_order
-modifier|*
-name|lo
-decl_stmt|;
-for|for
-control|(
-name|lo
-operator|=
-name|o
-operator|->
-name|link_order_head
-init|;
-name|lo
-condition|;
-name|lo
-operator|=
-name|lo
-operator|->
-name|next
-control|)
-if|if
-condition|(
-name|size
-operator|<
-name|lo
-operator|->
-name|offset
-operator|+
-name|lo
-operator|->
-name|size
-condition|)
-name|size
-operator|=
-name|lo
-operator|->
-name|offset
-operator|+
-name|lo
-operator|->
-name|size
-expr_stmt|;
-block|}
-name|end
-operator|=
-name|o
-operator|->
-name|vma
-operator|+
-name|size
-expr_stmt|;
-name|o
-operator|=
-name|o
-operator|->
-name|next
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|o
-operator|&&
-operator|(
-name|o
-operator|->
-name|flags
-operator|&
-name|SEC_THREAD_LOCAL
-operator|)
-condition|)
-do|;
-name|seg
-operator|->
-name|start
-operator|=
-name|base
-expr_stmt|;
-name|seg
-operator|->
-name|size
-operator|=
-name|end
-operator|-
-name|base
-expr_stmt|;
-name|seg
-operator|->
-name|align
-operator|=
-name|align
-expr_stmt|;
-return|return
-name|seg
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relax_section
 parameter_list|(
 name|abfd
@@ -8496,7 +8084,7 @@ name|bfd_link_info
 modifier|*
 name|link_info
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 modifier|*
 name|again
 decl_stmt|;
@@ -8532,21 +8120,17 @@ name|struct
 name|alpha_relax_info
 name|info
 decl_stmt|;
-name|struct
-name|elf_link_tls_segment
-name|tls_segment
-decl_stmt|;
 comment|/* We are not currently changing any sizes, so only one pass.  */
 operator|*
 name|again
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
 name|link_info
 operator|->
-name|relocateable
+name|relocatable
 operator|||
 operator|(
 name|sec
@@ -8565,7 +8149,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* If this is the first time we have been called for this section,      initialize the cooked size.  */
 if|if
@@ -8607,7 +8191,7 @@ comment|/* Load the relocations for this section.  */
 name|internal_relocs
 operator|=
 operator|(
-name|_bfd_elf64_link_read_relocs
+name|_bfd_elf_link_read_relocs
 argument_list|(
 name|abfd
 argument_list|,
@@ -8637,7 +8221,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|memset
 argument_list|(
@@ -8827,20 +8411,6 @@ goto|goto
 name|error_return
 goto|;
 block|}
-comment|/* Compute the TLS segment information.  The version normally found in      elf_hash_table (link_info)->tls_segment isn't built until final_link.      ??? Probably should look into extracting this into a common function.  */
-name|info
-operator|.
-name|tls_segment
-operator|=
-name|elf64_alpha_relax_find_tls_segment
-argument_list|(
-operator|&
-name|info
-argument_list|,
-operator|&
-name|tls_segment
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|irel
@@ -8874,6 +8444,17 @@ operator|->
 name|r_info
 argument_list|)
 decl_stmt|;
+name|unsigned
+name|long
+name|r_symndx
+init|=
+name|ELF64_R_SYM
+argument_list|(
+name|irel
+operator|->
+name|r_info
+argument_list|)
+decl_stmt|;
 comment|/* Early exit for unhandled or unrelaxable relocations.  */
 switch|switch
 condition|(
@@ -8898,9 +8479,15 @@ case|:
 case|case
 name|R_ALPHA_TLSGD
 case|:
+break|break;
 case|case
 name|R_ALPHA_TLSLDM
 case|:
+comment|/* The symbol for a TLSLDM reloc is ignored.  Collapse the              reloc to the 0 symbol so that they all match.  */
+name|r_symndx
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 default|default:
 continue|continue;
@@ -8908,12 +8495,7 @@ block|}
 comment|/* Get the value of the symbol referred to by the reloc.  */
 if|if
 condition|(
-name|ELF64_R_SYM
-argument_list|(
-name|irel
-operator|->
-name|r_info
-argument_list|)
+name|r_symndx
 operator|<
 name|symtab_hdr
 operator|->
@@ -8984,12 +8566,39 @@ name|isym
 operator|=
 name|isymbuf
 operator|+
-name|ELF64_R_SYM
+name|r_symndx
+expr_stmt|;
+comment|/* Given the symbol for a TLSLDM reloc is ignored, this also 	     means forcing the symbol value to the tp base.  */
+if|if
+condition|(
+name|r_type
+operator|==
+name|R_ALPHA_TLSLDM
+condition|)
+block|{
+name|info
+operator|.
+name|tsec
+operator|=
+name|bfd_abs_section_ptr
+expr_stmt|;
+name|symval
+operator|=
+name|alpha_get_tprel_base
 argument_list|(
-name|irel
-operator|->
-name|r_info
+name|info
+operator|.
+name|link_info
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|symval
+operator|=
+name|isym
+operator|->
+name|st_value
 expr_stmt|;
 if|if
 condition|(
@@ -9044,6 +8653,7 @@ operator|->
 name|st_shndx
 argument_list|)
 expr_stmt|;
+block|}
 name|info
 operator|.
 name|h
@@ -9058,6 +8668,10 @@ name|isym
 operator|->
 name|st_other
 expr_stmt|;
+if|if
+condition|(
+name|local_got_entries
+condition|)
 name|info
 operator|.
 name|first_gotent
@@ -9065,20 +8679,27 @@ operator|=
 operator|&
 name|local_got_entries
 index|[
-name|ELF64_R_SYM
-argument_list|(
-name|irel
-operator|->
-name|r_info
-argument_list|)
+name|r_symndx
 index|]
 expr_stmt|;
-name|symval
+else|else
+block|{
+name|info
+operator|.
+name|first_gotent
 operator|=
-name|isym
-operator|->
-name|st_value
+operator|&
+name|info
+operator|.
+name|gotent
 expr_stmt|;
+name|info
+operator|.
+name|gotent
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -9093,12 +8714,7 @@ name|h
 decl_stmt|;
 name|indx
 operator|=
-name|ELF64_R_SYM
-argument_list|(
-name|irel
-operator|->
-name|r_info
-argument_list|)
+name|r_symndx
 operator|-
 name|symtab_hdr
 operator|->
@@ -9200,13 +8816,28 @@ operator|&
 name|ELF_LINK_HASH_DEF_REGULAR
 operator|)
 condition|)
+block|{
+comment|/* Except for TLSGD relocs, which can sometimes be 		 relaxed to GOTTPREL relocs.  */
+if|if
+condition|(
+name|r_type
+operator|!=
+name|R_ALPHA_TLSGD
+condition|)
 continue|continue;
 name|info
 operator|.
-name|h
+name|tsec
 operator|=
-name|h
+name|bfd_abs_section_ptr
 expr_stmt|;
+name|symval
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|info
 operator|.
 name|tsec
@@ -9222,6 +8853,27 @@ operator|.
 name|def
 operator|.
 name|section
+expr_stmt|;
+name|symval
+operator|=
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|def
+operator|.
+name|value
+expr_stmt|;
+block|}
+name|info
+operator|.
+name|h
+operator|=
+name|h
 expr_stmt|;
 name|info
 operator|.
@@ -9241,20 +8893,6 @@ operator|&
 name|h
 operator|->
 name|got_entries
-expr_stmt|;
-name|symval
-operator|=
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|u
-operator|.
-name|def
-operator|.
-name|value
 expr_stmt|;
 block|}
 comment|/* Search for the got entry to be used by this relocation.  */
@@ -9514,7 +9152,7 @@ name|link_info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -9525,7 +9163,7 @@ name|link_info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -9536,7 +9174,7 @@ name|link_info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -9690,7 +9328,7 @@ operator|.
 name|changed_relocs
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -9765,7 +9403,7 @@ name|internal_relocs
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -9883,7 +9521,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_section_from_shdr
 parameter_list|(
 name|abfd
@@ -9896,7 +9534,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|Elf64_Internal_Shdr
+name|Elf_Internal_Shdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -9933,12 +9571,12 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 break|break;
 default|default:
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -9954,7 +9592,7 @@ name|name
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|newsect
 operator|=
@@ -9993,11 +9631,11 @@ operator|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10008,7 +9646,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_section_flags
 parameter_list|(
 name|flags
@@ -10019,7 +9657,7 @@ name|flagword
 modifier|*
 name|flags
 decl_stmt|;
-name|Elf64_Internal_Shdr
+name|Elf_Internal_Shdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -10038,7 +9676,7 @@ operator||=
 name|SEC_SMALL_DATA
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10049,7 +9687,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_fake_sections
 parameter_list|(
 name|abfd
@@ -10062,7 +9700,7 @@ name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
-name|Elf64_Internal_Shdr
+name|Elf_Internal_Shdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -10185,7 +9823,7 @@ operator||=
 name|SHF_ALPHA_GPREL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10196,7 +9834,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_add_symbol_hook
 parameter_list|(
 name|abfd
@@ -10222,7 +9860,6 @@ name|bfd_link_info
 modifier|*
 name|info
 decl_stmt|;
-specifier|const
 name|Elf_Internal_Sym
 modifier|*
 name|sym
@@ -10260,7 +9897,7 @@ operator|&&
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 name|sym
 operator|->
@@ -10323,7 +9960,7 @@ operator|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 operator|*
@@ -10340,7 +9977,7 @@ name|st_size
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10351,7 +9988,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_create_got_section
 parameter_list|(
 name|abfd
@@ -10375,16 +10012,43 @@ name|s
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|s
+operator|=
 name|bfd_get_section_by_name
 argument_list|(
 name|abfd
 argument_list|,
 literal|".got"
 argument_list|)
+operator|)
 condition|)
+block|{
+comment|/* Check for a non-linker created .got?  */
+if|if
+condition|(
+name|alpha_elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|got
+operator|==
+name|NULL
+condition|)
+name|alpha_elf_tdata
+argument_list|(
+name|abfd
+argument_list|)
+operator|->
+name|got
+operator|=
+name|s
+expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
+block|}
 name|s
 operator|=
 name|bfd_make_section
@@ -10431,7 +10095,7 @@ literal|3
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|alpha_elf_tdata
 argument_list|(
@@ -10443,7 +10107,7 @@ operator|=
 name|s
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10454,7 +10118,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_create_dynamic_sections
 parameter_list|(
 name|abfd
@@ -10534,7 +10198,7 @@ literal|3
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Define the symbol _PROCEDURE_LINKAGE_TABLE_ at the start of the      .plt section.  */
 name|bh
@@ -10569,7 +10233,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 name|get_elf_backend_data
 argument_list|(
@@ -10584,7 +10248,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|h
 operator|=
@@ -10614,7 +10278,7 @@ operator|->
 name|shared
 operator|&&
 operator|!
-name|_bfd_elf_link_record_dynamic_symbol
+name|bfd_elf_link_record_dynamic_symbol
 argument_list|(
 name|info
 argument_list|,
@@ -10622,7 +10286,7 @@ name|h
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|s
 operator|=
@@ -10672,7 +10336,7 @@ literal|3
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* We may or may not have created a .got section for this object, but      we definitely havn't done the rest of the work.  */
 if|if
@@ -10686,7 +10350,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|s
 operator|=
@@ -10736,7 +10400,7 @@ literal|3
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Define the symbol _GLOBAL_OFFSET_TABLE_ at the start of the      dynobj's .got section.  We don't do this in the linker script      because we don't want to define the symbol if we are not creating      a global offset table.  */
 name|bh
@@ -10776,7 +10440,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
 name|get_elf_backend_data
 argument_list|(
@@ -10791,7 +10455,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|h
 operator|=
@@ -10821,7 +10485,7 @@ operator|->
 name|shared
 operator|&&
 operator|!
-name|_bfd_elf_link_record_dynamic_symbol
+name|bfd_elf_link_record_dynamic_symbol
 argument_list|(
 name|info
 argument_list|,
@@ -10829,7 +10493,7 @@ name|h
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|elf_hash_table
 argument_list|(
@@ -10841,7 +10505,7 @@ operator|=
 name|h
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -10855,7 +10519,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_read_ecoff_info
 parameter_list|(
 name|abfd
@@ -11193,7 +10857,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 name|error_return
 label|:
@@ -11374,7 +11038,7 @@ name|external_ext
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function
@@ -11385,7 +11049,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_is_local_label_name
 parameter_list|(
 name|abfd
@@ -11436,7 +11100,7 @@ end_struct
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_find_nearest_line
 parameter_list|(
 name|abfd
@@ -11521,7 +11185,7 @@ name|dwarf2_find_line_info
 argument_list|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|msec
 operator|=
@@ -11656,7 +11320,7 @@ operator|=
 name|origflags
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -11682,7 +11346,7 @@ operator|=
 name|origflags
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 comment|/* Swap in the FDR information.  */
@@ -11738,7 +11402,7 @@ operator|=
 name|origflags
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|external_fdr_size
@@ -11862,7 +11526,7 @@ operator|=
 name|origflags
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|msec
@@ -11925,7 +11589,7 @@ name|ecoff_debug_swap
 modifier|*
 name|swap
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|failed
 decl_stmt|;
 block|}
@@ -11934,7 +11598,7 @@ end_struct
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_output_extsym
 parameter_list|(
 name|h
@@ -11962,7 +11626,7 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|strip
 decl_stmt|;
 name|asection
@@ -12016,7 +11680,7 @@ literal|2
 condition|)
 name|strip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 elseif|else
 if|if
@@ -12073,7 +11737,7 @@ literal|0
 condition|)
 name|strip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 elseif|else
 if|if
@@ -12113,9 +11777,9 @@ name|root
 operator|.
 name|string
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|)
 operator|==
 name|NULL
@@ -12123,19 +11787,19 @@ operator|)
 condition|)
 name|strip
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 else|else
 name|strip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
 name|strip
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 if|if
 condition|(
@@ -12830,14 +12494,14 @@ name|einfo
 operator|->
 name|failed
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -13188,7 +12852,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_check_relocs
 parameter_list|(
 name|abfd
@@ -13249,7 +12913,7 @@ decl_stmt|,
 modifier|*
 name|relend
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|got_created
 decl_stmt|;
 name|bfd_size_type
@@ -13259,10 +12923,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|dynobj
 operator|=
@@ -13317,7 +12981,7 @@ argument_list|)
 expr_stmt|;
 name|got_created
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|relend
 operator|=
@@ -13371,7 +13035,7 @@ name|unsigned
 name|int
 name|gotent_flags
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|maybe_dynamic
 decl_stmt|;
 name|unsigned
@@ -13468,7 +13132,7 @@ block|}
 comment|/* We can only get preliminary data on whether a symbol is          locally or externally defined, as not all of the input files          have yet been processed.  Do something with what we know, as          this may help reduce memory usage and processing time later.  */
 name|maybe_dynamic
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -13488,7 +13152,9 @@ name|symbolic
 operator|||
 name|info
 operator|->
-name|allow_shlib_undefined
+name|unresolved_syms_in_shared_libs
+operator|==
+name|RM_IGNORE
 operator|)
 operator|)
 operator|||
@@ -13516,7 +13182,7 @@ operator|)
 condition|)
 name|maybe_dynamic
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|need
 operator|=
@@ -13662,10 +13328,24 @@ name|NEED_DYNREL
 expr_stmt|;
 break|break;
 case|case
-name|R_ALPHA_TLSGD
-case|:
-case|case
 name|R_ALPHA_TLSLDM
+case|:
+comment|/* The symbol for a TLSLDM reloc is ignored.  Collapse the 	     reloc to the 0 symbol so that they all match.  */
+name|r_symndx
+operator|=
+literal|0
+expr_stmt|;
+name|h
+operator|=
+literal|0
+expr_stmt|;
+name|maybe_dynamic
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* FALLTHRU */
+case|case
+name|R_ALPHA_TLSGD
 case|:
 case|case
 name|R_ALPHA_GOTDTPREL
@@ -13756,7 +13436,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Make sure the object's gotobj is set to itself so 		 that we default to every object with its own .got. 		 We'll merge .gots later once we've collected each 		 object's info.  */
 name|alpha_elf_tdata
@@ -13807,7 +13487,7 @@ operator|!
 name|gotent
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -13921,7 +13601,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|BFD_ASSERT
 argument_list|(
@@ -14043,7 +13723,7 @@ literal|3
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -14123,7 +13803,7 @@ operator|!
 name|rent
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|rent
 operator|->
@@ -14237,7 +13917,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -14248,7 +13928,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_adjust_dynamic_symbol
 parameter_list|(
 name|info
@@ -14387,7 +14067,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* The first bit of the .plt is reserved.  */
 if|if
@@ -14437,6 +14117,40 @@ operator|!=
 name|bfd_link_hash_defweak
 condition|)
 block|{
+name|ah
+operator|->
+name|plt_old_section
+operator|=
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|def
+operator|.
+name|section
+expr_stmt|;
+name|ah
+operator|->
+name|plt_old_value
+operator|=
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|def
+operator|.
+name|value
+expr_stmt|;
+name|ah
+operator|->
+name|flags
+operator||=
+name|ALPHA_ELF_LINK_HASH_PLT_LOC
+expr_stmt|;
 name|h
 operator|->
 name|root
@@ -14493,7 +14207,7 @@ name|Elf64_External_Rela
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 else|else
@@ -14582,12 +14296,12 @@ operator|.
 name|value
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* This is a reference to a symbol defined by a dynamic object which      is not a function.  The Alpha, since it uses .got entries for all      symbols even in regular objects, does not need the hackery of a      .dynbss section and COPY dynamic relocations.  */
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -14598,7 +14312,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_merge_ind_symbols
 parameter_list|(
 name|hi
@@ -14633,7 +14347,7 @@ operator|!=
 name|bfd_link_hash_indirect
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|hs
 operator|=
@@ -14952,7 +14666,7 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -14963,7 +14677,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_can_merge_gots
 parameter_list|(
 name|a
@@ -15010,7 +14724,7 @@ operator|<=
 name|MAX_GOT_SIZE
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* By their nature, local .got entries cannot be merged.  */
 if|if
@@ -15029,7 +14743,7 @@ operator|>
 name|MAX_GOT_SIZE
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Failing the common trivial comparison, we must effectively      perform the merge.  Not actually performing the merge means that      we don't have to store undo information in case we fail.  */
 for|for
@@ -15258,7 +14972,7 @@ operator|>
 name|MAX_GOT_SIZE
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|global_found
 label|:
@@ -15267,7 +14981,7 @@ block|}
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_block
@@ -15772,7 +15486,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_calc_got_offsets_for_symbol
 parameter_list|(
 name|h
@@ -15789,6 +15503,11 @@ name|arg
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
+name|bfd_boolean
+name|result
+init|=
+name|TRUE
+decl_stmt|;
 name|struct
 name|alpha_elf_got_entry
 modifier|*
@@ -15850,22 +15569,68 @@ operator|>
 literal|0
 condition|)
 block|{
+name|struct
+name|alpha_elf_obj_tdata
+modifier|*
+name|td
+decl_stmt|;
 name|bfd_size_type
 modifier|*
 name|plge
-init|=
-operator|&
+decl_stmt|;
+name|td
+operator|=
 name|alpha_elf_tdata
 argument_list|(
 name|gotent
 operator|->
 name|gotobj
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|==
+name|NULL
+condition|)
+block|{
+name|_bfd_error_handler
+argument_list|(
+name|_
+argument_list|(
+literal|"Symbol %s has no GOT subsection for offset 0x%x"
+argument_list|)
+argument_list|,
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|root
+operator|.
+name|string
+argument_list|,
+name|gotent
+operator|->
+name|got_offset
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|FALSE
+expr_stmt|;
+continue|continue;
+block|}
+name|plge
+operator|=
+operator|&
+name|td
 operator|->
 name|got
 operator|->
 name|_raw_size
-decl_stmt|;
+expr_stmt|;
 name|gotent
 operator|->
 name|got_offset
@@ -15885,7 +15650,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|true
+name|result
 return|;
 block|}
 end_function
@@ -16140,7 +15905,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_got_sections
 parameter_list|(
 name|info
@@ -16220,7 +15985,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-comment|/* We are assuming no merging has yet ocurred.  */
+comment|/* We are assuming no merging has yet occurred.  */
 name|BFD_ASSERT
 argument_list|(
 name|this_got
@@ -16265,7 +16030,7 @@ name|total_got_size
 argument_list|)
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -16301,7 +16066,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|alpha_elf_hash_table
 argument_list|(
@@ -16408,7 +16173,7 @@ name|info
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -16419,7 +16184,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_plt_section
 parameter_list|(
 name|info
@@ -16470,7 +16235,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 name|splt
 operator|->
@@ -16551,14 +16316,14 @@ operator|->
 name|_raw_size
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_plt_section_1
 parameter_list|(
 name|h
@@ -16604,7 +16369,7 @@ name|ELF_LINK_HASH_NEEDS_PLT
 operator|)
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* There must still be a LITERAL got entry for the function.  */
 for|for
@@ -16699,16 +16464,66 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* Undo the definition frobbing begun in adjust_dynamic_symbol.  */
+if|if
+condition|(
+name|h
+operator|->
+name|flags
+operator|&
+name|ALPHA_ELF_LINK_HASH_PLT_LOC
+condition|)
+block|{
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|def
+operator|.
+name|section
+operator|=
+name|h
+operator|->
+name|plt_old_section
+expr_stmt|;
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|def
+operator|.
+name|value
+operator|=
+name|h
+operator|->
+name|plt_old_value
+expr_stmt|;
+name|h
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ALPHA_ELF_LINK_HASH_PLT_LOC
+expr_stmt|;
+block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_always_size_sections
 parameter_list|(
 name|output_bfd
@@ -16734,10 +16549,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* First, take care of the indirect symbols created by versioning.  */
 name|alpha_elf_link_hash_traverse
@@ -16761,7 +16576,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Allocate space for all of the .got subsections.  */
 name|i
@@ -16834,12 +16649,12 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -16898,6 +16713,9 @@ return|;
 case|case
 name|R_ALPHA_LITERAL
 case|:
+case|case
+name|R_ALPHA_GOTTPREL
+case|:
 return|return
 name|dynamic
 operator|||
@@ -16905,9 +16723,6 @@ name|shared
 return|;
 case|case
 name|R_ALPHA_GOTDTPREL
-case|:
-case|case
-name|R_ALPHA_GOTTPREL
 case|:
 return|return
 name|dynamic
@@ -16919,19 +16734,13 @@ case|:
 case|case
 name|R_ALPHA_REFQUAD
 case|:
-return|return
-name|dynamic
-operator|||
-name|shared
-return|;
-case|case
-name|R_ALPHA_SREL64
-case|:
 case|case
 name|R_ALPHA_TPREL64
 case|:
 return|return
 name|dynamic
+operator|||
+name|shared
 return|;
 comment|/* Everything else is illegal.  We'll issue an error during        relocate_section.  */
 default|default:
@@ -16948,7 +16757,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_calc_dynrel_sizes
 parameter_list|(
 name|h
@@ -16966,7 +16775,7 @@ modifier|*
 name|info
 decl_stmt|;
 block|{
-name|boolean
+name|bfd_boolean
 name|dynamic
 decl_stmt|;
 name|struct
@@ -17165,7 +16974,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -17176,7 +16985,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_rela_got_section
 parameter_list|(
 name|info
@@ -17381,7 +17190,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 name|srel
@@ -17417,7 +17226,7 @@ operator|->
 name|_raw_size
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -17428,7 +17237,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_rela_got_1
 parameter_list|(
 name|h
@@ -17446,7 +17255,7 @@ modifier|*
 name|info
 decl_stmt|;
 block|{
-name|boolean
+name|bfd_boolean
 name|dynamic
 decl_stmt|;
 name|struct
@@ -17610,7 +17419,7 @@ name|entries
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -17621,7 +17430,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_size_dynamic_sections
 parameter_list|(
 name|output_bfd
@@ -17647,7 +17456,7 @@ name|asection
 modifier|*
 name|s
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|relplt
 decl_stmt|;
 name|dynobj
@@ -17679,10 +17488,9 @@ block|{
 comment|/* Set the contents of the .interp section to the interpreter.  */
 if|if
 condition|(
-operator|!
 name|info
 operator|->
-name|shared
+name|executable
 condition|)
 block|{
 name|s
@@ -17743,7 +17551,7 @@ comment|/* else we're not dynamic and by definition we don't need such things.  
 comment|/* The check_relocs and adjust_dynamic_symbol entry points have      determined the sizes of the various dynamic sections.  Allocate      memory for them.  */
 name|relplt
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -17769,7 +17577,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|strip
 decl_stmt|;
 if|if
@@ -17797,7 +17605,7 @@ expr_stmt|;
 comment|/* If we don't need this section, strip it from the output file. 	 This is to handle .rela.bss and .rela.plt.  We must create it 	 in create_dynamic_sections, because it must be created before 	 the linker maps input sections to output sections.  The 	 linker does that before adjust_dynamic_symbol is called, and 	 it is that function which decides whether anything needs to 	 go into these sections.  */
 name|strip
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -17842,7 +17650,7 @@ literal|0
 condition|)
 name|relplt
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 comment|/* We use the reloc_count field as a counter if we need 		 to copy relocs into the output file.  */
 name|s
@@ -17915,7 +17723,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -17939,13 +17747,12 @@ parameter_list|,
 name|VAL
 parameter_list|)
 define|\
-value|bfd_elf64_add_dynamic_entry (info, (bfd_vma) (TAG), (bfd_vma) (VAL))
+value|_bfd_elf_add_dynamic_entry (info, TAG, VAL)
 if|if
 condition|(
-operator|!
 name|info
 operator|->
-name|shared
+name|executable
 condition|)
 block|{
 if|if
@@ -17959,7 +17766,7 @@ literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -18002,7 +17809,7 @@ literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -18035,7 +17842,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -18057,7 +17864,7 @@ literal|0
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -18065,10 +17872,206 @@ undef|#
 directive|undef
 name|add_dynamic_entry
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Emit a dynamic relocation for (DYNINDX, RTYPE, ADDEND) at (SEC, OFFSET)    into the next available slot in SREL.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|elf64_alpha_emit_dynrel
+parameter_list|(
+name|abfd
+parameter_list|,
+name|info
+parameter_list|,
+name|sec
+parameter_list|,
+name|srel
+parameter_list|,
+name|offset
+parameter_list|,
+name|dynindx
+parameter_list|,
+name|rtype
+parameter_list|,
+name|addend
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
+decl_stmt|;
+name|asection
+modifier|*
+name|sec
+decl_stmt|,
+decl|*
+name|srel
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|bfd_vma
+name|offset
+decl_stmt|,
+name|addend
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|dynindx
+decl_stmt|,
+name|rtype
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|Elf_Internal_Rela
+name|outrel
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|loc
+decl_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|srel
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|outrel
+operator|.
+name|r_info
+operator|=
+name|ELF64_R_INFO
+argument_list|(
+name|dynindx
+argument_list|,
+name|rtype
+argument_list|)
+expr_stmt|;
+name|outrel
+operator|.
+name|r_addend
+operator|=
+name|addend
+expr_stmt|;
+name|offset
+operator|=
+name|_bfd_elf_section_offset
+argument_list|(
+name|abfd
+argument_list|,
+name|info
+argument_list|,
+name|sec
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|offset
+operator||
+literal|1
+operator|)
+operator|!=
+operator|(
+name|bfd_vma
+operator|)
+operator|-
+literal|1
+condition|)
+name|outrel
+operator|.
+name|r_offset
+operator|=
+name|sec
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|sec
+operator|->
+name|output_offset
+operator|+
+name|offset
+expr_stmt|;
+else|else
+name|memset
+argument_list|(
+operator|&
+name|outrel
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|outrel
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|loc
+operator|=
+name|srel
+operator|->
+name|contents
+expr_stmt|;
+name|loc
+operator|+=
+name|srel
+operator|->
+name|reloc_count
+operator|++
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Rela
+argument_list|)
+expr_stmt|;
+name|bfd_elf64_swap_reloca_out
+argument_list|(
+name|abfd
+argument_list|,
+operator|&
+name|outrel
+argument_list|,
+name|loc
+argument_list|)
+expr_stmt|;
+name|BFD_ASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Rela
+argument_list|)
+operator|*
+name|srel
+operator|->
+name|reloc_count
+operator|<=
+name|srel
+operator|->
+name|_cooked_size
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/* Relocate an Alpha ELF section for a relocatable link.     We don't have to change anything unless the reloc is against a section    symbol, in which case we have to adjust according to where the section    symbol winds up in the output section.  */
@@ -18076,7 +18079,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relocate_section_r
 parameter_list|(
 name|output_bfd
@@ -18145,10 +18148,10 @@ name|Elf_Internal_Rela
 modifier|*
 name|relend
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|ret_val
 init|=
-name|true
+name|TRUE
 decl_stmt|;
 name|symtab_hdr_sh_info
 operator|=
@@ -18243,7 +18246,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 continue|continue;
 block|}
@@ -18327,7 +18330,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_relocate_section
 parameter_list|(
 name|output_bfd
@@ -18393,11 +18396,6 @@ name|Elf_Internal_Rela
 modifier|*
 name|relend
 decl_stmt|;
-name|struct
-name|elf_link_tls_segment
-modifier|*
-name|tls_segment
-decl_stmt|;
 name|asection
 modifier|*
 name|sgot
@@ -18428,7 +18426,7 @@ modifier|*
 modifier|*
 name|local_got_entries
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|ret_val
 decl_stmt|;
 specifier|const
@@ -18441,7 +18439,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 return|return
 name|elf64_alpha_relocate_section_r
@@ -18466,7 +18464,7 @@ return|;
 comment|/* This is a final link.  */
 name|ret_val
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|symtab_hdr
 operator|=
@@ -18629,32 +18627,30 @@ argument_list|)
 operator|->
 name|local_got_entries
 expr_stmt|;
-name|tls_segment
-operator|=
+if|if
+condition|(
 name|elf_hash_table
 argument_list|(
 name|info
 argument_list|)
 operator|->
-name|tls_segment
-expr_stmt|;
-if|if
-condition|(
-name|tls_segment
+name|tls_sec
+operator|!=
+name|NULL
 condition|)
 block|{
 name|dtp_base
 operator|=
 name|alpha_get_dtprel_base
 argument_list|(
-name|tls_segment
+name|info
 argument_list|)
 expr_stmt|;
 name|tp_base
 operator|=
 name|alpha_get_tprel_base
 argument_list|(
-name|tls_segment
+name|info
 argument_list|)
 expr_stmt|;
 block|}
@@ -18728,13 +18724,13 @@ decl_stmt|;
 name|bfd_vma
 name|addend
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|dynamic_symbol_p
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|undef_weak_ref
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 name|unsigned
 name|long
@@ -18784,7 +18780,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 continue|continue;
 block|}
@@ -18803,6 +18799,17 @@ operator|->
 name|r_info
 argument_list|)
 expr_stmt|;
+comment|/* The symbol for a TLSLDM reloc is ignored.  Collapse the 	 reloc to the 0 symbol so that they all match.  */
+if|if
+condition|(
+name|r_type
+operator|==
+name|R_ALPHA_TLSLDM
+condition|)
+name|r_symndx
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|r_symndx
@@ -18812,6 +18819,10 @@ operator|->
 name|sh_info
 condition|)
 block|{
+name|asection
+modifier|*
+name|msec
+decl_stmt|;
 name|sym
 operator|=
 name|local_syms
@@ -18825,6 +18836,10 @@ index|[
 name|r_symndx
 index|]
 expr_stmt|;
+name|msec
+operator|=
+name|sec
+expr_stmt|;
 name|value
 operator|=
 name|_bfd_elf_rela_local_sym
@@ -18833,10 +18848,48 @@ name|output_bfd
 argument_list|,
 name|sym
 argument_list|,
-name|sec
+operator|&
+name|msec
 argument_list|,
 name|rel
 argument_list|)
+expr_stmt|;
+comment|/* If this is a tp-relative relocation against sym 0, 	     this is hackery from relax_section.  Force the value to 	     be the tls base.  */
+if|if
+condition|(
+name|r_symndx
+operator|==
+literal|0
+operator|&&
+operator|(
+name|r_type
+operator|==
+name|R_ALPHA_TLSLDM
+operator|||
+name|r_type
+operator|==
+name|R_ALPHA_GOTTPREL
+operator|||
+name|r_type
+operator|==
+name|R_ALPHA_TPREL64
+operator|||
+name|r_type
+operator|==
+name|R_ALPHA_TPRELHI
+operator|||
+name|r_type
+operator|==
+name|R_ALPHA_TPRELLO
+operator|||
+name|r_type
+operator|==
+name|R_ALPHA_TPREL16
+operator|)
+condition|)
+name|value
+operator|=
+name|tp_base
 expr_stmt|;
 if|if
 condition|(
@@ -18874,16 +18927,11 @@ argument_list|)
 operator|==
 name|STT_SECTION
 operator|&&
-operator|(
-name|elf_section_data
-argument_list|(
 name|sec
-argument_list|)
 operator|->
 name|sec_info_type
 operator|==
 name|ELF_INFO_TYPE_MERGE
-operator|)
 operator|&&
 name|gotent
 operator|&&
@@ -18897,10 +18945,6 @@ name|struct
 name|alpha_elf_got_entry
 modifier|*
 name|ent
-decl_stmt|;
-name|asection
-modifier|*
-name|msec
 decl_stmt|;
 for|for
 control|(
@@ -19004,151 +19048,76 @@ block|}
 block|}
 name|dynamic_symbol_p
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 else|else
 block|{
-name|h
-operator|=
-name|alpha_elf_sym_hashes
+name|bfd_boolean
+name|warned
+decl_stmt|;
+name|bfd_boolean
+name|unresolved_reloc
+decl_stmt|;
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|hh
+decl_stmt|;
+name|struct
+name|elf_link_hash_entry
+modifier|*
+modifier|*
+name|sym_hashes
+init|=
+name|elf_sym_hashes
 argument_list|(
 name|input_bfd
 argument_list|)
-index|[
+decl_stmt|;
+name|RELOC_FOR_GLOBAL_SYMBOL
+argument_list|(
+name|info
+argument_list|,
+name|input_bfd
+argument_list|,
+name|input_section
+argument_list|,
+name|rel
+argument_list|,
 name|r_symndx
-operator|-
+argument_list|,
 name|symtab_hdr
-operator|->
-name|sh_info
-index|]
-expr_stmt|;
-while|while
-condition|(
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_indirect
-operator|||
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_warning
-condition|)
-name|h
-operator|=
-operator|(
-expr|struct
-name|alpha_elf_link_hash_entry
-operator|*
-operator|)
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|u
-operator|.
-name|i
-operator|.
-name|link
-expr_stmt|;
+argument_list|,
+name|sym_hashes
+argument_list|,
+name|hh
+argument_list|,
+name|sec
+argument_list|,
 name|value
-operator|=
+argument_list|,
+name|unresolved_reloc
+argument_list|,
+name|warned
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|warned
+condition|)
+continue|continue;
+if|if
+condition|(
+name|value
+operator|==
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|h
+operator|&&
+operator|!
+name|unresolved_reloc
+operator|&&
+name|hh
 operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_defined
-operator|||
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_defweak
-condition|)
-block|{
-name|sec
-operator|=
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|u
-operator|.
-name|def
-operator|.
-name|section
-expr_stmt|;
-comment|/* Detect the cases that sym_sec->output_section is 		 expected to be NULL -- all cases in which the symbol 		 is defined in another shared module.  This includes 		 PLT relocs for which we've created a PLT entry and 		 other relocs for which we're prepared to create 		 dynamic relocations.  */
-comment|/* ??? Just accept it NULL and continue.  */
-if|if
-condition|(
-name|sec
-operator|->
-name|output_section
-operator|!=
-name|NULL
-condition|)
-name|value
-operator|=
-operator|(
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|u
-operator|.
-name|def
-operator|.
-name|value
-operator|+
-name|sec
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sec
-operator|->
-name|output_offset
-operator|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|h
-operator|->
-name|root
-operator|.
 name|root
 operator|.
 name|type
@@ -19157,109 +19126,17 @@ name|bfd_link_hash_undefweak
 condition|)
 name|undef_weak_ref
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|info
-operator|->
-name|shared
-operator|&&
-operator|(
-operator|!
-name|info
-operator|->
-name|symbolic
-operator|||
-name|info
-operator|->
-name|allow_shlib_undefined
-operator|)
-operator|&&
-operator|!
-name|info
-operator|->
-name|no_undefined
-operator|&&
-name|ELF_ST_VISIBILITY
-argument_list|(
 name|h
-operator|->
-name|root
-operator|.
-name|other
-argument_list|)
-operator|==
-name|STV_DEFAULT
-condition|)
-empty_stmt|;
-else|else
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-call|(
-modifier|*
-name|info
-operator|->
-name|callbacks
-operator|->
-name|undefined_symbol
-call|)
-argument_list|(
-name|info
-argument_list|,
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|root
-operator|.
-name|string
-argument_list|,
-name|input_bfd
-argument_list|,
-name|input_section
-argument_list|,
-name|rel
-operator|->
-name|r_offset
-argument_list|,
-operator|(
-operator|!
-name|info
-operator|->
-name|shared
-operator|||
-name|info
-operator|->
-name|no_undefined
-operator|||
-name|ELF_ST_VISIBILITY
-argument_list|(
-name|h
-operator|->
-name|root
-operator|.
-name|other
-argument_list|)
-operator|)
-argument_list|)
-operator|)
-condition|)
-return|return
-name|false
-return|;
-name|ret_val
 operator|=
-name|false
+operator|(
+expr|struct
+name|alpha_elf_link_hash_entry
+operator|*
+operator|)
+name|hh
 expr_stmt|;
-continue|continue;
-block|}
 name|dynamic_symbol_p
 operator|=
 name|alpha_elf_dynamic_symbol_p
@@ -19468,94 +19345,27 @@ operator|&&
 operator|!
 name|dynamic_symbol_p
 condition|)
-block|{
-name|Elf_Internal_Rela
-name|outrel
-decl_stmt|;
-name|BFD_ASSERT
-argument_list|(
-name|srelgot
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_offset
-operator|=
-operator|(
-name|sgot
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sgot
-operator|->
-name|output_offset
-operator|+
-name|gotent
-operator|->
-name|got_offset
-operator|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_info
-operator|=
-name|ELF64_R_INFO
-argument_list|(
-literal|0
-argument_list|,
-name|R_ALPHA_RELATIVE
-argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
-operator|=
-name|value
-expr_stmt|;
-name|bfd_elf64_swap_reloca_out
+name|elf64_alpha_emit_dynrel
 argument_list|(
 name|output_bfd
 argument_list|,
-operator|&
-name|outrel
+name|info
 argument_list|,
-operator|(
-operator|(
-name|Elf64_External_Rela
-operator|*
-operator|)
+name|sgot
+argument_list|,
 name|srelgot
+argument_list|,
+name|gotent
 operator|->
-name|contents
-operator|)
-operator|+
-name|srelgot
-operator|->
-name|reloc_count
-operator|++
+name|got_offset
+argument_list|,
+literal|0
+argument_list|,
+name|R_ALPHA_RELATIVE
+argument_list|,
+name|value
 argument_list|)
 expr_stmt|;
-name|BFD_ASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|Elf64_External_Rela
-argument_list|)
-operator|*
-name|srelgot
-operator|->
-name|reloc_count
-operator|<=
-name|srelgot
-operator|->
-name|_cooked_size
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|value
 operator|=
@@ -19583,10 +19393,25 @@ goto|goto
 name|default_reloc
 goto|;
 case|case
-name|R_ALPHA_GPREL16
-case|:
-case|case
 name|R_ALPHA_GPREL32
+case|:
+comment|/* If the target section was a removed linkonce section, 	     r_symndx will be zero.  In this case, assume that the 	     switch will not be used, so don't fill it in.  If we 	     do nothing here, we'll get relocation truncated messages, 	     due to the placement of the application above 4GB.  */
+if|if
+condition|(
+name|r_symndx
+operator|==
+literal|0
+condition|)
+block|{
+name|r
+operator|=
+name|bfd_reloc_ok
+expr_stmt|;
+break|break;
+block|}
+comment|/* FALLTHRU */
+case|case
+name|R_ALPHA_GPREL16
 case|:
 case|case
 name|R_ALPHA_GPRELLOW
@@ -19624,7 +19449,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 name|BFD_ASSERT
@@ -19677,7 +19502,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 name|BFD_ASSERT
@@ -19774,7 +19599,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 comment|/* The regular PC-relative stuff measures from the start of 	     the instruction rather than the end.  */
@@ -19862,7 +19687,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 comment|/* The symbol should be marked either NOPV or STD_GPLOAD.  */
@@ -19997,7 +19822,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 block|}
@@ -20018,8 +19843,15 @@ case|case
 name|R_ALPHA_TPREL64
 case|:
 block|{
-name|Elf_Internal_Rela
-name|outrel
+name|long
+name|dynindx
+decl_stmt|,
+name|dyntype
+init|=
+name|r_type
+decl_stmt|;
+name|bfd_vma
+name|dynaddend
 decl_stmt|;
 comment|/* Careful here to remember RELATIVE relocations for global 	       variables for symbolic shared objects.  */
 if|if
@@ -20039,24 +19871,15 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|outrel
-operator|.
-name|r_info
+name|dynindx
 operator|=
-name|ELF64_R_INFO
-argument_list|(
 name|h
 operator|->
 name|root
 operator|.
 name|dynindx
-argument_list|,
-name|r_type
-argument_list|)
 expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
+name|dynaddend
 operator|=
 name|addend
 expr_stmt|;
@@ -20079,7 +19902,12 @@ condition|)
 block|{
 name|BFD_ASSERT
 argument_list|(
-name|tls_segment
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|tls_sec
 operator|!=
 name|NULL
 argument_list|)
@@ -20102,18 +19930,42 @@ condition|)
 block|{
 name|BFD_ASSERT
 argument_list|(
-name|tls_segment
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|tls_sec
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|shared
+condition|)
+block|{
 name|value
 operator|-=
-name|dtp_base
+name|tp_base
 expr_stmt|;
 goto|goto
 name|default_reloc
 goto|;
+block|}
+name|dynindx
+operator|=
+literal|0
+expr_stmt|;
+name|dynaddend
+operator|=
+name|value
+operator|-
+name|dtp_base
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -20170,23 +20022,18 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
-name|outrel
-operator|.
-name|r_info
+name|dynindx
 operator|=
-name|ELF64_R_INFO
-argument_list|(
 literal|0
-argument_list|,
-name|R_ALPHA_RELATIVE
-argument_list|)
 expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
+name|dyntype
+operator|=
+name|R_ALPHA_RELATIVE
+expr_stmt|;
+name|dynaddend
 operator|=
 name|value
 expr_stmt|;
@@ -20195,18 +20042,7 @@ else|else
 goto|goto
 name|default_reloc
 goto|;
-name|BFD_ASSERT
-argument_list|(
-name|srel
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_offset
-operator|=
-name|_bfd_elf_section_offset
+name|elf64_alpha_emit_dynrel
 argument_list|(
 name|output_bfd
 argument_list|,
@@ -20214,92 +20050,17 @@ name|info
 argument_list|,
 name|input_section
 argument_list|,
+name|srel
+argument_list|,
 name|rel
 operator|->
 name|r_offset
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|outrel
-operator|.
-name|r_offset
-operator||
-literal|1
-operator|)
-operator|!=
-operator|(
-name|bfd_vma
-operator|)
-operator|-
-literal|1
-condition|)
-name|outrel
-operator|.
-name|r_offset
-operator|+=
-operator|(
-name|input_section
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|input_section
-operator|->
-name|output_offset
-operator|)
-expr_stmt|;
-else|else
-name|memset
-argument_list|(
-operator|&
-name|outrel
 argument_list|,
-literal|0
+name|dynindx
 argument_list|,
-sizeof|sizeof
-name|outrel
-argument_list|)
-expr_stmt|;
-name|bfd_elf64_swap_reloca_out
-argument_list|(
-name|output_bfd
+name|dyntype
 argument_list|,
-operator|&
-name|outrel
-argument_list|,
-operator|(
-operator|(
-name|Elf64_External_Rela
-operator|*
-operator|)
-name|srel
-operator|->
-name|contents
-operator|)
-operator|+
-name|srel
-operator|->
-name|reloc_count
-operator|++
-argument_list|)
-expr_stmt|;
-name|BFD_ASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|Elf64_External_Rela
-argument_list|)
-operator|*
-name|srel
-operator|->
-name|reloc_count
-operator|<=
-name|srel
-operator|->
-name|_cooked_size
+name|dynaddend
 argument_list|)
 expr_stmt|;
 block|}
@@ -20348,7 +20109,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 comment|/* ??? .eh_frame references to discarded sections will be smashed 	     to relocations against SHN_UNDEF.  The .eh_frame format allows 	     NULL to be encoded as 0 in any format, so this works here.  */
@@ -20433,95 +20194,27 @@ operator|&&
 operator|!
 name|dynamic_symbol_p
 condition|)
-block|{
-name|Elf_Internal_Rela
-name|outrel
-decl_stmt|;
-name|BFD_ASSERT
-argument_list|(
-name|srelgot
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_offset
-operator|=
-operator|(
-name|sgot
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sgot
-operator|->
-name|output_offset
-operator|+
-name|gotent
-operator|->
-name|got_offset
-operator|)
-expr_stmt|;
-comment|/* ??? Proper dynindx here.  */
-name|outrel
-operator|.
-name|r_info
-operator|=
-name|ELF64_R_INFO
-argument_list|(
-literal|0
-argument_list|,
-name|R_ALPHA_DTPMOD64
-argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
-operator|=
-literal|0
-expr_stmt|;
-name|bfd_elf64_swap_reloca_out
+name|elf64_alpha_emit_dynrel
 argument_list|(
 name|output_bfd
 argument_list|,
-operator|&
-name|outrel
+name|info
 argument_list|,
-operator|(
-operator|(
-name|Elf64_External_Rela
-operator|*
-operator|)
+name|sgot
+argument_list|,
 name|srelgot
+argument_list|,
+name|gotent
 operator|->
-name|contents
-operator|)
-operator|+
-name|srelgot
-operator|->
-name|reloc_count
-operator|++
+name|got_offset
+argument_list|,
+literal|0
+argument_list|,
+name|R_ALPHA_DTPMOD64
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|BFD_ASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|Elf64_External_Rela
-argument_list|)
-operator|*
-name|srelgot
-operator|->
-name|reloc_count
-operator|<=
-name|srelgot
-operator|->
-name|_cooked_size
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|dynamic_symbol_p
@@ -20538,7 +20231,12 @@ else|else
 block|{
 name|BFD_ASSERT
 argument_list|(
-name|tls_segment
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|tls_sec
 operator|!=
 name|NULL
 argument_list|)
@@ -20633,12 +20331,17 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 name|BFD_ASSERT
 argument_list|(
-name|tls_segment
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|tls_sec
 operator|!=
 name|NULL
 argument_list|)
@@ -20711,7 +20414,7 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 elseif|else
@@ -20748,12 +20451,17 @@ argument_list|)
 expr_stmt|;
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 name|BFD_ASSERT
 argument_list|(
-name|tls_segment
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|tls_sec
 operator|!=
 name|NULL
 argument_list|)
@@ -20854,23 +20562,68 @@ else|else
 block|{
 name|BFD_ASSERT
 argument_list|(
-name|tls_segment
+name|elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|tls_sec
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|value
-operator|-=
-operator|(
+if|if
+condition|(
 name|r_type
 operator|==
 name|R_ALPHA_GOTDTPREL
-condition|?
+condition|)
+name|value
+operator|-=
 name|dtp_base
-else|:
-name|tp_base
-operator|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|shared
+condition|)
+name|value
+operator|-=
+name|tp_base
+expr_stmt|;
+else|else
+block|{
+name|elf64_alpha_emit_dynrel
+argument_list|(
+name|output_bfd
+argument_list|,
+name|info
+argument_list|,
+name|sgot
+argument_list|,
+name|srelgot
+argument_list|,
+name|gotent
+operator|->
+name|got_offset
+argument_list|,
+literal|0
+argument_list|,
+name|R_ALPHA_TPREL64
+argument_list|,
+name|value
+operator|-
+name|dtp_base
+argument_list|)
+expr_stmt|;
+name|value
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 name|bfd_put_64
 argument_list|(
@@ -21024,7 +20777,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -21081,7 +20834,7 @@ operator|)
 condition|)
 name|ret_val
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 break|break;
@@ -21106,7 +20859,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_finish_dynamic_symbol
 parameter_list|(
 name|output_bfd
@@ -21171,6 +20924,10 @@ name|srel
 decl_stmt|;
 name|Elf_Internal_Rela
 name|outrel
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|loc
 decl_stmt|;
 name|bfd_vma
 name|got_addr
@@ -21444,6 +21201,19 @@ name|r_addend
 operator|=
 literal|0
 expr_stmt|;
+name|loc
+operator|=
+name|srel
+operator|->
+name|contents
+operator|+
+name|plt_index
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Elf64_External_Rela
+argument_list|)
+expr_stmt|;
 name|bfd_elf64_swap_reloca_out
 argument_list|(
 name|output_bfd
@@ -21451,17 +21221,7 @@ argument_list|,
 operator|&
 name|outrel
 argument_list|,
-operator|(
-operator|(
-name|Elf64_External_Rela
-operator|*
-operator|)
-name|srel
-operator|->
-name|contents
-operator|+
-name|plt_index
-operator|)
+name|loc
 argument_list|)
 expr_stmt|;
 if|if
@@ -21585,84 +21345,27 @@ name|info
 operator|->
 name|shared
 condition|)
-block|{
-name|outrel
-operator|.
-name|r_offset
-operator|=
-operator|(
-name|sgot
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sgot
-operator|->
-name|output_offset
-operator|+
-name|gotent
-operator|->
-name|got_offset
-operator|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_info
-operator|=
-name|ELF64_R_INFO
-argument_list|(
-literal|0
-argument_list|,
-name|R_ALPHA_RELATIVE
-argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
-operator|=
-name|plt_addr
-expr_stmt|;
-name|bfd_elf64_swap_reloca_out
+name|elf64_alpha_emit_dynrel
 argument_list|(
 name|output_bfd
 argument_list|,
-operator|&
-name|outrel
+name|info
 argument_list|,
-operator|(
-operator|(
-name|Elf64_External_Rela
-operator|*
-operator|)
+name|sgot
+argument_list|,
 name|srel
+argument_list|,
+name|gotent
 operator|->
-name|contents
-operator|)
-operator|+
-name|srel
-operator|->
-name|reloc_count
-operator|++
+name|got_offset
+argument_list|,
+literal|0
+argument_list|,
+name|R_ALPHA_RELATIVE
+argument_list|,
+name|plt_addr
 argument_list|)
 expr_stmt|;
-name|BFD_ASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|Elf64_External_Rela
-argument_list|)
-operator|*
-name|srel
-operator|->
-name|reloc_count
-operator|<=
-name|srel
-operator|->
-name|_cooked_size
-argument_list|)
-expr_stmt|;
-block|}
 name|gotent
 operator|=
 name|gotent
@@ -21694,9 +21397,6 @@ comment|/* Fill in the dynamic relocations for this symbol's .got entries.  */
 name|asection
 modifier|*
 name|srel
-decl_stmt|;
-name|Elf_Internal_Rela
-name|outrel
 decl_stmt|;
 name|struct
 name|alpha_elf_got_entry
@@ -21749,7 +21449,7 @@ name|asection
 modifier|*
 name|sgot
 decl_stmt|;
-name|int
+name|long
 name|r_type
 decl_stmt|;
 if|if
@@ -21771,26 +21471,6 @@ name|gotobj
 argument_list|)
 operator|->
 name|got
-expr_stmt|;
-name|outrel
-operator|.
-name|r_offset
-operator|=
-operator|(
-name|sgot
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sgot
-operator|->
-name|output_offset
-operator|+
-name|gotent
-operator|->
-name|got_offset
-operator|)
 expr_stmt|;
 name|r_type
 operator|=
@@ -21843,48 +21523,29 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-name|outrel
-operator|.
-name|r_info
-operator|=
-name|ELF64_R_INFO
+name|elf64_alpha_emit_dynrel
 argument_list|(
+name|output_bfd
+argument_list|,
+name|info
+argument_list|,
+name|sgot
+argument_list|,
+name|srel
+argument_list|,
+name|gotent
+operator|->
+name|got_offset
+argument_list|,
 name|h
 operator|->
 name|dynindx
 argument_list|,
 name|r_type
-argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
-operator|=
+argument_list|,
 name|gotent
 operator|->
 name|addend
-expr_stmt|;
-name|bfd_elf64_swap_reloca_out
-argument_list|(
-name|output_bfd
-argument_list|,
-operator|&
-name|outrel
-argument_list|,
-operator|(
-operator|(
-name|Elf64_External_Rela
-operator|*
-operator|)
-name|srel
-operator|->
-name|contents
-operator|+
-name|srel
-operator|->
-name|reloc_count
-operator|++
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -21895,64 +21556,31 @@ name|reloc_type
 operator|==
 name|R_ALPHA_TLSGD
 condition|)
-block|{
-name|outrel
-operator|.
-name|r_offset
-operator|+=
-literal|8
-expr_stmt|;
-name|outrel
-operator|.
-name|r_info
-operator|=
-name|ELF64_R_INFO
+name|elf64_alpha_emit_dynrel
 argument_list|(
+name|output_bfd
+argument_list|,
+name|info
+argument_list|,
+name|sgot
+argument_list|,
+name|srel
+argument_list|,
+name|gotent
+operator|->
+name|got_offset
+operator|+
+literal|8
+argument_list|,
 name|h
 operator|->
 name|dynindx
 argument_list|,
 name|R_ALPHA_DTPREL64
-argument_list|)
-expr_stmt|;
-name|bfd_elf64_swap_reloca_out
-argument_list|(
-name|output_bfd
 argument_list|,
-operator|&
-name|outrel
-argument_list|,
-operator|(
-operator|(
-name|Elf64_External_Rela
-operator|*
-operator|)
-name|srel
+name|gotent
 operator|->
-name|contents
-operator|+
-name|srel
-operator|->
-name|reloc_count
-operator|++
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-name|BFD_ASSERT
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|Elf64_External_Rela
-argument_list|)
-operator|*
-name|srel
-operator|->
-name|reloc_count
-operator|<=
-name|srel
-operator|->
-name|_cooked_size
+name|addend
 argument_list|)
 expr_stmt|;
 block|}
@@ -22012,7 +21640,7 @@ operator|=
 name|SHN_ABS
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -22023,7 +21651,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_finish_dynamic_sections
 parameter_list|(
 name|output_bfd
@@ -22315,7 +21943,7 @@ name|dyncon
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Initialize the PLT0 entry */
+comment|/* Initialize the PLT0 entry.  */
 if|if
 condition|(
 name|splt
@@ -22419,12 +22047,12 @@ name|this_hdr
 operator|.
 name|sh_entsize
 operator|=
-name|PLT_HEADER_SIZE
+literal|0
 expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -22435,7 +22063,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|elf64_alpha_final_link
 parameter_list|(
 name|abfd
@@ -22729,7 +22357,7 @@ operator|)
 name|NULL
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -22960,7 +22588,7 @@ name|esym
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -23113,7 +22741,7 @@ name|input_debug
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -23142,7 +22770,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Loop through the external symbols.  For each one with 		 interesting information, try to find the symbol in 		 the linker global hash table and save the information 		 for the output external symbols.  */
 name|eraw_src
@@ -23264,11 +22892,11 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -23448,7 +23076,7 @@ name|einfo
 operator|.
 name|failed
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|elf_link_hash_traverse
 argument_list|(
@@ -23473,7 +23101,7 @@ operator|.
 name|failed
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Set the size of the .mdebug section.  */
 name|o
@@ -23512,7 +23140,7 @@ comment|/* Invoke the regular ELF backend linker to do all the work.  */
 if|if
 condition|(
 operator|!
-name|bfd_elf64_bfd_final_link
+name|bfd_elf_final_link
 argument_list|(
 name|abfd
 argument_list|,
@@ -23520,7 +23148,7 @@ name|info
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Now write out the computed sections.  */
 comment|/* The .got subsections...  */
@@ -23613,7 +23241,7 @@ name|_raw_size
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 block|}
@@ -23657,7 +23285,7 @@ name|filepos
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|bfd_ecoff_debug_free
 argument_list|(
@@ -23675,7 +23303,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -23735,6 +23363,64 @@ end_function
 
 begin_escape
 end_escape
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|bfd_elf_special_section
+specifier|const
+name|elf64_alpha_special_sections
+index|[]
+init|=
+block|{
+block|{
+literal|".sdata"
+block|,
+literal|6
+block|,
+operator|-
+literal|2
+block|,
+name|SHT_PROGBITS
+block|,
+name|SHF_ALLOC
+operator|+
+name|SHF_WRITE
+operator|+
+name|SHF_ALPHA_GPREL
+block|}
+block|,
+block|{
+literal|".sbss"
+block|,
+literal|5
+block|,
+operator|-
+literal|2
+block|,
+name|SHT_NOBITS
+block|,
+name|SHF_ALLOC
+operator|+
+name|SHF_WRITE
+operator|+
+name|SHF_ALPHA_GPREL
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ECOFF swapping routines.  These are used when dealing with the    .mdebug section, which is in the ECOFF debugging format.  Copied    from elf32-mips.c.  */
@@ -23912,7 +23598,7 @@ literal|1
 block|,
 literal|64
 block|,
-literal|8
+literal|3
 block|,
 name|ELFCLASS64
 block|,
@@ -23936,22 +23622,16 @@ name|bfd_elf64_swap_dyn_in
 block|,
 name|bfd_elf64_swap_dyn_out
 block|,
-name|NULL
+name|bfd_elf64_swap_reloc_in
 block|,
-name|NULL
+name|bfd_elf64_swap_reloc_out
 block|,
-name|NULL
+name|bfd_elf64_swap_reloca_in
 block|,
-name|NULL
+name|bfd_elf64_swap_reloca_out
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ELF_ARCH
-end_ifndef
 
 begin_define
 define|#
@@ -23987,15 +23667,6 @@ directive|define
 name|ELF_MAXPAGESIZE
 value|0x10000
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ELF_ARCH */
-end_comment
 
 begin_define
 define|#
@@ -24189,6 +23860,14 @@ define|\
 value|alpha_elf_size_info
 end_define
 
+begin_define
+define|#
+directive|define
+name|elf_backend_special_sections
+define|\
+value|elf64_alpha_special_sections
+end_define
+
 begin_comment
 comment|/* A few constants that determine how the .plt section is set up.  */
 end_comment
@@ -24221,11 +23900,158 @@ name|elf_backend_got_header_size
 value|0
 end_define
 
+begin_include
+include|#
+directive|include
+file|"elf64-target.h"
+end_include
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* FreeBSD support.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_LITTLE_SYM
+end_undef
+
 begin_define
 define|#
 directive|define
-name|elf_backend_plt_header_size
-value|PLT_HEADER_SIZE
+name|TARGET_LITTLE_SYM
+value|bfd_elf64_alpha_freebsd_vec
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_LITTLE_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_LITTLE_NAME
+value|"elf64-alpha-freebsd"
+end_define
+
+begin_comment
+comment|/* The kernel recognizes executables as valid only if they carry a    "FreeBSD" label in the ELF header.  So we put this label on all    executables and (for simplicity) also all other object files.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|elf64_alpha_fbsd_post_process_headers
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+expr|struct
+name|bfd_link_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|elf64_alpha_fbsd_post_process_headers
+parameter_list|(
+name|abfd
+parameter_list|,
+name|link_info
+parameter_list|)
+name|bfd
+modifier|*
+name|abfd
+decl_stmt|;
+name|struct
+name|bfd_link_info
+modifier|*
+name|link_info
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+name|Elf_Internal_Ehdr
+modifier|*
+name|i_ehdrp
+decl_stmt|;
+comment|/* ELF file header, internal form.  */
+name|i_ehdrp
+operator|=
+name|elf_elfheader
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
+comment|/* Put an ABI label supported by FreeBSD>= 4.1.  */
+name|i_ehdrp
+operator|->
+name|e_ident
+index|[
+name|EI_OSABI
+index|]
+operator|=
+name|ELFOSABI_FREEBSD
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OLD_FREEBSD_ABI_LABEL
+comment|/* The ABI label supported by FreeBSD<= 4.0 is quite nonstandard.  */
+name|memcpy
+argument_list|(
+operator|&
+name|i_ehdrp
+operator|->
+name|e_ident
+index|[
+name|EI_ABIVERSION
+index|]
+argument_list|,
+literal|"FreeBSD"
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_post_process_headers
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_post_process_headers
+define|\
+value|elf64_alpha_fbsd_post_process_headers
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf64_bed
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf64_bed
+value|elf64_alpha_fbsd_bed
 end_define
 
 begin_include

@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opcode/arc.h"
 end_include
 
@@ -294,6 +300,22 @@ name|ls_operand
 index|[
 name|OPERANDS
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|arc_opcode
+modifier|*
+name|arc_ext_opcodes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|arc_ext_operand_value
+modifier|*
+name|arc_ext_operands
 decl_stmt|;
 end_decl_stmt
 
@@ -3937,6 +3959,8 @@ return|return
 name|mach_type_map
 index|[
 name|bfd_mach
+operator|-
+name|bfd_mach_arc_5
 index|]
 operator||
 operator|(

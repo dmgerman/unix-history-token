@@ -21,34 +21,26 @@ begin_function
 name|int
 name|bignum_copy
 parameter_list|(
+specifier|register
+name|LITTLENUM_TYPE
+modifier|*
 name|in
 parameter_list|,
+specifier|register
+name|int
 name|in_length
 parameter_list|,
+comment|/* in sizeof(littlenum)s */
+specifier|register
+name|LITTLENUM_TYPE
+modifier|*
 name|out
 parameter_list|,
+specifier|register
+name|int
 name|out_length
+comment|/* in sizeof(littlenum)s */
 parameter_list|)
-specifier|register
-name|LITTLENUM_TYPE
-modifier|*
-name|in
-decl_stmt|;
-specifier|register
-name|int
-name|in_length
-decl_stmt|;
-comment|/* in sizeof(littlenum)s */
-specifier|register
-name|LITTLENUM_TYPE
-modifier|*
-name|out
-decl_stmt|;
-specifier|register
-name|int
-name|out_length
-decl_stmt|;
-comment|/* in sizeof(littlenum)s */
 block|{
 name|int
 name|significant_littlenums_dropped

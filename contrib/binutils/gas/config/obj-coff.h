@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2002    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* coff object file format    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -601,6 +601,30 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|TC_TIC4X
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"coff/tic4x.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"coff2-tic4x"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|TC_TIC54X
 end_ifdef
 
@@ -837,6 +861,31 @@ directive|define
 name|sy_obj
 value|sy_flags
 end_define
+
+begin_comment
+comment|/* We can't use the predefined section symbols in bfd/section.c, as    COFF symbols have extra fields.  See bfd/libcoff.h:coff_symbol_type.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|obj_sec_sym_ok_for_reloc
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|obj_sec_sym_ok_for_reloc
+parameter_list|(
+name|SEC
+parameter_list|)
+value|((SEC)->owner != 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2307,7 +2356,7 @@ comment|/* Symbol table macros and constants.  */
 end_comment
 
 begin_comment
-comment|/* Possible and usefull section number in symbol table    The values of TEXT, DATA and BSS may not be portable.  */
+comment|/* Possible and useful section number in symbol table    The values of TEXT, DATA and BSS may not be portable.  */
 end_comment
 
 begin_define
@@ -2353,7 +2402,7 @@ value|50
 end_define
 
 begin_comment
-comment|/* Macros to extract information from a symbol table entry.    This syntaxic indirection allows independence regarding a.out or coff.    The argument (s) of all these macros is a pointer to a symbol table entry.  */
+comment|/* Macros to extract information from a symbol table entry.    This syntactic indirection allows independence regarding a.out or coff.    The argument (s) of all these macros is a pointer to a symbol table entry.  */
 end_comment
 
 begin_comment
@@ -2371,6 +2420,7 @@ name|S_IS_EXTERNAL
 parameter_list|(
 name|s
 parameter_list|)
+define|\
 value|((s)->sy_symbol.ost_entry.n_scnum == C_UNDEF_SECTION)
 end_define
 
@@ -2390,6 +2440,23 @@ value|((s)->sy_symbol.ost_entry.n_scnum> C_UNDEF_SECTION \    || ((s)->sy_symbol
 end_define
 
 begin_comment
+comment|/* Return true for symbols that should not be reduced to section    symbols or eliminated from expressions, because they may be    overridden by the linker.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_FORCE_RELOC
+parameter_list|(
+name|s
+parameter_list|,
+name|strict
+parameter_list|)
+define|\
+value|(!SEG_NORMAL (S_GET_SEGMENT (s)) || (strict&& S_IS_WEAK (s)))
+end_define
+
+begin_comment
 comment|/* True if a debug special symbol entry.  */
 end_comment
 
@@ -2400,6 +2467,7 @@ name|S_IS_DEBUG
 parameter_list|(
 name|s
 parameter_list|)
+define|\
 value|((s)->sy_symbol.ost_entry.n_scnum == C_DEBUG_SECTION)
 end_define
 
@@ -2611,6 +2679,7 @@ name|s
 parameter_list|,
 name|v
 parameter_list|)
+define|\
 value|((s)->sy_symbol.ost_entry.n_offset = (unsigned long) (v))
 end_define
 
@@ -2627,6 +2696,7 @@ name|s
 parameter_list|,
 name|v
 parameter_list|)
+define|\
 value|((s)->sy_symbol.ost_entry.n_offset = (v))
 end_define
 
@@ -2643,6 +2713,7 @@ name|s
 parameter_list|,
 name|v
 parameter_list|)
+define|\
 value|((s)->sy_symbol.ost_entry.n_scnum = SEGMENT_TO_SYMBOL_TYPE(v))
 end_define
 
@@ -2659,6 +2730,7 @@ name|s
 parameter_list|,
 name|v
 parameter_list|)
+define|\
 value|((s)->sy_symbol.ost_entry.n_type = (v))
 end_define
 
@@ -2675,6 +2747,7 @@ name|s
 parameter_list|,
 name|v
 parameter_list|)
+define|\
 value|((s)->sy_symbol.ost_entry.n_sclass = (v))
 end_define
 
@@ -2691,6 +2764,7 @@ name|s
 parameter_list|,
 name|v
 parameter_list|)
+define|\
 value|((s)->sy_symbol.ost_entry.n_numaux = (v))
 end_define
 
@@ -2709,6 +2783,7 @@ name|S_SET_EXTERNAL
 parameter_list|(
 name|s
 parameter_list|)
+define|\
 value|{ S_SET_STORAGE_CLASS(s, C_EXT) ; SF_CLEAR_LOCAL(s); }
 end_define
 
@@ -4283,7 +4358,7 @@ value|((h)->filehdr.f_flags = (v))
 end_define
 
 begin_comment
-comment|/* Extra fields to achieve bsd a.out compatibility and for convinience.  */
+comment|/* Extra fields to achieve bsd a.out compatibility and for convenience.  */
 end_comment
 
 begin_define

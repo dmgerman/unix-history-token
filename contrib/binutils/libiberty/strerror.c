@@ -2420,6 +2420,20 @@ directive|ifndef
 name|HAVE_SYS_ERRLIST
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|sys_nerr
+value|sys_nerr__
+end_define
+
+begin_define
+define|#
+directive|define
+name|sys_errlist
+value|sys_errlist__
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int

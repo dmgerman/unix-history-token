@@ -156,7 +156,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|rs6000coff_core_file_matches_executable_p
 parameter_list|()
 function_decl|;
@@ -280,7 +280,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|lynx_core_file_matches_executable_p
 name|PARAMS
 argument_list|(
@@ -435,7 +435,7 @@ define|#
 directive|define
 name|_bfd_xcoff_construct_extended_name_table
 define|\
-value|((boolean (*) PARAMS ((bfd *, char **, bfd_size_type *, const char **))) \    bfd_false)
+value|((bfd_boolean (*) PARAMS ((bfd *, char **, bfd_size_type *, const char **))) \    bfd_false)
 end_define
 
 begin_define
@@ -469,7 +469,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_mkobject
 name|PARAMS
 argument_list|(
@@ -483,7 +483,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_copy_private_bfd_data
 name|PARAMS
 argument_list|(
@@ -500,7 +500,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_is_local_label_name
 name|PARAMS
 argument_list|(
@@ -553,7 +553,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_slurp_armap
 name|PARAMS
 argument_list|(
@@ -633,7 +633,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_write_armap
 name|PARAMS
 argument_list|(
@@ -659,7 +659,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|_bfd_xcoff_write_archive_contents
 name|PARAMS
 argument_list|(
@@ -681,7 +681,7 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|boolean
+name|bfd_boolean
 operator|)
 argument_list|)
 decl_stmt|;

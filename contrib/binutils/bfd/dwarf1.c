@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF 1 find nearest line (_bfd_dwarf1_find_nearest_line).    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  Written by Gavin Romig-Koch of Cygnus Solutions (gavin@cygnus.com).  This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* DWARF 1 find nearest line (_bfd_dwarf1_find_nearest_line).    Copyright 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  Written by Gavin Romig-Koch of Cygnus Solutions (gavin@cygnus.com).  This file is part of BFD.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -305,7 +305,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|parse_die
 name|PARAMS
 argument_list|(
@@ -329,7 +329,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|parse_line_table
 name|PARAMS
 argument_list|(
@@ -348,7 +348,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|parse_functions_in_unit
 name|PARAMS
 argument_list|(
@@ -367,7 +367,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|dwarf1_unit_find_nearest_line
 name|PARAMS
 argument_list|(
@@ -543,12 +543,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* parse_die - parse a Dwarf1 die.    Parse the die starting at 'aDiePtr' into 'aDieInfo'.    'abfd' must be the bfd from which the section that 'aDiePtr'    points to was pulled from.     Return false if the die is invalidly formatted; true otherwise.  */
+comment|/* parse_die - parse a Dwarf1 die.    Parse the die starting at 'aDiePtr' into 'aDieInfo'.    'abfd' must be the bfd from which the section that 'aDiePtr'    points to was pulled from.     Return FALSE if the die is invalidly formatted; TRUE otherwise.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|parse_die
 parameter_list|(
 name|abfd
@@ -641,7 +641,7 @@ operator|>=
 name|aDiePtrEnd
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -660,7 +660,7 @@ operator|=
 name|TAG_padding
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 comment|/* Then the tag.  */
@@ -922,18 +922,18 @@ break|break;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Parse a dwarf1 line number table for 'aUnit->stmt_list_offset'    into 'aUnit->linenumber_table'.  Return false if an error    occurs; true otherwise.  */
+comment|/* Parse a dwarf1 line number table for 'aUnit->stmt_list_offset'    into 'aUnit->linenumber_table'.  Return FALSE if an error    occurs; TRUE otherwise.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|parse_line_table
 parameter_list|(
 name|stash
@@ -989,7 +989,7 @@ operator|!
 name|msec
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|size
 operator|=
@@ -1023,7 +1023,7 @@ operator|->
 name|line_section
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -1056,7 +1056,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|stash
@@ -1272,18 +1272,18 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Parse each function die in a compilation unit 'aUnit'.    The first child die of 'aUnit' should be in 'aUnit->first_child',    the result is placed in 'aUnit->func_list'.    Return false if error; true otherwise.  */
+comment|/* Parse each function die in a compilation unit 'aUnit'.    The first child die of 'aUnit' should be in 'aUnit->first_child',    the result is placed in 'aUnit->func_list'.    Return FALSE if error; TRUE otherwise.  */
 end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|parse_functions_in_unit
 parameter_list|(
 name|stash
@@ -1351,7 +1351,7 @@ name|debug_section_end
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -1438,7 +1438,7 @@ else|else
 break|break;
 block|}
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -1449,7 +1449,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|dwarf1_unit_find_nearest_line
 parameter_list|(
 name|stash
@@ -1499,12 +1499,12 @@ block|{
 name|int
 name|line_p
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 name|int
 name|func_p
 init|=
-name|false
+name|FALSE
 decl_stmt|;
 if|if
 condition|(
@@ -1556,7 +1556,7 @@ name|aUnit
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 if|if
@@ -1578,7 +1578,7 @@ name|aUnit
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 for|for
@@ -1645,7 +1645,7 @@ name|linenumber
 expr_stmt|;
 name|line_p
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -1691,7 +1691,7 @@ name|name
 expr_stmt|;
 name|func_p
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 block|}
@@ -1707,11 +1707,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* The DWARF 1 version of find_nearest line.    Return true if the line is found without error.  */
+comment|/* The DWARF 1 version of find_nearest line.    Return TRUE if the line is found without error.  */
 end_comment
 
 begin_function
-name|boolean
+name|bfd_boolean
 name|_bfd_dwarf1_find_nearest_line
 parameter_list|(
 name|abfd
@@ -1858,7 +1858,7 @@ operator|!
 name|stash
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|msec
 operator|=
@@ -1877,7 +1877,7 @@ condition|)
 block|{
 comment|/* No dwarf1 info.  Note that at this point the stash 	     has been allocated, but contains zeros, this lets 	     future calls to this function fail quicker.  */
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|size
@@ -1910,7 +1910,7 @@ operator|->
 name|debug_section
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -1941,7 +1941,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|stash
@@ -1978,7 +1978,7 @@ operator|->
 name|debug_section
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Look at the previously parsed units to see if any contain      the addr.  */
 for|for
@@ -2066,7 +2066,7 @@ name|debug_section_end
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 if|if
 condition|(
@@ -2243,7 +2243,7 @@ name|length
 expr_stmt|;
 block|}
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 end_function

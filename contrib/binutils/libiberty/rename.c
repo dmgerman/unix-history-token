@@ -7,6 +7,12 @@ begin_comment
 comment|/*  @deftypefn Supplemental int rename (const char *@var{old}, const char *@var{new})  Renames a file from @var{old} to @var{new}.  If @var{new} already exists, it is removed.  @end deftypefn  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -55,10 +61,12 @@ name|zfrom
 parameter_list|,
 name|zto
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|zfrom
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|zto

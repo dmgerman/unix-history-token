@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Opcode table for the ARM.     Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Opcode table for the ARM.     Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2003    Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_struct
@@ -44,7 +44,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* format of the assembler string :        %%			%    %<bitfield>d		print the bitfield in decimal    %<bitfield>x		print the bitfield in hex    %<bitfield>X		print the bitfield as 1 hex digit without leading "0x"    %<bitfield>r		print as an ARM register    %<bitfield>f		print a floating point constant if>7 else a 			floating point register    %<code>y		print a single precision VFP reg. 			  Codes: 0=>Sm, 1=>Sd, 2=>Sn, 3=>multi-list, 4=>Sm pair    %<code>z		print a double precision VFP reg 			  Codes: 0=>Dm, 1=>Dd, 2=>Dn, 3=>multi-list    %c			print condition code (always bits 28-31)    %P			print floating point precision in arithmetic insn    %Q			print floating point precision in ldf/stf insn    %R			print floating point rounding mode    %<bitnum>'c		print specified char iff bit is one    %<bitnum>`c		print specified char iff bit is zero    %<bitnum>?ab		print a if bit is one else print b    %p			print 'p' iff bits 12-15 are 15    %t			print 't' iff bit 21 set and bit 24 clear    %o			print operand2 (immediate or register + shift)    %a			print address for ldr/str instruction    %s                   print address for ldr/str halfword/signextend instruction    %b			print branch destination    %B			print arm BLX(1) destination    %A			print address for ldc/stc/ldf/stf instruction    %m			print register mask for ldm/stm instruction    %C			print the PSR sub type.    %F			print the COUNT field of a LFM/SFM instruction. Thumb specific format options:    %D                   print Thumb register (bits 0..2 as high number if bit 7 set)    %S                   print Thumb register (bits 3..5 as high number if bit 6 set)    %<bitfield>I         print bitfield as a signed decimal    				(top bit of range being the sign bit)    %M                   print Thumb register mask    %N                   print Thumb register mask (with LR)    %O                   print Thumb register mask (with PC)    %T                   print Thumb condition code (always bits 8-11)    %I                   print cirrus signed shift immediate: bits 0..3|4..6    %<bitfield>B         print Thumb branch destination (signed displacement)    %<bitfield>W         print (bitfield * 4) as a decimal    %<bitfield>H         print (bitfield * 2) as a decimal    %<bitfield>a         print (bitfield * 4) as a pc-rel offset + decoded symbol */
+comment|/* format of the assembler string :        %%			%    %<bitfield>d		print the bitfield in decimal    %<bitfield>x		print the bitfield in hex    %<bitfield>X		print the bitfield as 1 hex digit without leading "0x"    %<bitfield>w         print the bitfield plus one in decimal     %<bitfield>r		print as an ARM register    %<bitfield>f		print a floating point constant if>7 else a 			floating point register    %<code>y		print a single precision VFP reg. 			  Codes: 0=>Sm, 1=>Sd, 2=>Sn, 3=>multi-list, 4=>Sm pair    %<code>z		print a double precision VFP reg 			  Codes: 0=>Dm, 1=>Dd, 2=>Dn, 3=>multi-list    %c			print condition code (always bits 28-31)    %P			print floating point precision in arithmetic insn    %Q			print floating point precision in ldf/stf insn    %R			print floating point rounding mode    %<bitnum>'c		print specified char iff bit is one    %<bitnum>`c		print specified char iff bit is zero    %<bitnum>?ab		print a if bit is one else print b    %p			print 'p' iff bits 12-15 are 15    %t			print 't' iff bit 21 set and bit 24 clear    %o			print operand2 (immediate or register + shift)    %a			print address for ldr/str instruction    %s                   print address for ldr/str halfword/signextend instruction    %b			print branch destination    %B			print arm BLX(1) destination    %A			print address for ldc/stc/ldf/stf instruction    %m			print register mask for ldm/stm instruction    %C			print the PSR sub type.    %F			print the COUNT field of a LFM/SFM instruction. IWMMXT specific format options:    %<bitfield>g         print as an iWMMXt 64-bit register    %<bitfield>G         print as an iWMMXt general purpose or control register    %<bitfield>w         print as an iWMMXt width field - [bhwd]ss/us    %Z			print the Immediate of a WSHUFH instruction.    %L			print as an iWMMXt N/M width field.    %l			like 'A' except use byte offsets for 'B'& 'H' versions Thumb specific format options:    %D                   print Thumb register (bits 0..2 as high number if bit 7 set)    %S                   print Thumb register (bits 3..5 as high number if bit 6 set)    %<bitfield>I         print bitfield as a signed decimal    				(top bit of range being the sign bit)    %M                   print Thumb register mask    %N                   print Thumb register mask (with LR)    %O                   print Thumb register mask (with PC)    %T                   print Thumb condition code (always bits 8-11)    %I                   print cirrus signed shift immediate: bits 0..3|4..6    %<bitfield>B         print Thumb branch destination (signed displacement)    %<bitfield>W         print (bitfield * 4) as a decimal    %<bitfield>H         print (bitfield * 2) as a decimal    %<bitfield>a         print (bitfield * 4) as a pc-rel offset + decoded symbol */
 end_comment
 
 begin_comment
@@ -53,6 +53,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|arm_opcode
 name|arm_opcodes
@@ -116,6 +117,999 @@ block|,
 literal|"%22?sumlal%c%20's\t%12-15r, %16-19r, %0-3r, %8-11r"
 block|}
 block|,
+comment|/* ARM V6 instructions. */
+block|{
+literal|0xfc500000
+block|,
+literal|0xfff00000
+block|,
+literal|"mrrc2\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
+block|}
+block|,
+block|{
+literal|0xfc400000
+block|,
+literal|0xfff00000
+block|,
+literal|"mcrr2\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
+block|}
+block|,
+block|{
+literal|0xf1080000
+block|,
+literal|0xfffdfe3f
+block|,
+literal|"cpsie\t%8'a%7'i%6'f"
+block|}
+block|,
+block|{
+literal|0xf1080000
+block|,
+literal|0xfffdfe20
+block|,
+literal|"cpsie\t%8'a%7'i%6'f,#%0-4d"
+block|}
+block|,
+block|{
+literal|0xf10C0000
+block|,
+literal|0xfffdfe3f
+block|,
+literal|"cpsid\t%8'a%7'i%6'f"
+block|}
+block|,
+block|{
+literal|0xf10C0000
+block|,
+literal|0xfffdfe20
+block|,
+literal|"cpsid\t%8'a%7'i%6'f,#%0-4d"
+block|}
+block|,
+block|{
+literal|0xf1000000
+block|,
+literal|0xfff1fe20
+block|,
+literal|"cps\t#%0-4d"
+block|}
+block|,
+block|{
+literal|0x06800010
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"pkhbt%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06800010
+block|,
+literal|0x0ff00070
+block|,
+literal|"pkhbt%c\t%12-15r, %16-19r, %0-3r, LSL #%7-11d"
+block|}
+block|,
+block|{
+literal|0x06800050
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"pkhtb%c\t%12-15r, %16-19r, %0-3r, ASR #32"
+block|}
+block|,
+block|{
+literal|0x06800050
+block|,
+literal|0x0ff00070
+block|,
+literal|"pkhtb%c\t%12-15r, %16-19r, %0-3r, ASR #%7-11d"
+block|}
+block|,
+block|{
+literal|0x01900f9f
+block|,
+literal|0x0ff00fff
+block|,
+literal|"ldrex%c\tr%12-15d, [%16-19r]"
+block|}
+block|,
+block|{
+literal|0x06200f10
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qadd16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06200f90
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qadd8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06200f30
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qaddsubx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06200f70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qsub16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06200ff0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qsub8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06200f50
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"qsubaddx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06100f10
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sadd16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06100f90
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sadd8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06100f30
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"saddaddx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06300f10
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"shadd16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06300f90
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"shadd8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06300f30
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"shaddsubx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06300f70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"shsub16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06300ff0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"shsub8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06300f50
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"shsubaddx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06100f70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"ssub16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06100ff0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"ssub8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06100f50
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"ssubaddx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06500f10
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uadd16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06500f90
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uadd8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06500f30
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uaddsubx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06700f10
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uhadd16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06700f90
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uhadd8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06700f30
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uhaddsubx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06700f70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uhsub16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06700ff0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uhsub8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06700f50
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uhsubaddx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06600f10
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uqadd16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06600f90
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uqadd8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06600f30
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uqaddsubx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06600f70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uqsub16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06600ff0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uqsub8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06600f50
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uqsubaddx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06500f70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"usub16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06500ff0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"usub8%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06500f50
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"usubaddx%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06bf0f30
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"rev%c\t\%12-15r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06bf0fb0
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"rev16%c\t\%12-15r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06ff0fb0
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"revsh%c\t\%12-15r, %0-3r"
+block|}
+block|,
+block|{
+literal|0xf8100a00
+block|,
+literal|0xfe50ffff
+block|,
+literal|"rfe%23?id%24?ba\t\%16-19r%21'!"
+block|}
+block|,
+block|{
+literal|0x06bf0070
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxth%c %12-15r,%0-3r"
+block|}
+block|,
+block|{
+literal|0x06bf0470
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxth%c %12-15r,%0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06bf0870
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxth%c %12-15r,%0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06bf0c70
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxth%c %12-15r,%0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x068f0070
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxtb16%c %12-15r,%0-3r"
+block|}
+block|,
+block|{
+literal|0x068f0470
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxtb16%c %12-15r,%0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x068f0870
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxtb16%c %12-15r,%0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x068f0c70
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxtb16%c %12-15r,%0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06af0070
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxtb%c %12-15r,%0-3r"
+block|}
+block|,
+block|{
+literal|0x06af0470
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxtb%c %12-15r,%0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06af0870
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxtb%c %12-15r,%0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06af0c70
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"sxtb%c %12-15r,%0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06ff0070
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxth%c %12-15r,%0-3r"
+block|}
+block|,
+block|{
+literal|0x06ff0470
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxth%c %12-15r,%0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06ff0870
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxth%c %12-15r,%0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06ff0c70
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxth%c %12-15r,%0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06cf0070
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxtb16%c %12-15r,%0-3r"
+block|}
+block|,
+block|{
+literal|0x06cf0470
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxtb16%c %12-15r,%0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06cf0870
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxtb16%c %12-15r,%0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06cf0c70
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxtb16%c %12-15r,%0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06ef0070
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxtb%c %12-15r,%0-3r"
+block|}
+block|,
+block|{
+literal|0x06ef0470
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxtb%c %12-15r,%0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06ef0870
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxtb%c %12-15r,%0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06ef0c70
+block|,
+literal|0x0fff0ff0
+block|,
+literal|"uxtb%c %12-15r,%0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06b00070
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtah%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06b00470
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06b00870
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06b00c70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06800070
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06800470
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06800870
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06800c70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06a00070
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtab%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06a00470
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06a00870
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06a00c70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06f00070
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtah%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06f00470
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06f00870
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06f00c70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06c00070
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtab16%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06c00470
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06c00870
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06c00c70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x06e00070
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtab%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06e00470
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+block|}
+block|,
+block|{
+literal|0x06e00870
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+block|}
+block|,
+block|{
+literal|0x06e00c70
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+block|}
+block|,
+block|{
+literal|0x068000b0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"sel%c\t%12-15r, %16-19r, %0-3r"
+block|}
+block|,
+block|{
+literal|0xf1010000
+block|,
+literal|0xfffffc00
+block|,
+literal|"setend\t%9?ble"
+block|}
+block|,
+block|{
+literal|0x0700f010
+block|,
+literal|0x0ff0f0d0
+block|,
+literal|"smuad%5'x%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x0700f050
+block|,
+literal|0x0ff0f0d0
+block|,
+literal|"smusd%5'x%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x07000010
+block|,
+literal|0x0ff000d0
+block|,
+literal|"smlad%5'x%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x07400010
+block|,
+literal|0x0ff000d0
+block|,
+literal|"smlald%5'x%c\t%12-15r, %16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x07000050
+block|,
+literal|0x0ff000d0
+block|,
+literal|"smlsd%5'x%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x07400050
+block|,
+literal|0x0ff000d0
+block|,
+literal|"smlsld%5'x%c\t%12-15r, %16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x0750f010
+block|,
+literal|0x0ff0f0d0
+block|,
+literal|"smmul%5'r%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x07500010
+block|,
+literal|0x0ff000d0
+block|,
+literal|"smmla%5'r%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x075000d0
+block|,
+literal|0x0ff000d0
+block|,
+literal|"smmls%5'r%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0xf84d0500
+block|,
+literal|0xfe5fffe0
+block|,
+literal|"srs%23?id%24?ba\t#%0-4d%21'!"
+block|}
+block|,
+block|{
+literal|0x06a00010
+block|,
+literal|0x0fe00ff0
+block|,
+literal|"ssat%c\t%12-15r, #%16-20W, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06a00010
+block|,
+literal|0x0fe00070
+block|,
+literal|"ssat%c\t%12-15r, #%16-20W, %0-3r, LSL #%7-11d"
+block|}
+block|,
+block|{
+literal|0x06a00050
+block|,
+literal|0x0fe00070
+block|,
+literal|"ssat%c\t%12-15r, #%16-20W, %0-3r, ASR #%7-11d"
+block|}
+block|,
+block|{
+literal|0x06a00f30
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"ssat16%c\t%12-15r, #%16-19W, %0-3r"
+block|}
+block|,
+block|{
+literal|0x01800f90
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"strex%c\t%12-15r, %0-3r, [%16-19r]"
+block|}
+block|,
+block|{
+literal|0x00400090
+block|,
+literal|0x0ff000f0
+block|,
+literal|"umaal%c\t%12-15r, %16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x0780f010
+block|,
+literal|0x0ff0f0f0
+block|,
+literal|"usad8%c\t%16-19r, %0-3r, %8-11r"
+block|}
+block|,
+block|{
+literal|0x07800010
+block|,
+literal|0x0ff000f0
+block|,
+literal|"usada8%c\t%16-19r, %0-3r, %8-11r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x06e00010
+block|,
+literal|0x0fe00ff0
+block|,
+literal|"usat%c\t%12-15r, #%16-20d, %0-3r"
+block|}
+block|,
+block|{
+literal|0x06e00010
+block|,
+literal|0x0fe00070
+block|,
+literal|"usat%c\t%12-15r, #%16-20d, %0-3r, LSL #%7-11d"
+block|}
+block|,
+block|{
+literal|0x06e00050
+block|,
+literal|0x0fe00070
+block|,
+literal|"usat%c\t%12-15r, #%16-20d, %0-3r, ASR #%7-11d"
+block|}
+block|,
+block|{
+literal|0x06e00f30
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"usat16%c\t%12-15r, #%16-19d, %0-3r"
+block|}
+block|,
 comment|/* V5J instruction.  */
 block|{
 literal|0x012fff20
@@ -172,6 +1166,407 @@ block|,
 literal|0xfc70f000
 block|,
 literal|"pld\t%a"
+block|}
+block|,
+comment|/* Intel Wireless MMX technology instructions.  */
+define|#
+directive|define
+name|FIRST_IWMMXT_INSN
+value|0x0e130130
+define|#
+directive|define
+name|IWMMXT_INSN_COUNT
+value|47
+block|{
+literal|0x0e130130
+block|,
+literal|0x0f3f0fff
+block|,
+literal|"tandc%22-23w%c\t%12-15r"
+block|}
+block|,
+block|{
+literal|0x0e400010
+block|,
+literal|0x0ff00f3f
+block|,
+literal|"tbcst%6-7w%c\t%16-19g, %12-15r"
+block|}
+block|,
+block|{
+literal|0x0e130170
+block|,
+literal|0x0f3f0ff8
+block|,
+literal|"textrc%22-23w%c\t%12-15r, #%0-2d"
+block|}
+block|,
+block|{
+literal|0x0e100070
+block|,
+literal|0x0f300ff0
+block|,
+literal|"textrm%3?su%22-23w%c\t%12-15r, %16-19g, #%0-2d"
+block|}
+block|,
+block|{
+literal|0x0e600010
+block|,
+literal|0x0ff00f38
+block|,
+literal|"tinsr%6-7w%c\t%16-19g, %12-15r, #%0-2d"
+block|}
+block|,
+block|{
+literal|0x0e000110
+block|,
+literal|0x0ff00fff
+block|,
+literal|"tmcr%c\t%16-19G, %12-15r"
+block|}
+block|,
+block|{
+literal|0x0c400000
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"tmcrr%c\t%0-3g, %12-15r, %16-19r"
+block|}
+block|,
+block|{
+literal|0x0e2c0010
+block|,
+literal|0x0ffc0e10
+block|,
+literal|"tmia%17?tb%16?tb%c\t%5-8g, %0-3r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x0e200010
+block|,
+literal|0x0fff0e10
+block|,
+literal|"tmia%c\t%5-8g, %0-3r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x0e280010
+block|,
+literal|0x0fff0e10
+block|,
+literal|"tmiaph%c\t%5-8g, %0-3r, %12-15r"
+block|}
+block|,
+block|{
+literal|0x0e100030
+block|,
+literal|0x0f300fff
+block|,
+literal|"tmovmsk%22-23w%c\t%12-15r, %16-19g"
+block|}
+block|,
+block|{
+literal|0x0e100110
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"tmrc%c\t%12-15r, %16-19G"
+block|}
+block|,
+block|{
+literal|0x0c500000
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"tmrrc%c\t%12-15r, %16-19r, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e130150
+block|,
+literal|0x0f3f0fff
+block|,
+literal|"torc%22-23w%c\t%12-15r"
+block|}
+block|,
+block|{
+literal|0x0e0001c0
+block|,
+literal|0x0f300fff
+block|,
+literal|"wacc%22-23w%c\t%12-15g, %16-19g"
+block|}
+block|,
+block|{
+literal|0x0e000180
+block|,
+literal|0x0f000ff0
+block|,
+literal|"wadd%20-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e000020
+block|,
+literal|0x0f800ff0
+block|,
+literal|"waligni%c\t%12-15g, %16-19g, %0-3g, #%20-22d"
+block|}
+block|,
+block|{
+literal|0x0e800020
+block|,
+literal|0x0fc00ff0
+block|,
+literal|"walignr%20-21d%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e200000
+block|,
+literal|0x0fe00ff0
+block|,
+literal|"wand%20'n%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e800000
+block|,
+literal|0x0fa00ff0
+block|,
+literal|"wavg2%22?hb%20'r%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e000060
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wcmpeq%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e100060
+block|,
+literal|0x0f100ff0
+block|,
+literal|"wcmpgt%21?su%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0xfc100100
+block|,
+literal|0xfe500f00
+block|,
+literal|"wldrw\t%12-15G, %A"
+block|}
+block|,
+block|{
+literal|0x0c100000
+block|,
+literal|0x0e100e00
+block|,
+literal|"wldr%L%c\t%12-15g, %l"
+block|}
+block|,
+block|{
+literal|0x0e400100
+block|,
+literal|0x0fc00ff0
+block|,
+literal|"wmac%21?su%20'z%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e800100
+block|,
+literal|0x0fd00ff0
+block|,
+literal|"wmadd%21?su%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e000160
+block|,
+literal|0x0f100ff0
+block|,
+literal|"wmax%21?su%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e100160
+block|,
+literal|0x0f100ff0
+block|,
+literal|"wmin%21?su%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e000100
+block|,
+literal|0x0fc00ff0
+block|,
+literal|"wmul%21?su%20?ml%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e000000
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"wor%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e000080
+block|,
+literal|0x0f000ff0
+block|,
+literal|"wpack%20-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e300040
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wror%22-23w%8'g%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e300148
+block|,
+literal|0x0f300ffc
+block|,
+literal|"wror%22-23w%8'g%c\t%12-15g, %16-19g, %0-3G"
+block|}
+block|,
+block|{
+literal|0x0e000120
+block|,
+literal|0x0fa00ff0
+block|,
+literal|"wsad%22?hb%20'z%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e0001e0
+block|,
+literal|0x0f000ff0
+block|,
+literal|"wshufh%c\t%12-15g, %16-19g, #%Z"
+block|}
+block|,
+block|{
+literal|0x0e100040
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wsll%22-23w%8'g%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e100148
+block|,
+literal|0x0f300ffc
+block|,
+literal|"wsll%22-23w%8'g%c\t%12-15g, %16-19g, %0-3G"
+block|}
+block|,
+block|{
+literal|0x0e000040
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wsra%22-23w%8'g%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e000148
+block|,
+literal|0x0f300ffc
+block|,
+literal|"wsra%22-23w%8'g%c\t%12-15g, %16-19g, %0-3G"
+block|}
+block|,
+block|{
+literal|0x0e200040
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wsrl%22-23w%8'g%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e200148
+block|,
+literal|0x0f300ffc
+block|,
+literal|"wsrl%22-23w%8'g%c\t%12-15g, %16-19g, %0-3G"
+block|}
+block|,
+block|{
+literal|0xfc000100
+block|,
+literal|0xfe500f00
+block|,
+literal|"wstrw\t%12-15G, %A"
+block|}
+block|,
+block|{
+literal|0x0c000000
+block|,
+literal|0x0e100e00
+block|,
+literal|"wstr%L%c\t%12-15g, %l"
+block|}
+block|,
+block|{
+literal|0x0e0001a0
+block|,
+literal|0x0f000ff0
+block|,
+literal|"wsub%20-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e0000c0
+block|,
+literal|0x0f100fff
+block|,
+literal|"wunpckeh%21?su%22-23w%c\t%12-15g, %16-19g"
+block|}
+block|,
+block|{
+literal|0x0e0000e0
+block|,
+literal|0x0f100fff
+block|,
+literal|"wunpckel%21?su%22-23w%c\t%12-15g, %16-19g"
+block|}
+block|,
+block|{
+literal|0x0e1000c0
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wunpckih%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e1000e0
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wunpckil%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+literal|0x0e100000
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"wxor%c\t%12-15g, %16-19g, %0-3g"
 block|}
 block|,
 comment|/* V5 Instructions.  */
@@ -422,22 +1817,6 @@ block|,
 literal|0x0ff00ff0
 block|,
 literal|"qdsub%c\t%12-15r, %0-3r, %16-19r"
-block|}
-block|,
-block|{
-literal|0x0c400000
-block|,
-literal|0x0ff00000
-block|,
-literal|"mcrr%c\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
-block|}
-block|,
-block|{
-literal|0x0c500000
-block|,
-literal|0x0ff00000
-block|,
-literal|"mrrc%c\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
 block|}
 block|,
 comment|/* ARM Instructions.  */
@@ -1813,99 +3192,99 @@ literal|"cfmvr64h%c\t%12-15r, mvdx%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e100610
+literal|0x0e200440
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmval32%c\tmvax%0-3d, mvfx%16-19d"
+literal|"cfmval32%c\tmvax%12-15d, mvfx%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e000610
+literal|0x0e100440
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmv32al%c\tmvfx%0-3d, mvax%16-19d"
+literal|"cfmv32al%c\tmvfx%12-15d, mvax%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e100630
+literal|0x0e200460
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmvam32%c\tmvax%0-3d, mvfx%16-19d"
+literal|"cfmvam32%c\tmvax%12-15d, mvfx%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e000630
+literal|0x0e100460
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmv32am%c\tmvfx%0-3d, mvax%16-19d"
+literal|"cfmv32am%c\tmvfx%12-15d, mvax%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e100650
+literal|0x0e200480
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmvah32%c\tmvax%0-3d, mvfx%16-19d"
+literal|"cfmvah32%c\tmvax%12-15d, mvfx%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e000650
+literal|0x0e100480
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmv32ah%c\tmvfx%0-3d, mvax%16-19d"
+literal|"cfmv32ah%c\tmvfx%12-15d, mvax%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e000670
+literal|0x0e2004a0
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmv32a%c\tmvfx%0-3d, mvax%16-19d"
+literal|"cfmva32%c\tmvax%12-15d, mvfx%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e100670
+literal|0x0e1004a0
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmva32%c\tmvax%0-3d, mvfx%16-19d"
+literal|"cfmv32a%c\tmvfx%12-15d, mvax%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e000690
+literal|0x0e2004c0
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmv64a%c\tmvdx%0-3d, mvax%16-19d"
+literal|"cfmva64%c\tmvax%12-15d, mvdx%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e100690
+literal|0x0e1004c0
 block|,
-literal|0x0ff0fff0
+literal|0x0ff00fff
 block|,
-literal|"cfmva64%c\tmvax%0-3d, mvdx%16-19d"
+literal|"cfmv64a%c\tmvdx%12-15d, mvax%16-19d"
 block|}
 block|,
 block|{
-literal|0x0e1006b0
+literal|0x0e2004e0
 block|,
-literal|0x0ff0fff0
+literal|0x0fff0fff
 block|,
-literal|"cfmvsc32%c\tdspsc, mvfx%16-19d"
+literal|"cfmvsc32%c\tdspsc, mvdx%12-15d"
 block|}
 block|,
 block|{
-literal|0x0e0006b0
+literal|0x0e1004e0
 block|,
-literal|0x0ff0fff0
+literal|0x0fff0fff
 block|,
-literal|"cfmv32sc%c\tmvfx%0-3d, dspsc"
+literal|"cfmv32sc%c\tmvdx%12-15d, dspsc"
 block|}
 block|,
 block|{
@@ -2278,6 +3657,22 @@ block|}
 block|,
 comment|/* Generic coprocessor instructions */
 block|{
+literal|0x0c400000
+block|,
+literal|0x0ff00000
+block|,
+literal|"mcrr%c\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
+block|}
+block|,
+block|{
+literal|0x0c500000
+block|,
+literal|0x0ff00000
+block|,
+literal|"mrrc%c\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
+block|}
+block|,
+block|{
 literal|0x0e000000
 block|,
 literal|0x0f000010
@@ -2353,6 +3748,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|thumb_opcode
 name|thumb_opcodes
@@ -2360,6 +3756,95 @@ index|[]
 init|=
 block|{
 comment|/* Thumb instructions.  */
+comment|/* ARM V6.  */
+block|{
+literal|0xb660
+block|,
+literal|0xfff8
+block|,
+literal|"cpsie\t%2'a%1'i%0'f"
+block|}
+block|,
+block|{
+literal|0xb670
+block|,
+literal|0xfff8
+block|,
+literal|"cpsid\t%2'a%1'i%0'f"
+block|}
+block|,
+block|{
+literal|0x4600
+block|,
+literal|0xffc0
+block|,
+literal|"cpy\t%0-2r, %3-5r"
+block|}
+block|,
+block|{
+literal|0xba00
+block|,
+literal|0xffc0
+block|,
+literal|"rev\t%0-2r, %3-5r"
+block|}
+block|,
+block|{
+literal|0xba40
+block|,
+literal|0xffc0
+block|,
+literal|"rev16\t%0-2r, %3-5r"
+block|}
+block|,
+block|{
+literal|0xbac0
+block|,
+literal|0xffc0
+block|,
+literal|"revsh\t%0-2r, %3-5r"
+block|}
+block|,
+block|{
+literal|0xb650
+block|,
+literal|0xfff7
+block|,
+literal|"setend\t%3?ble\t"
+block|}
+block|,
+block|{
+literal|0xb200
+block|,
+literal|0xffc0
+block|,
+literal|"sxth\t%0-2r, %3-5r"
+block|}
+block|,
+block|{
+literal|0xb240
+block|,
+literal|0xffc0
+block|,
+literal|"sxtb\t%0-2r, %3-5r"
+block|}
+block|,
+block|{
+literal|0xb280
+block|,
+literal|0xffc0
+block|,
+literal|"uxth\t%0-2r, %3-5r"
+block|}
+block|,
+block|{
+literal|0xb2c0
+block|,
+literal|0xffc0
+block|,
+literal|"uxtb\t%0-2r, %3-5r"
+block|}
+block|,
 comment|/* ARM V5 ISA extends Thumb.  */
 block|{
 literal|0xbe00

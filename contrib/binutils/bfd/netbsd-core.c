@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back end for NetBSD style core files    Copyright 1988, 1989, 1991, 1992, 1993, 1996, 1998, 1999, 2000, 2001,    2002    Free Software Foundation, Inc.    Written by Paul Kranenburg, EUR  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back end for NetBSD style core files    Copyright 1988, 1989, 1991, 1992, 1993, 1996, 1998, 1999, 2000, 2001,    2002, 2003, 2004    Free Software Foundation, Inc.    Written by Paul Kranenburg, EUR  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -58,6 +58,17 @@ end_include
 begin_comment
 comment|/*  * FIXME: On NetBSD/sparc CORE_FPU_OFFSET should be (sizeof (struct trapframe))  */
 end_comment
+
+begin_comment
+comment|/* Offset of StackGhost cookie within `struct md_coredump' on    OpenBSD/sparc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CORE_WCOOKIE_OFFSET
+value|344
+end_define
 
 begin_struct
 struct|struct
@@ -127,7 +138,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|netbsd_core_file_matches_executable_p
 name|PARAMS
 argument_list|(
@@ -159,10 +170,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Handle NetBSD-style core dump file.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -533,6 +540,90 @@ name|alignment_power
 operator|=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|CORE_GETMID
+argument_list|(
+name|core
+argument_list|)
+operator|==
+name|M_SPARC_NETBSD
+operator|&&
+name|CORE_GETFLAG
+argument_list|(
+name|coreseg
+argument_list|)
+operator|==
+name|CORE_CPU
+operator|&&
+name|coreseg
+operator|.
+name|c_size
+operator|>
+name|CORE_WCOOKIE_OFFSET
+condition|)
+block|{
+comment|/* Truncate the .reg section.  */
+name|asect
+operator|->
+name|_raw_size
+operator|=
+name|CORE_WCOOKIE_OFFSET
+expr_stmt|;
+comment|/* And create the .wcookie section.  */
+name|asect
+operator|=
+name|bfd_make_section_anyway
+argument_list|(
+name|abfd
+argument_list|,
+literal|".wcookie"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|asect
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|punt
+goto|;
+name|asect
+operator|->
+name|flags
+operator|=
+name|SEC_ALLOC
+operator|+
+name|SEC_HAS_CONTENTS
+expr_stmt|;
+name|asect
+operator|->
+name|_raw_size
+operator|=
+literal|4
+expr_stmt|;
+name|asect
+operator|->
+name|vma
+operator|=
+literal|0
+expr_stmt|;
+name|asect
+operator|->
+name|filepos
+operator|=
+name|offset
+operator|+
+name|CORE_WCOOKIE_OFFSET
+expr_stmt|;
+name|asect
+operator|->
+name|alignment_power
+operator|=
+literal|2
+expr_stmt|;
+block|}
 name|offset
 operator|+=
 name|coreseg
@@ -689,10 +780,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -720,13 +807,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|netbsd_core_file_matches_executable_p
 parameter_list|(
 name|core_bfd
@@ -745,7 +828,7 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 return|return
-name|true
+name|TRUE
 return|;
 comment|/* FIXME, We have no way of telling at this point */
 block|}
@@ -775,22 +858,42 @@ begin_define
 define|#
 directive|define
 name|NO_GET
-value|((bfd_vma (*) PARAMS ((   const bfd_byte *))) swap_abort )
+value|((bfd_vma (*) (const void *)) swap_abort)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NO_PUT
-value|((void    (*) PARAMS ((bfd_vma, bfd_byte *))) swap_abort )
+value|((void (*) (bfd_vma, void *)) swap_abort)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NO_SIGNED_GET
-define|\
-value|((bfd_signed_vma (*) PARAMS ((const bfd_byte *))) swap_abort )
+name|NO_GETS
+value|((bfd_signed_vma (*) (const void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_GET64
+value|((bfd_uint64_t (*) (const void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_PUT64
+value|((void (*) (bfd_uint64_t, void *)) swap_abort)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NO_GETS64
+value|((bfd_int64_t (*) (const void *)) swap_abort)
 end_define
 
 begin_decl_stmt
@@ -848,48 +951,48 @@ comment|/* ar_pad_char */
 literal|16
 block|,
 comment|/* ar_max_namelen */
+name|NO_GET64
+block|,
+name|NO_GETS64
+block|,
+name|NO_PUT64
+block|,
+comment|/* 64 bit data.  */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
-comment|/* 64 bit data */
+comment|/* 32 bit data.  */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
-comment|/* 32 bit data */
+comment|/* 16 bit data.  */
+name|NO_GET64
+block|,
+name|NO_GETS64
+block|,
+name|NO_PUT64
+block|,
+comment|/* 64 bit hdrs.  */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
-comment|/* 16 bit data */
+comment|/* 32 bit hdrs.  */
 name|NO_GET
 block|,
-name|NO_SIGNED_GET
+name|NO_GETS
 block|,
 name|NO_PUT
 block|,
-comment|/* 64 bit hdrs */
-name|NO_GET
-block|,
-name|NO_SIGNED_GET
-block|,
-name|NO_PUT
-block|,
-comment|/* 32 bit hdrs */
-name|NO_GET
-block|,
-name|NO_SIGNED_GET
-block|,
-name|NO_PUT
-block|,
-comment|/* 16 bit hdrs */
+comment|/* 16 bit hdrs.  */
 block|{
 comment|/* bfd_check_format */
 name|_bfd_dummy_target

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for ALPHA Extended-Coff files.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Modified from coff-mips.c by Steve Chamberlain<sac@cygnus.com> and    Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for ALPHA Extended-Coff files.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Modified from coff-mips.c by Steve Chamberlain<sac@cygnus.com> and    Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -100,7 +100,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|alpha_ecoff_bad_format_hook
 name|PARAMS
 argument_list|(
@@ -262,8 +262,8 @@ name|bfd_byte
 operator|*
 name|data
 operator|,
-name|boolean
-name|relocateable
+name|bfd_boolean
+name|relocatable
 operator|,
 name|asymbol
 operator|*
@@ -305,7 +305,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|alpha_relocate_section
 name|PARAMS
 argument_list|(
@@ -334,7 +334,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bfd_boolean
 name|alpha_adjust_headers
 name|PARAMS
 argument_list|(
@@ -830,7 +830,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|8
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -845,7 +845,7 @@ comment|/* special_function */
 literal|"IGNORE"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -854,7 +854,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -873,7 +873,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -888,7 +888,7 @@ comment|/* special_function */
 literal|"REFLONG"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -897,7 +897,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -916,7 +916,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|64
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -931,7 +931,7 @@ comment|/* special_function */
 literal|"REFQUAD"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 name|MINUS_ONE
@@ -940,7 +940,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -959,7 +959,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -974,7 +974,7 @@ comment|/* special_function */
 literal|"GPREL32"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -983,7 +983,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1002,7 +1002,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1017,7 +1017,7 @@ comment|/* special_function */
 literal|"LITERAL"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -1026,7 +1026,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1045,7 +1045,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1060,7 +1060,7 @@ comment|/* special_function */
 literal|"LITUSE"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -1069,7 +1069,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1088,7 +1088,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1103,7 +1103,7 @@ comment|/* special_function */
 literal|"GPDISP"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -1112,7 +1112,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|true
+name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1131,7 +1131,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|21
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1146,7 +1146,7 @@ comment|/* special_function */
 literal|"BRADDR"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x1fffff
@@ -1155,7 +1155,7 @@ comment|/* src_mask */
 literal|0x1fffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1174,7 +1174,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|14
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1189,7 +1189,7 @@ comment|/* special_function */
 literal|"HINT"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0x3fff
@@ -1198,7 +1198,7 @@ comment|/* src_mask */
 literal|0x3fff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1217,7 +1217,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|16
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1232,7 +1232,7 @@ comment|/* special_function */
 literal|"SREL16"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffff
@@ -1241,7 +1241,7 @@ comment|/* src_mask */
 literal|0xffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1260,7 +1260,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|32
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1275,7 +1275,7 @@ comment|/* special_function */
 literal|"SREL32"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 literal|0xffffffff
@@ -1284,7 +1284,7 @@ comment|/* src_mask */
 literal|0xffffffff
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1303,7 +1303,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|64
 argument_list|,
 comment|/* bitsize */
-name|true
+name|TRUE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1318,7 +1318,7 @@ comment|/* special_function */
 literal|"SREL64"
 argument_list|,
 comment|/* name */
-name|true
+name|TRUE
 argument_list|,
 comment|/* partial_inplace */
 name|MINUS_ONE
@@ -1327,7 +1327,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1346,7 +1346,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1361,7 +1361,7 @@ comment|/* special_function */
 literal|"OP_PUSH"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -1370,7 +1370,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1389,7 +1389,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|64
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1404,7 +1404,7 @@ comment|/* special_function */
 literal|"OP_STORE"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -1413,7 +1413,7 @@ comment|/* src_mask */
 name|MINUS_ONE
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1432,7 +1432,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1447,7 +1447,7 @@ comment|/* special_function */
 literal|"OP_PSUB"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -1456,7 +1456,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1475,7 +1475,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-name|false
+name|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1490,7 +1490,7 @@ comment|/* special_function */
 literal|"OP_PRSHIFT"
 argument_list|,
 comment|/* name */
-name|false
+name|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -1499,7 +1499,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-name|false
+name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
@@ -1518,7 +1518,7 @@ comment|/* size (0 = byte, 1 = short, 2 = long) */
 literal|0
 argument_list|,
 comment|/* bitsize */
-argument|false
+argument|FALSE
 argument_list|,
 comment|/* pc_relative */
 literal|0
@@ -1533,7 +1533,7 @@ comment|/* special_function */
 literal|"GPVALUE"
 argument_list|,
 comment|/* name */
-argument|false
+argument|FALSE
 argument_list|,
 comment|/* partial_inplace */
 literal|0
@@ -1542,7 +1542,7 @@ comment|/* src_mask */
 literal|0
 argument_list|,
 comment|/* dst_mask */
-argument|false
+argument|FALSE
 argument_list|)
 comment|/* pcrel_offset */
 block|}
@@ -1678,7 +1678,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|alpha_ecoff_bad_format_hook
 parameter_list|(
 name|abfd
@@ -1715,10 +1715,10 @@ name|internal_f
 argument_list|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -2726,7 +2726,7 @@ name|link_order
 parameter_list|,
 name|data
 parameter_list|,
-name|relocateable
+name|relocatable
 parameter_list|,
 name|symbols
 parameter_list|)
@@ -2748,8 +2748,8 @@ name|bfd_byte
 modifier|*
 name|data
 decl_stmt|;
-name|boolean
-name|relocateable
+name|bfd_boolean
+name|relocatable
 decl_stmt|;
 name|asymbol
 modifier|*
@@ -2807,7 +2807,7 @@ name|bfd
 modifier|*
 name|output_bfd
 init|=
-name|relocateable
+name|relocatable
 condition|?
 name|abfd
 else|:
@@ -2820,7 +2820,7 @@ decl_stmt|;
 name|bfd_vma
 name|gp
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|gp_undefined
 decl_stmt|;
 name|bfd_vma
@@ -2908,7 +2908,7 @@ name|input_section
 operator|->
 name|reloc_done
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|reloc_count
 operator|=
@@ -2944,7 +2944,7 @@ goto|;
 comment|/* Get the GP value for the output BFD.  */
 name|gp_undefined
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|gp
 operator|=
@@ -2962,7 +2962,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|asection
@@ -3103,11 +3103,11 @@ name|hash
 argument_list|,
 literal|"_gp"
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|false
+name|FALSE
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3129,7 +3129,7 @@ name|bfd_link_hash_defined
 condition|)
 name|gp_undefined
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 else|else
 block|{
@@ -3257,7 +3257,7 @@ name|ALPHA_R_SREL64
 case|:
 if|if
 condition|(
-name|relocateable
+name|relocatable
 operator|&&
 operator|(
 operator|(
@@ -3742,7 +3742,7 @@ name|relocation
 decl_stmt|;
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|rel
@@ -3854,7 +3854,7 @@ name|size
 decl_stmt|;
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|rel
@@ -3978,7 +3978,7 @@ name|relocation
 decl_stmt|;
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|rel
@@ -4090,7 +4090,7 @@ name|relocation
 decl_stmt|;
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|rel
@@ -4200,7 +4200,7 @@ name|addend
 expr_stmt|;
 name|gp_undefined
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 default|default:
@@ -4210,7 +4210,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|asection
@@ -4285,7 +4285,7 @@ name|rel
 operator|->
 name|address
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 condition|)
@@ -4591,7 +4591,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* A helper routine for alpha_relocate_section which converts an    external reloc when generating relocateable output.  Returns the    relocation amount.  */
+comment|/* A helper routine for alpha_relocate_section which converts an    external reloc when generating relocatable output.  Returns the    relocation amount.  */
 end_comment
 
 begin_function
@@ -4645,7 +4645,7 @@ name|BFD_ASSERT
 argument_list|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 argument_list|)
 expr_stmt|;
 if|if
@@ -5099,7 +5099,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|alpha_relocate_section
 parameter_list|(
 name|output_bfd
@@ -5156,7 +5156,7 @@ decl_stmt|;
 name|bfd_vma
 name|gp
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|gp_undefined
 decl_stmt|;
 name|bfd_vma
@@ -5235,7 +5235,7 @@ operator|!
 name|symndx_to_section
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|symndx_to_section
 index|[
@@ -5458,7 +5458,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 name|lita_sec
 operator|!=
@@ -5654,7 +5654,7 @@ argument_list|)
 operator|->
 name|issued_multiple_gp_warning
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 if|if
@@ -5767,13 +5767,13 @@ decl_stmt|;
 name|int
 name|r_size
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|relocatep
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|adjust_addrp
 decl_stmt|;
-name|boolean
+name|bfd_boolean
 name|gp_usedp
 decl_stmt|;
 name|bfd_vma
@@ -5870,15 +5870,15 @@ operator|)
 expr_stmt|;
 name|relocatep
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|adjust_addrp
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|gp_usedp
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 name|addend
 operator|=
@@ -5901,7 +5901,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 name|H_PUT_64
 argument_list|(
@@ -5920,7 +5920,7 @@ argument_list|)
 expr_stmt|;
 name|adjust_addrp
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
@@ -5934,7 +5934,7 @@ name|ALPHA_R_HINT
 case|:
 name|relocatep
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -5964,7 +5964,7 @@ operator|)
 expr_stmt|;
 name|relocatep
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -5973,7 +5973,7 @@ case|:
 comment|/* This relocation is used in a switch table.  It is a 32 	     bit offset from the current GP value.  We must adjust it 	     by the different between the original GP value and the 	     current GP value.  */
 name|relocatep
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|addend
 operator|=
@@ -5988,7 +5988,7 @@ name|gp
 expr_stmt|;
 name|gp_usedp
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -6046,7 +6046,7 @@ expr_stmt|;
 block|}
 name|relocatep
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|addend
 operator|=
@@ -6061,7 +6061,7 @@ name|gp
 expr_stmt|;
 name|gp_usedp
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -6306,7 +6306,7 @@ argument_list|)
 expr_stmt|;
 name|gp_usedp
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 block|}
 break|break;
@@ -6400,7 +6400,7 @@ condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 if|if
@@ -6496,12 +6496,12 @@ name|bfd_vma
 operator|)
 literal|0
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|addend
 operator|=
@@ -6573,7 +6573,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|addend
@@ -6601,7 +6601,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 comment|/* Adjust r_vaddr by the addend.  */
@@ -6693,19 +6693,19 @@ block|}
 block|}
 name|adjust_addrp
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 case|case
 name|ALPHA_R_OP_STORE
 case|:
-comment|/* Store a value from the reloc stack into a bitfield.  If 	     we are generating relocateable output, all we do is 	     adjust the address of the reloc.  */
+comment|/* Store a value from the reloc stack into a bitfield.  If 	     we are generating relocatable output, all we do is 	     adjust the address of the reloc.  */
 if|if
 condition|(
 operator|!
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
 name|bfd_vma
@@ -6816,7 +6816,7 @@ name|r_symndx
 expr_stmt|;
 name|gp_undefined
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 break|break;
 block|}
@@ -6923,10 +6923,10 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 condition|)
 block|{
-comment|/* We are generating relocateable output, and must 		 convert the existing reloc.  */
+comment|/* We are generating relocatable output, and must 		 convert the existing reloc.  */
 if|if
 condition|(
 name|r_extern
@@ -6995,7 +6995,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 name|relocation
@@ -7193,12 +7193,12 @@ name|input_section
 operator|->
 name|vma
 argument_list|,
-name|true
+name|TRUE
 argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 name|relocation
 operator|=
@@ -7365,7 +7365,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 block|}
 break|break;
@@ -7376,7 +7376,7 @@ if|if
 condition|(
 name|info
 operator|->
-name|relocateable
+name|relocatable
 operator|&&
 name|adjust_addrp
 condition|)
@@ -7450,7 +7450,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-name|false
+name|FALSE
 return|;
 comment|/* Only give the error once per link.  */
 name|gp
@@ -7466,7 +7466,7 @@ argument_list|)
 expr_stmt|;
 name|gp_undefined
 operator|=
-name|false
+name|FALSE
 expr_stmt|;
 block|}
 block|}
@@ -7480,7 +7480,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -7494,7 +7494,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bfd_boolean
 name|alpha_adjust_headers
 parameter_list|(
 name|abfd
@@ -7565,7 +7565,7 @@ operator||=
 name|F_ALPHA_SHARABLE
 expr_stmt|;
 return|return
-name|true
+name|TRUE
 return|;
 block|}
 end_function
@@ -8254,7 +8254,7 @@ name|nbfd
 operator|->
 name|mtime_set
 operator|=
-name|true
+name|TRUE
 expr_stmt|;
 name|nbfd
 operator|->
@@ -8690,13 +8690,13 @@ literal|0
 block|,
 name|FILNMLEN
 block|,
-name|true
+name|TRUE
 block|,
-name|false
+name|FALSE
 block|,
 literal|4
 block|,
-name|false
+name|FALSE
 block|,
 literal|2
 block|,
@@ -8758,8 +8758,8 @@ block|,
 comment|/* The page boundary used to align sections in a demand-paged      executable file.  E.g., 0x1000.  */
 literal|0x2000
 block|,
-comment|/* True if the .rdata section is part of the text segment, as on the      Alpha.  False if .rdata is part of the data segment, as on the      MIPS.  */
-name|true
+comment|/* TRUE if the .rdata section is part of the text segment, as on the      Alpha.  FALSE if .rdata is part of the data segment, as on the      MIPS.  */
+name|TRUE
 block|,
 comment|/* Bitsize of constructor entries.  */
 literal|64

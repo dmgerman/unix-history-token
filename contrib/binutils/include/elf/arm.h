@@ -106,6 +106,13 @@ name|EF_ARM_VFP_FLOAT
 value|0x400
 end_define
 
+begin_define
+define|#
+directive|define
+name|EF_ARM_MAVERICK_FLOAT
+value|0x800
+end_define
+
 begin_comment
 comment|/* Other constants defined in the ARM ELF spec. version B-01.  */
 end_comment
@@ -978,6 +985,17 @@ argument_list|(
 argument|R_ARM_max
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* The name of the note section used to identify arm variants.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARM_NOTE_SECTION
+value|".note.gnu.arm.ident"
+end_define
 
 begin_endif
 endif|#

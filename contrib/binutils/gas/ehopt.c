@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ehopt.c--optimize gcc exception frame information.    Copyright 1998, 2000, 2001 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ehopt.c--optimize gcc exception frame information.    Copyright 1998, 2000, 2001, 2003 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -43,20 +43,17 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|get_cie_info
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|cie_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Extract information from the CIE.  */
@@ -67,13 +64,11 @@ specifier|static
 name|int
 name|get_cie_info
 parameter_list|(
-name|info
-parameter_list|)
 name|struct
 name|cie_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|fragS
 modifier|*
@@ -666,19 +661,15 @@ begin_function
 name|int
 name|check_eh_frame
 parameter_list|(
-name|exp
-parameter_list|,
-name|pnbytes
-parameter_list|)
 name|expressionS
 modifier|*
 name|exp
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 modifier|*
 name|pnbytes
-decl_stmt|;
+parameter_list|)
 block|{
 struct|struct
 name|frame_data
@@ -1071,6 +1062,26 @@ name|state
 operator|=
 name|state_error
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|state
+operator|==
+name|state_skipping_aug
+operator|&&
+name|d
+operator|->
+name|aug_size
+operator|==
+literal|0
+condition|)
+name|d
+operator|->
+name|state
+operator|=
+name|state_wait_loc4
+expr_stmt|;
 break|break;
 case|case
 name|state_skipping_aug
@@ -1425,12 +1436,10 @@ begin_function
 name|int
 name|eh_frame_estimate_size_before_relax
 parameter_list|(
-name|frag
-parameter_list|)
 name|fragS
 modifier|*
 name|frag
-decl_stmt|;
+parameter_list|)
 block|{
 name|offsetT
 name|diff
@@ -1534,12 +1543,10 @@ begin_function
 name|int
 name|eh_frame_relax_frag
 parameter_list|(
-name|frag
-parameter_list|)
 name|fragS
 modifier|*
 name|frag
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|oldsize
@@ -1577,12 +1584,10 @@ begin_function
 name|void
 name|eh_frame_convert_frag
 parameter_list|(
-name|frag
-parameter_list|)
 name|fragS
 modifier|*
 name|frag
-decl_stmt|;
+parameter_list|)
 block|{
 name|offsetT
 name|diff

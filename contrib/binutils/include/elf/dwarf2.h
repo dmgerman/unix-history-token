@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations and definitions of codes relating to the DWARF2 symbolic    debugging information format.    Copyright (C) 1992, 1993, 1995, 1996, 1997, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Written by Gary Funck (gary@intrepid.com) The Ada Joint Program    Office (AJPO), Florida State Unviversity and Silicon Graphics Inc.    provided support for this effort -- June 21, 1995.     Derived from the DWARF 1 implementation written by Ron Guilmette    (rfg@netcom.com), November 1990.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations and definitions of codes relating to the DWARF2 symbolic    debugging information format.    Copyright (C) 1992, 1993, 1995, 1996, 1997, 1999, 2000, 2001, 2002,    2003 Free Software Foundation, Inc.     Written by Gary Funck (gary@intrepid.com) The Ada Joint Program    Office (AJPO), Florida State Unviversity and Silicon Graphics Inc.    provided support for this effort -- June 21, 1995.     Derived from the DWARF 1 implementation written by Ron Guilmette    (rfg@netcom.com), November 1990.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License as published by the Free    Software Foundation; either version 2, or (at your option) any later    version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -199,7 +199,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Strcuture found in .debug_info section.  */
+comment|/* Structure found in .debug_info section.  */
 end_comment
 
 begin_typedef
@@ -575,6 +575,11 @@ name|DW_TAG_MIPS_loop
 init|=
 literal|0x4081
 block|,
+comment|/* HP extensions.  See: ftp://ftp.hp.com/pub/lang/tools/WDB/wdb-4.0.tar.gz .  */
+name|DW_TAG_HP_array_descriptor
+init|=
+literal|0x4090
+block|,
 comment|/* GNU extensions.  */
 name|DW_TAG_format_label
 init|=
@@ -598,6 +603,28 @@ block|,
 name|DW_TAG_GNU_EINCL
 init|=
 literal|0x4105
+block|,
+comment|/* Extensions for UPC.  See: http://upc.gwu.edu/~upc.  */
+name|DW_TAG_upc_shared_type
+init|=
+literal|0x8765
+block|,
+name|DW_TAG_upc_strict_type
+init|=
+literal|0x8766
+block|,
+name|DW_TAG_upc_relaxed_type
+init|=
+literal|0x8767
+block|,
+comment|/* PGI (STMicroelectronics) extensions.  No documentation available.  */
+name|DW_TAG_PGI_kanji_type
+init|=
+literal|0xA000
+block|,
+name|DW_TAG_PGI_interface_block
+init|=
+literal|0xA020
 block|}
 enum|;
 end_enum
@@ -1034,7 +1061,7 @@ name|DW_AT_call_line
 init|=
 literal|0x59
 block|,
-comment|/* SGI/MIPS Extensions.  */
+comment|/* SGI/MIPS extensions.  */
 name|DW_AT_MIPS_fde
 init|=
 literal|0x2001
@@ -1079,6 +1106,65 @@ name|DW_AT_MIPS_has_inlines
 init|=
 literal|0x200b
 block|,
+comment|/* HP extensions.  */
+name|DW_AT_HP_block_index
+init|=
+literal|0x2000
+block|,
+name|DW_AT_HP_unmodifiable
+init|=
+literal|0x2001
+block|,
+comment|/* Same as DW_AT_MIPS_fde.  */
+name|DW_AT_HP_actuals_stmt_list
+init|=
+literal|0x2010
+block|,
+name|DW_AT_HP_proc_per_section
+init|=
+literal|0x2011
+block|,
+name|DW_AT_HP_raw_data_ptr
+init|=
+literal|0x2012
+block|,
+name|DW_AT_HP_pass_by_reference
+init|=
+literal|0x2013
+block|,
+name|DW_AT_HP_opt_level
+init|=
+literal|0x2014
+block|,
+name|DW_AT_HP_prof_version_id
+init|=
+literal|0x2015
+block|,
+name|DW_AT_HP_opt_flags
+init|=
+literal|0x2016
+block|,
+name|DW_AT_HP_cold_region_low_pc
+init|=
+literal|0x2017
+block|,
+name|DW_AT_HP_cold_region_high_pc
+init|=
+literal|0x2018
+block|,
+name|DW_AT_HP_all_variables_modifiable
+init|=
+literal|0x2019
+block|,
+name|DW_AT_HP_linkage_name
+init|=
+literal|0x201a
+block|,
+name|DW_AT_HP_prof_flags
+init|=
+literal|0x201b
+block|,
+comment|/* In comp unit of procs_info for -g.  */
 comment|/* GNU extensions.  */
 name|DW_AT_sf_names
 init|=
@@ -1108,10 +1194,28 @@ name|DW_AT_GNU_vector
 init|=
 literal|0x2107
 block|,
-comment|/* VMS Extensions.  */
+comment|/* VMS extensions.  */
 name|DW_AT_VMS_rtnbeg_pd_address
 init|=
 literal|0x2201
+block|,
+comment|/* UPC extension.  */
+name|DW_AT_upc_threads_scaled
+init|=
+literal|0x3210
+block|,
+comment|/* PGI (STMicroelectronics) extensions.  */
+name|DW_AT_PGI_lbase
+init|=
+literal|0x3a00
+block|,
+name|DW_AT_PGI_soffset
+init|=
+literal|0x3a01
+block|,
+name|DW_AT_PGI_lstride
+init|=
+literal|0x3a02
 block|}
 enum|;
 end_enum
@@ -1739,9 +1843,44 @@ name|DW_OP_call4
 init|=
 literal|0x99
 block|,
-name|DW_OP_calli
+name|DW_OP_call_ref
 init|=
 literal|0x9a
+block|,
+comment|/* GNU extensions.  */
+name|DW_OP_GNU_push_tls_address
+init|=
+literal|0xe0
+block|,
+comment|/* HP extensions.  */
+name|DW_OP_HP_unknown
+init|=
+literal|0xe0
+block|,
+comment|/* Ouch, the same as GNU_push_tls_address.  */
+name|DW_OP_HP_is_value
+init|=
+literal|0xe1
+block|,
+name|DW_OP_HP_fltconst4
+init|=
+literal|0xe2
+block|,
+name|DW_OP_HP_fltconst8
+init|=
+literal|0xe3
+block|,
+name|DW_OP_HP_mod_range
+init|=
+literal|0xe4
+block|,
+name|DW_OP_HP_unmod_range
+init|=
+literal|0xe5
+block|,
+name|DW_OP_HP_tls
+init|=
+literal|0xe6
 block|}
 enum|;
 end_enum
@@ -1750,7 +1889,7 @@ begin_define
 define|#
 directive|define
 name|DW_OP_lo_user
-value|0x80
+value|0xe0
 end_define
 
 begin_comment
@@ -1816,6 +1955,40 @@ comment|/* DWARF 3.  */
 name|DW_ATE_imaginary_float
 init|=
 literal|0x9
+block|,
+comment|/* HP extensions.  */
+name|DW_ATE_HP_float80
+init|=
+literal|0x80
+block|,
+comment|/* Floating-point (80 bit).  */
+name|DW_ATE_HP_complex_float80
+init|=
+literal|0x81
+block|,
+comment|/* Complex floating-point (80 bit).  */
+name|DW_ATE_HP_float128
+init|=
+literal|0x82
+block|,
+comment|/* Floating-point (128 bit).  */
+name|DW_ATE_HP_complex_float128
+init|=
+literal|0x83
+block|,
+comment|/* Complex floating-point (128 bit).  */
+name|DW_ATE_HP_floathpintel
+init|=
+literal|0x84
+block|,
+comment|/* Floating-point (82 bit IA64).  */
+name|DW_ATE_HP_imaginary_float80
+init|=
+literal|0x85
+block|,
+name|DW_ATE_HP_imaginary_float128
+init|=
+literal|0x86
 block|}
 enum|;
 end_enum
@@ -2115,6 +2288,47 @@ block|,
 name|DW_LNE_define_file
 init|=
 literal|3
+block|,
+comment|/* HP extensions.  */
+name|DW_LNE_HP_negate_is_UV_update
+init|=
+literal|0x11
+block|,
+name|DW_LNE_HP_push_context
+init|=
+literal|0x12
+block|,
+name|DW_LNE_HP_pop_context
+init|=
+literal|0x13
+block|,
+name|DW_LNE_HP_set_file_line_column
+init|=
+literal|0x14
+block|,
+name|DW_LNE_HP_set_routine_name
+init|=
+literal|0x15
+block|,
+name|DW_LNE_HP_set_sequence
+init|=
+literal|0x16
+block|,
+name|DW_LNE_HP_negate_post_semantics
+init|=
+literal|0x17
+block|,
+name|DW_LNE_HP_negate_function_exit
+init|=
+literal|0x18
+block|,
+name|DW_LNE_HP_negate_front_end_logical
+init|=
+literal|0x19
+block|,
+name|DW_LNE_HP_define_proc
+init|=
+literal|0x20
 block|}
 enum|;
 end_enum
@@ -2366,6 +2580,11 @@ comment|/* MIPS.  */
 name|DW_LANG_Mips_Assembler
 init|=
 literal|0x8001
+block|,
+comment|/* UPC.  */
+name|DW_LANG_Upc
+init|=
+literal|0x8765
 block|}
 enum|;
 end_enum

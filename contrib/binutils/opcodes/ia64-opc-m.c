@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ia64-opc-m.c -- IA-64 `M' opcode table.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ia64-opc-m.c -- IA-64 `M' opcode table.    Copyright 1998, 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -107,6 +107,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|bX7
+parameter_list|(
+name|x
+parameter_list|)
+value|(((ia64_insn) ((x)& 0x1))<< 36)
+end_define
+
+begin_comment
+comment|/* note: alias for bM() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bY
+parameter_list|(
+name|x
+parameter_list|)
+value|(((ia64_insn) ((x)& 0x1))<< 26)
+end_define
+
+begin_define
+define|#
+directive|define
 name|bHint
 parameter_list|(
 name|x
@@ -166,6 +190,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|mX7
+value|bX7 (-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mY
+value|bY (-1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|mHint
 value|bHint (-1)
 end_define
@@ -199,6 +237,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|OpX3X6bX7
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|(bOp (a) | bX3 (b) | bX6b (c) | bX7 (d)), \ 				(mOp | mX3 | mX6b | mX7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OpX3X4
 parameter_list|(
 name|a
@@ -224,6 +278,24 @@ parameter_list|,
 name|d
 parameter_list|)
 value|(bOp (a) | bX3 (b) | bX4 (c) | bX2 (d)), \ 				(mOp | mX3 | mX4 | mX2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OpX3X4X2Y
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+value|(bOp (a) | bX3 (b) | bX4 (c) | bX2 (d) | bY (e)), \ 				(mOp | mX3 | mX4 | mX2 | mY)
 end_define
 
 begin_define
@@ -292,6 +364,17 @@ define|\
 value|(bOp (a) | bM (b) | bX (c) | bX6a (d) | bHint (e)), \ 	(mOp | mM | mX | mX6a | mHint)
 end_define
 
+begin_comment
+comment|/* Used to initialise unused fields in ia64_opcode struct,    in order to stop gcc from complaining.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EMPTY
+value|0,0,NULL
+end_define
+
 begin_decl_stmt
 name|struct
 name|ia64_opcode
@@ -299,7 +382,7 @@ name|ia64_opcodes_m
 index|[]
 init|=
 block|{
-comment|/* M-type instruction encodings (sorted according to major opcode) */
+comment|/* M-type instruction encodings (sorted according to major opcode).  */
 block|{
 literal|"chk.a.nc"
 block|,
@@ -317,6 +400,8 @@ name|R1
 block|,
 name|TGT25c
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -336,6 +421,8 @@ name|R1
 block|,
 name|TGT25c
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -355,6 +442,8 @@ name|F1
 block|,
 name|TGT25c
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -374,6 +463,8 @@ name|F1
 block|,
 name|TGT25c
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -391,6 +482,10 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
+block|,
+block|{}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -408,6 +503,10 @@ literal|0
 argument_list|,
 literal|2
 argument_list|)
+block|,
+block|{}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -425,6 +524,10 @@ literal|2
 argument_list|,
 literal|2
 argument_list|)
+block|,
+block|{}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -442,6 +545,10 @@ literal|3
 argument_list|,
 literal|2
 argument_list|)
+block|,
+block|{}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -459,6 +566,10 @@ literal|0
 argument_list|,
 literal|3
 argument_list|)
+block|,
+block|{}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -476,6 +587,10 @@ literal|1
 argument_list|,
 literal|3
 argument_list|)
+block|,
+block|{}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -493,6 +608,10 @@ literal|3
 argument_list|,
 literal|3
 argument_list|)
+block|,
+block|{}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -511,13 +630,15 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-block|{
-literal|0
-block|, }
+block|{}
 block|,
 name|FIRST
 operator||
 name|NO_PRED
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -536,13 +657,15 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-block|{
-literal|0
-block|, }
+block|{}
 block|,
 name|FIRST
 operator||
 name|NO_PRED
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -564,6 +687,8 @@ block|,
 block|{
 name|R1
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -585,6 +710,8 @@ block|,
 block|{
 name|F1
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -608,6 +735,8 @@ name|AR3
 block|,
 name|IMM8
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -629,6 +758,8 @@ block|,
 block|{
 name|IMMU21
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -636,7 +767,7 @@ literal|"nop.m"
 block|,
 name|M0
 block|,
-name|OpX3X4X2
+name|OpX3X4X2Y
 argument_list|(
 literal|0
 argument_list|,
@@ -645,11 +776,40 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 block|,
 block|{
 name|IMMU21
 block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"hint.m"
+block|,
+name|M0
+block|,
+name|OpX3X4X2Y
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|,
+block|{
+name|IMMU21
+block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -669,6 +829,8 @@ block|,
 block|{
 name|IMMU24
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -688,6 +850,8 @@ block|,
 block|{
 name|IMMU24
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -709,6 +873,10 @@ name|IMMU24
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -730,6 +898,10 @@ name|IMMU24
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -751,6 +923,8 @@ name|AR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -772,6 +946,8 @@ name|R1
 block|,
 name|AR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -795,6 +971,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -818,6 +998,10 @@ name|CR3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -849,6 +1033,10 @@ operator||
 name|NO_PRED
 operator||
 name|MOD_RRBS
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -872,6 +1060,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -893,6 +1085,8 @@ name|PSR_UM
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -916,6 +1110,10 @@ name|PSR
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -937,6 +1135,8 @@ name|R1
 block|,
 name|PSR_UM
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -960,6 +1160,8 @@ name|R3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -983,6 +1185,8 @@ name|R3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1006,6 +1210,8 @@ name|R3
 block|,
 name|IMMU2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1029,6 +1235,8 @@ name|R3
 block|,
 name|IMMU2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1050,6 +1258,8 @@ name|R3
 block|,
 name|IMMU2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1071,6 +1281,8 @@ name|R3
 block|,
 name|IMMU2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1092,6 +1304,8 @@ name|R3
 block|,
 name|IMMU2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1115,6 +1329,10 @@ block|,
 name|LAST
 operator||
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1138,6 +1356,10 @@ block|,
 name|LAST
 operator||
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1161,6 +1383,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1184,6 +1410,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1207,6 +1437,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1230,6 +1464,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1253,6 +1491,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1276,6 +1518,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1299,6 +1545,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1322,6 +1572,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1345,6 +1599,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1368,6 +1626,10 @@ name|RR_R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1391,6 +1653,10 @@ name|DBR_R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1414,6 +1680,10 @@ name|IBR_R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1437,6 +1707,10 @@ name|PKR_R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1460,6 +1734,10 @@ name|PMC_R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1481,6 +1759,8 @@ name|R1
 block|,
 name|PMD_R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1504,6 +1784,10 @@ name|MSR_R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1525,6 +1809,8 @@ name|R1
 block|,
 name|CPUID_R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1548,6 +1834,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1573,6 +1863,10 @@ block|,
 name|LAST
 operator||
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1598,6 +1892,10 @@ block|,
 name|LAST
 operator||
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1621,6 +1919,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1644,6 +1946,10 @@ name|R2
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1665,6 +1971,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1686,6 +1994,8 @@ name|R1
 block|,
 name|R3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1709,6 +2019,10 @@ name|R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1732,6 +2046,10 @@ name|R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -1751,6 +2069,8 @@ name|R2
 block|,
 name|TGT25b
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1770,6 +2090,8 @@ name|F2
 block|,
 name|TGT25b
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1777,18 +2099,45 @@ literal|"fc"
 block|,
 name|M0
 block|,
-name|OpX3X6b
+name|OpX3X6bX7
 argument_list|(
 literal|1
 argument_list|,
 literal|0
 argument_list|,
 literal|0x30
+argument_list|,
+literal|0
 argument_list|)
 block|,
 block|{
 name|R3
 block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"fc.i"
+block|,
+name|M0
+block|,
+name|OpX3X6bX7
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0x30
+argument_list|,
+literal|1
+argument_list|)
+block|,
+block|{
+name|R3
+block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1810,6 +2159,10 @@ name|R3
 block|}
 block|,
 name|PRIV
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|,
 comment|/* integer load */
@@ -1836,6 +2189,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1861,6 +2216,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1886,6 +2243,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1911,6 +2270,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1936,6 +2297,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1961,6 +2324,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -1986,6 +2351,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2011,6 +2378,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2036,6 +2405,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2061,6 +2432,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2086,6 +2459,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2111,6 +2486,95 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"ld16"
+block|,
+name|M2
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x28
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+name|R1
+block|,
+name|AR_CSD
+block|,
+name|MR3
+block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"ld16.nt1"
+block|,
+name|M2
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x28
+argument_list|,
+literal|1
+argument_list|)
+block|,
+block|{
+name|R1
+block|,
+name|AR_CSD
+block|,
+name|MR3
+block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"ld16.nta"
+block|,
+name|M2
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x28
+argument_list|,
+literal|3
+argument_list|)
+block|,
+block|{
+name|R1
+block|,
+name|AR_CSD
+block|,
+name|MR3
+block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2136,6 +2600,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2161,6 +2627,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2186,6 +2654,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2211,6 +2681,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2236,6 +2708,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2261,6 +2735,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2286,6 +2762,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2311,6 +2789,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2336,6 +2816,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2361,6 +2843,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2386,6 +2870,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2411,6 +2897,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2436,6 +2924,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2461,6 +2951,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2486,6 +2978,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2511,6 +3005,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2536,6 +3032,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2561,6 +3059,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2586,6 +3086,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2611,6 +3113,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2636,6 +3140,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2661,6 +3167,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2686,6 +3194,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2711,6 +3221,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2736,6 +3248,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2761,6 +3275,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2786,6 +3302,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2811,6 +3329,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2836,6 +3356,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2861,6 +3383,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2886,6 +3410,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2911,6 +3437,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2936,6 +3464,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2961,6 +3491,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -2986,6 +3518,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3011,6 +3545,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3036,6 +3572,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3061,6 +3599,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3086,6 +3626,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3111,6 +3653,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3136,6 +3680,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3161,6 +3707,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3186,6 +3734,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3211,6 +3761,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3236,6 +3788,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3261,6 +3815,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3286,6 +3842,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3311,6 +3869,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3336,6 +3896,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3361,6 +3923,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3386,6 +3950,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3411,6 +3977,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3436,6 +4004,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3461,6 +4031,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3486,6 +4058,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3511,6 +4085,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3536,6 +4112,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3561,6 +4139,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3586,6 +4166,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3611,6 +4193,95 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"ld16.acq"
+block|,
+name|M2
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x2c
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+name|R1
+block|,
+name|AR_CSD
+block|,
+name|MR3
+block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"ld16.acq.nt1"
+block|,
+name|M2
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x2c
+argument_list|,
+literal|1
+argument_list|)
+block|,
+block|{
+name|R1
+block|,
+name|AR_CSD
+block|,
+name|MR3
+block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"ld16.acq.nta"
+block|,
+name|M2
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x2c
+argument_list|,
+literal|3
+argument_list|)
+block|,
+block|{
+name|R1
+block|,
+name|AR_CSD
+block|,
+name|MR3
+block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3636,6 +4307,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3661,6 +4334,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3686,6 +4361,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3711,6 +4388,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3736,6 +4415,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3761,6 +4442,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3786,6 +4469,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3811,6 +4496,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3836,6 +4523,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3861,6 +4550,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3886,6 +4577,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3911,6 +4604,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3936,6 +4631,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3961,6 +4658,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -3986,6 +4685,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4011,6 +4712,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4036,6 +4739,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4061,6 +4766,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4086,6 +4793,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4111,6 +4820,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4136,6 +4847,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4161,6 +4874,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4186,6 +4901,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4211,6 +4928,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4236,6 +4955,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4261,6 +4982,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4286,6 +5009,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4311,6 +5036,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4336,6 +5063,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4361,6 +5090,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4386,6 +5117,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4411,6 +5144,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4436,6 +5171,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4461,6 +5198,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4486,6 +5225,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4511,6 +5252,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4536,6 +5279,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4561,6 +5306,8 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -4586,9 +5333,41 @@ name|R1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
-comment|/* integer load w/increment by register */
+comment|/* Pseudo-op that generates ldxmov relocation.  */
+block|{
+literal|"ld8.mov"
+block|,
+name|M
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0x03
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+name|R1
+block|,
+name|MR3
+block|,
+name|IA64_OPND_LDXMOV
+block|}
+block|,
+name|EMPTY
+block|}
+block|,
+comment|/* Integer load w/increment by register.  */
 define|#
 directive|define
 name|LDINCREG
@@ -4597,7 +5376,7 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M, OpMXX6aHint (4, 1, 0, c, h), {R1, MR3, R2}, POSTINC,
+value|M, OpMXX6aHint (4, 1, 0, c, h), {R1, MR3, R2}, POSTINC, 0, NULL
 block|{
 literal|"ld1"
 block|,
@@ -5845,6 +6624,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -5870,6 +6651,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -5895,6 +6678,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -5920,6 +6705,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -5945,6 +6732,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -5970,6 +6759,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -5995,6 +6786,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6020,6 +6813,66 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"st16"
+block|,
+name|M
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x30
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+name|MR3
+block|,
+name|R2
+block|,
+name|AR_CSD
+block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"st16.nta"
+block|,
+name|M
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x30
+argument_list|,
+literal|3
+argument_list|)
+block|,
+block|{
+name|MR3
+block|,
+name|R2
+block|,
+name|AR_CSD
+block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6045,6 +6898,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6070,6 +6925,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6095,6 +6952,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6120,6 +6979,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6145,6 +7006,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6170,6 +7033,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6195,6 +7060,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6220,6 +7087,66 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"st16.rel"
+block|,
+name|M
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x34
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+name|MR3
+block|,
+name|R2
+block|,
+name|AR_CSD
+block|}
+block|,
+name|EMPTY
+block|}
+block|,
+block|{
+literal|"st16.rel.nta"
+block|,
+name|M
+block|,
+name|OpMXX6aHint
+argument_list|(
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|,
+literal|0x34
+argument_list|,
+literal|3
+argument_list|)
+block|,
+block|{
+name|MR3
+block|,
+name|R2
+block|,
+name|AR_CSD
+block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6245,6 +7172,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6270,6 +7199,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 define|#
@@ -6280,7 +7211,16 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M, OpMXX6aHint (4, 0, 1, c, h), {R1, MR3, R2, AR_CCV}
+value|M, OpMXX6aHint (4, 0, 1, c, h), {R1, MR3, R2, AR_CCV}, EMPTY
+define|#
+directive|define
+name|CMPXCHG16
+parameter_list|(
+name|c
+parameter_list|,
+name|h
+parameter_list|)
+value|M, OpMXX6aHint (4, 0, 1, c, h), {R1, MR3, R2, AR_CSD, AR_CCV}, EMPTY
 block|{
 literal|"cmpxchg1.acq"
 block|,
@@ -6408,6 +7348,39 @@ block|,
 name|CMPXCHG
 argument_list|(
 literal|0x03
+argument_list|,
+literal|3
+argument_list|)
+block|}
+block|,
+block|{
+literal|"cmp8xchg16.acq"
+block|,
+name|CMPXCHG16
+argument_list|(
+literal|0x20
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+literal|"cmp8xchg16.acq.nt1"
+block|,
+name|CMPXCHG16
+argument_list|(
+literal|0x20
+argument_list|,
+literal|1
+argument_list|)
+block|}
+block|,
+block|{
+literal|"cmp8xchg16.acq.nta"
+block|,
+name|CMPXCHG16
+argument_list|(
+literal|0x20
 argument_list|,
 literal|3
 argument_list|)
@@ -6545,9 +7518,45 @@ literal|3
 argument_list|)
 block|}
 block|,
+block|{
+literal|"cmp8xchg16.rel"
+block|,
+name|CMPXCHG16
+argument_list|(
+literal|0x24
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+block|{
+literal|"cmp8xchg16.rel.nt1"
+block|,
+name|CMPXCHG16
+argument_list|(
+literal|0x24
+argument_list|,
+literal|1
+argument_list|)
+block|}
+block|,
+block|{
+literal|"cmp8xchg16.rel.nta"
+block|,
+name|CMPXCHG16
+argument_list|(
+literal|0x24
+argument_list|,
+literal|3
+argument_list|)
+block|}
+block|,
 undef|#
 directive|undef
 name|CMPXCHG
+undef|#
+directive|undef
+name|CMPXCHG16
 block|{
 literal|"xchg1"
 block|,
@@ -6573,6 +7582,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6600,6 +7611,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6627,6 +7640,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6654,6 +7669,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6681,6 +7698,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6708,6 +7727,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6735,6 +7756,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6762,6 +7785,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6789,6 +7814,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6816,6 +7843,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6843,6 +7872,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6870,6 +7901,8 @@ name|MR3
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6897,6 +7930,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6924,6 +7959,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6951,6 +7988,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -6978,6 +8017,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7005,6 +8046,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7032,6 +8075,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7059,6 +8104,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7086,6 +8133,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7113,6 +8162,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7140,6 +8191,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7167,6 +8220,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7194,6 +8249,8 @@ name|MR3
 block|,
 name|INC3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7217,6 +8274,8 @@ name|R1
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7240,6 +8299,8 @@ name|R1
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7263,6 +8324,8 @@ name|R1
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -7286,9 +8349,11 @@ name|R1
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
-comment|/* integer load w/increment by immediate */
+comment|/* Integer load w/increment by immediate.  */
 define|#
 directive|define
 name|LDINCIMMED
@@ -7297,7 +8362,7 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M, OpX6aHint (5, c, h), {R1, MR3, IMM9b}, POSTINC
+value|M, OpX6aHint (5, c, h), {R1, MR3, IMM9b}, POSTINC, 0, NULL
 block|{
 literal|"ld1"
 block|,
@@ -8522,7 +9587,7 @@ block|,
 undef|#
 directive|undef
 name|LDINCIMMED
-comment|/* store w/increment by immediate */
+comment|/* Store w/increment by immediate.  */
 define|#
 directive|define
 name|STINCIMMED
@@ -8531,7 +9596,7 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M, OpX6aHint (5, c, h), {MR3, R2, IMM9a}, POSTINC
+value|M, OpX6aHint (5, c, h), {MR3, R2, IMM9a}, POSTINC, 0, NULL
 block|{
 literal|"st1"
 block|,
@@ -8733,7 +9798,7 @@ block|,
 undef|#
 directive|undef
 name|STINCIMMED
-comment|/* floating-point load */
+comment|/* Floating-point load.  */
 block|{
 literal|"ldfs"
 block|,
@@ -8757,6 +9822,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8782,6 +9849,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8807,6 +9876,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8832,6 +9903,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8857,6 +9930,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8882,6 +9957,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8907,6 +9984,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8932,6 +10011,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8957,6 +10038,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -8982,6 +10065,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9007,6 +10092,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9032,6 +10119,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9057,6 +10146,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9082,6 +10173,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9107,6 +10200,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9132,6 +10227,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9157,6 +10254,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9182,6 +10281,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9207,6 +10308,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9232,6 +10335,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9257,6 +10362,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9282,6 +10389,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9307,6 +10416,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9332,6 +10443,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9357,6 +10470,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9382,6 +10497,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9407,6 +10524,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9432,6 +10551,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9457,6 +10578,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9482,6 +10605,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9507,6 +10632,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9532,6 +10659,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9557,6 +10686,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9582,6 +10713,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9607,6 +10740,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9632,6 +10767,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9657,6 +10794,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9682,6 +10821,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9707,6 +10848,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9732,6 +10875,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9757,6 +10902,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9782,6 +10929,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9807,6 +10956,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9832,6 +10983,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9857,6 +11010,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9882,6 +11037,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9907,6 +11064,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9932,6 +11091,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9957,6 +11118,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -9982,6 +11145,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10007,6 +11172,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10032,6 +11199,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10057,6 +11226,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10082,6 +11253,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10107,6 +11280,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10132,6 +11307,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10157,6 +11334,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10182,6 +11361,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10207,6 +11388,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10232,6 +11415,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10257,6 +11442,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10282,6 +11469,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10307,6 +11496,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10332,6 +11523,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10357,6 +11550,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10382,6 +11577,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10407,6 +11604,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10432,6 +11631,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10457,6 +11658,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10482,6 +11685,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10507,6 +11712,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10532,6 +11739,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10557,6 +11766,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10582,6 +11793,8 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -10607,9 +11820,11 @@ name|F1
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
-comment|/* floating-point load w/increment by register */
+comment|/* Floating-point load w/increment by register.  */
 define|#
 directive|define
 name|FLDINCREG
@@ -10618,7 +11833,7 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M, OpMXX6aHint (6, 1, 0, c, h), {F1, MR3, R2}, POSTINC
+value|M, OpMXX6aHint (6, 1, 0, c, h), {F1, MR3, R2}, POSTINC, 0, NULL
 block|{
 literal|"ldfs"
 block|,
@@ -11447,7 +12662,7 @@ block|,
 undef|#
 directive|undef
 name|FLDINCREG
-comment|/* floating-point store */
+comment|/* Floating-point store.  */
 block|{
 literal|"stfs"
 block|,
@@ -11471,6 +12686,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11496,6 +12713,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11521,6 +12740,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11546,6 +12767,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11571,6 +12794,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11596,6 +12821,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11621,6 +12848,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11646,6 +12875,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11671,6 +12902,8 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11696,9 +12929,11 @@ name|MR3
 block|,
 name|F2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
-comment|/* floating-point load pair */
+comment|/* Floating-point load pair.  */
 block|{
 literal|"ldfps"
 block|,
@@ -11724,6 +12959,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11751,6 +12988,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11778,6 +13017,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11805,6 +13046,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11832,6 +13075,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11859,6 +13104,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11886,6 +13133,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11913,6 +13162,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11940,6 +13191,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11967,6 +13220,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -11994,6 +13249,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12021,6 +13278,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12048,6 +13307,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12075,6 +13336,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12102,6 +13365,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12129,6 +13394,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12156,6 +13423,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12183,6 +13452,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12210,6 +13481,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12237,6 +13510,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12264,6 +13539,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12291,6 +13568,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12318,6 +13597,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12345,6 +13626,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12372,6 +13655,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12399,6 +13684,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12426,6 +13713,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12453,6 +13742,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12480,6 +13771,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12507,6 +13800,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12534,6 +13829,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12561,6 +13858,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12588,6 +13887,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12615,6 +13916,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12642,6 +13945,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12669,6 +13974,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12696,6 +14003,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12723,6 +14032,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12750,6 +14061,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12777,6 +14090,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12804,6 +14119,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12831,6 +14148,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12858,6 +14177,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12885,6 +14206,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12912,6 +14235,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12939,6 +14264,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12966,6 +14293,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -12993,6 +14322,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13020,6 +14351,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13047,6 +14380,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13074,6 +14409,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13101,6 +14438,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13128,6 +14467,8 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13155,9 +14496,11 @@ name|F2
 block|,
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
-comment|/* floating-point load pair w/increment by immediate */
+comment|/* Floating-point load pair w/increment by immediate.  */
 define|#
 directive|define
 name|LD
@@ -13168,7 +14511,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|M2, OpMXX6aHint (6, 1, 1, a, b), {F1, F2, MR3, c}, POSTINC
+value|M2, OpMXX6aHint (6, 1, 1, a, b), {F1, F2, MR3, c}, POSTINC, 0, NULL
 block|{
 literal|"ldfps"
 block|,
@@ -13874,7 +15217,7 @@ block|,
 undef|#
 directive|undef
 name|LD
-comment|/* line prefetch */
+comment|/* Line prefetch.  */
 block|{
 literal|"lfetch"
 block|,
@@ -13896,6 +15239,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13919,6 +15264,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13942,6 +15289,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13965,6 +15314,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -13988,6 +15339,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14011,6 +15364,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14034,6 +15389,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14057,6 +15414,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14080,6 +15439,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14103,6 +15464,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14126,6 +15489,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14149,6 +15514,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14172,6 +15539,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14195,6 +15564,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14218,6 +15589,8 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14241,9 +15614,11 @@ block|,
 block|{
 name|MR3
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
-comment|/* line prefetch w/increment by register */
+comment|/* Line prefetch w/increment by register.  */
 define|#
 directive|define
 name|LFETCHINCREG
@@ -14252,7 +15627,7 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M0, OpMXX6aHint (6, 1, 0, c, h), {MR3, R2}, POSTINC
+value|M0, OpMXX6aHint (6, 1, 0, c, h), {MR3, R2}, POSTINC, 0, NULL
 block|{
 literal|"lfetch"
 block|,
@@ -14432,7 +15807,7 @@ block|,
 undef|#
 directive|undef
 name|LFETCHINCREG
-comment|/* semaphore operations */
+comment|/* Semaphore operations.  */
 block|{
 literal|"setf.sig"
 block|,
@@ -14454,6 +15829,8 @@ name|F1
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14477,6 +15854,8 @@ name|F1
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14500,6 +15879,8 @@ name|F1
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
 block|{
@@ -14523,9 +15904,11 @@ name|F1
 block|,
 name|R2
 block|}
+block|,
+name|EMPTY
 block|}
 block|,
-comment|/* floating-point load w/increment by immediate */
+comment|/* Floating-point load w/increment by immediate.  */
 define|#
 directive|define
 name|FLDINCIMMED
@@ -14534,7 +15917,7 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M, OpX6aHint (7, c, h), {F1, MR3, IMM9b}, POSTINC
+value|M, OpX6aHint (7, c, h), {F1, MR3, IMM9b}, POSTINC, 0, NULL
 block|{
 literal|"ldfs"
 block|,
@@ -15363,7 +16746,7 @@ block|,
 undef|#
 directive|undef
 name|FLDINCIMMED
-comment|/* floating-point store w/increment by immediate */
+comment|/* Floating-point store w/increment by immediate.  */
 define|#
 directive|define
 name|FSTINCIMMED
@@ -15372,7 +16755,7 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M, OpX6aHint (7, c, h), {MR3, F2, IMM9a}, POSTINC
+value|M, OpX6aHint (7, c, h), {MR3, F2, IMM9a}, POSTINC, 0, NULL
 block|{
 literal|"stfs"
 block|,
@@ -15486,7 +16869,7 @@ block|,
 undef|#
 directive|undef
 name|FSTINCIMMED
-comment|/* line prefetch w/increment by immediate */
+comment|/* Line prefetch w/increment by immediate.  */
 define|#
 directive|define
 name|LFETCHINCIMMED
@@ -15495,7 +16878,7 @@ name|c
 parameter_list|,
 name|h
 parameter_list|)
-value|M0, OpX6aHint (7, c, h), {MR3, IMM9b}, POSTINC
+value|M0, OpX6aHint (7, c, h), {MR3, IMM9b}, POSTINC, 0, NULL
 block|{
 literal|"lfetch"
 block|,
@@ -15676,7 +17059,25 @@ undef|#
 directive|undef
 name|LFETCHINCIMMED
 block|{
+name|NULL
+block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -15842,6 +17243,12 @@ begin_undef
 undef|#
 directive|undef
 name|OpMXX6aHint
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|EMPTY
 end_undef
 
 end_unit
