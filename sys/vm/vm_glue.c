@@ -1903,12 +1903,22 @@ expr_stmt|;
 comment|/* 			 * do not swapout a process that 			 * is waiting for VM 			 * data structures there is a 			 * possible deadlock. 			 */
 if|if
 condition|(
-name|vm_map_try_lock
+name|lockmgr
 argument_list|(
 operator|&
 name|vm
 operator|->
 name|vm_map
+operator|.
+name|lock
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|,
+name|NULL
+argument_list|,
+name|curthread
 argument_list|)
 condition|)
 block|{
