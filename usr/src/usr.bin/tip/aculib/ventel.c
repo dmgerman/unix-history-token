@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ventel.c	1.6 (Berkeley) %G%"
+literal|"@(#)ventel.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Routines for calling up on a Ventel Modem  * The Ventel is expected to be strapped for "no echo".  */
+comment|/*  * Routines for calling up on a Ventel Modem  * The Ventel is expected to be strapped for local echo (just like uucp)  */
 end_comment
 
 begin_include
@@ -60,6 +60,60 @@ name|jmp_buf
 name|timeoutbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * some sleep calls have been replaced by this macro  * because some ventel modems require two<cr>s in less than  * a second in order to 'wake up'... yes, it is dirty...  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|delay
+parameter_list|(
+name|num
+parameter_list|,
+name|denom
+parameter_list|)
+value|busyloop(CPUSPEED*num/denom)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUSPEED
+value|1000000
+end_define
+
+begin_comment
+comment|/* VAX 780 is 1MIPS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|n
+parameter_list|)
+value|{ register long N = (n); while (--N> 0); }
+end_define
+
+begin_macro
+name|busyloop
+argument_list|(
+argument|n
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|DELAY
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_expr_stmt
 name|ven_dialer
@@ -195,9 +249,11 @@ name|cp
 operator|++
 control|)
 block|{
-name|sleep
+name|delay
 argument_list|(
 literal|1
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|write
@@ -210,9 +266,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|echo
+name|delay
 argument_list|(
-literal|"\r$\n"
+literal|1
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|FD
+argument_list|,
+literal|"\r"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|gobble
+argument_list|(
+literal|'\n'
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 if|if
@@ -784,7 +858,7 @@ argument_list|)
 expr_stmt|;
 name|sleep
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -813,9 +887,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|sleep
+name|delay
 argument_list|(
 literal|1
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|write
@@ -829,7 +905,7 @@ argument_list|)
 expr_stmt|;
 name|sleep
 argument_list|(
-literal|3
+literal|2
 argument_list|)
 expr_stmt|;
 if|if
