@@ -3568,6 +3568,23 @@ name|matchcnt
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * If we are being called because of a process doing a 	 * copy-on-write, then it is not safe to write as we may 	 * recurse into the copy-on-write routine. 	 */
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_COWINPROGRESS
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -24494,8 +24511,21 @@ name|time_second
 operator|+
 name|tickdelay
 expr_stmt|;
+comment|/* 	 * If we are being called because of a process doing a 	 * copy-on-write, then it is not safe to update the vnode 	 * as we may recurse into the copy-on-write routine. 	 */
 if|if
 condition|(
+operator|(
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_COWINPROGRESS
+operator|)
+operator|==
+literal|0
+operator|&&
 name|UFS_UPDATE
 argument_list|(
 name|vp
