@@ -52,7 +52,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	5.9 (Berkeley) %G%"
+literal|"@(#)lpr.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3052,6 +3052,25 @@ return|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|cp
+operator|==
+name|file
+condition|)
+block|{
+name|fd
+operator|=
+name|access
+argument_list|(
+literal|"/"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 operator|*
 name|cp
 operator|=
@@ -3071,6 +3090,7 @@ name|cp
 operator|=
 literal|'/'
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fd
