@@ -1163,7 +1163,8 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Local: Unable to listen to socket - BUNDLE overload?\n"
+literal|"Local: Unable to listen to socket -"
+literal|" BUNDLE overload?\n"
 argument_list|)
 expr_stmt|;
 name|close

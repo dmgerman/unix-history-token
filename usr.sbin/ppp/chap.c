@@ -3132,6 +3132,7 @@ modifier|*
 name|authp
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -3303,6 +3304,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -3325,14 +3327,18 @@ operator|==
 literal|0x81
 condition|)
 block|{
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|msg
+name|ptr
 operator|=
 name|buf
 expr_stmt|;
-name|msg
+name|ptr
 operator|+=
 name|sprintf
 argument_list|(
@@ -3354,11 +3360,11 @@ condition|;
 name|i
 operator|++
 control|)
-name|msg
+name|ptr
 operator|+=
 name|sprintf
 argument_list|(
-name|msg
+name|ptr
 argument_list|,
 literal|"%02X"
 argument_list|,
@@ -3381,7 +3387,7 @@ argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
-name|msg
+name|ptr
 argument_list|,
 literal|" V=3 M=Invalid!"
 argument_list|)
@@ -5314,7 +5320,8 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"CHAP81: AuthenticatorResponse: (%s) != ans: (%s)\n"
+literal|"CHAP81: AuthenticatorResponse: (%s)"
+literal|" != ans: (%s)\n"
 argument_list|,
 name|chap
 operator|->

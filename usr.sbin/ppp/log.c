@@ -2036,7 +2036,8 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"set log local: Only available on the command line\n"
+literal|"set log local: Only available on the"
+literal|" command line\n"
 argument_list|)
 expr_stmt|;
 return|return

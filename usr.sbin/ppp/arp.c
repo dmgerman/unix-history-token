@@ -776,7 +776,8 @@ name|log_Printf
 argument_list|(
 name|LOG_PHASE_BIT
 argument_list|,
-literal|"Cannot determine ethernet address for proxy ARP\n"
+literal|"Cannot determine ethernet address for "
+literal|"proxy ARP\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -3172,7 +3172,8 @@ name|log_Printf
 argument_list|(
 name|LogCCP
 argument_list|,
-literal|"%s: Warning: Ignoring peer NAK of unsent option\n"
+literal|"%s: Warning: Ignoring peer NAK of unsent"
+literal|" option\n"
 argument_list|,
 name|fp
 operator|->

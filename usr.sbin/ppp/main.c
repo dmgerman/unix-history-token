@@ -700,7 +700,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ppp [-auto | -foreground | -background | -direct | -dedicated | -ddial | -interactive]"
+literal|"Usage: ppp [-auto | -foreground | -background | -direct |"
+literal|" -dedicated | -ddial | -interactive]"
 ifndef|#
 directive|ifndef
 name|NOALIAS

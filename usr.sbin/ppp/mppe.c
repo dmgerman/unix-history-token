@@ -181,6 +181,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|MPPEReduceSessionKey
 parameter_list|(
@@ -238,6 +239,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|MPPEKeyChange
 parameter_list|(
@@ -1002,7 +1004,8 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"MPPE: MasterKey is invalid, MPPE is capable only with CHAP81 authentication\n"
+literal|"MPPE: MasterKey is invalid,"
+literal|" MPPE is capable only with CHAP81 authentication\n"
 argument_list|)
 expr_stmt|;
 operator|*
