@@ -629,6 +629,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_beginav_save
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_beginav_save
+value|(*Perl_Ibeginav_save_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_bitcount
 end_undef
 
@@ -1045,6 +1058,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_dummy1_bincompat
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_dummy1_bincompat
+value|(*Perl_Idummy1_bincompat_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_e_script
 end_undef
 
@@ -1279,6 +1305,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_fdpid_mutex
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_fdpid_mutex
+value|(*Perl_Ifdpid_mutex_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_filemode
 end_undef
 
@@ -1378,6 +1417,19 @@ define|#
 directive|define
 name|PL_globalstash
 value|(*Perl_Iglobalstash_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PL_he_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_he_arenaroot
+value|(*Perl_Ihe_arenaroot_ptr(aTHXo))
 end_define
 
 begin_undef
@@ -2267,6 +2319,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_nullstash
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_nullstash
+value|(*Perl_Inullstash_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_numeric_local
 end_undef
 
@@ -2293,14 +2358,14 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|PL_numeric_radix
+name|PL_numeric_radix_sv
 end_undef
 
 begin_define
 define|#
 directive|define
-name|PL_numeric_radix
-value|(*Perl_Inumeric_radix_ptr(aTHXo))
+name|PL_numeric_radix_sv
+value|(*Perl_Inumeric_radix_sv_ptr(aTHXo))
 end_define
 
 begin_undef
@@ -2969,6 +3034,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_sv_lock_mutex
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_sv_lock_mutex
+value|(*Perl_Isv_lock_mutex_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_sv_mutex
 end_undef
 
@@ -3463,6 +3541,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_xnv_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xnv_arenaroot
+value|(*Perl_Ixnv_arenaroot_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_xnv_root
 end_undef
 
@@ -3471,6 +3562,19 @@ define|#
 directive|define
 name|PL_xnv_root
 value|(*Perl_Ixnv_root_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PL_xpv_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpv_arenaroot
+value|(*Perl_Ixpv_arenaroot_ptr(aTHXo))
 end_define
 
 begin_undef
@@ -3489,6 +3593,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_xpvav_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpvav_arenaroot
+value|(*Perl_Ixpvav_arenaroot_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_xpvav_root
 end_undef
 
@@ -3497,6 +3614,19 @@ define|#
 directive|define
 name|PL_xpvav_root
 value|(*Perl_Ixpvav_root_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PL_xpvbm_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpvbm_arenaroot
+value|(*Perl_Ixpvbm_arenaroot_ptr(aTHXo))
 end_define
 
 begin_undef
@@ -3515,6 +3645,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_xpvcv_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpvcv_arenaroot
+value|(*Perl_Ixpvcv_arenaroot_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_xpvcv_root
 end_undef
 
@@ -3523,6 +3666,19 @@ define|#
 directive|define
 name|PL_xpvcv_root
 value|(*Perl_Ixpvcv_root_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PL_xpvhv_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpvhv_arenaroot
+value|(*Perl_Ixpvhv_arenaroot_ptr(aTHXo))
 end_define
 
 begin_undef
@@ -3541,6 +3697,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_xpviv_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpviv_arenaroot
+value|(*Perl_Ixpviv_arenaroot_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_xpviv_root
 end_undef
 
@@ -3549,6 +3718,19 @@ define|#
 directive|define
 name|PL_xpviv_root
 value|(*Perl_Ixpviv_root_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PL_xpvlv_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpvlv_arenaroot
+value|(*Perl_Ixpvlv_arenaroot_ptr(aTHXo))
 end_define
 
 begin_undef
@@ -3567,6 +3749,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_xpvmg_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpvmg_arenaroot
+value|(*Perl_Ixpvmg_arenaroot_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_xpvmg_root
 end_undef
 
@@ -3580,6 +3775,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_xpvnv_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xpvnv_arenaroot
+value|(*Perl_Ixpvnv_arenaroot_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_xpvnv_root
 end_undef
 
@@ -3588,6 +3796,19 @@ define|#
 directive|define
 name|PL_xpvnv_root
 value|(*Perl_Ixpvnv_root_ptr(aTHXo))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PL_xrv_arenaroot
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_xrv_arenaroot
+value|(*Perl_Ixrv_arenaroot_ptr(aTHXo))
 end_define
 
 begin_undef

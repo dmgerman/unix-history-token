@@ -1165,8 +1165,8 @@ name|REG_COMP_C
 end_ifdef
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|U8
 name|regarglen
 index|[]
@@ -1493,8 +1493,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|char
 name|reg_off_by_arg
 index|[]
@@ -1751,8 +1751,8 @@ name|DEBUGGING
 end_ifdef
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|char
 modifier|*
 specifier|const
@@ -2005,8 +2005,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|int
 name|reg_num
 init|=

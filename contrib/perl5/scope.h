@@ -240,6 +240,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|SAVEt_GENERIC_PVREF
+value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEt_PADSV
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEt_MORTALIZESV
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
 name|SSCHECK
 parameter_list|(
 name|need
@@ -520,11 +541,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|SAVEPADSV
+parameter_list|(
+name|s
+parameter_list|)
+value|save_padsv(s)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SAVEFREESV
 parameter_list|(
 name|s
 parameter_list|)
 value|save_freesv((SV*)(s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEMORTALIZESV
+parameter_list|(
+name|s
+parameter_list|)
+value|save_mortalizesv((SV*)(s))
 end_define
 
 begin_define
@@ -565,6 +606,16 @@ parameter_list|(
 name|s
 parameter_list|)
 value|save_generic_svref((SV**)&(s))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEGENERICPV
+parameter_list|(
+name|s
+parameter_list|)
+value|save_generic_pvref((char**)&(s))
 end_define
 
 begin_define
@@ -654,9 +705,19 @@ define|#
 directive|define
 name|SAVECOPSTASH
 parameter_list|(
-name|cop
+name|c
 parameter_list|)
-value|SAVEPPTR(CopSTASHPV(cop))
+value|SAVEPPTR(CopSTASHPV(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVECOPSTASH_FREE
+parameter_list|(
+name|c
+parameter_list|)
+value|SAVEGENERICPV(CopSTASHPV(c))
 end_define
 
 begin_define
@@ -664,9 +725,19 @@ define|#
 directive|define
 name|SAVECOPFILE
 parameter_list|(
-name|cop
+name|c
 parameter_list|)
-value|SAVEPPTR(CopFILE(cop))
+value|SAVEPPTR(CopFILE(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVECOPFILE_FREE
+parameter_list|(
+name|c
+parameter_list|)
+value|SAVEGENERICPV(CopFILE(c))
 end_define
 
 begin_else
@@ -679,19 +750,43 @@ define|#
 directive|define
 name|SAVECOPSTASH
 parameter_list|(
-name|cop
+name|c
 parameter_list|)
-value|SAVESPTR(CopSTASH(cop))
+value|SAVESPTR(CopSTASH(c))
 end_define
+
+begin_define
+define|#
+directive|define
+name|SAVECOPSTASH_FREE
+parameter_list|(
+name|c
+parameter_list|)
+value|SAVECOPSTASH(c)
+end_define
+
+begin_comment
+comment|/* XXX not refcounted */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SAVECOPFILE
 parameter_list|(
-name|cop
+name|c
 parameter_list|)
-value|SAVESPTR(CopFILEGV(cop))
+value|SAVESPTR(CopFILEGV(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVECOPFILE_FREE
+parameter_list|(
+name|c
+parameter_list|)
+value|SAVEGENERICSV(CopFILEGV(c))
 end_define
 
 begin_endif
@@ -704,9 +799,9 @@ define|#
 directive|define
 name|SAVECOPLINE
 parameter_list|(
-name|cop
+name|c
 parameter_list|)
-value|SAVEI16(CopLINE(cop))
+value|SAVEI16(CopLINE(c))
 end_define
 
 begin_comment
@@ -720,7 +815,19 @@ name|SSNEW
 parameter_list|(
 name|size
 parameter_list|)
-value|save_alloc(size, 0)
+value|Perl_save_alloc(aTHX_ (size), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSNEWt
+parameter_list|(
+name|n
+parameter_list|,
+name|t
+parameter_list|)
+value|SSNEW((n)*sizeof(t))
 end_define
 
 begin_define
@@ -732,7 +839,21 @@ name|size
 parameter_list|,
 name|align
 parameter_list|)
-value|save_alloc(size, \     (align - ((int)((caddr_t)&PL_savestack[PL_savestack_ix]) % align)) % align)
+value|Perl_save_alloc(aTHX_ (size), \     (align - ((int)((caddr_t)&PL_savestack[PL_savestack_ix]) % align)) % align)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSNEWat
+parameter_list|(
+name|n
+parameter_list|,
+name|t
+parameter_list|,
+name|align
+parameter_list|)
+value|SSNEWa((n)*sizeof(t), align)
 end_define
 
 begin_define
@@ -744,7 +865,19 @@ name|off
 parameter_list|,
 name|type
 parameter_list|)
-value|((type) ((char*)PL_savestack + off))
+value|((type)  ((char*)PL_savestack + off))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSPTRt
+parameter_list|(
+name|off
+parameter_list|,
+name|type
+parameter_list|)
+value|((type*) ((char*)PL_savestack + off))
 end_define
 
 begin_comment

@@ -688,10 +688,28 @@ parameter_list|)
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|PerlIO_set_cnt
+parameter_list|(
+name|f
+parameter_list|,
+name|c
+parameter_list|)
+value|(FILE_cnt(f) = (c))
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|STDIO_PTR_LVALUE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDIO_PTR_LVAL_NOCHANGE_CNT
 end_ifdef
 
 begin_define
@@ -709,22 +727,23 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|PerlIO_set_cnt
-parameter_list|(
-name|f
-parameter_list|,
-name|c
-parameter_list|)
-value|(FILE_cnt(f) = (c))
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* STDIO_PTR_LVALUE */
+end_comment
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* STDIO_CNT_LVALUE */
+end_comment
 
 begin_define
 define|#
@@ -759,6 +778,12 @@ directive|ifdef
 name|STDIO_PTR_LVALUE
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDIO_PTR_LVAL_NOCHANGE_CNT
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -770,7 +795,46 @@ name|p
 parameter_list|,
 name|c
 parameter_list|)
-value|(FILE_ptr(f) = (p), PerlIO_set_cnt(f,c))
+value|STMT_START {FILE_ptr(f) = (p), PerlIO_set_cnt(f,c);} STMT_END
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDIO_PTR_LVAL_SETS_CNT
+end_ifdef
+
+begin_comment
+comment|/* assert() may pre-process to ""; potential syntax error (FILE_ptr(), ) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PerlIO_set_ptrcnt
+parameter_list|(
+name|f
+parameter_list|,
+name|p
+parameter_list|,
+name|c
+parameter_list|)
+value|STMT_START {FILE_ptr(f) = (p); assert(FILE_cnt(f) == (c));} STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|PerlIO_fast_gets
+parameter_list|(
+name|f
+parameter_list|)
+value|1
 end_define
 
 begin_else
@@ -791,6 +855,16 @@ name|c
 parameter_list|)
 value|abort()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1605,6 +1679,14 @@ parameter_list|)
 value|_CANNOT _fileno_
 end_define
 
+begin_if
+if|#
+directive|if
+name|SFIO_VERSION
+operator|<
+literal|20000101L
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1634,6 +1716,11 @@ name|f
 parameter_list|)
 value|_CANNOT _funlockfile_
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2411,6 +2498,14 @@ parameter_list|)
 value|_CANNOT _putw_
 end_define
 
+begin_if
+if|#
+directive|if
+name|SFIO_VERSION
+operator|<
+literal|20000101L
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2440,6 +2535,11 @@ name|f
 parameter_list|)
 value|_CANNOT _funlockfile_
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    cop.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    cop.h  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_struct
@@ -106,10 +106,6 @@ parameter_list|)
 value|((c)->cop_file = savepv(pv))
 end_define
 
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -149,12 +145,8 @@ name|c
 parameter_list|,
 name|pv
 parameter_list|)
-value|((c)->cop_stashpv = savepv(pv))
+value|((c)->cop_stashpv = ((pv) ? savepv(pv) : Nullch))
 end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_define
 define|#
@@ -175,7 +167,7 @@ name|c
 parameter_list|,
 name|hv
 parameter_list|)
-value|CopSTASHPV_set(c, HvNAME(hv))
+value|CopSTASHPV_set(c, (hv) ? HvNAME(hv) : Nullch)
 end_define
 
 begin_define
@@ -187,7 +179,7 @@ name|c
 parameter_list|,
 name|hv
 parameter_list|)
-value|(hv 					\&& (CopSTASHPV(c) == HvNAME(hv)	\ 				     || (CopSTASHPV(c)&& HvNAME(hv)	\&& strEQ(CopSTASHPV(c), HvNAME(hv)))))
+value|((hv) 					\&& (CopSTASHPV(c) == HvNAME(hv)	\ 				     || (CopSTASHPV(c)&& HvNAME(hv)	\&& strEQ(CopSTASHPV(c), HvNAME(hv)))))
 end_define
 
 begin_else
@@ -214,7 +206,7 @@ name|c
 parameter_list|,
 name|gv
 parameter_list|)
-value|((c)->cop_filegv = gv)
+value|((c)->cop_filegv = (GV*)SvREFCNT_inc(gv))
 end_define
 
 begin_define
@@ -226,7 +218,7 @@ name|c
 parameter_list|,
 name|pv
 parameter_list|)
-value|((c)->cop_filegv = gv_fetchfile(pv))
+value|CopFILEGV_set((c), gv_fetchfile(pv))
 end_define
 
 begin_define
@@ -278,7 +270,7 @@ name|c
 parameter_list|,
 name|hv
 parameter_list|)
-value|((c)->cop_stash = hv)
+value|((c)->cop_stash = (hv))
 end_define
 
 begin_define
@@ -291,6 +283,10 @@ parameter_list|)
 value|(CopSTASH(c) ? HvNAME(CopSTASH(c)) : Nullch)
 end_define
 
+begin_comment
+comment|/* cop_stash is not refcounted */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -300,7 +296,7 @@ name|c
 parameter_list|,
 name|pv
 parameter_list|)
-value|CopSTASH_set(c, gv_stashpv(pv,GV_ADD))
+value|CopSTASH_set((c), gv_stashpv(pv,GV_ADD))
 end_define
 
 begin_define
@@ -312,7 +308,7 @@ name|c
 parameter_list|,
 name|hv
 parameter_list|)
-value|(CopSTASH(c) == hv)
+value|(CopSTASH(c) == (hv))
 end_define
 
 begin_endif
@@ -426,6 +422,11 @@ name|U8
 name|lval
 decl_stmt|;
 comment|/* XXX merge lval and hasargs? */
+name|SV
+modifier|*
+modifier|*
+name|oldcurpad
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -489,45 +490,20 @@ begin_comment
 comment|/* USE_THREADS */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_ITHREADS
-end_ifdef
-
 begin_comment
-comment|/* junk in @_ spells trouble when cloning CVs, so don't leave any */
+comment|/* junk in @_ spells trouble when cloning CVs and in pp_caller(), so don't  * leave any (a fast av_clear(ary), basically) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CLEAR_ARGARRAY
-parameter_list|()
-value|av_clear(cx->blk_sub.argarray)
+parameter_list|(
+name|ary
+parameter_list|)
+define|\
+value|STMT_START {							\ 	AvMAX(ary) += AvARRAY(ary) - AvALLOC(ary);			\ 	SvPVX(ary) = (char*)AvALLOC(ary);				\ 	AvFILLp(ary) = -1;						\     } STMT_END
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CLEAR_ARGARRAY
-parameter_list|()
-value|NOOP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_ITHREADS */
-end_comment
 
 begin_define
 define|#
@@ -541,7 +517,7 @@ parameter_list|)
 define|\
 value|STMT_START {							\ 	if (cx->blk_sub.hasargs) {					\ 	    POP_SAVEARRAY();						\
 comment|/* abandon @_ if it got reified */
-value|\ 	    if (AvREAL(cx->blk_sub.argarray)) {				\ 		SSize_t fill = AvFILLp(cx->blk_sub.argarray);		\ 		SvREFCNT_dec(cx->blk_sub.argarray);			\ 		cx->blk_sub.argarray = newAV();				\ 		av_extend(cx->blk_sub.argarray, fill);			\ 		AvFLAGS(cx->blk_sub.argarray) = AVf_REIFY;		\ 		PL_curpad[0] = (SV*)cx->blk_sub.argarray;		\ 	    }								\ 	    else {							\ 		CLEAR_ARGARRAY();					\ 	    }								\ 	}								\ 	sv = (SV*)cx->blk_sub.cv;					\ 	if (sv&& (CvDEPTH((CV*)sv) = cx->blk_sub.olddepth))		\ 	    sv = Nullsv;						\     } STMT_END
+value|\ 	    if (AvREAL(cx->blk_sub.argarray)) {				\ 		SSize_t fill = AvFILLp(cx->blk_sub.argarray);		\ 		SvREFCNT_dec(cx->blk_sub.argarray);			\ 		cx->blk_sub.argarray = newAV();				\ 		av_extend(cx->blk_sub.argarray, fill);			\ 		AvFLAGS(cx->blk_sub.argarray) = AVf_REIFY;		\ 		cx->blk_sub.oldcurpad[0] = (SV*)cx->blk_sub.argarray;	\ 	    }								\ 	    else {							\ 		CLEAR_ARGARRAY(cx->blk_sub.argarray);			\ 	    }								\ 	}								\ 	sv = (SV*)cx->blk_sub.cv;					\ 	if (sv&& (CvDEPTH((CV*)sv) = cx->blk_sub.olddepth))		\ 	    sv = Nullsv;						\     } STMT_END
 end_define
 
 begin_define
@@ -1323,7 +1299,7 @@ comment|/* "gimme" values */
 end_comment
 
 begin_comment
-comment|/* =for apidoc AmU||G_SCALAR Used to indicate scalar context.  See C<GIMME_V>, C<GIMME>, and L<perlcall>.  =for apidoc AmU||G_ARRAY Used to indicate array context.  See C<GIMME_V>, C<GIMME> and L<perlcall>.  =for apidoc AmU||G_VOID Used to indicate void context.  See C<GIMME_V> and L<perlcall>.  =for apidoc AmU||G_DISCARD Indicates that arguments returned from a callback should be discarded.  See L<perlcall>.  =for apidoc AmU||G_EVAL  Used to force a Perl C<eval> wrapper around a callback.  See L<perlcall>.  =for apidoc AmU||G_NOARGS  Indicates that no arguments are being sent to a callback.  See L<perlcall>.  =cut */
+comment|/* =for apidoc AmU||G_SCALAR Used to indicate scalar context.  See C<GIMME_V>, C<GIMME>, and L<perlcall>.  =for apidoc AmU||G_ARRAY Used to indicate list context.  See C<GIMME_V>, C<GIMME> and L<perlcall>.  =for apidoc AmU||G_VOID Used to indicate void context.  See C<GIMME_V> and L<perlcall>.  =for apidoc AmU||G_DISCARD Indicates that arguments returned from a callback should be discarded.  See L<perlcall>.  =for apidoc AmU||G_EVAL  Used to force a Perl C<eval> wrapper around a callback.  See L<perlcall>.  =for apidoc AmU||G_NOARGS  Indicates that no arguments are being sent to a callback.  See L<perlcall>.  =cut */
 end_comment
 
 begin_define
@@ -1410,6 +1386,17 @@ begin_comment
 comment|/* Disable debugging at toplevel.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|G_METHOD
+value|64
+end_define
+
+begin_comment
+comment|/* Calling method. */
+end_comment
+
 begin_comment
 comment|/* flag bits for PL_in_eval */
 end_comment
@@ -1456,6 +1443,17 @@ end_define
 
 begin_comment
 comment|/* set by Perl_call_sv if G_KEEPERR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EVAL_INREQUIRE
+value|8
+end_define
+
+begin_comment
+comment|/* The code is being required. */
 end_comment
 
 begin_comment
@@ -1670,7 +1668,7 @@ define|#
 directive|define
 name|POPSTACK
 define|\
-value|STMT_START {							\ 	djSP;								\ 	PERL_SI *prev = PL_curstackinfo->si_prev;			\ 	if (!prev) {							\ 	    PerlIO_printf(Perl_error_log, "panic: POPSTACK\n");		\ 	    my_exit(1);							\ 	}								\ 	SWITCHSTACK(PL_curstack,prev->si_stack);			\
+value|STMT_START {							\ 	dSP;								\ 	PERL_SI *prev = PL_curstackinfo->si_prev;			\ 	if (!prev) {							\ 	    PerlIO_printf(Perl_error_log, "panic: POPSTACK\n");		\ 	    my_exit(1);							\ 	}								\ 	SWITCHSTACK(PL_curstack,prev->si_stack);			\
 comment|/* don't free prev here, free them all at the END{} */
 value|\ 	PL_curstackinfo = prev;						\     } STMT_END
 end_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    scope.c  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    scope.c  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -117,8 +117,6 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|int
 name|ex
 decl_stmt|;
@@ -191,8 +189,6 @@ name|int
 name|n
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -465,8 +461,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|cxstack_max
 operator|=
 name|GROW
@@ -504,8 +498,6 @@ modifier|*
 name|retop
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 if|if
 condition|(
 name|PL_retstack_ix
@@ -550,8 +542,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 if|if
 condition|(
 name|PL_retstack_ix
@@ -579,8 +569,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 if|if
 condition|(
 name|PL_scopestack_ix
@@ -623,8 +611,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|I32
 name|oldsave
 init|=
@@ -649,8 +635,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|I32
 name|oldmax
 init|=
@@ -697,8 +681,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|PL_savestack_max
 operator|=
 name|GROW
@@ -735,8 +717,6 @@ name|I32
 name|n
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|STRESS_REALLOC
@@ -788,8 +768,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 comment|/* XXX should tmps_floor live in cxstack? */
 name|I32
 name|myfloor
@@ -855,8 +833,6 @@ modifier|*
 name|sptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|SV
 modifier|*
@@ -935,6 +911,7 @@ argument_list|(
 name|osv
 argument_list|)
 expr_stmt|;
+comment|/* note, can croak! */
 if|if
 condition|(
 name|PL_tainting
@@ -1014,6 +991,7 @@ argument_list|(
 name|osv
 argument_list|)
 expr_stmt|;
+comment|/* XXX SvMAGIC() is *shared* between osv and sv.  This can 	 * lead to coredumps when both SVs are destroyed without one 	 * of their SvMAGIC() slots being NULLed. */
 name|PL_localizing
 operator|=
 literal|1
@@ -1045,8 +1023,6 @@ modifier|*
 name|gv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SV
 modifier|*
 modifier|*
@@ -1106,8 +1082,6 @@ modifier|*
 name|sptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -1142,7 +1116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like save_svref(), but doesn't deal with magic.  Can be used to  * restore a global SV to its prior contents, freeing new value. */
+comment|/* Like save_sptr(), but also SvREFCNT_dec()s the new value.  Can be used to  * restore a global SV to its prior contents, freeing new value. */
 end_comment
 
 begin_function
@@ -1156,8 +1130,6 @@ modifier|*
 name|sptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -1185,6 +1157,45 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Like save_pptr(), but also Safefree()s the new value if it is different  * from the old one.  Can be used to restore a global char* to its prior  * contents, freeing new value. */
+end_comment
+
+begin_function
+name|void
+name|Perl_save_generic_pvref
+parameter_list|(
+name|pTHX_
+name|char
+modifier|*
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|SSCHECK
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+name|SSPUSHPTR
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+name|SSPUSHPTR
+argument_list|(
+operator|*
+name|str
+argument_list|)
+expr_stmt|;
+name|SSPUSHINT
+argument_list|(
+name|SAVEt_GENERIC_PVREF
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|void
 name|Perl_save_gp
@@ -1198,8 +1209,6 @@ name|I32
 name|empty
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|6
@@ -1372,6 +1381,23 @@ argument_list|(
 name|PL_curcop
 argument_list|)
 expr_stmt|;
+name|GvFILE
+argument_list|(
+name|gv
+argument_list|)
+operator|=
+name|CopFILE
+argument_list|(
+name|PL_curcop
+argument_list|)
+condition|?
+name|CopFILE
+argument_list|(
+name|PL_curcop
+argument_list|)
+else|:
+literal|""
+expr_stmt|;
 name|GvEGV
 argument_list|(
 name|gv
@@ -1410,8 +1436,6 @@ modifier|*
 name|gv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|AV
 modifier|*
 name|oav
@@ -1560,8 +1584,6 @@ modifier|*
 name|gv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|HV
 modifier|*
 name|ohv
@@ -1691,8 +1713,6 @@ modifier|*
 name|item
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|SV
 modifier|*
@@ -1747,8 +1767,6 @@ modifier|*
 name|intp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -1784,8 +1802,6 @@ modifier|*
 name|longp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -1820,8 +1836,6 @@ modifier|*
 name|intp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -1856,8 +1870,6 @@ modifier|*
 name|intp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -1892,8 +1904,6 @@ modifier|*
 name|bytep
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -1928,8 +1938,6 @@ modifier|*
 name|ivp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -1969,8 +1977,6 @@ modifier|*
 name|pptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -2005,8 +2011,6 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -2047,8 +2051,6 @@ modifier|*
 name|sptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -2074,6 +2076,49 @@ block|}
 end_function
 
 begin_function
+name|void
+name|Perl_save_padsv
+parameter_list|(
+name|pTHX_
+name|PADOFFSET
+name|off
+parameter_list|)
+block|{
+name|SSCHECK
+argument_list|(
+literal|4
+argument_list|)
+expr_stmt|;
+name|SSPUSHPTR
+argument_list|(
+name|PL_curpad
+index|[
+name|off
+index|]
+argument_list|)
+expr_stmt|;
+name|SSPUSHPTR
+argument_list|(
+name|PL_curpad
+argument_list|)
+expr_stmt|;
+name|SSPUSHLONG
+argument_list|(
+operator|(
+name|long
+operator|)
+name|off
+argument_list|)
+expr_stmt|;
+name|SSPUSHINT
+argument_list|(
+name|SAVEt_PADSV
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|SV
 modifier|*
 modifier|*
@@ -2087,8 +2132,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|USE_THREADS
-name|dTHR
-expr_stmt|;
 name|SV
 modifier|*
 modifier|*
@@ -2164,8 +2207,6 @@ modifier|*
 name|gv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|2
@@ -2195,8 +2236,6 @@ modifier|*
 name|hptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -2232,8 +2271,6 @@ modifier|*
 name|aptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -2268,8 +2305,6 @@ modifier|*
 name|sv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|2
@@ -2290,6 +2325,34 @@ end_function
 
 begin_function
 name|void
+name|Perl_save_mortalizesv
+parameter_list|(
+name|pTHX_
+name|SV
+modifier|*
+name|sv
+parameter_list|)
+block|{
+name|SSCHECK
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|SSPUSHPTR
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+name|SSPUSHINT
+argument_list|(
+name|SAVEt_MORTALIZESV
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|Perl_save_freeop
 parameter_list|(
 name|pTHX_
@@ -2298,8 +2361,6 @@ modifier|*
 name|o
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|2
@@ -2328,8 +2389,6 @@ modifier|*
 name|pv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|2
@@ -2359,8 +2418,6 @@ modifier|*
 name|svp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|2
@@ -2403,8 +2460,6 @@ name|I32
 name|klen
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|4
@@ -2451,8 +2506,6 @@ name|I32
 name|maxsarg
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|SV
 modifier|*
@@ -2537,8 +2590,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -2575,8 +2626,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|3
@@ -2618,8 +2667,6 @@ modifier|*
 name|sptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|4
@@ -2679,8 +2726,6 @@ modifier|*
 name|sptr
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|4
@@ -2731,8 +2776,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SSCHECK
 argument_list|(
 literal|2
@@ -2763,8 +2806,6 @@ name|I32
 name|pad
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|I32
 name|start
@@ -2854,8 +2895,6 @@ name|I32
 name|base
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|SV
 modifier|*
@@ -2885,6 +2924,11 @@ specifier|register
 name|void
 modifier|*
 name|ptr
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|str
 decl_stmt|;
 name|I32
 name|i
@@ -2992,6 +3036,58 @@ goto|goto
 name|restore_sv
 goto|;
 case|case
+name|SAVEt_GENERIC_PVREF
+case|:
+comment|/* generic pv */
+name|str
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|SSPOPPTR
+expr_stmt|;
+name|ptr
+operator|=
+name|SSPOPPTR
+expr_stmt|;
+if|if
+condition|(
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|ptr
+operator|!=
+name|str
+condition|)
+block|{
+name|Safefree
+argument_list|(
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|ptr
+argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|ptr
+operator|=
+name|str
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|SAVEt_GENERIC_SVREF
 case|:
 comment|/* generic sv */
@@ -3007,11 +3103,6 @@ name|ptr
 operator|=
 name|SSPOPPTR
 expr_stmt|;
-if|if
-condition|(
-name|ptr
-condition|)
-block|{
 name|sv
 operator|=
 operator|*
@@ -3037,7 +3128,6 @@ argument_list|(
 name|sv
 argument_list|)
 expr_stmt|;
-block|}
 name|SvREFCNT_dec
 argument_list|(
 name|value
@@ -3166,6 +3256,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* XXX This branch is pretty bogus.  This code irretrievably 	     * clears(!) the magic on the SV (either to avoid further 	     * croaking that might ensue when the SvSETMAGIC() below is 	     * called, or to avoid two different SVs pointing at the same 	     * SvMAGIC()).  This needs a total rethink.  --GSAR */
 elseif|else
 if|if
 condition|(
@@ -3216,6 +3307,7 @@ argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
+comment|/* XXX this is a leak when we get here because the 		 * mg_get() in save_scalar_at() croaked */
 name|SvMAGIC
 argument_list|(
 name|value
@@ -3838,6 +3930,23 @@ operator|=
 name|SSPOPPTR
 expr_stmt|;
 name|SvREFCNT_dec
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|ptr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SAVEt_MORTALIZESV
+case|:
+name|ptr
+operator|=
+name|SSPOPPTR
+expr_stmt|;
+name|sv_2mortal
 argument_list|(
 operator|(
 name|SV
@@ -4520,34 +4629,6 @@ break|break;
 case|case
 name|SAVEt_HINTS
 case|:
-if|if
-condition|(
-name|GvHV
-argument_list|(
-name|PL_hintgv
-argument_list|)
-condition|)
-block|{
-name|SvREFCNT_dec
-argument_list|(
-operator|(
-name|SV
-operator|*
-operator|)
-name|GvHV
-argument_list|(
-name|PL_hintgv
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|GvHV
-argument_list|(
-name|PL_hintgv
-argument_list|)
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 operator|*
 operator|(
 name|I32
@@ -4595,6 +4676,46 @@ operator|*
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|SAVEt_PADSV
+case|:
+block|{
+name|PADOFFSET
+name|off
+init|=
+operator|(
+name|PADOFFSET
+operator|)
+name|SSPOPLONG
+decl_stmt|;
+name|ptr
+operator|=
+name|SSPOPPTR
+expr_stmt|;
+if|if
+condition|(
+name|ptr
+condition|)
+operator|(
+operator|(
+name|SV
+operator|*
+operator|*
+operator|)
+name|ptr
+operator|)
+index|[
+name|off
+index|]
+operator|=
+operator|(
+name|SV
+operator|*
+operator|)
+name|SSPOPPTR
+expr_stmt|;
+block|}
+break|break;
 default|default:
 name|Perl_croak
 argument_list|(
@@ -4620,8 +4741,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-name|dTHR
-expr_stmt|;
 name|PerlIO_printf
 argument_list|(
 name|Perl_debug_log

@@ -8,7 +8,7 @@ comment|/*   Here are some notes on configuring Perl's malloc.  (For non-perl   
 end_comment
 
 begin_comment
-comment|/*    If used outside of Perl environment, it may be useful to redefine    the following macros (listed below with defaults):       # Type of address returned by allocation functions      Malloc_t				void *       # Type of size argument for allocation functions      MEM_SIZE				unsigned long       # size of void*      PTRSIZE				4       # Maximal value in LONG      LONG_MAX				0x7FFFFFFF       # Unsigned integer type big enough to keep a pointer      UV					unsigned long       # Type of pointer with 1-byte granularity      caddr_t				char *       # Type returned by free()      Free_t				void       # Very fatal condition reporting function (cannot call any )      fatalcroak(arg)			write(2,arg,strlen(arg)) + exit(2)         # Fatal error reporting function      croak(format, arg)			warn(idem) + exit(1)         # Error reporting function      warn(format, arg)			fprintf(stderr, idem)       # Locking/unlocking for MT operation      MALLOC_LOCK			MUTEX_LOCK(&PL_malloc_mutex)      MALLOC_UNLOCK			MUTEX_UNLOCK(&PL_malloc_mutex)       # Locking/unlocking mutex for MT operation      MUTEX_LOCK(l)			void      MUTEX_UNLOCK(l)			void  */
+comment|/*    If used outside of Perl environment, it may be useful to redefine    the following macros (listed below with defaults):       # Type of address returned by allocation functions      Malloc_t				void *       # Type of size argument for allocation functions      MEM_SIZE				unsigned long       # size of void*      PTRSIZE				4       # Maximal value in LONG      LONG_MAX				0x7FFFFFFF       # Unsigned integer type big enough to keep a pointer      UV					unsigned long       # Type of pointer with 1-byte granularity      caddr_t				char *       # Type returned by free()      Free_t				void       # Very fatal condition reporting function (cannot call any )      fatalcroak(arg)			write(2,arg,strlen(arg)) + exit(2)         # Fatal error reporting function      croak(format, arg)			warn(idem) + exit(1)         # Fatal error reporting function      croak2(format, arg1, arg2)		warn2(idem) + exit(1)         # Error reporting function      warn(format, arg)			fprintf(stderr, idem)       # Error reporting function      warn2(format, arg1, arg2)		fprintf(stderr, idem)       # Locking/unlocking for MT operation      MALLOC_LOCK			MUTEX_LOCK(&PL_malloc_mutex)      MALLOC_UNLOCK			MUTEX_UNLOCK(&PL_malloc_mutex)       # Locking/unlocking mutex for MT operation      MUTEX_LOCK(l)			void      MUTEX_UNLOCK(l)			void  */
 end_comment
 
 begin_ifndef
@@ -350,8 +350,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|croak2
+value|Perl_croak_nocontext
+end_define
+
+begin_define
+define|#
+directive|define
 name|warn
 value|Perl_warn_nocontext
+end_define
+
+begin_define
+define|#
+directive|define
+name|warn2
+value|Perl_warn_nocontext
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|croak2
+value|croak
+end_define
+
+begin_define
+define|#
+directive|define
+name|warn2
+value|warn
 end_define
 
 begin_endif
@@ -614,6 +647,35 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|croak2
+end_ifndef
+
+begin_comment
+comment|/* make depend */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|croak2
+parameter_list|(
+name|mess
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+value|(warn2((mess), (arg1), (arg2)), exit(1))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|warn
 end_ifndef
 
@@ -627,6 +689,29 @@ parameter_list|,
 name|arg
 parameter_list|)
 value|fprintf(stderr, (mess), (arg))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|warn2
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|warn2
+parameter_list|(
+name|mess
+parameter_list|,
+name|arg1
+parameter_list|)
+value|fprintf(stderr, (mess), (arg1), (arg2))
 end_define
 
 begin_endif
@@ -1096,6 +1181,7 @@ endif|#
 directive|endif
 struct|struct
 block|{
+comment|/*  * Keep the ovu_index and ovu_magic in this order, having a char  * field first gives alignment indigestion in some systems, such as  * MachTen.  */
 name|u_char
 name|ovu_index
 decl_stmt|;
@@ -2843,41 +2929,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PERL_EMERGENCY_SBRK
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PERL_CORE
-argument_list|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BIG_SIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|BIG_SIZE
-value|(1<<16)
-end_define
-
-begin_comment
-comment|/* 64K */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -2922,6 +2978,220 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BITS_IN_PTR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BITS_IN_PTR
+value|(8*PTRSIZE)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * nextf[i] is the pointer to the next free block of size 2^i.  The  * smallest allocatable block is 8 bytes.  The overhead information  * precedes the data area returned to the user.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBUCKETS
+value|(BITS_IN_PTR*BUCKETS_PER_POW2 + 1)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|union
+name|overhead
+modifier|*
+name|nextf
+index|[
+name|NBUCKETS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PURIFY
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_PERL_SBRK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USE_PERL_SBRK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_PERL_SBRK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|sbrk
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_sbrk(a)
+end_define
+
+begin_function_decl
+name|Malloc_t
+name|Perl_sbrk
+parameter_list|(
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAS_SBRK_PROTO
+end_ifndef
+
+begin_function_decl
+specifier|extern
+name|Malloc_t
+name|sbrk
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUGGING_MSTATS
+end_ifdef
+
+begin_comment
+comment|/*  * nmalloc[i] is the difference between the number of mallocs and frees  * for a given block size.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|nmalloc
+index|[
+name|NBUCKETS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|sbrk_slack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|start_slack
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !( defined DEBUGGING_MSTATS ) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sbrk_slack
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|goodsbrk
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PERL_EMERGENCY_SBRK
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BIG_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BIG_SIZE
+value|(1<<16)
+end_define
+
+begin_comment
+comment|/* 64K */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -2936,6 +3206,17 @@ name|MEM_SIZE
 name|emergency_buffer_size
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|no_mem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0 if the last request for more memory succeeded. 			   Otherwise the size of the failing request. */
+end_comment
 
 begin_function
 specifier|static
@@ -2970,16 +3251,47 @@ condition|(
 name|size
 operator|>=
 name|BIG_SIZE
+operator|&&
+operator|(
+operator|!
+name|no_mem
+operator|||
+operator|(
+name|size
+operator|<
+name|no_mem
+operator|)
+operator|)
 condition|)
 block|{
-comment|/* Give the possibility to recover: */
+comment|/* Give the possibility to recover, but avoid an infinite cycle. */
 name|MALLOC_UNLOCK
 expr_stmt|;
-name|croak
-argument_list|(
-literal|"Out of memory during \"large\" request for %i bytes"
-argument_list|,
+name|no_mem
+operator|=
 name|size
+expr_stmt|;
+name|croak2
+argument_list|(
+literal|"Out of memory during \"large\" request for %"
+name|UVuf
+literal|" bytes, total sbrk() is %"
+name|UVuf
+literal|" bytes"
+argument_list|,
+operator|(
+name|UV
+operator|)
+name|size
+argument_list|,
+call|(
+name|UV
+call|)
+argument_list|(
+name|goodsbrk
+operator|+
+name|sbrk_slack
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3257,9 +3569,25 @@ name|MALLOC_UNLOCK
 expr_stmt|;
 name|croak
 argument_list|(
-literal|"Out of memory during request for %i bytes"
+literal|"Out of memory during request for %"
+name|UVuf
+literal|" bytes, total sbrk() is %"
+name|UVuf
+literal|" bytes"
 argument_list|,
+operator|(
+name|UV
+operator|)
 name|size
+argument_list|,
+call|(
+name|UV
+call|)
+argument_list|(
+name|goodsbrk
+operator|+
+name|sbrk_slack
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -3275,7 +3603,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(defined(PERL_EMERGENCY_SBRK)&& defined(PERL_CORE)) */
+comment|/*  !defined(PERL_EMERGENCY_SBRK) */
 end_comment
 
 begin_define
@@ -3293,201 +3621,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !(defined(PERL_EMERGENCY_SBRK)&& defined(PERL_CORE)) */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BITS_IN_PTR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|BITS_IN_PTR
-value|(8*PTRSIZE)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * nextf[i] is the pointer to the next free block of size 2^i.  The  * smallest allocatable block is 8 bytes.  The overhead information  * precedes the data area returned to the user.  */
+comment|/* ifdef PERL_CORE */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NBUCKETS
-value|(BITS_IN_PTR*BUCKETS_PER_POW2 + 1)
-end_define
-
-begin_decl_stmt
-specifier|static
-name|union
-name|overhead
-modifier|*
-name|nextf
-index|[
-name|NBUCKETS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PURIFY
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|USE_PERL_SBRK
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_PERL_SBRK
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_PERL_SBRK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|sbrk
-parameter_list|(
-name|a
-parameter_list|)
-value|Perl_sbrk(a)
-end_define
-
-begin_function_decl
-name|Malloc_t
-name|Perl_sbrk
-parameter_list|(
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DONT_DECLARE_STD
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_UNISTD
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|Malloc_t
-name|sbrk
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUGGING_MSTATS
-end_ifdef
-
-begin_comment
-comment|/*  * nmalloc[i] is the difference between the number of mallocs and frees  * for a given block size.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|nmalloc
-index|[
-name|NBUCKETS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|sbrk_slack
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|start_slack
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|goodsbrk
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -3799,6 +3940,17 @@ operator|!
 name|PL_nomemok
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PLAIN_MALLOC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|NO_FANCY_MALLOC
+argument_list|)
 name|PerlIO_puts
 argument_list|(
 name|PerlIO_stderr
@@ -3807,6 +3959,157 @@ argument_list|,
 literal|"Out of memory!\n"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|char
+name|buff
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|eb
+init|=
+name|buff
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buff
+argument_list|)
+operator|-
+literal|1
+decl_stmt|;
+name|char
+modifier|*
+name|s
+init|=
+name|eb
+decl_stmt|;
+name|size_t
+name|n
+init|=
+name|nbytes
+decl_stmt|;
+name|PerlIO_puts
+argument_list|(
+name|PerlIO_stderr
+argument_list|()
+argument_list|,
+literal|"Out of memory during request for "
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUGGING
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|RCHECK
+argument_list|)
+name|n
+operator|=
+name|size
+expr_stmt|;
+endif|#
+directive|endif
+operator|*
+name|s
+operator|=
+literal|0
+expr_stmt|;
+do|do
+block|{
+operator|*
+operator|--
+name|s
+operator|=
+literal|'0'
+operator|+
+operator|(
+name|n
+operator|%
+literal|10
+operator|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|n
+operator|/=
+literal|10
+condition|)
+do|;
+name|PerlIO_puts
+argument_list|(
+name|PerlIO_stderr
+argument_list|()
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|PerlIO_puts
+argument_list|(
+name|PerlIO_stderr
+argument_list|()
+argument_list|,
+literal|" bytes, total sbrk() is "
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|eb
+expr_stmt|;
+name|n
+operator|=
+name|goodsbrk
+operator|+
+name|sbrk_slack
+expr_stmt|;
+do|do
+block|{
+operator|*
+operator|--
+name|s
+operator|=
+literal|'0'
+operator|+
+operator|(
+name|n
+operator|%
+literal|10
+operator|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|n
+operator|/=
+literal|10
+condition|)
+do|;
+name|PerlIO_puts
+argument_list|(
+name|PerlIO_stderr
+argument_list|()
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|PerlIO_puts
+argument_list|(
+name|PerlIO_stderr
+argument_list|()
+argument_list|,
+literal|" bytes!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(PLAIN_MALLOC)&& defined(NO_FANCY_MALLOC) */
 name|my_exit
 argument_list|(
 literal|1
@@ -3835,8 +4138,6 @@ argument_list|,
 name|PTR2UV
 argument_list|(
 name|p
-operator|+
-literal|1
 argument_list|)
 argument_list|,
 call|(
@@ -3922,7 +4223,7 @@ name|PerlIO_stderr
 argument_list|()
 argument_list|,
 literal|"Unaligned `next' pointer in the free "
-literal|"chain 0x"
+literal|"chain 0x%"
 name|UVxf
 literal|" at 0x%"
 name|UVxf
@@ -5355,6 +5656,25 @@ operator|=
 name|cp
 expr_stmt|;
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PLAIN_MALLOC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_FANCY_MALLOC
+argument_list|)
+name|no_mem
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|last_sbrk_top
 operator|=
 name|cp
@@ -8245,6 +8565,12 @@ name|sbrked_remains
 expr_stmt|;
 name|MALLOC_UNLOCK
 expr_stmt|;
+name|buf
+operator|->
+name|nbuckets
+operator|=
+name|NBUCKETS
+expr_stmt|;
 if|if
 condition|(
 name|level
@@ -8327,36 +8653,21 @@ name|DEBUGGING_MSTATS
 specifier|register
 name|int
 name|i
-decl_stmt|,
-name|j
-decl_stmt|;
-specifier|register
-name|union
-name|overhead
-modifier|*
-name|p
 decl_stmt|;
 name|perl_mstats_t
 name|buffer
 decl_stmt|;
-name|unsigned
-name|long
+name|UV
 name|nf
 index|[
 name|NBUCKETS
 index|]
 decl_stmt|;
-name|unsigned
-name|long
+name|UV
 name|nt
 index|[
 name|NBUCKETS
 index|]
-decl_stmt|;
-name|struct
-name|chunk_chain_s
-modifier|*
-name|nextchain
 decl_stmt|;
 name|buffer
 operator|.
@@ -8388,12 +8699,20 @@ name|PerlIO_printf
 argument_list|(
 name|Perl_error_log
 argument_list|,
-literal|"Memory allocation statistics %s (buckets %ld(%ld)..%ld(%ld)\n"
+literal|"Memory allocation statistics %s (buckets %"
+name|IVdf
+literal|"(%"
+name|IVdf
+literal|")..%"
+name|IVdf
+literal|"(%"
+name|IVdf
+literal|")\n"
 argument_list|,
 name|s
 argument_list|,
 operator|(
-name|long
+name|IV
 operator|)
 name|BUCKET_SIZE_REAL
 argument_list|(
@@ -8401,7 +8720,7 @@ name|MIN_BUCKET
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|IV
 operator|)
 name|BUCKET_SIZE
 argument_list|(
@@ -8409,7 +8728,7 @@ name|MIN_BUCKET
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|IV
 operator|)
 name|BUCKET_SIZE_REAL
 argument_list|(
@@ -8419,7 +8738,7 @@ name|topbucket
 argument_list|)
 argument_list|,
 operator|(
-name|long
+name|IV
 operator|)
 name|BUCKET_SIZE
 argument_list|(
@@ -8433,7 +8752,9 @@ name|PerlIO_printf
 argument_list|(
 name|Perl_error_log
 argument_list|,
-literal|"%8ld free:"
+literal|"%8"
+name|IVdf
+literal|" free:"
 argument_list|,
 name|buffer
 operator|.
@@ -8476,7 +8797,8 @@ operator|*
 name|BUCKETS_PER_POW2
 operator|)
 condition|?
-literal|" %5d"
+literal|" %5"
+name|UVuf
 else|:
 operator|(
 operator|(
@@ -8487,9 +8809,11 @@ operator|*
 name|BUCKETS_PER_POW2
 operator|)
 condition|?
-literal|" %3d"
+literal|" %3"
+name|UVuf
 else|:
-literal|" %d"
+literal|" %"
+name|UVuf
 operator|)
 operator|)
 argument_list|,
@@ -8550,7 +8874,8 @@ operator|*
 name|BUCKETS_PER_POW2
 operator|)
 condition|?
-literal|" %5d"
+literal|" %5"
+name|UVuf
 else|:
 operator|(
 operator|(
@@ -8561,9 +8886,11 @@ operator|*
 name|BUCKETS_PER_POW2
 operator|)
 condition|?
-literal|" %3d"
+literal|" %3"
+name|UVuf
 else|:
-literal|" %d"
+literal|" %"
+name|UVuf
 operator|)
 operator|)
 argument_list|,
@@ -8582,7 +8909,9 @@ name|PerlIO_printf
 argument_list|(
 name|Perl_error_log
 argument_list|,
-literal|"\n%8ld used:"
+literal|"\n%8"
+name|IVdf
+literal|" used:"
 argument_list|,
 name|buffer
 operator|.
@@ -8629,7 +8958,8 @@ operator|*
 name|BUCKETS_PER_POW2
 operator|)
 condition|?
-literal|" %5d"
+literal|" %5"
+name|IVdf
 else|:
 operator|(
 operator|(
@@ -8640,9 +8970,11 @@ operator|*
 name|BUCKETS_PER_POW2
 operator|)
 condition|?
-literal|" %3d"
+literal|" %3"
+name|IVdf
 else|:
-literal|" %d"
+literal|" %"
+name|IVdf
 operator|)
 operator|)
 argument_list|,
@@ -8710,7 +9042,8 @@ operator|*
 name|BUCKETS_PER_POW2
 operator|)
 condition|?
-literal|" %5d"
+literal|" %5"
+name|IVdf
 else|:
 operator|(
 operator|(
@@ -8721,9 +9054,11 @@ operator|*
 name|BUCKETS_PER_POW2
 operator|)
 condition|?
-literal|" %3d"
+literal|" %3"
+name|IVdf
 else|:
-literal|" %d"
+literal|" %"
+name|IVdf
 operator|)
 operator|)
 argument_list|,
@@ -8749,7 +9084,21 @@ name|PerlIO_printf
 argument_list|(
 name|Perl_error_log
 argument_list|,
-literal|"\nTotal sbrk(): %ld/%ld:%ld. Odd ends: pad+heads+chain+tail: %ld+%ld+%ld+%ld.\n"
+literal|"\nTotal sbrk(): %"
+name|IVdf
+literal|"/%"
+name|IVdf
+literal|":%"
+name|IVdf
+literal|". Odd ends: pad+heads+chain+tail: %"
+name|IVdf
+literal|"+%"
+name|IVdf
+literal|"+%"
+name|IVdf
+literal|"+%"
+name|IVdf
+literal|".\n"
 argument_list|,
 name|buffer
 operator|.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    av.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    av.h  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_struct
@@ -56,7 +56,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* AVf_REAL is set for all AVs whose xav_array contents are refcounted.  * Some things like "@_" and the scratchpad list do not set this, to  * indicate that they are cheating (for efficiency) by not refcounting  * the AV's contents.  *   * AVf_REIFY is only meaningful on such "fake" AVs (i.e. where AVf_REAL  * is not set).  It indicates that the fake AV is capable of becoming  * real if the array needs to be modified in some way.  Functions that  * modify fake AVs check both flags to call av_reify() as appropriate.  *  * Note that the Perl stack has neither flag set. (Thus, items that go  * on the stack are never refcounted.)  *  * These internal details are subject to change any time.  AV  * manipulations external to perl should not care about any of this.  * GSAR 1999-09-10  */
+comment|/* AVf_REAL is set for all AVs whose xav_array contents are refcounted.  * Some things like "@_" and the scratchpad list do not set this, to  * indicate that they are cheating (for efficiency) by not refcounting  * the AV's contents.  *   * AVf_REIFY is only meaningful on such "fake" AVs (i.e. where AVf_REAL  * is not set).  It indicates that the fake AV is capable of becoming  * real if the array needs to be modified in some way.  Functions that  * modify fake AVs check both flags to call av_reify() as appropriate.  *  * Note that the Perl stack and @DB::args have neither flag set. (Thus,  * items that go on the stack are never refcounted.)  *  * These internal details are subject to change any time.  AV  * manipulations external to perl should not care about any of this.  * GSAR 1999-09-10  */
 end_comment
 
 begin_define

@@ -24554,6 +24554,14 @@ name|ysv
 modifier|*
 name|ysave
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+name|ENTER
+expr_stmt|;
+comment|/* force yydestruct() before we return */
+endif|#
+directive|endif
 name|New
 argument_list|(
 literal|73
@@ -26991,6 +26999,9 @@ operator|)
 name|scan_num
 argument_list|(
 literal|"1"
+argument_list|,
+operator|&
+name|yylval
 argument_list|)
 expr_stmt|;
 name|yyval
@@ -32237,6 +32248,14 @@ literal|1
 expr_stmt|;
 name|yyaccept
 label|:
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+name|LEAVE
+expr_stmt|;
+comment|/* force yydestruct() before we return */
+endif|#
+directive|endif
 return|return
 name|retval
 return|;

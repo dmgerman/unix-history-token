@@ -139,98 +139,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ckDEAD
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|( ! specialWARN(PL_curcop->cop_warnings)&&			\ 	    IsSet(SvPVX(PL_curcop->cop_warnings), 2*x+1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ckWARN
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|( (PL_curcop->cop_warnings != pWARN_STD&&			\ 	   PL_curcop->cop_warnings != pWARN_NONE&&			\ 	      (PL_curcop->cop_warnings == pWARN_ALL ||			\ 	       IsSet(SvPVX(PL_curcop->cop_warnings), 2*x) ) )		\ 	  || (PL_curcop->cop_warnings == pWARN_STD&& PL_dowarn& G_WARN_ON) )
-end_define
-
-begin_define
-define|#
-directive|define
-name|ckWARN2
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|( (PL_curcop->cop_warnings != pWARN_STD&&			\ 	     PL_curcop->cop_warnings != pWARN_NONE&&			\ 	      (PL_curcop->cop_warnings == pWARN_ALL ||			\ 	        IsSet(SvPVX(PL_curcop->cop_warnings), 2*x)  ||		\ 	        IsSet(SvPVX(PL_curcop->cop_warnings), 2*y) ) ) 		\ 	    ||	(PL_curcop->cop_warnings == pWARN_STD&& PL_dowarn& G_WARN_ON) )
-end_define
-
-begin_define
-define|#
-directive|define
-name|ckWARN_d
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|(PL_curcop->cop_warnings == pWARN_STD ||			\ 	   PL_curcop->cop_warnings == pWARN_ALL ||			\ 	     (PL_curcop->cop_warnings != pWARN_NONE&&			\ 	      IsSet(SvPVX(PL_curcop->cop_warnings), 2*x) ) )
-end_define
-
-begin_define
-define|#
-directive|define
-name|ckWARN2_d
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|(PL_curcop->cop_warnings == pWARN_STD ||			\ 	   PL_curcop->cop_warnings == pWARN_ALL ||			\ 	     (PL_curcop->cop_warnings != pWARN_NONE&&			\ 	        (IsSet(SvPVX(PL_curcop->cop_warnings), 2*x)  ||		\ 	         IsSet(SvPVX(PL_curcop->cop_warnings), 2*y) ) ) )
-end_define
-
-begin_define
-define|#
-directive|define
-name|isLEXWARN_on
-value|(PL_curcop->cop_warnings != pWARN_STD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isLEXWARN_off
-value|(PL_curcop->cop_warnings == pWARN_STD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|isWARN_ONCE
-value|(PL_dowarn& (G_WARN_ON|G_WARN_ONCE))
-end_define
-
-begin_define
-define|#
-directive|define
-name|isWARN_on
-parameter_list|(
-name|c
-parameter_list|,
-name|x
-parameter_list|)
-value|(IsSet(SvPVX(c), 2*(x)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|WARN_ALL
 value|0
 end_define
@@ -576,6 +484,110 @@ define|#
 directive|define
 name|WARN_NONEstring
 value|"\0\0\0\0\0\0\0\0\0\0\0\0"
+end_define
+
+begin_define
+define|#
+directive|define
+name|isLEXWARN_on
+value|(PL_curcop->cop_warnings != pWARN_STD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isLEXWARN_off
+value|(PL_curcop->cop_warnings == pWARN_STD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isWARN_ONCE
+value|(PL_dowarn& (G_WARN_ON|G_WARN_ONCE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isWARN_on
+parameter_list|(
+name|c
+parameter_list|,
+name|x
+parameter_list|)
+value|(IsSet(SvPVX(c), 2*(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|isWARNf_on
+parameter_list|(
+name|c
+parameter_list|,
+name|x
+parameter_list|)
+value|(IsSet(SvPVX(c), 2*(x)+1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ckDEAD
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|( ! specialWARN(PL_curcop->cop_warnings)&&			\ 	    ( isWARNf_on(PL_curcop->cop_warnings, WARN_ALL) || 		\ 	      isWARNf_on(PL_curcop->cop_warnings, x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ckWARN
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|( (isLEXWARN_on&& PL_curcop->cop_warnings != pWARN_NONE&&	\ 	      (PL_curcop->cop_warnings == pWARN_ALL ||			\ 	       isWARN_on(PL_curcop->cop_warnings, x) ) )		\ 	  || (isLEXWARN_off&& PL_dowarn& G_WARN_ON) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|ckWARN2
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|( (isLEXWARN_on&& PL_curcop->cop_warnings != pWARN_NONE&&	\ 	      (PL_curcop->cop_warnings == pWARN_ALL ||			\ 	        isWARN_on(PL_curcop->cop_warnings, x)  ||		\ 	        isWARN_on(PL_curcop->cop_warnings, y) ) ) 		\ 	    ||	(isLEXWARN_off&& PL_dowarn& G_WARN_ON) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|ckWARN_d
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(isLEXWARN_off || PL_curcop->cop_warnings == pWARN_ALL ||	\ 	     (PL_curcop->cop_warnings != pWARN_NONE&&			\ 	      isWARN_on(PL_curcop->cop_warnings, x) ) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|ckWARN2_d
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|(isLEXWARN_off || PL_curcop->cop_warnings == pWARN_ALL ||	\ 	     (PL_curcop->cop_warnings != pWARN_NONE&&			\ 	        (isWARN_on(PL_curcop->cop_warnings, x)  ||		\ 	         isWARN_on(PL_curcop->cop_warnings, y) ) ) )
 end_define
 
 begin_comment

@@ -344,6 +344,27 @@ parameter_list|)
 value|fstat((fd),(bufptr))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DJGPP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|Fflush
+parameter_list|(
+name|fp
+parameter_list|)
+value|djgpp_fflush(fp)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -353,6 +374,11 @@ name|fp
 parameter_list|)
 value|fflush(fp)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

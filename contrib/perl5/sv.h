@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    sv.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    sv.h  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_ifdef
@@ -90,7 +90,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|sv
+name|STRUCT_SV
 block|{
 name|void
 modifier|*
@@ -254,6 +254,42 @@ directive|ifdef
 name|USE_THREADS
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_INC
+parameter_list|(
+name|count
+parameter_list|)
+value|__ATOMIC_INCREMENT_LONG(&count)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_DEC_AND_TEST
+parameter_list|(
+name|res
+parameter_list|,
+name|count
+parameter_list|)
+value|res=(1==__ATOMIC_DECREMENT_LONG(&count))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -267,7 +303,7 @@ name|ATOMIC_INC
 parameter_list|(
 name|count
 parameter_list|)
-value|STMT_START {	\ 	MUTEX_LOCK(&PL_svref_mutex);		\ 	++count;				\ 	MUTEX_UNLOCK(&PL_svref_mutex);		\      } STMT_END
+value|STMT_START {	\ 	  MUTEX_LOCK(&PL_svref_mutex);		\ 	  ++count;				\ 	  MUTEX_UNLOCK(&PL_svref_mutex);		\        } STMT_END
 end_define
 
 begin_define
@@ -279,7 +315,7 @@ name|res
 parameter_list|,
 name|count
 parameter_list|)
-value|STMT_START {	\ 	MUTEX_LOCK(&PL_svref_mutex);			\ 	res = (--count == 0);				\ 	MUTEX_UNLOCK(&PL_svref_mutex);			\      } STMT_END
+value|STMT_START {	\ 	  MUTEX_LOCK(&PL_svref_mutex);			\ 	  res = (--count == 0);				\ 	  MUTEX_UNLOCK(&PL_svref_mutex);			\        } STMT_END
 end_define
 
 begin_else
@@ -316,6 +352,15 @@ end_endif
 
 begin_comment
 comment|/* EMULATE_ATOMIC_REFCOUNTS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VMS */
 end_comment
 
 begin_else
@@ -390,6 +435,36 @@ name|USE_THREADS
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__ALPHA
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SvREFCNT_inc
+parameter_list|(
+name|sv
+parameter_list|)
+define|\
+value|(PL_Sv=(SV*)(sv), (PL_Sv&& __ATOMIC_INCREMENT_LONG(&(SvREFCNT(PL_Sv)))), (SV *)PL_Sv)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -399,6 +474,11 @@ name|sv
 parameter_list|)
 value|sv_newref((SV*)sv)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -1307,11 +1387,22 @@ modifier|*
 name|xio_ofp
 decl_stmt|;
 comment|/* but sockets need separate streams */
+comment|/* Cray addresses everything by word boundaries (64 bits) and      * code and data pointers cannot be mixed (which is exactly what      * Perl_filter_add() tries to do with the dirp), hence the following      * union trick (as suggested by Gurusamy Sarathy).      * For further information see Geir Johansen's problem report titled        [ID 20000612.002] Perl problem on Cray system      * The any pointer (known as IoANY()) will also be a good place      * to hang any IO disciplines to.      */
+union|union
+block|{
 name|DIR
 modifier|*
-name|xio_dirp
+name|xiou_dirp
 decl_stmt|;
 comment|/* for opendir, readdir, etc */
+name|void
+modifier|*
+name|xiou_any
+decl_stmt|;
+comment|/* for alignment */
+block|}
+name|xio_dirpu
+union|;
 name|long
 name|xio_lines
 decl_stmt|;
@@ -1371,6 +1462,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|xio_dirp
+value|xio_dirpu.xiou_dirp
+end_define
+
+begin_define
+define|#
+directive|define
+name|xio_any
+value|xio_dirpu.xiou_any
+end_define
 
 begin_define
 define|#
@@ -1454,7 +1559,7 @@ comment|/* The following macros define implementation-independent predicates on 
 end_comment
 
 begin_comment
-comment|/* =for apidoc Am|bool|SvNIOK|SV* sv Returns a boolean indicating whether the SV contains a number, integer or double.  =for apidoc Am|bool|SvNIOKp|SV* sv Returns a boolean indicating whether the SV contains a number, integer or double.  Checks the B<private> setting.  Use C<SvNIOK>.  =for apidoc Am|void|SvNIOK_off|SV* sv Unsets the NV/IV status of an SV.  =for apidoc Am|bool|SvOK|SV* sv Returns a boolean indicating whether the value is an SV.  =for apidoc Am|bool|SvIOKp|SV* sv Returns a boolean indicating whether the SV contains an integer.  Checks the B<private> setting.  Use C<SvIOK>.  =for apidoc Am|bool|SvNOKp|SV* sv Returns a boolean indicating whether the SV contains a double.  Checks the B<private> setting.  Use C<SvNOK>.  =for apidoc Am|bool|SvPOKp|SV* sv Returns a boolean indicating whether the SV contains a character string. Checks the B<private> setting.  Use C<SvPOK>.  =for apidoc Am|bool|SvIOK|SV* sv Returns a boolean indicating whether the SV contains an integer.  =for apidoc Am|void|SvIOK_on|SV* sv Tells an SV that it is an integer.  =for apidoc Am|void|SvIOK_off|SV* sv Unsets the IV status of an SV.  =for apidoc Am|void|SvIOK_only|SV* sv Tells an SV that it is an integer and disables all other OK bits.  =for apidoc Am|bool|SvNOK|SV* sv Returns a boolean indicating whether the SV contains a double.  =for apidoc Am|void|SvNOK_on|SV* sv Tells an SV that it is a double.  =for apidoc Am|void|SvNOK_off|SV* sv Unsets the NV status of an SV.  =for apidoc Am|void|SvNOK_only|SV* sv Tells an SV that it is a double and disables all other OK bits.  =for apidoc Am|bool|SvPOK|SV* sv Returns a boolean indicating whether the SV contains a character string.  =for apidoc Am|void|SvPOK_on|SV* sv Tells an SV that it is a string.  =for apidoc Am|void|SvPOK_off|SV* sv Unsets the PV status of an SV.  =for apidoc Am|void|SvPOK_only|SV* sv Tells an SV that it is a string and disables all other OK bits.  =for apidoc Am|bool|SvOOK|SV* sv Returns a boolean indicating whether the SvIVX is a valid offset value for the SvPVX.  This hack is used internally to speed up removal of characters from the beginning of a SvPV.  When SvOOK is true, then the start of the allocated string buffer is really (SvPVX - SvIVX).  =for apidoc Am|bool|SvROK|SV* sv Tests if the SV is an RV.  =for apidoc Am|void|SvROK_on|SV* sv Tells an SV that it is an RV.  =for apidoc Am|void|SvROK_off|SV* sv Unsets the RV status of an SV.  =for apidoc Am|SV*|SvRV|SV* sv Dereferences an RV to return the SV.  =for apidoc Am|IV|SvIVX|SV* sv Returns the integer which is stored in the SV, assuming SvIOK is true.  =for apidoc Am|UV|SvUVX|SV* sv Returns the unsigned integer which is stored in the SV, assuming SvIOK is true.  =for apidoc Am|NV|SvNVX|SV* sv Returns the double which is stored in the SV, assuming SvNOK is true.  =for apidoc Am|char*|SvPVX|SV* sv Returns a pointer to the string in the SV.  The SV must contain a string.  =for apidoc Am|STRLEN|SvCUR|SV* sv Returns the length of the string which is in the SV.  See C<SvLEN>.  =for apidoc Am|STRLEN|SvLEN|SV* sv Returns the size of the string buffer in the SV.  See C<SvCUR>.  =for apidoc Am|char*|SvEND|SV* sv Returns a pointer to the last character in the string which is in the SV. See C<SvCUR>.  Access the character as *(SvEND(sv)).  =for apidoc Am|HV*|SvSTASH|SV* sv Returns the stash of the SV.  =for apidoc Am|void|SvCUR_set|SV* sv|STRLEN len Set the length of the string which is in the SV.  See C<SvCUR>.  =cut */
+comment|/* =for apidoc Am|bool|SvNIOK|SV* sv Returns a boolean indicating whether the SV contains a number, integer or double.  =for apidoc Am|bool|SvNIOKp|SV* sv Returns a boolean indicating whether the SV contains a number, integer or double.  Checks the B<private> setting.  Use C<SvNIOK>.  =for apidoc Am|void|SvNIOK_off|SV* sv Unsets the NV/IV status of an SV.  =for apidoc Am|bool|SvOK|SV* sv Returns a boolean indicating whether the value is an SV.  =for apidoc Am|bool|SvIOKp|SV* sv Returns a boolean indicating whether the SV contains an integer.  Checks the B<private> setting.  Use C<SvIOK>.  =for apidoc Am|bool|SvNOKp|SV* sv Returns a boolean indicating whether the SV contains a double.  Checks the B<private> setting.  Use C<SvNOK>.  =for apidoc Am|bool|SvPOKp|SV* sv Returns a boolean indicating whether the SV contains a character string. Checks the B<private> setting.  Use C<SvPOK>.  =for apidoc Am|bool|SvIOK|SV* sv Returns a boolean indicating whether the SV contains an integer.  =for apidoc Am|void|SvIOK_on|SV* sv Tells an SV that it is an integer.  =for apidoc Am|void|SvIOK_off|SV* sv Unsets the IV status of an SV.  =for apidoc Am|void|SvIOK_only|SV* sv Tells an SV that it is an integer and disables all other OK bits.  =for apidoc Am|void|SvIOK_only_UV|SV* sv Tells and SV that it is an unsigned integer and disables all other OK bits.  =for apidoc Am|void|SvIOK_UV|SV* sv Returns a boolean indicating whether the SV contains an unsigned integer.  =for apidoc Am|void|SvIOK_notUV|SV* sv Returns a boolean indicating whether the SV contains an signed integer.  =for apidoc Am|bool|SvNOK|SV* sv Returns a boolean indicating whether the SV contains a double.  =for apidoc Am|void|SvNOK_on|SV* sv Tells an SV that it is a double.  =for apidoc Am|void|SvNOK_off|SV* sv Unsets the NV status of an SV.  =for apidoc Am|void|SvNOK_only|SV* sv Tells an SV that it is a double and disables all other OK bits.  =for apidoc Am|bool|SvPOK|SV* sv Returns a boolean indicating whether the SV contains a character string.  =for apidoc Am|void|SvPOK_on|SV* sv Tells an SV that it is a string.  =for apidoc Am|void|SvPOK_off|SV* sv Unsets the PV status of an SV.  =for apidoc Am|void|SvPOK_only|SV* sv Tells an SV that it is a string and disables all other OK bits.  =for apidoc Am|bool|SvOOK|SV* sv Returns a boolean indicating whether the SvIVX is a valid offset value for the SvPVX.  This hack is used internally to speed up removal of characters from the beginning of a SvPV.  When SvOOK is true, then the start of the allocated string buffer is really (SvPVX - SvIVX).  =for apidoc Am|bool|SvROK|SV* sv Tests if the SV is an RV.  =for apidoc Am|void|SvROK_on|SV* sv Tells an SV that it is an RV.  =for apidoc Am|void|SvROK_off|SV* sv Unsets the RV status of an SV.  =for apidoc Am|SV*|SvRV|SV* sv Dereferences an RV to return the SV.  =for apidoc Am|IV|SvIVX|SV* sv Returns the integer which is stored in the SV, assuming SvIOK is true.  =for apidoc Am|UV|SvUVX|SV* sv Returns the unsigned integer which is stored in the SV, assuming SvIOK is true.  =for apidoc Am|NV|SvNVX|SV* sv Returns the double which is stored in the SV, assuming SvNOK is true.  =for apidoc Am|char*|SvPVX|SV* sv Returns a pointer to the string in the SV.  The SV must contain a string.  =for apidoc Am|STRLEN|SvCUR|SV* sv Returns the length of the string which is in the SV.  See C<SvLEN>.  =for apidoc Am|STRLEN|SvLEN|SV* sv Returns the size of the string buffer in the SV, not including any part attributable to C<SvOOK>.  See C<SvCUR>.  =for apidoc Am|char*|SvEND|SV* sv Returns a pointer to the last character in the string which is in the SV. See C<SvCUR>.  Access the character as *(SvEND(sv)).  =for apidoc Am|HV*|SvSTASH|SV* sv Returns the stash of the SV.  =for apidoc Am|void|SvCUR_set|SV* sv|STRLEN len Set the length of the string which is in the SV.  See C<SvCUR>.  =cut */
 end_comment
 
 begin_define
@@ -1726,6 +1831,10 @@ name|sv
 parameter_list|)
 value|((void)SvOK_off(sv), \ 				    SvFLAGS(sv) |= (SVf_NOK|SVp_NOK))
 end_define
+
+begin_comment
+comment|/* =for apidoc Am|void|SvUTF8|SV* sv Returns a boolean indicating whether the SV contains UTF-8 encoded data.  =for apidoc Am|void|SvUTF8_on|SV *sv Tells an SV that it is a string and encoded in UTF8.  Do not use frivolously.  =for apidoc Am|void|SvUTF8_off|SV *sv Unsets the UTF8 status of an SV.  =for apidoc Am|void|SvPOK_only_UTF8|SV* sv Tells an SV that it is a UTF8 string (do not use frivolously) and disables all other OK bits.    =cut  */
+end_comment
 
 begin_define
 define|#
@@ -2045,6 +2154,16 @@ parameter_list|(
 name|sv
 parameter_list|)
 value|(SvFLAGS(sv)&= ~SVf_AMAGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvGAMAGIC
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)& (SVs_GMG|SVf_AMAGIC))
 end_define
 
 begin_comment
@@ -2762,6 +2881,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IoANY
+parameter_list|(
+name|sv
+parameter_list|)
+value|((XPVIO*)  SvANY(sv))->xio_any
+end_define
+
+begin_define
+define|#
+directive|define
 name|IoLINES
 parameter_list|(
 name|sv
@@ -2890,6 +3019,70 @@ value|((XPVIO*)  SvANY(sv))->xio_flags
 end_define
 
 begin_comment
+comment|/* IoTYPE(sv) is a single character telling the type of I/O connection. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IoTYPE_RDONLY
+value|'<'
+end_define
+
+begin_define
+define|#
+directive|define
+name|IoTYPE_WRONLY
+value|'>'
+end_define
+
+begin_define
+define|#
+directive|define
+name|IoTYPE_RDWR
+value|'+'
+end_define
+
+begin_define
+define|#
+directive|define
+name|IoTYPE_APPEND
+value|'a'
+end_define
+
+begin_define
+define|#
+directive|define
+name|IoTYPE_PIPE
+value|'|'
+end_define
+
+begin_define
+define|#
+directive|define
+name|IoTYPE_STD
+value|'-'
+end_define
+
+begin_comment
+comment|/* stdin or stdout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IoTYPE_SOCKET
+value|'s'
+end_define
+
+begin_define
+define|#
+directive|define
+name|IoTYPE_CLOSED
+value|' '
+end_define
+
+begin_comment
 comment|/* =for apidoc Am|bool|SvTAINTED|SV* sv Checks to see if an SV is tainted. Returns TRUE if it is, FALSE if not.  =for apidoc Am|void|SvTAINTED_on|SV* sv Marks an SV as tainted.  =for apidoc Am|void|SvTAINTED_off|SV* sv Untaints an SV. Be I<very> careful with this routine, as it short-circuits some of Perl's fundamental security features. XS module authors should not use this function unless they fully understand all the implications of unconditionally untainting the value. Untainting should be done in the standard perl fashion, via a carefully crafted regexp, rather than directly untainting variables.  =for apidoc Am|void|SvTAINT|SV* sv Taints an SV if tainting is enabled  =cut */
 end_comment
 
@@ -2931,7 +3124,7 @@ parameter_list|(
 name|sv
 parameter_list|)
 define|\
-value|STMT_START {			\ 	if (PL_tainting) {		\ 	    dTHR;			\ 	    if (PL_tainted)		\ 		SvTAINTED_on(sv);	\ 	}				\     } STMT_END
+value|STMT_START {			\ 	if (PL_tainting) {		\ 	    if (PL_tainted)		\ 		SvTAINTED_on(sv);	\ 	}				\     } STMT_END
 end_define
 
 begin_comment
@@ -4005,6 +4198,20 @@ define|#
 directive|define
 name|Sv_Grow
 value|sv_grow
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLONEf_COPY_STACKS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLONEf_KEEP_PTR_TABLE
+value|2
 end_define
 
 end_unit

@@ -351,29 +351,6 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__CYGWIN__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PERL_SYS_INIT
-parameter_list|(
-name|c
-parameter_list|,
-name|v
-parameter_list|)
-value|Perl_my_setenv_init(&environ); MALLOC_INIT
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -385,11 +362,6 @@ name|v
 parameter_list|)
 value|MALLOC_INIT
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -436,6 +408,12 @@ begin_define
 define|#
 directive|define
 name|dXSUB_SYS
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_ENVIRON_ARRAY
 end_define
 
 end_unit

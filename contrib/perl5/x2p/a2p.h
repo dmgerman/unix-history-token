@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: a2p.h,v $$Revision: 4.1 $$Date: 92/08/07 18:29:09 $  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log:	a2p.h,v $  */
+comment|/* $RCSfile: a2p.h,v $$Revision: 4.1 $$Date: 92/08/07 18:29:09 $  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log:	a2p.h,v $  */
 end_comment
 
 begin_define
@@ -707,6 +707,12 @@ argument_list|(
 name|OS2
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|PTHX_UNUSED
+end_define
 
 begin_include
 include|#

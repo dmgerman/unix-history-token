@@ -37,9 +37,6 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
-comment|/* just for taint */
 name|char
 modifier|*
 name|ug
@@ -280,8 +277,6 @@ name|svp
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|TAINT
 expr_stmt|;
 name|taint_proper
@@ -312,8 +307,6 @@ name|mg
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|TAINT
 expr_stmt|;
 name|taint_proper
@@ -365,8 +358,6 @@ name|svp
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|TAINT
 expr_stmt|;
 name|taint_proper
@@ -397,8 +388,6 @@ name|mg
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|TAINT
 expr_stmt|;
 name|taint_proper
@@ -444,9 +433,6 @@ name|svp
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
-comment|/* just for taint */
 name|STRLEN
 name|n_a
 decl_stmt|;
@@ -593,9 +579,6 @@ name|svp
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
-comment|/* just for taint */
 name|TAINT
 expr_stmt|;
 name|taint_proper

@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|PERL_SUBVERSION
-value|0
+value|1
 end_define
 
 begin_comment

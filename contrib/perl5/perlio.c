@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    perlio.c  *  *    Copyright (c) 1996-2000, Nick Ing-Simmons  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    perlio.c  *  *    Copyright (c) 1996-2001, Nick Ing-Simmons  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_define
@@ -606,6 +606,11 @@ name|defined
 argument_list|(
 name|STDIO_CNT_LVALUE
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|STDIO_PTR_LVAL_NOCHANGE_CNT
+argument_list|)
 name|FILE_cnt
 argument_list|(
 name|f
@@ -615,12 +620,32 @@ name|cnt
 expr_stmt|;
 else|#
 directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STDIO_PTR_LVAL_SETS_CNT
+argument_list|)
+name|assert
+argument_list|(
+name|FILE_cnt
+argument_list|(
+name|f
+argument_list|)
+operator|==
+name|cnt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|Perl_croak
 argument_list|(
 name|aTHX_
-literal|"Cannot set 'cnt' of FILE * on this system"
+literal|"Cannot set 'cnt' of FILE * on this system when setting 'ptr'"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -1815,7 +1840,23 @@ end_undef
 
 begin_function
 name|int
+ifdef|#
+directive|ifdef
+name|USE_SFIO
 name|PerlIO_setpos
+parameter_list|(
+name|PerlIO
+modifier|*
+name|f
+parameter_list|,
+specifier|const
+name|Off_t
+modifier|*
+name|pos
+parameter_list|)
+else|#
+directive|else
+function|PerlIO_setpos
 parameter_list|(
 name|PerlIO
 modifier|*
@@ -1826,6 +1867,8 @@ name|Fpos_t
 modifier|*
 name|pos
 parameter_list|)
+endif|#
+directive|endif
 block|{
 return|return
 name|PerlIO_seek
@@ -1930,16 +1973,53 @@ end_undef
 
 begin_function
 name|int
+ifdef|#
+directive|ifdef
+name|USE_SFIO
 name|PerlIO_getpos
 parameter_list|(
 name|PerlIO
 modifier|*
 name|f
 parameter_list|,
-name|Fpos_t
+name|Off_t
 modifier|*
 name|pos
 parameter_list|)
+block|{
+operator|*
+name|pos
+operator|=
+name|PerlIO_seek
+argument_list|(
+name|f
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|PerlIO_getpos
+argument_list|(
+argument|PerlIO *f
+argument_list|,
+argument|Fpos_t *pos
+argument_list|)
+end_macro
+
+begin_block
 block|{
 operator|*
 name|pos
@@ -1953,7 +2033,12 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

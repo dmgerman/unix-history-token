@@ -447,6 +447,10 @@ argument|SV *
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* =for apidoc mn|SV*|PL_rs  The input record separator - C<$/> in Perl space.  =for apidoc mn|GV*|PL_last_in_gv  The GV which was last used for a filehandle input operation. (C<<<FH>>>)  =for apidoc mn|SV*|PL_ofs_sv  The output field separator - C<$,> in Perl space.  =cut */
+end_comment
+
 begin_macro
 name|PERLVAR
 argument_list|(

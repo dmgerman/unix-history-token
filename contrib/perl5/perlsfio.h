@@ -20,6 +20,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* sfio 2000 changed _stdopen to _stdfdopen */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SFIO_VERSION
+operator|>=
+literal|20000101L
+end_if
+
+begin_define
+define|#
+directive|define
+name|_stdopen
+value|_stdfdopen
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|Sfio_t
@@ -293,6 +317,31 @@ parameter_list|)
 value|sfsync(f)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* This breaks tests */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PerlIO_tell
+parameter_list|(
+name|f
+parameter_list|)
+value|sfseek(f,0,1|SF_SHARE)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -302,6 +351,11 @@ name|f
 parameter_list|)
 value|sftell(f)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -456,7 +510,7 @@ name|p
 parameter_list|,
 name|c
 parameter_list|)
-value|((f)->next = (p))
+value|STMT_START {(f)->next = (unsigned char *)(p); assert(PerlIO_get_cnt(f) == (c));} STMT_END
 end_define
 
 begin_define
@@ -468,7 +522,7 @@ name|f
 parameter_list|,
 name|c
 parameter_list|)
-value|1
+value|STMT_START {(f)->next = (f)->endr - (c);} STMT_END
 end_define
 
 begin_define

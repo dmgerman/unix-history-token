@@ -927,7 +927,7 @@ literal|"subtraction (-)"
 block|,
 literal|"integer subtraction (-)"
 block|,
-literal|"concatenation (.)"
+literal|"concatenation (.) or string"
 block|,
 literal|"string"
 block|,
@@ -1075,7 +1075,7 @@ literal|"pack"
 block|,
 literal|"split"
 block|,
-literal|"join"
+literal|"join or string"
 block|,
 literal|"list"
 block|,
@@ -1131,7 +1131,7 @@ literal|"subroutine entry"
 block|,
 literal|"subroutine exit"
 block|,
-literal|"lvalue subroutine exit"
+literal|"lvalue subroutine return"
 block|,
 literal|"caller"
 block|,
@@ -4033,7 +4033,7 @@ block|,
 comment|/* length */
 name|MEMBER_TO_FPTR
 argument_list|(
-name|Perl_ck_fun
+name|Perl_ck_substr
 argument_list|)
 block|,
 comment|/* substr */
@@ -4471,7 +4471,7 @@ block|,
 comment|/* leaveloop */
 name|MEMBER_TO_FPTR
 argument_list|(
-name|Perl_ck_null
+name|Perl_ck_return
 argument_list|)
 block|,
 comment|/* return */

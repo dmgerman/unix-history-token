@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    av.c  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    av.c  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -140,9 +140,6 @@ operator|!=
 operator|&
 name|PL_sv_undef
 condition|)
-block|{
-name|dTHR
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -151,7 +148,6 @@ argument_list|(
 name|sv
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|key
 operator|=
@@ -211,9 +207,6 @@ name|I32
 name|key
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
-comment|/* only necessary if we have to extend stack */
 name|MAGIC
 modifier|*
 name|mg
@@ -975,8 +968,6 @@ literal|'D'
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|sv
 operator|=
 name|sv_newmortal
@@ -1356,8 +1347,6 @@ name|av
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 if|if
 condition|(
 name|av
@@ -2596,6 +2585,9 @@ name|MAGIC
 modifier|*
 name|mg
 decl_stmt|;
+name|I32
+name|slide
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2799,6 +2791,21 @@ argument_list|(
 name|av
 argument_list|)
 expr_stmt|;
+comment|/* Create extra elements */
+name|slide
+operator|=
+name|i
+operator|>
+literal|0
+condition|?
+name|i
+else|:
+literal|0
+expr_stmt|;
+name|num
+operator|+=
+name|slide
+expr_stmt|;
 name|av_extend
 argument_list|(
 name|av
@@ -2855,6 +2862,39 @@ condition|(
 name|num
 condition|)
 do|;
+comment|/* Make extra elements into a buffer */
+name|AvMAX
+argument_list|(
+name|av
+argument_list|)
+operator|-=
+name|slide
+expr_stmt|;
+name|AvFILLp
+argument_list|(
+name|av
+argument_list|)
+operator|-=
+name|slide
+expr_stmt|;
+name|SvPVX
+argument_list|(
+name|av
+argument_list|)
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|AvARRAY
+argument_list|(
+name|av
+argument_list|)
+operator|+
+name|slide
+operator|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -3094,6 +3134,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* =for apidoc av_fill  Ensure than an array has a given number of elements, equivalent to Perl's C<$#array = $fill;>.  =cut */
+end_comment
 
 begin_function
 name|void
@@ -3342,6 +3386,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* =for apidoc av_delete  Deletes the element indexed by C<key> from the array.  Returns the deleted element. C<flags> is currently ignored.  =cut */
+end_comment
 
 begin_function
 name|SV
@@ -3617,7 +3665,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This relies on the fact that uninitialized array elements  * are set to&PL_sv_undef.  */
+comment|/* =for apidoc av_exists  Returns true if the element indexed by C<key> has been initialized.  This relies on the fact that uninitialized array elements are set to C<&PL_sv_undef>.  =cut */
 end_comment
 
 begin_function
@@ -3707,6 +3755,10 @@ init|=
 name|sv_newmortal
 argument_list|()
 decl_stmt|;
+name|MAGIC
+modifier|*
+name|mg
+decl_stmt|;
 name|mg_copy
 argument_list|(
 operator|(
@@ -3722,16 +3774,25 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
-name|magic_existspack
-argument_list|(
-name|sv
-argument_list|,
+name|mg
+operator|=
 name|mg_find
 argument_list|(
 name|sv
 argument_list|,
 literal|'p'
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mg
+condition|)
+block|{
+name|magic_existspack
+argument_list|(
+name|sv
+argument_list|,
+name|mg
 argument_list|)
 expr_stmt|;
 return|return
@@ -3740,6 +3801,7 @@ argument_list|(
 name|sv
 argument_list|)
 return|;
+block|}
 block|}
 block|}
 if|if

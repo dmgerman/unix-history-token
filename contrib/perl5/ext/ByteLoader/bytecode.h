@@ -55,6 +55,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|char
+modifier|*
+name|pvindex
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|IV
 name|IV64
 typedef|;
@@ -72,7 +80,7 @@ parameter_list|,
 name|nelem
 parameter_list|)
 define|\
-value|bs.pfread((char*)(argp),(len),(nelem),bs.data)
+value|bl_read(bstate->bs_fdata,(char*)(argp),(len),(nelem))
 end_define
 
 begin_define
@@ -80,7 +88,7 @@ define|#
 directive|define
 name|BGET_FGETC
 parameter_list|()
-value|bs.pfgetc(bs.data)
+value|bl_getc(bstate->bs_fdata)
 end_define
 
 begin_define
@@ -91,7 +99,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|BGET_FREAD(&arg, sizeof(U32), 1); arg = PerlSock_ntohl((U32)arg)
+value|BGET_FREAD(&arg, sizeof(U32), 1)
 end_define
 
 begin_define
@@ -102,7 +110,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|BGET_FREAD(&arg, sizeof(I32), 1); arg = (I32)PerlSock_ntohl((U32)arg)
+value|BGET_FREAD(&arg, sizeof(I32), 1)
 end_define
 
 begin_define
@@ -113,7 +121,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|BGET_FREAD(&arg, sizeof(U16), 1); arg = PerlSock_ntohs((U16)arg)
+value|BGET_FREAD(&arg, sizeof(U16), 1)
 end_define
 
 begin_define
@@ -133,7 +141,7 @@ name|BGET_PV
 parameter_list|(
 name|arg
 parameter_list|)
-value|STMT_START {	\ 	BGET_U32(arg);			\ 	if (arg)			\ 	    bs.pfreadpv(arg, bs.data,&bytecode_pv);	\ 	else {				\ 	    bytecode_pv.xpv_pv = 0;		\ 	    bytecode_pv.xpv_len = 0;		\ 	    bytecode_pv.xpv_cur = 0;		\ 	}				\     } STMT_END
+value|STMT_START {					\ 	BGET_U32(arg);							\ 	if (arg) {							\ 	    New(666, bstate->bs_pv.xpv_pv, arg, char);			\ 	    bl_read(bstate->bs_fdata, (void*)bstate->bs_pv.xpv_pv, arg, 1);	\ 	    bstate->bs_pv.xpv_len = arg;				\ 	    bstate->bs_pv.xpv_cur = arg - 1;				\ 	} else {							\ 	    bstate->bs_pv.xpv_pv = 0;					\ 	    bstate->bs_pv.xpv_len = 0;					\ 	    bstate->bs_pv.xpv_cur = 0;					\ 	}								\     } STMT_END
 end_define
 
 begin_ifdef
@@ -185,7 +193,7 @@ name|BGET_IV64
 parameter_list|(
 name|arg
 parameter_list|)
-value|STMT_START {			\ 	U32 hi, lo;					\ 	BGET_U32(hi);					\ 	BGET_U32(lo);					\ 	if (sizeof(IV) == 8)				\ 	    arg = ((IV)hi<< (sizeof(IV)*4) | (IV)lo);	\ 	else if (((I32)hi == -1&& (I32)lo< 0)		\ 		 || ((I32)hi == 0&& (I32)lo>= 0)) {	\ 	    arg = (I32)lo;				\ 	}						\ 	else {						\ 	    bytecode_iv_overflows++;				\ 	    arg = 0;					\ 	}						\     } STMT_END
+value|STMT_START {			\ 	U32 hi, lo;					\ 	BGET_U32(hi);					\ 	BGET_U32(lo);					\ 	if (sizeof(IV) == 8)				\ 	    arg = ((IV)hi<< (sizeof(IV)*4) | (IV)lo);	\ 	else if (((I32)hi == -1&& (I32)lo< 0)		\ 		 || ((I32)hi == 0&& (I32)lo>= 0)) {	\ 	    arg = (I32)lo;				\ 	}						\ 	else {						\ 	    bstate->bs_iv_overflows++;			\ 	    arg = 0;					\ 	}						\     } STMT_END
 end_define
 
 begin_define
@@ -195,7 +203,7 @@ name|BGET_op_tr_array
 parameter_list|(
 name|arg
 parameter_list|)
-value|do {	\ 	unsigned short *ary;		\ 	int i;				\ 	New(666, ary, 256, unsigned short); \ 	BGET_FREAD(ary, 256, 2);	\ 	for (i = 0; i< 256; i++)	\ 	    ary[i] = PerlSock_ntohs(ary[i]);	\ 	arg = (char *) ary;		\     } while (0)
+value|do {			\ 	unsigned short *ary;				\ 	int i;						\ 	New(666, ary, 256, unsigned short);		\ 	BGET_FREAD(ary, sizeof(unsigned short), 256);	\ 	arg = (char *) ary;				\     } while (0)
 end_define
 
 begin_define
@@ -205,7 +213,7 @@ name|BGET_pvcontents
 parameter_list|(
 name|arg
 parameter_list|)
-value|arg = bytecode_pv.xpv_pv
+value|arg = bstate->bs_pv.xpv_pv
 end_define
 
 begin_define
@@ -239,7 +247,7 @@ name|arg
 parameter_list|,
 name|type
 parameter_list|)
-value|STMT_START {	\ 	U32 ix;					\ 	BGET_U32(ix);				\ 	arg = (type)bytecode_obj_list[ix];		\     } STMT_END
+value|STMT_START {	\ 	BGET_U32(ix);				\ 	arg = (type)bstate->bs_obj_list[ix];	\     } STMT_END
 end_define
 
 begin_define
@@ -265,6 +273,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGET_pvindex
+parameter_list|(
+name|arg
+parameter_list|)
+value|STMT_START {			\ 	BGET_objindex(arg, pvindex);			\ 	arg = arg ? savepv(arg) : arg;			\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
 name|BSET_ldspecsv
 parameter_list|(
 name|sv
@@ -272,6 +290,18 @@ parameter_list|,
 name|arg
 parameter_list|)
 value|sv = specialsv_list[arg]
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSET_stpv
+parameter_list|(
+name|pv
+parameter_list|,
+name|arg
+parameter_list|)
+value|STMT_START {		\ 	BSET_OBJ_STORE(pv, arg);		\ 	SAVEFREEPV(pv);				\     } STMT_END
 end_define
 
 begin_define
@@ -355,7 +385,7 @@ name|mg
 parameter_list|,
 name|arg
 parameter_list|)
-value|mg->mg_ptr = arg; mg->mg_len = bytecode_pv.xpv_cur
+value|mg->mg_ptr = arg; mg->mg_len = bstate->bs_pv.xpv_cur
 end_define
 
 begin_define
@@ -377,7 +407,7 @@ name|BSET_xpv
 parameter_list|(
 name|sv
 parameter_list|)
-value|do {	\ 	SvPV_set(sv, bytecode_pv.xpv_pv);	\ 	SvCUR_set(sv, bytecode_pv.xpv_cur);	\ 	SvLEN_set(sv, bytecode_pv.xpv_len);	\     } while (0)
+value|do {	\ 	SvPV_set(sv, bstate->bs_pv.xpv_pv);	\ 	SvCUR_set(sv, bstate->bs_pv.xpv_cur);	\ 	SvLEN_set(sv, bstate->bs_pv.xpv_len);	\     } while (0)
 end_define
 
 begin_define
@@ -414,7 +444,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|hv_store((HV*)sv, bytecode_pv.xpv_pv, bytecode_pv.xpv_cur, arg, 0)
+value|hv_store((HV*)sv, bstate->bs_pv.xpv_pv, bstate->bs_pv.xpv_cur, arg, 0)
 end_define
 
 begin_define
@@ -437,7 +467,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|((PMOP*)o)->op_pmregexp = arg ? \ 		CALLREGCOMP(aTHX_ arg, arg + bytecode_pv.xpv_cur, ((PMOP*)o)) : 0
+value|((PMOP*)o)->op_pmregexp = arg ? \ 		CALLREGCOMP(aTHX_ arg, arg + bstate->bs_pv.xpv_cur, ((PMOP*)o)) : 0
 end_define
 
 begin_define
@@ -449,7 +479,8 @@ name|sv
 parameter_list|,
 name|arg
 parameter_list|)
-value|sv = NEWSV(666,0); SvUPGRADE(sv, arg)
+define|\
+value|STMT_START {					\ 	    sv = (arg == SVt_PVAV ? (SV*)newAV() :	\ 		  arg == SVt_PVHV ? (SV*)newHV() :	\ 		  NEWSV(666,0));			\ 	    SvUPGRADE(sv, arg);				\ 	} STMT_END
 end_define
 
 begin_define
@@ -483,7 +514,7 @@ name|BSET_ret
 parameter_list|(
 name|foo
 parameter_list|)
-value|return
+value|STMT_START {			\ 	Safefree(bstate->bs_obj_list);			\ 	return;						\     } STMT_END
 end_define
 
 begin_comment
@@ -526,6 +557,10 @@ parameter_list|)
 value|STMT_START {	\ 	PL_comppad = (AV *)arg;			\ 	pad = AvARRAY(arg);			\     } STMT_END
 end_define
 
+begin_comment
+comment|/* this works now that Sarathy's changed the CopFILE_set macro to do the SvREFCNT_inc() 	-- BKS 6-2-2000 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -562,6 +597,49 @@ parameter_list|)
 value|CopSTASHPV_set(cop,arg)
 end_define
 
+begin_comment
+comment|/* this is simply stolen from the code in newATTRSUB() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSET_push_begin
+parameter_list|(
+name|ary
+parameter_list|,
+name|cv
+parameter_list|)
+define|\
+value|STMT_START {					\ 	    I32 oldscope = PL_scopestack_ix;		\ 	    ENTER;					\ 	    SAVECOPFILE(&PL_compiling);			\ 	    SAVECOPLINE(&PL_compiling);			\ 	    save_svref(&PL_rs);				\ 	    sv_setsv(PL_rs, PL_nrs);			\ 	    if (!PL_beginav)				\ 		PL_beginav = newAV();			\ 	    av_push(PL_beginav, cv);			\ 	    call_list(oldscope, PL_beginav);		\ 	    PL_curcop =&PL_compiling;			\ 	    PL_compiling.op_private = PL_hints;		\ 	    LEAVE;					\ 	} STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSET_push_init
+parameter_list|(
+name|ary
+parameter_list|,
+name|cv
+parameter_list|)
+define|\
+value|STMT_START {									\ 	    av_unshift((PL_initav ? PL_initav : (PL_initav = newAV(), PL_initav)), 1); 	\ 	    av_store(PL_initav, 0, cv);							\ 	} STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSET_push_end
+parameter_list|(
+name|ary
+parameter_list|,
+name|cv
+parameter_list|)
+define|\
+value|STMT_START {									\ 	    av_unshift((PL_endav ? PL_endav : (PL_endav = newAV(), PL_endav)), 1);	\ 	    av_store(PL_endav, 0, cv);							\ 	} STMT_END
+end_define
+
 begin_define
 define|#
 directive|define
@@ -572,7 +650,70 @@ parameter_list|,
 name|ix
 parameter_list|)
 define|\
-value|(I32)ix> bytecode_obj_list_fill ?	\ 	bset_obj_store(aTHXo_ obj, (I32)ix) : (bytecode_obj_list[ix] = obj)
+value|(I32)ix> bstate->bs_obj_list_fill ?	\ 	bset_obj_store(aTHXo_ bstate, obj, (I32)ix) : (bstate->bs_obj_list[ix] = obj)
+end_define
+
+begin_comment
+comment|/* NOTE: the bytecode header only sanity-checks the bytecode. If a script cares about  * what version of Perl it's being called under, it should do a 'require 5.6.0' or  * equivalent. However, since the header includes checks requiring an exact match in  * ByteLoader versions (we can't guarantee forward compatibility), you don't   * need to specify one:  * 	use ByteLoader;  * is all you need.  *	-- BKS, June 2000 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HEADER_FAIL
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|Perl_croak(aTHX_ "Invalid bytecode for this architecture: " f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEADER_FAIL1
+parameter_list|(
+name|f
+parameter_list|,
+name|arg1
+parameter_list|)
+define|\
+value|Perl_croak(aTHX_ "Invalid bytecode for this architecture: " f, arg1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEADER_FAIL2
+parameter_list|(
+name|f
+parameter_list|,
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+define|\
+value|Perl_croak(aTHX_ "Invalid bytecode for this architecture: " f, arg1, arg2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BYTECODE_HEADER_CHECK
+define|\
+value|STMT_START {						\ 	    U32 sz = 0;						\ 	    strconst str;					\ 								\ 	    BGET_U32(sz);
+comment|/* Magic: 'PLBC' */
+value|\ 	    if (sz != 0x43424c50) {				\ 		HEADER_FAIL1("bad magic (want 0x43424c50, got %#x)", (int)sz);		\ 	    }							\ 	    BGET_strconst(str);
+comment|/* archname */
+value|\ 	    if (strNE(str, ARCHNAME)) {				\ 		HEADER_FAIL2("wrong architecture (want %s, you have %s)",str,ARCHNAME);	\ 	    }							\ 	    BGET_strconst(str);
+comment|/* ByteLoader version */
+value|\ 	    if (strNE(str, VERSION)) {				\ 		HEADER_FAIL2("mismatched ByteLoader versions (want %s, you have %s)",	\ 			str, VERSION);				\ 	    }							\ 	    BGET_U32(sz);
+comment|/* ivsize */
+value|\ 	    if (sz != IVSIZE) {					\ 		HEADER_FAIL("different IVSIZE");		\ 	    }							\ 	    BGET_U32(sz);
+comment|/* ptrsize */
+value|\ 	    if (sz != PTRSIZE) {				\ 		HEADER_FAIL("different PTRSIZE");		\ 	    }							\ 	    BGET_strconst(str);
+comment|/* byteorder */
+value|\ 	    if (strNE(str, STRINGIFY(BYTEORDER))) {		\ 		HEADER_FAIL("different byteorder");	\ 	    }							\ 	} STMT_END
 end_define
 
 end_unit

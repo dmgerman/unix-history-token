@@ -63,6 +63,12 @@ name|hv
 init|=
 name|Nullhv
 decl_stmt|;
+name|SV
+modifier|*
+name|subgen
+init|=
+name|Nullsv
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -142,6 +148,15 @@ operator|&
 name|PL_sv_undef
 operator|&&
 operator|(
+name|subgen
+operator|=
+name|GvSV
+argument_list|(
+name|gv
+argument_list|)
+operator|)
+operator|&&
+operator|(
 name|hv
 operator|=
 name|GvHV
@@ -149,6 +164,16 @@ argument_list|(
 name|gv
 argument_list|)
 operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|SvIV
+argument_list|(
+name|subgen
+argument_list|)
+operator|==
+name|PL_sub_generation
 condition|)
 block|{
 name|SV
@@ -194,9 +219,57 @@ operator|)
 operator|&
 name|PL_sv_undef
 condition|)
+block|{
+name|DEBUG_o
+argument_list|(
+name|Perl_deb
+argument_list|(
+name|aTHX_
+literal|"Using cached ISA %s for package %s\n"
+argument_list|,
+name|name
+argument_list|,
+name|HvNAME
+argument_list|(
+name|stash
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|sv
 return|;
+block|}
+block|}
+else|else
+block|{
+name|DEBUG_o
+argument_list|(
+name|Perl_deb
+argument_list|(
+name|aTHX_
+literal|"ISA Cache in package %s is stale\n"
+argument_list|,
+name|HvNAME
+argument_list|(
+name|stash
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hv_clear
+argument_list|(
+name|hv
+argument_list|)
+expr_stmt|;
+name|sv_setiv
+argument_list|(
+name|subgen
+argument_list|,
+name|PL_sub_generation
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|gvp
 operator|=
@@ -248,6 +321,9 @@ if|if
 condition|(
 operator|!
 name|hv
+operator|||
+operator|!
+name|subgen
 condition|)
 block|{
 name|gvp
@@ -295,6 +371,11 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hv
+condition|)
 name|hv
 operator|=
 name|GvHVn
@@ -302,6 +383,27 @@ argument_list|(
 name|gv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|subgen
+condition|)
+block|{
+name|subgen
+operator|=
+name|newSViv
+argument_list|(
+name|PL_sub_generation
+argument_list|)
+expr_stmt|;
+name|GvSV
+argument_list|(
+name|gv
+argument_list|)
+operator|=
+name|subgen
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -360,8 +462,6 @@ operator|!
 name|basestash
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 if|if
 condition|(
 name|ckWARN
@@ -1312,7 +1412,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|SvNIOKp
+name|SvNOK
 argument_list|(
 name|req
 argument_list|)
@@ -1339,8 +1439,11 @@ block|{
 name|Perl_croak
 argument_list|(
 name|aTHX_
-literal|"%s v%vd required--"
-literal|"this is only v%vd"
+literal|"%s v%"
+name|VDf
+literal|" required--"
+literal|"this is only v%"
+name|VDf
 argument_list|,
 name|HvNAME
 argument_list|(
@@ -1393,7 +1496,7 @@ block|}
 comment|/* if we get here, we're looking for a numeric comparison, 	 * so force the required version into a float, even if they 	 * said C<use Foo v1.2.3> */
 if|if
 condition|(
-name|SvNIOKp
+name|SvNOK
 argument_list|(
 name|req
 argument_list|)

@@ -167,7 +167,7 @@ comment|/*SUPPRESS 112*/
 end_comment
 
 begin_comment
-comment|/*  * pregcomp and pregexec -- regsub and regerror are not used in perl  *  *	Copyright (c) 1986 by University of Toronto.  *	Written by Henry Spencer.  Not derived from licensed software.  *  *	Permission is granted to anyone to use this software for any  *	purpose on any computer system, and to redistribute it freely,  *	subject to the following restrictions:  *  *	1. The author is not responsible for the consequences of use of  *		this software, no matter how awful, even if they arise  *		from defects in it.  *  *	2. The origin of this software must not be misrepresented, either  *		by explicit claim or by omission.  *  *	3. Altered versions must be plainly marked as such, and must not  *		be misrepresented as being the original software.  *  *  ****    Alterations to Henry's code are...  ****  ****    Copyright (c) 1991-2000, Larry Wall  ****  ****    You may distribute under the terms of either the GNU General Public  ****    License or the Artistic License, as specified in the README file.   *  * Beware that some of this code is subtly aware of the way operator  * precedence is structured in regular expressions.  Serious changes in  * regular-expression syntax might require a total rethink.  */
+comment|/*  * pregcomp and pregexec -- regsub and regerror are not used in perl  *  *	Copyright (c) 1986 by University of Toronto.  *	Written by Henry Spencer.  Not derived from licensed software.  *  *	Permission is granted to anyone to use this software for any  *	purpose on any computer system, and to redistribute it freely,  *	subject to the following restrictions:  *  *	1. The author is not responsible for the consequences of use of  *		this software, no matter how awful, even if they arise  *		from defects in it.  *  *	2. The origin of this software must not be misrepresented, either  *		by explicit claim or by omission.  *  *	3. Altered versions must be plainly marked as such, and must not  *		be misrepresented as being the original software.  *  *  ****    Alterations to Henry's code are...  ****  ****    Copyright (c) 1991-2001, Larry Wall  ****  ****    You may distribute under the terms of either the GNU General Public  ****    License or the Artistic License, as specified in the README file.   *  * Beware that some of this code is subtly aware of the way operator  * precedence is structured in regular expressions.  Serious changes in  * regular-expression syntax might require a total rethink.  */
 end_comment
 
 begin_include
@@ -372,36 +372,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|atarist
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PERL_META
-value|"^$.[()|?+*\\"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|META
-value|"^$.[()|?+*\\"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|SPSTART
 end_ifdef
 
@@ -543,6 +513,10 @@ decl_stmt|;
 name|I32
 name|whilem_c
 decl_stmt|;
+name|I32
+modifier|*
+name|last_closep
+decl_stmt|;
 name|struct
 name|regnode_charclass_class
 modifier|*
@@ -563,6 +537,8 @@ name|scan_data_t
 name|zero_scan_data
 init|=
 block|{
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -770,6 +746,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCF_WHILEM_VISITED_POS
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
 name|RF_utf8
 value|8
 end_define
@@ -839,6 +822,281 @@ value|(UTF ? utf8_distance(a,b) : a - b)
 end_define
 
 begin_comment
+comment|/* length of regex to show in messages that don't mark a position within */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RegexLengthToShowInErrorMessages
+value|127
+end_define
+
+begin_comment
+comment|/*  * If MARKER[12] are adjusted, be sure to adjust the constants at the top  * of t/op/regmesg.t, the tests in t/op/re_tests, and those in  * op/pragma/warn/regcomp.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MARKER1
+value|"HERE"
+end_define
+
+begin_comment
+comment|/* marker as it appears in the description */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MARKER2
+value|"<< HERE "
+end_define
+
+begin_comment
+comment|/* marker as it appears within the regex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REPORT_LOCATION
+value|" before " MARKER1 " mark in regex m/%.*s" MARKER2 "%s/"
+end_define
+
+begin_comment
+comment|/*  * Calls SAVEDESTRUCTOR_X if needed, then calls Perl_croak with the given  * arg. Show regex, up to a maximum length. If it's too long, chop and add  * "...".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAIL
+parameter_list|(
+name|msg
+parameter_list|)
+define|\
+value|STMT_START {                                                             \         char *ellipses = "";                                                 \         unsigned len = strlen(PL_regprecomp);                                \                                                                              \ 	if (!SIZE_ONLY)                                                      \ 	    SAVEDESTRUCTOR_X(clear_re,(void*)PL_regcomp_rx);                 \                                                                              \ 	if (len> RegexLengthToShowInErrorMessages) {                        \
+comment|/* chop 10 shorter than the max, to ensure meaning of "..." */
+value|\ 	    len = RegexLengthToShowInErrorMessages - 10;                     \ 	    ellipses = "...";                                                \ 	}                                                                    \ 	Perl_croak(aTHX_ "%s in regex m/%.*s%s/",                            \ 		   msg, (int)len, PL_regprecomp, ellipses);                  \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Calls SAVEDESTRUCTOR_X if needed, then calls Perl_croak with the given  * args. Show regex, up to a maximum length. If it's too long, chop and add  * "...".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FAIL2
+parameter_list|(
+name|pat
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|STMT_START {                                                             \         char *ellipses = "";                                                 \         unsigned len = strlen(PL_regprecomp);                                \                                                                              \ 	if (!SIZE_ONLY)                                                      \ 	    SAVEDESTRUCTOR_X(clear_re,(void*)PL_regcomp_rx);                 \                                                                              \ 	if (len> RegexLengthToShowInErrorMessages) {                        \
+comment|/* chop 10 shorter than the max, to ensure meaning of "..." */
+value|\ 	    len = RegexLengthToShowInErrorMessages - 10;                     \ 	    ellipses = "...";                                                \ 	}                                                                    \ 	S_re_croak2(aTHX_ pat, " in regex m/%.*s%s/",                        \ 		    msg, (int)len, PL_regprecomp, ellipses);                \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Simple_vFAIL -- like FAIL, but marks the current location in the scan  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Simple_vFAIL
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       unsigned offset = strlen(PL_regprecomp)-(PL_regxend-PL_regcomp_parse); \                                                                              \       Perl_croak(aTHX_ "%s" REPORT_LOCATION,               \ 		 m, (int)offset, PL_regprecomp, PL_regprecomp + offset);     \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Calls SAVEDESTRUCTOR_X if needed, then Simple_vFAIL()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vFAIL
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       if (!SIZE_ONLY)                                                        \ 	    SAVEDESTRUCTOR_X(clear_re,(void*)PL_regcomp_rx);                 \       Simple_vFAIL(m);                                                       \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Like Simple_vFAIL(), but accepts two arguments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Simple_vFAIL2
+parameter_list|(
+name|m
+parameter_list|,
+name|a1
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       unsigned offset = strlen(PL_regprecomp)-(PL_regxend-PL_regcomp_parse); \                                                                              \       S_re_croak2(aTHX_ m, REPORT_LOCATION, a1,       \ 		  (int)offset, PL_regprecomp, PL_regprecomp + offset);       \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Calls SAVEDESTRUCTOR_X if needed, then Simple_vFAIL2().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vFAIL2
+parameter_list|(
+name|m
+parameter_list|,
+name|a1
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       if (!SIZE_ONLY)                                                        \ 	    SAVEDESTRUCTOR_X(clear_re,(void*)PL_regcomp_rx);                 \       Simple_vFAIL2(m, a1);                                                  \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Like Simple_vFAIL(), but accepts three arguments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Simple_vFAIL3
+parameter_list|(
+name|m
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       unsigned offset = strlen(PL_regprecomp)-(PL_regxend-PL_regcomp_parse); \                                                                              \       S_re_croak2(aTHX_ m, REPORT_LOCATION, a1, a2,   \ 		  (int)offset, PL_regprecomp, PL_regprecomp + offset);       \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Calls SAVEDESTRUCTOR_X if needed, then Simple_vFAIL3().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vFAIL3
+parameter_list|(
+name|m
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       if (!SIZE_ONLY)                                                        \ 	    SAVEDESTRUCTOR_X(clear_re,(void*)PL_regcomp_rx);                 \       Simple_vFAIL3(m, a1, a2);                                              \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Like Simple_vFAIL(), but accepts four arguments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Simple_vFAIL4
+parameter_list|(
+name|m
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,
+name|a3
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       unsigned offset = strlen(PL_regprecomp)-(PL_regxend-PL_regcomp_parse); \                                                                              \       S_re_croak2(aTHX_ m, REPORT_LOCATION, a1, a2, a3,\ 		  (int)offset, PL_regprecomp, PL_regprecomp + offset);       \     } STMT_END
+end_define
+
+begin_comment
+comment|/*  * Like Simple_vFAIL(), but accepts five arguments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Simple_vFAIL5
+parameter_list|(
+name|m
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,
+name|a3
+parameter_list|,
+name|a4
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       unsigned offset = strlen(PL_regprecomp)-(PL_regxend-PL_regcomp_parse); \       S_re_croak2(aTHX_ m, REPORT_LOCATION, a1, a2, a3, a4,\ 		  (int)offset, PL_regprecomp, PL_regprecomp + offset);       \     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|vWARN
+parameter_list|(
+name|loc
+parameter_list|,
+name|m
+parameter_list|)
+define|\
+value|STMT_START {                                                             \         unsigned offset = strlen(PL_regprecomp)-(PL_regxend-(loc));          \ 	Perl_warner(aTHX_ WARN_REGEXP, "%s" REPORT_LOCATION,\ 		 m, (int)offset, PL_regprecomp, PL_regprecomp + offset);          \     } STMT_END                                                               \   #define	vWARN2(loc, m, a1)                                                   \     STMT_START {                                                             \         unsigned offset = strlen(PL_regprecomp)-(PL_regxend-(loc));          \ 	Perl_warner(aTHX_ WARN_REGEXP, m REPORT_LOCATION,\                  a1,                                                         \ 		 (int)offset, PL_regprecomp, PL_regprecomp + offset);        \     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|vWARN3
+parameter_list|(
+name|loc
+parameter_list|,
+name|m
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       unsigned offset = strlen(PL_regprecomp) - (PL_regxend - (loc));        \ 	Perl_warner(aTHX_ WARN_REGEXP, m REPORT_LOCATION,                    \                  a1, a2,                                                     \ 		 (int)offset, PL_regprecomp, PL_regprecomp + offset);        \     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|vWARN4
+parameter_list|(
+name|loc
+parameter_list|,
+name|m
+parameter_list|,
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,
+name|a3
+parameter_list|)
+define|\
+value|STMT_START {                                                             \       unsigned offset = strlen(PL_regprecomp)-(PL_regxend-(loc));            \ 	Perl_warner(aTHX_ WARN_REGEXP, m REPORT_LOCATION,\                  a1, a2, a3,                                                 \ 		 (int)offset, PL_regprecomp, PL_regprecomp + offset);        \     } STMT_END
+end_define
+
+begin_comment
 comment|/* Allow for side effects in s */
 end_comment
 
@@ -882,8 +1140,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|STRLEN
 name|l
 init|=
@@ -1186,7 +1442,7 @@ operator|=
 literal|0
 init|;
 name|value
-operator|<
+operator|<=
 name|ANYOF_MAX
 condition|;
 name|value
@@ -1797,8 +2053,6 @@ comment|/* scanp: Start here (read-write). */
 comment|/* deltap: Write maxlen-minlen here. */
 comment|/* last: Stop before this one. */
 block|{
-name|dTHR
-expr_stmt|;
 name|I32
 name|min
 init|=
@@ -2065,7 +2319,11 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|stringok
+condition|)
 block|{
 name|int
 name|oldl
@@ -2151,10 +2409,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-if|if
-condition|(
-name|stringok
-condition|)
 name|stop
 operator|=
 name|next
@@ -2521,6 +2775,10 @@ decl_stmt|,
 name|f
 init|=
 literal|0
+decl_stmt|,
+name|fake
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|regnode_charclass_class
@@ -2539,6 +2797,7 @@ if|if
 condition|(
 name|data
 condition|)
+block|{
 name|data_fake
 operator|.
 name|whilem_c
@@ -2546,6 +2805,23 @@ operator|=
 name|data
 operator|->
 name|whilem_c
+expr_stmt|;
+name|data_fake
+operator|.
+name|last_closep
+operator|=
+name|data
+operator|->
+name|last_closep
+expr_stmt|;
+block|}
+else|else
+name|data_fake
+operator|.
+name|last_closep
+operator|=
+operator|&
+name|fake
 expr_stmt|;
 name|next
 operator|=
@@ -2599,6 +2875,16 @@ operator|=
 name|SCF_DO_STCLASS_AND
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|SCF_WHILEM_VISITED_POS
+condition|)
+name|f
+operator||=
+name|SCF_WHILEM_VISITED_POS
+expr_stmt|;
 comment|/* we suppose the run is continuous, last=next...*/
 name|minnext
 operator|=
@@ -3615,14 +3901,16 @@ name|minnext
 decl_stmt|,
 name|deltanext
 decl_stmt|,
-name|pos_before
-decl_stmt|,
 name|fl
 decl_stmt|;
 name|I32
 name|f
 init|=
 name|flags
+decl_stmt|,
+name|pos_before
+init|=
+literal|0
 decl_stmt|;
 name|regnode
 modifier|*
@@ -3849,6 +4137,49 @@ argument_list|(
 name|scan
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OP
+argument_list|(
+name|scan
+argument_list|)
+operator|==
+name|CURLYX
+condition|)
+block|{
+name|I32
+name|lp
+init|=
+operator|(
+name|data
+condition|?
+operator|*
+operator|(
+name|data
+operator|->
+name|last_closep
+operator|)
+else|:
+literal|0
+operator|)
+decl_stmt|;
+name|scan
+operator|->
+name|flags
+operator|=
+operator|(
+operator|(
+name|lp
+operator|<=
+name|U8_MAX
+operator|)
+condition|?
+name|lp
+else|:
+name|U8_MAX
+operator|)
+expr_stmt|;
+block|}
 name|scan
 operator|=
 name|NEXTOPER
@@ -3957,6 +4288,28 @@ operator|~
 name|SCF_DO_STCLASS_OR
 expr_stmt|;
 block|}
+comment|/* These are the cases when once a subexpression 		   fails at a particular position, it cannot succeed 		   even after backtracking at the enclosing scope. 		    		   XXXX what if minimal match and we are at the 		        initial run of {n,m}? */
+if|if
+condition|(
+operator|(
+name|mincount
+operator|!=
+name|maxcount
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|maxcount
+operator|!=
+name|REG_INFTY
+operator|)
+condition|)
+name|f
+operator|&=
+operator|~
+name|SCF_WHILEM_VISITED_POS
+expr_stmt|;
 comment|/* This will finish on WHILEM, setting scan, or on NULL: */
 name|minnext
 operator|=
@@ -4180,13 +4533,15 @@ operator|/
 literal|3
 condition|)
 comment|/* Complement check for big count */
-name|Perl_warner
+block|{
+name|vWARN
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
-literal|"Strange *+?{} on zero-length expression"
+literal|"Quantifier unexpected on zero-length expression"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+block|}
 name|min
 operator|+=
 name|minnext
@@ -4578,7 +4933,7 @@ name|CLOSE
 condition|)
 name|FAIL
 argument_list|(
-literal|"panic opt close"
+literal|"Panic opt close"
 argument_list|)
 expr_stmt|;
 name|oscan
@@ -4687,12 +5042,27 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|OP
 argument_list|(
 name|oscan
 argument_list|)
 operator|==
 name|CURLYX
+operator|)
+operator|&&
+operator|(
+name|flags
+operator|&
+name|SCF_WHILEM_VISITED_POS
+operator|)
+comment|/* See the comment on a similar expression above. 			    However, this time it not a subexpression 			    we care about, but the expression itself. */
+operator|&&
+operator|(
+name|maxcount
+operator|==
+name|REG_INFTY
+operator|)
 operator|&&
 name|data
 operator|&&
@@ -4704,7 +5074,7 @@ operator|<
 literal|16
 condition|)
 block|{
-comment|/* This stays as CURLYX, and can put the count/of pair. */
+comment|/* This stays as CURLYX, we can put the count/of pair. */
 comment|/* Find WHILEM (as in regexec.c) */
 name|regnode
 modifier|*
@@ -4983,6 +5353,44 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+comment|/* start offset must point into the last copy */
+name|data
+operator|->
+name|last_start_min
+operator|+=
+name|minnext
+operator|*
+operator|(
+name|mincount
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+name|data
+operator|->
+name|last_start_max
+operator|+=
+name|is_inf
+condition|?
+literal|0
+else|:
+operator|(
+name|maxcount
+operator|-
+literal|1
+operator|)
+operator|*
+operator|(
+name|minnext
+operator|+
+name|data
+operator|->
+name|pos_delta
+operator|)
+expr_stmt|;
 block|}
 block|}
 comment|/* It is counted once already... */
@@ -6530,6 +6938,10 @@ name|I32
 name|deltanext
 decl_stmt|,
 name|minnext
+decl_stmt|,
+name|fake
+init|=
+literal|0
 decl_stmt|;
 name|regnode
 modifier|*
@@ -6554,6 +6966,7 @@ if|if
 condition|(
 name|data
 condition|)
+block|{
 name|data_fake
 operator|.
 name|whilem_c
@@ -6561,6 +6974,23 @@ operator|=
 name|data
 operator|->
 name|whilem_c
+expr_stmt|;
+name|data_fake
+operator|.
+name|last_closep
+operator|=
+name|data
+operator|->
+name|last_closep
+expr_stmt|;
+block|}
+else|else
+name|data_fake
+operator|.
+name|last_closep
+operator|=
+operator|&
+name|fake
 expr_stmt|;
 if|if
 condition|(
@@ -6596,10 +7026,20 @@ operator|&
 name|intrnl
 expr_stmt|;
 name|f
-operator|=
+operator||=
 name|SCF_DO_STCLASS_AND
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|SCF_WHILEM_VISITED_POS
+condition|)
+name|f
+operator||=
+name|SCF_WHILEM_VISITED_POS
+expr_stmt|;
 name|next
 operator|=
 name|regnext
@@ -6647,9 +7087,9 @@ condition|(
 name|deltanext
 condition|)
 block|{
-name|FAIL
+name|vFAIL
 argument_list|(
-literal|"variable length lookbehind not implemented"
+literal|"Variable length lookbehind not implemented"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6661,9 +7101,9 @@ operator|>
 name|U8_MAX
 condition|)
 block|{
-name|FAIL2
+name|vFAIL2
 argument_list|(
-literal|"lookbehind longer than %"
+literal|"Lookbehind longer than %"
 name|UVuf
 literal|" not implemented"
 argument_list|,
@@ -6731,6 +7171,8 @@ expr_stmt|;
 if|if
 condition|(
 name|f
+operator|&
+name|SCF_DO_STCLASS_AND
 condition|)
 block|{
 name|int
@@ -6794,7 +7236,10 @@ name|scan
 argument_list|)
 operator|==
 name|CLOSE
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|ARG
 argument_list|(
 name|scan
@@ -6832,6 +7277,23 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Disable optimization */
+block|}
+if|if
+condition|(
+name|data
+condition|)
+operator|*
+operator|(
+name|data
+operator|->
+name|last_closep
+operator|)
+operator|=
+name|ARG
+argument_list|(
+name|scan
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -7059,8 +7521,6 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 if|if
 condition|(
 name|PL_regcomp_rx
@@ -7236,8 +7696,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|int
 name|i
 init|=
@@ -7364,8 +7822,6 @@ modifier|*
 name|pm
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regexp
 modifier|*
@@ -7432,14 +7888,7 @@ literal|0
 expr_stmt|;
 name|PL_regprecomp
 operator|=
-name|savepvn
-argument_list|(
 name|exp
-argument_list|,
-name|xend
-operator|-
-name|exp
-argument_list|)
 expr_stmt|;
 name|DEBUG_r
 argument_list|(
@@ -7571,11 +8020,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|Safefree
-argument_list|(
-name|PL_regprecomp
-argument_list|)
-expr_stmt|;
 name|PL_regprecomp
 operator|=
 name|Nullch
@@ -7666,7 +8110,7 @@ name|NULL
 condition|)
 name|FAIL
 argument_list|(
-literal|"regexp out of space"
+literal|"Regexp out of space"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -7715,7 +8159,14 @@ name|r
 operator|->
 name|precomp
 operator|=
+name|savepvn
+argument_list|(
 name|PL_regprecomp
+argument_list|,
+name|r
+operator|->
+name|prelen
+argument_list|)
 expr_stmt|;
 name|r
 operator|->
@@ -7953,6 +8404,11 @@ name|ch_class
 decl_stmt|;
 name|int
 name|stclass_flag
+decl_stmt|;
+name|I32
+name|last_close
+init|=
+literal|0
 decl_stmt|;
 name|first
 operator|=
@@ -8498,6 +8954,13 @@ name|stclass_flag
 operator|=
 literal|0
 expr_stmt|;
+name|data
+operator|.
+name|last_closep
+operator|=
+operator|&
+name|last_close
+expr_stmt|;
 name|minlen
 operator|=
 name|study_chunk
@@ -8517,6 +8980,8 @@ operator|&
 name|data
 argument_list|,
 name|SCF_DO_SUBSTR
+operator||
+name|SCF_WHILEM_VISITED_POS
 operator||
 name|stclass_flag
 argument_list|)
@@ -9199,6 +9664,11 @@ name|struct
 name|regnode_charclass_class
 name|ch_class
 decl_stmt|;
+name|I32
+name|last_close
+init|=
+literal|0
+decl_stmt|;
 name|DEBUG_r
 argument_list|(
 name|PerlIO_printf
@@ -9230,6 +9700,13 @@ operator|=
 operator|&
 name|ch_class
 expr_stmt|;
+name|data
+operator|.
+name|last_closep
+operator|=
+operator|&
+name|last_close
+expr_stmt|;
 name|minlen
 operator|=
 name|study_chunk
@@ -9248,6 +9725,8 @@ operator|&
 name|data
 argument_list|,
 name|SCF_DO_STCLASS_AND
+operator||
+name|SCF_WHILEM_VISITED_POS
 argument_list|)
 expr_stmt|;
 name|r
@@ -9473,6 +9952,13 @@ argument_list|,
 name|I32
 argument_list|)
 expr_stmt|;
+name|PL_regdata
+operator|=
+name|r
+operator|->
+name|data
+expr_stmt|;
+comment|/* for regprop() ANYOFUTF8 */
 name|DEBUG_r
 argument_list|(
 name|regdump
@@ -9509,8 +9995,6 @@ name|flagp
 parameter_list|)
 comment|/* paren: Parenthesized? 0=top, 1=(, inside: changed to letter. */
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regnode
 modifier|*
@@ -9556,6 +10040,12 @@ init|=
 literal|0
 decl_stmt|;
 name|char
+modifier|*
+name|oregcomp_parse
+init|=
+name|PL_regcomp_parse
+decl_stmt|;
+name|char
 name|c
 decl_stmt|;
 operator|*
@@ -9598,6 +10088,12 @@ name|int
 name|logical
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|seqstart
+init|=
+name|PL_regcomp_parse
 decl_stmt|;
 name|PL_regcomp_parse
 operator|++
@@ -9676,7 +10172,7 @@ case|:
 case|case
 literal|'@'
 case|:
-name|FAIL2
+name|vFAIL2
 argument_list|(
 literal|"Sequence (?%c...) not implemented"
 argument_list|,
@@ -9733,13 +10229,13 @@ if|if
 condition|(
 name|SIZE_ONLY
 condition|)
-name|Perl_warner
+name|vWARN
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
 literal|"(?p{}) is deprecated - use (??{})"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 comment|/* FALL THROUGH*/
 case|case
 literal|'?'
@@ -9759,8 +10255,6 @@ case|case
 literal|'{'
 case|:
 block|{
-name|dTHR
-expr_stmt|;
 name|I32
 name|count
 init|=
@@ -9854,11 +10348,17 @@ name|PL_regcomp_parse
 operator|!=
 literal|')'
 condition|)
-name|FAIL
+block|{
+name|PL_regcomp_parse
+operator|=
+name|s
+expr_stmt|;
+name|vFAIL
 argument_list|(
 literal|"Sequence (?{...}) not terminated or not {}-balanced"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -9900,6 +10400,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ENTER
+expr_stmt|;
+name|Perl_save_re_context
+argument_list|(
+name|aTHX
+argument_list|)
+expr_stmt|;
 name|rop
 operator|=
 name|sv_compile_2op
@@ -9914,6 +10421,8 @@ argument_list|,
 operator|&
 name|av
 argument_list|)
+expr_stmt|;
+name|LEAVE
 expr_stmt|;
 name|n
 operator|=
@@ -10204,11 +10713,9 @@ operator|)
 operator|!=
 literal|')'
 condition|)
-name|FAIL2
+name|vFAIL
 argument_list|(
-literal|"Switch (?(number%c not recognized"
-argument_list|,
-name|c
+literal|"Switch condition not recognized"
 argument_list|)
 expr_stmt|;
 name|insert_if
@@ -10341,7 +10848,7 @@ name|c
 operator|!=
 literal|')'
 condition|)
-name|FAIL
+name|vFAIL
 argument_list|(
 literal|"Switch (?(condition)... contains too many branches"
 argument_list|)
@@ -10400,9 +10907,9 @@ return|;
 block|}
 else|else
 block|{
-name|FAIL2
+name|vFAIL2
 argument_list|(
-literal|"Unknown condition for (?(%.2s"
+literal|"Unknown switch condition (?(%.2s"
 argument_list|,
 name|PL_regcomp_parse
 argument_list|)
@@ -10412,7 +10919,11 @@ block|}
 case|case
 literal|0
 case|:
-name|FAIL
+name|PL_regcomp_parse
+operator|--
+expr_stmt|;
+comment|/* for vFAIL to print correctly */
+name|vFAIL
 argument_list|(
 literal|"Sequence (? incomplete"
 argument_list|)
@@ -10512,14 +11023,22 @@ name|PL_regcomp_parse
 operator|!=
 literal|')'
 condition|)
-name|FAIL2
-argument_list|(
-literal|"Sequence (?%c...) not recognized"
-argument_list|,
-operator|*
+block|{
 name|PL_regcomp_parse
+operator|++
+expr_stmt|;
+name|vFAIL3
+argument_list|(
+literal|"Sequence (%.*s...) not recognized"
+argument_list|,
+name|PL_regcomp_parse
+operator|-
+name|seqstart
+argument_list|,
+name|seqstart
 argument_list|)
 expr_stmt|;
+block|}
 name|nextchar
 argument_list|()
 expr_stmt|;
@@ -11039,9 +11558,13 @@ operator|!=
 literal|')'
 condition|)
 block|{
-name|FAIL
+name|PL_regcomp_parse
+operator|=
+name|oregcomp_parse
+expr_stmt|;
+name|vFAIL
 argument_list|(
-literal|"unmatched () in regexp"
+literal|"Unmatched ("
 argument_list|)
 expr_stmt|;
 block|}
@@ -11065,16 +11588,19 @@ operator|==
 literal|')'
 condition|)
 block|{
-name|FAIL
+name|PL_regcomp_parse
+operator|++
+expr_stmt|;
+name|vFAIL
 argument_list|(
-literal|"unmatched () in regexp"
+literal|"Unmatched )"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|FAIL
 argument_list|(
-literal|"junk on end of regexp"
+literal|"Junk on end of regexp"
 argument_list|)
 expr_stmt|;
 comment|/* "Can't happen". */
@@ -11107,8 +11633,6 @@ name|I32
 name|first
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regnode
 modifier|*
@@ -11362,8 +11886,6 @@ modifier|*
 name|flagp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regnode
 modifier|*
@@ -11567,7 +12089,7 @@ name|max
 operator|>=
 name|REG_INFTY
 condition|)
-name|FAIL2
+name|vFAIL2
 argument_list|(
 literal|"Quantifier in {,} bigger than %d"
 argument_list|,
@@ -11752,7 +12274,7 @@ name|max
 operator|<
 name|min
 condition|)
-name|FAIL
+name|vFAIL
 argument_list|(
 literal|"Can't do {n,m} with n> m"
 argument_list|)
@@ -11807,7 +12329,8 @@ if|#
 directive|if
 literal|0
 comment|/* Now runtime fix should be reliable. */
-block|if (!(flags&HASWIDTH)&& op != '?')       FAIL("regexp *+ operand could be empty");
+comment|/* if this is reinstated, don't forget to put this back into perldiag:  	    =item Regexp *+ operand could be empty at {#} in regex m/%s/  	   (F) The part of the regexp subject to either the * or + quantifier            could match an empty string. The {#} shows in the regular            expression about where the problem was discovered.      */
+block|if (!(flags&HASWIDTH)&& op != '?')       vFAIL("Regexp *+ operand could be empty");
 endif|#
 directive|endif
 name|nextchar
@@ -11977,17 +12500,19 @@ operator|/
 literal|3
 condition|)
 block|{
-name|Perl_warner
+name|vWARN3
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
 literal|"%.*s matches null string many times"
 argument_list|,
-argument|PL_regcomp_parse - origparse
+name|PL_regcomp_parse
+operator|-
+name|origparse
 argument_list|,
-argument|origparse
+name|origparse
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -12024,11 +12549,16 @@ argument_list|(
 name|PL_regcomp_parse
 argument_list|)
 condition|)
-name|FAIL
+block|{
+name|PL_regcomp_parse
+operator|++
+expr_stmt|;
+name|vFAIL
 argument_list|(
-literal|"nested *?+ in regexp"
+literal|"Nested quantifiers"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ret
@@ -12038,7 +12568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - regatom - the lowest level  *  * Optimization:  gobbles an entire sequence of ordinary characters so that  * it can turn them into a single node, which is smaller to store and  * faster to run.  Backslashed characters are exceptions, each becoming a  * separate node; the code is simpler that way and it's not worth fixing.  *  * [Yes, it is worth fixing, some scripts can run twice the speed.]  */
+comment|/*  - regatom - the lowest level  *  * Optimization:  gobbles an entire sequence of ordinary characters so that  * it can turn them into a single node, which is smaller to store and  * faster to run.  Backslashed characters are exceptions, each becoming a  * separate node; the code is simpler that way and it's not worth fixing.  *  * [Yes, it is worth fixing, some scripts can run twice the speed.] */
 end_comment
 
 begin_function
@@ -12053,8 +12583,6 @@ modifier|*
 name|flagp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regnode
 modifier|*
@@ -12127,18 +12655,16 @@ break|break;
 case|case
 literal|'$'
 case|:
+name|nextchar
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
+operator|*
 name|PL_regcomp_parse
-index|[
-literal|1
-index|]
 condition|)
 name|PL_seen_zerolen
 operator|++
-expr_stmt|;
-name|nextchar
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -12252,9 +12778,14 @@ break|break;
 case|case
 literal|'['
 case|:
-name|PL_regcomp_parse
+block|{
+name|char
+modifier|*
+name|oregcomp_parse
+init|=
 operator|++
-expr_stmt|;
+name|PL_regcomp_parse
+decl_stmt|;
 name|ret
 operator|=
 operator|(
@@ -12274,11 +12805,17 @@ name|PL_regcomp_parse
 operator|!=
 literal|']'
 condition|)
-name|FAIL
+block|{
+name|PL_regcomp_parse
+operator|=
+name|oregcomp_parse
+expr_stmt|;
+name|vFAIL
 argument_list|(
-literal|"unmatched [] in regexp"
+literal|"Unmatched ["
 argument_list|)
 expr_stmt|;
+block|}
 name|nextchar
 argument_list|()
 expr_stmt|;
@@ -12290,6 +12827,7 @@ operator||
 name|SIMPLE
 expr_stmt|;
 break|break;
+block|}
 case|case
 literal|'('
 case|:
@@ -12319,9 +12857,30 @@ name|flags
 operator|&
 name|TRYAGAIN
 condition|)
+block|{
+if|if
+condition|(
+name|PL_regcomp_parse
+operator|==
+name|PL_regxend
+condition|)
+block|{
+comment|/* Make parent create an empty node if needed. */
+operator|*
+name|flagp
+operator||=
+name|TRYAGAIN
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 goto|goto
 name|tryagain
 goto|;
+block|}
 return|return
 operator|(
 name|NULL
@@ -12364,11 +12923,9 @@ return|return
 name|NULL
 return|;
 block|}
-name|FAIL2
+name|vFAIL
 argument_list|(
-literal|"internal urp in regexp at /%s/"
-argument_list|,
-name|PL_regcomp_parse
+literal|"Internal urp"
 argument_list|)
 expr_stmt|;
 comment|/* Supposed to be caught earlier. */
@@ -12402,9 +12959,12 @@ case|:
 case|case
 literal|'*'
 case|:
-name|FAIL
+name|PL_regcomp_parse
+operator|++
+expr_stmt|;
+name|vFAIL
 argument_list|(
-literal|"?+*{} follows nothing in regexp"
+literal|"Quantifier follows nothing"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13018,11 +13578,21 @@ condition|(
 operator|!
 name|PL_regxend
 condition|)
-name|FAIL
+block|{
+name|PL_regcomp_parse
+operator|+=
+literal|2
+expr_stmt|;
+name|PL_regxend
+operator|=
+name|oldregxend
+expr_stmt|;
+name|vFAIL
 argument_list|(
 literal|"Missing right brace on \\p{}"
 argument_list|)
 expr_stmt|;
+block|}
 name|PL_regxend
 operator|++
 expr_stmt|;
@@ -13142,6 +13712,17 @@ name|defchar
 goto|;
 else|else
 block|{
+while|while
+condition|(
+name|isDIGIT
+argument_list|(
+operator|*
+name|PL_regcomp_parse
+argument_list|)
+condition|)
+name|PL_regcomp_parse
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -13153,9 +13734,9 @@ name|PL_regcomp_rx
 operator|->
 name|nparens
 condition|)
-name|FAIL
+name|vFAIL
 argument_list|(
-literal|"reference to nonexistent group"
+literal|"Reference to nonexistent group"
 argument_list|)
 expr_stmt|;
 name|PL_regsawback
@@ -13186,17 +13767,6 @@ name|flagp
 operator||=
 name|HASWIDTH
 expr_stmt|;
-while|while
-condition|(
-name|isDIGIT
-argument_list|(
-operator|*
-name|PL_regcomp_parse
-argument_list|)
-condition|)
-name|PL_regcomp_parse
-operator|++
-expr_stmt|;
 name|PL_regcomp_parse
 operator|--
 expr_stmt|;
@@ -13217,7 +13787,7 @@ name|PL_regxend
 condition|)
 name|FAIL
 argument_list|(
-literal|"trailing \\ in regexp"
+literal|"Trailing \\"
 argument_list|)
 expr_stmt|;
 comment|/* FALL THROUGH */
@@ -13266,7 +13836,7 @@ comment|/* FALL THROUGH */
 default|default:
 block|{
 specifier|register
-name|I32
+name|STRLEN
 name|len
 decl_stmt|;
 specifier|register
@@ -13285,7 +13855,7 @@ decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
-name|I32
+name|STRLEN
 name|numlen
 decl_stmt|;
 name|PL_regcomp_parse
@@ -13564,17 +14134,26 @@ condition|(
 operator|!
 name|e
 condition|)
-name|FAIL
+block|{
+name|PL_regcomp_parse
+operator|=
+name|p
+operator|+
+literal|1
+expr_stmt|;
+name|vFAIL
 argument_list|(
 literal|"Missing right brace on \\x{}"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|UTF
-condition|)
+block|}
+else|else
 block|{
+name|numlen
+operator|=
+literal|1
+expr_stmt|;
+comment|/* allow underscores */
 name|ender
 operator|=
 operator|(
@@ -13589,11 +14168,14 @@ argument_list|,
 name|e
 operator|-
 name|p
+operator|-
+literal|1
 argument_list|,
 operator|&
 name|numlen
 argument_list|)
 expr_stmt|;
+comment|/* numlen is generous */
 if|if
 condition|(
 name|numlen
@@ -13603,7 +14185,6 @@ operator|>=
 literal|127
 condition|)
 block|{
-comment|/* numlen is generous */
 name|p
 operator|--
 expr_stmt|;
@@ -13618,15 +14199,14 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-else|else
-name|FAIL
-argument_list|(
-literal|"Can't use \\x{} without 'use utf8' declaration"
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
+name|numlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* disallow underscores */
 name|ender
 operator|=
 operator|(
@@ -13725,6 +14305,11 @@ name|PL_regnpar
 operator|)
 condition|)
 block|{
+name|numlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* disallow underscores */
 name|ender
 operator|=
 operator|(
@@ -13766,7 +14351,7 @@ name|PL_regxend
 condition|)
 name|FAIL
 argument_list|(
-literal|"trailing \\ in regexp"
+literal|"Trailing \\"
 argument_list|)
 expr_stmt|;
 comment|/* FALL THROUGH */
@@ -13787,17 +14372,18 @@ operator|*
 name|p
 argument_list|)
 condition|)
-name|Perl_warner
+name|vWARN2
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|p
+operator|+
+literal|1
 argument_list|,
-literal|"/%.127s/: Unrecognized escape \\%c passed through"
+literal|"Unrecognized escape \\%c passed through"
 argument_list|,
-argument|PL_regprecomp
-argument_list|,
-argument|*p
+operator|*
+name|p
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 goto|goto
 name|normal_default
 goto|;
@@ -13808,14 +14394,11 @@ name|normal_default
 label|:
 if|if
 condition|(
-operator|(
+name|UTF8_IS_START
+argument_list|(
 operator|*
 name|p
-operator|&
-literal|0xc0
-operator|)
-operator|==
-literal|0xc0
+argument_list|)
 operator|&&
 name|UTF
 condition|)
@@ -13830,8 +14413,14 @@ operator|*
 operator|)
 name|p
 argument_list|,
+name|PL_regxend
+operator|-
+name|p
+argument_list|,
 operator|&
 name|numlen
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|p
@@ -13907,6 +14496,7 @@ name|p
 operator|=
 name|oldp
 expr_stmt|;
+comment|/* ender is a Unicode value so it can be> 0xff -- 		     * in other words, do not use UTF8_IS_CONTINUED(). */
 elseif|else
 if|if
 condition|(
@@ -13952,6 +14542,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+comment|/* ender is a Unicode value so it can be> 0xff -- 		 * in other words, do not use UTF8_IS_CONTINUED(). */
 if|if
 condition|(
 name|ender
@@ -14003,17 +14594,25 @@ expr_stmt|;
 name|nextchar
 argument_list|()
 expr_stmt|;
+block|{
+comment|/* len is STRLEN which is unsigned, need to copy to signed */
+name|IV
+name|iv
+init|=
+name|len
+decl_stmt|;
 if|if
 condition|(
-name|len
+name|iv
 operator|<
 literal|0
 condition|)
-name|FAIL
+name|vFAIL
 argument_list|(
-literal|"internal disaster in regexp"
+literal|"Internal disaster"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|len
@@ -14163,8 +14762,6 @@ name|I32
 name|value
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|char
 modifier|*
 name|posixcc
@@ -14371,6 +14968,29 @@ name|ANYOF_ASCII
 expr_stmt|;
 break|break;
 case|case
+literal|'b'
+case|:
+if|if
+condition|(
+name|strnEQ
+argument_list|(
+name|posixcc
+argument_list|,
+literal|"blank"
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|namedclass
+operator|=
+name|complement
+condition|?
+name|ANYOF_NBLANK
+else|:
+name|ANYOF_BLANK
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 if|if
@@ -14523,10 +15143,11 @@ name|namedclass
 operator|=
 name|complement
 condition|?
-name|ANYOF_NSPACE
+name|ANYOF_NPSXSPC
 else|:
-name|ANYOF_SPACE
+name|ANYOF_PSXSPC
 expr_stmt|;
+break|break;
 case|case
 literal|'u'
 case|:
@@ -14632,10 +15253,10 @@ index|]
 operator|!=
 literal|']'
 condition|)
-name|Perl_croak
+block|{
+name|Simple_vFAIL3
 argument_list|(
-name|aTHX_
-literal|"Character class [:%.*s:] unknown"
+literal|"POSIX class [:%.*s:] unknown"
 argument_list|,
 name|t
 operator|-
@@ -14649,29 +15270,39 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 elseif|else
 if|if
 condition|(
-name|ckWARN
-argument_list|(
-name|WARN_REGEXP
-argument_list|)
-operator|&&
 operator|!
 name|SIZE_ONLY
 condition|)
+block|{
 comment|/* [[=foo=]] and [[.foo.]] are still future. */
-name|Perl_warner
+comment|/* adjust PL_regcomp_parse so the warning shows after 		       the class closes */
+while|while
+condition|(
+operator|*
+name|PL_regcomp_parse
+operator|&&
+operator|*
+name|PL_regcomp_parse
+operator|!=
+literal|']'
+condition|)
+name|PL_regcomp_parse
+operator|++
+expr_stmt|;
+name|Simple_vFAIL3
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+literal|"POSIX syntax [%c %c] is reserved for future extensions"
 argument_list|,
-literal|"Character class syntax [%c %c] is reserved for future extensions"
+name|c
 argument_list|,
-argument|c
-argument_list|,
-argument|c
+name|c
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -14770,17 +15401,20 @@ operator|==
 literal|']'
 condition|)
 block|{
-name|Perl_warner
+name|vWARN3
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|s
+operator|+
+literal|2
 argument_list|,
-literal|"Character class syntax [%c %c] belongs inside character classes"
+literal|"POSIX syntax [%c %c] belongs inside character classes"
 argument_list|,
-argument|c
+name|c
 argument_list|,
-argument|c
+name|c
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+comment|/* [[=foo=]] and [[.foo.]] are still future. */
 if|if
 condition|(
 name|c
@@ -14791,17 +15425,30 @@ name|c
 operator|==
 literal|'.'
 condition|)
-name|Perl_warner
-argument_list|(
-argument|aTHX_ WARN_REGEXP
-argument_list|,
-literal|"Character class syntax [%c %c] is reserved for future extensions"
-argument_list|,
-argument|c
-argument_list|,
-argument|c
-argument_list|)
+block|{
+comment|/* adjust PL_regcomp_parse so the error shows after 		   the class closes */
+while|while
+condition|(
+operator|*
+name|PL_regcomp_parse
+operator|&&
+operator|*
+name|PL_regcomp_parse
+operator|++
+operator|!=
+literal|']'
+condition|)
 empty_stmt|;
+name|Simple_vFAIL3
+argument_list|(
+literal|"POSIX syntax [%c %c] is reserved for future extensions"
+argument_list|,
+name|c
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -14816,8 +15463,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|U32
 name|value
@@ -14839,7 +15484,7 @@ name|regnode
 modifier|*
 name|ret
 decl_stmt|;
-name|I32
+name|STRLEN
 name|numlen
 decl_stmt|;
 name|I32
@@ -15030,7 +15675,7 @@ name|PL_regcomp_parse
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Some compilers cannot handle switching on 64-bit integer 	     * values, therefore value cannot be an UV. --jhi */
+comment|/* Some compilers cannot handle switching on 64-bit integer 	     * values, therefore the 'value' cannot be an UV. --jhi */
 switch|switch
 condition|(
 name|value
@@ -15166,6 +15811,11 @@ directive|endif
 case|case
 literal|'x'
 case|:
+name|numlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* disallow underscores */
 name|value
 operator|=
 operator|(
@@ -15235,6 +15885,11 @@ case|:
 case|case
 literal|'9'
 case|:
+name|numlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* disallow underscores */
 name|value
 operator|=
 operator|(
@@ -15272,17 +15927,18 @@ argument_list|(
 name|value
 argument_list|)
 condition|)
-name|Perl_warner
+name|vWARN2
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
-literal|"/%.127s/: Unrecognized escape \\%c in character class passed through"
+literal|"Unrecognized escape \\%c in character class passed through"
 argument_list|,
-argument|PL_regprecomp
-argument_list|,
-argument|(int)value
+operator|(
+name|int
+operator|)
+name|value
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -15329,21 +15985,23 @@ argument_list|(
 name|WARN_REGEXP
 argument_list|)
 condition|)
-name|Perl_warner
+name|vWARN4
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
-literal|"/%.127s/: false [] range \"%*.*s\" in regexp"
+literal|"False [] range \"%*.*s\""
 argument_list|,
-argument|PL_regprecomp
+name|PL_regcomp_parse
+operator|-
+name|rangebegin
 argument_list|,
-argument|PL_regcomp_parse - rangebegin
+name|PL_regcomp_parse
+operator|-
+name|rangebegin
 argument_list|,
-argument|PL_regcomp_parse - rangebegin
-argument_list|,
-argument|rangebegin
+name|rangebegin
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|ANYOF_BITMAP_SET
 argument_list|(
 name|ret
@@ -15988,6 +16646,97 @@ comment|/* EBCDIC */
 block|}
 break|break;
 case|case
+name|ANYOF_BLANK
+case|:
+if|if
+condition|(
+name|LOC
+condition|)
+name|ANYOF_CLASS_SET
+argument_list|(
+name|ret
+argument_list|,
+name|ANYOF_BLANK
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+for|for
+control|(
+name|value
+operator|=
+literal|0
+init|;
+name|value
+operator|<
+literal|256
+condition|;
+name|value
+operator|++
+control|)
+if|if
+condition|(
+name|isBLANK
+argument_list|(
+name|value
+argument_list|)
+condition|)
+name|ANYOF_BITMAP_SET
+argument_list|(
+name|ret
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|ANYOF_NBLANK
+case|:
+if|if
+condition|(
+name|LOC
+condition|)
+name|ANYOF_CLASS_SET
+argument_list|(
+name|ret
+argument_list|,
+name|ANYOF_NBLANK
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+for|for
+control|(
+name|value
+operator|=
+literal|0
+init|;
+name|value
+operator|<
+literal|256
+condition|;
+name|value
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|isBLANK
+argument_list|(
+name|value
+argument_list|)
+condition|)
+name|ANYOF_BITMAP_SET
+argument_list|(
+name|ret
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|ANYOF_CNTRL
 case|:
 if|if
@@ -16356,6 +17105,97 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|ANYOF_PSXSPC
+case|:
+if|if
+condition|(
+name|LOC
+condition|)
+name|ANYOF_CLASS_SET
+argument_list|(
+name|ret
+argument_list|,
+name|ANYOF_PSXSPC
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+for|for
+control|(
+name|value
+operator|=
+literal|0
+init|;
+name|value
+operator|<
+literal|256
+condition|;
+name|value
+operator|++
+control|)
+if|if
+condition|(
+name|isPSXSPC
+argument_list|(
+name|value
+argument_list|)
+condition|)
+name|ANYOF_BITMAP_SET
+argument_list|(
+name|ret
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|ANYOF_NPSXSPC
+case|:
+if|if
+condition|(
+name|LOC
+condition|)
+name|ANYOF_CLASS_SET
+argument_list|(
+name|ret
+argument_list|,
+name|ANYOF_NPSXSPC
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+for|for
+control|(
+name|value
+operator|=
+literal|0
+init|;
+name|value
+operator|<
+literal|256
+condition|;
+name|value
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|isPSXSPC
+argument_list|(
+name|value
+argument_list|)
+condition|)
+name|ANYOF_BITMAP_SET
+argument_list|(
+name|ret
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|ANYOF_PUNCT
 case|:
 if|if
@@ -16629,9 +17469,9 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|FAIL
+name|vFAIL
 argument_list|(
-literal|"invalid [::] class in regexp"
+literal|"Invalid [::] class"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -16663,12 +17503,9 @@ name|value
 condition|)
 comment|/* b-a */
 block|{
-name|Perl_croak
+name|Simple_vFAIL4
 argument_list|(
-name|aTHX_
-literal|"/%.127s/: invalid [] range \"%*.*s\" in regexp"
-argument_list|,
-name|PL_regprecomp
+literal|"Invalid [] range \"%*.*s\""
 argument_list|,
 name|PL_regcomp_parse
 operator|-
@@ -16732,21 +17569,23 @@ argument_list|(
 name|WARN_REGEXP
 argument_list|)
 condition|)
-name|Perl_warner
+name|vWARN4
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
-literal|"/%.127s/: false [] range \"%*.*s\" in regexp"
+literal|"False [] range \"%*.*s\""
 argument_list|,
-argument|PL_regprecomp
+name|PL_regcomp_parse
+operator|-
+name|rangebegin
 argument_list|,
-argument|PL_regcomp_parse - rangebegin
+name|PL_regcomp_parse
+operator|-
+name|rangebegin
 argument_list|,
-argument|PL_regcomp_parse - rangebegin
-argument_list|,
-argument|rangebegin
+name|rangebegin
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -17058,8 +17897,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -17086,7 +17923,7 @@ name|regnode
 modifier|*
 name|ret
 decl_stmt|;
-name|I32
+name|STRLEN
 name|numlen
 decl_stmt|;
 name|I32
@@ -17231,8 +18068,14 @@ operator|*
 operator|)
 name|PL_regcomp_parse
 argument_list|,
+name|PL_regxend
+operator|-
+name|PL_regcomp_parse
+argument_list|,
 operator|&
 name|numlen
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|PL_regcomp_parse
@@ -17273,8 +18116,14 @@ operator|*
 operator|)
 name|PL_regcomp_parse
 argument_list|,
+name|PL_regxend
+operator|-
+name|PL_regcomp_parse
+argument_list|,
 operator|&
 name|numlen
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|PL_regcomp_parse
@@ -17364,7 +18213,7 @@ condition|(
 operator|!
 name|e
 condition|)
-name|FAIL
+name|vFAIL
 argument_list|(
 literal|"Missing right brace on \\p{}"
 argument_list|)
@@ -17539,11 +18388,16 @@ condition|(
 operator|!
 name|e
 condition|)
-name|FAIL
+name|vFAIL
 argument_list|(
 literal|"Missing right brace on \\x{}"
 argument_list|)
 expr_stmt|;
+name|numlen
+operator|=
+literal|1
+expr_stmt|;
+comment|/* allow underscores */
 name|value
 operator|=
 operator|(
@@ -17570,6 +18424,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|numlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* disallow underscores */
 name|value
 operator|=
 operator|(
@@ -17640,6 +18499,11 @@ case|:
 case|case
 literal|'9'
 case|:
+name|numlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* disallow underscores */
 name|value
 operator|=
 operator|(
@@ -17677,17 +18541,18 @@ argument_list|(
 name|value
 argument_list|)
 condition|)
-name|Perl_warner
+name|vWARN2
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
-literal|"/%.127s/: Unrecognized escape \\%c in character class passed through"
+literal|"Unrecognized escape \\%c in character class passed through"
 argument_list|,
-argument|PL_regprecomp
-argument_list|,
-argument|(int)value
+operator|(
+name|int
+operator|)
+name|value
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -17717,21 +18582,23 @@ argument_list|(
 name|WARN_REGEXP
 argument_list|)
 condition|)
-name|Perl_warner
+name|vWARN4
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
-literal|"/%.127s/: false [] range \"%*.*s\" in regexp"
+literal|"False [] range \"%*.*s\""
 argument_list|,
-argument|PL_regprecomp
+name|PL_regcomp_parse
+operator|-
+name|rangebegin
 argument_list|,
-argument|PL_regcomp_parse - rangebegin
+name|PL_regcomp_parse
+operator|-
+name|rangebegin
 argument_list|,
-argument|PL_regcomp_parse - rangebegin
-argument_list|,
-argument|rangebegin
+name|rangebegin
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|Perl_sv_catpvf
 argument_list|(
 argument|aTHX_ listsv
@@ -17988,12 +18855,56 @@ name|Perl_sv_catpvf
 argument_list|(
 argument|aTHX_ listsv
 argument_list|,
-literal|"+utf8::IsSpace\n"
+literal|"+utf8::IsSpacePerl\n"
 argument_list|)
 empty_stmt|;
 break|break;
 case|case
 name|ANYOF_NSPACE
+case|:
+name|Perl_sv_catpvf
+argument_list|(
+argument|aTHX_ listsv
+argument_list|,
+literal|"!utf8::IsSpacePerl\n"
+argument_list|)
+empty_stmt|;
+break|break;
+case|case
+name|ANYOF_BLANK
+case|:
+name|Perl_sv_catpvf
+argument_list|(
+argument|aTHX_ listsv
+argument_list|,
+literal|"+utf8::IsBlank\n"
+argument_list|)
+empty_stmt|;
+break|break;
+case|case
+name|ANYOF_NBLANK
+case|:
+name|Perl_sv_catpvf
+argument_list|(
+argument|aTHX_ listsv
+argument_list|,
+literal|"!utf8::IsBlank\n"
+argument_list|)
+empty_stmt|;
+break|break;
+case|case
+name|ANYOF_PSXSPC
+case|:
+name|Perl_sv_catpvf
+argument_list|(
+argument|aTHX_ listsv
+argument_list|,
+literal|"+utf8::IsSpace\n"
+argument_list|)
+empty_stmt|;
+break|break;
+case|case
+name|ANYOF_NPSXSPC
 case|:
 name|Perl_sv_catpvf
 argument_list|(
@@ -18064,12 +18975,9 @@ name|value
 condition|)
 block|{
 comment|/* b-a */
-name|Perl_croak
+name|Simple_vFAIL4
 argument_list|(
-name|aTHX_
-literal|"/%.127s/: invalid [] range \"%*.*s\" in regexp"
-argument_list|,
-name|PL_regprecomp
+literal|"Invalid [] range \"%*.*s\""
 argument_list|,
 name|PL_regcomp_parse
 operator|-
@@ -18133,21 +19041,23 @@ argument_list|(
 name|WARN_REGEXP
 argument_list|)
 condition|)
-name|Perl_warner
+name|vWARN4
 argument_list|(
-argument|aTHX_ WARN_REGEXP
+name|PL_regcomp_parse
 argument_list|,
-literal|"/%.127s/: false [] range \"%*.*s\" in regexp"
+literal|"False [] range \"%*.*s\""
 argument_list|,
-argument|PL_regprecomp
+name|PL_regcomp_parse
+operator|-
+name|rangebegin
 argument_list|,
-argument|PL_regcomp_parse - rangebegin
+name|PL_regcomp_parse
+operator|-
+name|rangebegin
 argument_list|,
-argument|PL_regcomp_parse - rangebegin
-argument_list|,
-argument|rangebegin
+name|rangebegin
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -18229,11 +19139,50 @@ argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUGGING
+name|AV
+modifier|*
+name|av
+init|=
+name|newAV
+argument_list|()
+decl_stmt|;
+name|av_push
+argument_list|(
+name|av
+argument_list|,
+name|rv
+argument_list|)
+expr_stmt|;
+name|av_push
+argument_list|(
+name|av
+argument_list|,
+name|listsv
+argument_list|)
+expr_stmt|;
+name|rv
+operator|=
+name|newRV_noinc
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|av
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|SvREFCNT_dec
 argument_list|(
 name|listsv
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|n
 operator|=
 name|add_data
@@ -18288,8 +19237,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|char
 modifier|*
 name|retval
@@ -18415,8 +19362,6 @@ name|U8
 name|op
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regnode
 modifier|*
@@ -18498,8 +19443,6 @@ name|U32
 name|arg
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regnode
 modifier|*
@@ -18581,41 +19524,22 @@ name|char
 modifier|*
 name|s
 parameter_list|,
-name|I32
+name|STRLEN
 modifier|*
 name|lenp
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
-if|if
-condition|(
+operator|*
+name|lenp
+operator|=
 name|SIZE_ONLY
-condition|)
-block|{
-name|U8
-name|tmpbuf
-index|[
-name|UTF8_MAXLEN
-index|]
-decl_stmt|;
-operator|*
-name|lenp
-operator|=
-name|uv_to_utf8
+condition|?
+name|UNISKIP
 argument_list|(
-name|tmpbuf
-argument_list|,
 name|uv
 argument_list|)
-operator|-
-name|tmpbuf
-expr_stmt|;
-block|}
-else|else
-operator|*
-name|lenp
-operator|=
+else|:
+operator|(
 name|uv_to_utf8
 argument_list|(
 operator|(
@@ -18632,6 +19556,7 @@ name|U8
 operator|*
 operator|)
 name|s
+operator|)
 expr_stmt|;
 block|}
 end_function
@@ -18654,8 +19579,6 @@ modifier|*
 name|opnd
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regnode
 modifier|*
@@ -18778,8 +19701,6 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|regnode
 modifier|*
@@ -18880,8 +19801,6 @@ modifier|*
 name|val
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 comment|/* "Operandless" and "op != BRANCH" are synonymous in practice. */
 if|if
 condition|(
@@ -19575,8 +20494,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-name|dTHR
-expr_stmt|;
 name|SV
 modifier|*
 name|sv
@@ -20044,9 +20961,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|isCNTRL
+argument_list|(
 name|c
-operator|<=
-literal|' '
+argument_list|)
 operator|||
 name|c
 operator|==
@@ -20127,8 +21045,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-name|dTHR
-expr_stmt|;
 specifier|register
 name|int
 name|k
@@ -20154,7 +21070,7 @@ condition|)
 comment|/* regnode.type is unsigned */
 name|FAIL
 argument_list|(
-literal|"corrupted regexp opcode"
+literal|"Corrupted regexp opcode"
 argument_list|)
 expr_stmt|;
 name|sv_catpv
@@ -20236,6 +21152,13 @@ name|o
 argument_list|)
 operator|==
 name|CURLYN
+operator|||
+name|OP
+argument_list|(
+name|o
+argument_list|)
+operator|==
+name|CURLYX
 condition|)
 name|Perl_sv_catpvf
 argument_list|(
@@ -20346,15 +21269,39 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|bool
+name|anyofutf8
+init|=
+name|OP
+argument_list|(
+name|o
+argument_list|)
+operator|==
+name|ANYOFUTF8
+decl_stmt|;
+name|U8
+name|flags
+init|=
+name|anyofutf8
+condition|?
+name|ARG1
+argument_list|(
+name|o
+argument_list|)
+else|:
+name|o
+operator|->
+name|flags
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
 specifier|const
-name|out
+name|anyofs
 index|[]
 init|=
 block|{
-comment|/* Should be syncronized with 					   a table in regcomp.h */
+comment|/* Should be syncronized with 					 * ANYOF_ #xdefines in regcomp.h */
 literal|"\\w"
 block|,
 literal|"\\W"
@@ -20401,17 +21348,23 @@ literal|"[:^punct:]"
 block|,
 literal|"[:upper:]"
 block|,
-literal|"[:!upper:]"
+literal|"[:^upper:]"
 block|,
 literal|"[:xdigit:]"
 block|,
 literal|"[:^xdigit:]"
+block|,
+literal|"[:space:]"
+block|,
+literal|"[:^space:]"
+block|,
+literal|"[:blank:]"
+block|,
+literal|"[:^blank:]"
 block|}
 decl_stmt|;
 if|if
 condition|(
-name|o
-operator|->
 name|flags
 operator|&
 name|ANYOF_LOCALE
@@ -20425,8 +21378,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|o
-operator|->
 name|flags
 operator|&
 name|ANYOF_FOLD
@@ -20451,8 +21402,6 @@ argument_list|)
 empty_stmt|;
 if|if
 condition|(
-name|o
-operator|->
 name|flags
 operator|&
 name|ANYOF_INVERT
@@ -20464,6 +21413,16 @@ argument_list|,
 literal|"^"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OP
+argument_list|(
+name|o
+argument_list|)
+operator|==
+name|ANYOF
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -20589,7 +21548,7 @@ name|i
 operator|<
 sizeof|sizeof
 argument_list|(
-name|out
+name|anyofs
 argument_list|)
 operator|/
 sizeof|sizeof
@@ -20614,12 +21573,381 @@ name|sv_catpv
 argument_list|(
 name|sv
 argument_list|,
-name|out
+name|anyofs
 index|[
 name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|SV
+modifier|*
+name|rv
+init|=
+operator|(
+name|SV
+operator|*
+operator|)
+name|PL_regdata
+operator|->
+name|data
+index|[
+name|ARG2
+argument_list|(
+name|o
+argument_list|)
+index|]
+decl_stmt|;
+name|AV
+modifier|*
+name|av
+init|=
+operator|(
+name|AV
+operator|*
+operator|)
+name|SvRV
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|rv
+argument_list|)
+decl_stmt|;
+name|SV
+modifier|*
+name|sw
+init|=
+operator|*
+name|av_fetch
+argument_list|(
+name|av
+argument_list|,
+literal|0
+argument_list|,
+name|FALSE
+argument_list|)
+decl_stmt|;
+name|SV
+modifier|*
+name|lv
+init|=
+operator|*
+name|av_fetch
+argument_list|(
+name|av
+argument_list|,
+literal|1
+argument_list|,
+name|FALSE
+argument_list|)
+decl_stmt|;
+name|UV
+name|i
+decl_stmt|;
+name|U8
+name|s
+index|[
+name|UTF8_MAXLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+literal|256
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* just the first 256 */
+name|U8
+modifier|*
+name|e
+init|=
+name|uv_to_utf8
+argument_list|(
+name|s
+argument_list|,
+name|i
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|256
+operator|&&
+name|swash_fetch
+argument_list|(
+name|sw
+argument_list|,
+name|s
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|rangestart
+operator|==
+operator|-
+literal|1
+condition|)
+name|rangestart
+operator|=
+name|i
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|rangestart
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|U8
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+name|i
+operator|<=
+name|rangestart
+operator|+
+literal|3
+condition|)
+for|for
+control|(
+init|;
+name|rangestart
+operator|<
+name|i
+condition|;
+name|rangestart
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|e
+operator|=
+name|uv_to_utf8
+argument_list|(
+name|s
+argument_list|,
+name|rangestart
+argument_list|)
+operator|,
+name|p
+operator|=
+name|s
+init|;
+name|p
+operator|<
+name|e
+condition|;
+name|p
+operator|++
+control|)
+name|put_byte
+argument_list|(
+name|sv
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+for|for
+control|(
+name|e
+operator|=
+name|uv_to_utf8
+argument_list|(
+name|s
+argument_list|,
+name|rangestart
+argument_list|)
+operator|,
+name|p
+operator|=
+name|s
+init|;
+name|p
+operator|<
+name|e
+condition|;
+name|p
+operator|++
+control|)
+name|put_byte
+argument_list|(
+name|sv
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+name|sv_catpv
+argument_list|(
+name|sv
+argument_list|,
+literal|"-"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|e
+operator|=
+name|uv_to_utf8
+argument_list|(
+name|s
+argument_list|,
+name|i
+operator|-
+literal|1
+argument_list|)
+operator|,
+name|p
+operator|=
+name|s
+init|;
+name|p
+operator|<
+name|e
+condition|;
+name|p
+operator|++
+control|)
+name|put_byte
+argument_list|(
+name|sv
+argument_list|,
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|rangestart
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
+name|sv_catpv
+argument_list|(
+name|sv
+argument_list|,
+literal|"..."
+argument_list|)
+expr_stmt|;
+block|{
+name|char
+modifier|*
+name|s
+init|=
+name|savepv
+argument_list|(
+name|SvPVX
+argument_list|(
+name|lv
+argument_list|)
+argument_list|)
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+operator|&&
+operator|*
+name|s
+operator|!=
+literal|'\n'
+condition|)
+name|s
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'\n'
+condition|)
+block|{
+name|char
+modifier|*
+name|t
+init|=
+operator|++
+name|s
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'\n'
+condition|)
+operator|*
+name|s
+operator|=
+literal|' '
+expr_stmt|;
+name|s
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|s
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|' '
+condition|)
+name|s
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|sv_catpv
+argument_list|(
+name|sv
+argument_list|,
+name|t
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
 name|Perl_sv_catpvf
 argument_list|(
 argument|aTHX_ sv
@@ -20722,8 +22050,6 @@ modifier|*
 name|r
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|DEBUG_r
 argument_list|(
 argument|if (!PL_colorset) reginitcolors()
@@ -20990,6 +22316,17 @@ name|old_curpad
 operator|=
 name|PL_curpad
 expr_stmt|;
+comment|/* Watch out for global destruction's random ordering. */
+if|if
+condition|(
+name|SvTYPE
+argument_list|(
+name|new_comppad
+argument_list|)
+operator|==
+name|SVt_PVAV
+condition|)
+block|{
 name|PL_comppad
 operator|=
 name|new_comppad
@@ -21000,6 +22337,12 @@ name|AvARRAY
 argument_list|(
 name|new_comppad
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|PL_curpad
+operator|=
+name|NULL
 expr_stmt|;
 name|op_free
 argument_list|(
@@ -21115,8 +22458,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|I32
 name|offset
@@ -21391,8 +22732,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SAVEPPTR
 argument_list|(
 name|PL_bostr
@@ -21470,7 +22809,7 @@ name|PL_regprev
 argument_list|)
 expr_stmt|;
 comment|/* char before regbol, \n if none */
-name|SAVEVPTR
+name|SAVEGENERICPV
 argument_list|(
 name|PL_reg_start_tmp
 argument_list|)
@@ -21479,11 +22818,6 @@ comment|/* from regexec.c */
 name|PL_reg_start_tmp
 operator|=
 literal|0
-expr_stmt|;
-name|SAVEFREEPV
-argument_list|(
-name|PL_reg_start_tmp
-argument_list|)
 expr_stmt|;
 name|SAVEI32
 argument_list|(
@@ -21631,6 +22965,12 @@ name|PL_reg_curpm
 argument_list|)
 expr_stmt|;
 comment|/* from regexec.c */
+name|SAVEI32
+argument_list|(
+name|PL_regnpar
+argument_list|)
+expr_stmt|;
+comment|/* () count. */
 ifdef|#
 directive|ifdef
 name|DEBUGGING

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    hv.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    hv.h  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+end_comment
+
+begin_comment
+comment|/* typedefs to eliminate some typing */
 end_comment
 
 begin_typedef
@@ -19,6 +23,10 @@ name|HEK
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* entry in hash value chain */
+end_comment
+
 begin_struct
 struct|struct
 name|he
@@ -27,17 +35,24 @@ name|HE
 modifier|*
 name|hent_next
 decl_stmt|;
+comment|/* next entry in chain */
 name|HEK
 modifier|*
 name|hent_hek
 decl_stmt|;
+comment|/* hash key */
 name|SV
 modifier|*
 name|hent_val
 decl_stmt|;
+comment|/* scalar value that was hashed */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* hash key -- defined separately for use as shared pointer */
+end_comment
 
 begin_struct
 struct|struct
@@ -46,18 +61,25 @@ block|{
 name|U32
 name|hek_hash
 decl_stmt|;
+comment|/* hash of key */
 name|I32
 name|hek_len
 decl_stmt|;
+comment|/* length of hash key */
 name|char
 name|hek_key
 index|[
 literal|1
 index|]
 decl_stmt|;
+comment|/* variable-length hash key */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* hash structure: */
+end_comment
 
 begin_comment
 comment|/* This structure must match the beginning of struct xpvmg in sv.h. */
@@ -120,6 +142,10 @@ comment|/* name, if a symbol table */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* hash a key */
+end_comment
 
 begin_define
 define|#
@@ -508,6 +534,10 @@ name|hek
 parameter_list|)
 value|(hek)->hek_key
 end_define
+
+begin_comment
+comment|/* calculate HV array allocation */
+end_comment
 
 begin_if
 if|#

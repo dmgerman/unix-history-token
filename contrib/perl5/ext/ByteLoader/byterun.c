@@ -91,6 +91,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|optype_size
 index|[]
@@ -154,66 +155,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|SV
-modifier|*
-name|specialsv_list
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|bytecode_iv_overflows
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|SV
-modifier|*
-name|bytecode_sv
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|XPV
-name|bytecode_pv
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-modifier|*
-name|bytecode_obj_list
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|I32
-name|bytecode_obj_list_fill
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 modifier|*
 name|bset_obj_store
 parameter_list|(
 name|pTHXo_
+name|struct
+name|byteloader_state
+modifier|*
+name|bstate
+parameter_list|,
 name|void
 modifier|*
 name|obj
@@ -226,49 +178,37 @@ if|if
 condition|(
 name|ix
 operator|>
-name|bytecode_obj_list_fill
+name|bstate
+operator|->
+name|bs_obj_list_fill
 condition|)
 block|{
-if|if
-condition|(
-name|bytecode_obj_list_fill
-operator|==
-operator|-
-literal|1
-condition|)
-name|New
-argument_list|(
-literal|666
-argument_list|,
-name|bytecode_obj_list
-argument_list|,
-name|ix
-operator|+
-literal|1
-argument_list|,
-name|void
-operator|*
-argument_list|)
-expr_stmt|;
-else|else
 name|Renew
 argument_list|(
-name|bytecode_obj_list
+name|bstate
+operator|->
+name|bs_obj_list
 argument_list|,
 name|ix
 operator|+
-literal|1
+literal|32
 argument_list|,
 name|void
 operator|*
 argument_list|)
 expr_stmt|;
-name|bytecode_obj_list_fill
+name|bstate
+operator|->
+name|bs_obj_list_fill
 operator|=
 name|ix
+operator|+
+literal|31
 expr_stmt|;
 block|}
-name|bytecode_obj_list
+name|bstate
+operator|->
+name|bs_obj_list
 index|[
 name|ix
 index|]
@@ -281,21 +221,56 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 name|void
 name|byterun
-parameter_list|(
+argument_list|(
 name|pTHXo_
-name|struct
-name|bytestream
-name|bs
-parameter_list|)
+specifier|register
+expr|struct
+name|byteloader_state
+operator|*
+name|bstate
+argument_list|)
 block|{
-name|dTHR
-expr_stmt|;
+specifier|register
 name|int
 name|insn
 decl_stmt|;
+name|U32
+name|ix
+decl_stmt|;
+name|SV
+modifier|*
+name|specialsv_list
+index|[
+literal|6
+index|]
+decl_stmt|;
+name|BYTECODE_HEADER_CHECK
+expr_stmt|;
+comment|/* croak if incorrect platform */
+name|New
+argument_list|(
+literal|666
+argument_list|,
+name|bstate
+operator|->
+name|bs_obj_list
+argument_list|,
+literal|32
+argument_list|,
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
+comment|/* set op objlist */
+name|bstate
+operator|->
+name|bs_obj_list_fill
+operator|=
+literal|31
+expr_stmt|;
 name|specialsv_list
 index|[
 literal|0
@@ -326,6 +301,20 @@ index|]
 operator|=
 operator|&
 name|PL_sv_no
+expr_stmt|;
+name|specialsv_list
+index|[
+literal|4
+index|]
+operator|=
+name|pWARN_ALL
+expr_stmt|;
+name|specialsv_list
+index|[
+literal|5
+index|]
+operator|=
+name|pWARN_NONE
 expr_stmt|;
 while|while
 condition|(
@@ -395,7 +384,9 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 operator|=
 name|arg
 expr_stmt|;
@@ -435,7 +426,9 @@ argument_list|)
 expr_stmt|;
 name|BSET_OBJ_STORE
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -465,21 +458,25 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|INSN_LDSPECSV
+name|INSN_STPV
 case|:
 comment|/* 5 */
 block|{
-name|U8
+name|U32
 name|arg
 decl_stmt|;
-name|BGET_U8
+name|BGET_U32
 argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|BSET_ldspecsv
+name|BSET_stpv
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_pv
+operator|.
+name|xpv_pv
 argument_list|,
 name|arg
 argument_list|)
@@ -487,7 +484,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|INSN_NEWSV
+name|INSN_LDSPECSV
 case|:
 comment|/* 6 */
 block|{
@@ -499,9 +496,35 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+name|BSET_ldspecsv
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_NEWSV
+case|:
+comment|/* 7 */
+block|{
+name|U8
+name|arg
+decl_stmt|;
+name|BGET_U8
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 name|BSET_newsv
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -511,7 +534,7 @@ block|}
 case|case
 name|INSN_NEWOP
 case|:
-comment|/* 7 */
+comment|/* 8 */
 block|{
 name|U8
 name|arg
@@ -533,7 +556,7 @@ block|}
 case|case
 name|INSN_NEWOPN
 case|:
-comment|/* 8 */
+comment|/* 9 */
 block|{
 name|U8
 name|arg
@@ -555,7 +578,7 @@ block|}
 case|case
 name|INSN_NEWPV
 case|:
-comment|/* 9 */
+comment|/* 11 */
 block|{
 name|PV
 name|arg
@@ -570,7 +593,7 @@ block|}
 case|case
 name|INSN_PV_CUR
 case|:
-comment|/* 11 */
+comment|/* 12 */
 block|{
 name|STRLEN
 name|arg
@@ -580,7 +603,9 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|bytecode_pv
+name|bstate
+operator|->
+name|bs_pv
 operator|.
 name|xpv_cur
 operator|=
@@ -591,11 +616,13 @@ block|}
 case|case
 name|INSN_PV_FREE
 case|:
-comment|/* 12 */
+comment|/* 13 */
 block|{
 name|BSET_pv_free
 argument_list|(
-name|bytecode_pv
+name|bstate
+operator|->
+name|bs_pv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -603,7 +630,7 @@ block|}
 case|case
 name|INSN_SV_UPGRADE
 case|:
-comment|/* 13 */
+comment|/* 14 */
 block|{
 name|char
 name|arg
@@ -615,7 +642,9 @@ argument_list|)
 expr_stmt|;
 name|BSET_sv_upgrade
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -625,7 +654,7 @@ block|}
 case|case
 name|INSN_SV_REFCNT
 case|:
-comment|/* 14 */
+comment|/* 15 */
 block|{
 name|U32
 name|arg
@@ -637,7 +666,9 @@ argument_list|)
 expr_stmt|;
 name|SvREFCNT
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -647,7 +678,7 @@ block|}
 case|case
 name|INSN_SV_REFCNT_ADD
 case|:
-comment|/* 15 */
+comment|/* 16 */
 block|{
 name|I32
 name|arg
@@ -661,7 +692,9 @@ name|BSET_sv_refcnt_add
 argument_list|(
 name|SvREFCNT
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 argument_list|,
 name|arg
@@ -672,7 +705,7 @@ block|}
 case|case
 name|INSN_SV_FLAGS
 case|:
-comment|/* 16 */
+comment|/* 17 */
 block|{
 name|U32
 name|arg
@@ -684,7 +717,9 @@ argument_list|)
 expr_stmt|;
 name|SvFLAGS
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -694,7 +729,7 @@ block|}
 case|case
 name|INSN_XRV
 case|:
-comment|/* 17 */
+comment|/* 18 */
 block|{
 name|svindex
 name|arg
@@ -706,7 +741,9 @@ argument_list|)
 expr_stmt|;
 name|SvRV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -716,11 +753,13 @@ block|}
 case|case
 name|INSN_XPV
 case|:
-comment|/* 18 */
+comment|/* 19 */
 block|{
 name|BSET_xpv
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -728,7 +767,7 @@ block|}
 case|case
 name|INSN_XIV32
 case|:
-comment|/* 19 */
+comment|/* 20 */
 block|{
 name|I32
 name|arg
@@ -740,7 +779,9 @@ argument_list|)
 expr_stmt|;
 name|SvIVX
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -750,7 +791,7 @@ block|}
 case|case
 name|INSN_XIV64
 case|:
-comment|/* 20 */
+comment|/* 21 */
 block|{
 name|IV64
 name|arg
@@ -762,7 +803,9 @@ argument_list|)
 expr_stmt|;
 name|SvIVX
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -772,7 +815,7 @@ block|}
 case|case
 name|INSN_XNV
 case|:
-comment|/* 21 */
+comment|/* 22 */
 block|{
 name|NV
 name|arg
@@ -784,7 +827,9 @@ argument_list|)
 expr_stmt|;
 name|SvNVX
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -793,28 +838,6 @@ break|break;
 block|}
 case|case
 name|INSN_XLV_TARGOFF
-case|:
-comment|/* 22 */
-block|{
-name|STRLEN
-name|arg
-decl_stmt|;
-name|BGET_U32
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|LvTARGOFF
-argument_list|(
-name|bytecode_sv
-argument_list|)
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_XLV_TARGLEN
 case|:
 comment|/* 23 */
 block|{
@@ -826,9 +849,35 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+name|LvTARGOFF
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|)
+operator|=
+name|arg
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_XLV_TARGLEN
+case|:
+comment|/* 24 */
+block|{
+name|STRLEN
+name|arg
+decl_stmt|;
+name|BGET_U32
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 name|LvTARGLEN
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -838,7 +887,7 @@ block|}
 case|case
 name|INSN_XLV_TARG
 case|:
-comment|/* 24 */
+comment|/* 25 */
 block|{
 name|svindex
 name|arg
@@ -850,7 +899,9 @@ argument_list|)
 expr_stmt|;
 name|LvTARG
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -860,7 +911,7 @@ block|}
 case|case
 name|INSN_XLV_TYPE
 case|:
-comment|/* 25 */
+comment|/* 26 */
 block|{
 name|char
 name|arg
@@ -872,7 +923,9 @@ argument_list|)
 expr_stmt|;
 name|LvTYPE
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -882,7 +935,7 @@ block|}
 case|case
 name|INSN_XBM_USEFUL
 case|:
-comment|/* 26 */
+comment|/* 27 */
 block|{
 name|I32
 name|arg
@@ -894,7 +947,9 @@ argument_list|)
 expr_stmt|;
 name|BmUSEFUL
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -904,7 +959,7 @@ block|}
 case|case
 name|INSN_XBM_PREVIOUS
 case|:
-comment|/* 27 */
+comment|/* 28 */
 block|{
 name|U16
 name|arg
@@ -916,7 +971,9 @@ argument_list|)
 expr_stmt|;
 name|BmPREVIOUS
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -926,7 +983,7 @@ block|}
 case|case
 name|INSN_XBM_RARE
 case|:
-comment|/* 28 */
+comment|/* 29 */
 block|{
 name|U8
 name|arg
@@ -938,7 +995,9 @@ argument_list|)
 expr_stmt|;
 name|BmRARE
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -948,7 +1007,7 @@ block|}
 case|case
 name|INSN_XFM_LINES
 case|:
-comment|/* 29 */
+comment|/* 30 */
 block|{
 name|I32
 name|arg
@@ -960,7 +1019,9 @@ argument_list|)
 expr_stmt|;
 name|FmLINES
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -969,28 +1030,6 @@ break|break;
 block|}
 case|case
 name|INSN_XIO_LINES
-case|:
-comment|/* 30 */
-block|{
-name|long
-name|arg
-decl_stmt|;
-name|BGET_I32
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|IoLINES
-argument_list|(
-name|bytecode_sv
-argument_list|)
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_XIO_PAGE
 case|:
 comment|/* 31 */
 block|{
@@ -1002,9 +1041,11 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|IoPAGE
+name|IoLINES
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1012,7 +1053,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|INSN_XIO_PAGE_LEN
+name|INSN_XIO_PAGE
 case|:
 comment|/* 32 */
 block|{
@@ -1024,9 +1065,11 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
-name|IoPAGE_LEN
+name|IoPAGE
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1034,7 +1077,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|INSN_XIO_LINES_LEFT
+name|INSN_XIO_PAGE_LEN
 case|:
 comment|/* 33 */
 block|{
@@ -1046,9 +1089,35 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+name|IoPAGE_LEN
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|)
+operator|=
+name|arg
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_XIO_LINES_LEFT
+case|:
+comment|/* 34 */
+block|{
+name|long
+name|arg
+decl_stmt|;
+name|BGET_I32
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 name|IoLINES_LEFT
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1058,7 +1127,7 @@ block|}
 case|case
 name|INSN_XIO_TOP_NAME
 case|:
-comment|/* 34 */
+comment|/* 36 */
 block|{
 name|pvcontents
 name|arg
@@ -1070,7 +1139,9 @@ argument_list|)
 expr_stmt|;
 name|IoTOP_NAME
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1080,7 +1151,7 @@ block|}
 case|case
 name|INSN_XIO_TOP_GV
 case|:
-comment|/* 36 */
+comment|/* 37 */
 block|{
 name|svindex
 name|arg
@@ -1099,7 +1170,9 @@ operator|)
 operator|&
 name|IoTOP_GV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1109,7 +1182,7 @@ block|}
 case|case
 name|INSN_XIO_FMT_NAME
 case|:
-comment|/* 37 */
+comment|/* 38 */
 block|{
 name|pvcontents
 name|arg
@@ -1121,7 +1194,9 @@ argument_list|)
 expr_stmt|;
 name|IoFMT_NAME
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1131,7 +1206,7 @@ block|}
 case|case
 name|INSN_XIO_FMT_GV
 case|:
-comment|/* 38 */
+comment|/* 39 */
 block|{
 name|svindex
 name|arg
@@ -1150,7 +1225,9 @@ operator|)
 operator|&
 name|IoFMT_GV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1160,7 +1237,7 @@ block|}
 case|case
 name|INSN_XIO_BOTTOM_NAME
 case|:
-comment|/* 39 */
+comment|/* 40 */
 block|{
 name|pvcontents
 name|arg
@@ -1172,7 +1249,9 @@ argument_list|)
 expr_stmt|;
 name|IoBOTTOM_NAME
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1182,7 +1261,7 @@ block|}
 case|case
 name|INSN_XIO_BOTTOM_GV
 case|:
-comment|/* 40 */
+comment|/* 41 */
 block|{
 name|svindex
 name|arg
@@ -1201,7 +1280,9 @@ operator|)
 operator|&
 name|IoBOTTOM_GV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1211,7 +1292,7 @@ block|}
 case|case
 name|INSN_XIO_SUBPROCESS
 case|:
-comment|/* 41 */
+comment|/* 42 */
 block|{
 name|short
 name|arg
@@ -1223,7 +1304,9 @@ argument_list|)
 expr_stmt|;
 name|IoSUBPROCESS
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1232,28 +1315,6 @@ break|break;
 block|}
 case|case
 name|INSN_XIO_TYPE
-case|:
-comment|/* 42 */
-block|{
-name|char
-name|arg
-decl_stmt|;
-name|BGET_U8
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|IoTYPE
-argument_list|(
-name|bytecode_sv
-argument_list|)
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_XIO_FLAGS
 case|:
 comment|/* 43 */
 block|{
@@ -1265,9 +1326,35 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+name|IoTYPE
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|)
+operator|=
+name|arg
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_XIO_FLAGS
+case|:
+comment|/* 44 */
+block|{
+name|char
+name|arg
+decl_stmt|;
+name|BGET_U8
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 name|IoFLAGS
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1277,7 +1364,7 @@ block|}
 case|case
 name|INSN_XCV_STASH
 case|:
-comment|/* 44 */
+comment|/* 45 */
 block|{
 name|svindex
 name|arg
@@ -1296,7 +1383,9 @@ operator|)
 operator|&
 name|CvSTASH
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1305,28 +1394,6 @@ break|break;
 block|}
 case|case
 name|INSN_XCV_START
-case|:
-comment|/* 45 */
-block|{
-name|opindex
-name|arg
-decl_stmt|;
-name|BGET_opindex
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|CvSTART
-argument_list|(
-name|bytecode_sv
-argument_list|)
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_XCV_ROOT
 case|:
 comment|/* 46 */
 block|{
@@ -1338,9 +1405,35 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+name|CvSTART
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|)
+operator|=
+name|arg
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_XCV_ROOT
+case|:
+comment|/* 47 */
+block|{
+name|opindex
+name|arg
+decl_stmt|;
+name|BGET_opindex
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 name|CvROOT
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1350,7 +1443,7 @@ block|}
 case|case
 name|INSN_XCV_GV
 case|:
-comment|/* 47 */
+comment|/* 48 */
 block|{
 name|svindex
 name|arg
@@ -1369,7 +1462,9 @@ operator|)
 operator|&
 name|CvGV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1379,19 +1474,21 @@ block|}
 case|case
 name|INSN_XCV_FILE
 case|:
-comment|/* 48 */
+comment|/* 49 */
 block|{
-name|pvcontents
+name|pvindex
 name|arg
 decl_stmt|;
-name|BGET_pvcontents
+name|BGET_pvindex
 argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
 name|CvFILE
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1401,7 +1498,7 @@ block|}
 case|case
 name|INSN_XCV_DEPTH
 case|:
-comment|/* 49 */
+comment|/* 50 */
 block|{
 name|long
 name|arg
@@ -1413,7 +1510,9 @@ argument_list|)
 expr_stmt|;
 name|CvDEPTH
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1422,35 +1521,6 @@ break|break;
 block|}
 case|case
 name|INSN_XCV_PADLIST
-case|:
-comment|/* 50 */
-block|{
-name|svindex
-name|arg
-decl_stmt|;
-name|BGET_svindex
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|SV
-operator|*
-operator|*
-operator|)
-operator|&
-name|CvPADLIST
-argument_list|(
-name|bytecode_sv
-argument_list|)
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_XCV_OUTSIDE
 case|:
 comment|/* 51 */
 block|{
@@ -1469,9 +1539,42 @@ operator|*
 operator|*
 operator|)
 operator|&
+name|CvPADLIST
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|)
+operator|=
+name|arg
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_XCV_OUTSIDE
+case|:
+comment|/* 52 */
+block|{
+name|svindex
+name|arg
+decl_stmt|;
+name|BGET_svindex
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+name|SV
+operator|*
+operator|*
+operator|)
+operator|&
 name|CvOUTSIDE
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1481,7 +1584,7 @@ block|}
 case|case
 name|INSN_XCV_FLAGS
 case|:
-comment|/* 52 */
+comment|/* 53 */
 block|{
 name|U16
 name|arg
@@ -1493,7 +1596,9 @@ argument_list|)
 expr_stmt|;
 name|CvFLAGS
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1503,7 +1608,7 @@ block|}
 case|case
 name|INSN_AV_EXTEND
 case|:
-comment|/* 53 */
+comment|/* 54 */
 block|{
 name|SSize_t
 name|arg
@@ -1515,7 +1620,9 @@ argument_list|)
 expr_stmt|;
 name|BSET_av_extend
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -1525,7 +1632,7 @@ block|}
 case|case
 name|INSN_AV_PUSH
 case|:
-comment|/* 54 */
+comment|/* 55 */
 block|{
 name|svindex
 name|arg
@@ -1537,7 +1644,9 @@ argument_list|)
 expr_stmt|;
 name|BSET_av_push
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -1546,28 +1655,6 @@ break|break;
 block|}
 case|case
 name|INSN_XAV_FILL
-case|:
-comment|/* 55 */
-block|{
-name|SSize_t
-name|arg
-decl_stmt|;
-name|BGET_I32
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|AvFILLp
-argument_list|(
-name|bytecode_sv
-argument_list|)
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_XAV_MAX
 case|:
 comment|/* 56 */
 block|{
@@ -1579,9 +1666,35 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+name|AvFILLp
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|)
+operator|=
+name|arg
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_XAV_MAX
+case|:
+comment|/* 57 */
+block|{
+name|SSize_t
+name|arg
+decl_stmt|;
+name|BGET_I32
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 name|AvMAX
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1591,7 +1704,7 @@ block|}
 case|case
 name|INSN_XAV_FLAGS
 case|:
-comment|/* 57 */
+comment|/* 58 */
 block|{
 name|U8
 name|arg
@@ -1603,7 +1716,9 @@ argument_list|)
 expr_stmt|;
 name|AvFLAGS
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1613,7 +1728,7 @@ block|}
 case|case
 name|INSN_XHV_RITER
 case|:
-comment|/* 58 */
+comment|/* 59 */
 block|{
 name|I32
 name|arg
@@ -1625,7 +1740,9 @@ argument_list|)
 expr_stmt|;
 name|HvRITER
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1635,7 +1752,7 @@ block|}
 case|case
 name|INSN_XHV_NAME
 case|:
-comment|/* 59 */
+comment|/* 60 */
 block|{
 name|pvcontents
 name|arg
@@ -1647,7 +1764,9 @@ argument_list|)
 expr_stmt|;
 name|HvNAME
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1657,7 +1776,7 @@ block|}
 case|case
 name|INSN_HV_STORE
 case|:
-comment|/* 60 */
+comment|/* 61 */
 block|{
 name|svindex
 name|arg
@@ -1669,7 +1788,9 @@ argument_list|)
 expr_stmt|;
 name|BSET_hv_store
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -1679,7 +1800,7 @@ block|}
 case|case
 name|INSN_SV_MAGIC
 case|:
-comment|/* 61 */
+comment|/* 62 */
 block|{
 name|char
 name|arg
@@ -1691,7 +1812,9 @@ argument_list|)
 expr_stmt|;
 name|BSET_sv_magic
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -1701,7 +1824,7 @@ block|}
 case|case
 name|INSN_MG_OBJ
 case|:
-comment|/* 62 */
+comment|/* 63 */
 block|{
 name|svindex
 name|arg
@@ -1713,7 +1836,9 @@ argument_list|)
 expr_stmt|;
 name|SvMAGIC
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|->
 name|mg_obj
@@ -1725,7 +1850,7 @@ block|}
 case|case
 name|INSN_MG_PRIVATE
 case|:
-comment|/* 63 */
+comment|/* 64 */
 block|{
 name|U16
 name|arg
@@ -1737,7 +1862,9 @@ argument_list|)
 expr_stmt|;
 name|SvMAGIC
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|->
 name|mg_private
@@ -1749,7 +1876,7 @@ block|}
 case|case
 name|INSN_MG_FLAGS
 case|:
-comment|/* 64 */
+comment|/* 65 */
 block|{
 name|U8
 name|arg
@@ -1761,7 +1888,9 @@ argument_list|)
 expr_stmt|;
 name|SvMAGIC
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|->
 name|mg_flags
@@ -1773,7 +1902,7 @@ block|}
 case|case
 name|INSN_MG_PV
 case|:
-comment|/* 65 */
+comment|/* 66 */
 block|{
 name|pvcontents
 name|arg
@@ -1787,7 +1916,9 @@ name|BSET_mg_pv
 argument_list|(
 name|SvMAGIC
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 argument_list|,
 name|arg
@@ -1798,7 +1929,7 @@ block|}
 case|case
 name|INSN_XMG_STASH
 case|:
-comment|/* 66 */
+comment|/* 67 */
 block|{
 name|svindex
 name|arg
@@ -1817,7 +1948,9 @@ operator|)
 operator|&
 name|SvSTASH
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1826,28 +1959,6 @@ break|break;
 block|}
 case|case
 name|INSN_GV_FETCHPV
-case|:
-comment|/* 67 */
-block|{
-name|strconst
-name|arg
-decl_stmt|;
-name|BGET_strconst
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|BSET_gv_fetchpv
-argument_list|(
-name|bytecode_sv
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_GV_STASHPV
 case|:
 comment|/* 68 */
 block|{
@@ -1859,9 +1970,35 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+name|BSET_gv_fetchpv
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_GV_STASHPV
+case|:
+comment|/* 69 */
+block|{
+name|strconst
+name|arg
+decl_stmt|;
+name|BGET_strconst
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
 name|BSET_gv_stashpv
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -1871,7 +2008,7 @@ block|}
 case|case
 name|INSN_GP_SV
 case|:
-comment|/* 69 */
+comment|/* 70 */
 block|{
 name|svindex
 name|arg
@@ -1883,7 +2020,9 @@ argument_list|)
 expr_stmt|;
 name|GvSV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1893,7 +2032,7 @@ block|}
 case|case
 name|INSN_GP_REFCNT
 case|:
-comment|/* 70 */
+comment|/* 71 */
 block|{
 name|U32
 name|arg
@@ -1905,7 +2044,9 @@ argument_list|)
 expr_stmt|;
 name|GvREFCNT
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1915,7 +2056,7 @@ block|}
 case|case
 name|INSN_GP_REFCNT_ADD
 case|:
-comment|/* 71 */
+comment|/* 72 */
 block|{
 name|I32
 name|arg
@@ -1929,7 +2070,9 @@ name|BSET_gp_refcnt_add
 argument_list|(
 name|GvREFCNT
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 argument_list|,
 name|arg
@@ -1939,35 +2082,6 @@ break|break;
 block|}
 case|case
 name|INSN_GP_AV
-case|:
-comment|/* 72 */
-block|{
-name|svindex
-name|arg
-decl_stmt|;
-name|BGET_svindex
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|SV
-operator|*
-operator|*
-operator|)
-operator|&
-name|GvAV
-argument_list|(
-name|bytecode_sv
-argument_list|)
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_GP_HV
 case|:
 comment|/* 73 */
 block|{
@@ -1986,9 +2100,11 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|GvHV
+name|GvAV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -1996,7 +2112,7 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|INSN_GP_CV
+name|INSN_GP_HV
 case|:
 comment|/* 74 */
 block|{
@@ -2015,9 +2131,11 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|GvCV
+name|GvHV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -2025,31 +2143,9 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|INSN_GP_FILE
+name|INSN_GP_CV
 case|:
 comment|/* 75 */
-block|{
-name|pvcontents
-name|arg
-decl_stmt|;
-name|BGET_pvcontents
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|GvFILE
-argument_list|(
-name|bytecode_sv
-argument_list|)
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_GP_IO
-case|:
-comment|/* 76 */
 block|{
 name|svindex
 name|arg
@@ -2066,9 +2162,11 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|GvIOp
+name|GvCV
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -2076,7 +2174,31 @@ expr_stmt|;
 break|break;
 block|}
 case|case
-name|INSN_GP_FORM
+name|INSN_GP_FILE
+case|:
+comment|/* 76 */
+block|{
+name|pvindex
+name|arg
+decl_stmt|;
+name|BGET_pvindex
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|GvFILE
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|)
+operator|=
+name|arg
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_GP_IO
 case|:
 comment|/* 77 */
 block|{
@@ -2095,9 +2217,42 @@ operator|*
 operator|*
 operator|)
 operator|&
+name|GvIOp
+argument_list|(
+name|bstate
+operator|->
+name|bs_sv
+argument_list|)
+operator|=
+name|arg
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_GP_FORM
+case|:
+comment|/* 78 */
+block|{
+name|svindex
+name|arg
+decl_stmt|;
+name|BGET_svindex
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+name|SV
+operator|*
+operator|*
+operator|)
+operator|&
 name|GvFORM
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -2107,7 +2262,7 @@ block|}
 case|case
 name|INSN_GP_CVGEN
 case|:
-comment|/* 78 */
+comment|/* 79 */
 block|{
 name|U32
 name|arg
@@ -2119,7 +2274,9 @@ argument_list|)
 expr_stmt|;
 name|GvCVGEN
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -2129,7 +2286,7 @@ block|}
 case|case
 name|INSN_GP_LINE
 case|:
-comment|/* 79 */
+comment|/* 80 */
 block|{
 name|line_t
 name|arg
@@ -2141,7 +2298,9 @@ argument_list|)
 expr_stmt|;
 name|GvLINE
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -2151,7 +2310,7 @@ block|}
 case|case
 name|INSN_GP_SHARE
 case|:
-comment|/* 80 */
+comment|/* 81 */
 block|{
 name|svindex
 name|arg
@@ -2163,7 +2322,9 @@ argument_list|)
 expr_stmt|;
 name|BSET_gp_share
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|,
 name|arg
 argument_list|)
@@ -2173,7 +2334,7 @@ block|}
 case|case
 name|INSN_XGV_FLAGS
 case|:
-comment|/* 81 */
+comment|/* 82 */
 block|{
 name|U8
 name|arg
@@ -2185,7 +2346,9 @@ argument_list|)
 expr_stmt|;
 name|GvFLAGS
 argument_list|(
-name|bytecode_sv
+name|bstate
+operator|->
+name|bs_sv
 argument_list|)
 operator|=
 name|arg
@@ -2195,7 +2358,7 @@ block|}
 case|case
 name|INSN_OP_NEXT
 case|:
-comment|/* 82 */
+comment|/* 83 */
 block|{
 name|opindex
 name|arg
@@ -2216,7 +2379,7 @@ block|}
 case|case
 name|INSN_OP_SIBLING
 case|:
-comment|/* 83 */
+comment|/* 84 */
 block|{
 name|opindex
 name|arg
@@ -2237,7 +2400,7 @@ block|}
 case|case
 name|INSN_OP_PPADDR
 case|:
-comment|/* 84 */
+comment|/* 85 */
 block|{
 name|strconst
 name|arg
@@ -2261,7 +2424,7 @@ block|}
 case|case
 name|INSN_OP_TARG
 case|:
-comment|/* 85 */
+comment|/* 86 */
 block|{
 name|PADOFFSET
 name|arg
@@ -2282,7 +2445,7 @@ block|}
 case|case
 name|INSN_OP_TYPE
 case|:
-comment|/* 86 */
+comment|/* 87 */
 block|{
 name|OPCODE
 name|arg
@@ -2304,7 +2467,7 @@ block|}
 case|case
 name|INSN_OP_SEQ
 case|:
-comment|/* 87 */
+comment|/* 88 */
 block|{
 name|U16
 name|arg
@@ -2325,7 +2488,7 @@ block|}
 case|case
 name|INSN_OP_FLAGS
 case|:
-comment|/* 88 */
+comment|/* 89 */
 block|{
 name|U8
 name|arg
@@ -2346,7 +2509,7 @@ block|}
 case|case
 name|INSN_OP_PRIVATE
 case|:
-comment|/* 89 */
+comment|/* 90 */
 block|{
 name|U8
 name|arg
@@ -2367,7 +2530,7 @@ block|}
 case|case
 name|INSN_OP_FIRST
 case|:
-comment|/* 90 */
+comment|/* 91 */
 block|{
 name|opindex
 name|arg
@@ -2388,7 +2551,7 @@ block|}
 case|case
 name|INSN_OP_LAST
 case|:
-comment|/* 91 */
+comment|/* 92 */
 block|{
 name|opindex
 name|arg
@@ -2409,7 +2572,7 @@ block|}
 case|case
 name|INSN_OP_OTHER
 case|:
-comment|/* 92 */
+comment|/* 93 */
 block|{
 name|opindex
 name|arg
@@ -2422,27 +2585,6 @@ expr_stmt|;
 name|cLOGOP
 operator|->
 name|op_other
-operator|=
-name|arg
-expr_stmt|;
-break|break;
-block|}
-case|case
-name|INSN_OP_CHILDREN
-case|:
-comment|/* 93 */
-block|{
-name|U32
-name|arg
-decl_stmt|;
-name|BGET_U32
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
-name|cLISTOP
-operator|->
-name|op_children
 operator|=
 name|arg
 expr_stmt|;
@@ -2762,10 +2904,10 @@ name|INSN_COP_LABEL
 case|:
 comment|/* 108 */
 block|{
-name|pvcontents
+name|pvindex
 name|arg
 decl_stmt|;
-name|BGET_pvcontents
+name|BGET_pvindex
 argument_list|(
 name|arg
 argument_list|)
@@ -2783,10 +2925,10 @@ name|INSN_COP_STASHPV
 case|:
 comment|/* 109 */
 block|{
-name|pvcontents
+name|pvindex
 name|arg
 decl_stmt|;
-name|BGET_pvcontents
+name|BGET_pvindex
 argument_list|(
 name|arg
 argument_list|)
@@ -2805,10 +2947,10 @@ name|INSN_COP_FILE
 case|:
 comment|/* 110 */
 block|{
-name|pvcontents
+name|pvindex
 name|arg
 decl_stmt|;
-name|BGET_pvcontents
+name|BGET_pvindex
 argument_list|(
 name|arg
 argument_list|)
@@ -2967,6 +3109,72 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|INSN_PUSH_BEGIN
+case|:
+comment|/* 118 */
+block|{
+name|svindex
+name|arg
+decl_stmt|;
+name|BGET_svindex
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|BSET_push_begin
+argument_list|(
+name|PL_beginav
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_PUSH_INIT
+case|:
+comment|/* 119 */
+block|{
+name|svindex
+name|arg
+decl_stmt|;
+name|BGET_svindex
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|BSET_push_init
+argument_list|(
+name|PL_initav
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|INSN_PUSH_END
+case|:
+comment|/* 120 */
+block|{
+name|svindex
+name|arg
+decl_stmt|;
+name|BGET_svindex
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+name|BSET_push_end
+argument_list|(
+name|PL_endav
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 default|default:
 name|Perl_croak
 argument_list|(
@@ -2980,7 +3188,7 @@ comment|/* NOTREACHED */
 block|}
 block|}
 block|}
-end_function
+end_decl_stmt
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    pp.c  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    pp.c  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -295,14 +295,6 @@ value|sv_catpvn(sv, (char*)(p), SIZE32)
 endif|#
 directive|endif
 comment|/* variations on pp_null */
-ifdef|#
-directive|ifdef
-name|I_UNISTD
-include|#
-directive|include
-file|<unistd.h>
-endif|#
-directive|endif
 comment|/* XXX I can't imagine anyone who doesn't have this actually _needs_    it, since pid_t is an integral type.    --AD  2/20/1998 */
 ifdef|#
 directive|ifdef
@@ -330,7 +322,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -377,7 +369,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -415,6 +407,32 @@ operator|&
 name|OPf_REF
 condition|)
 block|{
+name|PUSHs
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|LVRET
+condition|)
+block|{
+if|if
+condition|(
+name|GIMME
+operator|==
+name|G_SCALAR
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't return array to lvalue scalar context"
+argument_list|)
+expr_stmt|;
 name|PUSHs
 argument_list|(
 name|TARG
@@ -592,7 +610,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -632,6 +650,27 @@ name|OPf_REF
 condition|)
 name|RETURN
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|LVRET
+condition|)
+block|{
+if|if
+condition|(
+name|GIMME
+operator|==
+name|G_SCALAR
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't return hash to lvalue scalar context"
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
 name|gimme
 operator|=
 name|GIMME_V
@@ -740,7 +779,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTOPss
 expr_stmt|;
@@ -862,7 +901,7 @@ modifier|*
 name|sym
 decl_stmt|;
 name|STRLEN
-name|n_a
+name|len
 decl_stmt|;
 if|if
 condition|(
@@ -1069,7 +1108,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|n_a
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1111,9 +1150,41 @@ if|if
 condition|(
 operator|!
 name|sv
+operator|&&
+operator|(
+operator|!
+name|is_gv_magical
+argument_list|(
+name|sym
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|)
+operator|||
+operator|!
+operator|(
+name|sv
+operator|=
+operator|(
+name|SV
+operator|*
+operator|)
+name|gv_fetchpv
+argument_list|(
+name|sym
+argument_list|,
+name|TRUE
+argument_list|,
+name|SVt_PVGV
+argument_list|)
+operator|)
+operator|)
 condition|)
+block|{
 name|RETSETUNDEF
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1197,7 +1268,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTOPss
 expr_stmt|;
@@ -1265,7 +1336,7 @@ modifier|*
 name|sym
 decl_stmt|;
 name|STRLEN
-name|n_a
+name|len
 decl_stmt|;
 if|if
 condition|(
@@ -1350,7 +1421,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|n_a
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1392,9 +1463,41 @@ if|if
 condition|(
 operator|!
 name|gv
+operator|&&
+operator|(
+operator|!
+name|is_gv_magical
+argument_list|(
+name|sym
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|)
+operator|||
+operator|!
+operator|(
+name|gv
+operator|=
+operator|(
+name|GV
+operator|*
+operator|)
+name|gv_fetchpv
+argument_list|(
+name|sym
+argument_list|,
+name|TRUE
+argument_list|,
+name|SVt_PV
+argument_list|)
+operator|)
+operator|)
 condition|)
+block|{
 name|RETSETUNDEF
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1508,7 +1611,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|AV
 modifier|*
@@ -1593,7 +1696,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -1606,6 +1709,8 @@ operator|->
 name|op_flags
 operator|&
 name|OPf_MOD
+operator|||
+name|LVRET
 condition|)
 block|{
 if|if
@@ -1782,7 +1887,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|GV
 modifier|*
@@ -1857,7 +1962,52 @@ name|op_private
 operator|&
 name|OPpLVAL_INTRO
 operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|gv
 operator|&&
+name|GvCV
+argument_list|(
+name|gv
+argument_list|)
+operator|==
+name|cv
+operator|&&
+operator|(
+name|gv
+operator|=
+name|gv_autoload4
+argument_list|(
+name|GvSTASH
+argument_list|(
+name|gv
+argument_list|)
+argument_list|,
+name|GvNAME
+argument_list|(
+name|gv
+argument_list|)
+argument_list|,
+name|GvNAMELEN
+argument_list|(
+name|gv
+argument_list|)
+argument_list|,
+name|FALSE
+argument_list|)
+operator|)
+condition|)
+name|cv
+operator|=
+name|GvCV
+argument_list|(
+name|gv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|CvLVALUE
 argument_list|(
@@ -1870,6 +2020,7 @@ name|aTHX_
 literal|"Can't modify non-lvalue subroutine call"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 name|cv
@@ -1904,7 +2055,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|CV
 modifier|*
@@ -2298,7 +2449,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|CV
 modifier|*
@@ -2370,7 +2521,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 operator|*
 name|SP
@@ -2395,7 +2546,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -2667,7 +2818,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -2750,7 +2901,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|HV
 modifier|*
@@ -2861,7 +3012,7 @@ name|char
 modifier|*
 name|elem
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 name|STRLEN
 name|n_a
@@ -3173,7 +3324,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dPOPss
 expr_stmt|;
@@ -3469,7 +3620,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARG
 expr_stmt|;
@@ -3534,7 +3685,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -3561,24 +3712,32 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
+name|dORIGMARK
+expr_stmt|;
 while|while
 condition|(
-name|SP
-operator|>
 name|MARK
+operator|<
+name|SP
 condition|)
 name|do_chop
 argument_list|(
 name|TARG
 argument_list|,
-name|POPs
+operator|*
+operator|++
+name|MARK
 argument_list|)
+expr_stmt|;
+name|SP
+operator|=
+name|ORIGMARK
 expr_stmt|;
 name|PUSHTARG
 expr_stmt|;
@@ -3596,7 +3755,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -3622,7 +3781,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -3666,7 +3825,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 specifier|register
 name|SV
@@ -3819,7 +3978,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -3944,12 +4103,6 @@ name|GV
 modifier|*
 name|gv
 init|=
-operator|(
-name|GV
-operator|*
-operator|)
-name|SvREFCNT_inc
-argument_list|(
 name|CvGV
 argument_list|(
 operator|(
@@ -3957,7 +4110,6 @@ name|CV
 operator|*
 operator|)
 name|sv
-argument_list|)
 argument_list|)
 decl_stmt|;
 name|cv_undef
@@ -4156,7 +4308,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -4249,7 +4401,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -4371,7 +4523,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -4482,7 +4634,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -4521,7 +4673,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -4557,7 +4709,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -4686,7 +4838,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -4723,7 +4875,7 @@ name|dleft
 decl_stmt|;
 if|if
 condition|(
-name|SvIOK
+name|SvIOK_notUV
 argument_list|(
 name|TOPs
 argument_list|)
@@ -4798,7 +4950,7 @@ condition|(
 operator|!
 name|use_double
 operator|&&
-name|SvIOK
+name|SvIOK_notUV
 argument_list|(
 name|TOPs
 argument_list|)
@@ -5128,7 +5280,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -5141,7 +5293,7 @@ argument_list|)
 expr_stmt|;
 block|{
 specifier|register
-name|I32
+name|IV
 name|count
 init|=
 name|POPi
@@ -5272,14 +5424,15 @@ comment|/* Note: mark already snarfed by pp_list */
 name|SV
 modifier|*
 name|tmpstr
+init|=
+name|POPs
 decl_stmt|;
 name|STRLEN
 name|len
 decl_stmt|;
-name|tmpstr
-operator|=
-name|POPs
-expr_stmt|;
+name|bool
+name|isutf
+decl_stmt|;
 name|SvSetSV
 argument_list|(
 name|TARG
@@ -5292,6 +5445,13 @@ argument_list|(
 name|TARG
 argument_list|,
 name|len
+argument_list|)
+expr_stmt|;
+name|isutf
+operator|=
+name|DO_UTF8
+argument_list|(
+name|TARG
 argument_list|)
 expr_stmt|;
 if|if
@@ -5367,6 +5527,19 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|isutf
+condition|)
+operator|(
+name|void
+operator|)
+name|SvPOK_only_UTF8
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
@@ -5393,7 +5566,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -5429,7 +5602,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -5498,7 +5671,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -5567,7 +5740,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -5604,7 +5777,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -5641,7 +5814,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -5678,7 +5851,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -5715,7 +5888,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -5752,7 +5925,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -5771,37 +5944,7 @@ name|value
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__osf__
-comment|/* XXX Configure probe for isnan and isnanl needed XXX */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_LONG_DOUBLE
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAS_LONG_DOUBLE
-argument_list|)
-define|#
-directive|define
 name|Perl_isnan
-value|isnanl
-else|#
-directive|else
-define|#
-directive|define
-name|Perl_isnan
-value|isnan
-endif|#
-directive|endif
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__osf__
-comment|/* XXX fix in 5.6.1 --jhi */
 if|if
 condition|(
 name|Perl_isnan
@@ -5906,7 +6049,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -5970,7 +6113,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -6034,7 +6177,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -6098,7 +6241,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -6162,7 +6305,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -6202,7 +6345,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -6243,7 +6386,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -6304,7 +6447,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -6414,7 +6557,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -6542,7 +6685,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -6670,7 +6813,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -6904,14 +7047,11 @@ argument_list|(
 name|sv
 argument_list|)
 operator|&&
+name|UTF8_IS_START
+argument_list|(
 operator|*
-operator|(
-name|U8
-operator|*
-operator|)
 name|s
-operator|>=
-literal|0xc0
+argument_list|)
 operator|&&
 name|isIDFIRST_utf8
 argument_list|(
@@ -6980,7 +7120,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICunSET
 argument_list|(
@@ -7015,7 +7155,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -7080,14 +7220,9 @@ block|}
 else|else
 block|{
 specifier|register
-name|char
+name|U8
 modifier|*
 name|tmps
-decl_stmt|;
-specifier|register
-name|long
-modifier|*
-name|tmpl
 decl_stmt|;
 specifier|register
 name|I32
@@ -7105,6 +7240,10 @@ argument_list|)
 expr_stmt|;
 name|tmps
 operator|=
+operator|(
+name|U8
+operator|*
+operator|)
 name|SvPV_force
 argument_list|(
 name|TARG
@@ -7116,9 +7255,292 @@ name|anum
 operator|=
 name|len
 expr_stmt|;
+if|if
+condition|(
+name|SvUTF8
+argument_list|(
+name|TARG
+argument_list|)
+condition|)
+block|{
+comment|/* Calculate exact length, let's not estimate. */
+name|STRLEN
+name|targlen
+init|=
+literal|0
+decl_stmt|;
+name|U8
+modifier|*
+name|result
+decl_stmt|;
+name|U8
+modifier|*
+name|send
+decl_stmt|;
+name|STRLEN
+name|l
+decl_stmt|;
+name|UV
+name|nchar
+init|=
+literal|0
+decl_stmt|;
+name|UV
+name|nwide
+init|=
+literal|0
+decl_stmt|;
+name|send
+operator|=
+name|tmps
+operator|+
+name|len
+expr_stmt|;
+while|while
+condition|(
+name|tmps
+operator|<
+name|send
+condition|)
+block|{
+name|UV
+name|c
+init|=
+name|utf8_to_uv
+argument_list|(
+name|tmps
+argument_list|,
+name|send
+operator|-
+name|tmps
+argument_list|,
+operator|&
+name|l
+argument_list|,
+name|UTF8_ALLOW_ANYUV
+argument_list|)
+decl_stmt|;
+name|tmps
+operator|+=
+name|UTF8SKIP
+argument_list|(
+name|tmps
+argument_list|)
+expr_stmt|;
+name|targlen
+operator|+=
+name|UNISKIP
+argument_list|(
+operator|~
+name|c
+argument_list|)
+expr_stmt|;
+name|nchar
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|>
+literal|0xff
+condition|)
+name|nwide
+operator|++
+expr_stmt|;
+block|}
+comment|/* Now rewind strings and write them. */
+name|tmps
+operator|-=
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|nwide
+condition|)
+block|{
+name|Newz
+argument_list|(
+literal|0
+argument_list|,
+name|result
+argument_list|,
+name|targlen
+operator|+
+literal|1
+argument_list|,
+name|U8
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|tmps
+operator|<
+name|send
+condition|)
+block|{
+name|UV
+name|c
+init|=
+name|utf8_to_uv
+argument_list|(
+name|tmps
+argument_list|,
+name|send
+operator|-
+name|tmps
+argument_list|,
+operator|&
+name|l
+argument_list|,
+name|UTF8_ALLOW_ANYUV
+argument_list|)
+decl_stmt|;
+name|tmps
+operator|+=
+name|UTF8SKIP
+argument_list|(
+name|tmps
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|uv_to_utf8
+argument_list|(
+name|result
+argument_list|,
+operator|~
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|result
+operator|=
+literal|'\0'
+expr_stmt|;
+name|result
+operator|-=
+name|targlen
+expr_stmt|;
+name|sv_setpvn
+argument_list|(
+name|TARG
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|result
+argument_list|,
+name|targlen
+argument_list|)
+expr_stmt|;
+name|SvUTF8_on
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Newz
+argument_list|(
+literal|0
+argument_list|,
+name|result
+argument_list|,
+name|nchar
+operator|+
+literal|1
+argument_list|,
+name|U8
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|tmps
+operator|<
+name|send
+condition|)
+block|{
+name|U8
+name|c
+init|=
+operator|(
+name|U8
+operator|)
+name|utf8_to_uv
+argument_list|(
+name|tmps
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|l
+argument_list|,
+name|UTF8_ALLOW_ANY
+argument_list|)
+decl_stmt|;
+name|tmps
+operator|+=
+name|UTF8SKIP
+argument_list|(
+name|tmps
+argument_list|)
+expr_stmt|;
+operator|*
+name|result
+operator|++
+operator|=
+operator|~
+name|c
+expr_stmt|;
+block|}
+operator|*
+name|result
+operator|=
+literal|'\0'
+expr_stmt|;
+name|result
+operator|-=
+name|nchar
+expr_stmt|;
+name|sv_setpvn
+argument_list|(
+name|TARG
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|result
+argument_list|,
+name|nchar
+argument_list|)
+expr_stmt|;
+block|}
+name|Safefree
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
+name|SETs
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|LIBERAL
+block|{
+specifier|register
+name|long
+modifier|*
+name|tmpl
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -7186,11 +7608,12 @@ expr_stmt|;
 name|tmps
 operator|=
 operator|(
-name|char
+name|U8
 operator|*
 operator|)
 name|tmpl
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 for|for
@@ -7238,7 +7661,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -7274,7 +7697,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -7326,7 +7749,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -7373,7 +7796,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -7385,7 +7808,7 @@ name|opASSIGN
 argument_list|)
 expr_stmt|;
 block|{
-name|dPOPTOPiirl
+name|dPOPTOPiirl_ul
 expr_stmt|;
 name|SETi
 argument_list|(
@@ -7409,7 +7832,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -7421,7 +7844,7 @@ name|opASSIGN
 argument_list|)
 expr_stmt|;
 block|{
-name|dPOPTOPiirl
+name|dPOPTOPiirl_ul
 expr_stmt|;
 name|SETi
 argument_list|(
@@ -7445,7 +7868,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -7482,7 +7905,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -7519,7 +7942,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -7556,7 +7979,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -7593,7 +8016,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -7630,7 +8053,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -7667,7 +8090,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -7731,7 +8154,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -7764,7 +8187,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -7803,7 +8226,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -7847,7 +8270,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -7920,7 +8343,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -7999,7 +8422,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|UV
 name|anum
@@ -8093,8 +8516,6 @@ define|#
 directive|define
 name|SEED_C5
 value|26107
-name|dTHR
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|PERL_NO_DEV_RANDOM
@@ -8355,7 +8776,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -8399,7 +8820,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -8423,7 +8844,7 @@ operator|<=
 literal|0.0
 condition|)
 block|{
-name|RESTORE_NUMERIC_STANDARD
+name|SET_NUMERIC_STANDARD
 argument_list|()
 expr_stmt|;
 name|DIE
@@ -8462,7 +8883,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -8486,7 +8907,7 @@ operator|<
 literal|0.0
 condition|)
 block|{
-name|RESTORE_NUMERIC_STANDARD
+name|SET_NUMERIC_STANDARD
 argument_list|()
 expr_stmt|;
 name|DIE
@@ -8525,7 +8946,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -8579,6 +9000,18 @@ name|value
 operator|>=
 literal|0.0
 condition|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_MODFL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LONG_DOUBLE_EQUALS_DOUBLE
+argument_list|)
 operator|(
 name|void
 operator|)
@@ -8590,8 +9023,50 @@ operator|&
 name|value
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|double
+name|tmp
+init|=
+operator|(
+name|double
+operator|)
+name|value
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|Perl_modf
+argument_list|(
+name|tmp
+argument_list|,
+operator|&
+name|tmp
+argument_list|)
+expr_stmt|;
+name|value
+operator|=
+operator|(
+name|NV
+operator|)
+name|tmp
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_MODFL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LONG_DOUBLE_EQUALS_DOUBLE
+argument_list|)
 operator|(
 name|void
 operator|)
@@ -8609,6 +9084,38 @@ operator|=
 operator|-
 name|value
 expr_stmt|;
+else|#
+directive|else
+name|double
+name|tmp
+init|=
+operator|(
+name|double
+operator|)
+name|value
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|Perl_modf
+argument_list|(
+operator|-
+name|tmp
+argument_list|,
+operator|&
+name|tmp
+argument_list|)
+expr_stmt|;
+name|value
+operator|=
+operator|-
+operator|(
+name|NV
+operator|)
+name|tmp
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|iv
 operator|=
@@ -8650,7 +9157,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -8750,7 +9257,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -8758,23 +9265,35 @@ name|char
 modifier|*
 name|tmps
 decl_stmt|;
-name|I32
+name|STRLEN
 name|argtype
 decl_stmt|;
 name|STRLEN
-name|n_a
+name|len
 decl_stmt|;
 name|tmps
 operator|=
-name|POPpx
+operator|(
+name|SvPVx
+argument_list|(
+name|POPs
+argument_list|,
+name|len
+argument_list|)
+operator|)
 expr_stmt|;
+name|argtype
+operator|=
+literal|1
+expr_stmt|;
+comment|/* allow underscores */
 name|XPUSHn
 argument_list|(
 name|scan_hex
 argument_list|(
 name|tmps
 argument_list|,
-literal|99
+name|len
 argument_list|,
 operator|&
 name|argtype
@@ -8795,14 +9314,14 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
 name|NV
 name|value
 decl_stmt|;
-name|I32
+name|STRLEN
 name|argtype
 decl_stmt|;
 name|char
@@ -8810,16 +9329,25 @@ modifier|*
 name|tmps
 decl_stmt|;
 name|STRLEN
-name|n_a
+name|len
 decl_stmt|;
 name|tmps
 operator|=
-name|POPpx
+operator|(
+name|SvPVx
+argument_list|(
+name|POPs
+argument_list|,
+name|len
+argument_list|)
+operator|)
 expr_stmt|;
 while|while
 condition|(
 operator|*
 name|tmps
+operator|&&
+name|len
 operator|&&
 name|isSPACE
 argument_list|(
@@ -8829,6 +9357,9 @@ argument_list|)
 condition|)
 name|tmps
 operator|++
+operator|,
+name|len
+operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -8839,7 +9370,15 @@ literal|'0'
 condition|)
 name|tmps
 operator|++
+operator|,
+name|len
+operator|--
 expr_stmt|;
+name|argtype
+operator|=
+literal|1
+expr_stmt|;
+comment|/* allow underscores */
 if|if
 condition|(
 operator|*
@@ -8854,7 +9393,8 @@ argument_list|(
 operator|++
 name|tmps
 argument_list|,
-literal|99
+operator|--
+name|len
 argument_list|,
 operator|&
 name|argtype
@@ -8875,7 +9415,8 @@ argument_list|(
 operator|++
 name|tmps
 argument_list|,
-literal|99
+operator|--
+name|len
 argument_list|,
 operator|&
 name|argtype
@@ -8888,7 +9429,7 @@ name|scan_oct
 argument_list|(
 name|tmps
 argument_list|,
-literal|99
+name|len
 argument_list|,
 operator|&
 name|argtype
@@ -8917,7 +9458,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -8965,7 +9506,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -8980,7 +9521,7 @@ name|STRLEN
 name|curlen
 decl_stmt|;
 name|STRLEN
-name|utfcurlen
+name|utf8_curlen
 decl_stmt|;
 name|I32
 name|pos
@@ -8999,6 +9540,8 @@ operator|->
 name|op_flags
 operator|&
 name|OPf_MOD
+operator|||
+name|LVRET
 decl_stmt|;
 name|char
 modifier|*
@@ -9011,6 +9554,12 @@ name|PL_curcop
 operator|->
 name|cop_arybase
 decl_stmt|;
+name|SV
+modifier|*
+name|repl_sv
+init|=
+name|NULL
+decl_stmt|;
 name|char
 modifier|*
 name|repl
@@ -9019,6 +9568,25 @@ literal|0
 decl_stmt|;
 name|STRLEN
 name|repl_len
+decl_stmt|;
+name|int
+name|num_args
+init|=
+name|PL_op
+operator|->
+name|op_private
+operator|&
+literal|7
+decl_stmt|;
+name|bool
+name|repl_need_utf8_upgrade
+init|=
+name|FALSE
+decl_stmt|;
+name|bool
+name|repl_is_utf8
+init|=
+name|FALSE
 decl_stmt|;
 name|SvTAINTED_off
 argument_list|(
@@ -9034,19 +9602,19 @@ expr_stmt|;
 comment|/* decontaminate */
 if|if
 condition|(
-name|MAXARG
+name|num_args
 operator|>
 literal|2
 condition|)
 block|{
 if|if
 condition|(
-name|MAXARG
+name|num_args
 operator|>
 literal|3
 condition|)
 block|{
-name|sv
+name|repl_sv
 operator|=
 name|POPs
 expr_stmt|;
@@ -9054,9 +9622,21 @@ name|repl
 operator|=
 name|SvPV
 argument_list|(
-name|sv
+name|repl_sv
 argument_list|,
 name|repl_len
+argument_list|)
+expr_stmt|;
+name|repl_is_utf8
+operator|=
+name|DO_UTF8
+argument_list|(
+name|repl_sv
+argument_list|)
+operator|&&
+name|SvCUR
+argument_list|(
+name|repl_sv
 argument_list|)
 expr_stmt|;
 block|}
@@ -9075,6 +9655,43 @@ name|POPs
 expr_stmt|;
 name|PUTBACK
 expr_stmt|;
+if|if
+condition|(
+name|repl_sv
+condition|)
+block|{
+if|if
+condition|(
+name|repl_is_utf8
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|DO_UTF8
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|sv_utf8_upgrade
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|DO_UTF8
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|repl_need_utf8_upgrade
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 name|tmps
 operator|=
 name|SvPV
@@ -9092,7 +9709,7 @@ name|sv
 argument_list|)
 condition|)
 block|{
-name|utfcurlen
+name|utf8_curlen
 operator|=
 name|sv_len_utf8
 argument_list|(
@@ -9101,22 +9718,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|utfcurlen
+name|utf8_curlen
 operator|==
 name|curlen
 condition|)
-name|utfcurlen
+name|utf8_curlen
 operator|=
 literal|0
 expr_stmt|;
 else|else
 name|curlen
 operator|=
-name|utfcurlen
+name|utf8_curlen
 expr_stmt|;
 block|}
 else|else
-name|utfcurlen
+name|utf8_curlen
 operator|=
 literal|0
 expr_stmt|;
@@ -9143,7 +9760,7 @@ name|rem
 expr_stmt|;
 if|if
 condition|(
-name|MAXARG
+name|num_args
 operator|>
 literal|2
 condition|)
@@ -9191,7 +9808,7 @@ name|curlen
 expr_stmt|;
 if|if
 condition|(
-name|MAXARG
+name|num_args
 operator|<
 literal|3
 condition|)
@@ -9303,11 +9920,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|I32
+name|upos
+init|=
+name|pos
+decl_stmt|;
+name|I32
+name|urem
+init|=
+name|rem
+decl_stmt|;
 if|if
 condition|(
-name|utfcurlen
+name|utf8_curlen
 condition|)
-block|{
 name|sv_pos_u2b
 argument_list|(
 name|sv
@@ -9319,12 +9945,6 @@ operator|&
 name|rem
 argument_list|)
 expr_stmt|;
-name|SvUTF8_on
-argument_list|(
-name|TARG
-argument_list|)
-expr_stmt|;
-block|}
 name|tmps
 operator|+=
 name|pos
@@ -9340,8 +9960,63 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|utf8_curlen
+condition|)
+name|SvUTF8_on
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|repl
 condition|)
+block|{
+name|SV
+modifier|*
+name|repl_sv_copy
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|repl_need_utf8_upgrade
+condition|)
+block|{
+name|repl_sv_copy
+operator|=
+name|newSVsv
+argument_list|(
+name|repl_sv
+argument_list|)
+expr_stmt|;
+name|sv_utf8_upgrade
+argument_list|(
+name|repl_sv_copy
+argument_list|)
+expr_stmt|;
+name|repl
+operator|=
+name|SvPV
+argument_list|(
+name|repl_sv_copy
+argument_list|,
+name|repl_len
+argument_list|)
+expr_stmt|;
+name|repl_is_utf8
+operator|=
+name|DO_UTF8
+argument_list|(
+name|repl_sv_copy
+argument_list|)
+operator|&&
+name|SvCUR
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+block|}
 name|sv_insert
 argument_list|(
 name|sv
@@ -9355,6 +10030,25 @@ argument_list|,
 name|repl_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|repl_is_utf8
+condition|)
+name|SvUTF8_on
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|repl_sv_copy
+condition|)
+name|SvREFCNT_dec
+argument_list|(
+name|repl_sv_copy
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -9415,7 +10109,7 @@ comment|/* is it defined ? */
 operator|(
 name|void
 operator|)
-name|SvPOK_only
+name|SvPOK_only_UTF8
 argument_list|(
 name|sv
 argument_list|)
@@ -9511,14 +10205,14 @@ argument_list|(
 name|TARG
 argument_list|)
 operator|=
-name|pos
+name|upos
 expr_stmt|;
 name|LvTARGLEN
 argument_list|(
 name|TARG
 argument_list|)
 operator|=
-name|rem
+name|urem
 expr_stmt|;
 block|}
 block|}
@@ -9544,18 +10238,18 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
 specifier|register
-name|I32
+name|IV
 name|size
 init|=
 name|POPi
 decl_stmt|;
 specifier|register
-name|I32
+name|IV
 name|offset
 init|=
 name|POPi
@@ -9575,6 +10269,8 @@ operator|->
 name|op_flags
 operator|&
 name|OPf_MOD
+operator|||
+name|LVRET
 decl_stmt|;
 name|SvTAINTED_off
 argument_list|(
@@ -9710,7 +10406,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -9906,7 +10602,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -10118,7 +10814,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -10167,25 +10863,22 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
-name|UV
-name|value
-decl_stmt|;
-name|STRLEN
-name|n_a
-decl_stmt|;
 name|SV
 modifier|*
-name|tmpsv
+name|argsv
 init|=
 name|POPs
 decl_stmt|;
+name|STRLEN
+name|len
+decl_stmt|;
 name|U8
 modifier|*
-name|tmps
+name|s
 init|=
 operator|(
 name|U8
@@ -10193,54 +10886,31 @@ operator|*
 operator|)
 name|SvPVx
 argument_list|(
-name|tmpsv
+name|argsv
 argument_list|,
-name|n_a
+name|len
 argument_list|)
 decl_stmt|;
-name|I32
-name|retlen
-decl_stmt|;
-if|if
-condition|(
-operator|(
-operator|*
-name|tmps
-operator|&
-literal|0x80
-operator|)
-operator|&&
-name|DO_UTF8
-argument_list|(
-name|tmpsv
-argument_list|)
-condition|)
-name|value
-operator|=
-name|utf8_to_uv
-argument_list|(
-name|tmps
-argument_list|,
-operator|&
-name|retlen
-argument_list|)
-expr_stmt|;
-else|else
-name|value
-operator|=
-call|(
-name|UV
-call|)
-argument_list|(
-operator|*
-name|tmps
-operator|&
-literal|255
-argument_list|)
-expr_stmt|;
 name|XPUSHu
 argument_list|(
-name|value
+name|DO_UTF8
+argument_list|(
+name|argsv
+argument_list|)
+condition|?
+name|utf8_to_uv_simple
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|)
+else|:
+operator|(
+operator|*
+name|s
+operator|&
+literal|0xff
+operator|)
 argument_list|)
 expr_stmt|;
 name|RETURN
@@ -10257,7 +10927,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -10265,7 +10935,7 @@ name|char
 modifier|*
 name|tmps
 decl_stmt|;
-name|U32
+name|UV
 name|value
 init|=
 name|POPu
@@ -10396,12 +11066,6 @@ name|tmps
 operator|=
 literal|'\0'
 expr_stmt|;
-name|SvUTF8_off
-argument_list|(
-name|TARG
-argument_list|)
-expr_stmt|;
-comment|/* decontaminate */
 operator|(
 name|void
 operator|)
@@ -10429,7 +11093,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -10522,7 +11186,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -10562,23 +11226,22 @@ operator|)
 operator|&&
 name|slen
 operator|&&
-operator|(
+name|UTF8_IS_START
+argument_list|(
 operator|*
 name|s
-operator|&
-literal|0xc0
-operator|)
-operator|==
-literal|0xc0
+argument_list|)
 condition|)
 block|{
-name|I32
+name|STRLEN
 name|ulen
 decl_stmt|;
 name|U8
 name|tmpbuf
 index|[
 name|UTF8_MAXLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|U8
@@ -10592,8 +11255,12 @@ name|utf8_to_uv
 argument_list|(
 name|s
 argument_list|,
+name|slen
+argument_list|,
 operator|&
 name|ulen
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 if|if
@@ -10856,7 +11523,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -10896,23 +11563,22 @@ operator|)
 operator|&&
 name|slen
 operator|&&
-operator|(
+name|UTF8_IS_START
+argument_list|(
 operator|*
 name|s
-operator|&
-literal|0xc0
-operator|)
-operator|==
-literal|0xc0
+argument_list|)
 condition|)
 block|{
-name|I32
+name|STRLEN
 name|ulen
 decl_stmt|;
 name|U8
 name|tmpbuf
 index|[
 name|UTF8_MAXLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|U8
@@ -10926,8 +11592,12 @@ name|utf8_to_uv
 argument_list|(
 name|s
 argument_list|,
+name|slen
+argument_list|,
 operator|&
 name|ulen
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 if|if
@@ -11190,7 +11860,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -11216,7 +11886,7 @@ condition|)
 block|{
 name|dTARGET
 expr_stmt|;
-name|I32
+name|STRLEN
 name|ulen
 decl_stmt|;
 specifier|register
@@ -11353,8 +12023,12 @@ name|utf8_to_uv
 argument_list|(
 name|s
 argument_list|,
+name|len
+argument_list|,
 operator|&
 name|ulen
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 argument_list|)
@@ -11582,7 +12256,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -11608,7 +12282,7 @@ condition|)
 block|{
 name|dTARGET
 expr_stmt|;
-name|I32
+name|STRLEN
 name|ulen
 decl_stmt|;
 specifier|register
@@ -11745,8 +12419,12 @@ name|utf8_to_uv
 argument_list|(
 name|s
 argument_list|,
+name|len
+argument_list|,
 operator|&
 name|ulen
+argument_list|,
+literal|0
 argument_list|)
 argument_list|)
 argument_list|)
@@ -11974,7 +12652,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -12060,10 +12738,11 @@ condition|)
 block|{
 if|if
 condition|(
+name|UTF8_IS_CONTINUED
+argument_list|(
 operator|*
 name|s
-operator|&
-literal|0x80
+argument_list|)
 condition|)
 block|{
 name|STRLEN
@@ -12191,7 +12870,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|SvPOK_only
+name|SvPOK_only_UTF8
 argument_list|(
 name|TARG
 argument_list|)
@@ -12242,7 +12921,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -12269,11 +12948,15 @@ specifier|register
 name|I32
 name|lval
 init|=
+operator|(
 name|PL_op
 operator|->
 name|op_flags
 operator|&
 name|OPf_MOD
+operator|||
+name|LVRET
+operator|)
 decl_stmt|;
 name|I32
 name|arybase
@@ -12496,7 +13179,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|HV
 modifier|*
@@ -12673,7 +13356,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|I32
 name|gimme
@@ -13049,7 +13732,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -13247,7 +13930,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -13268,11 +13951,15 @@ specifier|register
 name|I32
 name|lval
 init|=
+operator|(
 name|PL_op
 operator|->
 name|op_flags
 operator|&
 name|OPf_MOD
+operator|||
+name|LVRET
+operator|)
 decl_stmt|;
 name|I32
 name|realhv
@@ -13488,7 +14175,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -13539,7 +14226,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -13804,7 +14491,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -13861,7 +14548,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -13983,7 +14670,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -15175,7 +15862,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -15339,7 +16026,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|AV
 modifier|*
@@ -15394,7 +16081,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|AV
 modifier|*
@@ -15463,7 +16150,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -15634,7 +16321,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -15817,10 +16504,11 @@ condition|)
 block|{
 if|if
 condition|(
+name|UTF8_IS_ASCII
+argument_list|(
 operator|*
 name|s
-operator|<
-literal|0x80
+argument_list|)
 condition|)
 block|{
 name|s
@@ -15830,6 +16518,17 @@ continue|continue;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|utf8_to_uv_simple
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+break|break;
 name|up
 operator|=
 operator|(
@@ -15857,41 +16556,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|s
-operator|>
-name|send
-operator|||
-operator|!
-operator|(
-operator|(
-operator|*
-name|down
-operator|&
-literal|0xc0
-operator|)
-operator|==
-literal|0x80
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|ckWARN_d
-argument_list|(
-name|WARN_UTF8
-argument_list|)
-condition|)
-name|Perl_warner
-argument_list|(
-argument|aTHX_ WARN_UTF8
-argument_list|,
-literal|"Malformed UTF-8 character"
-argument_list|)
-empty_stmt|;
-break|break;
-block|}
+comment|/* reverse this character */
 while|while
 condition|(
 name|down
@@ -15968,7 +16633,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|SvPOK_only
+name|SvPOK_only_UTF8
 argument_list|(
 name|TARG
 argument_list|)
@@ -16210,7 +16875,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dPOPPOPssrl
 expr_stmt|;
@@ -16300,13 +16965,13 @@ modifier|*
 name|str
 decl_stmt|;
 comment|/* These must not be in registers: */
-name|I16
+name|short
 name|ashort
 decl_stmt|;
 name|int
 name|aint
 decl_stmt|;
-name|I32
+name|long
 name|along
 decl_stmt|;
 ifdef|#
@@ -17896,6 +18561,9 @@ operator|<
 name|strend
 condition|)
 block|{
+name|STRLEN
+name|alen
+decl_stmt|;
 name|auint
 operator|=
 name|utf8_to_uv
@@ -17906,9 +18574,19 @@ operator|*
 operator|)
 name|s
 argument_list|,
+name|strend
+operator|-
+name|s
+argument_list|,
 operator|&
-name|along
+name|alen
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+name|along
+operator|=
+name|alen
 expr_stmt|;
 name|s
 operator|+=
@@ -17960,6 +18638,9 @@ operator|<
 name|strend
 condition|)
 block|{
+name|STRLEN
+name|alen
+decl_stmt|;
 name|auint
 operator|=
 name|utf8_to_uv
@@ -17970,9 +18651,19 @@ operator|*
 operator|)
 name|s
 argument_list|,
+name|strend
+operator|-
+name|s
+argument_list|,
 operator|&
-name|along
+name|alen
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+name|along
+operator|=
+name|alen
 expr_stmt|;
 name|s
 operator|+=
@@ -19086,9 +19777,6 @@ condition|(
 name|natint
 condition|)
 block|{
-name|long
-name|along
-decl_stmt|;
 while|while
 condition|(
 name|len
@@ -19149,6 +19837,20 @@ operator|>
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|LONGSIZE
+operator|>
+name|SIZE32
+operator|&&
+name|INTSIZE
+operator|==
+name|SIZE32
+name|I32
+name|along
+decl_stmt|;
+endif|#
+directive|endif
 name|COPY32
 argument_list|(
 name|s
@@ -19223,9 +19925,6 @@ condition|(
 name|natint
 condition|)
 block|{
-name|long
-name|along
-decl_stmt|;
 while|while
 condition|(
 name|len
@@ -19295,6 +19994,20 @@ operator|>
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|LONGSIZE
+operator|>
+name|SIZE32
+operator|&&
+name|INTSIZE
+operator|==
+name|SIZE32
+name|I32
+name|along
+decl_stmt|;
+endif|#
+directive|endif
 name|COPY32
 argument_list|(
 name|s
@@ -19921,14 +20634,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
+name|UTF8_IS_ASCII
+argument_list|(
 operator|*
 name|s
 operator|++
-operator|&
-literal|0x80
-operator|)
+argument_list|)
 condition|)
 block|{
 name|bytes
@@ -19992,7 +20703,8 @@ operator|=
 name|Perl_newSVpvf
 argument_list|(
 name|aTHX_
-literal|"%.*Vu"
+literal|"%.*"
+name|UVf
 argument_list|,
 operator|(
 name|int
@@ -21977,7 +22689,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -22012,6 +22724,10 @@ name|MARK
 argument_list|,
 name|fromlen
 argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|patcopy
 decl_stmt|;
 specifier|register
 name|char
@@ -22141,6 +22857,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|patcopy
+operator|=
+name|pat
+expr_stmt|;
 while|while
 condition|(
 name|pat
@@ -22182,7 +22902,29 @@ argument_list|(
 name|datumtype
 argument_list|)
 condition|)
+block|{
+name|patcopy
+operator|++
+expr_stmt|;
 continue|continue;
+block|}
+if|if
+condition|(
+name|datumtype
+operator|==
+literal|'U'
+operator|&&
+name|pat
+operator|==
+name|patcopy
+operator|+
+literal|1
+condition|)
+name|SvUTF8_on
+argument_list|(
+name|cat
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|datumtype
@@ -22401,6 +23143,17 @@ else|:
 operator|&
 name|PL_sv_no
 argument_list|)
+operator|+
+operator|(
+operator|*
+name|pat
+operator|==
+literal|'Z'
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -23408,6 +24161,8 @@ name|cat
 argument_list|)
 operator|+
 name|UTF8_MAXLEN
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|SvCUR_set
@@ -23905,6 +24660,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+if|#
+directive|if
+name|UVSIZE
+operator|>
+literal|4
+operator|&&
+name|UVSIZE
+operator|>=
+name|NVSIZE
+name|adouble
+operator|<=
+literal|0xffffffff
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|CXUX_BROKEN_CONSTANT_CONVERT
@@ -23916,6 +24685,8 @@ directive|else
 name|adouble
 operator|<=
 name|UV_MAX
+endif|#
+directive|endif
 endif|#
 directive|endif
 condition|)
@@ -24210,9 +24981,8 @@ literal|0x80
 expr_stmt|;
 if|if
 condition|(
-operator|--
 name|in
-operator|<
+operator|<=
 name|buf
 condition|)
 comment|/* this cannot happen ;-) */
@@ -24221,6 +24991,9 @@ argument_list|(
 name|aTHX_
 literal|"Cannot compress integer"
 argument_list|)
+expr_stmt|;
+name|in
+operator|--
 expr_stmt|;
 name|adouble
 operator|=
@@ -24930,7 +25703,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARG
 expr_stmt|;
@@ -24939,7 +25712,7 @@ modifier|*
 name|ary
 decl_stmt|;
 specifier|register
-name|I32
+name|IV
 name|limit
 init|=
 name|POPi
@@ -24964,6 +25737,14 @@ argument_list|(
 name|sv
 argument_list|,
 name|len
+argument_list|)
+decl_stmt|;
+name|bool
+name|do_utf8
+init|=
+name|DO_UTF8
+argument_list|(
+name|sv
 argument_list|)
 decl_stmt|;
 name|char
@@ -24999,14 +25780,36 @@ name|iters
 init|=
 literal|0
 decl_stmt|;
-name|I32
-name|maxiters
+name|STRLEN
+name|slen
 init|=
+name|do_utf8
+condition|?
+name|utf8_length
+argument_list|(
+operator|(
+name|U8
+operator|*
+operator|)
+name|s
+argument_list|,
+operator|(
+name|U8
+operator|*
+operator|)
+name|strend
+argument_list|)
+else|:
 operator|(
 name|strend
 operator|-
 name|s
 operator|)
+decl_stmt|;
+name|I32
+name|maxiters
+init|=
+name|slen
 operator|+
 literal|10
 decl_stmt|;
@@ -25104,7 +25907,7 @@ condition|)
 name|DIE
 argument_list|(
 name|aTHX_
-literal|"panic: do_split"
+literal|"panic: pp_split"
 argument_list|)
 expr_stmt|;
 name|rx
@@ -25544,6 +26347,18 @@ argument_list|(
 name|dstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_utf8
+condition|)
+operator|(
+name|void
+operator|)
+name|SvUTF8_on
+argument_list|(
+name|dstr
+argument_list|)
+expr_stmt|;
 name|XPUSHs
 argument_list|(
 name|dstr
@@ -25668,6 +26483,18 @@ argument_list|(
 name|dstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_utf8
+condition|)
+operator|(
+name|void
+operator|)
+name|SvUTF8_on
+argument_list|(
+name|dstr
+argument_list|)
+expr_stmt|;
 name|XPUSHs
 argument_list|(
 name|dstr
@@ -25733,9 +26560,6 @@ argument_list|(
 argument|aTHX_ rx
 argument_list|)
 decl_stmt|;
-name|char
-name|c
-decl_stmt|;
 name|len
 operator|=
 name|rx
@@ -25749,19 +26573,32 @@ operator|==
 literal|1
 operator|&&
 operator|!
+operator|(
+name|rx
+operator|->
+name|reganch
+operator|&
+name|ROPT_UTF8
+operator|)
+operator|&&
+operator|!
 name|tail
 condition|)
 block|{
+name|STRLEN
+name|n_a
+decl_stmt|;
+name|char
 name|c
-operator|=
+init|=
 operator|*
 name|SvPV
 argument_list|(
 name|csv
 argument_list|,
-name|len
+name|n_a
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 operator|--
@@ -25826,17 +26663,53 @@ argument_list|(
 name|dstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_utf8
+condition|)
+operator|(
+name|void
+operator|)
+name|SvUTF8_on
+argument_list|(
+name|dstr
+argument_list|)
+expr_stmt|;
 name|XPUSHs
 argument_list|(
 name|dstr
 argument_list|)
 expr_stmt|;
+comment|/* The rx->minlen is in characters but we want to step 		 * s ahead by bytes. */
+if|if
+condition|(
+name|do_utf8
+condition|)
+name|s
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|utf8_hop
+argument_list|(
+operator|(
+name|U8
+operator|*
+operator|)
+name|m
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+else|else
 name|s
 operator|=
 name|m
 operator|+
-literal|1
+name|len
 expr_stmt|;
+comment|/* Fake \n at the end */
 block|}
 block|}
 else|else
@@ -25916,11 +26789,46 @@ argument_list|(
 name|dstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_utf8
+condition|)
+operator|(
+name|void
+operator|)
+name|SvUTF8_on
+argument_list|(
+name|dstr
+argument_list|)
+expr_stmt|;
 name|XPUSHs
 argument_list|(
 name|dstr
 argument_list|)
 expr_stmt|;
+comment|/* The rx->minlen is in characters but we want to step 		 * s ahead by bytes. */
+if|if
+condition|(
+name|do_utf8
+condition|)
+name|s
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|utf8_hop
+argument_list|(
+operator|(
+name|U8
+operator|*
+operator|)
+name|m
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+else|else
 name|s
 operator|=
 name|m
@@ -25935,11 +26843,7 @@ else|else
 block|{
 name|maxiters
 operator|+=
-operator|(
-name|strend
-operator|-
-name|s
-operator|)
+name|slen
 operator|*
 name|rx
 operator|->
@@ -26075,6 +26979,18 @@ argument_list|(
 name|dstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_utf8
+condition|)
+operator|(
+name|void
+operator|)
+name|SvUTF8_on
+argument_list|(
+name|dstr
+argument_list|)
+expr_stmt|;
 name|XPUSHs
 argument_list|(
 name|dstr
@@ -26174,6 +27090,18 @@ argument_list|(
 name|dstr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_utf8
+condition|)
+operator|(
+name|void
+operator|)
+name|SvUTF8_on
+argument_list|(
+name|dstr
+argument_list|)
+expr_stmt|;
 name|XPUSHs
 argument_list|(
 name|dstr
@@ -26235,15 +27163,20 @@ name|origlimit
 operator|)
 condition|)
 block|{
+name|STRLEN
+name|l
+init|=
+name|strend
+operator|-
+name|s
+decl_stmt|;
 name|dstr
 operator|=
 name|NEWSV
 argument_list|(
 literal|34
 argument_list|,
-name|strend
-operator|-
-name|s
+name|l
 argument_list|)
 expr_stmt|;
 name|sv_setpvn
@@ -26252,9 +27185,7 @@ name|dstr
 argument_list|,
 name|s
 argument_list|,
-name|strend
-operator|-
-name|s
+name|l
 argument_list|)
 expr_stmt|;
 if|if
@@ -26262,6 +27193,18 @@ condition|(
 name|make_mortal
 condition|)
 name|sv_2mortal
+argument_list|(
+name|dstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_utf8
+condition|)
+operator|(
+name|void
+operator|)
+name|SvUTF8_on
 argument_list|(
 name|dstr
 argument_list|)
@@ -26525,8 +27468,6 @@ modifier|*
 name|svv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|MAGIC
 modifier|*
 name|mg
@@ -26630,7 +27571,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTOPss
 expr_stmt|;
@@ -26643,111 +27584,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_THREADS
-name|MAGIC
-modifier|*
-name|mg
-decl_stmt|;
-if|if
-condition|(
-name|SvROK
-argument_list|(
-name|sv
-argument_list|)
-condition|)
-name|sv
-operator|=
-name|SvRV
+name|sv_lock
 argument_list|(
 name|sv
 argument_list|)
 expr_stmt|;
-name|mg
-operator|=
-name|condpair_magic
-argument_list|(
-name|sv
-argument_list|)
-expr_stmt|;
-name|MUTEX_LOCK
-argument_list|(
-name|MgMUTEXP
-argument_list|(
-name|mg
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|MgOWNER
-argument_list|(
-name|mg
-argument_list|)
-operator|==
-name|thr
-condition|)
-name|MUTEX_UNLOCK
-argument_list|(
-name|MgMUTEXP
-argument_list|(
-name|mg
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-while|while
-condition|(
-name|MgOWNER
-argument_list|(
-name|mg
-argument_list|)
-condition|)
-name|COND_WAIT
-argument_list|(
-name|MgOWNERCONDP
-argument_list|(
-name|mg
-argument_list|)
-argument_list|,
-name|MgMUTEXP
-argument_list|(
-name|mg
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|MgOWNER
-argument_list|(
-name|mg
-argument_list|)
-operator|=
-name|thr
-expr_stmt|;
-name|DEBUG_S
-argument_list|(
-argument|PerlIO_printf(Perl_debug_log,
-literal|"0x%"
-argument|UVxf
-literal|": pp_lock lock 0x%"
-argument|UVxf
-literal|"\n"
-argument|, 			      PTR2UV(thr), PTR2UV(sv));
-argument_list|)
-name|MUTEX_UNLOCK
-argument_list|(
-name|MgMUTEXP
-argument_list|(
-name|mg
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|SAVEDESTRUCTOR_X
-argument_list|(
-name|Perl_unlock_condpair
-argument_list|,
-name|sv
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* USE_THREADS */
@@ -26805,7 +27646,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|USE_THREADS
-name|djSP
+name|dSP
 expr_stmt|;
 name|EXTEND
 argument_list|(

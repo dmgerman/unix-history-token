@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    version.c -- Perl 5 interface to Berkeley DB    written by Paul Marquess<Paul.Marquess@btinternet.com>  last modified 16th January 2000  version 1.72   All comments/suggestions/problems are welcome       Copyright (c) 1995-2000 Paul Marquess. All rights reserved.      This program is free software; you can redistribute it and/or      modify it under the same terms as Perl itself.   Changes:         1.71 -  Support for Berkeley DB version 3. 		Support for Berkeley DB 2/3's backward compatability mode.         1.72 -  No change.  */
+comment|/*    version.c -- Perl 5 interface to Berkeley DB    written by Paul Marquess<Paul.Marquess@btinternet.com>  last modified 16th January 2000  version 1.73   All comments/suggestions/problems are welcome       Copyright (c) 1995-2000 Paul Marquess. All rights reserved.      This program is free software; you can redistribute it and/or      modify it under the same terms as Perl itself.   Changes:         1.71 -  Support for Berkeley DB version 3. 		Support for Berkeley DB 2/3's backward compatability mode.         1.72 -  No change.         1.73 -  Added support for threading         1.74 -  Added Perl core patch 7801.   */
 end_comment
 
 begin_include
@@ -29,9 +29,27 @@ end_include
 
 begin_function
 name|void
+ifdef|#
+directive|ifdef
+name|CAN_PROTOTYPE
 name|__getBerkeleyDBInfo
+parameter_list|(
+name|void
+parameter_list|)
+else|#
+directive|else
+function|__getBerkeleyDBInfo
 parameter_list|()
+endif|#
+directive|endif
 block|{
+ifdef|#
+directive|ifdef
+name|dTHX
+name|dTHX
+expr_stmt|;
+endif|#
+directive|endif
 name|SV
 modifier|*
 name|version_sv

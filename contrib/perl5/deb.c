@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    deb.c  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    deb.c  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -148,8 +148,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-name|dTHR
-expr_stmt|;
 name|char
 modifier|*
 name|file
@@ -249,8 +247,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-name|dTHR
-expr_stmt|;
 name|PerlIO_printf
 argument_list|(
 name|Perl_debug_log
@@ -372,8 +368,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-name|dTHR
-expr_stmt|;
 name|I32
 name|top
 init|=

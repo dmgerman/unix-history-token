@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    hv.c  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    hv.c  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -118,25 +118,47 @@ name|HE
 modifier|*
 name|heend
 decl_stmt|;
+name|XPV
+modifier|*
+name|ptr
+decl_stmt|;
 name|New
 argument_list|(
 literal|54
 argument_list|,
-name|PL_he_root
+name|ptr
 argument_list|,
 literal|1008
 operator|/
 sizeof|sizeof
 argument_list|(
-name|HE
+name|XPV
 argument_list|)
 argument_list|,
-name|HE
+name|XPV
 argument_list|)
+expr_stmt|;
+name|ptr
+operator|->
+name|xpv_pv
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|PL_he_arenaroot
+expr_stmt|;
+name|PL_he_arenaroot
+operator|=
+name|ptr
 expr_stmt|;
 name|he
 operator|=
-name|PL_he_root
+operator|(
+name|HE
+operator|*
+operator|)
+name|ptr
 expr_stmt|;
 name|heend
 operator|=
@@ -152,6 +174,11 @@ argument_list|)
 operator|-
 literal|1
 index|]
+expr_stmt|;
+name|PL_he_root
+operator|=
+operator|++
+name|he
 expr_stmt|;
 while|while
 condition|(
@@ -642,8 +669,6 @@ literal|'P'
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|sv
 operator|=
 name|sv_newmortal
@@ -1147,8 +1172,6 @@ literal|'P'
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|sv
 operator|=
 name|sv_newmortal
@@ -2255,8 +2278,6 @@ name|hv
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|bool
 name|needs_copy
 decl_stmt|;
@@ -3576,8 +3597,6 @@ literal|'P'
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
 name|sv
 operator|=
 name|sv_newmortal
@@ -3953,9 +3972,6 @@ literal|'P'
 argument_list|)
 condition|)
 block|{
-name|dTHR
-expr_stmt|;
-comment|/* just for SvTRUE */
 name|sv
 operator|=
 name|sv_newmortal
@@ -5417,7 +5433,7 @@ argument_list|(
 name|entry
 argument_list|)
 argument_list|,
-name|SvREFCNT_inc
+name|newSVsv
 argument_list|(
 name|HeVAL
 argument_list|(
@@ -7184,9 +7200,6 @@ break|break;
 block|}
 name|UNLOCK_STRTAB_MUTEX
 expr_stmt|;
-block|{
-name|dTHR
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7204,7 +7217,6 @@ argument_list|,
 literal|"Attempt to free non-existent shared string"
 argument_list|)
 empty_stmt|;
-block|}
 block|}
 end_function
 

@@ -9,57 +9,94 @@ end_comment
 
 begin_struct
 struct|struct
-name|bytestream
+name|byteloader_fdata
 block|{
-name|void
+name|SV
 modifier|*
-name|data
+name|datasv
 decl_stmt|;
 name|int
-function_decl|(
+name|next_out
+decl_stmt|;
+name|int
+name|idx
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|byteloader_state
+block|{
+name|struct
+name|byteloader_fdata
 modifier|*
-name|pfgetc
-function_decl|)
-parameter_list|(
+name|bs_fdata
+decl_stmt|;
+name|SV
+modifier|*
+name|bs_sv
+decl_stmt|;
 name|void
+modifier|*
+modifier|*
+name|bs_obj_list
+decl_stmt|;
+name|int
+name|bs_obj_list_fill
+decl_stmt|;
+name|XPV
+name|bs_pv
+decl_stmt|;
+name|int
+name|bs_iv_overflows
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|bl_getc
+parameter_list|(
+name|struct
+name|byteloader_fdata
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
-function_decl|(
-modifier|*
-name|pfread
-function_decl|)
+name|bl_read
 parameter_list|(
+name|struct
+name|byteloader_fdata
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
 name|size_t
 parameter_list|,
 name|size_t
-parameter_list|,
-name|void
-modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
-function_decl|(
-modifier|*
-name|pfreadpv
-function_decl|)
+name|byterun
 parameter_list|(
-name|U32
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|XPV
+name|pTHXo_
+name|struct
+name|byteloader_state
 modifier|*
 parameter_list|)
 function_decl|;
-block|}
-struct|;
-end_struct
+end_function_decl
 
 begin_enum
 enum|enum
@@ -79,271 +116,271 @@ comment|/* 3 */
 name|INSN_STOP
 block|,
 comment|/* 4 */
-name|INSN_LDSPECSV
+name|INSN_STPV
 block|,
 comment|/* 5 */
-name|INSN_NEWSV
+name|INSN_LDSPECSV
 block|,
 comment|/* 6 */
-name|INSN_NEWOP
+name|INSN_NEWSV
 block|,
 comment|/* 7 */
-name|INSN_NEWOPN
+name|INSN_NEWOP
 block|,
 comment|/* 8 */
-name|INSN_NEWPV
+name|INSN_NEWOPN
 block|,
 comment|/* 9 */
 name|INSN_NOP
 block|,
 comment|/* 10 */
-name|INSN_PV_CUR
+name|INSN_NEWPV
 block|,
 comment|/* 11 */
-name|INSN_PV_FREE
+name|INSN_PV_CUR
 block|,
 comment|/* 12 */
-name|INSN_SV_UPGRADE
+name|INSN_PV_FREE
 block|,
 comment|/* 13 */
-name|INSN_SV_REFCNT
+name|INSN_SV_UPGRADE
 block|,
 comment|/* 14 */
-name|INSN_SV_REFCNT_ADD
+name|INSN_SV_REFCNT
 block|,
 comment|/* 15 */
-name|INSN_SV_FLAGS
+name|INSN_SV_REFCNT_ADD
 block|,
 comment|/* 16 */
-name|INSN_XRV
+name|INSN_SV_FLAGS
 block|,
 comment|/* 17 */
-name|INSN_XPV
+name|INSN_XRV
 block|,
 comment|/* 18 */
-name|INSN_XIV32
+name|INSN_XPV
 block|,
 comment|/* 19 */
-name|INSN_XIV64
+name|INSN_XIV32
 block|,
 comment|/* 20 */
-name|INSN_XNV
+name|INSN_XIV64
 block|,
 comment|/* 21 */
-name|INSN_XLV_TARGOFF
+name|INSN_XNV
 block|,
 comment|/* 22 */
-name|INSN_XLV_TARGLEN
+name|INSN_XLV_TARGOFF
 block|,
 comment|/* 23 */
-name|INSN_XLV_TARG
+name|INSN_XLV_TARGLEN
 block|,
 comment|/* 24 */
-name|INSN_XLV_TYPE
+name|INSN_XLV_TARG
 block|,
 comment|/* 25 */
-name|INSN_XBM_USEFUL
+name|INSN_XLV_TYPE
 block|,
 comment|/* 26 */
-name|INSN_XBM_PREVIOUS
+name|INSN_XBM_USEFUL
 block|,
 comment|/* 27 */
-name|INSN_XBM_RARE
+name|INSN_XBM_PREVIOUS
 block|,
 comment|/* 28 */
-name|INSN_XFM_LINES
+name|INSN_XBM_RARE
 block|,
 comment|/* 29 */
-name|INSN_XIO_LINES
+name|INSN_XFM_LINES
 block|,
 comment|/* 30 */
-name|INSN_XIO_PAGE
+name|INSN_XIO_LINES
 block|,
 comment|/* 31 */
-name|INSN_XIO_PAGE_LEN
+name|INSN_XIO_PAGE
 block|,
 comment|/* 32 */
-name|INSN_XIO_LINES_LEFT
+name|INSN_XIO_PAGE_LEN
 block|,
 comment|/* 33 */
-name|INSN_XIO_TOP_NAME
+name|INSN_XIO_LINES_LEFT
 block|,
 comment|/* 34 */
 name|INSN_COMMENT
 block|,
 comment|/* 35 */
-name|INSN_XIO_TOP_GV
+name|INSN_XIO_TOP_NAME
 block|,
 comment|/* 36 */
-name|INSN_XIO_FMT_NAME
+name|INSN_XIO_TOP_GV
 block|,
 comment|/* 37 */
-name|INSN_XIO_FMT_GV
+name|INSN_XIO_FMT_NAME
 block|,
 comment|/* 38 */
-name|INSN_XIO_BOTTOM_NAME
+name|INSN_XIO_FMT_GV
 block|,
 comment|/* 39 */
-name|INSN_XIO_BOTTOM_GV
+name|INSN_XIO_BOTTOM_NAME
 block|,
 comment|/* 40 */
-name|INSN_XIO_SUBPROCESS
+name|INSN_XIO_BOTTOM_GV
 block|,
 comment|/* 41 */
-name|INSN_XIO_TYPE
+name|INSN_XIO_SUBPROCESS
 block|,
 comment|/* 42 */
-name|INSN_XIO_FLAGS
+name|INSN_XIO_TYPE
 block|,
 comment|/* 43 */
-name|INSN_XCV_STASH
+name|INSN_XIO_FLAGS
 block|,
 comment|/* 44 */
-name|INSN_XCV_START
+name|INSN_XCV_STASH
 block|,
 comment|/* 45 */
-name|INSN_XCV_ROOT
+name|INSN_XCV_START
 block|,
 comment|/* 46 */
-name|INSN_XCV_GV
+name|INSN_XCV_ROOT
 block|,
 comment|/* 47 */
-name|INSN_XCV_FILE
+name|INSN_XCV_GV
 block|,
 comment|/* 48 */
-name|INSN_XCV_DEPTH
+name|INSN_XCV_FILE
 block|,
 comment|/* 49 */
-name|INSN_XCV_PADLIST
+name|INSN_XCV_DEPTH
 block|,
 comment|/* 50 */
-name|INSN_XCV_OUTSIDE
+name|INSN_XCV_PADLIST
 block|,
 comment|/* 51 */
-name|INSN_XCV_FLAGS
+name|INSN_XCV_OUTSIDE
 block|,
 comment|/* 52 */
-name|INSN_AV_EXTEND
+name|INSN_XCV_FLAGS
 block|,
 comment|/* 53 */
-name|INSN_AV_PUSH
+name|INSN_AV_EXTEND
 block|,
 comment|/* 54 */
-name|INSN_XAV_FILL
+name|INSN_AV_PUSH
 block|,
 comment|/* 55 */
-name|INSN_XAV_MAX
+name|INSN_XAV_FILL
 block|,
 comment|/* 56 */
-name|INSN_XAV_FLAGS
+name|INSN_XAV_MAX
 block|,
 comment|/* 57 */
-name|INSN_XHV_RITER
+name|INSN_XAV_FLAGS
 block|,
 comment|/* 58 */
-name|INSN_XHV_NAME
+name|INSN_XHV_RITER
 block|,
 comment|/* 59 */
-name|INSN_HV_STORE
+name|INSN_XHV_NAME
 block|,
 comment|/* 60 */
-name|INSN_SV_MAGIC
+name|INSN_HV_STORE
 block|,
 comment|/* 61 */
-name|INSN_MG_OBJ
+name|INSN_SV_MAGIC
 block|,
 comment|/* 62 */
-name|INSN_MG_PRIVATE
+name|INSN_MG_OBJ
 block|,
 comment|/* 63 */
-name|INSN_MG_FLAGS
+name|INSN_MG_PRIVATE
 block|,
 comment|/* 64 */
-name|INSN_MG_PV
+name|INSN_MG_FLAGS
 block|,
 comment|/* 65 */
-name|INSN_XMG_STASH
+name|INSN_MG_PV
 block|,
 comment|/* 66 */
-name|INSN_GV_FETCHPV
+name|INSN_XMG_STASH
 block|,
 comment|/* 67 */
-name|INSN_GV_STASHPV
+name|INSN_GV_FETCHPV
 block|,
 comment|/* 68 */
-name|INSN_GP_SV
+name|INSN_GV_STASHPV
 block|,
 comment|/* 69 */
-name|INSN_GP_REFCNT
+name|INSN_GP_SV
 block|,
 comment|/* 70 */
-name|INSN_GP_REFCNT_ADD
+name|INSN_GP_REFCNT
 block|,
 comment|/* 71 */
-name|INSN_GP_AV
+name|INSN_GP_REFCNT_ADD
 block|,
 comment|/* 72 */
-name|INSN_GP_HV
+name|INSN_GP_AV
 block|,
 comment|/* 73 */
-name|INSN_GP_CV
+name|INSN_GP_HV
 block|,
 comment|/* 74 */
-name|INSN_GP_FILE
+name|INSN_GP_CV
 block|,
 comment|/* 75 */
-name|INSN_GP_IO
+name|INSN_GP_FILE
 block|,
 comment|/* 76 */
-name|INSN_GP_FORM
+name|INSN_GP_IO
 block|,
 comment|/* 77 */
-name|INSN_GP_CVGEN
+name|INSN_GP_FORM
 block|,
 comment|/* 78 */
-name|INSN_GP_LINE
+name|INSN_GP_CVGEN
 block|,
 comment|/* 79 */
-name|INSN_GP_SHARE
+name|INSN_GP_LINE
 block|,
 comment|/* 80 */
-name|INSN_XGV_FLAGS
+name|INSN_GP_SHARE
 block|,
 comment|/* 81 */
-name|INSN_OP_NEXT
+name|INSN_XGV_FLAGS
 block|,
 comment|/* 82 */
-name|INSN_OP_SIBLING
+name|INSN_OP_NEXT
 block|,
 comment|/* 83 */
-name|INSN_OP_PPADDR
+name|INSN_OP_SIBLING
 block|,
 comment|/* 84 */
-name|INSN_OP_TARG
+name|INSN_OP_PPADDR
 block|,
 comment|/* 85 */
-name|INSN_OP_TYPE
+name|INSN_OP_TARG
 block|,
 comment|/* 86 */
-name|INSN_OP_SEQ
+name|INSN_OP_TYPE
 block|,
 comment|/* 87 */
-name|INSN_OP_FLAGS
+name|INSN_OP_SEQ
 block|,
 comment|/* 88 */
-name|INSN_OP_PRIVATE
+name|INSN_OP_FLAGS
 block|,
 comment|/* 89 */
-name|INSN_OP_FIRST
+name|INSN_OP_PRIVATE
 block|,
 comment|/* 90 */
-name|INSN_OP_LAST
+name|INSN_OP_FIRST
 block|,
 comment|/* 91 */
-name|INSN_OP_OTHER
+name|INSN_OP_LAST
 block|,
 comment|/* 92 */
-name|INSN_OP_CHILDREN
+name|INSN_OP_OTHER
 block|,
 comment|/* 93 */
 name|INSN_OP_PMREPLROOT
@@ -418,9 +455,18 @@ comment|/* 116 */
 name|INSN_CURPAD
 block|,
 comment|/* 117 */
+name|INSN_PUSH_BEGIN
+block|,
+comment|/* 118 */
+name|INSN_PUSH_INIT
+block|,
+comment|/* 119 */
+name|INSN_PUSH_END
+block|,
+comment|/* 120 */
 name|MAX_INSN
 init|=
-literal|117
+literal|120
 block|}
 enum|;
 end_enum
@@ -463,26 +509,6 @@ comment|/* 10 */
 block|}
 enum|;
 end_enum
-
-begin_function_decl
-specifier|extern
-name|void
-name|byterun
-parameter_list|(
-name|pTHXo_
-name|struct
-name|bytestream
-name|bs
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|INIT_SPECIALSV_LIST
-value|STMT_START { \ 	PL_specialsv_list[0] = Nullsv; \ 	PL_specialsv_list[1] =&PL_sv_undef; \ 	PL_specialsv_list[2] =&PL_sv_yes; \ 	PL_specialsv_list[3] =&PL_sv_no; \     } STMT_END
-end_define
 
 end_unit
 
