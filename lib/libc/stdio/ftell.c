@@ -173,15 +173,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-comment|/* make sure stdio is set up */
-if|if
-condition|(
-operator|!
-name|__sdidinit
-condition|)
-name|__sinit
-argument_list|()
-expr_stmt|;
 name|FLOCKFILE
 argument_list|(
 name|fp
@@ -218,11 +209,19 @@ name|rv
 operator|<
 literal|0
 condition|)
+block|{
 comment|/* Unspecified value because of ungetc() at 0 */
-name|rv
+name|errno
 operator|=
-literal|0
+name|ESPIPE
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|rv
