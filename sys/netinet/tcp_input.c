@@ -203,12 +203,6 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -238,11 +232,6 @@ include|#
 directive|include
 file|<netinet6/nd6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -274,22 +263,11 @@ directive|include
 file|<netinet/tcp_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/tcp6_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -330,22 +308,11 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netinet6/ipsec6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -382,6 +349,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|tcprexmtthresh
 init|=
@@ -666,8 +634,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|tcp_newreno
+name|void
+name|tcp_newreno_partial_ack
 parameter_list|(
 name|struct
 name|tcpcb
@@ -1572,16 +1540,50 @@ name|headlocked
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|sockaddr_in
+modifier|*
+name|next_hop
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|rstreason
+decl_stmt|;
+comment|/* For badport_bandlim accounting purposes */
+name|struct
+name|ip6_hdr
+modifier|*
+name|ip6
+init|=
+name|NULL
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|int
+name|isipv6
+decl_stmt|;
+else|#
+directive|else
+specifier|const
+name|int
+name|isipv6
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
+comment|/* 	 * The size of tcp_saveipgen must be the size of the max ip header, 	 * now IPv6. 	 */
 name|u_char
 name|tcp_saveipgen
 index|[
 literal|40
 index|]
 decl_stmt|;
-comment|/* the size of the above must be of max ip header, now IPv6 */
 name|struct
 name|tcphdr
 name|tcp_savetcp
@@ -1595,39 +1597,12 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|INET6
-name|struct
-name|ip6_hdr
-modifier|*
-name|ip6
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|isipv6
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* INET6 */
-name|struct
-name|sockaddr_in
-modifier|*
-name|next_hop
-init|=
-name|NULL
-decl_stmt|;
-ifdef|#
-directive|ifdef
 name|MAC
 name|int
 name|error
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|rstreason
-decl_stmt|;
-comment|/* For badport_bandlim accounting purposes */
 comment|/* Grab info from MT_TAG mbufs prepended to the chain. */
 for|for
 control|(
@@ -1715,9 +1690,6 @@ operator|.
 name|tcps_rcvtotal
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -1810,11 +1782,8 @@ goto|;
 block|}
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* INET6 */
 block|{
-comment|/* 	 * Get IP and TCP header together in first mbuf. 	 * Note: IP leaves IP header in first mbuf. 	 */
+comment|/* 		 * Get IP and TCP header together in first mbuf. 		 * Note: IP leaves IP header in first mbuf. 		 */
 if|if
 condition|(
 name|off0
@@ -2005,7 +1974,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Checksum extended TCP header and data. 		 */
+comment|/* 			 * Checksum extended TCP header and data. 			 */
 name|len
 operator|=
 sizeof|sizeof
@@ -2140,9 +2109,6 @@ name|tcphdr
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -2186,9 +2152,6 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* INET6 */
 block|{
 if|if
 condition|(
@@ -2401,19 +2364,13 @@ condition|(
 name|next_hop
 operator|!=
 name|NULL
-ifdef|#
-directive|ifdef
-name|INET6
 operator|&&
 name|isipv6
 operator|==
-name|NULL
-comment|/* IPv6 support is not yet */
-endif|#
-directive|endif
-comment|/* INET6 */
+literal|0
 condition|)
 block|{
+comment|/* IPv6 support is not yet */
 comment|/* 		 * Transparently forwarded. Pretend to be the destination. 		 * already got one like this?  		 */
 name|inp
 operator|=
@@ -2453,16 +2410,7 @@ operator|!
 name|inp
 condition|)
 block|{
-comment|/*  			 * No, then it's new. Try find the ambushing socket 			 */
-if|if
-condition|(
-name|next_hop
-operator|->
-name|sin_port
-operator|==
-literal|0
-condition|)
-block|{
+comment|/* It's new.  Try find the ambushing socket. */
 name|inp
 operator|=
 name|in_pcblookup_hash
@@ -2482,6 +2430,17 @@ name|next_hop
 operator|->
 name|sin_addr
 argument_list|,
+name|next_hop
+operator|->
+name|sin_port
+condition|?
+name|ntohs
+argument_list|(
+name|next_hop
+operator|->
+name|sin_port
+argument_list|)
+else|:
 name|th
 operator|->
 name|th_dport
@@ -2496,51 +2455,9 @@ name|rcvif
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|inp
-operator|=
-name|in_pcblookup_hash
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|,
-name|ip
-operator|->
-name|ip_src
-argument_list|,
-name|th
-operator|->
-name|th_sport
-argument_list|,
-name|next_hop
-operator|->
-name|sin_addr
-argument_list|,
-name|ntohs
-argument_list|(
-name|next_hop
-operator|->
-name|sin_port
-argument_list|)
-argument_list|,
-literal|1
-argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -2580,9 +2497,6 @@ name|rcvif
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
-comment|/* INET6 */
 name|inp
 operator|=
 name|in_pcblookup_hash
@@ -2619,9 +2533,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -2653,10 +2564,8 @@ name|drop
 goto|;
 block|}
 block|}
-elseif|else
-endif|#
-directive|endif
-comment|/* INET6 */
+else|else
+block|{
 if|if
 condition|(
 name|inp
@@ -2682,9 +2591,9 @@ goto|goto
 name|drop
 goto|;
 block|}
+block|}
 endif|#
 directive|endif
-comment|/*IPSEC*/
 comment|/* 	 * If the state is CLOSED (i.e., TCB does not exist) then 	 * all data in the incoming segment is discarded. 	 * If the TCB exists but is in CLOSED state, it is embryonic, 	 * but should either do a listen or a connect soon. 	 */
 if|if
 condition|(
@@ -2714,7 +2623,6 @@ index|]
 decl_stmt|;
 else|#
 directive|else
-comment|/* INET6 */
 name|char
 name|dbuf
 index|[
@@ -2732,10 +2640,6 @@ expr|"123"]
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* INET6 */
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -2769,8 +2673,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|strcpy
 argument_list|(
@@ -2815,7 +2717,8 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Connection attempt to TCP %s:%d from %s:%d\n"
+literal|"Connection attempt to TCP %s:%d "
+literal|"from %s:%d\n"
 argument_list|,
 name|dbuf
 argument_list|,
@@ -2844,7 +2747,8 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Connection attempt to TCP %s:%d from %s:%d flags:0x%x\n"
+literal|"Connection attempt to TCP %s:%d "
+literal|"from %s:%d flags:0x%x\n"
 argument_list|,
 name|dbuf
 argument_list|,
@@ -3048,9 +2952,6 @@ name|tp
 operator|->
 name|t_state
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -3077,9 +2978,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
-comment|/* INET6 */
 name|bcopy
 argument_list|(
 operator|(
@@ -3134,6 +3032,8 @@ name|inc_isipv6
 operator|=
 name|isipv6
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|isipv6
@@ -3166,9 +3066,6 @@ expr_stmt|;
 comment|/* XXX */
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* INET6 */
 block|{
 name|inc
 operator|.
@@ -3486,9 +3383,6 @@ operator|->
 name|th_sport
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -3513,10 +3407,8 @@ goto|goto
 name|drop
 goto|;
 block|}
-elseif|else
-endif|#
-directive|endif
-comment|/* INET6 */
+else|else
+block|{
 if|if
 condition|(
 name|ip
@@ -3535,6 +3427,7 @@ goto|goto
 name|drop
 goto|;
 block|}
+block|}
 comment|/* 		 * RFC1122 4.2.3.10, p. 104: discard bcast/mcast SYN 		 * 		 * Note that it is quite possible to receive unicast 		 * link-layer packets with a broadcast IP address. Use 		 * in_broadcast() to find them. 		 */
 if|if
 condition|(
@@ -3551,9 +3444,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -3581,9 +3471,8 @@ goto|goto
 name|drop
 goto|;
 block|}
-elseif|else
-endif|#
-directive|endif
+else|else
+block|{
 if|if
 condition|(
 name|IN_MULTICAST
@@ -3637,6 +3526,7 @@ condition|)
 goto|goto
 name|drop
 goto|;
+block|}
 comment|/* 		 * SYN appears to be valid; create compressed TCP state 		 * for syncache, or perform t/tcp connection. 		 */
 if|if
 condition|(
@@ -3776,9 +3666,6 @@ name|tlen
 operator|!=
 literal|0
 operator|&&
-ifdef|#
-directive|ifdef
-name|INET6
 operator|(
 operator|(
 name|isipv6
@@ -3796,21 +3683,14 @@ operator|(
 operator|!
 name|isipv6
 operator|&&
-endif|#
-directive|endif
 name|in_localaddr
 argument_list|(
 name|inp
 operator|->
 name|inp_faddr
 argument_list|)
-ifdef|#
-directive|ifdef
-name|INET6
 operator|)
 operator|)
-endif|#
-directive|endif
 operator|)
 operator|)
 condition|)
@@ -5149,7 +5029,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 *  Received initial SYN in SYN-SENT[*] state => simul- 		 *  taneous open.  If segment contains CC option and there is 		 *  a cached CC, apply TAO test; if it succeeds, connection is 		 *  half-synchronized.  Otherwise, do 3-way handshake: 		 *        SYN-SENT -> SYN-RECEIVED 		 *        SYN-SENT* -> SYN-RECEIVED* 		 *  If there was no CC option, clear cached CC value. 		 */
+comment|/* 		 	 * Received initial SYN in SYN-SENT[*] state => 		 	 * simultaneous open.  If segment contains CC option 		 	 * and there is a cached CC, apply TAO test. 		 	 * If it succeeds, connection is * half-synchronized. 		 	 * Otherwise, do 3-way handshake: 		 	 *        SYN-SENT -> SYN-RECEIVED 		 	 *        SYN-SENT* -> SYN-RECEIVED* 		 	 * If there was no CC option, clear cached CC value. 		 	 */
 name|tp
 operator|->
 name|t_flags
@@ -5358,7 +5238,7 @@ name|th
 operator|->
 name|th_seq
 expr_stmt|;
-comment|/* 		 *  Client side of transaction: already sent SYN and data. 		 *  If the remote host used T/TCP to validate the SYN, 		 *  our data will be ACK'd; if so, enter normal data segment 		 *  processing in the middle of step 5, ack processing. 		 *  Otherwise, goto step 6. 		 */
+comment|/* 		 * Client side of transaction: already sent SYN and data. 		 * If the remote host used T/TCP to validate the SYN, 		 * our data will be ACK'd; if so, enter normal data segment 		 * processing in the middle of step 5, ack processing. 		 * Otherwise, goto step 6. 		 */
 if|if
 condition|(
 name|thflags
@@ -6686,60 +6566,47 @@ comment|/* 		 * If the congestion window was inflated to account 		 * for the ot
 if|if
 condition|(
 name|tcp_do_newreno
-operator|==
-literal|0
+condition|)
+block|{
+name|int
+name|is_partialack
+init|=
+name|SEQ_LT
+argument_list|(
+name|th
+operator|->
+name|th_ack
+argument_list|,
+name|tp
+operator|->
+name|snd_recover
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_dupacks
+operator|>=
+name|tcprexmtthresh
 condition|)
 block|{
 if|if
 condition|(
-name|tp
-operator|->
-name|t_dupacks
-operator|>=
-name|tcprexmtthresh
-operator|&&
-name|tp
-operator|->
-name|snd_cwnd
-operator|>
-name|tp
-operator|->
-name|snd_ssthresh
+name|is_partialack
 condition|)
-name|tp
-operator|->
-name|snd_cwnd
-operator|=
-name|tp
-operator|->
-name|snd_ssthresh
-expr_stmt|;
-name|tp
-operator|->
-name|t_dupacks
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|tp
-operator|->
-name|t_dupacks
-operator|>=
-name|tcprexmtthresh
-operator|&&
-operator|!
-name|tcp_newreno
+block|{
+name|tcp_newreno_partial_ack
 argument_list|(
 name|tp
 argument_list|,
 name|th
 argument_list|)
-condition|)
+expr_stmt|;
+block|}
+else|else
 block|{
-comment|/*                          * Window inflation should have left us with approx.                          * snd_ssthresh outstanding data.  But in case we                          * would be inclined to send a burst, better to do                          * it via the slow start mechanism.                          */
+comment|/* 					 * Window inflation should have left us 					 * with approximately snd_ssthresh 					 * outstanding data. 					 * But in case we would be inclined to 					 * send a burst, better to do it via 					 * the slow start mechanism. 					 */
 if|if
 condition|(
 name|SEQ_GT
@@ -6782,20 +6649,21 @@ name|tp
 operator|->
 name|snd_ssthresh
 expr_stmt|;
-name|tp
-operator|->
-name|t_dupacks
-operator|=
-literal|0
-expr_stmt|;
 block|}
+block|}
+comment|/* 			 * Reset dupacks, except on partial acks in 			 *   fast recovery. 			 */
 if|if
 condition|(
+operator|!
+operator|(
 name|tp
 operator|->
 name|t_dupacks
-operator|<
+operator|>=
 name|tcprexmtthresh
+operator|&&
+name|is_partialack
+operator|)
 condition|)
 name|tp
 operator|->
@@ -6803,6 +6671,40 @@ name|t_dupacks
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|t_dupacks
+operator|>=
+name|tcprexmtthresh
+operator|&&
+name|tp
+operator|->
+name|snd_cwnd
+operator|>
+name|tp
+operator|->
+name|snd_ssthresh
+condition|)
+name|tp
+operator|->
+name|snd_cwnd
+operator|=
+name|tp
+operator|->
+name|snd_ssthresh
+expr_stmt|;
+name|tp
+operator|->
+name|t_dupacks
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|SEQ_GT
@@ -6826,7 +6728,7 @@ goto|goto
 name|dropafterack
 goto|;
 block|}
-comment|/* 		 *  If we reach this point, ACK is not a duplicate, 		 *     i.e., it ACKs something we sent. 		 */
+comment|/* 		 * If we reach this point, ACK is not a duplicate, 		 *     i.e., it ACKs something we sent. 		 */
 if|if
 condition|(
 name|tp
@@ -7113,9 +7015,8 @@ expr_stmt|;
 comment|/* 		 * If t_dupacks != 0 here, it indicates that we are still 		 * in NewReno fast recovery mode, so we leave the congestion 		 * window alone. 		 */
 if|if
 condition|(
+operator|!
 name|tcp_do_newreno
-operator|==
-literal|0
 operator|||
 name|tp
 operator|->
@@ -7734,7 +7635,8 @@ argument_list|)
 expr_stmt|;
 comment|/* hdr drop is delayed */
 block|}
-elseif|else
+else|else
+block|{
 comment|/* 		 * If no out of band data is expected, 		 * pull receive urgent pointer along 		 * with the receive window. 		 */
 if|if
 condition|(
@@ -7757,6 +7659,7 @@ name|tp
 operator|->
 name|rcv_nxt
 expr_stmt|;
+block|}
 name|dodata
 label|:
 comment|/* XXX */
@@ -7810,7 +7713,7 @@ name|drop_hdrlen
 argument_list|)
 expr_stmt|;
 comment|/* delayed header drop */
-comment|/* 		 * Insert segment which inludes th into reassembly queue of tcp with 		 * control block tp.  Return TH_FIN if reassembly now includes 		 * a segment with FIN.  This handle the common case inline (segment 		 * is the next to be received on an established connection, and the 		 * queue is empty), avoiding linkage into and removal from the queue 		 * and repetition of various conversions. 		 * Set DELACK for segments received in order, but ack immediately 		 * when segments are out of order (so fast retransmit can work). 		 */
+comment|/* 		 * Insert segment which includes th into TCP reassembly queue 		 * with control block tp.  Set thflags to whether reassembly now 		 * includes a segment with FIN.  This handles the common case 		 * inline (segment is the next to be received on an established 		 * connection, and the queue is empty), avoiding linkage into 		 * and removal from the queue and repetition of various 		 * conversions. 		 * Set DELACK for segments received in order, but ack 		 * immediately when segments are out of order (so 		 * fast retransmit can work). 		 */
 if|if
 condition|(
 name|th
@@ -7991,7 +7894,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* 			 *  If connection is half-synchronized 			 *  (ie NEEDSYN flag on) then delay ACK, 			 *  so it may be piggybacked when SYN is sent. 			 *  Otherwise, since we received a FIN then no 			 *  more input can be expected, send ACK now. 			 */
+comment|/* 			 * If connection is half-synchronized 			 * (ie NEEDSYN flag on) then delay ACK, 			 * so it may be piggybacked when SYN is sent. 			 * Otherwise, since we received a FIN then no 			 * more input can be expected, send ACK now. 			 */
 if|if
 condition|(
 name|DELAY_ACK
@@ -8378,9 +8281,6 @@ condition|)
 goto|goto
 name|drop
 goto|;
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -8408,10 +8308,8 @@ goto|goto
 name|drop
 goto|;
 block|}
-elseif|else
-endif|#
-directive|endif
-comment|/* INET6 */
+else|else
+block|{
 if|if
 condition|(
 name|IN_MULTICAST
@@ -8465,6 +8363,7 @@ condition|)
 goto|goto
 name|drop
 goto|;
+block|}
 comment|/* IPv6 anycast check is done at tcp6_input() */
 comment|/* 	 * Perform bandwidth limiting. 	 */
 if|if
@@ -9607,6 +9506,10 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
+init|=
+name|tp
+operator|->
+name|t_inpcb
 decl_stmt|;
 name|struct
 name|socket
@@ -9628,23 +9531,7 @@ directive|ifdef
 name|INET6
 name|int
 name|isipv6
-decl_stmt|;
-name|int
-name|min_protoh
-decl_stmt|;
-endif|#
-directive|endif
-name|inp
-operator|=
-name|tp
-operator|->
-name|t_inpcb
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-name|isipv6
-operator|=
+init|=
 operator|(
 operator|(
 name|inp
@@ -9660,9 +9547,10 @@ condition|?
 literal|1
 else|:
 literal|0
-expr_stmt|;
+decl_stmt|;
+name|size_t
 name|min_protoh
-operator|=
+init|=
 name|isipv6
 condition|?
 sizeof|sizeof
@@ -9682,18 +9570,27 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 else|#
 directive|else
-define|#
-directive|define
+specifier|const
+name|int
+name|isipv6
+init|=
+literal|0
+decl_stmt|;
+specifier|const
+name|size_t
 name|min_protoh
-value|(sizeof (struct tcpiphdr))
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -9709,8 +9606,6 @@ name|inp_inc
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|rt
 operator|=
 name|tcp_rtlookup
@@ -9736,16 +9631,10 @@ name|tp
 operator|->
 name|t_maxseg
 operator|=
-ifdef|#
-directive|ifdef
-name|INET6
 name|isipv6
 condition|?
 name|tcp_v6mssdflt
 else|:
-endif|#
-directive|endif
-comment|/* INET6 */
 name|tcp_mssdflt
 expr_stmt|;
 return|return;
@@ -9794,16 +9683,10 @@ literal|0
 condition|)
 name|offer
 operator|=
-ifdef|#
-directive|ifdef
-name|INET6
 name|isipv6
 condition|?
 name|tcp_v6mssdflt
 else|:
-endif|#
-directive|endif
-comment|/* INET6 */
 name|tcp_mssdflt
 expr_stmt|;
 else|else
@@ -9989,14 +9872,13 @@ name|min_protoh
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|isipv6
+condition|)
+block|{
 name|mss
 operator|=
-ifdef|#
-directive|ifdef
-name|INET6
-operator|(
-name|isipv6
-condition|?
 name|nd_ifinfo
 index|[
 name|rt
@@ -10007,29 +9889,9 @@ name|if_index
 index|]
 operator|.
 name|linkmtu
-else|:
-endif|#
-directive|endif
-name|ifp
-operator|->
-name|if_mtu
-ifdef|#
-directive|ifdef
-name|INET6
-operator|)
-endif|#
-directive|endif
 operator|-
 name|min_protoh
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-if|if
-condition|(
-name|isipv6
-condition|)
-block|{
 if|if
 condition|(
 operator|!
@@ -10051,9 +9913,16 @@ name|tcp_v6mssdflt
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-endif|#
-directive|endif
+else|else
+block|{
+name|mss
+operator|=
+name|ifp
+operator|->
+name|if_mtu
+operator|-
+name|min_protoh
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -10073,6 +9942,7 @@ argument_list|,
 name|tcp_mssdflt
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|mss
 operator|=
@@ -10388,9 +10258,6 @@ block|}
 comment|/* 	 * Set the slow-start flight size depending on whether this 	 * is a local network or not. 	 */
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|INET6
 operator|(
 name|isipv6
 operator|&&
@@ -10407,20 +10274,13 @@ operator|(
 operator|!
 name|isipv6
 operator|&&
-endif|#
-directive|endif
 name|in_localaddr
 argument_list|(
 name|inp
 operator|->
 name|inp_faddr
 argument_list|)
-ifdef|#
-directive|ifdef
-name|INET6
 operator|)
-endif|#
-directive|endif
 condition|)
 name|tp
 operator|->
@@ -10501,17 +10361,7 @@ directive|ifdef
 name|INET6
 name|int
 name|isipv6
-decl_stmt|;
-name|int
-name|min_protoh
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|INET6
-name|isipv6
-operator|=
+init|=
 operator|(
 operator|(
 name|tp
@@ -10529,9 +10379,10 @@ condition|?
 literal|1
 else|:
 literal|0
-expr_stmt|;
+decl_stmt|;
+name|size_t
 name|min_protoh
-operator|=
+init|=
 name|isipv6
 condition|?
 sizeof|sizeof
@@ -10551,18 +10402,27 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 else|#
 directive|else
-define|#
-directive|define
+specifier|const
+name|int
+name|isipv6
+init|=
+literal|0
+decl_stmt|;
+specifier|const
+name|size_t
 name|min_protoh
-value|(sizeof (struct tcpiphdr))
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -10580,9 +10440,6 @@ name|inp_inc
 argument_list|)
 expr_stmt|;
 else|else
-endif|#
-directive|endif
-comment|/* INET6 */
 name|rt
 operator|=
 name|tcp_rtlookup
@@ -10602,19 +10459,16 @@ operator|==
 name|NULL
 condition|)
 return|return
-ifdef|#
-directive|ifdef
-name|INET6
+operator|(
 name|isipv6
 condition|?
 name|tcp_v6mssdflt
 else|:
-endif|#
-directive|endif
-comment|/* INET6 */
 name|tcp_mssdflt
+operator|)
 return|;
 return|return
+operator|(
 name|rt
 operator|->
 name|rt_ifp
@@ -10622,18 +10476,19 @@ operator|->
 name|if_mtu
 operator|-
 name|min_protoh
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Checks for partial ack.  If partial ack arrives, force the retransmission  * of the next unacknowledged segment, do not clear tp->t_dupacks, and return  * 1.  By setting snd_nxt to ti_ack, this forces retransmission timer to  * be started again.  If the ack advances at least to tp->snd_recover, return 0.  */
+comment|/*  * On a partial ack arrives, force the retransmission of the  * next unacknowledged segment.  Do not clear tp->t_dupacks.  * By setting snd_nxt to ti_ack, this forces retransmission timer to  * be started again.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
-name|tcp_newreno
+name|void
+name|tcp_newreno_partial_ack
 parameter_list|(
 name|tp
 parameter_list|,
@@ -10649,20 +10504,6 @@ name|tcphdr
 modifier|*
 name|th
 decl_stmt|;
-block|{
-if|if
-condition|(
-name|SEQ_LT
-argument_list|(
-name|th
-operator|->
-name|th_ack
-argument_list|,
-name|tp
-operator|->
-name|snd_recover
-argument_list|)
-condition|)
 block|{
 name|tcp_seq
 name|onxt
@@ -10699,7 +10540,7 @@ name|th
 operator|->
 name|th_ack
 expr_stmt|;
-comment|/* 		 * Set snd_cwnd to one segment beyond acknowledged offset 		 * (tp->snd_una has not yet been updated when this function  		 *  is called) 		 */
+comment|/* 	 * Set snd_cwnd to one segment beyond acknowledged offset. 	 * (tp->snd_una has not yet been updated when this function is called.) 	 */
 name|tp
 operator|->
 name|snd_cwnd
@@ -10749,7 +10590,7 @@ name|snd_nxt
 operator|=
 name|onxt
 expr_stmt|;
-comment|/* 		 * Partial window deflation.  Relies on fact that tp->snd_una 		 * not updated yet. 		 */
+comment|/* 	 * Partial window deflation.  Relies on fact that tp->snd_una 	 * not updated yet. 	 */
 name|tp
 operator|->
 name|snd_cwnd
@@ -10768,17 +10609,6 @@ operator|->
 name|t_maxseg
 operator|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
