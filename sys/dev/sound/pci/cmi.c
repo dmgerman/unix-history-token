@@ -4116,7 +4116,7 @@ name|sc
 operator|->
 name|reg
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -4126,12 +4126,6 @@ operator|&
 name|sc
 operator|->
 name|regid
-argument_list|,
-literal|0
-argument_list|,
-name|BUS_SPACE_UNRESTRICTED
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)

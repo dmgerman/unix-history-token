@@ -9636,7 +9636,7 @@ name|PCIM_CMD_PORTEN
 condition|)
 name|reg
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -9644,12 +9644,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 operator|&
 name|regid
-argument_list|,
-literal|0
-argument_list|,
-name|BUS_SPACE_UNRESTRICTED
-argument_list|,
-literal|256
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -9711,7 +9705,7 @@ goto|;
 block|}
 name|irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -9719,12 +9713,6 @@ name|SYS_RES_IRQ
 argument_list|,
 operator|&
 name|irqid
-argument_list|,
-literal|0
-argument_list|,
-name|BUS_SPACE_UNRESTRICTED
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 operator||
