@@ -5087,6 +5087,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|u_int32_t
+name|scopeid
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -5343,6 +5346,12 @@ name|index
 argument_list|)
 expr_stmt|;
 block|}
+name|scopeid
+operator|=
+name|sin
+operator|->
+name|sin6_scope_id
+expr_stmt|;
 name|error
 operator|=
 name|getnameinfo
@@ -5684,6 +5693,17 @@ condition|)
 name|printf
 argument_list|(
 literal|"deprecated "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|scopeid
+condition|)
+name|printf
+argument_list|(
+literal|" scopeid 0x%x"
+argument_list|,
+name|scopeid
 argument_list|)
 expr_stmt|;
 if|if
