@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar_subs.c	1.3 (Berkeley) %G%"
+literal|"@(#)ar_subs.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,6 +122,9 @@ operator|(
 specifier|register
 name|ARCHD
 operator|*
+operator|,
+name|int
+name|is_app
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1237,6 +1240,9 @@ specifier|register
 name|ARCHD
 operator|*
 name|arcn
+argument_list|,
+name|int
+name|is_app
 argument_list|)
 else|#
 directive|else
@@ -1245,11 +1251,19 @@ name|void
 name|wr_archive
 argument_list|(
 name|arcn
+argument_list|,
+name|is_app
 argument_list|)
 decl|register
 name|ARCHD
 modifier|*
 name|arcn
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|is_app
 decl_stmt|;
 end_decl_stmt
 
@@ -1267,6 +1281,10 @@ decl_stmt|;
 specifier|register
 name|int
 name|hlk
+decl_stmt|;
+specifier|register
+name|int
+name|wr_one
 decl_stmt|;
 name|off_t
 name|cnt
@@ -1349,6 +1367,11 @@ literal|0
 operator|)
 condition|)
 return|return;
+comment|/* 	 * if this not append, and there are no files, we do no write a trailer 	 */
+name|wr_one
+operator|=
+name|is_app
+expr_stmt|;
 comment|/* 	 * while there are files to archive, process them one at at time 	 */
 while|while
 condition|(
@@ -1617,6 +1640,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|wr_one
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -1756,6 +1783,11 @@ condition|)
 break|break;
 block|}
 comment|/* 	 * tell format to write trailer; pad to block boundry; reset directory 	 * mode/access times, and check if all patterns supplied by the user 	 * were matched. block off signals to avoid chance for multiple entry 	 * into the cleanup code 	 */
+if|if
+condition|(
+name|wr_one
+condition|)
+block|{
 call|(
 modifier|*
 name|frmt
@@ -1767,6 +1799,7 @@ expr_stmt|;
 name|wr_fin
 argument_list|()
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2148,6 +2181,8 @@ comment|/* 	 * go to the writing phase to add the new members 	 */
 name|wr_archive
 argument_list|(
 name|arcn
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2219,6 +2254,8 @@ name|wr_archive
 argument_list|(
 operator|&
 name|archd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

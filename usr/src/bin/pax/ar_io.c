@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar_io.c	1.3 (Berkeley) %G%"
+literal|"@(#)ar_io.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +212,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|artyp
+init|=
+name|ISREG
 decl_stmt|;
 end_decl_stmt
 
@@ -327,6 +329,19 @@ comment|/* trailer was rewritten in append */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|can_unlnk
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* do we unlink null archives?  */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|arcname
@@ -412,6 +427,8 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|can_unlnk
+operator|=
 name|phyblk
 operator|=
 name|did_io
@@ -421,6 +438,10 @@ operator|=
 name|invld_rec
 operator|=
 literal|0
+expr_stmt|;
+name|artyp
+operator|=
+name|ISREG
 expr_stmt|;
 name|flcnt
 operator|=
@@ -532,6 +553,11 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+else|else
+name|can_unlnk
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|APPND
@@ -637,6 +663,23 @@ argument_list|,
 name|arcname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|arfd
+argument_list|)
+expr_stmt|;
+name|arfd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|can_unlnk
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -662,6 +705,23 @@ literal|"Cannot write an archive on top of a directory %s"
 argument_list|,
 name|arcname
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|arfd
+argument_list|)
+expr_stmt|;
+name|arfd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|can_unlnk
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -743,6 +803,17 @@ else|else
 name|artyp
 operator|=
 name|ISREG
+expr_stmt|;
+comment|/* 	 * make sure we beyond any doubt that we only can unlink regular files 	 * we created 	 */
+if|if
+condition|(
+name|artyp
+operator|!=
+name|ISREG
+condition|)
+name|can_unlnk
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * if we are writing, we are done 	 */
 if|if
@@ -1096,6 +1167,54 @@ name|fflush
 argument_list|(
 name|outf
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * if nothing was written to the archive (and we created it), we remove 	 * it 	 */
+if|if
+condition|(
+name|can_unlnk
+operator|&&
+operator|(
+name|fstat
+argument_list|(
+name|arfd
+argument_list|,
+operator|&
+name|arsb
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|S_ISREG
+argument_list|(
+name|arsb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|arsb
+operator|.
+name|st_size
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|arcname
+argument_list|)
+expr_stmt|;
+name|can_unlnk
+operator|=
+literal|0
 expr_stmt|;
 block|}
 operator|(
