@@ -410,10 +410,7 @@ name|isvnunlocked
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NULLFSDEBUG
 argument_list|(
 literal|"nullfs_mount(mp = %p)\n"
 argument_list|,
@@ -424,8 +421,6 @@ operator|)
 name|mp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Update is a no-op 	 */
 if|if
 condition|(
@@ -619,16 +614,11 @@ operator|->
 name|null_lowervp
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NULLFSDEBUG
 argument_list|(
 literal|"nullfs_mount: multi null mount?\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|EDEADLK
@@ -852,10 +842,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NULLFSDEBUG
 argument_list|(
 literal|"nullfs_mount: lower %s, alias at %s\n"
 argument_list|,
@@ -872,8 +859,6 @@ operator|.
 name|f_mntonname
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -961,6 +946,10 @@ argument_list|)
 operator|->
 name|nullm_rootvp
 decl_stmt|;
+name|void
+modifier|*
+name|mntdata
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -969,12 +958,9 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NULLFSDEBUG
 argument_list|(
-literal|"nullfs_unmount(mp = %p)\n"
+literal|"nullfs_unmount: mp = %p\n"
 argument_list|,
 operator|(
 name|void
@@ -983,8 +969,6 @@ operator|)
 name|mp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|mntflags
@@ -1037,7 +1021,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|NULLFS_DEBUG
 name|vprint
 argument_list|(
 literal|"alias root of lower"
@@ -1060,22 +1044,26 @@ name|nullm_rootvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally, throw away the null_mount structure 	 */
-name|free
-argument_list|(
+name|mntdata
+operator|=
 name|mp
 operator|->
 name|mnt_data
-argument_list|,
-name|M_NULLFSMNT
-argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|mp
 operator|->
 name|mnt_data
 operator|=
 literal|0
 expr_stmt|;
+name|free
+argument_list|(
+name|mntdata
+argument_list|,
+name|M_NULLFSMNT
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 return|return
 literal|0
 return|;
@@ -1116,10 +1104,7 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NULLFSDEBUG
 argument_list|(
 literal|"nullfs_root(mp = %p, vp = %p->%p)\n"
 argument_list|,
@@ -1155,8 +1140,6 @@ name|nullm_rootvp
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Return locked reference to root. 	 */
 name|vp
 operator|=
@@ -1172,6 +1155,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NULLFS_DEBUG
 if|if
 condition|(
 name|VOP_ISLOCKED
@@ -1183,16 +1169,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * XXX 		 * Should we check type of node? 		 */
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|printf
 argument_list|(
 literal|"nullfs_root: multi null mount?\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vrele
 argument_list|(
 name|vp
@@ -1204,7 +1185,8 @@ name|EDEADLK
 operator|)
 return|;
 block|}
-else|else
+endif|#
+directive|endif
 name|vn_lock
 argument_list|(
 name|vp
@@ -1318,10 +1300,7 @@ name|struct
 name|statfs
 name|mstat
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NULLFSDEBUG
 argument_list|(
 literal|"nullfs_statfs(mp = %p, vp = %p->%p)\n"
 argument_list|,
@@ -1357,8 +1336,6 @@ name|nullm_rootvp
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 operator|&
@@ -1849,7 +1826,7 @@ name|nullfs_vptofh
 block|,
 name|nullfs_init
 block|,
-name|vfs_stduninit
+name|nullfs_uninit
 block|,
 name|nullfs_extattrctl
 block|, }
