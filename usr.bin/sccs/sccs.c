@@ -1251,9 +1251,6 @@ name|i
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|V6
-ifndef|#
-directive|ifndef
 name|SCCSDIR
 name|struct
 name|passwd
@@ -1429,9 +1426,6 @@ block|}
 endif|#
 directive|endif
 comment|/* SCCSDIR */
-endif|#
-directive|endif
-comment|/* V6 */
 comment|/* 	**  Detect and decode flags intended for this program. 	*/
 if|if
 condition|(
@@ -2541,9 +2535,6 @@ operator|=
 literal|"-"
 expr_stmt|;
 comment|/* execute the diff program of choice */
-ifndef|#
-directive|ifndef
-name|V6
 name|execvp
 argument_list|(
 literal|"diff"
@@ -2551,8 +2542,6 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|execv
 argument_list|(
 name|cmd
