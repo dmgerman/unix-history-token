@@ -1942,24 +1942,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|pccard
-argument_list|,
-name|tcic
-argument_list|,
-name|pccard_driver
-argument_list|,
-name|pccard_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|pccard
