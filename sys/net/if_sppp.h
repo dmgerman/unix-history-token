@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.0, Fri Oct  6 20:39:21 MSK 1995  *  * $Id: if_sppp.h,v 1.12 1998/12/20 19:06:22 phk Exp $  */
+comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.0, Fri Oct  6 20:39:21 MSK 1995  *  * $Id: if_sppp.h,v 1.13 1998/12/27 21:30:44 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -247,9 +247,13 @@ name|pp_next
 decl_stmt|;
 comment|/* next interface in keepalive list */
 name|u_int
+name|pp_mode
+decl_stmt|;
+comment|/* major protocol modes (cisco/ppp/...) */
+name|u_int
 name|pp_flags
 decl_stmt|;
-comment|/* use Cisco protocol instead of PPP */
+comment|/* sub modes */
 name|u_short
 name|pp_alivecnt
 decl_stmt|;
@@ -431,17 +435,6 @@ end_define
 
 begin_comment
 comment|/* use keepalive protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PP_CISCO
-value|0x02
-end_define
-
-begin_comment
-comment|/* use Cisco protocol instead of PPP */
 end_comment
 
 begin_comment
