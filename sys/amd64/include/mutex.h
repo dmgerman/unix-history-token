@@ -48,31 +48,10 @@ begin_comment
 comment|/* _KERNEL */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !LOCORE */
-end_comment
-
-begin_comment
-comment|/*  * Simple assembly macros to get and release mutexes.  *  * Note: All of these macros accept a "flags" argument and are analoguous  *	 to the mtx_lock_flags and mtx_unlock_flags general macros. If one  *	 desires to not pass a flag, the value 0 may be passed as second  *	 argument.  *  * XXX: We only have MTX_LOCK_SPIN and MTX_UNLOCK_SPIN for now, since that's  *	all we use right now. We should add MTX_LOCK and MTX_UNLOCK (for sleep  *	locks) in the near future, however.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTX_LOCK_SPIN
-parameter_list|(
-name|lck
-parameter_list|,
-name|flags
-parameter_list|)
-define|\
-value|pushq $0 ;							\ 	pushq $0 ;							\ 	pushq $flags ;							\ 	pushq $lck ;							\ 	call _mtx_lock_spin_flags ;					\ 	addq $0x20, %rsp ;						\  #define MTX_UNLOCK_SPIN(lck)						\ 	pushq $0 ;							\ 	pushq $0 ;							\ 	pushq $0 ;							\ 	pushq $lck ;							\ 	call _mtx_unlock_spin_flags ;					\ 	addq $0x20, %rsp ;						\  #endif
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* !LOCORE */
