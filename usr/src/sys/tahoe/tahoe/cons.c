@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	7.5	90/01/17	*/
+comment|/*	cons.c	7.6	90/11/01	*/
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"file.h"
 end_include
 
 begin_include
@@ -2397,7 +2403,8 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|failed
@@ -2412,6 +2419,14 @@ argument_list|,
 literal|"Console wedged, reset failed.\n"
 argument_list|)
 expr_stmt|;
+name|ttyflush
+argument_list|(
+name|tp
+argument_list|,
+name|FWRITE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
