@@ -56,13 +56,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PACKAGE_VERSION
-value|"1.00"
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_BZLIB_H
 value|1
 end_define
