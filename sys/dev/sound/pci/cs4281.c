@@ -3453,38 +3453,14 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pci_get_powerstate
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|PCI_POWERSTATE_D0
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+block|if (pci_get_powerstate(dev) != PCI_POWERSTATE_D0) {
 comment|/* Reset the power state. */
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"chip is in D%d power mode "
-literal|"-- setting to D0\n"
-argument_list|,
-name|pci_get_powerstate
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|pci_set_powerstate
-argument_list|(
-name|dev
-argument_list|,
-name|PCI_POWERSTATE_D0
-argument_list|)
-expr_stmt|;
-block|}
+block|device_printf(dev, "chip is in D%d power mode " 		      "-- setting to D0\n", pci_get_powerstate(dev));  	pci_set_powerstate(dev, PCI_POWERSTATE_D0);     }
+endif|#
+directive|endif
 name|sc
 operator|->
 name|regid
