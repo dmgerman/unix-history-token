@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.25 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -110,7 +110,7 @@ define|#
 directive|define
 name|baudrate
 parameter_list|()
-value|(cfgetospeed(&origtermio))
+value|(cfgetospeed(&__orig_termios))
 end_define
 
 begin_define
@@ -126,7 +126,7 @@ define|#
 directive|define
 name|erasechar
 parameter_list|()
-value|(origtermio.c_cc[VERASE])
+value|(__orig_termios.c_cc[VERASE])
 end_define
 
 begin_define
@@ -134,7 +134,7 @@ define|#
 directive|define
 name|killchar
 parameter_list|()
-value|(origtermio.c_cc[VKILL])
+value|(__orig_termios.c_cc[VKILL])
 end_define
 
 begin_define
@@ -149,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|ospeed
-value|(cfgetospeed(&origtermio))
+value|(cfgetospeed(&__orig_termios))
 end_define
 
 begin_endif
@@ -752,7 +752,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|termios
-name|origtermio
+name|__orig_termios
 decl_stmt|;
 end_decl_stmt
 
@@ -1892,18 +1892,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|tstp
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|vwprintw
 name|__P
@@ -2252,18 +2240,6 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|__cputchar
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|__TRACE
 name|__P
 argument_list|(
@@ -2273,6 +2249,18 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__cputchar
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2302,6 +2290,30 @@ operator|*
 operator|,
 name|WINDOW
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__startwin
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|__stop_signal_handler
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
