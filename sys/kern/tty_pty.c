@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty_pty.c	8.2 (Berkeley) 9/23/93  * $Id: tty_pty.c,v 1.14 1995/07/22 01:30:32 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty_pty.c	8.2 (Berkeley) 9/23/93  * $Id: tty_pty.c,v 1.15 1995/07/22 16:45:08 bde Exp $  */
 end_comment
 
 begin_comment
@@ -532,11 +532,25 @@ operator|->
 name|t_oproc
 condition|)
 comment|/* Ctrlr still around. */
+call|(
+name|void
+call|)
+argument_list|(
+operator|*
+name|linesw
+index|[
 name|tp
 operator|->
-name|t_state
-operator||=
-name|TS_CARR_ON
+name|t_line
+index|]
+operator|.
+name|l_modem
+argument_list|)
+argument_list|(
+name|tp
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1300,37 +1314,9 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_function
 name|int
 name|ptcopen
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|flag
-parameter_list|,
-name|int
-name|devtype
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-else|#
-directive|else
-function|int ptcopen
 parameter_list|(
 name|dev
 parameter_list|,
@@ -1353,8 +1339,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|struct
@@ -1531,12 +1515,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX MDMBUF makes no sense for ptys but would inhibit the above 	 * l_modem().  CLOCAL makes sense but isn't supported.   Special 	 * l_modem()s that ignore carrier drop make no sense for ptys but 	 * may be in use because other parts of the line discipline make 	 * sense for ptys.  Recover by doing everything that a normal 	 * ttymodem() would have done except for sending a SIGHUP. 	 */
 name|tp
 operator|->
 name|t_state
 operator|&=
 operator|~
+operator|(
 name|TS_CARR_ON
+operator||
+name|TS_CONNECTED
+operator|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_ZOMBIE
+expr_stmt|;
+name|ttyflush
+argument_list|(
+name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -1803,7 +1807,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
+name|TS_CONNECTED
 operator|)
 operator|==
 literal|0
@@ -2106,7 +2110,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
+name|TS_CONNECTED
 operator|)
 operator|==
 literal|0
@@ -2737,7 +2741,7 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-name|TSA_CARR_ON
+name|TSA_HUP_OR_INPUT
 argument_list|(
 name|tp
 argument_list|)
@@ -2793,7 +2797,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_CARR_ON
+name|TS_CONNECTED
 operator|)
 operator|==
 literal|0

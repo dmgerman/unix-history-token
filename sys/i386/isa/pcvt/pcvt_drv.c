@@ -1426,6 +1426,29 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_modem
+operator|)
+operator|(
+name|tp
+operator|,
+literal|1
+operator|)
+expr_stmt|;
+comment|/* fake connection */
+name|winsz
+operator|=
+literal|1
+expr_stmt|;
+comment|/* set winsize later */
 block|}
 elseif|else
 if|if
@@ -1449,37 +1472,6 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-name|tp
-operator|->
-name|t_state
-operator||=
-name|TS_CARR_ON
-expr_stmt|;
-name|tp
-operator|->
-name|t_cflag
-operator||=
-name|CLOCAL
-expr_stmt|;
-comment|/* cannot be a modem (:-) */
-if|if
-condition|(
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ISOPEN
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* is this a "cold" open ? */
-name|winsz
-operator|=
-literal|1
-expr_stmt|;
-comment|/* yes, set winsize later  */
 if|#
 directive|if
 name|PCVT_NETBSD
