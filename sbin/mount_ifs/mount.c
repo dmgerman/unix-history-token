@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount.c,v 1.22 1998/02/13 04:54:27 bde Exp $"
+literal|"$Id: mount.c,v 1.23 1998/03/08 09:56:02 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2574,12 +2574,38 @@ name|f_owner
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|sfp
+operator|->
+name|f_syncwrites
+operator|!=
+literal|0
+operator|||
+name|sfp
+operator|->
+name|f_asyncwrites
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|sfp
+operator|->
+name|f_flags
+operator|&
+name|MNT_RDONLY
+operator|)
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%swrites: sync %d async %d)\n"
+literal|"%swrites: sync %d async %d)"
 argument_list|,
 operator|!
 name|f
@@ -2596,6 +2622,20 @@ argument_list|,
 name|sfp
 operator|->
 name|f_asyncwrites
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|f
+condition|?
+literal|")"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
