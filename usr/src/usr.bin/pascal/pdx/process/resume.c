@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)resume.c 1.8 %G%"
+literal|"@(#)resume.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * resume execution, first setting appropriate registers  */
+comment|/*  * Resume execution, first setting appropriate registers.  */
 end_comment
 
 begin_include
@@ -59,14 +59,6 @@ directive|include
 file|"runtime/frame.rep"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|isvaxpx
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -78,11 +70,6 @@ include|#
 directive|include
 file|"pxinfo.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -166,11 +153,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|(
-name|isvaxpx
-operator|)
 ifdef|#
 directive|ifdef
 name|sun
@@ -276,17 +258,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-else|#
-directive|else
-comment|/* compiled code */
-name|pc
-operator|=
-name|process
-operator|->
-name|pc
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|option
@@ -340,11 +311,6 @@ operator|==
 name|SIGCONT
 condition|)
 do|;
-if|#
-directive|if
-operator|(
-name|isvaxpx
-operator|)
 if|if
 condition|(
 name|option
@@ -363,36 +329,9 @@ name|choose
 argument_list|()
 expr_stmt|;
 block|}
-comment|/*      * If px implements a breakpoint by executing a halt instruction      * (which is true on the VAX), the real pc must be incremented to      * skip over it.  On other machines (such as SUNs), px sends itself      * a signal and no incrementing is needed.      */
-ifdef|#
-directive|ifdef
-name|vax
-if|if
-condition|(
-name|isbperr
-argument_list|()
-condition|)
-block|{
-name|p
-operator|->
-name|pc
-operator|++
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|#
-directive|endif
+comment|/*      * If px implements a breakpoint by executing a halt instruction      * the real pc must be incremented to skip over it.      *      * Currently, px sends itself a signal so no incrementing is needed.      * 	if (isbperr()) { 	    p->pc++; 	}      */
 block|}
 end_block
-
-begin_if
-if|#
-directive|if
-operator|(
-name|isvaxpx
-operator|)
-end_if
 
 begin_ifdef
 ifdef|#
@@ -862,11 +801,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
