@@ -13,7 +13,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	vocab.c	1.1	82/05/11	"
+literal|"	vocab.c	4.1	82/05/11	"
 decl_stmt|;
 end_decl_stmt
 

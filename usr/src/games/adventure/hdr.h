@@ -13,7 +13,7 @@ name|char
 name|hdr_sccsid
 index|[]
 init|=
-literal|"	hdr.h	1.1	82/05/11	"
+literal|"	hdr.h	4.1	82/05/11	"
 decl_stmt|;
 end_decl_stmt
 

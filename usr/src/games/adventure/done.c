@@ -13,7 +13,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	done.c	1.1	82/05/11	"
+literal|"	done.c	4.1	82/05/11	"
 decl_stmt|;
 end_decl_stmt
 
