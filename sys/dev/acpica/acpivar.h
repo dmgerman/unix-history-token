@@ -925,6 +925,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|uint32_t
+name|acpi_TimerDelta
+parameter_list|(
+name|uint32_t
+name|end
+parameter_list|,
+name|uint32_t
+name|start
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|ACPI_BUFFER
 modifier|*
 name|acpi_AllocBuffer
