@@ -2241,12 +2241,25 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
-comment|/* 8 * sizeof(type->ks_size) */
+sizeof|sizeof
+argument_list|(
+name|kmemzones
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|kmemzones
+index|[
+literal|0
+index|]
+argument_list|)
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|type
@@ -2325,6 +2338,7 @@ name|first
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 name|len
 operator|=
