@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	6.4	84/04/30	*/
+comment|/*	uipc_socket.c	6.5	84/08/21	*/
 end_comment
 
 begin_include
@@ -1741,6 +1741,7 @@ name|space
 operator|<=
 literal|0
 operator|||
+operator|(
 name|sosendallatonce
 argument_list|(
 name|so
@@ -1751,6 +1752,37 @@ operator|<
 name|uio
 operator|->
 name|uio_resid
+operator|)
+operator|||
+operator|(
+name|uio
+operator|->
+name|uio_resid
+operator|>=
+name|CLBYTES
+operator|&&
+name|space
+operator|<
+name|CLBYTES
+operator|&&
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_cc
+operator|>=
+name|CLBYTES
+operator|&&
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_NBIO
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -2017,6 +2049,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|top
+condition|)
+block|{
+if|if
+condition|(
 name|dontroute
 condition|)
 name|so
@@ -2079,6 +2116,7 @@ operator|&=
 operator|~
 name|SO_DONTROUTE
 expr_stmt|;
+block|}
 name|top
 operator|=
 literal|0
