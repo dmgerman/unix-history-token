@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bootinfo.h,v 1.2 1998/07/05 12:13:18 dfr Exp $ */
+comment|/* $Id: bootinfo.h,v 1.3 1998/10/14 09:53:24 peter Exp $ */
 end_comment
 
 begin_comment
@@ -106,7 +106,7 @@ name|kernend
 decl_stmt|;
 comment|/* 240: end of kernel		*/
 name|u_long
-name|modbase
+name|modptr
 decl_stmt|;
 comment|/* 248: FreeBSD module base	*/
 comment|/* 256: total size		*/
