@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs_msdos.c,v 1.6 1998/12/07 14:09:17 rnordier Exp $"
+literal|"$Id: newfs_msdos.c,v 1.7 1999/01/03 02:18:57 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2266,6 +2266,7 @@ operator|=
 name|opt_F
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|opt_f
@@ -2290,6 +2291,7 @@ name|fat
 operator|=
 literal|32
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2741,6 +2743,7 @@ condition|(
 operator|!
 name|fat
 condition|)
+block|{
 if|if
 condition|(
 name|bpb
@@ -2951,6 +2954,7 @@ name|fat
 operator|=
 literal|32
 expr_stmt|;
+block|}
 name|x
 operator|=
 name|bss
@@ -5687,6 +5691,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -5731,6 +5736,7 @@ argument_list|,
 name|dtype
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|slice
