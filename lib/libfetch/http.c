@@ -4797,29 +4797,6 @@ operator|>
 name|hdr_end
 condition|)
 do|;
-comment|/* we have a hit or an error */
-if|if
-condition|(
-name|conn
-operator|->
-name|err
-operator|==
-name|HTTP_OK
-operator|||
-name|conn
-operator|->
-name|err
-operator|==
-name|HTTP_PARTIAL
-operator|||
-name|HTTP_ERROR
-argument_list|(
-name|conn
-operator|->
-name|err
-argument_list|)
-condition|)
-break|break;
 comment|/* we need to provide authentication */
 if|if
 condition|(
@@ -4851,6 +4828,29 @@ name|NULL
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* we have a hit or an error */
+if|if
+condition|(
+name|conn
+operator|->
+name|err
+operator|==
+name|HTTP_OK
+operator|||
+name|conn
+operator|->
+name|err
+operator|==
+name|HTTP_PARTIAL
+operator|||
+name|HTTP_ERROR
+argument_list|(
+name|conn
+operator|->
+name|err
+argument_list|)
+condition|)
+break|break;
 comment|/* all other cases: we got a redirect */
 name|e
 operator|=
