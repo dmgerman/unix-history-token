@@ -882,10 +882,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  *  *  */
-end_comment
-
 begin_function
 name|void
 name|vm_page_io_start
