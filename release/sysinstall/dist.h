@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  $Id: dist.h,v 1.29.2.5 1999/05/14 07:16:30 jkh Exp $  */
+comment|/* $FreeBSD$  */
 end_comment
 
 begin_ifndef

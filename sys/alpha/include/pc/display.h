@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IBM PC display definitions  *  *	$Id$  *	from: i386/include/pc display.h,v 1.4  */
+comment|/*  * IBM PC display definitions  *  * $FreeBSD$  *	from: i386/include/pc display.h,v 1.4  */
 end_comment
 
 begin_comment

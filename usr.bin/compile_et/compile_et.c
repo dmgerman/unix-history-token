@@ -98,7 +98,7 @@ name|char
 name|rcsid_compile_et_c
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.5 1998/12/15 12:20:27 des Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

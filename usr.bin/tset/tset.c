@@ -54,7 +54,7 @@ name|char
 name|rcdif
 index|[]
 init|=
-literal|"$Id$"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Send a compressed CTM delta to a recipient mailing list by encoding it  * in safe ASCII characters, in mailer-friendly chunks, and passing them  * to sendmail.  Optionally, the chunks can be queued to be sent later by  * ctm_dequeue in controlled bursts.  The encoding is almost the same as  * MIME BASE64, and is protected by a simple checksum.  *  * Author: Stephen McKay  *  * NOTICE: This is free software.  I hope you get some use from this program.  * In return you should think about all the nice people who give away software.  * Maybe you should write some free software too.  *  * $Id$  */
+comment|/*  * Send a compressed CTM delta to a recipient mailing list by encoding it  * in safe ASCII characters, in mailer-friendly chunks, and passing them  * to sendmail.  Optionally, the chunks can be queued to be sent later by  * ctm_dequeue in controlled bursts.  The encoding is almost the same as  * MIME BASE64, and is protected by a simple checksum.  *  * Author: Stephen McKay  *  * NOTICE: This is free software.  I hope you get some use from this program.  * In return you should think about all the nice people who give away software.  * Maybe you should write some free software too.  *  * $FreeBSD$  */
 end_comment
 
 begin_include

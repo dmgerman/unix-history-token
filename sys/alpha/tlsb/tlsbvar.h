@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tlsbvar.h,v 1.1 1998/06/10 10:55:58 dfr Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

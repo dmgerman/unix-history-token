@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xargs.c,v 1.8 1999/05/23 15:58:22 jmz Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

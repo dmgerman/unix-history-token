@@ -14,7 +14,7 @@ value|22
 end_define
 
 begin_comment
-comment|/*  * Patchlevel file for Ian Darwin's MAGIC command.  * $Id: patchlevel.h,v 1.7 1997/03/18 19:37:21 mpp Exp $  *  */
+comment|/*  * Patchlevel file for Ian Darwin's MAGIC command.  * $FreeBSD$  *  */
 end_comment
 
 end_unit

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lptcontrol.c,v 1.8 1999/02/14 12:23:49 nsouch Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

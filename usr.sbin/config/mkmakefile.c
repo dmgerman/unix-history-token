@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.33 1998/09/03 21:03:43 nsouch Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

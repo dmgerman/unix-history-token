@@ -8,7 +8,7 @@ comment|/* dpt_sig.c:  Dunp a DPT Signature */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_sig.c,v 1.1 1998/01/26 06:20:45 julian Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_include

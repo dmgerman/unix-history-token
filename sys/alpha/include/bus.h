@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Cop
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

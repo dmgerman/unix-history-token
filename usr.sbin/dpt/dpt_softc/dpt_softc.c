@@ -8,7 +8,7 @@ comment|/* dpt_softc.c:  Dunp a DPT control structure */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_softc.c,v 1.1 1998/01/26 06:20:46 julian Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_include

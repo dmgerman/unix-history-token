@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/usr.sbin/tcpdump/tcpslice/search.c,v 1.2 1995/03/08 12:53:39 olah Exp $ (LBL)"
+literal|"@(#)$FreeBSD$ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

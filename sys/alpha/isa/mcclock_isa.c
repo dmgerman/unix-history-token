@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mcclock_isa.c,v 1.3 1998/07/31 09:20:35 dfr Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

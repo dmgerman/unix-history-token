@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pen.c,v 1.29 1998/07/28 01:18:02 nectar Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

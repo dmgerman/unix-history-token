@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.24.2.1 1999/06/03 12:42:48 yokota Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

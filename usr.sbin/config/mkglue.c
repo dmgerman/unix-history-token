@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkglue.c,v 1.13 1997/09/21 22:12:49 gibbs Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
