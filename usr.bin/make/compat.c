@@ -1986,6 +1986,26 @@ operator|)
 name|gn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|gn
+operator|->
+name|made
+operator|==
+name|ERROR
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n\nStop.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/*      * For each entry in the list of targets to create, call CompatMake on      * it to create the thing. CompatMake will leave the 'made' field of gn      * in one of several states:      *	    UPTODATE	    gn was already up-to-date      *	    MADE  	    gn was recreated successfully      *	    ERROR 	    An error occurred while gn was being created      *	    ABORTED	    gn was not remade because one of its inferiors      *	    	  	    could not be made due to errors.      */
