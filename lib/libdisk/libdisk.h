@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.13 1995/05/06 03:28:30 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.14 1995/05/08 02:08:30 phk Exp $  *  */
 end_comment
 
 begin_define
@@ -624,6 +624,41 @@ end_function_decl
 
 begin_comment
 comment|/* Check if offset is aligned on a track according to the 	 * bios geometry 	 */
+end_comment
+
+begin_function_decl
+name|struct
+name|chunk
+modifier|*
+name|Create_Chunk_DWIM
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|d
+parameter_list|,
+name|struct
+name|chunk
+modifier|*
+name|parent
+parameter_list|,
+name|u_long
+name|size
+parameter_list|,
+name|chunk_e
+name|type
+parameter_list|,
+name|int
+name|subtype
+parameter_list|,
+name|u_long
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* This one creates a partition inside the given parent of the given 	 * size, and returns a pointer to it.  The first unused chunk big 	 * enough is used. 	 */
 end_comment
 
 begin_comment
