@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.70 1995/11/19 22:22:28 dyson Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.71 1995/11/20 02:12:34 davidg Exp $  */
 end_comment
 
 begin_define
@@ -548,21 +548,14 @@ name|int
 name|sd_externalize
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|kern_devconf
 modifier|*
 name|kdc
 parameter_list|,
-name|void
+name|struct
+name|sysctl_req
 modifier|*
-name|userp
-parameter_list|,
-name|size_t
-name|len
+name|req
 parameter_list|)
 block|{
 return|return
@@ -578,10 +571,7 @@ operator|->
 name|kdc_unit
 argument_list|)
 argument_list|,
-name|userp
-argument_list|,
-operator|&
-name|len
+name|req
 argument_list|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.20 1995/05/11 19:26:46 rgrimes Exp $  */
+comment|/*  * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.21 1995/05/30 08:13:22 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -502,21 +502,14 @@ name|int
 name|ch_externalize
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
 name|kern_devconf
 modifier|*
 name|kdc
 parameter_list|,
-name|void
+name|struct
+name|sysctl_req
 modifier|*
-name|userp
-parameter_list|,
-name|size_t
-name|len
+name|req
 parameter_list|)
 block|{
 return|return
@@ -532,10 +525,7 @@ operator|->
 name|kdc_unit
 argument_list|)
 argument_list|,
-name|userp
-argument_list|,
-operator|&
-name|len
+name|req
 argument_list|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, Garrett A. Wollman.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devconf.h,v 1.5 1995/04/12 20:47:13 wollman Exp $  */
+comment|/*  * Copyright (c) 1994, Garrett A. Wollman.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: devconf.h,v 1.6 1995/04/13 20:37:51 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -230,6 +230,12 @@ begin_comment
 comment|/*  * These four routines are called from the generic configuration  * table code to allow devices to provide their information in a  * more useful form.  *  * EXTERNALIZE: convert internal representation to external and copy out  * into user space.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|sysctl_req
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -239,17 +245,12 @@ name|kdc_externalize_t
 function_decl|)
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|struct
 name|kern_devconf
 modifier|*
 parameter_list|,
-name|void
+name|struct
+name|sysctl_req
 modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_typedef
@@ -267,17 +268,12 @@ name|kdc_internalize_t
 function_decl|)
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|struct
 name|kern_devconf
 modifier|*
 parameter_list|,
-name|void
+name|struct
+name|sysctl_req
 modifier|*
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_typedef

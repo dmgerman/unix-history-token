@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus device definitions  *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.h,v 1.3 1995/11/05 04:42:50 gibbs Exp $  */
+comment|/*  * EISA bus device definitions  *  * Copyright (c) 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.h,v 1.4 1995/11/06 05:21:01 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -471,50 +471,41 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
+begin_struct_decl
+struct_decl|struct
+name|sysctl_req
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
 name|int
 name|eisa_externalize
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|eisa_device
-operator|*
-operator|,
-name|void
-operator|*
-operator|,
-name|size_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|struct
+name|sysctl_req
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
 name|int
 name|eisa_generic_externalize
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|,
-expr|struct
+parameter_list|(
+name|struct
 name|kern_devconf
-operator|*
-operator|,
-name|void
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|struct
+name|sysctl_req
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
