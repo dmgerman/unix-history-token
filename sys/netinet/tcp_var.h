@@ -1945,17 +1945,6 @@ comment|/* SACK enabled/disabled */
 end_comment
 
 begin_function_decl
-name|void
-name|tcp_canceltimers
-parameter_list|(
-name|struct
-name|tcpcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|tcpcb
 modifier|*
