@@ -420,7 +420,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"file %s, line %d, syntax error\n"
+literal|"file %s, line %d, syntax error"
 argument_list|,
 name|hidname
 argument_list|,
@@ -496,7 +496,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"file %s, line %d, syntax error\n"
+literal|"file %s, line %d, syntax error"
 argument_list|,
 name|hidname
 argument_list|,
@@ -768,7 +768,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no hid table\n"
+literal|"no hid table"
 argument_list|)
 expr_stmt|;
 for|for
@@ -938,8 +938,8 @@ name|sprintf
 argument_list|(
 name|b
 argument_list|,
-literal|"%s %d"
-argument_list|,
+name|fmtcheck
+argument_list|(
 name|pages
 index|[
 name|k
@@ -951,6 +951,9 @@ name|j
 index|]
 operator|.
 name|name
+argument_list|,
+literal|"%d"
+argument_list|)
 argument_list|,
 name|i
 argument_list|)
@@ -1018,7 +1021,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no hid table\n"
+literal|"no hid table"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1083,13 +1086,6 @@ specifier|const
 name|char
 modifier|*
 name|sep
-init|=
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|':'
-argument_list|)
 decl_stmt|;
 name|int
 name|k
@@ -1100,6 +1096,15 @@ name|unsigned
 name|int
 name|l
 decl_stmt|;
+name|sep
+operator|=
+name|strchr
+argument_list|(
+name|name
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sep
