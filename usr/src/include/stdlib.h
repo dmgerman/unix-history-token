@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,30 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SIZE_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_SIZE_T_
+name|size_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_SIZE_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -492,7 +516,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* these are currently just stubs */
+comment|/* These are currently just stubs. */
 end_comment
 
 begin_decl_stmt
@@ -641,10 +665,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not ANSI */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -662,23 +682,6 @@ argument_list|)
 end_if
 
 begin_decl_stmt
-name|void
-modifier|*
-name|alloca
-name|__P
-argument_list|(
-operator|(
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* built-in for gcc */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -693,14 +696,9 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|opterr
+decl_stmt|,
+name|optind
 decl_stmt|;
 end_decl_stmt
 
@@ -759,6 +757,23 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|alloca
+name|__P
+argument_list|(
+operator|(
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* built-in for gcc */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -888,10 +903,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* neither ANSI nor POSIX */
-end_comment
 
 begin_macro
 name|__END_DECLS
