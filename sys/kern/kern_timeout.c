@@ -210,7 +210,7 @@ end_ifdef
 begin_decl_stmt
 name|struct
 name|mtx
-name|callout_dont_sleep
+name|dont_sleep_in_callout
 decl_stmt|;
 end_decl_stmt
 
@@ -436,9 +436,9 @@ name|DIAGNOSTIC
 name|mtx_init
 argument_list|(
 operator|&
-name|callout_dont_sleep
+name|dont_sleep_in_callout
 argument_list|,
-literal|"callout_dont_sleep"
+literal|"dont_sleep_in_callout"
 argument_list|,
 name|NULL
 argument_list|,
@@ -800,7 +800,7 @@ expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
-name|callout_dont_sleep
+name|dont_sleep_in_callout
 argument_list|)
 expr_stmt|;
 endif|#
@@ -816,7 +816,7 @@ name|DIAGNOSTIC
 name|mtx_unlock
 argument_list|(
 operator|&
-name|callout_dont_sleep
+name|dont_sleep_in_callout
 argument_list|)
 expr_stmt|;
 name|binuptime
