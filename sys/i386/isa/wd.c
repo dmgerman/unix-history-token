@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.79 1995/05/08 16:48:23 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.80 1995/05/09 12:26:00 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -762,14 +762,14 @@ name|short
 name|dk_port
 decl_stmt|;
 comment|/* i/o port base */
-name|short
-name|dk_flags
-decl_stmt|;
-comment|/* drive characteristics found */
 name|u_long
 name|cfg_flags
 decl_stmt|;
 comment|/* configured characteristics */
+name|short
+name|dk_flags
+decl_stmt|;
+comment|/* drive characteristics found */
 define|#
 directive|define
 name|DKFL_SINGLE
@@ -795,6 +795,11 @@ directive|define
 name|DKFL_MULTI
 value|0x00200
 comment|/* use multi-i/o mode */
+define|#
+directive|define
+name|DKFL_BADSCAN
+value|0x00400
+comment|/* report all errors */
 name|struct
 name|wdparams
 name|dk_params
@@ -3853,7 +3858,29 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* error or error correction? */
+if|if
+condition|(
+name|du
+operator|->
+name|dk_flags
+operator|&
+name|DKFL_BADSCAN
+condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|du
@@ -4669,6 +4696,13 @@ operator|.
 name|b_active
 operator|=
 literal|0
+expr_stmt|;
+name|du
+operator|->
+name|dk_flags
+operator|&=
+operator|~
+name|DKFL_BADSCAN
 expr_stmt|;
 while|while
 condition|(
@@ -7254,6 +7288,37 @@ condition|(
 name|cmd
 condition|)
 block|{
+case|case
+name|DIOCSBADSCAN
+case|:
+if|if
+condition|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|addr
+condition|)
+name|du
+operator|->
+name|dk_flags
+operator||=
+name|DKFL_BADSCAN
+expr_stmt|;
+else|else
+name|du
+operator|->
+name|dk_flags
+operator|&=
+operator|~
+name|DKFL_BADSCAN
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 ifdef|#
 directive|ifdef
 name|notyet
