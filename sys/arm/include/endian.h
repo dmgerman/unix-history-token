@@ -145,7 +145,7 @@ name|__htonl
 parameter_list|(
 name|x
 parameter_list|)
-value|(__bswap16(x))
+value|(__bswap32(x))
 end_define
 
 begin_define
@@ -155,7 +155,7 @@ name|__htons
 parameter_list|(
 name|x
 parameter_list|)
-value|(__bswap32(x))
+value|(__bswap16(x))
 end_define
 
 begin_function
