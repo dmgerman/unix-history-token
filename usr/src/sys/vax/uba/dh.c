@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.34	81/05/18	*/
+comment|/*	dh.c	4.35	81/06/02	*/
 end_comment
 
 begin_include
@@ -1491,12 +1491,19 @@ operator|<<
 name|dh
 operator|)
 expr_stmt|;
+if|#
+directive|if
+name|NBK
+operator|>
+literal|0
 name|addr
 operator|->
 name|dhsilo
 operator|=
 literal|16
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|splx
 argument_list|(
