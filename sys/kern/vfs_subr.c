@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.31 (Berkeley) 5/26/95  * $Id: vfs_subr.c,v 1.123 1998/01/12 03:15:01 dyson Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.31 (Berkeley) 5/26/95  * $Id: vfs_subr.c,v 1.124 1998/01/17 09:16:28 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -143,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vnode_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
 end_include
 
 begin_include
@@ -581,6 +587,13 @@ comment|/* publicly exported FS */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|vm_zone_t
+name|vnode_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|desiredvnodes
 decl_stmt|;
@@ -728,6 +741,25 @@ name|CIRCLEQ_INIT
 argument_list|(
 operator|&
 name|mountlist
+argument_list|)
+expr_stmt|;
+name|vnode_zone
+operator|=
+name|zinit
+argument_list|(
+literal|"VNODE"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vnode
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -2314,18 +2346,9 @@ expr|struct
 name|vnode
 operator|*
 operator|)
-name|malloc
+name|zalloc
 argument_list|(
-operator|(
-name|u_long
-operator|)
-sizeof|sizeof
-expr|*
-name|vp
-argument_list|,
-name|M_VNODE
-argument_list|,
-name|M_WAITOK
+name|vnode_zone
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -4393,6 +4416,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|simple_lock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -6046,6 +6077,14 @@ argument_list|,
 name|DOCLOSE
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|simple_lock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Delete from old mount point vnode list, if on one. 	 */

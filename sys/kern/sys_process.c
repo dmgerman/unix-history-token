@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, Sean Eric Fagan  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Sean Eric Fagan.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sys_process.c,v 1.32 1997/11/12 12:28:12 tegge Exp $  */
+comment|/*  * Copyright (c) 1994, Sean Eric Fagan  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Sean Eric Fagan.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sys_process.c,v 1.33 1997/12/06 04:11:10 sef Exp $  */
 end_comment
 
 begin_include
@@ -120,12 +120,12 @@ comment|/* page number */
 end_comment
 
 begin_comment
-unit|vm_map_entry_t	out_entry; 	vm_prot_t	out_prot; 	boolean_t	wired, single_use; 	vm_pindex_t	pindex;
+unit|vm_map_entry_t	out_entry; 	vm_prot_t	out_prot; 	boolean_t	wired; 	vm_pindex_t	pindex;
 comment|/* Map page into kernel space */
 end_comment
 
 begin_comment
-unit|map =&procp->p_vmspace->vm_map;  	page_offset = addr - trunc_page(addr); 	pageno = trunc_page(addr);  	tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_READ,&out_entry,&object,&pindex,&out_prot,&wired,&single_use);  	if (rv != KERN_SUCCESS) 		return EINVAL;  	vm_map_lookup_done (tmap, out_entry);
+unit|map =&procp->p_vmspace->vm_map;  	page_offset = addr - trunc_page(addr); 	pageno = trunc_page(addr);  	tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_READ,&out_entry,&object,&pindex,&out_prot,&wired);  	if (rv != KERN_SUCCESS) 		return EINVAL;  	vm_map_lookup_done (tmap, out_entry);
 comment|/* Find space in kernel_map for the page we're interested in */
 end_comment
 
@@ -140,7 +140,7 @@ comment|/* page number */
 end_comment
 
 begin_comment
-unit|vm_map_entry_t	out_entry; 	vm_prot_t	out_prot; 	boolean_t	wired, single_use; 	vm_pindex_t	pindex; 	boolean_t	fix_prot = 0;
+unit|vm_map_entry_t	out_entry; 	vm_prot_t	out_prot; 	boolean_t	wired; 	vm_pindex_t	pindex; 	boolean_t	fix_prot = 0;
 comment|/* Map page into kernel space */
 end_comment
 
@@ -170,7 +170,7 @@ comment|/* 	 * Now we need to get the page.  out_entry, out_prot, wired, and 	 *
 end_comment
 
 begin_comment
-unit|tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_WRITE,&out_entry,&object,&pindex,&out_prot,&wired,&single_use); 	if (rv != KERN_SUCCESS) { 		return EINVAL; 	}
+unit|tmap = map; 	rv = vm_map_lookup (&tmap, pageno, VM_PROT_WRITE,&out_entry,&object,&pindex,&out_prot,&wired); 	if (rv != KERN_SUCCESS) { 		return EINVAL; 	}
 comment|/* 	 * Okay, we've got the page.  Let's release tmap. 	 */
 end_comment
 

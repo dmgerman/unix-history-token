@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.85 1998/01/12 01:44:41 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.86 1998/01/17 09:16:59 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -136,6 +136,17 @@ end_decl_stmt
 
 begin_comment
 comment|/*  *	Associated with page of user-allocatable memory is a  *	page structure.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vm_page_bucket_generation
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* generation id for buckets */
 end_comment
 
 begin_decl_stmt
@@ -1586,6 +1597,9 @@ argument_list|,
 name|hashq
 argument_list|)
 expr_stmt|;
+name|vm_page_bucket_generation
+operator|++
+expr_stmt|;
 comment|/* 	 * Now link into the object's list of backed pages. 	 */
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -1612,6 +1626,13 @@ operator|->
 name|page_hint
 operator|=
 name|m
+expr_stmt|;
+name|m
+operator|->
+name|object
+operator|->
+name|generation
+operator|++
 expr_stmt|;
 comment|/* 	 * And show that the object has one more resident page. 	 */
 name|object
@@ -1700,6 +1721,9 @@ argument_list|,
 name|hashq
 argument_list|)
 expr_stmt|;
+name|vm_page_bucket_generation
+operator|++
+expr_stmt|;
 comment|/* 	 * Now remove from the object's list of backed pages. 	 */
 name|TAILQ_REMOVE
 argument_list|(
@@ -1722,6 +1746,13 @@ name|object
 operator|->
 name|resident_page_count
 operator|--
+expr_stmt|;
+name|m
+operator|->
+name|object
+operator|->
+name|generation
+operator|++
 expr_stmt|;
 name|m
 operator|->
@@ -1765,6 +1796,9 @@ modifier|*
 name|bucket
 decl_stmt|;
 name|int
+name|curgeneration
+decl_stmt|;
+name|int
 name|s
 decl_stmt|;
 comment|/* 	 * Search the hash table for this object/offset pair 	 */
@@ -1781,10 +1815,11 @@ name|pindex
 argument_list|)
 index|]
 expr_stmt|;
-name|s
+name|restart
+label|:
+name|curgeneration
 operator|=
-name|splvm
-argument_list|()
+name|vm_page_bucket_generation
 expr_stmt|;
 for|for
 control|(
@@ -1811,6 +1846,15 @@ control|)
 block|{
 if|if
 condition|(
+name|curgeneration
+operator|!=
+name|vm_page_bucket_generation
+condition|)
+goto|goto
+name|restart
+goto|;
+if|if
+condition|(
 operator|(
 name|m
 operator|->
@@ -1828,11 +1872,6 @@ name|pindex
 operator|)
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|object
@@ -1848,11 +1887,6 @@ operator|)
 return|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -3107,6 +3141,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|vm_pageout_deficit
+operator|++
+expr_stmt|;
 name|pagedaemon_wakeup
 argument_list|()
 expr_stmt|;
@@ -3213,6 +3250,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|vm_pageout_deficit
+operator|++
+expr_stmt|;
 name|pagedaemon_wakeup
 argument_list|()
 expr_stmt|;
@@ -3341,6 +3381,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|vm_pageout_deficit
+operator|++
+expr_stmt|;
 name|pagedaemon_wakeup
 argument_list|()
 expr_stmt|;
@@ -3401,6 +3444,9 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|vm_pageout_deficit
+operator|++
 expr_stmt|;
 name|pagedaemon_wakeup
 argument_list|()
@@ -3584,11 +3630,6 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Don't wakeup too often - wakeup the pageout daemon when 	 * we would be nearly out of memory. 	 */
 if|if
 condition|(
@@ -3625,11 +3666,6 @@ name|v_pageout_free_min
 operator|)
 condition|)
 name|pagedaemon_wakeup
-argument_list|()
-expr_stmt|;
-name|s
-operator|=
-name|splvm
 argument_list|()
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.142 1998/01/12 01:46:25 dyson Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.143 1998/01/17 09:16:26 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -954,6 +954,12 @@ operator|.
 name|le_next
 operator|=
 name|NOLIST
+expr_stmt|;
+name|bp
+operator|->
+name|b_generation
+operator|=
+literal|0
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -3014,6 +3020,11 @@ name|bp
 operator|->
 name|b_kvasize
 expr_stmt|;
+name|bp
+operator|->
+name|b_generation
+operator|++
+expr_stmt|;
 comment|/* buffers with junk contents */
 block|}
 elseif|else
@@ -3081,6 +3092,11 @@ operator|->
 name|b_dev
 operator|=
 name|NODEV
+expr_stmt|;
+name|bp
+operator|->
+name|b_generation
+operator|++
 expr_stmt|;
 comment|/* buffers that are locked */
 block|}
@@ -4831,6 +4847,11 @@ argument_list|)
 expr_stmt|;
 name|fillbuf
 label|:
+name|bp
+operator|->
+name|b_generation
+operator|++
+expr_stmt|;
 comment|/* we are not free, nor do we contain interesting data */
 if|if
 condition|(
@@ -6008,6 +6029,9 @@ decl_stmt|;
 name|int
 name|maxsize
 decl_stmt|;
+name|int
+name|generation
+decl_stmt|;
 if|if
 condition|(
 name|vp
@@ -6104,6 +6128,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|loop1
+label|:
+name|generation
+operator|=
+name|bp
+operator|->
+name|b_generation
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -6152,9 +6184,24 @@ argument_list|,
 name|slptimeo
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_generation
+operator|!=
+name|generation
+condition|)
 goto|goto
 name|loop
 goto|;
+goto|goto
+name|loop1
+goto|;
+block|}
+else|else
+block|{
 name|splx
 argument_list|(
 name|s
@@ -6168,6 +6215,7 @@ operator|*
 operator|)
 name|NULL
 return|;
+block|}
 block|}
 name|bp
 operator|->
@@ -6192,6 +6240,11 @@ operator|!=
 name|size
 condition|)
 block|{
+name|bp
+operator|->
+name|b_generation
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7553,6 +7606,16 @@ name|m
 condition|)
 block|{
 name|VM_WAIT
+expr_stmt|;
+name|vm_pageout_deficit
+operator|+=
+operator|(
+name|desiredpages
+operator|-
+name|bp
+operator|->
+name|b_npages
+operator|)
 expr_stmt|;
 goto|goto
 name|doretry
@@ -10415,6 +10478,16 @@ operator|!
 name|p
 condition|)
 block|{
+name|vm_pageout_deficit
+operator|+=
+operator|(
+name|to
+operator|-
+name|from
+operator|)
+operator|>>
+name|PAGE_SHIFT
+expr_stmt|;
 name|VM_WAIT
 expr_stmt|;
 goto|goto

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.13 1997/12/15 05:16:09 dyson Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  *  * $Id: vm_zone.c,v 1.14 1997/12/22 11:48:13 dyson Exp $  */
 end_comment
 
 begin_include
@@ -101,7 +101,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This file comprises a very simple zone allocator.  This is used  * in lieu of the malloc allocator, where needed or more optimal.  *  * Note that the initial implementation of this had coloring, and  * absolutely no improvement (actually perf degradation) occurred.  *  * zinitna, zinit, zbootinit are the initialization routines.  * zalloc, zfree, are the interrupt/lock unsafe allocation/free routines.  * zalloci, zfreei, are the interrupt/lock safe allocation/free routines.  */
+comment|/*  * This file comprises a very simple zone allocator.  This is used  * in lieu of the malloc allocator, where needed or more optimal.  *  * Note that the initial implementation of this had coloring, and  * absolutely no improvement (actually perf degradation) occurred.  *  * Note also that the zones are type stable.  The only restriction is  * that the first two longwords of a data structure can be changed  * between allocations.  Any data that must be stable between allocations  * must reside in areas after the first two longwords.  *  * zinitna, zinit, zbootinit are the initialization routines.  * zalloc, zfree, are the interrupt/lock unsafe allocation/free routines.  * zalloci, zfreei, are the interrupt/lock safe allocation/free routines.  */
 end_comment
 
 begin_decl_stmt
@@ -632,6 +632,17 @@ operator|->
 name|zlock
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|item
+argument_list|,
+name|nitems
+operator|*
+name|z
+operator|->
+name|zsize
+argument_list|)
+expr_stmt|;
 name|z
 operator|->
 name|zitems
@@ -1007,6 +1018,9 @@ name|i
 operator|++
 control|)
 block|{
+name|vm_offset_t
+name|zkva
+decl_stmt|;
 name|m
 operator|=
 name|vm_page_alloc
@@ -1031,8 +1045,8 @@ operator|==
 name|NULL
 condition|)
 break|break;
-name|pmap_kenter
-argument_list|(
+name|zkva
+operator|=
 name|z
 operator|->
 name|zkva
@@ -1042,11 +1056,25 @@ operator|->
 name|zpagecount
 operator|*
 name|PAGE_SIZE
+expr_stmt|;
+name|pmap_kenter
+argument_list|(
+name|zkva
 argument_list|,
 name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|zkva
+argument_list|,
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|z
@@ -1095,7 +1123,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splhigh
+name|splvm
 argument_list|()
 expr_stmt|;
 name|item
@@ -1135,6 +1163,13 @@ name|nbytes
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+name|item
+argument_list|,
+name|nbytes
+argument_list|)
+expr_stmt|;
 name|nitems
 operator|=
 name|nbytes
