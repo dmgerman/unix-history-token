@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.10 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.11 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.10 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.11 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1458,12 +1458,32 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"getcanonname: trying %s.%s\n"
+literal|"getcanonname: trying %s.%s (%s)\n"
 argument_list|,
 name|host
 argument_list|,
 operator|*
 name|dp
+argument_list|,
+name|qtype
+operator|==
+name|T_ANY
+condition|?
+literal|"ANY"
+else|:
+name|qtype
+operator|==
+name|T_A
+condition|?
+literal|"A"
+else|:
+name|qtype
+operator|==
+name|T_MX
+condition|?
+literal|"MX"
+else|:
+literal|"???"
 argument_list|)
 expr_stmt|;
 name|ret
