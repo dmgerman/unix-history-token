@@ -703,7 +703,7 @@ operator|<
 literal|0
 operator|||
 name|add_count
-operator|>
+operator|>=
 name|maxargs
 operator|-
 name|perm_count
@@ -819,7 +819,7 @@ operator|<
 literal|0
 operator|||
 name|add_count
-operator|>
+operator|>=
 name|maxargs
 operator|-
 name|where_count
@@ -872,7 +872,7 @@ operator|<
 literal|0
 operator|||
 name|add_count
-operator|>
+operator|>=
 name|maxargs
 operator|-
 name|perm_count
