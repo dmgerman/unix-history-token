@@ -15363,10 +15363,8 @@ if|if
 condition|(
 name|r
 operator|->
-name|rpool
+name|src
 operator|.
-name|cur
-operator|->
 name|addr
 operator|.
 name|type
