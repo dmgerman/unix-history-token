@@ -8,7 +8,7 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.7 93/08/26 21:09:32 julian Exp Locker: julian $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.8 93/08/31 21:40:16 julian Exp Locker: julian $  */
 end_comment
 
 begin_comment
@@ -483,6 +483,20 @@ define|#
 directive|define
 name|QIC_1320
 value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|DDS
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|DAT
+value|-1		0x13
 end_define
 
 end_unit
