@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/ed.h,v 3.28 1998/11/24 18:17:21 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/ed.h,v 3.30 2000/11/11 23:03:34 christos Exp $ */
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WINNT
+name|WINNT_NATIVE
 end_ifndef
 
 begin_define
@@ -82,15 +82,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/****************************************************************************/
@@ -1091,13 +1084,13 @@ struct|struct
 block|{
 ifdef|#
 directive|ifdef
-name|WINNT
+name|WINNT_NATIVE
 name|int
 name|dummy
 decl_stmt|;
 else|#
 directive|else
-comment|/* !WINNT */
+comment|/* !WINNT_NATIVE */
 if|#
 directive|if
 name|defined
@@ -1182,7 +1175,7 @@ directive|endif
 comment|/* TIOCGLTC */
 endif|#
 directive|endif
-comment|/* WINNT */
+comment|/* WINNT_NATIVE */
 block|}
 name|ttydata_t
 typedef|;
