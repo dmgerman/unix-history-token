@@ -1039,6 +1039,8 @@ block|{
 name|g_wither_geom
 argument_list|(
 name|gp
+argument_list|,
+name|ENXIO
 argument_list|)
 expr_stmt|;
 return|return
