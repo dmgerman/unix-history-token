@@ -114,7 +114,7 @@ parameter_list|,
 name|Acq
 parameter_list|)
 define|\
-value|do { \         int dummy; \         asm("1:     movl (%1),%%eax;" \             "movl   %%eax,%%edx;" \             "andl   %2,%%edx;" \             "btsl   $0x1,%%edx;" \             "adcl   $0x0,%%edx;" \             "lock;  cmpxchgl %%edx,(%1);" \             "jnz    1b;" \             "cmpb   $0x3,%%dl;" \             "sbbl   %%eax,%%eax" \             :"=a"(Acq),"=c"(dummy):"c"(GLptr),"i"(~1L):"dx"); \     } while(0)
+value|do { \         asm("1:     movl %1,%%eax;" \             "movl   %%eax,%%edx;" \             "andl   %2,%%edx;" \             "btsl   $0x1,%%edx;" \             "adcl   $0x0,%%edx;" \             "lock;  cmpxchgl %%edx,%1;" \             "jnz    1b;" \             "cmpb   $0x3,%%dl;" \             "sbbl   %%eax,%%eax" \             : "=a" (Acq), "+m" (GLptr) : "i" (~1L) : "edx"); \     } while(0)
 end_define
 
 begin_define
@@ -127,43 +127,7 @@ parameter_list|,
 name|Acq
 parameter_list|)
 define|\
-value|do { \         int dummy; \         asm("1:     movl (%1),%%eax;" \             "movl   %%eax,%%edx;" \             "andl   %2,%%edx;" \             "lock;  cmpxchgl %%edx,(%1);" \             "jnz    1b;" \             "andl   $0x1,%%eax" \             :"=a"(Acq),"=c"(dummy):"c"(GLptr),"i"(~3L):"dx"); \     } while(0)
-end_define
-
-begin_comment
-comment|/*  * Math helper asm macros  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DIV_64_BY_32
-parameter_list|(
-name|n_hi
-parameter_list|,
-name|n_lo
-parameter_list|,
-name|d32
-parameter_list|,
-name|q32
-parameter_list|,
-name|r32
-parameter_list|)
-define|\
-value|asm("divl %2;"        \         :"=a"(q32), "=d"(r32) \         :"r"(d32),            \         "0"(n_lo), "1"(n_hi))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SHIFT_RIGHT_64
-parameter_list|(
-name|n_hi
-parameter_list|,
-name|n_lo
-parameter_list|)
-define|\
-value|asm("shrl   $1,%2;"             \         "rcrl   $1,%3;"             \         :"=r"(n_hi), "=r"(n_lo)     \         :"0"(n_hi), "1"(n_lo))
+value|do { \         asm("1:     movl %1,%%eax;" \             "movl   %%eax,%%edx;" \             "andl   %2,%%edx;" \             "lock;  cmpxchgl %%edx,%1;" \             "jnz    1b;" \             "andl   $0x1,%%eax" \             : "=a" (Acq), "+m" (GLptr) : "i" (~3L) : "edx"); \     } while(0)
 end_define
 
 begin_comment
@@ -183,27 +147,21 @@ begin_define
 define|#
 directive|define
 name|ACPI_MACHINE_WIDTH
-value|32
+value|64
 end_define
 
 begin_define
 define|#
 directive|define
 name|COMPILER_DEPENDENT_INT64
-value|long long
+value|long
 end_define
 
 begin_define
 define|#
 directive|define
 name|COMPILER_DEPENDENT_UINT64
-value|unsigned long long
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_NATIVE_DIVIDE
+value|unsigned long
 end_define
 
 begin_endif
