@@ -221,14 +221,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
 name|hash
 operator|=
 name|DEHASH
@@ -435,25 +427,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* init the fat cache for this denode */
-comment|/* 	 * Lock the denode so that it can't be accessed until we've read 	 * it in and have done what we need to it.  Do this here instead 	 * of at the start of msdosfs_hashins() so that reinsert() can 	 * call msdosfs_hashins() with a locked denode. 	 */
-if|if
-condition|(
-name|VOP_LOCK
-argument_list|(
-name|nvp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|td
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"deget: unexpected lock failure"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|vfs_hash_insert
