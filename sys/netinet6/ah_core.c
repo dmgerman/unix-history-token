@@ -2075,7 +2075,8 @@ argument_list|(
 name|ctxt
 argument_list|,
 operator|(
-name|caddr_t
+name|u_int8_t
+operator|*
 operator|)
 name|addr
 argument_list|,
@@ -3118,6 +3119,10 @@ name|SHA1Update
 argument_list|(
 name|ctxt
 argument_list|,
+operator|(
+name|u_int8_t
+operator|*
+operator|)
 name|_KEYBUF
 argument_list|(
 name|state
@@ -3334,7 +3339,8 @@ argument_list|(
 name|ctxt
 argument_list|,
 operator|(
-name|caddr_t
+name|u_int8_t
+operator|*
 operator|)
 name|addr
 argument_list|,
@@ -3466,7 +3472,8 @@ argument_list|(
 name|ctxt
 argument_list|,
 operator|(
-name|caddr_t
+name|u_int8_t
+operator|*
 operator|)
 operator|&
 name|digest

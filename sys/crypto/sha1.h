@@ -137,7 +137,8 @@ name|sha1_ctxt
 operator|*
 operator|,
 specifier|const
-name|caddr_t
+name|u_int8_t
+operator|*
 operator|,
 name|size_t
 operator|)
@@ -214,6 +215,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_define
 define|#
