@@ -65,29 +65,22 @@ begin_comment
 comment|/*  * Expand the line buffer.  Return -1 on error.  * The `new size' does not account for a terminating '\0',  * so we add 1 here.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|__slbexpand
-argument_list|(
-argument|fp
-argument_list|,
-argument|newsize
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|,
+name|newsize
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 name|newsize
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|void
 modifier|*
@@ -156,7 +149,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get an input line.  The returned pointer often (but not always)  * points into a stdio buffer.  Fgetline smashes the newline (if any)  * in the stdio buffer; callers must not use it on streams that  * have `magic' setvbuf() games happening.  */
