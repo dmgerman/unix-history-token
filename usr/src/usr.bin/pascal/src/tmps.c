@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmps.c 1.10 %G%"
+literal|"@(#)tmps.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -425,13 +425,6 @@ argument_list|,
 name|type
 argument_list|,
 name|offset
-operator|+
-name|regtypes
-index|[
-name|REG_GENERAL
-index|]
-operator|.
-name|regno_offset
 argument_list|)
 expr_stmt|;
 name|nlp
