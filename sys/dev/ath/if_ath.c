@@ -15724,11 +15724,6 @@ index|]
 operator|.
 name|ds_link
 expr_stmt|;
-name|ATH_TXQ_UNLOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The CAB queue is started from the SWBA handler since 	 * frames only go out on DTIM and to avoid possible races. 	 */
 if|if
 condition|(
@@ -15745,6 +15740,11 @@ argument_list|,
 name|txq
 operator|->
 name|axq_qnum
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|txq
 argument_list|)
 expr_stmt|;
 return|return
