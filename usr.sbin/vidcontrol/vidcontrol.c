@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vidcontrol.c,v 1.22 1998/09/23 10:00:15 yokota Exp $"
+literal|"$Id: vidcontrol.c,v 1.23 1998/09/24 01:36:36 gpalmer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2448,10 +2448,14 @@ argument_list|,
 name|info
 operator|.
 name|vi_window_size
+operator|/
+literal|1024
 argument_list|,
 name|info
 operator|.
 name|vi_window_gran
+operator|/
+literal|1024
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2465,6 +2469,8 @@ argument_list|,
 name|info
 operator|.
 name|vi_buffer_size
+operator|/
+literal|1024
 argument_list|)
 expr_stmt|;
 block|}
