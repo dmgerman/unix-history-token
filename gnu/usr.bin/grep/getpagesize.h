@@ -12,25 +12,6 @@ end_ifndef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|getpagesize
-parameter_list|()
-value|512
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|HAVE_UNISTD_H
 end_ifdef
 
@@ -45,10 +26,64 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|getpagesize
+operator|&&
+name|defined
+name|_SC_PAGESIZE
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+name|VMS
+operator|&&
+name|__VMS_VER
+operator|<
+literal|70000000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|getpagesize
+parameter_list|()
+value|sysconf (_SC_PAGESIZE)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|getpagesize
+operator|&&
+name|defined
+name|VMS
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_SC_PAGESIZE
+name|__ALPHA
 end_ifdef
 
 begin_define
@@ -56,13 +91,37 @@ define|#
 directive|define
 name|getpagesize
 parameter_list|()
-value|sysconf(_SC_PAGESIZE)
+value|8192
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|getpagesize
+parameter_list|()
+value|512
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|getpagesize
+end_ifndef
 
 begin_include
 include|#
@@ -95,14 +154,6 @@ directive|ifdef
 name|NBPG
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|getpagesize
-parameter_list|()
-value|NBPG * CLSIZE
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -121,18 +172,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* no CLSIZE */
-end_comment
+begin_define
+define|#
+directive|define
+name|getpagesize
+parameter_list|()
+value|(NBPG * CLSIZE)
+end_define
 
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* no NBPG */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -153,36 +204,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* NBPC */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* no NBPG */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* no EXEC_PAGESIZE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no _SC_PAGESIZE */
-end_comment
 
 begin_endif
 endif|#
