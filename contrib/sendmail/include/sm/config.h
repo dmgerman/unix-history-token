@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: config.h,v 1.46 2003/12/10 03:19:06 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: config.h,v 1.47 2004/10/26 21:41:07 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -508,6 +508,12 @@ if|#
 directive|if
 name|LDAPMAP
 end_if
+
+begin_include
+include|#
+directive|include
+file|<lber.h>
+end_include
 
 begin_include
 include|#

@@ -39,7 +39,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.900 2004/07/08 23:29:33 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.902 2004/11/18 21:46:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -7607,6 +7607,36 @@ comment|/* only complain if strict check */
 name|ok
 operator|=
 name|AllowBogusHELO
+expr_stmt|;
+comment|/* allow trailing whitespace */
+while|while
+condition|(
+operator|!
+name|ok
+operator|&&
+operator|*
+operator|++
+name|q
+operator|!=
+literal|'\0'
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|q
+argument_list|)
+condition|)
+empty_stmt|;
+if|if
+condition|(
+operator|*
+name|q
+operator|==
+literal|'\0'
+condition|)
+name|ok
+operator|=
+name|true
 expr_stmt|;
 break|break;
 block|}
@@ -15984,6 +16014,12 @@ operator|=
 name|p
 control|)
 block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|s
+operator|=
 name|p
 operator|=
 name|strchr
@@ -16069,6 +16105,17 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+if|if
+condition|(
+name|s
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|s
+operator|=
+literal|','
+expr_stmt|;
 block|}
 block|}
 elseif|else

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2001, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: ungetc.c,v 1.28 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: ungetc.c,v 1.29 2004/08/03 20:54:49 ca Exp $"
 argument_list|)
 end_macro
 
@@ -78,6 +78,20 @@ directive|include
 file|"local.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|sm_submore_x
+name|__P
+argument_list|(
+operator|(
+name|SM_FILE_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  SM_SUBMORE_X -- expand ungetc buffer ** **  Expand the ungetc buffer `in place'.  That is, adjust fp->f_p when **  the buffer moves, so that it points the same distance from the end, **  and move the bytes in the buffer around as necessary so that they **  are all at the end (stack-style). ** **	Parameters: **		fp -- the file pointer ** **	Results: **		none. ** **	Exceptions: **		F:sm_heap -- out of memory */
 end_comment
@@ -89,7 +103,6 @@ name|sm_submore_x
 parameter_list|(
 name|fp
 parameter_list|)
-specifier|register
 name|SM_FILE_T
 modifier|*
 name|fp

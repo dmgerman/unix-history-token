@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.98 2004/03/03 19:20:31 ca Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.101 2004/12/15 22:45:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -33,6 +33,32 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_comment
+comment|/* allow to disable error handling code just in case... */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEAL_WITH_ERROR_SSL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DEAL_WITH_ERROR_SSL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! DEAL_WITH_ERROR_SSL */
+end_comment
 
 begin_if
 if|#
@@ -875,6 +901,9 @@ comment|/* SASL>= 20000 */
 name|unsigned
 name|int
 name|outlen
+decl_stmt|,
+modifier|*
+name|maxencode
 decl_stmt|;
 name|size_t
 name|ret
@@ -899,6 +928,48 @@ name|fp
 operator|->
 name|f_cookie
 decl_stmt|;
+comment|/* 	**  Fetch the maximum input buffer size for sasl_encode(). 	**  This can be less than the size set in attemptauth() 	**  due to a negotation with the other side, e.g., 	**  Cyrus IMAP lmtp program sets maxbuf=4096, 	**  digestmd5 substracts 25 and hence we'll get 4071 	**  instead of 8192 (MAXOUTLEN). 	**  Hack (for now): simply reduce the size, callers are (must be) 	**  able to deal with that and invoke sasl_write() again with 	**  the rest of the data. 	**  Note: it would be better to store this value in the context 	**  after the negotiation. 	*/
+name|result
+operator|=
+name|sasl_getprop
+argument_list|(
+name|so
+operator|->
+name|conn
+argument_list|,
+name|SASL_MAXOUTBUF
+argument_list|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|maxencode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|SASL_OK
+operator|&&
+name|size
+operator|>
+operator|*
+name|maxencode
+operator|&&
+operator|*
+name|maxencode
+operator|>
+literal|0
+condition|)
+name|size
+operator|=
+operator|*
+name|maxencode
+expr_stmt|;
 name|result
 operator|=
 name|sasl_encode
@@ -1881,7 +1952,7 @@ name|SSL_ERROR_SSL
 case|:
 if|#
 directive|if
-name|_FFR_DEAL_WITH_ERROR_SSL
+name|DEAL_WITH_ERROR_SSL
 if|if
 condition|(
 name|r
@@ -1896,7 +1967,7 @@ comment|/* out of protocol EOF found */
 break|break;
 endif|#
 directive|endif
-comment|/* _FFR_DEAL_WITH_ERROR_SSL */
+comment|/* DEAL_WITH_ERROR_SSL */
 name|err
 operator|=
 literal|"generic SSL error"
@@ -1914,7 +1985,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_DEAL_WITH_ERROR_SSL
+name|DEAL_WITH_ERROR_SSL
 comment|/* avoid repeated calls? */
 if|if
 condition|(
@@ -1929,7 +2000,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_DEAL_WITH_ERROR_SSL */
+comment|/* DEAL_WITH_ERROR_SSL */
 break|break;
 block|}
 if|if
@@ -2242,7 +2313,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_DEAL_WITH_ERROR_SSL
+name|DEAL_WITH_ERROR_SSL
 comment|/* avoid repeated calls? */
 if|if
 condition|(
@@ -2257,7 +2328,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_DEAL_WITH_ERROR_SSL */
+comment|/* DEAL_WITH_ERROR_SSL */
 break|break;
 block|}
 if|if

@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.194 2004/01/14 01:47:34 ca Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.195 2004/08/04 21:11:31 ca Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.194 2004/01/14 01:47:34 ca Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.195 2004/08/04 21:11:31 ca Exp $ (without name server)"
 argument_list|)
 end_macro
 
@@ -685,12 +685,27 @@ modifier|*
 name|prefs
 decl_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|resfunc
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*resfunc
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 name|unsigned
 name|short
 name|prefer

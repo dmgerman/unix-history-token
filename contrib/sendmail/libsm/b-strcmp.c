@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2001, 2004 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: b-strcmp.c,v 1.12 2001/09/11 04:04:47 gshapiro Exp $"
+literal|"@(#)$Id: b-strcmp.c,v 1.13 2004/08/03 20:07:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -92,6 +92,47 @@ end_define
 begin_comment
 comment|/* "maximum" time to run single test */
 end_comment
+
+begin_decl_stmt
+name|void
+name|fatal
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|purpose
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void

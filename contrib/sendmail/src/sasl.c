@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sasl.c,v 8.20 2004/06/02 22:48:06 ca Exp $"
+literal|"@(#)$Id: sasl.c,v 8.21 2004/11/22 23:09:00 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -574,24 +574,6 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NI_WITHSCOPEID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NI_WITHSCOPEID
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|NI_MAXHOST
 end_ifndef
 
@@ -663,6 +645,15 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|NETINET6
+name|int
+name|niflags
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 if|if
 condition|(
 name|addr
@@ -685,6 +676,34 @@ block|}
 if|#
 directive|if
 name|NETINET6
+name|niflags
+operator|=
+operator|(
+name|NI_NUMERICHOST
+operator||
+name|NI_NUMERICSERV
+operator|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NI_WITHSCOPEID
+if|if
+condition|(
+name|addr
+operator|->
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_INET6
+condition|)
+name|niflags
+operator||=
+name|NI_WITHSCOPEID
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NI_WITHSCOPEID */
 if|if
 condition|(
 name|getnameinfo
@@ -708,11 +727,7 @@ argument_list|,
 sizeof|sizeof
 name|pbuf
 argument_list|,
-name|NI_NUMERICHOST
-operator||
-name|NI_WITHSCOPEID
-operator||
-name|NI_NUMERICSERV
+name|niflags
 argument_list|)
 operator|!=
 literal|0

@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.136 2004/03/22 18:21:34 ca Exp $"
+literal|"@(#)$Id: mime.c,v 8.137 2004/09/02 21:37:26 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3763,6 +3763,21 @@ literal|1
 index|]
 operator|==
 literal|'\t'
+if|#
+directive|if
+name|_FFR_MIME_CR_OK
+operator|||
+name|line
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\r'
+endif|#
+directive|endif
+comment|/* _FFR_MIME_CR_OK */
 operator|)
 condition|)
 name|i
