@@ -254,7 +254,7 @@ literal|"S4"
 block|,
 literal|"S5"
 block|,
-literal|"S4B"
+literal|"NONE"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7333,6 +7333,8 @@ condition|(
 name|old_state
 operator|>
 name|ACPI_S_STATES_MAX
+operator|+
+literal|1
 condition|)
 block|{
 name|strcpy
@@ -7345,6 +7347,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|bzero
+argument_list|(
+name|sleep_state
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sleep_state
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|sleep_state
@@ -7402,6 +7414,8 @@ init|;
 name|new_state
 operator|<=
 name|ACPI_S_STATES_MAX
+operator|+
+literal|1
 condition|;
 name|new_state
 operator|++
@@ -7440,6 +7454,8 @@ operator|(
 name|new_state
 operator|<=
 name|ACPI_S_STATES_MAX
+operator|+
+literal|1
 operator|)
 condition|)
 block|{
