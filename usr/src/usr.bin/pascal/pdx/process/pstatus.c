@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstatus.c 1.1 %G%"
+literal|"@(#)pstatus.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,7 +208,7 @@ operator|==
 name|FINISHED
 condition|)
 block|{
-name|exit
+name|quit
 argument_list|(
 literal|0
 argument_list|)
