@@ -5085,9 +5085,13 @@ argument_list|,
 name|UIO_SYSSPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 name|printf
 argument_list|(
-literal|"kern_symlink  = %d\n"
+literal|"kern_symlink /dev -> / returns %d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -5227,13 +5231,6 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* We may have a chance... */
-block|error = kern_mkdir(td, "/dev", UIO_SYSSPACE, 0700); 	printf("kern_mkdir = %d\n", error);
-endif|#
-directive|endif
 name|NDINIT
 argument_list|(
 operator|&
@@ -5831,13 +5828,6 @@ argument_list|,
 name|path
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"kernel_vmount = %d\n"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 if|if
