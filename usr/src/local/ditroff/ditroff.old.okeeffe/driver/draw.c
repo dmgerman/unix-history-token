@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	draw.c	1.3	83/11/01  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
+comment|/*	draw.c	1.4	83/11/30  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
 end_comment
 
 begin_include
@@ -84,6 +84,13 @@ name|n
 parameter_list|)
 value|vpos = n;
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|output
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -311,6 +318,10 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|output
+condition|)
 name|HGtline
 argument_list|(
 name|hpos
@@ -359,6 +370,10 @@ end_expr_stmt
 begin_block
 block|{
 comment|/* 0.0 is the angle to sweep the arc: = full circle */
+if|if
+condition|(
+name|output
+condition|)
 name|HGArc
 argument_list|(
 name|hpos
@@ -386,8 +401,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*----------------------------------------------------------------------------  | Routine:	drawellip (horizontal_diameter, vertical_diameter)  |  | Results:	Draws regular ellipses given the major "diameters."  It does  |		so by drawing many small lines, every other pixel.  The ellipse  |		formula:  ((x-x0)/hrad)**2 + ((y-y0)/vrad)**2 = 1 is used,  |		converting to:  y = y0 +- vrad * sqrt(1 - ((x-x0)/hrad)**2).  |		The line segments are duplicated (mirrored) on either side of  |		the horizontal "diameter".  |  | Side Efct:	Resulting position is at (hpos + hd, vpos).  |  | Bugs:	Odd numbered horizontal axes are rounded up to even numbers.  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------  | Routine:	drawellip (horizontal_diameter, vertical_diameter)  |  | Results:	Draws regular ellipses given the major "diameters."  It does  |		so by drawing many small lines, every ELLIPSEDX pixels (DX  |		defined here).  The ellipse formula:  |			((x-x0)/hrad)**2 + ((y-y0)/vrad)**2 = 1     is used,  |		converting to:  y = y0 +- vrad * sqrt(1 - ((x-x0)/hrad)**2).  |		The line segments are duplicated (mirrored) on either side of  |		the horizontal "diameter".  |  | Side Efct:	Resulting position is at (hpos + hd, vpos).  |  | Bugs:	Odd numbered horizontal axes are rounded up to even numbers.  *----------------------------------------------------------------------------*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ELLIPSEDX
+value|3
+end_define
 
 begin_expr_stmt
 name|drawellip
@@ -442,32 +464,38 @@ decl_stmt|,
 name|hdsave
 decl_stmt|;
 comment|/* places to save things to be used over */
-name|hd
-operator|=
-literal|2
-operator|*
-operator|(
-operator|(
-name|hd
-operator|+
-literal|1
-operator|)
-operator|/
-literal|2
-operator|)
-expr_stmt|;
-comment|/* don't accept odd diameters */
 if|if
 condition|(
 name|hd
 operator|<
-literal|2
+name|ELLIPSEDX
 condition|)
+block|{
+comment|/* don't draw tiny ellipses */
+if|if
+condition|(
+name|output
+condition|)
+name|HGtline
+argument_list|(
+name|hpos
+argument_list|,
+name|vpos
+argument_list|,
+name|hpos
+operator|+
 name|hd
-operator|=
-literal|2
+argument_list|,
+name|vpos
+argument_list|)
 expr_stmt|;
-comment|/* or dinky ones */
+name|hmot
+argument_list|(
+name|hd
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bx
 operator|=
 literal|4
@@ -498,24 +526,27 @@ name|hd
 operator|*
 name|hd
 operator|-
-literal|4
-operator|*
 operator|(
+literal|2
+operator|*
 name|hpos
 operator|+
 name|hd
-operator|/
-literal|2
 operator|)
 operator|*
 operator|(
+literal|2
+operator|*
 name|hpos
 operator|+
 name|hd
-operator|/
-literal|2
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|output
+condition|)
+block|{
 name|bxsave
 operator|=
 name|bx
@@ -525,7 +556,7 @@ name|xsave
 operator|=
 name|x
 expr_stmt|;
-comment|/*    the top half of the elipse, so the bottom half */
+comment|/*    the top half of the ellipse so the bottom half */
 name|hdsave
 operator|=
 name|hd
@@ -539,11 +570,15 @@ expr_stmt|;
 comment|/* define drawing path */
 name|word
 argument_list|(
+operator|(
 name|hd
-operator|/
-literal|2
-operator|+
+operator|-
 literal|1
+operator|)
+operator|/
+name|ELLIPSEDX
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 name|word
@@ -563,11 +598,20 @@ name|vpos
 argument_list|)
 argument_list|)
 expr_stmt|;
-do|do
+while|while
+condition|(
+operator|(
+name|hd
+operator|-=
+name|ELLIPSEDX
+operator|)
+operator|>
+literal|0
+condition|)
 block|{
 name|x
 operator|+=
-literal|2
+name|ELLIPSEDX
 expr_stmt|;
 name|word
 argument_list|(
@@ -598,7 +642,11 @@ operator|+
 operator|(
 name|bx
 operator|-=
-literal|8
+operator|(
+literal|4
+operator|*
+name|ELLIPSEDX
+operator|)
 operator|)
 operator|*
 name|x
@@ -615,13 +663,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|hd
-operator|-=
-literal|2
-condition|)
-do|;
+name|word
+argument_list|(
+name|xbound
+argument_list|(
+name|hpos
+operator|+
+name|hdsave
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* end at right side */
+name|word
+argument_list|(
+name|ybound
+argument_list|(
+name|vpos
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|byte
 argument_list|(
 name|ADRAW
@@ -654,11 +714,15 @@ expr_stmt|;
 comment|/* define drawing path */
 name|word
 argument_list|(
+operator|(
 name|hd
-operator|/
-literal|2
-operator|+
+operator|-
 literal|1
+operator|)
+operator|/
+name|ELLIPSEDX
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 name|word
@@ -678,11 +742,20 @@ name|vpos
 argument_list|)
 argument_list|)
 expr_stmt|;
-do|do
+while|while
+condition|(
+operator|(
+name|hd
+operator|-=
+name|ELLIPSEDX
+operator|)
+operator|>
+literal|0
+condition|)
 block|{
 name|x
 operator|+=
-literal|2
+name|ELLIPSEDX
 expr_stmt|;
 name|word
 argument_list|(
@@ -713,7 +786,11 @@ operator|+
 operator|(
 name|bx
 operator|-=
-literal|8
+operator|(
+literal|4
+operator|*
+name|ELLIPSEDX
+operator|)
 operator|)
 operator|*
 name|x
@@ -730,13 +807,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|hd
-operator|-=
-literal|2
-condition|)
-do|;
+name|word
+argument_list|(
+name|xbound
+argument_list|(
+name|hpos
+operator|+
+name|hdsave
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* end at right side */
+name|word
+argument_list|(
+name|ybound
+argument_list|(
+name|vpos
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|byte
 argument_list|(
 name|ADRAW
@@ -748,6 +837,7 @@ argument_list|(
 literal|15
 argument_list|)
 expr_stmt|;
+block|}
 name|hmot
 argument_list|(
 name|hdsave
@@ -856,6 +946,10 @@ literal|360.5
 else|:
 literal|0.5
 expr_stmt|;
+if|if
+condition|(
+name|output
+condition|)
 name|HGArc
 argument_list|(
 name|hpos
@@ -1164,6 +1258,11 @@ comment|/* npts must point to the last coordinate in x and y */
 comment|/* now, actually DO the curve */
 if|if
 condition|(
+name|output
+condition|)
+block|{
+if|if
+condition|(
 name|pic
 condition|)
 name|picurve
@@ -1185,6 +1284,7 @@ argument_list|,
 name|npts
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -4180,9 +4280,6 @@ decl_stmt|;
 name|int
 name|yinc
 decl_stmt|;
-name|int
-name|slope
-decl_stmt|;
 if|if
 condition|(
 name|linmod
@@ -4260,12 +4357,6 @@ operator|-
 name|dy
 expr_stmt|;
 block|}
-name|slope
-operator|=
-name|xinc
-operator|*
-name|yinc
-expr_stmt|;
 name|res1
 operator|=
 literal|0
@@ -4295,13 +4386,7 @@ if|if
 condition|(
 operator|(
 operator|(
-operator|(
 name|x0
-operator|+
-name|slope
-operator|*
-name|y0
-operator|)
 operator|&
 name|linmod
 operator|)
@@ -4370,13 +4455,7 @@ if|if
 condition|(
 operator|(
 operator|(
-operator|(
-name|x0
-operator|+
-name|slope
-operator|*
 name|y0
-operator|)
 operator|&
 name|linmod
 operator|)
