@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioccom.h	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioccom.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -68,15 +68,8 @@ value|NBPG
 end_define
 
 begin_comment
-comment|/* max size of ioctl, mult. of NBPG */
+comment|/* max size of ioctl args, mult. of NBPG */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IOC_VOID
-value|0x20000000
-end_define
 
 begin_comment
 comment|/* no parameters */
@@ -85,23 +78,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IOC_OUT
-value|0x40000000
+name|IOC_VOID
+value|(unsigned long)0x20000000
 end_define
 
 begin_comment
-comment|/* copy out parameters */
+comment|/* copy parameters out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOC_OUT
+value|(unsigned long)0x40000000
+end_define
+
+begin_comment
+comment|/* copy parameters in */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IOC_IN
-value|0x80000000
+value|(unsigned long)0x80000000
 end_define
 
 begin_comment
-comment|/* copy in parameters */
+comment|/* copy paramters in and out */
 end_comment
 
 begin_define
@@ -111,16 +115,16 @@ name|IOC_INOUT
 value|(IOC_IN|IOC_OUT)
 end_define
 
+begin_comment
+comment|/* mask for IN/OUT/VOID */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IOC_DIRMASK
-value|0xe0000000
+value|(unsigned long)0xe0000000
 end_define
-
-begin_comment
-comment|/* mask for IN/OUT/VOID */
-end_comment
 
 begin_define
 define|#

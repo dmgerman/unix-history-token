@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -288,11 +288,68 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KERNEL
-end_ifndef
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|itimerfix
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|timeval
+operator|*
+name|tv
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|itimerdecr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|itimerval
+operator|*
+name|itp
+operator|,
+name|int
+name|usec
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|microtime
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|timeval
+operator|*
+name|tv
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !KERNEL */
+end_comment
 
 begin_include
 include|#

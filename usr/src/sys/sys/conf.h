@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ name|p
 operator|)
 argument_list|)
 expr_stmt|;
-name|int
+name|void
 argument_list|(
 argument|*d_strategy
 argument_list|)
@@ -140,7 +140,7 @@ operator|(
 name|dev_t
 name|dev
 operator|,
-name|int
+name|u_long
 name|cmd
 operator|,
 name|caddr_t
@@ -306,7 +306,7 @@ operator|(
 name|dev_t
 name|dev
 operator|,
-name|int
+name|u_long
 name|cmd
 operator|,
 name|caddr_t
@@ -387,7 +387,7 @@ operator|(
 operator|)
 argument_list|)
 expr_stmt|;
-name|int
+name|void
 argument_list|(
 argument|*d_strategy
 argument_list|)
@@ -462,6 +462,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Line discipline switch table  */
+end_comment
 
 begin_struct
 struct|struct
@@ -557,7 +561,7 @@ name|tty
 operator|*
 name|tp
 operator|,
-name|int
+name|u_long
 name|cmd
 operator|,
 name|caddr_t
@@ -644,6 +648,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Swap device table  */
+end_comment
 
 begin_struct
 struct|struct

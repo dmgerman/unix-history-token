@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -91,7 +91,7 @@ name|dtom
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct mbuf *)((int)(x)& ~(MSIZE-1)))
+value|((struct mbuf *)((long)(x)& ~(MSIZE-1)))
 end_define
 
 begin_define
@@ -101,7 +101,7 @@ name|mtocl
 parameter_list|(
 name|x
 parameter_list|)
-value|(((u_int)(x) - (u_int)mbutl)>> MCLSHIFT)
+value|(((u_long)(x) - (u_long)mbutl)>> MCLSHIFT)
 end_define
 
 begin_define
@@ -111,7 +111,7 @@ name|cltom
 parameter_list|(
 name|x
 parameter_list|)
-value|((caddr_t)((u_int)mbutl + ((u_int)(x)<< MCLSHIFT)))
+value|((caddr_t)((u_long)mbutl + ((u_long)(x)<< MCLSHIFT)))
 end_define
 
 begin_comment
@@ -134,14 +134,14 @@ modifier|*
 name|mh_nextpkt
 decl_stmt|;
 comment|/* next chain in queue/record */
-name|int
-name|mh_len
-decl_stmt|;
-comment|/* amount of data in this mbuf */
 name|caddr_t
 name|mh_data
 decl_stmt|;
 comment|/* location of data */
+name|int
+name|mh_len
+decl_stmt|;
+comment|/* amount of data in this mbuf */
 name|short
 name|mh_type
 decl_stmt|;
@@ -162,16 +162,16 @@ begin_struct
 struct|struct
 name|pkthdr
 block|{
-name|int
-name|len
-decl_stmt|;
-comment|/* total packet length */
 name|struct
 name|ifnet
 modifier|*
 name|rcvif
 decl_stmt|;
 comment|/* rcv interface */
+name|int
+name|len
+decl_stmt|;
+comment|/* total packet length */
 block|}
 struct|;
 end_struct
@@ -672,7 +672,7 @@ parameter_list|,
 name|how
 parameter_list|)
 define|\
-value|MBUFLOCK( \ 		(void)m_clalloc(1, (how)); \ 	  if ((p) = (caddr_t)mclfree) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 	  } \ 	)
+value|MBUFLOCK( \ 		(void)m_clalloc(1, (how)); \ 	  if (((p) = (caddr_t)mclfree) != 0) { \ 		++mclrefcnt[mtocl(p)]; \ 		mbstat.m_clfree--; \ 		mclfree = ((union mcluster *)(p))->mcl_next; \ 	  } \ 	)
 end_define
 
 begin_define
@@ -1195,6 +1195,22 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|m_adj
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
 operator|,
 name|int
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -70,11 +70,11 @@ name|int
 name|ps_sig
 decl_stmt|;
 comment|/* for core dump/debugger XXX */
-name|int
+name|long
 name|ps_code
 decl_stmt|;
 comment|/* for core dump/debugger XXX */
-name|int
+name|long
 name|ps_addr
 decl_stmt|;
 comment|/* for core dump/debugger XXX */
@@ -582,7 +582,7 @@ operator|,
 name|int
 name|sig
 operator|,
-name|unsigned
+name|u_long
 name|code
 operator|)
 argument_list|)
@@ -608,7 +608,7 @@ operator|,
 name|int
 name|returnmask
 operator|,
-name|unsigned
+name|u_long
 name|code
 operator|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -140,10 +140,11 @@ modifier|*
 name|b_vp
 decl_stmt|;
 comment|/* Device vnode. */
-name|int
+name|long
 name|b_pfcent
 decl_stmt|;
 comment|/* Center page when swapping cluster. */
+comment|/* XXX pfcent should be int; overld. */
 name|int
 name|b_dirtyoff
 decl_stmt|;
@@ -583,7 +584,7 @@ name|clrbuf
 parameter_list|(
 name|bp
 parameter_list|)
-value|{							\ 	blkclr((bp)->b_data, (u_int)(bp)->b_bcount);			\ 	(bp)->b_resid = 0;						\ }
+value|{							\ 	bzero((bp)->b_data, (u_int)(bp)->b_bcount);			\ 	(bp)->b_resid = 0;						\ }
 end_define
 
 begin_comment
@@ -724,7 +725,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|bawrite
 name|__P
 argument_list|(
@@ -738,7 +739,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|bdwrite
 name|__P
 argument_list|(
@@ -842,7 +843,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|brelse
 name|__P
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.16 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -30,7 +30,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|long
+name|int32_t
 name|val
 index|[
 literal|2
@@ -1712,7 +1712,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* set number of request retrys */
+comment|/* set number of request retries */
 end_comment
 
 begin_define
