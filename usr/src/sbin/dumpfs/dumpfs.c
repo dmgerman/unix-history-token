@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpfs.c	8.3 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,6 +452,36 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+name|afs
+operator|.
+name|fs_magic
+operator|!=
+name|FS_MAGIC
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: superblock has bad magic number, skipped"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|afs
