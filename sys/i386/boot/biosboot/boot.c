@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.44.2.4 1996/06/05 19:48:46 nate Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.60 1996/10/08 22:41:34 bde Exp $  */
 end_comment
 
 begin_comment
@@ -37,6 +37,23 @@ directive|include
 file|<machine/bootinfo.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PROBE_KEYBOARD_LOCK
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -55,19 +72,37 @@ name|NAMEBUF_LEN
 value|(8*1024)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NAMEBLOCK
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|dflt_name
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|char
+modifier|*
+name|name
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|char
 name|namebuf
 index|[
 name|NAMEBUF_LEN
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|exec
-name|head
 decl_stmt|;
 end_decl_stmt
 
@@ -125,12 +160,9 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|FORCE_COMCONSOLE
 ifdef|#
 directive|ifdef
-name|notyet
+name|PROBE_KEYBOARD
 if|if
 condition|(
 name|probe_keyboard
@@ -152,10 +184,40 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* notyet */
-else|#
-directive|else
-comment|/* FORCE_COMCONSOLE */
+ifdef|#
+directive|ifdef
+name|PROBE_KEYBOARD_LOCK
+if|if
+condition|(
+operator|!
+operator|(
+name|inb
+argument_list|(
+literal|0x64
+argument_list|)
+operator|&
+literal|0x10
+operator|)
+condition|)
+block|{
+name|init_serial
+argument_list|()
+expr_stmt|;
+name|loadflags
+operator||=
+name|RB_SERIAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nKeyboard locked."
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|FORCE_COMCONSOLE
 name|init_serial
 argument_list|()
 expr_stmt|;
@@ -170,7 +232,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FORCE_COMCONSOLE */
 comment|/* Pick up the story from the Bios on geometry of disks */
 for|for
 control|(
@@ -291,14 +352,58 @@ block|}
 endif|#
 directive|endif
 block|}
+ifdef|#
+directive|ifdef
+name|NAMEBLOCK
+comment|/* 	 * XXX 	 * DAMN! I don't understand why this is not being set  	 * by the code in boot2.S 	 */
+name|dflt_name
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0x0000ffb0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|dflt_name
+operator|++
+operator|==
+literal|'D'
+operator|)
+operator|&&
+operator|(
+operator|*
+name|dflt_name
+operator|++
+operator|==
+literal|'N'
+operator|)
+condition|)
+block|{
+name|name
+operator|=
+name|dflt_name
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/*NAMEBLOCK*/
 name|loadstart
 label|:
+name|name
+operator|=
+literal|"/kernel"
+expr_stmt|;
 comment|/* print this all each time.. (saves space to do so) */
 comment|/* If we have looped, use the previous entries as defaults */
 name|printf
 argument_list|(
 literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n"
-literal|"Usage: [[[%d:][%s](%d,a)]%s][-abcCdhrsv]\n"
+literal|"Usage: [[[%d:][%s](%d,a)]%s][-abcCdghrsv]\n"
 literal|"Use 1:sd(0,a)kernel to boot sd0 if it is BIOS drive 1\n"
 literal|"Use ? for file list or press Enter for defaults\n\nBoot: "
 argument_list|,
@@ -326,11 +431,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|name
-operator|=
-name|dflname
-expr_stmt|;
-comment|/* re-initialize in case of loop */
 name|loadflags
 operator|&=
 name|RB_SERIAL
@@ -391,6 +491,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|exec
+name|head
+decl_stmt|;
 name|long
 name|int
 name|startaddr
@@ -538,7 +642,7 @@ while|while
 condition|(
 name|addr
 operator|&
-name|CLOFSET
+name|PAGE_MASK
 condition|)
 operator|*
 operator|(
@@ -618,8 +722,8 @@ operator|(
 name|unsigned
 operator|)
 name|addr
-operator|%
-name|NBPG
+operator|&
+name|PAGE_MASK
 expr_stmt|;
 if|if
 condition|(
@@ -630,7 +734,7 @@ condition|)
 block|{
 name|pad
 operator|=
-name|NBPG
+name|PAGE_SIZE
 operator|-
 name|pad
 expr_stmt|;
@@ -1068,7 +1172,24 @@ condition|)
 name|init_serial
 argument_list|()
 expr_stmt|;
+continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|RB_GDB
+if|if
+condition|(
+name|c
+operator|==
+literal|'g'
+condition|)
+operator|*
+name|howto
+operator||=
+name|RB_GDB
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|c
