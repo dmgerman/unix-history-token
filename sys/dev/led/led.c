@@ -308,6 +308,11 @@ literal|0xf
 expr_stmt|;
 name|sc
 operator|->
+name|count
+operator|--
+expr_stmt|;
+name|sc
+operator|->
 name|ptr
 operator|++
 expr_stmt|;
