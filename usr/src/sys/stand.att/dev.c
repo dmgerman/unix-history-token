@@ -1,24 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dev.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dev.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"sys/param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/time.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/vnode.h"
 end_include
 
 begin_include
@@ -40,7 +28,7 @@ file|"saio.h"
 end_include
 
 begin_comment
-comment|/*  * NB: the value "io->i_ino.i_dev", used to offset the devsw[] array  * in the routines below, is munged by the vaxstand Makefile to work  * for certain boots.  */
+comment|/*  * NB: the value "io->i_dev", used to offset the devsw[] array  * in the routines below, is munged by the vaxstand Makefile to work  * for certain boots.  */
 end_comment
 
 begin_expr_stmt
@@ -81,8 +69,6 @@ name|devsw
 index|[
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 index|]
 operator|.
@@ -147,8 +133,6 @@ name|devsw
 index|[
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 index|]
 operator|.
@@ -205,8 +189,6 @@ name|devsw
 index|[
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 index|]
 operator|.
@@ -230,8 +212,6 @@ name|devsw
 index|[
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 index|]
 operator|.
@@ -364,8 +344,6 @@ name|devsw
 index|[
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 index|]
 operator|.
@@ -417,8 +395,6 @@ name|devsw
 index|[
 name|io
 operator|->
-name|i_ino
-operator|.
 name|i_dev
 index|]
 operator|.
