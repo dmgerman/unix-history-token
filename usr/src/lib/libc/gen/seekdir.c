@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)seekdir.c 4.7 %G%"
+literal|"@(#)seekdir.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ file|<dir.h>
 end_include
 
 begin_comment
-comment|/*  * seek to an entry in a directory.  * Only values returned by ``telldir'' should be passed to seekdir.  */
+comment|/*  * seek to an entry in a directory.  * Only values returned by "telldir" should be passed to seekdir.  */
 end_comment
 
 begin_function
@@ -93,36 +93,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|dirp
-operator|->
-name|dd_loc
-operator|!=
-literal|0
-operator|&&
-operator|(
-name|curloc
-operator|&
-operator|~
-operator|(
-name|DIRBLKSIZ
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-name|base
-condition|)
-block|{
-name|dirp
-operator|->
-name|dd_loc
-operator|=
-name|offset
-expr_stmt|;
-return|return;
-block|}
 name|lseek
 argument_list|(
 name|dirp
