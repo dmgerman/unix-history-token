@@ -16,24 +16,6 @@ file|<sys/param.h>
 end_include
 
 begin_decl_stmt
-name|char
-name|_sibuf
-index|[
-name|MAXBSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|_sobuf
-index|[
-name|MAXBSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|_iobuf
 name|_iob

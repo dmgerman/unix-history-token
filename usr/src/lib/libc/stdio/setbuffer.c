@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)setbuffer.c	4.2 (Berkeley) %G% */
+comment|/* @(#)setbuffer.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -146,29 +146,12 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|static
-name|char
-name|_sebuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 specifier|extern
 name|char
-name|_sobuf
-index|[]
-decl_stmt|;
-if|if
-condition|(
-name|iop
-operator|!=
-name|stdout
-operator|&&
-name|iop
-operator|!=
-name|stderr
-condition|)
-return|return;
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
 name|fflush
 argument_list|(
 name|iop
@@ -178,22 +161,10 @@ name|setbuffer
 argument_list|(
 name|iop
 argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|setbuffer
+name|malloc
 argument_list|(
-name|iop
-argument_list|,
-name|iop
-operator|==
-name|stderr
-condition|?
-name|_sebuf
-else|:
-name|_sobuf
+name|BUFSIZ
+argument_list|)
 argument_list|,
 name|BUFSIZ
 argument_list|)
@@ -203,6 +174,8 @@ operator|->
 name|_flag
 operator||=
 name|_IOLBF
+operator||
+name|_IOMYBUF
 expr_stmt|;
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)wbuf.c	4.6 (Berkeley) %G% */
+comment|/* @(#)wbuf.c	4.7 (Berkeley) %G% */
 end_comment
 
 begin_include

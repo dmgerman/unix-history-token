@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)filbuf.c	4.7 (Berkeley) %G% */
+comment|/* @(#)filbuf.c	4.8 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -56,11 +56,6 @@ name|smallbuf
 index|[
 name|_NFILE
 index|]
-decl_stmt|;
-specifier|extern
-name|char
-name|_sibuf
-index|[]
 decl_stmt|;
 if|if
 condition|(
@@ -177,20 +172,6 @@ name|st_blksize
 expr_stmt|;
 if|if
 condition|(
-name|iop
-operator|==
-name|stdin
-condition|)
-name|iop
-operator|->
-name|_base
-operator|=
-name|_sibuf
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
 operator|(
 name|iop
 operator|->
@@ -221,7 +202,6 @@ name|_flag
 operator||=
 name|_IOMYBUF
 expr_stmt|;
-block|}
 name|iop
 operator|->
 name|_bufsiz
