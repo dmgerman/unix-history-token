@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pow.c	4.5 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)pow.c	4.5 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* double static */
+comment|/* static double */
 end_comment
 
 begin_comment
@@ -167,8 +167,8 @@ comment|/* IEEE double */
 end_comment
 
 begin_decl_stmt
-name|double
 specifier|static
+name|double
 name|ln2hi
 init|=
 literal|6.9314718036912381649E
@@ -204,8 +204,8 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|double
 specifier|static
+name|double
 name|zero
 init|=
 literal|0.0

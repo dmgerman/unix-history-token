@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp__E.c	1.2 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)exp__E.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,8 +232,8 @@ decl_stmt|,
 name|c
 decl_stmt|;
 block|{
-name|double
 specifier|static
+name|double
 name|zero
 init|=
 literal|0.0

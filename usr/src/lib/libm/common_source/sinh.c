@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sinh.c	4.3 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)sinh.c	4.3 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|VAX
 end_ifdef
 
 begin_comment
-comment|/* double static */
+comment|/* static double */
 end_comment
 
 begin_comment
@@ -124,8 +124,8 @@ comment|/* IEEE double */
 end_comment
 
 begin_decl_stmt
-name|double
 specifier|static
+name|double
 name|mln2hi
 init|=
 literal|7.0978271289338397310E2

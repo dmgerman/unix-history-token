@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expm1.c	1.2 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)expm1.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ comment|/* VAX D format */
 end_comment
 
 begin_comment
-comment|/* double static */
+comment|/* static double */
 end_comment
 
 begin_comment
@@ -153,8 +153,8 @@ comment|/* IEEE double */
 end_comment
 
 begin_decl_stmt
-name|double
 specifier|static
+name|double
 name|ln2hi
 init|=
 literal|6.9314718036912381649E
@@ -199,8 +199,8 @@ name|double
 name|x
 decl_stmt|;
 block|{
-name|double
 specifier|static
+name|double
 name|one
 init|=
 literal|1.0
