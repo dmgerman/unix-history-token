@@ -1701,7 +1701,7 @@ name|an_config
 operator|.
 name|an_opmode
 operator|=
-name|AN_OPMODE_IBSS_ADHOC
+name|AN_OPMODE_INFRASTRUCTURE_STATION
 expr_stmt|;
 name|sc
 operator|->
