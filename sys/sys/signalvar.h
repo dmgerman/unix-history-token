@@ -9,10 +9,6 @@ directive|ifndef
 name|_SYS_SIGNALVAR_H_
 end_ifndef
 
-begin_comment
-comment|/* tmp for user.h */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -259,7 +255,7 @@ parameter_list|(
 name|set
 parameter_list|)
 define|\
-value|do {								\ 		int __i;						\ 		for (__i = 0; __i< _SIG_WORDS; __i++)			\ 			(set).__bits[__i] = ~(unsigned int)0;		\ 	} while (0)
+value|do {								\ 		int __i;						\ 		for (__i = 0; __i< _SIG_WORDS; __i++)			\ 			(set).__bits[__i] = ~0U;			\ 	} while (0)
 end_define
 
 begin_define
@@ -774,6 +770,7 @@ name|int
 name|signum
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
