@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.5 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,6 +314,45 @@ name|COPTS
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+specifier|static
+struct|struct
+name|users
+block|{
+name|int
+name|u_default
+decl_stmt|;
+name|int
+name|u_min
+decl_stmt|;
+name|int
+name|u_max
+decl_stmt|;
+block|}
+name|users
+index|[]
+init|=
+block|{
+block|{
+literal|24
+block|,
+literal|8
+block|,
+literal|1024
+block|}
+block|,
+comment|/* MACHINE_VAX */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NUSERS
+value|(sizeof (users) / sizeof (users[0]))
+end_define
+
 begin_comment
 comment|/*  * Build the makefile from the skeleton  */
 end_comment
@@ -342,6 +381,11 @@ name|struct
 name|opt
 modifier|*
 name|op
+decl_stmt|;
+name|struct
+name|users
+modifier|*
+name|up
 decl_stmt|;
 name|read_files
 argument_list|()
@@ -561,9 +605,43 @@ argument_list|(
 literal|"timezone not specified; gmt assumed\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|vax
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|machine
+operator|>
+name|NUSERS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"maxusers config info isn't present, using vax\n"
+argument_list|)
+expr_stmt|;
+name|up
+operator|=
+operator|&
+name|users
+index|[
+name|MACHINE_VAX
+operator|-
+literal|1
+index|]
+expr_stmt|;
+block|}
+else|else
+name|up
+operator|=
+operator|&
+name|users
+index|[
+name|machine
+operator|-
+literal|1
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|maxusers
@@ -573,12 +651,18 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"maxusers not specified; 24 assumed\n"
+literal|"maxusers not specified; %d assumed\n"
+argument_list|,
+name|up
+operator|->
+name|u_default
 argument_list|)
 expr_stmt|;
 name|maxusers
 operator|=
-literal|24
+name|up
+operator|->
+name|u_default
 expr_stmt|;
 block|}
 elseif|else
@@ -586,17 +670,25 @@ if|if
 condition|(
 name|maxusers
 operator|<
-literal|8
+name|up
+operator|->
+name|u_min
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"minimum of 8 maxusers assumed\n"
+literal|"minimum of %d maxusers assumed\n"
+argument_list|,
+name|up
+operator|->
+name|u_min
 argument_list|)
 expr_stmt|;
 name|maxusers
 operator|=
-literal|8
+name|up
+operator|->
+name|u_min
 expr_stmt|;
 block|}
 elseif|else
@@ -604,17 +696,21 @@ if|if
 condition|(
 name|maxusers
 operator|>
-literal|1024
+name|up
+operator|->
+name|u_max
 condition|)
 name|printf
 argument_list|(
-literal|"warning: maxusers> 1024 (%d)\n"
+literal|"warning: maxusers> %d (%d)\n"
+argument_list|,
+name|up
+operator|->
+name|u_max
 argument_list|,
 name|maxusers
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|fprintf
 argument_list|(
 name|ofp
@@ -2465,18 +2561,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} %ss | ../%s/inline/inline |"
+literal|"\t${C2} %ss | ${INLINE} | ${AS} -o %so\n"
 argument_list|,
 name|tp
-argument_list|,
-name|machinename
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|" ${AS} -o %so\n"
 argument_list|,
 name|tp
 argument_list|)
@@ -2519,18 +2606,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} -i %ss | ../%s/inline/inline |"
+literal|"\t${C2} -i %ss | ${INLINE} | ${AS} -o %so\n"
 argument_list|,
 name|tp
-argument_list|,
-name|machinename
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|" ${AS} -o %so\n"
 argument_list|,
 name|tp
 argument_list|)
@@ -2609,9 +2687,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t../%s/inline/inline %ss | ${AS} -o %so\n"
-argument_list|,
-name|machinename
+literal|"\t${INLINE} %ss | ${AS} -o %so\n"
 argument_list|,
 name|tp
 argument_list|,
@@ -2829,7 +2905,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" ../%s/inline/inline"
+literal|" ${INLINE}"
 argument_list|,
 name|machinename
 argument_list|)
@@ -3095,16 +3171,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} swapgeneric.s | "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"../%s/inline/inline"
-argument_list|,
-name|machinename
+literal|"\t${C2} swapgeneric.s | ${INLINE}"
 argument_list|)
 expr_stmt|;
 name|fprintf
