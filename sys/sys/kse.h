@@ -226,6 +226,21 @@ name|KMF_WAITSIGEVENT
 value|0x10
 end_define
 
+begin_comment
+comment|/* These flags are kept in tm_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMF_NOUPCALL
+value|0x01
+end_define
+
+begin_comment
+comment|/* Commands for kse_thr_interrupt */
+end_comment
+
 begin_define
 define|#
 directive|define
