@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.23 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5452,30 +5452,6 @@ operator|!=
 name|CANONHOST
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|bitnset
-argument_list|(
-name|M_LOCAL
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"554 buildaddr: no host"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|a
 operator|->
 name|q_host
@@ -6046,26 +6022,25 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* if the mailer ignores hosts, we have succeeded! */
+comment|/* otherwise compare hosts (but be careful for NULL ptrs) */
 if|if
 condition|(
-name|bitnset
-argument_list|(
-name|M_LOCALMAILER
-argument_list|,
 name|a
 operator|->
-name|q_mailer
+name|q_host
+operator|==
+name|b
 operator|->
-name|m_flags
-argument_list|)
+name|q_host
 condition|)
+block|{
+comment|/* probably both null pointers */
 return|return
 operator|(
 name|TRUE
 operator|)
 return|;
-comment|/* otherwise compare hosts (but be careful for NULL ptrs) */
+block|}
 if|if
 condition|(
 name|a
@@ -6080,11 +6055,14 @@ name|q_host
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* only one is a null pointer */
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|strcasecmp
@@ -6325,7 +6303,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		header -- set if this address is in the header, rather **			than an envelope header. **		canonical -- if set, strip out any comment information, **			etc. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
+comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		header -- set if this address is in the header, rather **			than an envelope header. **		canonical -- if set, strip out any comment information, **			etc. **		adddomain -- if set, OK to do domain extension. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
 end_comment
 
 begin_function
@@ -6342,6 +6320,8 @@ parameter_list|,
 name|header
 parameter_list|,
 name|canonical
+parameter_list|,
+name|adddomain
 parameter_list|,
 name|e
 parameter_list|)
@@ -6361,6 +6341,9 @@ name|header
 decl_stmt|;
 name|bool
 name|canonical
+decl_stmt|;
+name|bool
+name|adddomain
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -6509,6 +6492,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|adddomain
+operator|&&
 name|e
 operator|->
 name|e_fromdomain
