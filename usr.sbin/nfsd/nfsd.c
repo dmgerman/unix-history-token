@@ -1859,6 +1859,12 @@ operator|&
 name|v6bits
 argument_list|)
 expr_stmt|;
+name|FD_ZERO
+argument_list|(
+operator|&
+name|sockbits
+argument_list|)
+expr_stmt|;
 name|rpcbregcnt
 operator|=
 literal|0
