@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fhdr.c 2.1 %G%"
+literal|"@(#)fhdr.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -532,11 +532,17 @@ name|il
 operator|==
 name|TR_NIL
 condition|)
+block|{
+name|temp
+operator|=
+name|NLNIL
+expr_stmt|;
 name|error
 argument_list|(
 literal|"Function type must be specified"
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -566,17 +572,6 @@ name|il
 argument_list|)
 expr_stmt|;
 block|}
-block|{
-specifier|register
-name|struct
-name|nl
-modifier|*
-name|il
-decl_stmt|;
-name|il
-operator|=
-name|temp
-expr_stmt|;
 name|p
 operator|=
 name|enter
@@ -591,13 +586,12 @@ name|id_ptr
 argument_list|,
 name|FUNC
 argument_list|,
-name|il
+name|temp
 argument_list|,
 name|NIL
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|p
 operator|->
 name|nl_flags
