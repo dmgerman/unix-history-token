@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	6.1	83/07/29	*/
+comment|/*	ht.c	6.2	83/09/26	*/
 end_comment
 
 begin_include
@@ -1277,6 +1277,10 @@ name|sc
 operator|->
 name|sc_dens
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* unneeded, may hang controller */
 if|if
 condition|(
 name|bp
@@ -1313,6 +1317,8 @@ name|mi
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|sc
 operator|->
 name|sc_dsreg
