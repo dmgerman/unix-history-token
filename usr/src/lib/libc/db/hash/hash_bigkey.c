@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_bigkey.c	5.6 (Berkeley) %G%"
+literal|"@(#)hash_bigkey.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,15 +712,10 @@ name|int
 name|__big_delete
 parameter_list|(
 name|bufp
-parameter_list|,
-name|ndx
 parameter_list|)
 name|BUFHEAD
 modifier|*
 name|bufp
-decl_stmt|;
-name|int
-name|ndx
 decl_stmt|;
 block|{
 specifier|register
@@ -1867,6 +1862,9 @@ name|collect_data
 argument_list|(
 name|bufp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|set_current
@@ -2297,8 +2295,6 @@ name|__big_keydata
 parameter_list|(
 name|bufp
 parameter_list|,
-name|ndx
-parameter_list|,
 name|key
 parameter_list|,
 name|val
@@ -2308,9 +2304,6 @@ parameter_list|)
 name|BUFHEAD
 modifier|*
 name|bufp
-decl_stmt|;
-name|int
-name|ndx
 decl_stmt|;
 name|DBT
 modifier|*
@@ -2520,6 +2513,8 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
 name|__big_return
 argument_list|(
 name|bufp
@@ -2530,7 +2525,13 @@ name|val
 argument_list|,
 name|set
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -2725,8 +2726,6 @@ condition|(
 name|__big_keydata
 argument_list|(
 name|big_keyp
-argument_list|,
-literal|1
 argument_list|,
 operator|&
 name|key
