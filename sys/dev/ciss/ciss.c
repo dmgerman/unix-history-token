@@ -9129,6 +9129,13 @@ argument_list|,
 literal|"rescan failed (can't create path)\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|ccb
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|xpt_setup_ccb
