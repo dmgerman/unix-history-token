@@ -6231,7 +6231,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|err
 operator|)
 return|;
 block|}
