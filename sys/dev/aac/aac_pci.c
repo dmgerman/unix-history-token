@@ -1071,7 +1071,7 @@ argument_list|,
 name|INTR_MPSAFE
 operator||
 name|INTR_ENTROPY
-argument_list|,
+operator||
 name|INTR_TYPE_BIO
 argument_list|,
 name|aac_intr
