@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.14 (Berkeley) %G%"
+literal|"@(#)parse.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4853,8 +4853,6 @@ operator|)
 condition|)
 block|{
 name|ignComment
-operator|=
-name|ignDepOp
 operator|=
 name|TRUE
 expr_stmt|;
