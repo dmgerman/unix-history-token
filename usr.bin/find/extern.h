@@ -180,6 +180,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|creat_f
+name|c_acl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|creat_f
 name|c_and
 decl_stmt|;
 end_decl_stmt
@@ -352,6 +358,12 @@ end_decl_stmt
 begin_decl_stmt
 name|exec_f
 name|f_Xtime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|exec_f
+name|f_acl
 decl_stmt|;
 end_decl_stmt
 
