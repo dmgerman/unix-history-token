@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.8 (Berkeley) %G%"
+literal|"@(#)popen.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,19 +37,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/wait.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -139,20 +157,12 @@ specifier|extern
 name|char
 modifier|*
 modifier|*
-name|glob
+name|ftpglob
 argument_list|()
 decl_stmt|,
 modifier|*
 modifier|*
 name|copyblk
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strtok
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
 argument_list|()
 decl_stmt|;
 if|if
@@ -331,7 +341,7 @@ operator|!
 operator|(
 name|pop
 operator|=
-name|glob
+name|ftpglob
 argument_list|(
 name|argv
 index|[
@@ -790,6 +800,10 @@ name|pid
 operator|=
 name|wait
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|stat_loc
 argument_list|)

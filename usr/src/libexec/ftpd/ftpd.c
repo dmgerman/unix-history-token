@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.38 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,19 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
 end_include
 
 begin_include
@@ -143,19 +131,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -185,12 +179,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<syslog.h>
 end_include
 
@@ -198,6 +186,36 @@ begin_include
 include|#
 directive|include
 file|<varargs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -580,19 +598,15 @@ name|SWAITINT
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|void
 name|lostconn
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+argument_list|()
+decl_stmt|,
 name|myoob
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -1298,12 +1312,10 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|lostconn
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1323,7 +1335,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -1351,11 +1363,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|new
@@ -5862,12 +5869,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|myoob
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -6002,7 +6007,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Note: a response of 425 is not mentioned as a possible response to  * 	the PASV command in RFC959. However, it has been blessed as  * 	a legitimate response by Jon Postel in a telephone conversation  *	with Rick Adams on 25 Jan 89.  */
@@ -6556,7 +6561,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dir
 decl_stmt|;
@@ -6601,7 +6606,7 @@ specifier|extern
 name|char
 modifier|*
 modifier|*
-name|glob
+name|ftpglob
 argument_list|()
 decl_stmt|,
 modifier|*
@@ -6613,7 +6618,7 @@ name|NULL
 expr_stmt|;
 name|dirlist
 operator|=
-name|glob
+name|ftpglob
 argument_list|(
 name|whichfiles
 argument_list|)
