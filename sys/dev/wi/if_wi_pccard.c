@@ -419,7 +419,7 @@ name|wi_pccard_products
 index|[]
 init|=
 block|{
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 literal|3COM
 argument_list|,
@@ -428,7 +428,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 literal|3COM
 argument_list|,
@@ -437,7 +437,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|ACTIONTEC
 argument_list|,
@@ -446,7 +446,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|ADDTRON
 argument_list|,
@@ -455,7 +455,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|ALLIEDTELESIS
 argument_list|,
@@ -464,7 +464,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|BAY
 argument_list|,
@@ -473,7 +473,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|BUFFALO
 argument_list|,
@@ -482,7 +482,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|BUFFALO
 argument_list|,
@@ -491,7 +491,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|COMPAQ
 argument_list|,
@@ -500,7 +500,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|CONTEC
 argument_list|,
@@ -509,7 +509,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|COREGA
 argument_list|,
@@ -518,7 +518,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|COREGA
 argument_list|,
@@ -527,7 +527,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|COREGA
 argument_list|,
@@ -536,7 +536,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|DLINK
 argument_list|,
@@ -545,7 +545,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|ELSA
 argument_list|,
@@ -554,7 +554,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|ELSA
 argument_list|,
@@ -563,7 +563,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|ELSA
 argument_list|,
@@ -572,7 +572,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|EMTAC
 argument_list|,
@@ -581,7 +581,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|ERICSSON
 argument_list|,
@@ -590,7 +590,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|GEMTEK
 argument_list|,
@@ -599,7 +599,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|HWN
 argument_list|,
@@ -608,7 +608,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|INTEL
 argument_list|,
@@ -617,7 +617,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|INTERSIL
 argument_list|,
@@ -626,7 +626,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|IODATA2
 argument_list|,
@@ -635,7 +635,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|LINKSYS2
 argument_list|,
@@ -644,7 +644,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|LINKSYS2
 argument_list|,
@@ -653,7 +653,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|LINKSYS2
 argument_list|,
@@ -662,7 +662,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|LUCENT
 argument_list|,
@@ -671,7 +671,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|NETGEAR_2
 argument_list|,
@@ -680,7 +680,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|NOKIA
 argument_list|,
@@ -689,7 +689,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|PLANEX_2
 argument_list|,
@@ -698,7 +698,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|PROXIM
 argument_list|,
@@ -707,7 +707,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|SAMSUNG
 argument_list|,
@@ -716,7 +716,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|SIMPLETECH
 argument_list|,
@@ -725,7 +725,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|SOCKET
 argument_list|,
@@ -734,7 +734,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|SYMBOL
 argument_list|,
@@ -743,7 +743,7 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD_ND
+name|PCMCIA_CARD
 argument_list|(
 name|TDK
 argument_list|,
