@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.11	82/01/13	*/
+comment|/*	ioctl.h	4.12	82/01/17	*/
 end_comment
 
 begin_comment
@@ -781,6 +781,61 @@ end_define
 
 begin_comment
 comment|/* get linger time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSENDOOB
+value|(('s'<<8)|5)
+end_define
+
+begin_comment
+comment|/* send out of band */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCRCVOOB
+value|(('s'<<8)|6)
+end_define
+
+begin_comment
+comment|/* get out of band */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCATMARK
+value|(('s'<<8)|7)
+end_define
+
+begin_comment
+comment|/* at out of band mark? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSPGRP
+value|(('s'<<8)|8)
+end_define
+
+begin_comment
+comment|/* set process group */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGPGRP
+value|(('s'<<8)|9)
+end_define
+
+begin_comment
+comment|/* get process group */
 end_comment
 
 begin_endif
