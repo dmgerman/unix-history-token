@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumprmt.c	1.6 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -169,6 +175,17 @@ name|sp
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+name|char
+modifier|*
+name|name
+init|=
+literal|"root"
+decl_stmt|;
 if|if
 condition|(
 name|sp
@@ -206,6 +223,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|pw
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|&&
+name|pw
+operator|->
+name|pw_name
+condition|)
+name|name
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
 name|rmtape
 operator|=
 name|rcmd
@@ -217,9 +256,9 @@ name|sp
 operator|->
 name|s_port
 argument_list|,
-literal|"root"
+name|name
 argument_list|,
-literal|"root"
+name|name
 argument_list|,
 literal|"/etc/rmt"
 argument_list|,
