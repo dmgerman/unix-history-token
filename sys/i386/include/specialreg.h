@@ -516,7 +516,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/*  *CPUID instruction 1 ebx info  */
+comment|/*  * CPUID instruction 1 ebx info  */
 end_comment
 
 begin_define
