@@ -906,6 +906,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Limit number of pathnames that glob can return.  * A limit of 0 indicates the number of pathnames is unlimited.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXGLOBARGS
+value|16384
+end_define
+
+begin_empty
+empty|#
+end_empty
+
+begin_comment
 comment|/*  * Timeout intervals for retrying connections  * to hosts that don't accept PORT cmds.  This  * is a kludge, but given the problems with TCP...  */
 end_comment
 
@@ -12830,6 +12845,16 @@ argument_list|(
 name|gl
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|gl
+operator|.
+name|gl_matchc
+operator|=
+name|MAXGLOBARGS
+expr_stmt|;
+name|flags
+operator||=
+name|GLOB_MAXPATH
 expr_stmt|;
 name|freeglob
 operator|=
