@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.13 (Berkeley) %G%"
+literal|"@(#)dd.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1399,15 +1399,7 @@ name|in_full
 expr_stmt|;
 comment|/* Handle partial input blocks. */
 block|}
-elseif|else
-if|if
-condition|(
-name|n
-operator|!=
-name|in
-operator|.
-name|dbsz
-condition|)
+else|else
 block|{
 comment|/* If sync, use the entire block. */
 if|if
@@ -1656,8 +1648,6 @@ operator|-=
 name|nw
 control|)
 block|{
-name|outp
-operator|+=
 name|nw
 operator|=
 name|write
@@ -1670,6 +1660,30 @@ name|outp
 argument_list|,
 name|cnt
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nw
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|out
+operator|.
+name|name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|outp
+operator|+=
+name|rw
 expr_stmt|;
 name|st
 operator|.
@@ -1705,26 +1719,6 @@ name|out_full
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|nw
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-literal|"%s: %s"
-argument_list|,
-name|out
-operator|.
-name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 operator|++
 name|st
 operator|.
