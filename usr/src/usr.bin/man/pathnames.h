@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pathnames.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pathnames.h	8.2 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_MANCONF
+value|"./man.conf"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -9,6 +27,11 @@ directive|define
 name|_PATH_MANCONF
 value|"/etc/man.conf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -22,6 +45,13 @@ define|#
 directive|define
 name|_PATH_WHATIS
 value|"whatis.db"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_TMP
+value|"/tmp/man.XXXXXX"
 end_define
 
 end_unit
