@@ -1752,12 +1752,6 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|mtx_owned
@@ -1772,12 +1766,27 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
+comment|/* 	 * We have to wait until after acquiring all locks before 	 * changing p_state.  We need to avoid any possibly context 	 * switches while marked as a zombie including blocking on 	 * a mutex. 	 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_state
 operator|=
 name|PRS_ZOMBIE
+expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1792,6 +1801,15 @@ name|p
 operator|->
 name|p_pptr
 argument_list|)
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 name|cnt
 operator|.
