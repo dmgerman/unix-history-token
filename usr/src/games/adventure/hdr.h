@@ -1,25 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
+begin_comment
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * The game adventure was original written Fortran by Will Crowther  * and Don Woods.  It was later translated to C and enhanced by  * Jim Gillogly.  *  * %sccs.include.redist.c%  *  *	@(#)hdr.h	5.1 (Berkeley) %G%  */
+end_comment
 
 begin_comment
 comment|/*   ADVENTURE -- Jim Gillogly, Jul 1977  * This program is a re-write of ADVENT, written in FORTRAN mostly by  * Don Woods of SAIL.  In most places it is as nearly identical to the  * original as possible given the language and word-size differences.  * A few places, such as the message arrays and travel arrays were changed  * to reflect the smaller core size and word size.  The labels of the  * original are reflected in this version, so that the comments of the  * fortran are still applicable here.  *  * The data file distributed with the fortran source is assumed to be called  * "glorkz" in the directory where the program is first run.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|hdr_sccsid
-index|[]
-init|=
-literal|"	hdr.h	4.1	82/05/11	"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*
-comment|hdr.h */
 end_comment
 
 begin_comment
