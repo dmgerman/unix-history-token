@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/resource.h>
 end_include
 
@@ -100,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -118,12 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -136,6 +124,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -143,12 +149,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_function_decl
@@ -207,9 +207,6 @@ name|argv
 parameter_list|)
 block|{
 name|int
-name|pid
-decl_stmt|;
-name|int
 name|aflag
 decl_stmt|,
 name|ch
@@ -222,11 +219,11 @@ name|status
 decl_stmt|,
 name|pflag
 decl_stmt|;
-name|struct
-name|timeval
-name|before
-decl_stmt|,
-name|after
+name|int
+name|exitonsig
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 name|struct
 name|rlimit
@@ -236,11 +233,11 @@ name|struct
 name|rusage
 name|ru
 decl_stmt|;
-name|FILE
-modifier|*
-name|out
-init|=
-name|stderr
+name|struct
+name|timeval
+name|before
+decl_stmt|,
+name|after
 decl_stmt|;
 name|char
 modifier|*
@@ -248,12 +245,12 @@ name|ofn
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|exitonsig
+name|FILE
+modifier|*
+name|out
 init|=
-literal|0
+name|stderr
 decl_stmt|;
-comment|/* Die with same signal as child */
 operator|(
 name|void
 operator|)
@@ -556,19 +553,19 @@ argument_list|(
 literal|"command terminated abnormally"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|exitonsig
+operator|=
 name|WIFSIGNALED
 argument_list|(
 name|status
 argument_list|)
-condition|)
-name|exitonsig
-operator|=
+condition|?
 name|WTERMSIG
 argument_list|(
 name|status
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 name|after
 operator|.
@@ -1076,6 +1073,7 @@ literal|"involuntary context switches"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If the child has exited on a signal, exit on the same 	 * signal, too, in order to reproduce the child's exit status. 	 * However, avoid actually dumping core from the current process. 	 */
 if|if
 condition|(
 name|exitonsig
@@ -1092,7 +1090,7 @@ argument_list|)
 operator|==
 name|SIG_ERR
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"signal"
 argument_list|)
@@ -1190,10 +1188,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|clockinfo
-name|clockrate
-decl_stmt|;
 name|int
 name|mib
 index|[
@@ -1202,6 +1196,10 @@ index|]
 decl_stmt|;
 name|size_t
 name|size
+decl_stmt|;
+name|struct
+name|clockinfo
+name|clockrate
 decl_stmt|;
 name|mib
 index|[
