@@ -176,72 +176,58 @@ begin_struct
 struct|struct
 name|vnode
 block|{
-name|struct
-name|mtx
-name|v_interlock
+comment|/* 	 * Fields which define the identity of the vnode.  These fields are 	 * owned by the filesystem (XXX: and vgone() ?) 	 */
+name|enum
+name|vtype
+name|v_type
 decl_stmt|;
-comment|/* lock for "i" things */
-name|u_long
-name|v_iflag
-decl_stmt|;
-comment|/* i vnode flags (see below) */
-name|int
-name|v_usecount
-decl_stmt|;
-comment|/* i ref count of users */
-name|struct
-name|thread
+comment|/* u vnode type */
+specifier|const
+name|char
 modifier|*
-name|v_vxthread
+name|v_tag
 decl_stmt|;
-comment|/* i thread owning VXLOCK */
-name|int
-name|v_holdcnt
-decl_stmt|;
-comment|/* i page& buffer references */
+comment|/* u type of underlying data */
 name|struct
-name|bufobj
-name|v_bufobj
+name|vop_vector
+modifier|*
+name|v_op
 decl_stmt|;
-comment|/* * Buffer cache object */
-name|u_long
-name|v_vflag
+comment|/* u vnode operations vector */
+name|void
+modifier|*
+name|v_data
 decl_stmt|;
-comment|/* v vnode flags */
-name|int
-name|v_writecount
+comment|/* u private data for fs */
+comment|/* 	 * Filesystem instance stuff 	 */
+name|struct
+name|mount
+modifier|*
+name|v_mount
 decl_stmt|;
-comment|/* v ref count of writers */
-name|daddr_t
-name|v_lastw
-decl_stmt|;
-comment|/* v last write (write cluster) */
-name|daddr_t
-name|v_cstart
-decl_stmt|;
-comment|/* v start block of cluster */
-name|daddr_t
-name|v_lasta
-decl_stmt|;
-comment|/* v last allocation (cluster) */
-name|int
-name|v_clen
-decl_stmt|;
-comment|/* v length of current cluster */
+comment|/* u ptr to vfs we are in */
+name|TAILQ_ENTRY
+argument_list|(
+argument|vnode
+argument_list|)
+name|v_nmntvnodes
+expr_stmt|;
+comment|/* m vnodes for mount point */
+comment|/* 	 * Type specific fields, only one applies to any given vnode. 	 * See #defines below for renaming to v_* namespace. 	 */
 union|union
 block|{
 name|struct
 name|mount
 modifier|*
-name|vu_mountedhere
+name|vu_mount
 decl_stmt|;
-comment|/* v ptr to mounted vfs (VDIR) */
+comment|/* v ptr to mountpoint (VDIR) */
 name|struct
 name|socket
 modifier|*
 name|vu_socket
 decl_stmt|;
-comment|/* v unix ipc (VSOCK) */
+comment|/* v unix domain net (VSOCK) */
 name|struct
 name|cdev
 modifier|*
@@ -257,59 +243,7 @@ comment|/* v fifo (VFIFO) */
 block|}
 name|v_un
 union|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|vnode
-argument_list|)
-name|v_freelist
-expr_stmt|;
-comment|/* f vnode freelist */
-name|TAILQ_ENTRY
-argument_list|(
-argument|vnode
-argument_list|)
-name|v_nmntvnodes
-expr_stmt|;
-comment|/* m vnodes for mount point */
-name|enum
-name|vtype
-name|v_type
-decl_stmt|;
-comment|/* u vnode type */
-specifier|const
-name|char
-modifier|*
-name|v_tag
-decl_stmt|;
-comment|/* u type of underlying data */
-name|void
-modifier|*
-name|v_data
-decl_stmt|;
-comment|/* u private data for fs */
-name|struct
-name|lock
-name|v_lock
-decl_stmt|;
-comment|/* u used if fs don't have one */
-name|struct
-name|lock
-modifier|*
-name|v_vnlock
-decl_stmt|;
-comment|/* u pointer to vnode lock */
-name|struct
-name|vop_vector
-modifier|*
-name|v_op
-decl_stmt|;
-comment|/* u vnode operations vector */
-name|struct
-name|mount
-modifier|*
-name|v_mount
-decl_stmt|;
-comment|/* u ptr to vfs we are in */
+comment|/* 	 * VFS_namecache stuff 	 */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -340,18 +274,40 @@ name|u_long
 name|v_ddid
 decl_stmt|;
 comment|/* c .. capability identifier */
-name|struct
-name|vpollinfo
-modifier|*
-name|v_pollinfo
+comment|/* 	 * clustering stuff 	 */
+name|daddr_t
+name|v_cstart
 decl_stmt|;
-comment|/* G Poll events, p for *v_pi */
-name|struct
-name|label
-modifier|*
-name|v_label
+comment|/* v start block of cluster */
+name|daddr_t
+name|v_lasta
 decl_stmt|;
-comment|/* MAC label for vnode */
+comment|/* v last allocation  */
+name|daddr_t
+name|v_lastw
+decl_stmt|;
+comment|/* v last write  */
+name|int
+name|v_clen
+decl_stmt|;
+comment|/* v length of cur. cluster */
+comment|/* 	 * Locking 	 */
+name|struct
+name|lock
+name|v_lock
+decl_stmt|;
+comment|/* u (if fs don't have one) */
+name|struct
+name|mtx
+name|v_interlock
+decl_stmt|;
+comment|/* lock for "i" things */
+name|struct
+name|lock
+modifier|*
+name|v_vnlock
+decl_stmt|;
+comment|/* u pointer to vnode lock */
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS
@@ -367,6 +323,58 @@ decl_stmt|;
 comment|/* Line number doing locking */
 endif|#
 directive|endif
+name|int
+name|v_holdcnt
+decl_stmt|;
+comment|/* i page& buffer references */
+name|int
+name|v_usecount
+decl_stmt|;
+comment|/* i ref count of users */
+name|struct
+name|thread
+modifier|*
+name|v_vxthread
+decl_stmt|;
+comment|/* i thread owning VXLOCK */
+name|u_long
+name|v_iflag
+decl_stmt|;
+comment|/* i vnode flags (see below) */
+name|u_long
+name|v_vflag
+decl_stmt|;
+comment|/* v vnode flags */
+name|int
+name|v_writecount
+decl_stmt|;
+comment|/* v ref count of writers */
+comment|/* 	 * The machinery of being a vnode 	 */
+name|TAILQ_ENTRY
+argument_list|(
+argument|vnode
+argument_list|)
+name|v_freelist
+expr_stmt|;
+comment|/* f vnode freelist */
+name|struct
+name|bufobj
+name|v_bufobj
+decl_stmt|;
+comment|/* * Buffer cache object */
+comment|/* 	 * Hooks for various subsystems and features. 	 */
+name|struct
+name|vpollinfo
+modifier|*
+name|v_pollinfo
+decl_stmt|;
+comment|/* G Poll events, p for *v_pi */
+name|struct
+name|label
+modifier|*
+name|v_label
+decl_stmt|;
+comment|/* MAC label for vnode */
 block|}
 struct|;
 end_struct
@@ -384,7 +392,7 @@ begin_define
 define|#
 directive|define
 name|v_mountedhere
-value|v_un.vu_mountedhere
+value|v_un.vu_mount
 end_define
 
 begin_define
