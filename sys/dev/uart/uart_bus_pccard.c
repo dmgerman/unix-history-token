@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pccard/pccard_cis.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pccard/pccarddevs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pccard/pccardreg.h>
 end_include
 
@@ -75,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<dev/pccard/pccardvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/pccard/pccarddevs.h>
 end_include
 
 begin_include
