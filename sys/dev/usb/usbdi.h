@@ -984,6 +984,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|usbd_ratecheck
+parameter_list|(
+name|struct
+name|timeval
+modifier|*
+name|last
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * The usb_task structs form a queue of things to run in the USB event  * thread.  Normally this is just device discovery when a connect/disconnect  * has been detected.  But it may also be used by drivers that need to  * perform (short) tasks that must have a process context.  */
 end_comment
