@@ -1,18 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*  * Copyright (c) 1995 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	from: NetBSD: mc146818reg.h,v 1.5 2003/11/02 11:07:45 wiz Exp  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: mc146818reg.h,v 1.2 1997/03/12 06:53:42 cgd Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1995 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
-end_comment
-
-begin_comment
-comment|/*  * Definitions for the Motorola MC146818A Real Time Clock.  * They also apply for the (compatible) Dallas Semicontuctor DS1287A RTC.  *  * Though there are undoubtedly other (better) sources, this material was  * culled from the DEC "KN121 System Module Programmer's Reference  * Information."  *  * The MC146818A has 16 registers.  The first 10 contain time-of-year  * and alarm data.  The rest contain various control and status bits.  *  * To read or write the registers, one writes the register number to  * the RTC's control port, then either reads from or writes the new  * data to the RTC's data port.  Since the locations of these ports  * and the method used to access them can be machine-dependent, the  * low-level details of reading and writing the RTC's registers are  * handled by machine-specific functions.  *  * The time-of-year and alarm data can be expressed in either binary  * or BCD, and they are selected by a bit in register B.  *  * The "hour" time-of-year and alarm fields can either be expressed in  * AM/PM format, or in 24-hour format.  If AM/PM format is chosen, the  * hour fields can have the values: 1-12 and 81-92 (the latter being  * PM).  If the 24-hour format is chosen, they can have the values  * 0-24.  The hour format is selectable by a bit in register B.  * (XXX IS AM/PM MODE DESCRIPTION CORRECT?)  *  * It is assumed the if systems are going to use BCD (rather than  * binary) mode, or AM/PM hour format, they'll do the appropriate  * conversions in machine-dependent code.  Also, if the clock is  * switched between BCD and binary mode, or between AM/PM mode and  * 24-hour mode, the time-of-day and alarm registers are NOT  * automatically reset; they must be reprogrammed with correct values.  */
+comment|/*  * Definitions for the Motorola MC146818A Real Time Clock.  * They also apply for the (compatible) Dallas Semiconductor DS1287A RTC.  *  * Though there are undoubtedly other (better) sources, this material was  * culled from the DEC "KN121 System Module Programmer's Reference  * Information."  *  * The MC146818A has 16 registers.  The first 10 contain time-of-year  * and alarm data.  The rest contain various control and status bits.  *  * To read or write the registers, one writes the register number to  * the RTC's control port, then either reads from or writes the new  * data to the RTC's data port.  Since the locations of these ports  * and the method used to access them can be machine-dependent, the  * low-level details of reading and writing the RTC's registers are  * handled by machine-specific functions.  *  * The time-of-year and alarm data can be expressed in either binary  * or BCD, and they are selected by a bit in register B.  *  * The "hour" time-of-year and alarm fields can either be expressed in  * AM/PM format, or in 24-hour format.  If AM/PM format is chosen, the  * hour fields can have the values: 1-12 and 81-92 (the latter being  * PM).  If the 24-hour format is chosen, they can have the values  * 0-24.  The hour format is selectable by a bit in register B.  * (XXX IS AM/PM MODE DESCRIPTION CORRECT?)  *  * It is assumed the if systems are going to use BCD (rather than  * binary) mode, or AM/PM hour format, they'll do the appropriate  * conversions in machine-dependent code.  Also, if the clock is  * switched between BCD and binary mode, or between AM/PM mode and  * 24-hour mode, the time-of-day and alarm registers are NOT  * automatically reset; they must be reprogrammed with correct values.  */
 end_comment
 
 begin_comment
@@ -634,64 +626,6 @@ define|#
 directive|define
 name|MC_BASE_RESET
 value|0x70
-end_define
-
-begin_comment
-comment|/*  * A collection of TOD/Alarm registers.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int
-name|mc_todregs
-index|[
-name|MC_NTODREGS
-index|]
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Get all of the TOD/Alarm registers  * Must be called at splhigh(), and with the RTC properly set up.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MC146818_GETTOD
-parameter_list|(
-name|dev
-parameter_list|,
-name|regs
-parameter_list|)
-define|\
-value|do {								\ 		int i;							\ 									\
-comment|/* update in progress; spin loop */
-value|\ 		while (MCCLOCK_READ(dev, MC_REGA)& MC_REGA_UIP)	\ 			;						\ 									\
-comment|/* read all of the tod/alarm regs */
-value|\ 		for (i = 0; i< MC_NTODREGS; i++)			\ 			(*regs)[i] = MCCLOCK_READ(dev, i);		\ 	} while (0);
-end_define
-
-begin_comment
-comment|/*  * Set all of the TOD/Alarm registers  * Must be called at splhigh(), and with the RTC properly set up.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MC146818_PUTTOD
-parameter_list|(
-name|dev
-parameter_list|,
-name|regs
-parameter_list|)
-define|\
-value|do {								\ 		int i;							\ 									\
-comment|/* stop updates while setting */
-value|\ 		MCCLOCK_WRITE(dev, MC_REGB,				\ 		    MCCLOCK_READ(dev, MC_REGB) | MC_REGB_SET);		\ 									\
-comment|/* write all of the tod/alarm regs */
-value|\ 		for (i = 0; i< MC_NTODREGS; i++)			\ 			MCCLOCK_WRITE(dev, i, (*regs)[i]);		\ 									\
-comment|/* reenable updates */
-value|\ 		MCCLOCK_WRITE(dev, MC_REGB,				\ 		    MCCLOCK_READ(dev, MC_REGB)& ~MC_REGB_SET);		\ 	} while (0);
 end_define
 
 end_unit
