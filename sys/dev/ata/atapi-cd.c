@@ -6313,49 +6313,6 @@ decl_stmt|;
 name|int32_t
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NOTYET
-comment|/* allow write only on CD-R/RW media */
-comment|/* all for now SOS */
-if|if
-condition|(
-operator|!
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
-operator|&&
-operator|!
-operator|(
-name|writeable_media
-operator|)
-condition|)
-block|{
-name|bp
-operator|->
-name|b_error
-operator|=
-name|EROFS
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|biodone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
 comment|/* if it's a null transfer, return immediatly. */
 if|if
 condition|(
@@ -6379,7 +6336,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* check for valid blocksize SOS */
 name|bp
 operator|->
 name|b_pblkno
@@ -7996,7 +7952,7 @@ name|param
 operator|.
 name|page_code
 operator|=
-literal|0x05
+name|ATAPI_CDROM_WRITE_PARAMETERS_PAGE
 expr_stmt|;
 name|param
 operator|.
