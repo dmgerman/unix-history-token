@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_wrtfmt[] = "@(#)wrtfmt.c	1.7";  *  * formatted write routines  */
+comment|/* char id_wrtfmt[] = "@(#)wrtfmt.c	1.8";  *  * formatted write routines  */
 end_comment
 
 begin_include
@@ -1168,6 +1168,15 @@ operator|==
 literal|0.0
 condition|)
 block|{
+name|n
+operator|=
+name|cblank
+expr_stmt|;
+name|cblank
+operator|=
+literal|1
+expr_stmt|;
+comment|/* force '0' fill */
 name|wrt_F
 argument_list|(
 name|p
@@ -1184,6 +1193,10 @@ name|d
 argument_list|,
 name|len
 argument_list|)
+expr_stmt|;
+name|cblank
+operator|=
+name|n
 expr_stmt|;
 name|PUT
 argument_list|(
