@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.32	83/05/18	*/
+comment|/*	param.h	4.33	83/05/21	*/
 end_comment
 
 begin_comment
@@ -530,6 +530,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEV_BSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* log2(DEV_BSIZE) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BLKDEV_IOSIZE
 value|2048
 end_define
@@ -539,6 +550,30 @@ define|#
 directive|define
 name|MAXFRAG
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|btodb
+parameter_list|(
+name|bytes
+parameter_list|)
+comment|/* calculates (bytes / DEV_BSIZE) */
+define|\
+value|((unsigned)(bytes)>> DEV_BSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dbtob
+parameter_list|(
+name|db
+parameter_list|)
+comment|/* calculates (db * DEV_BSIZE) */
+define|\
+value|((unsigned)(db)<< DEV_BSHIFT)
 end_define
 
 begin_comment
