@@ -2818,7 +2818,10 @@ name|v
 operator|->
 name|header
 operator|=
+name|strdup
+argument_list|(
 name|hp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
