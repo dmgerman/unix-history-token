@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_4.c	1.1 83/07/20"
+literal|"@(#)pl_4.c	1.2 83/10/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -772,20 +772,30 @@ name|p
 operator|>
 name|buf
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|waddstr
+argument_list|(
+name|scroll_w
+argument_list|,
+literal|"\b \b"
+argument_list|)
+expr_stmt|;
 name|p
 operator|--
 expr_stmt|;
+block|}
 break|break;
 default|default:
 if|if
 condition|(
 name|p
 operator|<
-operator|&
 name|buf
-index|[
+operator|+
 name|n
-index|]
 operator|-
 literal|1
 condition|)

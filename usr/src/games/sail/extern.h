@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)extern.h	1.5 83/07/20  */
+comment|/*  * @(#)extern.h	1.6 83/10/05  */
 end_comment
 
 begin_include
@@ -621,7 +621,7 @@ begin_struct
 struct|struct
 name|BP
 block|{
-name|int
+name|short
 name|turnsent
 decl_stmt|;
 name|struct
@@ -629,7 +629,7 @@ name|ship
 modifier|*
 name|toship
 decl_stmt|;
-name|int
+name|short
 name|mensent
 decl_stmt|;
 block|}
@@ -640,7 +640,7 @@ begin_struct
 struct|struct
 name|snag
 block|{
-name|int
+name|short
 name|turnfoul
 decl_stmt|;
 name|struct
@@ -726,23 +726,23 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* 0 */
-name|int
+name|short
 name|points
 decl_stmt|;
 comment|/* 20 */
-name|int
+name|char
 name|loadL
 decl_stmt|;
 comment|/* 22 */
-name|int
+name|char
 name|loadR
 decl_stmt|;
 comment|/* 24 */
-name|int
+name|char
 name|readyL
 decl_stmt|;
 comment|/* 26 */
-name|int
+name|char
 name|readyR
 decl_stmt|;
 comment|/* 28 */
@@ -762,7 +762,7 @@ name|NBP
 index|]
 decl_stmt|;
 comment|/* 48 */
-name|int
+name|char
 name|struck
 decl_stmt|;
 comment|/* 66 */
@@ -772,7 +772,7 @@ modifier|*
 name|captured
 decl_stmt|;
 comment|/* 68 */
-name|int
+name|short
 name|pcrew
 decl_stmt|;
 comment|/* 70 */
@@ -783,7 +783,7 @@ literal|10
 index|]
 decl_stmt|;
 comment|/* 72 */
-name|int
+name|char
 name|drift
 decl_stmt|;
 comment|/* 82 */
@@ -810,43 +810,43 @@ literal|60
 index|]
 decl_stmt|;
 comment|/* 164 */
-name|int
+name|char
 name|RH
 decl_stmt|;
 comment|/* 224 */
-name|int
+name|char
 name|RG
 decl_stmt|;
 comment|/* 226 */
-name|int
+name|char
 name|RR
 decl_stmt|;
 comment|/* 228 */
-name|int
+name|char
 name|FS
 decl_stmt|;
 comment|/* 230 */
-name|int
+name|char
 name|explode
 decl_stmt|;
 comment|/* 232 */
-name|int
+name|char
 name|sink
 decl_stmt|;
 comment|/* 234 */
-name|int
+name|char
 name|dir
 decl_stmt|;
-name|int
+name|short
 name|col
 decl_stmt|;
-name|int
+name|short
 name|row
 decl_stmt|;
-name|int
+name|char
 name|loadwith
 decl_stmt|;
-name|int
+name|char
 name|stern
 decl_stmt|;
 block|}
@@ -868,19 +868,19 @@ modifier|*
 name|specs
 decl_stmt|;
 comment|/* 2 */
-name|int
+name|char
 name|nationality
 decl_stmt|;
 comment|/* 4 */
-name|int
+name|short
 name|shiprow
 decl_stmt|;
 comment|/* 6 */
-name|int
+name|short
 name|shipcol
 decl_stmt|;
 comment|/* 8 */
-name|int
+name|char
 name|shipdir
 decl_stmt|;
 comment|/* 10 */
@@ -898,31 +898,31 @@ begin_struct
 struct|struct
 name|scenario
 block|{
-name|int
+name|char
 name|winddir
 decl_stmt|;
 comment|/* 0 */
-name|int
+name|char
 name|windspeed
 decl_stmt|;
 comment|/* 2 */
-name|int
+name|char
 name|windchange
 decl_stmt|;
 comment|/* 4 */
-name|int
+name|short
 name|turn
 decl_stmt|;
 comment|/* 6 */
-name|int
+name|char
 name|people
 decl_stmt|;
 comment|/* 8 */
-name|int
+name|char
 name|time
 decl_stmt|;
 comment|/* 10 */
-name|int
+name|char
 name|vessels
 decl_stmt|;
 comment|/* 12 */
@@ -957,61 +957,61 @@ begin_struct
 struct|struct
 name|shipspecs
 block|{
-name|int
+name|char
 name|bs
 decl_stmt|;
-name|int
+name|char
 name|fs
 decl_stmt|;
-name|int
+name|char
 name|ta
 decl_stmt|;
-name|int
+name|short
 name|guns
 decl_stmt|;
-name|int
+name|char
 name|class
 decl_stmt|;
-name|int
+name|char
 name|hull
 decl_stmt|;
-name|int
+name|char
 name|qual
 decl_stmt|;
-name|int
+name|char
 name|crew1
 decl_stmt|;
-name|int
+name|char
 name|crew2
 decl_stmt|;
-name|int
+name|char
 name|crew3
 decl_stmt|;
-name|int
+name|char
 name|gunL
 decl_stmt|;
-name|int
+name|char
 name|gunR
 decl_stmt|;
-name|int
+name|char
 name|carL
 decl_stmt|;
-name|int
+name|char
 name|carR
 decl_stmt|;
-name|int
+name|char
 name|rig1
 decl_stmt|;
-name|int
+name|char
 name|rig2
 decl_stmt|;
-name|int
+name|char
 name|rig3
 decl_stmt|;
-name|int
+name|char
 name|rig4
 decl_stmt|;
-name|int
+name|short
 name|pts
 decl_stmt|;
 block|}
@@ -1074,7 +1074,7 @@ begin_struct
 struct|struct
 name|windeffects
 block|{
-name|int
+name|char
 name|A
 decl_stmt|,
 name|B
@@ -1104,7 +1104,7 @@ begin_struct
 struct|struct
 name|Tables
 block|{
-name|int
+name|char
 name|H
 decl_stmt|,
 name|G
@@ -1144,7 +1144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
 name|AMMO
 index|[
 literal|9
@@ -1156,7 +1156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
 name|HDT
 index|[
 literal|9
@@ -1168,7 +1168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
 name|HDTrake
 index|[
 literal|9
@@ -1180,7 +1180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
 name|QUAL
 index|[
 literal|9
@@ -1192,7 +1192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
 name|MT
 index|[
 literal|9
@@ -1243,7 +1243,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
 name|rangeofshot
 index|[]
 decl_stmt|;

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_2.c	1.2 83/07/20"
+literal|"@(#)dr_2.c	1.3 83/10/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -917,9 +917,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|char
 name|drift
-decl_stmt|,
+decl_stmt|;
+name|int
 name|row
 decl_stmt|,
 name|col
@@ -1135,7 +1136,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|char
 name|drift
 decl_stmt|;
 specifier|register
@@ -1357,16 +1358,26 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|int
+name|char
 modifier|*
 name|dir
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|short
 modifier|*
 name|row
 decl_stmt|,
 modifier|*
 name|col
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|char
 modifier|*
 name|drift
 decl_stmt|;

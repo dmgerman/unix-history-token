@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_2.c	1.3 83/07/20"
+literal|"@(#)pl_2.c	1.4 83/10/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -1640,7 +1640,7 @@ block|{
 name|int
 name|buf
 decl_stmt|;
-name|int
+name|char
 modifier|*
 name|repairs
 decl_stmt|;
