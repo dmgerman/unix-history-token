@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.40	81/07/09	*/
+comment|/*	tm.c	4.41	81/08/30	*/
 end_comment
 
 begin_include
@@ -1800,6 +1800,7 @@ operator|*
 operator|(
 name|int
 operator|)
+operator|-
 name|bp
 operator|->
 name|b_repcnt
