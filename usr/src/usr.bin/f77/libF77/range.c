@@ -1,21 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_range[] = "@(#)range.c	1.2";  *  * routines to return extreme values  * VERY MACHINE DEPENDENT  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)range.c	5.1	%G%  */
 end_comment
 
-begin_union
-union|union
+begin_expr_stmt
+operator|*
+name|routines
+name|to
+end_expr_stmt
+
+begin_return
+return|return
+name|extreme
+name|values
+operator|*
+name|VERY
+name|MACHINE
+name|DEPENDENT
+operator|*
+operator|/
+expr|union
 name|fi
 block|{
 name|float
 name|f
-decl_stmt|;
+block|;
 name|long
 name|i
-decl_stmt|;
-block|}
-union|;
-end_union
+block|; }
+return|;
+end_return
 
 begin_union
 union|union
