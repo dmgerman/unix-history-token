@@ -1606,10 +1606,58 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
+name|struct
+name|sockaddr_in
+modifier|*
+name|next_hop
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|rstreason
 decl_stmt|;
 comment|/* For badport_bandlim accounting purposes */
+comment|/* Grab info from MT_TAG mbufs prepended to the chain. */
+for|for
+control|(
+init|;
+name|m
+operator|&&
+name|m
+operator|->
+name|m_type
+operator|==
+name|MT_TAG
+condition|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+control|)
+block|{
+if|if
+condition|(
+name|m
+operator|->
+name|m_tag_id
+operator|==
+name|PACKET_TAG_IPFORWARD
+condition|)
+name|next_hop
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|m
+operator|->
+name|m_hdr
+operator|.
+name|mh_data
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2336,12 +2384,10 @@ literal|1
 expr_stmt|;
 name|findpcb
 label|:
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
+comment|/* IPFIREWALL_FORWARD section */
 if|if
 condition|(
-name|ip_fw_fwd_addr
+name|next_hop
 operator|!=
 name|NULL
 ifdef|#
@@ -2357,7 +2403,7 @@ directive|endif
 comment|/* INET6 */
 condition|)
 block|{
-comment|/* 		 * Diverted. Pretend to be the destination. 		 * already got one like this?  		 */
+comment|/* 		 * Transparently forwarded. Pretend to be the destination. 		 * already got one like this?  		 */
 name|inp
 operator|=
 name|in_pcblookup_hash
@@ -2399,10 +2445,11 @@ block|{
 comment|/*  			 * No, then it's new. Try find the ambushing socket 			 */
 if|if
 condition|(
-operator|!
-name|ip_fw_fwd_addr
+name|next_hop
 operator|->
 name|sin_port
+operator|==
+literal|0
 condition|)
 block|{
 name|inp
@@ -2420,7 +2467,7 @@ name|th
 operator|->
 name|th_sport
 argument_list|,
-name|ip_fw_fwd_addr
+name|next_hop
 operator|->
 name|sin_addr
 argument_list|,
@@ -2455,13 +2502,13 @@ name|th
 operator|->
 name|th_sport
 argument_list|,
-name|ip_fw_fwd_addr
+name|next_hop
 operator|->
 name|sin_addr
 argument_list|,
 name|ntohs
 argument_list|(
-name|ip_fw_fwd_addr
+name|next_hop
 operator|->
 name|sin_port
 argument_list|)
@@ -2477,15 +2524,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|ip_fw_fwd_addr
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* IPFIREWALL_FORWARD */
 block|{
 ifdef|#
 directive|ifdef

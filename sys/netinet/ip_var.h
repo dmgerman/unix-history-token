@@ -917,10 +917,16 @@ parameter_list|(
 name|struct
 name|mbuf
 modifier|*
+name|m
 parameter_list|,
 name|int
+name|incoming
 parameter_list|,
 name|int
+name|port
+parameter_list|,
+name|int
+name|rule
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -930,13 +936,6 @@ specifier|extern
 name|struct
 name|pr_usrreqs
 name|div_usrreqs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int16_t
-name|ip_divert_cookie
 decl_stmt|;
 end_decl_stmt
 

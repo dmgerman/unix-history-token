@@ -171,18 +171,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * MT_DUMMYNET is a new (fake) mbuf type that is prepended to the  * packet when it comes out of a pipe. The definition  * ought to go in /sys/sys/mbuf.h but here it is less intrusive.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MT_DUMMYNET
-value|MT_CONTROL
-end_define
-
-begin_comment
-comment|/*  * struct dn_pkt identifies a packet in the dummynet queue. The  * first part is really an m_hdr for implementation purposes, and some  * fields are saved there. When passing the packet back to the ip_input/  * ip_output()/bdg_forward, the struct is prepended to the mbuf chain with type  * MT_DUMMYNET, and contains the pointer to the matching rule.  *  * Note: there is no real need to make this structure contain an m_hdr,  * in the future this should be changed to a normal data structure.  */
+comment|/*  * struct dn_pkt identifies a packet in the dummynet queue, but  * is also used to tag packets passed back to the various destinations  * (ip_input(), ip_output(), bdg_forward()  and so on).  * As such the first part of the structure must be a struct m_hdr,  * followed by dummynet-specific parameters. The m_hdr must be  * initialized with  *   mh_type	= MT_TAG;  *   mh_flags	= PACKET_TYPE_DUMMYNET;  *   mh_next	=<pointer to the actual mbuf>  *  * mh_nextpkt, mh_data are free for dummynet use (mh_nextpkt is used to  * build a linked list of packets in a dummynet queue).  */
 end_comment
 
 begin_struct
@@ -195,26 +184,26 @@ name|hdr
 decl_stmt|;
 define|#
 directive|define
-name|dn_next
-value|hdr.mh_nextpkt
-comment|/* next element in queue */
-define|#
-directive|define
 name|DN_NEXT
 parameter_list|(
 name|x
 parameter_list|)
-value|(struct dn_pkt *)(x)->dn_next
+value|(struct dn_pkt *)(x)->hdr.mh_nextpkt
 define|#
 directive|define
 name|dn_m
 value|hdr.mh_next
 comment|/* packet to be forwarded */
-define|#
-directive|define
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+decl_stmt|;
+comment|/* matching rule */
+name|int
 name|dn_dir
-value|hdr.mh_flags
-comment|/* action when pkt extracted from a queue */
+decl_stmt|;
+comment|/* action when packet comes out. */
 define|#
 directive|define
 name|DN_TO_IP_OUT
@@ -679,46 +668,24 @@ typedef|typedef
 name|int
 name|ip_dn_io_t
 parameter_list|(
-name|int
-name|pipe
-parameter_list|,
-name|int
-name|dir
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|route
-modifier|*
-name|ro
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-name|dst
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-name|rule
+name|int
+name|pipe_nr
 parameter_list|,
 name|int
-name|flags
+name|dir
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+name|fwa
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/* ip_{in,out}put.c, bridge.c */
-end_comment
 
 begin_decl_stmt
 specifier|extern

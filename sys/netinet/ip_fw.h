@@ -1303,6 +1303,76 @@ value|0x40000
 end_define
 
 begin_comment
+comment|/*  * arguments for calling ip_fw_chk() and dummynet_io(). We put them  * all into a structure because this way it is easier and more  * efficient to pass variables around and extend the interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_fw_args
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+comment|/* the mbuf chain		*/
+name|struct
+name|ifnet
+modifier|*
+name|oif
+decl_stmt|;
+comment|/* output interface		*/
+name|struct
+name|sockaddr_in
+modifier|*
+name|next_hop
+decl_stmt|;
+comment|/* forward address		*/
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+decl_stmt|;
+comment|/* matching rule		*/
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
+comment|/* for bridged packets		*/
+name|struct
+name|route
+modifier|*
+name|ro
+decl_stmt|;
+comment|/* for dummynet			*/
+name|struct
+name|sockaddr_in
+modifier|*
+name|dst
+decl_stmt|;
+comment|/* for dummynet			*/
+name|int
+name|flags
+decl_stmt|;
+comment|/* for dummynet			*/
+name|struct
+name|ipfw_flow_id
+name|f_id
+decl_stmt|;
+comment|/* grabbed from IP header	*/
+name|u_int16_t
+name|divert_rule
+decl_stmt|;
+comment|/* divert cookie		*/
+name|u_int32_t
+name|retval
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Function definitions.  */
 end_comment
 
@@ -1337,31 +1407,9 @@ name|int
 name|ip_fw_chk_t
 parameter_list|(
 name|struct
-name|mbuf
+name|ip_fw_args
 modifier|*
-modifier|*
-name|m
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|oif
-parameter_list|,
-name|u_int16_t
-modifier|*
-name|cookie
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-modifier|*
-name|rule
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-modifier|*
-name|next_hop
+name|args
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1405,14 +1453,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|fw_enable
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ipfw_flow_id
-name|last_pkt
 decl_stmt|;
 end_decl_stmt
 

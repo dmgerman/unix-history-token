@@ -373,13 +373,6 @@ begin_comment
 comment|/* counter for ipfw_report(NULL...) */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|ipfw_flow_id
-name|last_pkt
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -2813,9 +2806,6 @@ name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 case|case
 name|IP_FW_F_FWD
 case|:
@@ -2877,8 +2867,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|action
 operator|=
@@ -4784,6 +4772,11 @@ name|struct
 name|ip_fw
 modifier|*
 name|rule
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+name|args
 parameter_list|)
 block|{
 name|struct
@@ -4806,14 +4799,16 @@ name|DEB
 argument_list|(
 argument|printf(
 literal|"-- install state type %d 0x%08x %u -> 0x%08x %u\n"
-argument|,        type,        (last_pkt.src_ip), (last_pkt.src_port),        (last_pkt.dst_ip), (last_pkt.dst_port) );
+argument|,        type,        (args->f_id.src_ip), (args->f_id.src_port),        (args->f_id.dst_ip), (args->f_id.dst_port) );
 argument_list|)
 name|q
 operator|=
 name|lookup_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 name|NULL
 argument_list|)
@@ -4898,7 +4893,9 @@ comment|/* bidir rule */
 name|add_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 name|DYN_KEEP_STATE
 argument_list|,
@@ -4964,7 +4961,9 @@ name|id
 operator|.
 name|proto
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|proto
 expr_stmt|;
@@ -4978,7 +4977,9 @@ name|id
 operator|.
 name|src_ip
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|src_ip
 expr_stmt|;
@@ -4992,7 +4993,9 @@ name|id
 operator|.
 name|dst_ip
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|dst_ip
 expr_stmt|;
@@ -5006,7 +5009,9 @@ name|id
 operator|.
 name|src_port
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|src_port
 expr_stmt|;
@@ -5020,7 +5025,9 @@ name|id
 operator|.
 name|dst_port
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|dst_port
 expr_stmt|;
@@ -5087,7 +5094,9 @@ block|}
 name|add_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 name|DYN_LIMIT
 argument_list|,
@@ -5116,7 +5125,9 @@ block|}
 name|lookup_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 name|NULL
 argument_list|)
@@ -5240,33 +5251,78 @@ name|int
 name|ip_fw_chk
 parameter_list|(
 name|struct
+name|ip_fw_args
+modifier|*
+name|args
+parameter_list|)
+if|#
+directive|if
+literal|0
+comment|/* the old interface was this: */
+function|struct mbuf **m, struct ifnet *oif, u_int16_t *cookie, 	struct ip_fw **flow_id, struct sockaddr_in **next_hop)
+endif|#
+directive|endif
+block|{
+comment|/* 	 * grab things into variables to minimize diffs. 	 * XXX this has to be cleaned up later. 	 */
+name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|m
-parameter_list|,
+init|=
+operator|&
+operator|(
+name|args
+operator|->
+name|m
+operator|)
+decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|oif
-parameter_list|,
+init|=
+name|args
+operator|->
+name|oif
+decl_stmt|;
 name|u_int16_t
 modifier|*
 name|cookie
-parameter_list|,
+init|=
+operator|&
+operator|(
+name|args
+operator|->
+name|divert_rule
+operator|)
+decl_stmt|;
 name|struct
 name|ip_fw
 modifier|*
 modifier|*
 name|flow_id
-parameter_list|,
+init|=
+operator|&
+operator|(
+name|args
+operator|->
+name|rule
+operator|)
+decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
 modifier|*
 name|next_hop
-parameter_list|)
-block|{
+init|=
+operator|&
+operator|(
+name|args
+operator|->
+name|next_hop
+operator|)
+decl_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -5362,8 +5418,6 @@ literal|0
 decl_stmt|;
 name|u_int16_t
 name|skipto
-decl_stmt|,
-name|bridgeCookie
 decl_stmt|;
 name|u_int16_t
 name|ip_len
@@ -5392,32 +5446,18 @@ decl_stmt|;
 define|#
 directive|define
 name|BRIDGED
-value|(cookie ==&bridgeCookie)
+value|(args->eh != NULL)
 if|if
 condition|(
-name|cookie
-operator|==
-name|NULL
+name|BRIDGED
 condition|)
 block|{
 comment|/* this is a bridged packet */
-name|bridgeCookie
-operator|=
-literal|0
-expr_stmt|;
-name|cookie
-operator|=
-operator|&
-name|bridgeCookie
-expr_stmt|;
 name|eh
 operator|=
-operator|(
-expr|struct
-name|ether_header
-operator|*
-operator|)
-name|next_hop
+name|args
+operator|->
+name|eh
 expr_stmt|;
 if|if
 condition|(
@@ -5722,7 +5762,9 @@ directive|undef
 name|PULLUP_TO
 block|}
 block|}
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|src_ip
 operator|=
@@ -5733,7 +5775,9 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|dst_ip
 operator|=
@@ -5744,13 +5788,17 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|proto
 operator|=
 name|proto
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|src_port
 operator|=
@@ -5759,7 +5807,9 @@ argument_list|(
 name|src_port
 argument_list|)
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|dst_port
 operator|=
@@ -5768,7 +5818,9 @@ argument_list|(
 name|dst_port
 argument_list|)
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|flags
 operator|=
@@ -6336,7 +6388,9 @@ operator|=
 name|lookup_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 operator|&
 name|direction
@@ -7375,6 +7429,8 @@ condition|(
 name|install_state
 argument_list|(
 name|f
+argument_list|,
+name|args
 argument_list|)
 condition|)
 comment|/* error or limit violation */
@@ -7555,9 +7611,6 @@ operator||
 name|IP_FW_PORT_DYNT_FLAG
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 case|case
 name|IP_FW_F_FWD
 case|:
@@ -7595,8 +7648,6 @@ literal|0
 operator|)
 return|;
 comment|/* Allow the packet */
-endif|#
-directive|endif
 block|}
 comment|/* Deny/reject this packet using this rule */
 break|break;
@@ -9358,14 +9409,9 @@ case|:
 case|case
 name|IP_FW_F_SKIPTO
 case|:
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 case|case
 name|IP_FW_F_FWD
 case|:
-endif|#
-directive|endif
 break|break;
 default|default:
 name|dprintf
@@ -10170,15 +10216,7 @@ directive|else
 literal|"divert disabled, "
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 literal|"rule-based forwarding enabled, "
-else|#
-directive|else
-literal|"rule-based forwarding disabled, "
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_DEFAULT_TO_ACCEPT

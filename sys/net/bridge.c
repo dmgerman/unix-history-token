@@ -2964,14 +2964,7 @@ name|struct
 name|ifnet
 modifier|*
 name|src
-init|=
-name|m0
-operator|->
-name|m_pkthdr
-operator|.
-name|rcvif
 decl_stmt|;
-comment|/* NULL when called by *_output */
 name|struct
 name|ifnet
 modifier|*
@@ -2979,8 +2972,6 @@ name|ifp
 decl_stmt|,
 modifier|*
 name|last
-init|=
-name|NULL
 decl_stmt|;
 name|int
 name|shared
@@ -3003,13 +2994,9 @@ name|dst
 decl_stmt|;
 comment|/* real dst from ether_output */
 name|struct
-name|ip_fw
-modifier|*
-name|rule
-init|=
-name|NULL
+name|ip_fw_args
+name|args
 decl_stmt|;
-comment|/* did we match a firewall rule ? */
 ifdef|#
 directive|ifdef
 name|PFIL_HOOKS
@@ -3036,35 +3023,71 @@ name|DEB
 argument_list|(
 argument|quad_t ticks; ticks = rdtsc();
 argument_list|)
-if|if
-condition|(
+name|args
+operator|.
+name|rule
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* did we match a firewall rule ? */
+comment|/* Fetch state from dummynet tag, ignore others */
+for|for
+control|(
+init|;
 name|m0
 operator|->
 name|m_type
 operator|==
-name|MT_DUMMYNET
-condition|)
-block|{
-comment|/* extract info from dummynet header */
-name|rule
-operator|=
-operator|(
-expr|struct
-name|ip_fw
-operator|*
-operator|)
-operator|(
-name|m0
-operator|->
-name|m_data
-operator|)
-expr_stmt|;
+name|MT_TAG
+condition|;
 name|m0
 operator|=
 name|m0
 operator|->
 name|m_next
+control|)
+if|if
+condition|(
+name|m0
+operator|->
+name|m_tag_id
+operator|==
+name|PACKET_TAG_DUMMYNET
+condition|)
+block|{
+name|args
+operator|.
+name|rule
+operator|=
+operator|(
+operator|(
+expr|struct
+name|dn_pkt
+operator|*
+operator|)
+name|m0
+operator|)
+operator|->
+name|rule
 expr_stmt|;
+name|shared
+operator|=
+literal|0
+expr_stmt|;
+comment|/* For sure this is our own mbuf. */
+block|}
+if|if
+condition|(
+name|args
+operator|.
+name|rule
+operator|==
+name|NULL
+condition|)
+name|bdg_thru
+operator|++
+expr_stmt|;
+comment|/* first time through bdg_forward, count packet */
 name|src
 operator|=
 name|m0
@@ -3073,17 +3096,6 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-name|shared
-operator|=
-literal|0
-expr_stmt|;
-comment|/* For sure this is our own mbuf. */
-block|}
-else|else
-name|bdg_thru
-operator|++
-expr_stmt|;
-comment|/* count packet, only once */
 if|if
 condition|(
 name|src
@@ -3272,11 +3284,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|args
+operator|.
 name|rule
 operator|!=
 name|NULL
 condition|)
-comment|/* dummynet packet, already partially processed */
+comment|/* packet already partially processed */
 goto|goto
 name|forward
 goto|;
@@ -3503,7 +3517,7 @@ block|}
 endif|#
 directive|endif
 comment|/* PFIL_HOOKS */
-comment|/* 	 * The second parameter to the firewall code is the dst. interface. 	 * Since we apply checks only on input pkts we use NULL. 	 * The firewall knows this is a bridged packet as the cookie ptr 	 * is NULL. 	 */
+comment|/* 	 * Prepare arguments and call the firewall. 	 */
 if|if
 condition|(
 operator|!
@@ -3517,31 +3531,58 @@ goto|goto
 name|forward
 goto|;
 comment|/* not using ipfw, accept the packet */
+comment|/* 	 * XXX The following code is very similar to the one in 	 * if_ethersubr.c:ether_ipfw_chk() 	 */
+name|args
+operator|.
+name|m
+operator|=
+name|m0
+expr_stmt|;
+comment|/* the packet we are looking at 	*/
+name|args
+operator|.
+name|oif
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* this is an input packet 		*/
+name|args
+operator|.
+name|divert_rule
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we do not support divert yet 	*/
+name|args
+operator|.
+name|next_hop
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* we do not support forward yet	*/
+name|args
+operator|.
+name|eh
+operator|=
+operator|&
+name|save_eh
+expr_stmt|;
+comment|/* MAC header for bridged/MAC packets	*/
 name|i
 operator|=
 name|ip_fw_chk_ptr
 argument_list|(
 operator|&
-name|m0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-comment|/* cookie */
-argument_list|,
-operator|&
-name|rule
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|*
-operator|)
-operator|&
-name|save_eh
+name|args
 argument_list|)
 expr_stmt|;
+name|m0
+operator|=
+name|args
+operator|.
+name|m
+expr_stmt|;
+comment|/* in case the firewall used the mbuf	*/
 if|if
 condition|(
 operator|(
@@ -3579,7 +3620,7 @@ name|IP_FW_PORT_DYNT_FLAG
 operator|)
 condition|)
 block|{
-comment|/* 	     * Pass the pkt to dummynet, which consumes it. 	     * If shared, make a copy and keep the original. 	     * Need to prepend the ethernet header, optimize the common 	     * case of eh pointing already into the original mbuf. 	     */
+comment|/* 	     * Pass the pkt to dummynet, which consumes it. 	     * If shared, make a copy and keep the original. 	     */
 name|struct
 name|mbuf
 modifier|*
@@ -3605,16 +3646,10 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bdg_fwd: copy(1) failed\n"
-argument_list|)
-expr_stmt|;
+comment|/* copy failed, give up */
 return|return
 name|m0
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -3629,6 +3664,7 @@ name|NULL
 expr_stmt|;
 comment|/* and nothing back to the caller */
 block|}
+comment|/* 	     * Prepend the header, optimize for the common case of 	     * eh pointing into the mbuf. 	     */
 if|if
 condition|(
 operator|(
@@ -3687,18 +3723,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|m
-operator|&&
-name|verbose
-condition|)
-name|printf
-argument_list|(
-literal|"M_PREPEND failed\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|m
 operator|==
 name|NULL
@@ -3725,8 +3749,16 @@ name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
+name|args
+operator|.
+name|oif
+operator|=
+name|real_dst
+expr_stmt|;
 name|ip_dn_io_ptr
 argument_list|(
+name|m
+argument_list|,
 operator|(
 name|i
 operator|&
@@ -3735,32 +3767,17 @@ operator|)
 argument_list|,
 name|DN_TO_BDG_FWD
 argument_list|,
-name|m
-argument_list|,
-name|real_dst
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-name|rule
-argument_list|,
-literal|0
+operator|&
+name|args
 argument_list|)
 expr_stmt|;
 return|return
 name|m0
 return|;
 block|}
-comment|/* 	 * XXX add divert/forward actions... 	 */
-comment|/* if none of the above matches, we have to drop the pkt */
+comment|/* 	 * XXX at some point, add support for divert/forward actions. 	 * If none of the above matches, we have to drop the packet. 	 */
 name|bdg_ipfw_drops
 operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bdg_forward: No rules match, so dropping packet!\n"
-argument_list|)
 expr_stmt|;
 return|return
 name|m0
@@ -3803,28 +3820,24 @@ name|m0
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"-- bdg: pullup2 failed.\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
-block|}
-comment|/* now real_dst is used to determine the cluster where to forward */
+comment|/*      * now real_dst is used to determine the cluster where to forward.      * For packets coming from ether_input, this is the one of the 'src'      * interface, whereas for locally generated packets (src==NULL) it      * is the cluster of the original destination interface, which      * was already saved into real_dst.      */
 if|if
 condition|(
 name|src
 operator|!=
 name|NULL
 condition|)
-comment|/* pkt comes from ether_input */
 name|real_dst
 operator|=
 name|src
+expr_stmt|;
+name|last
+operator|=
+name|NULL
 expr_stmt|;
 for|for
 control|(

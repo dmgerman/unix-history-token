@@ -757,47 +757,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|ip_dn_io_t
 name|dummynet_io
-parameter_list|(
-name|int
-name|pipe_nr
-parameter_list|,
-name|int
-name|dir
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|route
-modifier|*
-name|ro
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-name|dst
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-name|rule
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1770,7 +1735,7 @@ argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The actual mbuf is preceded by a struct dn_pkt, resembling an mbuf 	 * (NOT A REAL one, just a small block of malloc'ed memory) with 	 *     m_type = MT_DUMMYNET 	 *     m_next = actual mbuf to be processed by ip_input/output 	 *     m_data = the matching rule 	 * and some other fields. 	 * The block IS FREED HERE because it contains parameters passed 	 * to the called routine. 	 */
+comment|/* 	 * The actual mbuf is preceded by a struct dn_pkt, resembling an mbuf 	 * (NOT A REAL one, just a small block of malloc'ed memory) with 	 *     m_type = MT_TAG, m_flags = PACKET_TAG_DUMMYNET 	 *     dn_m (m_next) = actual mbuf to be processed by ip_input/output 	 * and some other fields. 	 * The block IS FREED HERE because it contains parameters passed 	 * to the called routine. 	 */
 switch|switch
 condition|(
 name|pkt
@@ -3879,6 +3844,11 @@ name|struct
 name|dn_flow_set
 modifier|*
 name|fs
+parameter_list|,
+name|struct
+name|ipfw_flow_id
+modifier|*
+name|id
 parameter_list|)
 block|{
 name|int
@@ -3918,8 +3888,8 @@ expr_stmt|;
 else|else
 block|{
 comment|/* first, do the masking */
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_ip
 operator|&=
 name|fs
@@ -3928,8 +3898,8 @@ name|flow_mask
 operator|.
 name|dst_ip
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_ip
 operator|&=
 name|fs
@@ -3938,8 +3908,8 @@ name|flow_mask
 operator|.
 name|src_ip
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_port
 operator|&=
 name|fs
@@ -3948,8 +3918,8 @@ name|flow_mask
 operator|.
 name|dst_port
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_port
 operator|&=
 name|fs
@@ -3958,8 +3928,8 @@ name|flow_mask
 operator|.
 name|src_port
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|proto
 operator|&=
 name|fs
@@ -3968,8 +3938,8 @@ name|flow_mask
 operator|.
 name|proto
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|flags
 operator|=
 literal|0
@@ -3980,8 +3950,8 @@ name|i
 operator|=
 operator|(
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_ip
 operator|)
 operator|&
@@ -3990,8 +3960,8 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_ip
 operator|>>
 literal|15
@@ -4002,8 +3972,8 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_ip
 operator|<<
 literal|1
@@ -4014,8 +3984,8 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_ip
 operator|>>
 literal|16
@@ -4025,22 +3995,22 @@ literal|0xffff
 operator|)
 operator|^
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_port
 operator|<<
 literal|1
 operator|)
 operator|^
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_port
 operator|)
 operator|^
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|proto
 operator|)
 expr_stmt|;
@@ -4082,8 +4052,7 @@ if|if
 condition|(
 name|bcmp
 argument_list|(
-operator|&
-name|last_pkt
+name|id
 argument_list|,
 operator|&
 operator|(
@@ -4256,7 +4225,8 @@ name|q
 operator|->
 name|id
 operator|=
-name|last_pkt
+operator|*
+name|id
 expr_stmt|;
 block|}
 return|return
@@ -4779,30 +4749,27 @@ unit|}
 comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  *		real_dst in bdg_forward  * ro		route parameter (only used in ip_output, NULL otherwise)  * dst		destination address, only used by ip_output  * rule		matching rule, in case of multiple passes  * flags	flags from the caller, only used in ip_output  *   */
 end_comment
 
-begin_macro
-unit|int
+begin_function
+unit|static
+name|int
 name|dummynet_io
-argument_list|(
-argument|int pipe_nr
-argument_list|,
-argument|int dir
-argument_list|,
-comment|/* pipe_nr can also be a fs_nr */
-argument|struct mbuf *m
-argument_list|,
-argument|struct ifnet *ifp
-argument_list|,
-argument|struct route *ro
-argument_list|,
-argument|struct sockaddr_in *dst
-argument_list|,
-argument|struct ip_fw *rule
-argument_list|,
-argument|int flags
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|pipe_nr
+parameter_list|,
+name|int
+name|dir
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+name|fwa
+parameter_list|)
 block|{
 name|struct
 name|dn_pkt
@@ -4852,6 +4819,8 @@ condition|(
 operator|(
 name|fs
 operator|=
+name|fwa
+operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -4866,6 +4835,8 @@ name|locate_flowset
 argument_list|(
 name|pipe_nr
 argument_list|,
+name|fwa
+operator|->
 name|rule
 argument_list|)
 expr_stmt|;
@@ -4954,6 +4925,13 @@ operator|=
 name|find_queue
 argument_list|(
 name|fs
+argument_list|,
+operator|&
+operator|(
+name|fwa
+operator|->
+name|f_id
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5097,19 +5075,22 @@ name|hdr
 operator|.
 name|mh_type
 operator|=
-name|MT_DUMMYNET
+name|MT_TAG
 expr_stmt|;
-operator|(
-expr|struct
-name|ip_fw
-operator|*
-operator|)
 name|pkt
 operator|->
 name|hdr
 operator|.
-name|mh_data
+name|mh_flags
 operator|=
+name|PACKET_TAG_DUMMYNET
+expr_stmt|;
+name|pkt
+operator|->
+name|rule
+operator|=
+name|fwa
+operator|->
 name|rule
 expr_stmt|;
 name|DN_NEXT
@@ -5135,7 +5116,9 @@ name|pkt
 operator|->
 name|ifp
 operator|=
-name|ifp
+name|fwa
+operator|->
+name|oif
 expr_stmt|;
 if|if
 condition|(
@@ -5150,14 +5133,22 @@ operator|->
 name|ro
 operator|=
 operator|*
+operator|(
+name|fwa
+operator|->
 name|ro
+operator|)
 expr_stmt|;
 if|if
 condition|(
+name|fwa
+operator|->
 name|ro
 operator|->
 name|ro_rt
 condition|)
+name|fwa
+operator|->
 name|ro
 operator|->
 name|ro_rt
@@ -5167,6 +5158,8 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|fwa
+operator|->
 name|dst
 operator|==
 operator|(
@@ -5175,11 +5168,15 @@ name|sockaddr_in
 operator|*
 operator|)
 operator|&
+name|fwa
+operator|->
 name|ro
 operator|->
 name|ro_dst
 condition|)
 comment|/* dst points into ro */
+name|fwa
+operator|->
 name|dst
 operator|=
 operator|(
@@ -5200,12 +5197,16 @@ name|pkt
 operator|->
 name|dn_dst
 operator|=
+name|fwa
+operator|->
 name|dst
 expr_stmt|;
 name|pkt
 operator|->
 name|flags
 operator|=
+name|fwa
+operator|->
 name|flags
 expr_stmt|;
 block|}
@@ -5266,6 +5267,8 @@ comment|/*      * If we reach this point the flow was previously idle, so we nee
 if|if
 condition|(
 operator|(
+name|fwa
+operator|->
 name|rule
 operator|->
 name|fw_flg
@@ -5602,7 +5605,7 @@ return|return
 name|ENOBUFS
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Below, the rt_unref is only needed when (pkt->dn_dir == DN_TO_IP_OUT)  * Doing this would probably save us the initial bzero of dn_pkt  */
@@ -6126,22 +6129,14 @@ if|if
 condition|(
 name|pkt
 operator|->
-name|hdr
-operator|.
-name|mh_data
+name|rule
 operator|==
 name|r
 condition|)
 name|pkt
 operator|->
-name|hdr
-operator|.
-name|mh_data
+name|rule
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|ip_fw_default_rule
 expr_stmt|;
 block|}
@@ -6249,22 +6244,14 @@ if|if
 condition|(
 name|pkt
 operator|->
-name|hdr
-operator|.
-name|mh_data
+name|rule
 operator|==
 name|r
 condition|)
 name|pkt
 operator|->
-name|hdr
-operator|.
-name|mh_data
+name|rule
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|ip_fw_default_rule
 expr_stmt|;
 block|}
