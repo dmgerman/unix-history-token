@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -736,8 +742,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|long
-name|long
+name|intmax_t
 name|getq
 parameter_list|(
 specifier|const
@@ -2371,8 +2376,7 @@ end_comment
 
 begin_function
 specifier|static
-name|long
-name|long
+name|intmax_t
 name|getq
 parameter_list|(
 specifier|const
@@ -2385,8 +2389,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|long
-name|long
+name|intmax_t
 name|r
 decl_stmt|;
 name|errno
@@ -2395,7 +2398,7 @@ literal|0
 expr_stmt|;
 name|r
 operator|=
-name|strtoll
+name|strtoimax
 argument_list|(
 name|s
 argument_list|,
@@ -2488,8 +2491,7 @@ modifier|*
 name|s2
 parameter_list|)
 block|{
-name|long
-name|long
+name|intmax_t
 name|q1
 decl_stmt|,
 name|q2
