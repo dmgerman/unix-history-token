@@ -2819,17 +2819,9 @@ literal|0x10
 block|}
 block|,
 block|{
-literal|0x048011c1
+literal|0x2000131f
 block|,
-literal|"ActionTec 56k FAX PCI Modem"
-block|,
-literal|0x14
-block|}
-block|,
-block|{
-literal|0x0000151f
-block|,
-literal|"SmartLink 5634PCV SurfRider"
+literal|"CyberSerial (1-port) 16550"
 block|,
 literal|0x10
 block|}
@@ -2846,6 +2838,38 @@ block|{
 literal|0x01111407
 block|,
 literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x048011c1
+block|,
+literal|"Lucent kermit based PCI Modem"
+block|,
+literal|0x14
+block|}
+block|,
+block|{
+literal|0x95211415
+block|,
+literal|"Oxford Semiconductor PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x7101135e
+block|,
+literal|"SeaLevel Ultra 530.PCI Single Port Serial"
+block|,
+literal|0x18
+block|}
+block|,
+block|{
+literal|0x0000151f
+block|,
+literal|"SmartLink 5634PCV SurfRider"
 block|,
 literal|0x10
 block|}
