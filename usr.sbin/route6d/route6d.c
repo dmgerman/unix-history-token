@@ -909,7 +909,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_long
+name|int
 name|seq
 init|=
 literal|0
@@ -15421,7 +15421,7 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|u_long
+name|int
 name|myseq
 decl_stmt|;
 name|int
