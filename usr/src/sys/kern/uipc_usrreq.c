@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_usrreq.c	7.11 (Berkeley) %G%  */
+comment|/*  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_usrreq.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1944,24 +1944,6 @@ name|ni_vp
 expr_stmt|;
 if|if
 condition|(
-name|error
-operator|=
-name|vn_access
-argument_list|(
-name|vp
-argument_list|,
-name|VWRITE
-argument_list|,
-name|ndp
-operator|->
-name|ni_cred
-argument_list|)
-condition|)
-goto|goto
-name|bad
-goto|;
-if|if
-condition|(
 name|vp
 operator|->
 name|v_type
@@ -1977,6 +1959,24 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|error
+operator|=
+name|VOP_ACCESS
+argument_list|(
+name|vp
+argument_list|,
+name|VWRITE
+argument_list|,
+name|ndp
+operator|->
+name|ni_cred
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
 name|so2
 operator|=
 name|vp
