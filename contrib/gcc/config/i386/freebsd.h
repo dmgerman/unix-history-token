@@ -205,7 +205,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*} \    %{p:-Bstatic} %{pg:-Bstatic} %{Z}"
+value|"%{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*} \    %{p:-Bstatic} %{pg:-Bstatic} %{Z} %{R*}"
 end_define
 
 begin_define
@@ -500,16 +500,6 @@ begin_comment
 comment|/* This is how we tell the assembler that a symbol is weak.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* not ready for this yet - work in progress. 	 * We should probably update gas in the FreeBSD source to something 	 * more recent, so that this is recognised. Our LD handles it already. 	 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -522,11 +512,6 @@ parameter_list|)
 define|\
 value|do { fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \        fputc ('\n', FILE); } while (0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The following macro defines the format used to output the second    operand of the .type assembler directive.  Different svr4 assemblers    expect various different forms for this operand.  The one given here    is just a default.  You may need to override it in your machine-    specific tm.h file (depending upon the particulars of your assembler).  */
