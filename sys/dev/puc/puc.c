@@ -32,7 +32,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__RESOURCE_VISIBLE
+name|__RMAN_RESOURCE_VISIBLE
 end_define
 
 begin_comment
