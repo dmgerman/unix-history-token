@@ -6803,7 +6803,7 @@ name|sbp_status
 operator|->
 name|status
 argument_list|,
-name|ntohl
+name|ntohs
 argument_list|(
 name|sbp_status
 operator|->
