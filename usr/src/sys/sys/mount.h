@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -227,8 +227,53 @@ end_define
 begin_define
 define|#
 directive|define
+name|MOUNT_NULL
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_UMAP
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOUNT_MAXTYPE
-value|8
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|INITMOUNTNAMES
+value|{ \ 	"none",
+comment|/*  0 MOUNT_NONE */
+value|\ 	"ufs",
+comment|/*  1 MOUNT_UFS */
+value|\ 	"nfs",
+comment|/*  2 MOUNT_NFS */
+value|\ 	"mfs",
+comment|/*  3 MOUNT_MFS */
+value|\ 	"pc",
+comment|/*  4 MOUNT_PC */
+value|\ 	"lfs",
+comment|/*  5 MOUNT_LFS */
+value|\ 	"lofs",
+comment|/*  6 MOUNT_LOFS */
+value|\ 	"fdesc",
+comment|/*  7 MOUNT_FDESC */
+value|\ 	"portal",
+comment|/*  8 MOUNT_PORTAL */
+value|\ 	"null",
+comment|/*  9 MOUNT_NULL */
+value|\ 	"umap",
+comment|/* 10 MOUNT_UMAP */
+value|\ 	0,
+comment|/* 11 MOUNT_SPARE */
+value|\ }
 end_define
 
 begin_comment
