@@ -109,6 +109,8 @@ parameter_list|(
 name|struct
 name|intsrc
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 name|void
@@ -197,6 +199,20 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Flags for pic_disable_source() */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|PIC_EOI
+block|,
+name|PIC_NO_EOI
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * An interrupt source.  The upper-layer code uses the PIC methods to  * control a given source.  The lower-layer PIC drivers can store additional  * private data in a given interrupt source such as an interrupt pin number  * or an I/O APIC pointer.  */
