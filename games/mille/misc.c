@@ -130,11 +130,16 @@ name|stdscr
 operator|=
 name|Score
 expr_stmt|;
-name|mvprintw
+name|move
 argument_list|(
 name|ERR_Y
 argument_list|,
 name|ERR_X
+argument_list|)
+expr_stmt|;
+name|vw_printw
+argument_list|(
+name|stdscr
 argument_list|,
 name|str
 argument_list|,
