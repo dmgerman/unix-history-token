@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	6.3	85/03/12	*/
+comment|/*	up.c	6.4	85/06/04	*/
 end_comment
 
 begin_include
@@ -433,6 +433,54 @@ literal|0
 block|,
 literal|0
 block|, }
+struct|,
+name|upeagle_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 16 */
+literal|66880
+block|,
+literal|17
+block|,
+comment|/* B=cyl 17 thru 86 */
+literal|808320
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 841 */
+literal|15884
+block|,
+literal|391
+block|,
+comment|/* D=cyl 391 thru 407 */
+literal|307200
+block|,
+literal|408
+block|,
+comment|/* E=cyl 408 thru 727 */
+literal|109296
+block|,
+literal|728
+block|,
+comment|/* F=cyl 728 thru 841 */
+literal|432816
+block|,
+literal|391
+block|,
+comment|/* G=cyl 391 thru 841 */
+literal|291346
+block|,
+literal|87
+block|,
+comment|/* H=cyl 87 thru 390 */
+block|}
 struct|;
 end_struct
 
@@ -712,6 +760,25 @@ literal|4
 block|}
 block|,
 comment|/* DM980 */
+block|{
+literal|48
+block|,
+literal|20
+block|,
+literal|48
+operator|*
+literal|20
+block|,
+literal|842
+block|,
+name|upeagle_sizes
+block|,
+literal|15
+block|,
+literal|8
+block|}
+block|,
+comment|/* EAGLE */
 block|{
 literal|0
 block|,
@@ -1449,6 +1516,9 @@ name|bn
 decl_stmt|,
 name|sz
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|sz
 operator|=
 operator|(
@@ -1559,9 +1629,8 @@ index|]
 operator|.
 name|cyloff
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1631,11 +1700,10 @@ name|ui_mi
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return;
 name|bad
