@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.1 (Berkeley) %G%"
+literal|"@(#)err.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,7 +517,7 @@ argument_list|)
 expr_stmt|;
 name|VA_END
 expr_stmt|;
-name|putmsg
+name|putoutmsg
 argument_list|(
 name|MsgBuf
 argument_list|,
@@ -600,7 +600,7 @@ argument_list|)
 expr_stmt|;
 name|VA_END
 expr_stmt|;
-name|putmsg
+name|putoutmsg
 argument_list|(
 name|MsgBuf
 argument_list|,
@@ -614,11 +614,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
+comment|/* **  PUTOUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
 end_comment
 
 begin_macro
-name|putmsg
+name|putoutmsg
 argument_list|(
 argument|msg
 argument_list|,
@@ -734,6 +734,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|TrafficLogFile
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|TrafficLogFile
+argument_list|,
+literal|"%05d>>> %s\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+name|OpMode
+operator|==
+name|MD_SMTP
+condition|?
+name|msg
+else|:
+operator|&
+name|msg
+index|[
+literal|4
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|msg
 index|[
 literal|3
@@ -790,7 +818,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR: putmsg (%s): error on output channel sending \"%s\""
+literal|"%s: SYSERR: putoutmsg (%s): error on output channel sending \"%s\""
 argument_list|,
 name|CurEnv
 operator|->
@@ -818,7 +846,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTERRMSG -- like putmsg, but does special processing for error messages ** **	Parameters: **		msg -- the message to output. ** **	Returns: **		none. ** **	Side Effects: **		Sets the fatal error bit in the envelope as appropriate. */
+comment|/* **  PUTERRMSG -- like putoutmsg, but does special processing for error messages ** **	Parameters: **		msg -- the message to output. ** **	Returns: **		none. ** **	Side Effects: **		Sets the fatal error bit in the envelope as appropriate. */
 end_comment
 
 begin_macro
@@ -838,7 +866,7 @@ end_decl_stmt
 begin_block
 block|{
 comment|/* output the message as usual */
-name|putmsg
+name|putoutmsg
 argument_list|(
 name|msg
 argument_list|,

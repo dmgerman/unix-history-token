@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.1 (Berkeley) %G%"
+literal|"@(#)mci.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -848,7 +848,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"flags=%o, errno=%d, exitstat=%d, state=%d, pid=%d, maxsize=%ld\n"
+literal|"flags=%o, errno=%d, herrno=%d, exitstat=%d, state=%d, pid=%d,\n"
 argument_list|,
 name|mci
 operator|->
@@ -857,6 +857,10 @@ argument_list|,
 name|mci
 operator|->
 name|mci_errno
+argument_list|,
+name|mci
+operator|->
+name|mci_herrno
 argument_list|,
 name|mci
 operator|->
@@ -869,15 +873,15 @@ argument_list|,
 name|mci
 operator|->
 name|mci_pid
-argument_list|,
-name|mci
-operator|->
-name|mci_maxsize
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tphase=%s, mailer=%s,\n"
+literal|"\tmaxsize=%ld, phase=%s, mailer=%s,\n"
+argument_list|,
+name|mci
+operator|->
+name|mci_maxsize
 argument_list|,
 name|mci
 operator|->

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.1 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.2 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.1 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.2 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1047,18 +1047,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
-name|auth_warning
-argument_list|(
-name|e
-argument_list|,
-literal|"Host %s didn't use HELO protocol"
-argument_list|,
-name|RealHostName
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1105,6 +1093,22 @@ operator|>
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+operator|!
+name|gothello
+condition|)
+block|{
+name|auth_warning
+argument_list|(
+name|e
+argument_list|,
+literal|"Host %s didn't use HELO protocol"
+argument_list|,
+name|RealHostName
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|protocol

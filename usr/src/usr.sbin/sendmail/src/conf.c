@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.1 (Berkeley) %G%"
+literal|"@(#)conf.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,6 +225,8 @@ name|H_FORCE
 block|,
 literal|"return-path"
 block|,
+name|H_FORCE
+operator||
 name|H_ACHECK
 block|,
 name|NULL
@@ -1711,6 +1713,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NeXT__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* now do the guesses based on general OS type */
 end_comment
@@ -1892,6 +1915,31 @@ define|#
 directive|define
 name|_PATH_UNIX
 value|"/unix"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|Solaris2
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Solaris 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/kernel/unix"
 end_define
 
 begin_endif
@@ -3177,9 +3225,18 @@ name|void
 name|reapchild
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WIFEXITED
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NeXT__
+argument_list|)
 specifier|auto
 name|int
 name|status
@@ -3249,10 +3306,6 @@ while|while
 condition|(
 name|wait3
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
 name|status
 argument_list|,
@@ -3879,23 +3932,32 @@ directive|ifndef
 name|HASSETSID
 end_ifndef
 
-begin_macro
+begin_decl_stmt
+name|pid_t
 name|setsid
-argument_list|()
-end_macro
-
-begin_block
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 block|{
 ifdef|#
 directive|ifdef
 name|SYSTEM5
+return|return
 name|setpgrp
 argument_list|()
-expr_stmt|;
+return|;
+else|#
+directive|else
+return|return
+literal|0
+return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_decl_stmt
 
 begin_endif
 endif|#

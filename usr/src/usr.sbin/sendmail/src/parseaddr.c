@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.1 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,7 +491,9 @@ argument_list|)
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"554 cannot resolve name"
+literal|"554 cannot resolve name %s"
+argument_list|,
+name|addr
 argument_list|)
 expr_stmt|;
 return|return

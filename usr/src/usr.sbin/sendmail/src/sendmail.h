@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.1		%G%"
+literal|"@(#)sendmail.h	8.2		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2015,6 +2015,10 @@ name|mci_errno
 decl_stmt|;
 comment|/* error number on last connection */
 name|short
+name|mci_herrno
+decl_stmt|;
+comment|/* h_errno from last DNS lookup */
+name|short
 name|mci_exitstat
 decl_stmt|;
 comment|/* exit status from last connection */
@@ -2464,6 +2468,28 @@ end_define
 
 begin_comment
 comment|/* this is an alias file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_TRY0NULL
+value|0x0100
+end_define
+
+begin_comment
+comment|/* try with no null byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_TRY1NULL
+value|0x0200
+end_define
+
+begin_comment
+comment|/* try with the null byte */
 end_comment
 
 begin_define
@@ -4389,6 +4415,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* limit queue runs to this id */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|FILE
+modifier|*
+name|TrafficLogFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file in which to log all traffic */
 end_comment
 
 begin_comment

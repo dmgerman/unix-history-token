@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.1 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.2 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.1 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.2 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1300,6 +1300,16 @@ operator|->
 name|e_flags
 argument_list|)
 decl_stmt|;
+name|FILE
+modifier|*
+name|savetrace
+init|=
+name|TrafficLogFile
+decl_stmt|;
+name|TrafficLogFile
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|bitset
@@ -1332,6 +1342,10 @@ name|nullmailer
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+name|TrafficLogFile
+operator|=
+name|savetrace
 expr_stmt|;
 block|}
 else|else
@@ -3755,6 +3769,18 @@ argument_list|(
 name|qfp
 argument_list|)
 expr_stmt|;
+name|rename
+argument_list|(
+name|qf
+argument_list|,
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'Q'
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
@@ -4326,7 +4352,26 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-break|break;
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
+name|rename
+argument_list|(
+name|qf
+argument_list|,
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'Q'
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
 block|}
 if|if
 condition|(

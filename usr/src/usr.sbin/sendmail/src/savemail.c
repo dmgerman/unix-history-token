@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.1 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1997,6 +1997,24 @@ argument_list|(
 name|ee
 argument_list|,
 name|TRUE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* mark statistics */
+end_comment
+
+begin_expr_stmt
+name|markstats
+argument_list|(
+name|ee
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

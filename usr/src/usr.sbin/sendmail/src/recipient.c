@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.1 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1349,6 +1349,8 @@ argument_list|,
 name|getruid
 argument_list|()
 argument_list|,
+name|TRUE
+argument_list|,
 name|S_IWRITE
 operator||
 name|S_IEXEC
@@ -2567,6 +2569,8 @@ argument_list|(
 name|fname
 argument_list|,
 name|uid
+argument_list|,
+name|forwarding
 argument_list|,
 name|S_IREAD
 argument_list|)
