@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbufs.c	5.3 (Berkeley) %G%"
+literal|"@(#)mbufs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,10 +486,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|nlist
+name|kvm_nlist
 argument_list|(
-name|_PATH_UNIX
-argument_list|,
 name|nlst
 argument_list|)
 expr_stmt|;
@@ -570,23 +568,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|lseek
+name|NREAD
 argument_list|(
-name|kmem
-argument_list|,
-name|nlst
-index|[
 name|X_MBSTAT
-index|]
-operator|.
-name|n_value
-argument_list|,
-name|L_SET
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|kmem
 argument_list|,
 name|mb
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.9 (Berkeley) %G%"
+literal|"@(#)disks.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,10 +165,8 @@ operator|(
 literal|1
 operator|)
 return|;
-name|nlist
+name|kvm_nlist
 argument_list|(
-name|_PATH_UNIX
-argument_list|,
 name|nlst
 argument_list|)
 expr_stmt|;
@@ -195,16 +193,14 @@ literal|0
 operator|)
 return|;
 block|}
-name|dk_ndrive
-operator|=
-name|getword
+name|NREAD
 argument_list|(
-name|nlst
-index|[
 name|X_DK_NDRIVE
-index|]
-operator|.
-name|n_value
+argument_list|,
+operator|&
+name|dk_ndrive
+argument_list|,
+name|LONG
 argument_list|)
 expr_stmt|;
 if|if
@@ -245,20 +241,6 @@ name|float
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|lseek
-argument_list|(
-name|kmem
-argument_list|,
-name|nlst
-index|[
-name|X_DK_WPMS
-index|]
-operator|.
-name|n_value
-argument_list|,
-name|L_SET
-argument_list|)
-expr_stmt|;
 block|{
 name|long
 modifier|*
@@ -278,9 +260,12 @@ name|long
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|read
+name|KREAD
 argument_list|(
-name|kmem
+name|NPTR
+argument_list|(
+name|X_DK_WPMS
+argument_list|)
 argument_list|,
 name|wpms
 argument_list|,
@@ -648,7 +633,7 @@ parameter_list|,
 name|var
 parameter_list|)
 define|\
-value|lseek(kmem, where, L_SET); read(kmem,&var, sizeof var);
+value|KREAD(where,&var, sizeof var)
 end_define
 
 begin_ifdef
