@@ -1285,6 +1285,39 @@ begin_comment
 comment|/* 386BSD partition type */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DOSPTYP_LINSWP
+value|0x82
+end_define
+
+begin_comment
+comment|/* Linux swap partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_LINUX
+value|0x83
+end_define
+
+begin_comment
+comment|/* Linux partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_EXT
+value|5
+end_define
+
+begin_comment
+comment|/* DOS extended partition */
+end_comment
+
 begin_struct
 struct|struct
 name|dos_partition
@@ -1624,6 +1657,12 @@ end_function
 
 begin_struct_decl
 struct_decl|struct
+name|bio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|buf
 struct_decl|;
 end_struct_decl
@@ -1634,6 +1673,12 @@ name|buf_queue_head
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|bio_queue_head
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|int
 name|bounds_check_with_label
@@ -1641,7 +1686,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 name|bp
 operator|,
@@ -1664,7 +1709,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 name|bp
 operator|,
@@ -1743,17 +1788,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|bufqdisksort
+name|bioqdisksort
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf_queue_head
+name|bio_queue_head
 operator|*
 name|ap
 operator|,
 expr|struct
-name|buf
+name|bio
 operator|*
 name|bp
 operator|)

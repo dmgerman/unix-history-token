@@ -98,6 +98,9 @@ operator|&
 name|ufs_fsops
 block|,
 operator|&
+name|ext2fs_fsops
+block|,
+operator|&
 name|dosfs_fsops
 block|,
 operator|&

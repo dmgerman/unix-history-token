@@ -102,6 +102,9 @@ decl_stmt|;
 name|int
 name|try
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/*      * See if the user has specified an explicit kernel to boot.      */
 if|if
 condition|(
@@ -339,6 +342,45 @@ operator|(
 name|CMD_ERROR
 operator|)
 return|;
+comment|/* Call cleanup routines */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|devsw
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|devsw
+index|[
+name|i
+index|]
+operator|->
+name|dv_cleanup
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|devsw
+index|[
+name|i
+index|]
+operator|->
+name|dv_cleanup
+operator|)
+operator|(
+operator|)
+expr_stmt|;
 comment|/* Call the exec handler from the loader matching the kernel */
 name|module_formats
 index|[
