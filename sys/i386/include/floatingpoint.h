@@ -233,7 +233,7 @@ define|#
 directive|define
 name|fpgetround
 parameter_list|()
-value|((fp_rnd_t) ((__fpgetreg(FP_RND_REG)& FP_RND_FLD)>> FP_RND_OFF))
+value|((fp_rnd_t)					\ 	((__fpgetreg(FP_RND_REG)& FP_RND_FLD)>> FP_RND_OFF))
 end_define
 
 begin_define
@@ -243,7 +243,7 @@ name|fpsetround
 parameter_list|(
 name|m
 parameter_list|)
-value|((fp_rnd_t) __fpsetreg((m), FP_RND_REG, FP_RND_FLD, FP_RND_OFF))
+value|((fp_rnd_t)					\ 	__fpsetreg((m), FP_RND_REG, FP_RND_FLD, FP_RND_OFF))
 end_define
 
 begin_define
@@ -251,7 +251,7 @@ define|#
 directive|define
 name|fpgetprec
 parameter_list|()
-value|((fp_prec_t) ((__fpgetreg(FP_PRC_REG)& FP_PRC_FLD)>> FP_PRC_OFF))
+value|((fp_prec_t)					\ 	((__fpgetreg(FP_PRC_REG)& FP_PRC_FLD)>> FP_PRC_OFF))
 end_define
 
 begin_define
@@ -261,7 +261,7 @@ name|fpsetprec
 parameter_list|(
 name|m
 parameter_list|)
-value|((fp_prec_t) __fpsetreg((m), FP_PRC_REG, FP_PRC_FLD, FP_PRC_OFF))
+value|((fp_prec_t)					\ 	__fpsetreg((m), FP_PRC_REG, FP_PRC_FLD, FP_PRC_OFF))
 end_define
 
 begin_define
@@ -269,7 +269,7 @@ define|#
 directive|define
 name|fpgetmask
 parameter_list|()
-value|((fp_except_t) ((~__fpgetreg(FP_MSKS_REG)& FP_MSKS_FLD)>> FP_MSKS_OFF))
+value|((fp_except_t)					\ 	((~__fpgetreg(FP_MSKS_REG)& FP_MSKS_FLD)>> FP_MSKS_OFF))
 end_define
 
 begin_define
@@ -279,7 +279,7 @@ name|fpsetmask
 parameter_list|(
 name|m
 parameter_list|)
-value|((fp_except_t) (__fpsetreg(~(m), FP_MSKS_REG, FP_MSKS_FLD, FP_MSKS_OFF)))
+value|((fp_except_t)					\ 	(~__fpsetreg(~(m), FP_MSKS_REG, FP_MSKS_FLD, FP_MSKS_OFF))&	\ 	    (FP_MSKS_FLD>> FP_MSKS_OFF))
 end_define
 
 begin_define
@@ -287,7 +287,7 @@ define|#
 directive|define
 name|fpgetsticky
 parameter_list|()
-value|((fp_except_t) ((__fpgetreg(FP_STKY_REG)& FP_STKY_FLD)>> FP_STKY_OFF))
+value|((fp_except_t)					\ 	((__fpgetreg(FP_STKY_REG)& FP_STKY_FLD)>> FP_STKY_OFF))
 end_define
 
 begin_define
@@ -297,7 +297,7 @@ name|fpresetsticky
 parameter_list|(
 name|m
 parameter_list|)
-value|((fp_except_t) __fpsetreg(0, FP_STKY_REG, (m), FP_STKY_OFF))
+value|((fp_except_t)					\ 	__fpsetreg(0, FP_STKY_REG, (m), FP_STKY_OFF))
 end_define
 
 begin_define
