@@ -1071,11 +1071,6 @@ literal|0
 operator|)
 return|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -1311,11 +1306,6 @@ name|g_pc98_softc
 modifier|*
 name|ms
 decl_stmt|;
-name|struct
-name|g_slicer
-modifier|*
-name|gsp
-decl_stmt|;
 name|u_int
 name|fwsectors
 decl_stmt|,
@@ -1404,12 +1394,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|gsp
-operator|=
-name|gp
-operator|->
-name|softc
-expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
