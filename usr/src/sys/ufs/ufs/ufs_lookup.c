@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -76,6 +76,8 @@ argument_list|(
 name|vdp
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -91,6 +93,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -285,6 +295,8 @@ argument_list|,
 name|ndp
 operator|->
 name|ni_cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1157,6 +1169,8 @@ argument_list|,
 name|ndp
 operator|->
 name|ni_cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1396,6 +1410,8 @@ argument_list|,
 name|ndp
 operator|->
 name|ni_cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1596,6 +1612,8 @@ argument_list|,
 name|ndp
 operator|->
 name|ni_cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -3243,6 +3261,13 @@ name|cred
 argument_list|,
 operator|&
 name|count
+argument_list|,
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Since we read MINDIRSIZ, residual must 		 * be 0 unless we're at end of file. 		 */
@@ -3500,6 +3525,13 @@ name|cred
 argument_list|,
 operator|(
 name|int
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|proc
 operator|*
 operator|)
 literal|0
