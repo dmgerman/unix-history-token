@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/atomic.h>
 end_include
 
@@ -492,6 +498,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANT_SUPPORT
+end_ifdef
+
+begin_function_decl
+name|void
+name|_mtx_assert
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|what
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * We define our machine-independent (unoptimized) mutex micro-operations  * here, if they are not already defined in the machine-dependent mutex.h   */
 end_comment
@@ -701,7 +741,7 @@ name|mtx_lock
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	MPASS(curproc != NULL);						\ 	_get_sleep_lock((m), curproc, 0);				\ 	CTR5(KTR_LOCK, STR_mtx_lock_slp, (m)->mtx_description, (m),	\ 	    (m)->mtx_recurse, __FILE__,	__LINE__);			\ 	WITNESS_ENTER((m), (m)->mtx_flags, __FILE__, __LINE__);		\ } while (0)
+value|mtx_lock_flags((m), 0)
 end_define
 
 begin_define
@@ -711,7 +751,17 @@ name|mtx_lock_spin
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	MPASS(curproc != NULL);						\ 	_get_spin_lock((m), curproc, 0);				\ 	CTR5(KTR_LOCK, STR_mtx_lock_spn, (m)->mtx_description, (m),	\ 	    (m)->mtx_recurse, __FILE__,	__LINE__);			\ 	WITNESS_ENTER((m), (m)->mtx_flags, __FILE__, __LINE__);		\ } while (0)
+value|mtx_lock_spin_flags((m), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_trylock
+parameter_list|(
+name|m
+parameter_list|)
+value|mtx_trylock_flags((m), 0)
 end_define
 
 begin_define
@@ -721,7 +771,7 @@ name|mtx_unlock
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	MPASS(curproc != NULL);						\ 	WITNESS_EXIT((m), (m)->mtx_flags, __FILE__, __LINE__);		\ 	mtx_assert((m), MA_OWNED);					\ 	_rel_sleep_lock((m), curproc, 0);				\ 	CTR5(KTR_LOCK, STR_mtx_unlock_slp, (m)->mtx_description, (m),	\ 	    (m)->mtx_recurse, __FILE__,	__LINE__);			\ } while (0)
+value|mtx_unlock_flags((m), 0)
 end_define
 
 begin_define
@@ -731,7 +781,7 @@ name|mtx_unlock_spin
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	MPASS(curproc != NULL);						\ 	WITNESS_EXIT((m), (m)->mtx_flags, __FILE__, __LINE__);		\ 	mtx_assert((m), MA_OWNED);					\ 	_rel_spin_lock((m));						\ 	CTR5(KTR_LOCK, STR_mtx_unlock_spn, (m)->mtx_description, (m),	\ 	    (m)->mtx_recurse, __FILE__,	__LINE__);			\ } while (0)
+value|mtx_unlock_spin_flags((m), 0)
 end_define
 
 begin_define
@@ -743,7 +793,7 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {					\ 	MPASS(curproc != NULL);						\ 	_get_sleep_lock((m), curproc, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ } while (0)
+value|do {					\ 	MPASS(curproc != NULL);						\ 	KASSERT(((opts)& MTX_NOSWITCH) == 0,				\ 	    ("MTX_NOSWITCH used at %s:%d", __FILE__, __LINE__));	\ 	_get_sleep_lock((m), curproc, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_lock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ 	WITNESS_ENTER((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ } while (0)
 end_define
 
 begin_define
@@ -767,12 +817,8 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {					\ 	MPASS(curproc != NULL);						\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	mtx_assert((m), MA_OWNED);					\ 	_rel_sleep_lock((m), curproc, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ } while (0)
+value|do {					\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	_rel_sleep_lock((m), curproc, (opts));				\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_slp,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ } while (0)
 end_define
-
-begin_comment
-comment|/*  * The MTX_SPIN unlock case is all inlined, so we handle the MTX_QUIET  * flag right in the macro. Not a problem as if we don't have KTR_LOCK, this  * check will be optimized out.  */
-end_comment
 
 begin_define
 define|#
@@ -783,18 +829,7 @@ name|m
 parameter_list|,
 name|opts
 parameter_list|)
-value|do {				\ 	MPASS(curproc != NULL);						\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	mtx_assert((m), MA_OWNED);					\ 	_rel_spin_lock((m));						\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mtx_trylock
-parameter_list|(
-name|m
-parameter_list|)
-define|\
-value|_mtx_trylock((m), 0, __FILE__, __LINE__)
+value|do {				\ 	MPASS(curproc != NULL);						\ 	mtx_assert((m), MA_OWNED);					\ 	WITNESS_EXIT((m), ((m)->mtx_flags | (opts)), __FILE__,		\ 	    __LINE__);							\ 	_rel_spin_lock((m));						\ 	if (((opts)& MTX_QUIET) == 0)					\ 		CTR5(KTR_LOCK, STR_mtx_unlock_spn,			\ 		    (m)->mtx_description, (m), (m)->mtx_recurse, 	\ 		    __FILE__, __LINE__);				\ } while (0)
 end_define
 
 begin_define
@@ -928,29 +963,6 @@ name|MA_NOTRECURSED
 value|0x08
 end_define
 
-begin_function_decl
-name|void
-name|_mtx_assert
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|what
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -1008,16 +1020,6 @@ begin_comment
 comment|/* INVARIANTS */
 end_comment
 
-begin_comment
-comment|/*  * The MUTEX_DEBUG-enabled MPASS*() extra sanity-check macros.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MUTEX_DEBUG
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1025,8 +1027,7 @@ name|MPASS
 parameter_list|(
 name|ex
 parameter_list|)
-define|\
-value|if (!(ex))							\ 		panic("Assertion %s failed at %s:%d", #ex, __FILE__,	\ 		    __LINE__)
+value|MPASS4(ex, #ex, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -1038,8 +1039,7 @@ name|ex
 parameter_list|,
 name|what
 parameter_list|)
-define|\
-value|if (!(ex))							\ 		panic("Assertion %s failed at %s:%d", what, __FILE__,	\ 		    __LINE__)
+value|MPASS4(ex, what, __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -1053,8 +1053,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-define|\
-value|if (!(ex))							\ 		panic("Assertion %s failed at %s:%d", #ex, file, line)
+value|MPASS4(ex, #ex, file, line)
 end_define
 
 begin_define
@@ -1071,74 +1070,8 @@ parameter_list|,
 name|line
 parameter_list|)
 define|\
-value|if (!(ex))							\ 		panic("Assertion %s failed at %s:%d", what, file, line)
+value|KASSERT((ex), ("Assertion %s failed at %s:%d", what, file, line))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* MUTEX_DEBUG */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MPASS
-parameter_list|(
-name|ex
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPASS2
-parameter_list|(
-name|ex
-parameter_list|,
-name|what
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPASS3
-parameter_list|(
-name|ex
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPASS4
-parameter_list|(
-name|ex
-parameter_list|,
-name|what
-parameter_list|,
-name|file
-parameter_list|,
-name|line
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MUTEX_DEBUG */
-end_comment
 
 begin_comment
 comment|/*  * Exported WITNESS-enabled functions and corresponding wrapper macros.  */
