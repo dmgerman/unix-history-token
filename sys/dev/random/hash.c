@@ -384,7 +384,7 @@ name|context
 operator|->
 name|key
 argument_list|,
-name|size
+name|count
 argument_list|,
 name|data
 argument_list|)
