@@ -786,7 +786,7 @@ return|;
 block|}
 name|exit
 label|:
-comment|/*        * If present, strip the server's address off of the rootpath      * before passing it along.  This allows us to be compatible with      * the kernel's diskless (BOOTP_NFSROOT) booting conventions      */
+comment|/*        * If present, strip the server's address off of the rootpath      * before passing it along.  This allows us to be compatible with      * the kernel's diskless (kenv bootp.nfsroot=1) booting conventions      */
 for|for
 control|(
 name|i
