@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wc.c	8.1 (Berkeley) %G%"
+literal|"@(#)wc.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -639,13 +639,6 @@ expr_stmt|;
 if|if
 condition|(
 name|S_ISREG
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-operator|||
-name|S_ISLNK
 argument_list|(
 name|sb
 operator|.
