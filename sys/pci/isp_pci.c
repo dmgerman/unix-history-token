@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: $ */
+comment|/* $Id: isp_pci.c,v 1.12 1998/12/28 19:24:23 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_12_28_98_A */
+comment|/* release_12_28_98_A+ */
 end_comment
 
 begin_comment
@@ -274,6 +274,8 @@ block|,
 name|ISP_CODE_VERSION
 block|,
 name|BIU_BURST_ENABLE
+operator||
+name|BIU_PCI_CONF1_FIFO_64
 block|,
 literal|0
 block|}
@@ -311,8 +313,9 @@ name|ISP2100_CODE_ORG
 block|,
 name|ISP2100_CODE_VERSION
 block|,
-name|BIU_BURST_ENABLE
+literal|0
 block|,
+comment|/* Irrelevant to the 2100 */
 literal|0
 block|}
 decl_stmt|;
