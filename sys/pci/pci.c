@@ -4550,6 +4550,8 @@ condition|(
 name|cfg
 operator|->
 name|intline
+operator|!=
+literal|255
 condition|)
 name|resource_list_add
 argument_list|(
