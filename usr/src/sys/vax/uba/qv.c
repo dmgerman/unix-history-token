@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)qv.c	1.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)qv.c	1.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1556,24 +1556,30 @@ name|QV_INT_ENABLE
 expr_stmt|;
 name|tp
 operator|->
-name|t_flags
+name|t_iflag
 operator|=
-name|XTABS
-operator||
-name|EVENP
-operator||
-name|ECHO
-operator||
-name|CRMOD
+name|TTYDEF_IFLAG
 expr_stmt|;
-block|}
-else|else
 name|tp
 operator|->
-name|t_flags
+name|t_oflag
 operator|=
-name|RAW
+name|TTYDEF_OFLAG
 expr_stmt|;
+name|tp
+operator|->
+name|t_lflag
+operator|=
+name|TTYDEF_LFLAG
+expr_stmt|;
+name|tp
+operator|->
+name|t_cflag
+operator|=
+name|TTYDEF_CFLAG
+expr_stmt|;
+block|}
+comment|/* XXX ?why?  else  			tp->t_flags = RAW; 		*/
 block|}
 comment|/* 	 * Process line discipline specific open if its not the 	 * mouse channel. For the mouse we init the ring ptr's. 	 */
 if|if
@@ -1693,6 +1699,9 @@ name|qvdevice
 modifier|*
 name|qvaddr
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|unit
 operator|=
 name|minor
@@ -1762,6 +1771,8 @@ operator|(
 name|tp
 operator|)
 expr_stmt|;
+name|error
+operator|=
 name|ttyclose
 argument_list|(
 name|tp
@@ -1779,6 +1790,10 @@ argument_list|(
 name|qvaddr
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|tp
 operator|->
@@ -1786,6 +1801,11 @@ name|t_state
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 
