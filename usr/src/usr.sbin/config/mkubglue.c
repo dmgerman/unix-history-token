@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkubglue.c	1.8	83/06/16	*/
+comment|/*	mkubglue.c	1.9	83/06/16	*/
 end_comment
 
 begin_comment
@@ -320,15 +320,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"\tpushl\t$%d\n"
-argument_list|,
-name|number
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -367,6 +358,15 @@ literal|"#endif\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\tpushl\t$%d\n"
+argument_list|,
+name|number
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
