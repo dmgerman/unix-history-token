@@ -1147,6 +1147,8 @@ name|Status
 operator|=
 name|AcpiInstallGpeHandler
 argument_list|(
+name|NULL
+argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
@@ -1254,6 +1256,10 @@ name|Status
 operator|=
 name|AcpiRemoveGpeHandler
 argument_list|(
+name|sc
+operator|->
+name|ec_handle
+argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
@@ -1679,15 +1685,15 @@ label|:
 comment|/* Re-enable the GPE event so we'll get future requests. */
 name|Status
 operator|=
-name|AcpiEnableEvent
+name|AcpiEnableGpe
 argument_list|(
+name|NULL
+argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-name|ACPI_EVENT_GPE
-argument_list|,
-literal|0
+name|ACPI_NOT_ISR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1741,15 +1747,15 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Disable further GPEs while we handle this one. */
-name|AcpiDisableEvent
+name|AcpiDisableGpe
 argument_list|(
+name|NULL
+argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-name|ACPI_EVENT_GPE
-argument_list|,
-literal|0
+name|ACPI_ISR
 argument_list|)
 expr_stmt|;
 comment|/* Schedule the GPE query handler. */
@@ -1779,15 +1785,15 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiEnableEvent
+name|AcpiEnableGpe
 argument_list|(
+name|NULL
+argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-name|ACPI_EVENT_GPE
-argument_list|,
-literal|0
+name|ACPI_ISR
 argument_list|)
 expr_stmt|;
 if|if

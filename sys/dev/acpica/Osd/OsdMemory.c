@@ -240,7 +240,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
-name|void
+name|UINT32
 modifier|*
 name|Value
 parameter_list|,
@@ -392,7 +392,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
-name|ACPI_INTEGER
+name|UINT32
 name|Value
 parameter_list|,
 name|UINT32

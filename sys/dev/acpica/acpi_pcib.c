@@ -324,6 +324,19 @@ decl_stmt|;
 name|ACPI_DEVICE_INFO
 name|devinfo
 decl_stmt|;
+name|ACPI_BUFFER
+name|buf
+init|=
+block|{
+sizeof|sizeof
+argument_list|(
+name|devinfo
+argument_list|)
+block|,
+operator|&
+name|devinfo
+block|}
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -574,7 +587,7 @@ argument_list|(
 name|lnkdev
 argument_list|,
 operator|&
-name|devinfo
+name|buf
 argument_list|)
 argument_list|)
 condition|)
@@ -612,6 +625,8 @@ argument_list|,
 name|devinfo
 operator|.
 name|HardwareId
+operator|.
+name|Value
 argument_list|)
 condition|)
 block|{
@@ -628,6 +643,8 @@ argument_list|,
 name|devinfo
 operator|.
 name|HardwareId
+operator|.
+name|Value
 argument_list|)
 expr_stmt|;
 goto|goto
