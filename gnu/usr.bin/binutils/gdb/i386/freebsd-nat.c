@@ -498,7 +498,7 @@ name|error
 argument_list|(
 literal|"Register %s not found in core file."
 argument_list|,
-name|reg_names
+name|gdb_register_names
 index|[
 name|bad_reg
 index|]

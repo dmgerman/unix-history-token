@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NM_FBSD_H
+name|NM_FREEBSD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NM_FBSD_H
+name|NM_FREEBSD_H
 end_define
 
 begin_define
@@ -543,7 +543,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NM_FBSD_H */
+comment|/* NM_FREEBSD_H */
 end_comment
 
 end_unit

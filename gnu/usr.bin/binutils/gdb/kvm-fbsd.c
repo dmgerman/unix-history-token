@@ -4354,131 +4354,10 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|target_ops
 name|kcore_ops
-init|=
-block|{
-literal|"kcore"
-block|,
-comment|/* to_shortname */
-literal|"Kernel core dump file"
-block|,
-comment|/* to_longname */
-literal|"Use a core file as a target.  Specify the filename of the core file."
-block|,
-comment|/* to_doc */
-name|kcore_open
-block|,
-comment|/* to_open */
-name|kcore_close
-block|,
-comment|/* to_close */
-name|find_default_attach
-block|,
-comment|/* to_attach */
-name|kcore_detach
-block|,
-comment|/* to_detach */
-name|NULL
-block|,
-comment|/* to_resume */
-name|NULL
-block|,
-comment|/* to_wait */
-name|get_kcore_registers
-block|,
-comment|/* to_fetch_registers */
-name|NULL
-block|,
-comment|/* to_store_registers */
-name|NULL
-block|,
-comment|/* to_prepare_to_store */
-name|kcore_xfer_kmem
-block|,
-comment|/* to_xfer_memory */
-name|kcore_files_info
-block|,
-comment|/* to_files_info */
-name|NULL
-block|,
-comment|/* to_insert_breakpoint */
-name|NULL
-block|,
-comment|/* to_remove_breakpoint */
-name|NULL
-block|,
-comment|/* to_terminal_init */
-name|NULL
-block|,
-comment|/* to_terminal_inferior */
-name|NULL
-block|,
-comment|/* to_terminal_ours_for_output */
-name|NULL
-block|,
-comment|/* to_terminal_ours */
-name|NULL
-block|,
-comment|/* to_terminal_info */
-name|NULL
-block|,
-comment|/* to_kill */
-name|NULL
-block|,
-comment|/* to_load */
-name|NULL
-block|,
-comment|/* to_lookup_symbol */
-name|find_default_create_inferior
-block|,
-comment|/* to_create_inferior */
-name|NULL
-block|,
-comment|/* to_mourn_inferior */
-literal|0
-block|,
-comment|/* to_can_run */
-literal|0
-block|,
-comment|/* to_notice_signals */
-name|NULL
-block|,
-comment|/* to_thread_alive */
-literal|0
-block|,
-comment|/* to_stop */
-name|kcore_stratum
-block|,
-comment|/* to_stratum */
-name|NULL
-block|,
-comment|/* to_next */
-literal|0
-block|,
-comment|/* to_has_all_memory */
-literal|1
-block|,
-comment|/* to_has_memory */
-literal|1
-block|,
-comment|/* to_has_stack */
-literal|1
-block|,
-comment|/* to_has_registers */
-literal|0
-block|,
-comment|/* to_has_execution */
-name|NULL
-block|,
-comment|/* sections */
-name|NULL
-block|,
-comment|/* sections_end */
-name|OPS_MAGIC
-comment|/* to_magic */
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -4487,6 +4366,102 @@ name|void
 name|_initialize_kcorelow
 parameter_list|()
 block|{
+name|kcore_ops
+operator|.
+name|to_shortname
+operator|=
+literal|"kcore"
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_longname
+operator|=
+literal|"Kernel core dump file"
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_doc
+operator|=
+literal|"Use a core file as a target.  Specify the filename of the core file."
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_open
+operator|=
+name|kcore_open
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_close
+operator|=
+name|kcore_close
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_attach
+operator|=
+name|find_default_attach
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_detach
+operator|=
+name|kcore_detach
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_fetch_registers
+operator|=
+name|get_kcore_registers
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_xfer_memory
+operator|=
+name|kcore_xfer_kmem
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_files_info
+operator|=
+name|kcore_files_info
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_create_inferior
+operator|=
+name|find_default_create_inferior
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_stratum
+operator|=
+name|kcore_stratum
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_has_memory
+operator|=
+literal|1
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_has_stack
+operator|=
+literal|1
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_has_registers
+operator|=
+literal|1
+expr_stmt|;
+name|kcore_ops
+operator|.
+name|to_magic
+operator|=
+name|OPS_MAGIC
+expr_stmt|;
 name|add_target
 argument_list|(
 operator|&

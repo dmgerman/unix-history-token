@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|host_name
 init|=
-literal|"i386-unknown-freebsd"
+literal|"alpha-unknown-freebsd"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ name|char
 modifier|*
 name|target_name
 init|=
-literal|"i386-unknown-freebsd"
+literal|"alpha-unknown-freebsd"
 decl_stmt|;
 end_decl_stmt
 
