@@ -1441,16 +1441,16 @@ name|pthread_mutex_t
 name|lock
 decl_stmt|;
 comment|/* monitor lock */
-name|int
-name|state
-decl_stmt|;
-comment|/* 0 = idle>0 = # of readers  -1 = writer */
 name|pthread_cond_t
 name|read_signal
 decl_stmt|;
 name|pthread_cond_t
 name|write_signal
 decl_stmt|;
+name|int
+name|state
+decl_stmt|;
+comment|/* 0 = idle>0 = # of readers  -1 = writer */
 name|int
 name|blocked_writers
 decl_stmt|;
@@ -1940,6 +1940,10 @@ decl_stmt|;
 comment|/* Number of priority ceiling or protection mutexes owned. */
 name|int
 name|priority_mutex_count
+decl_stmt|;
+comment|/* Number rwlocks rdlocks held. */
+name|int
+name|rdlock_count
 decl_stmt|;
 comment|/* 	 * Queue of currently owned mutexes. 	 */
 name|TAILQ_HEAD

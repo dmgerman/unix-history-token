@@ -984,6 +984,12 @@ literal|0
 expr_stmt|;
 name|new_thread
 operator|->
+name|rdlock_count
+operator|=
+literal|0
+expr_stmt|;
+name|new_thread
+operator|->
 name|sigstk
 operator|.
 name|ss_sp
