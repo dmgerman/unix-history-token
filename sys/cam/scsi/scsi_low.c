@@ -7147,17 +7147,6 @@ comment|/*free_simq*/
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|slp
-operator|->
-name|sl_si
-operator|.
-name|sim
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 return|return
 name|ENODEV
 return|;
