@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.21	%G%	*/
+comment|/*	tm.c	4.22	%G%	*/
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ comment|/* DEBUG */
 end_comment
 
 begin_comment
-comment|/*  * TM11/TE10 tape driver  *  * THIS DRIVER HAS NOT BEEN TESTED WITH MORE THAN ONE TRANSPORT.  */
+comment|/*  * TM11/TE10 tape driver  *  * Todo:  *	Test driver with more than one slave  *	Test reset code  *	Do rewinds without hanging in driver  */
 end_comment
 
 begin_define
@@ -340,10 +340,15 @@ name|short
 name|sc_resid
 decl_stmt|;
 comment|/* copy of last bc */
+ifdef|#
+directive|ifdef
+name|notdef
 name|short
 name|sc_lastcmd
 decl_stmt|;
 comment|/* last command to handle direction changes */
+endif|#
+directive|endif
 block|}
 name|tm_softc
 index|[
@@ -710,23 +715,7 @@ name|TM_SELR
 operator||
 name|TM_TUR
 operator|)
-condition|)
-block|{
-name|uprintf
-argument_list|(
-literal|"tape not online\n"
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
-name|EIO
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
+operator|||
 operator|(
 name|flag
 operator|&
@@ -746,11 +735,6 @@ operator|&
 name|TM_WRL
 condition|)
 block|{
-name|uprintf
-argument_list|(
-literal|"tape write protected\n"
-argument_list|)
-expr_stmt|;
 name|u
 operator|.
 name|u_error
@@ -786,13 +770,6 @@ name|sc_lastiow
 operator|=
 literal|0
 expr_stmt|;
-name|sc
-operator|->
-name|sc_openf
-operator|=
-literal|1
-expr_stmt|;
-return|return;
 block|}
 end_block
 
@@ -1750,7 +1727,29 @@ name|um_cmd
 operator|=
 name|cmd
 expr_stmt|;
-comment|/* 		if (tmreverseop(sc->sc_lastcmd)) 			while (addr->tmer& TM_SDWN) 				tmgapsdcnt++; */
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+name|tmreverseop
+argument_list|(
+name|sc
+operator|->
+name|sc_lastcmd
+argument_list|)
+condition|)
+while|while
+condition|(
+name|addr
+operator|->
+name|tmer
+operator|&
+name|TM_SDWN
+condition|)
+name|tmgapsdcnt
+operator|++
+expr_stmt|;
 name|sc
 operator|->
 name|sc_lastcmd
@@ -1758,6 +1757,8 @@ operator|=
 name|TM_RCOM
 expr_stmt|;
 comment|/* will serve */
+endif|#
+directive|endif
 name|ubago
 argument_list|(
 name|ui
@@ -1830,7 +1831,36 @@ expr_stmt|;
 block|}
 name|dobpcmd
 label|:
-comment|/* 	if (tmreverseop(sc->sc_lastcmd) != tmreverseop(bp->b_command)) 		while (addr->tmer& TM_SDWN) 			tmgapsdcnt++; */
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+name|tmreverseop
+argument_list|(
+name|sc
+operator|->
+name|sc_lastcmd
+argument_list|)
+operator|!=
+name|tmreverseop
+argument_list|(
+name|bp
+operator|->
+name|b_command
+argument_list|)
+condition|)
+while|while
+condition|(
+name|addr
+operator|->
+name|tmer
+operator|&
+name|TM_SDWN
+condition|)
+name|tmgapsdcnt
+operator|++
+expr_stmt|;
 name|sc
 operator|->
 name|sc_lastcmd
@@ -1839,6 +1869,8 @@ name|bp
 operator|->
 name|b_command
 expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|->
 name|tmcs
@@ -2273,25 +2305,6 @@ operator|<
 literal|7
 condition|)
 block|{
-comment|/* SHOULD CHECK THAT RECOVERY WORKS IN THIS CASE */
-comment|/* AND THEN ONLY PRINT IF errcnt==7 */
-if|if
-condition|(
-operator|(
-name|addr
-operator|->
-name|tmer
-operator|&
-name|TM_SOFT
-operator|)
-operator|==
-name|TM_NXM
-condition|)
-name|printf
-argument_list|(
-literal|"TM UBA late error\n"
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_blkno
@@ -2333,19 +2346,22 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 		 * Couldn't recover error 		 */
-name|harderr
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"tm%d er=%b\n"
+literal|"te%d: hard error bn%d er=%b\n"
 argument_list|,
-name|dkunit
+name|minor
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
+operator|&
+literal|03
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
 argument_list|,
 name|sc
 operator|->
@@ -2914,11 +2930,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|printed
-init|=
-literal|0
-decl_stmt|;
 specifier|register
 name|struct
 name|uba_minfo
@@ -2982,29 +2993,13 @@ operator|!=
 name|uban
 condition|)
 continue|continue;
-if|if
-condition|(
-name|printed
-operator|==
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|" tm"
+literal|" tm%d"
+argument_list|,
+name|tm11
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|2000000
-argument_list|)
-expr_stmt|;
-comment|/* time to self test */
-name|printed
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|um
 operator|->
 name|um_tab
