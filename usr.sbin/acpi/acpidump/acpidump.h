@@ -51,13 +51,13 @@ directive|define
 name|ACPI_GAS_FIXED
 value|0x7f
 name|u_int8_t
-name|register_bit_width
+name|bit_width
 decl_stmt|;
 name|u_int8_t
-name|register_bit_offset
+name|bit_offset
 decl_stmt|;
 name|u_int8_t
-name|res
+name|_reserved
 decl_stmt|;
 name|u_int64_t
 name|address
@@ -186,7 +186,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|FACPbody
+name|FADTbody
 block|{
 name|u_int32_t
 name|facs_ptr
@@ -199,16 +199,16 @@ name|int_model
 decl_stmt|;
 define|#
 directive|define
-name|ACPI_FACP_INTMODEL_PIC
+name|ACPI_FADT_INTMODEL_PIC
 value|0
 comment|/* Standard PC-AT PIC */
 define|#
 directive|define
-name|ACPI_FACP_INTMODEL_APIC
+name|ACPI_FADT_INTMODEL_APIC
 value|1
 comment|/* Multiple APIC */
-name|u_char
-name|reserved1
+name|u_int8_t
+name|pm_profile
 decl_stmt|;
 name|u_int16_t
 name|sci_int
@@ -226,7 +226,7 @@ name|u_int8_t
 name|s4biosreq
 decl_stmt|;
 name|u_int8_t
-name|reserved2
+name|pstate_cnt
 decl_stmt|;
 name|u_int32_t
 name|pm1a_evt_blk
@@ -274,7 +274,7 @@ name|u_int8_t
 name|gpe1_base
 decl_stmt|;
 name|u_int8_t
-name|reserved3
+name|cst_cnt
 decl_stmt|;
 name|u_int16_t
 name|p_lvl2_lat
@@ -306,6 +306,16 @@ decl_stmt|;
 name|u_int16_t
 name|iapc_boot_arch
 decl_stmt|;
+define|#
+directive|define
+name|FADT_FLAG_LEGACY_DEV
+value|1
+comment|/* System has legacy devices */
+define|#
+directive|define
+name|FADT_FLAG_8042
+value|2
+comment|/* 8042 keyboard controller */
 name|u_char
 name|reserved4
 index|[
@@ -317,54 +327,74 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|ACPI_FACP_FLAG_WBINVD
+name|FADT_FLAG_WBINVD
 value|1
 comment|/* WBINVD is correctly supported */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_WBINVD_FLUSH
+name|FADT_FLAG_WBINVD_FLUSH
 value|2
 comment|/* WBINVD flushes caches */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_PROC_C1
+name|FADT_FLAG_PROC_C1
 value|4
 comment|/* C1 power state supported */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_P_LVL2_UP
+name|FADT_FLAG_P_LVL2_UP
 value|8
 comment|/* C2 power state works on SMP */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_PWR_BUTTON
+name|FADT_FLAG_PWR_BUTTON
 value|16
 comment|/* Power button uses control method */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_SLP_BUTTON
+name|FADT_FLAG_SLP_BUTTON
 value|32
 comment|/* Sleep button uses control method */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_FIX_RTC
+name|FADT_FLAG_FIX_RTC
 value|64
 comment|/* RTC wakeup not supported */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_RTC_S4
+name|FADT_FLAG_RTC_S4
 value|128
 comment|/* RTC can wakeup from S4 state */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_TMR_VAL_EXT
+name|FADT_FLAG_TMR_VAL_EXT
 value|256
 comment|/* TMR_VAL is 32bit */
 define|#
 directive|define
-name|ACPI_FACP_FLAG_DCK_CAP
+name|FADT_FLAG_DCK_CAP
 value|512
 comment|/* Can support docking */
+define|#
+directive|define
+name|FADT_FLAG_RESET_REG
+value|1024
+comment|/* Supports RESET_REG */
+define|#
+directive|define
+name|FADT_FLAG_SEALED_CASE
+value|2048
+comment|/* Case cannot be opened */
+define|#
+directive|define
+name|FADT_FLAG_HEADLESS
+value|4096
+comment|/* No monitor */
+define|#
+directive|define
+name|FADT_FLAG_CPU_SW_SLP
+value|8192
+comment|/* Supports CPU software sleep */
 name|struct
 name|ACPIgas
 name|reset_reg
@@ -427,7 +457,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|FACS
+name|FACSbody
 block|{
 name|u_char
 name|signature
@@ -438,42 +468,43 @@ decl_stmt|;
 name|u_int32_t
 name|len
 decl_stmt|;
-name|u_char
-name|hard_sig
-index|[
-literal|4
-index|]
+name|u_int32_t
+name|hw_sig
 decl_stmt|;
 comment|/* 	 * NOTE This should be filled with physical address below 1MB!! 	 * sigh.... 	 */
 name|u_int32_t
 name|firm_wake_vec
 decl_stmt|;
 name|u_int32_t
-name|g_lock
+name|global_lock
 decl_stmt|;
-comment|/* bit field */
+define|#
+directive|define
+name|FACS_FLAG_LOCK_PENDING
+value|1
 comment|/* 5.2.6.1 Global Lock */
 define|#
 directive|define
-name|ACPI_GLOBAL_LOCK_PENDING
-value|1
-define|#
-directive|define
-name|ACPI_GLOBAL_LOCK_OWNED
+name|FACS_FLAG_LOCK_OWNED
 value|2
 name|u_int32_t
 name|flags
 decl_stmt|;
-comment|/* bit field */
 define|#
 directive|define
-name|ACPI_FACS_FLAG_S4BIOS_F
+name|FACS_FLAG_S4BIOS_F
 value|1
 comment|/* Supports S4BIOS_SEQ */
+name|u_int64_t
+name|x_firm_wake_vec
+decl_stmt|;
+name|u_int8_t
+name|version
+decl_stmt|;
 name|char
 name|reserved
 index|[
-literal|40
+literal|31
 index|]
 decl_stmt|;
 block|}
@@ -886,18 +917,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void		*acpi_map_physical(vm_offset_t, size_t); struct ACPIrsdp	*acpi_find_rsd_ptr(void); int		 acpi_checksum(void *, size_t); struct ACPIsdt	*acpi_map_sdt(vm_offset_t); void		 acpi_print_rsd_ptr(struct ACPIrsdp *); void		 acpi_print_sdt(struct ACPIsdt *); void		 acpi_print_rsdt(struct ACPIsdt *); void		 acpi_print_facp(struct FACPbody *); void		 acpi_print_dsdt(struct ACPIsdt *); void    	 acpi_handle_rsdt(struct ACPIsdt *); void		 acpi_load_dsdt(char *, u_int8_t **, u_int8_t **); void		 acpi_dump_dsdt(u_int8_t *, u_int8_t *);
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Find and map the RSD PTR structure and return it for parsing */
 end_comment
@@ -1025,10 +1044,10 @@ begin_function_decl
 name|struct
 name|ACPIsdt
 modifier|*
-name|dsdt_from_facp
+name|dsdt_from_fadt
 parameter_list|(
 name|struct
-name|FACPbody
+name|FADTbody
 modifier|*
 parameter_list|)
 function_decl|;

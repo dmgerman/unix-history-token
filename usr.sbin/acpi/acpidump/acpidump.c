@@ -374,11 +374,11 @@ argument_list|)
 expr_stmt|;
 name|sdt
 operator|=
-name|dsdt_from_facp
+name|dsdt_from_fadt
 argument_list|(
 operator|(
 expr|struct
-name|FACPbody
+name|FADTbody
 operator|*
 operator|)
 name|sdt
