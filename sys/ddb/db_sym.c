@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.c,v 1.27 1998/12/04 22:54:43 archie Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.c,v 1.28 1999/01/27 19:00:49 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -96,7 +96,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|db_sym_t
+name|c_db_sym_t
 name|db_lookup
 name|__P
 argument_list|(
@@ -118,7 +118,7 @@ name|db_qualify
 name|__P
 argument_list|(
 operator|(
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 operator|,
 name|char
@@ -136,7 +136,7 @@ name|db_symbol_is_ambiguous
 name|__P
 argument_list|(
 operator|(
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 operator|)
 argument_list|)
@@ -150,7 +150,7 @@ name|db_line_at_pc
 name|__P
 argument_list|(
 operator|(
-name|db_sym_t
+name|c_db_sym_t
 operator|,
 name|char
 operator|*
@@ -274,7 +274,7 @@ name|sym
 parameter_list|,
 name|symtabname
 parameter_list|)
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 decl_stmt|;
 specifier|register
@@ -412,7 +412,7 @@ modifier|*
 name|valuep
 decl_stmt|;
 block|{
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 decl_stmt|;
 name|sym
@@ -426,7 +426,7 @@ if|if
 condition|(
 name|sym
 operator|==
-name|DB_SYM_NULL
+name|C_DB_SYM_NULL
 condition|)
 return|return
 operator|(
@@ -457,7 +457,7 @@ end_comment
 
 begin_function
 specifier|static
-name|db_sym_t
+name|c_db_sym_t
 name|db_lookup
 parameter_list|(
 name|symstr
@@ -468,7 +468,7 @@ modifier|*
 name|symstr
 decl_stmt|;
 block|{
-name|db_sym_t
+name|c_db_sym_t
 name|sp
 decl_stmt|;
 specifier|register
@@ -678,7 +678,7 @@ name|db_symbol_is_ambiguous
 parameter_list|(
 name|sym
 parameter_list|)
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 decl_stmt|;
 block|{
@@ -767,7 +767,7 @@ comment|/*  * Find the closest symbol to val, and return its name  * and the dif
 end_comment
 
 begin_function
-name|db_sym_t
+name|c_db_sym_t
 name|db_search_symbol
 parameter_list|(
 name|val
@@ -800,10 +800,10 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|db_sym_t
+name|c_db_sym_t
 name|ret
 init|=
-name|DB_SYM_NULL
+name|C_DB_SYM_NULL
 decl_stmt|,
 name|sym
 decl_stmt|;
@@ -900,7 +900,7 @@ name|namep
 parameter_list|,
 name|valuep
 parameter_list|)
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 decl_stmt|;
 specifier|const
@@ -1019,7 +1019,7 @@ decl_stmt|;
 name|int
 name|linenum
 decl_stmt|;
-name|db_sym_t
+name|c_db_sym_t
 name|cursym
 decl_stmt|;
 name|cursym
@@ -1172,7 +1172,7 @@ name|linenum
 parameter_list|,
 name|pc
 parameter_list|)
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 decl_stmt|;
 name|char
@@ -1215,7 +1215,7 @@ name|nargp
 parameter_list|,
 name|argnames
 parameter_list|)
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 decl_stmt|;
 name|int

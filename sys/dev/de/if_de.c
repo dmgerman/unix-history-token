@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.80 1998/09/25 18:06:53 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.92 1998/12/14 05:47:26 dillon Exp $ */
+comment|/*	$Id: if_de.c,v 1.93 1998/12/30 00:37:43 hoek Exp $ */
 end_comment
 
 begin_comment
@@ -12053,6 +12053,7 @@ modifier|*
 name|shp
 init|=
 operator|(
+specifier|const
 name|tulip_srom_header_t
 operator|*
 operator|)
@@ -12070,6 +12071,7 @@ modifier|*
 name|saip
 init|=
 operator|(
+specifier|const
 name|tulip_srom_adapter_info_t
 operator|*
 operator|)
@@ -15732,14 +15734,14 @@ condition|(
 name|bcmp
 argument_list|(
 operator|(
-name|caddr_t
+name|c_caddr_t
 operator|)
 name|sc
 operator|->
 name|tulip_enaddr
 argument_list|,
 operator|(
-name|caddr_t
+name|c_caddr_t
 operator|)
 name|tulip_vendors
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: db_elf.c,v 1.4 1998/10/09 23:32:03 peter Exp $ */
+comment|/* $Id: db_elf.c,v 1.5 1999/01/27 19:00:49 dillon Exp $ */
 end_comment
 
 begin_comment
@@ -1331,7 +1331,7 @@ name|db_symtab_t
 modifier|*
 name|symtab
 decl_stmt|;
-name|db_sym_t
+name|c_db_sym_t
 name|cursym
 decl_stmt|;
 name|int

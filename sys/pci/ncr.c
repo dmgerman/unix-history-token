@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.140 1998/12/14 05:47:27 dillon Exp $ ** **  Device driver for the   NCR 53C8XX   PCI-SCSI-Controller Family. ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.141 1998/12/30 00:37:44 hoek Exp $ ** **  Device driver for the   NCR 53C8XX   PCI-SCSI-Controller Family. ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -3231,16 +3231,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|u_int32_t
-name|ncr_info
-parameter_list|(
-name|int
-name|unit
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static  u_int32_t ncr_info	(int unit);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3308,18 +3309,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|ncr_min_phys
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static	void	ncr_min_phys	(struct buf *bp);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3599,7 +3599,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.140 1998/12/14 05:47:27 dillon Exp $\n"
+literal|"\n$Id: ncr.c,v 1.141 1998/12/30 00:37:44 hoek Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -8983,61 +8983,42 @@ begin_comment
 comment|/*========================================================== ** ** **      Auto configuration. ** ** **========================================================== */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*---------------------------------------------------------- ** **	Reduce the transfer length to the max value **	we can transfer safely. ** **      Reading a block greater then MAX_SIZE from the **	raw (character) device exercises a memory leak **	in the vm subsystem. This is common to ALL devices. **	We have submitted a description of this bug to **<FreeBSD-bugs@freefall.cdrom.com>. **	It should be fixed in the current release. ** **---------------------------------------------------------- */
 end_comment
 
-begin_function
-name|void
-name|ncr_min_phys
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|bp
-operator|->
-name|b_bcount
-operator|>
-name|MAX_SIZE
-condition|)
-name|bp
-operator|->
-name|b_bcount
-operator|=
-name|MAX_SIZE
-expr_stmt|;
-block|}
-end_function
+begin_endif
+unit|void ncr_min_phys (struct  buf *bp) { 	if ((unsigned long)bp->b_bcount> MAX_SIZE) bp->b_bcount = MAX_SIZE; }
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
 comment|/*---------------------------------------------------------- ** **	Maximal number of outstanding requests per target. ** **---------------------------------------------------------- */
 end_comment
 
-begin_function
-name|u_int32_t
-name|ncr_info
-parameter_list|(
-name|int
-name|unit
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+begin_comment
+unit|u_int32_t ncr_info (int unit) { 	return (1);
 comment|/* may be changed later */
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|}
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*---------------------------------------------------------- ** **	NCR chip devices table and chip look up function. **	Features bit are defined in ncrreg.h. Is it the  **	right place? ** **---------------------------------------------------------- */
@@ -18077,6 +18058,7 @@ operator|++
 control|)
 operator|(
 operator|(
+specifier|volatile
 name|char
 operator|*
 operator|)

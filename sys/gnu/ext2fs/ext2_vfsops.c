@@ -4926,6 +4926,7 @@ operator|==
 name|VNON
 operator|||
 operator|(
+operator|(
 name|ip
 operator|->
 name|i_flag
@@ -4951,11 +4952,12 @@ name|vp
 operator|->
 name|v_dirtyblkhd
 argument_list|)
+operator|)
+operator|)
 operator|||
 name|waitfor
 operator|==
 name|MNT_LAZY
-operator|)
 condition|)
 block|{
 name|simple_unlock

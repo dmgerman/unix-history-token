@@ -7046,6 +7046,7 @@ name|error
 return|;
 if|if
 condition|(
+operator|(
 name|temp
 operator|=
 name|geo
@@ -7061,6 +7062,9 @@ operator|->
 name|frames
 operator|*
 literal|2
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if

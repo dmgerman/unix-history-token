@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.h,v 1.15 1998/06/28 00:55:01 dfr Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.h,v 1.16 1999/01/27 19:00:49 dillon Exp $  */
 end_comment
 
 begin_ifndef
@@ -67,11 +67,31 @@ begin_comment
 comment|/* opaque handle on symbols */
 end_comment
 
+begin_typedef
+typedef|typedef
+specifier|const
+name|char
+modifier|*
+name|c_db_sym_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* opaque handle on symbols */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DB_SYM_NULL
 value|((db_sym_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_DB_SYM_NULL
+value|((c_db_sym_t)0)
 end_define
 
 begin_comment
@@ -153,7 +173,7 @@ comment|/* extend the list of symbol tables */
 end_comment
 
 begin_decl_stmt
-name|db_sym_t
+name|c_db_sym_t
 name|db_search_symbol
 name|__P
 argument_list|(
@@ -179,7 +199,7 @@ name|db_symbol_values
 name|__P
 argument_list|(
 operator|(
-name|db_sym_t
+name|c_db_sym_t
 operator|,
 specifier|const
 name|char
@@ -281,7 +301,7 @@ name|db_sym_numargs
 name|__P
 argument_list|(
 operator|(
-name|db_sym_t
+name|c_db_sym_t
 operator|,
 name|int
 operator|*
@@ -304,7 +324,7 @@ name|db_symtab_t
 operator|*
 name|symtab
 operator|,
-name|db_sym_t
+name|c_db_sym_t
 name|cursym
 operator|,
 name|char
@@ -324,7 +344,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|db_sym_t
+name|c_db_sym_t
 name|X_db_lookup
 name|__P
 argument_list|(
@@ -343,7 +363,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|db_sym_t
+name|c_db_sym_t
 name|X_db_search_symbol
 name|__P
 argument_list|(
@@ -375,7 +395,7 @@ operator|(
 name|db_symtab_t
 operator|*
 operator|,
-name|db_sym_t
+name|c_db_sym_t
 operator|,
 name|int
 operator|*
@@ -398,7 +418,7 @@ name|db_symtab_t
 operator|*
 name|symtab
 operator|,
-name|db_sym_t
+name|c_db_sym_t
 name|sym
 operator|,
 specifier|const
