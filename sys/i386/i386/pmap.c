@@ -7090,6 +7090,9 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -7223,7 +7226,7 @@ condition|(
 operator|(
 name|pte
 operator|=
-name|pmap_pte
+name|pmap_pte_quick
 argument_list|(
 name|pmap
 argument_list|,
@@ -7353,6 +7356,9 @@ name|pmap_invalidate_all
 argument_list|(
 name|pmap
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
