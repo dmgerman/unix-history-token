@@ -3113,12 +3113,16 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Do not allow NFS export by non-root users. 	 */
+comment|/* 	 * Do not allow NFS export or MNT_SUIDDIR by unprivileged users. 	 */
 if|if
 condition|(
 name|fsflags
 operator|&
+operator|(
 name|MNT_EXPORTED
+operator||
+name|MNT_SUIDDIR
+operator|)
 condition|)
 block|{
 name|error
@@ -3138,29 +3142,24 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Silently enforce MNT_NOSUID, MNT_NODEV and MNT_USER 	 * for unprivileged users and remove MNT_SUIDDIR. 	 */
+comment|/* 	 * Silently enforce MNT_NODEV, MNT_NOSUID and MNT_USER for 	 * unprivileged users. 	 */
 if|if
 condition|(
 name|suser
 argument_list|(
 name|td
 argument_list|)
+operator|!=
+literal|0
 condition|)
-block|{
-name|fsflags
-operator|&=
-operator|~
-name|MNT_SUIDDIR
-expr_stmt|;
 name|fsflags
 operator||=
-name|MNT_NOSUID
-operator||
 name|MNT_NODEV
+operator||
+name|MNT_NOSUID
 operator||
 name|MNT_USER
 expr_stmt|;
-block|}
 comment|/* 	 * Get vnode to be covered 	 */
 name|NDINIT
 argument_list|(
