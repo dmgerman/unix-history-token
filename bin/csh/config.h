@@ -239,6 +239,17 @@ directive|define
 name|BSD_STYLE_COLORLS
 end_define
 
+begin_comment
+comment|/* Use LC_MESSAGES locale category to open the message catalog */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCLoadBySet
+value|NL_CAT_LOCALE
+end_define
+
 begin_endif
 endif|#
 directive|endif
