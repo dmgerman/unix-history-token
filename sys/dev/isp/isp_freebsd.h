@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions (CAM version)  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Qlogic ISP SCSI Host Adapter FreeBSD Wrapper Definitions (CAM version)  * Copyright (c) 1997, 1998, 1999, 2000, 2001 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|9
+value|11
 end_define
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -265,16 +271,13 @@ modifier|*
 name|next
 decl_stmt|;
 name|u_int64_t
-name|default_wwn
+name|default_port_wwn
 decl_stmt|;
-name|char
-name|name
-index|[
-literal|8
-index|]
+name|u_int64_t
+name|default_node_wwn
 decl_stmt|;
-name|int
-name|unit
+name|device_t
+name|dev
 decl_stmt|;
 name|struct
 name|cam_sim
@@ -1014,7 +1017,7 @@ name|DEFAULT_NODEWWN
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp)->isp_osinfo.default_wwn
+value|(isp)->isp_osinfo.default_node_wwn
 end_define
 
 begin_define
@@ -1024,7 +1027,7 @@ name|DEFAULT_PORTWWN
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp)->isp_osinfo.default_wwn
+value|(isp)->isp_osinfo.default_port_wwn
 end_define
 
 begin_define
@@ -1210,15 +1213,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|isp_unit
-value|isp_osinfo.unit
-end_define
-
-begin_define
-define|#
-directive|define
-name|isp_name
-value|isp_osinfo.name
+name|isp_dev
+value|isp_osinfo.dev
 end_define
 
 begin_comment
