@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)script.c	4.3 82/03/26"
+literal|"@(#)script.c	4.4 83/06/10"
 decl_stmt|;
 end_decl_stmt
 

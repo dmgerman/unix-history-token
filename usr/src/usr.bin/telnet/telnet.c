@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.19 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1171,14 +1171,14 @@ argument_list|(
 literal|"setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|intr
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
@@ -1218,7 +1218,7 @@ argument_list|(
 literal|"telnet: connect"
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -2562,7 +2562,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 else|else
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -3825,13 +3825,6 @@ end_macro
 
 begin_block
 block|{
-name|sigset
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|deadpeer
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3858,13 +3851,6 @@ end_macro
 
 begin_block
 block|{
-name|sigset
-argument_list|(
-name|SIGINT
-argument_list|,
-name|intr
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)

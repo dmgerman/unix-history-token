@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.4 82/11/14"
+literal|"@(#)rcp.c	4.5 83/06/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * rcp  */
+end_comment
 
 begin_include
 include|#
@@ -73,10 +77,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_comment
-comment|/*  * rcp  */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -474,7 +474,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|sigsys
+name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,

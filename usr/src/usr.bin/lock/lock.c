@@ -1,13 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lock.c	4.2 (Berkeley) %G%"
+literal|"@(#)lock.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Lock a terminal up until the knowledgeable Joe returns.  */
+end_comment
 
 begin_include
 include|#
@@ -38,10 +53,6 @@ include|#
 directive|include
 file|<sgtty.h>
 end_include
-
-begin_comment
-comment|/*  * Lock a terminal up until the knowledgeable Joe returns.  */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -96,22 +107,21 @@ name|struct
 name|stat
 name|statb
 decl_stmt|;
-comment|/* 	 *	Ignore signals generated from tty keyboard.  These signals 	 *	are for xBSD only.  This program should be compiled with 	 *	the jobs library (cc ... -ljobs). 	 */
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -133,9 +143,11 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|gtty
+name|ioctl
 argument_list|(
 literal|0
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|tty
@@ -157,9 +169,11 @@ operator|&=
 operator|~
 name|ECHO
 expr_stmt|;
-name|stty
+name|ioctl
 argument_list|(
 literal|0
+argument_list|,
+name|TIOCSETN
 argument_list|,
 operator|&
 name|ntty
@@ -283,9 +297,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gtty
+name|ioctl
 argument_list|(
 literal|0
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|ntty
@@ -297,9 +313,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|stty
+name|ioctl
 argument_list|(
 literal|0
+argument_list|,
+name|TIOCSETN
 argument_list|,
 operator|&
 name|tty

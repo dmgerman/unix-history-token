@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.12 83/04/30"
+literal|"@(#)rlogin.c	4.13 83/06/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * rlogin - remote login  */
+end_comment
 
 begin_include
 include|#
@@ -79,10 +83,6 @@ include|#
 directive|include
 file|<wait.h>
 end_include
-
-begin_comment
-comment|/*  * rlogin - remote login  */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -575,7 +575,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|sigset
+name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
@@ -851,21 +851,21 @@ name|deftc
 operator|.
 name|tc_stopc
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|exit
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
 name|exit
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -894,9 +894,11 @@ name|done
 argument_list|()
 expr_stmt|;
 block|}
-name|sigignore
+name|signal
 argument_list|(
 name|SIGINT
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|mode
@@ -930,7 +932,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-name|sigset
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -1299,9 +1301,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|sigignore
+name|signal
 argument_list|(
 name|SIGCHLD
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|kill
@@ -1320,9 +1324,11 @@ argument_list|,
 name|SIGTSTP
 argument_list|)
 expr_stmt|;
-name|sigrelse
+name|signal
 argument_list|(
 name|SIGCHLD
+argument_list|,
+name|catchild
 argument_list|)
 expr_stmt|;
 name|mode
@@ -1534,7 +1540,7 @@ name|mark
 argument_list|,
 literal|1
 argument_list|,
-name|SOF_OOB
+name|MSG_OOB
 argument_list|)
 expr_stmt|;
 if|if
@@ -1635,7 +1641,7 @@ specifier|register
 name|int
 name|cnt
 decl_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGURG
 argument_list|,
@@ -1912,9 +1918,11 @@ end_macro
 
 begin_block
 block|{
-name|sigignore
+name|signal
 argument_list|(
 name|SIGPIPE
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|prf
