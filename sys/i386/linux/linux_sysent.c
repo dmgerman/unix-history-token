@@ -2342,7 +2342,10 @@ block|}
 block|,
 comment|/* 172 = linux_prctl */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|linux_rt_sigreturn_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
