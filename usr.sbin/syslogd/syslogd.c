@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.34 1998/06/24 23:50:20 julian Exp $"
+literal|"$Id: syslogd.c,v 1.35 1998/06/25 19:39:19 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4233,6 +4233,55 @@ operator|.
 name|f_hname
 argument_list|)
 expr_stmt|;
+comment|/* check for local vs remote messages */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|f
+operator|->
+name|f_prevhost
+argument_list|,
+name|LocalHostName
+argument_list|)
+condition|)
+name|l
+operator|=
+name|snprintf
+argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
+name|line
+operator|-
+literal|1
+argument_list|,
+literal|"<%d>%.15s Forwarded from %s: %s"
+argument_list|,
+name|f
+operator|->
+name|f_prevpri
+argument_list|,
+name|iov
+index|[
+literal|0
+index|]
+operator|.
+name|iov_base
+argument_list|,
+name|f
+operator|->
+name|f_prevhost
+argument_list|,
+name|iov
+index|[
+literal|4
+index|]
+operator|.
+name|iov_base
+argument_list|)
+expr_stmt|;
+else|else
 name|l
 operator|=
 name|snprintf
