@@ -226,6 +226,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Bad idea: don't use IPv6 with FAST_IPSEC (for the moment)!"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
