@@ -610,11 +610,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|line
-argument_list|)
-expr_stmt|;
 name|err
 argument_list|(
 literal|1
