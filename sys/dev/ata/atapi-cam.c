@@ -3455,7 +3455,16 @@ argument_list|)
 operator|!=
 name|CAM_REQ_CMP
 condition|)
+block|{
+name|free
+argument_list|(
+name|ccb
+argument_list|,
+name|M_ATACAM
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|CAM_DEBUG
 argument_list|(
 name|ccb
