@@ -2136,7 +2136,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|CHN_LOCK
+name|CHN_LOCKASSERT
 argument_list|(
 name|c
 argument_list|)
@@ -2197,11 +2197,6 @@ name|sndbuf_getsel
 argument_list|(
 name|bs
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|CHN_UNLOCK
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 return|return

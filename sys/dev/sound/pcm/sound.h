@@ -451,6 +451,8 @@ name|unsigned
 name|chancount
 decl_stmt|,
 name|maxchans
+decl_stmt|,
+name|defaultchan
 decl_stmt|;
 name|struct
 name|snd_mixer
@@ -481,6 +483,15 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|sysctl_tree_top
+decl_stmt|;
+name|dev_t
+name|dspdev
+decl_stmt|,
+name|dspWdev
+decl_stmt|,
+name|audiodev
+decl_stmt|,
+name|mixerdev
 decl_stmt|;
 name|void
 modifier|*
@@ -911,13 +922,16 @@ name|d
 parameter_list|,
 name|int
 name|direction
+parameter_list|,
+name|pid_t
+name|pid
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|pcm_chnfree
+name|pcm_chnrelease
 parameter_list|(
 name|struct
 name|pcm_channel
