@@ -57,12 +57,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1239,10 +1233,6 @@ name|p
 decl_stmt|,
 modifier|*
 name|tmp
-decl_stmt|;
-name|struct
-name|stat
-name|sb
 decl_stmt|;
 specifier|register
 name|int
