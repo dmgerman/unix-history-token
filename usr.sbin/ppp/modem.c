@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.23 1996/03/29 15:24:04 ache Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.26 1996/12/22 17:29:32 jkh Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -103,12 +103,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|USE_CTSRTS
-end_define
 
 begin_function_decl
 specifier|extern
@@ -1924,9 +1918,10 @@ operator|&
 name|rstio
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_CTSRTS
+if|if
+condition|(
+name|VarCtsRts
+condition|)
 name|rstio
 operator|.
 name|c_cflag
@@ -1937,8 +1932,8 @@ name|CCTS_OFLOW
 operator||
 name|CRTS_IFLOW
 expr_stmt|;
-else|#
-directive|else
+else|else
+block|{
 name|rstio
 operator|.
 name|c_cflag
@@ -1951,8 +1946,7 @@ name|c_iflag
 operator||=
 name|IXOFF
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|rstio
 operator|.
 name|c_iflag
@@ -2242,9 +2236,10 @@ operator|&
 name|rstio
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_CTSRTS
+if|if
+condition|(
+name|VarCtsRts
+condition|)
 name|rstio
 operator|.
 name|c_cflag
@@ -2255,16 +2250,13 @@ name|CCTS_OFLOW
 operator||
 name|CRTS_IFLOW
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|rstio
 operator|.
 name|c_cflag
 operator||=
 name|CLOCAL
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -3171,6 +3163,11 @@ index|[
 literal|200
 index|]
 decl_stmt|;
+name|int
+name|excode
+init|=
+literal|0
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|ScriptBuffer
@@ -3269,6 +3266,7 @@ operator|)
 operator|==
 name|MODE_INTER
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -3276,6 +3274,11 @@ argument_list|,
 literal|"login failed.\n"
 argument_list|)
 expr_stmt|;
+name|excode
+operator|=
+name|EX_NOLOGIN
+expr_stmt|;
+block|}
 block|}
 name|ModemTimeout
 argument_list|()
@@ -3298,6 +3301,7 @@ operator|)
 operator|==
 name|MODE_INTER
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -3305,12 +3309,38 @@ argument_list|,
 literal|"dial failed.\n"
 argument_list|)
 expr_stmt|;
+name|excode
+operator|=
+name|EX_NODIAL
+expr_stmt|;
+block|}
 block|}
 name|HangupModem
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+condition|)
+block|{
+specifier|extern
+name|void
+name|Cleanup
+parameter_list|()
+function_decl|;
+name|CloseModem
+argument_list|()
+expr_stmt|;
+name|Cleanup
+argument_list|(
+name|excode
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3397,20 +3427,33 @@ name|PARODD
 condition|)
 name|printf
 argument_list|(
-literal|"odd parity\n"
+literal|"odd parity, "
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"even parity\n"
+literal|"even parity, "
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|printf
 argument_list|(
-literal|"none parity\n"
+literal|"no parity, "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CTS/RTS %s.\n"
+argument_list|,
+operator|(
+name|VarCtsRts
+condition|?
+literal|"on"
+else|:
+literal|"off"
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
