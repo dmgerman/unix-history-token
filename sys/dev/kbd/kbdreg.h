@@ -255,6 +255,14 @@ name|long
 name|kb_count
 decl_stmt|;
 comment|/* # of processed key strokes */
+name|u_char
+name|kb_lastact
+index|[
+name|NUM_KEYS
+operator|/
+literal|2
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
