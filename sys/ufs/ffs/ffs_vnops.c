@@ -304,17 +304,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_balloc_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|ffs_balloc
-block|}
-block|,
-block|{
-operator|&
 name|vop_reallocblks_desc
 block|,
 operator|(

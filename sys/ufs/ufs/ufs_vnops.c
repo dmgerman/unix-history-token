@@ -7302,7 +7302,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|tvp
 argument_list|,

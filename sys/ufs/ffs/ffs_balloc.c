@@ -83,14 +83,31 @@ begin_function
 name|int
 name|ffs_balloc
 parameter_list|(
-name|ap
-parameter_list|)
 name|struct
-name|vop_balloc_args
-comment|/* { 		struct vnode *a_vp; 		ufs_daddr_t a_lbn; 		int a_size; 		struct ucred *a_cred; 		int a_flags; 		struct buf *a_bpp; 	} */
+name|vnode
 modifier|*
-name|ap
-decl_stmt|;
+name|a_vp
+parameter_list|,
+name|off_t
+name|a_startoffset
+parameter_list|,
+name|int
+name|a_size
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|a_cred
+parameter_list|,
+name|int
+name|a_flags
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+modifier|*
+name|a_bpp
+parameter_list|)
 block|{
 name|struct
 name|inode
@@ -195,8 +212,6 @@ decl_stmt|;
 comment|/* XXX */
 name|vp
 operator|=
-name|ap
-operator|->
 name|a_vp
 expr_stmt|;
 name|ip
@@ -218,8 +233,6 @@ name|lblkno
 argument_list|(
 name|fs
 argument_list|,
-name|ap
-operator|->
 name|a_startoffset
 argument_list|)
 expr_stmt|;
@@ -229,13 +242,9 @@ name|blkoff
 argument_list|(
 name|fs
 argument_list|,
-name|ap
-operator|->
 name|a_startoffset
 argument_list|)
 operator|+
-name|ap
-operator|->
 name|a_size
 expr_stmt|;
 if|if
@@ -252,8 +261,6 @@ literal|"ffs_balloc: blk too big"
 argument_list|)
 expr_stmt|;
 operator|*
-name|ap
-operator|->
 name|a_bpp
 operator|=
 name|NULL
@@ -271,14 +278,10 @@ operator|)
 return|;
 name|cred
 operator|=
-name|ap
-operator|->
 name|a_cred
 expr_stmt|;
 name|flags
 operator|=
-name|ap
-operator|->
 name|a_flags
 expr_stmt|;
 comment|/* 	 * If the next write will extend the file into a new block, 	 * and the file is currently composed of a fragment 	 * this fragment has to be extended to be a full block. 	 */
@@ -568,8 +571,6 @@ name|nb
 argument_list|)
 expr_stmt|;
 operator|*
-name|ap
-operator|->
 name|a_bpp
 operator|=
 name|bp
@@ -911,8 +912,6 @@ operator||
 name|IN_UPDATE
 expr_stmt|;
 operator|*
-name|ap
-operator|->
 name|a_bpp
 operator|=
 name|bp
@@ -1549,8 +1548,6 @@ name|B_METAONLY
 condition|)
 block|{
 operator|*
-name|ap
-operator|->
 name|a_bpp
 operator|=
 name|bp
@@ -1757,8 +1754,6 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|*
-name|ap
-operator|->
 name|a_bpp
 operator|=
 name|nbp
@@ -1849,8 +1844,6 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|*
-name|ap
-operator|->
 name|a_bpp
 operator|=
 name|nbp

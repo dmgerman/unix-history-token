@@ -2940,6 +2940,12 @@ name|um_vfree
 operator|=
 name|ffs_vfree
 expr_stmt|;
+name|ump
+operator|->
+name|um_balloc
+operator|=
+name|ffs_balloc
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|bp

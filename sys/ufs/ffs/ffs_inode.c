@@ -994,7 +994,7 @@ name|B_SYNC
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|ovp
 argument_list|,
@@ -1130,7 +1130,7 @@ name|B_SYNC
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|ovp
 argument_list|,

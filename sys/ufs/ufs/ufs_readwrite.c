@@ -1753,7 +1753,7 @@ directive|endif
 comment|/* XXX is uio->uio_offset the right thing here? */
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,

@@ -785,7 +785,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -890,7 +890,7 @@ control|)
 block|{
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -983,7 +983,7 @@ else|else
 block|{
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -1175,7 +1175,7 @@ name|blkno
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -1234,7 +1234,7 @@ control|)
 block|{
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -1285,7 +1285,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -1355,7 +1355,7 @@ control|)
 block|{
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -1768,7 +1768,7 @@ block|}
 block|}
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -1864,7 +1864,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -1994,7 +1994,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -2168,7 +2168,7 @@ control|)
 block|{
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -2284,7 +2284,7 @@ control|)
 block|{
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -2510,7 +2510,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -3330,7 +3330,7 @@ else|else
 block|{
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -3826,7 +3826,7 @@ control|)
 block|{
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -4150,7 +4150,7 @@ name|P_COWINPROGRESS
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -4497,7 +4497,7 @@ name|P_COWINPROGRESS
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -5314,7 +5314,7 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We ensure that everything of our own that needs to be 		 * copied will be done at the time that ffs_snapshot is 		 * called. Thus we can skip the check here which can 		 * deadlock in doing the lookup in VOP_BALLOC. 		 */
+comment|/* 		 * We ensure that everything of our own that needs to be 		 * copied will be done at the time that ffs_snapshot is 		 * called. Thus we can skip the check here which can 		 * deadlock in doing the lookup in UFS_BALLOC. 		 */
 if|if
 condition|(
 name|bp
@@ -5324,7 +5324,7 @@ operator|==
 name|vp
 condition|)
 continue|continue;
-comment|/* 		 * Check to see if block needs to be copied. We have to 		 * be able to do the VOP_BALLOC without blocking, otherwise 		 * we may get in a deadlock with another process also 		 * trying to allocate. If we find outselves unable to 		 * get the buffer lock, we unlock the snapshot vnode, 		 * sleep briefly, and try again. 		 */
+comment|/* 		 * Check to see if block needs to be copied. We have to 		 * be able to do the UFS_BALLOC without blocking, otherwise 		 * we may get in a deadlock with another process also 		 * trying to allocate. If we find outselves unable to 		 * get the buffer lock, we unlock the snapshot vnode, 		 * sleep briefly, and try again. 		 */
 name|retry
 label|:
 name|vn_lock
@@ -5365,7 +5365,7 @@ name|P_COWINPROGRESS
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
@@ -5525,7 +5525,7 @@ name|P_COWINPROGRESS
 expr_stmt|;
 name|error
 operator|=
-name|VOP_BALLOC
+name|UFS_BALLOC
 argument_list|(
 name|vp
 argument_list|,
