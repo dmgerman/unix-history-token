@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -374,6 +374,18 @@ expr|struct
 name|proc
 argument_list|,
 name|p_flag
+argument_list|)
+expr_stmt|;
+name|off
+argument_list|(
+literal|"P_MDFLAG"
+argument_list|,
+expr|struct
+name|proc
+argument_list|,
+name|p_md
+operator|.
+name|md_flags
 argument_list|)
 expr_stmt|;
 name|def
@@ -871,16 +883,6 @@ expr_stmt|;
 comment|/* pcb fields */
 name|off
 argument_list|(
-literal|"PCB_FLAGS"
-argument_list|,
-expr|struct
-name|pcb
-argument_list|,
-name|pcb_flags
-argument_list|)
-expr_stmt|;
-name|off
-argument_list|(
 literal|"PCB_PS"
 argument_list|,
 expr|struct
@@ -950,6 +952,40 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* exception frame offset/sizes */
+name|off
+argument_list|(
+literal|"FR_SP"
+argument_list|,
+expr|struct
+name|frame
+argument_list|,
+name|f_regs
+index|[
+literal|15
+index|]
+argument_list|)
+expr_stmt|;
+name|off
+argument_list|(
+literal|"FR_HW"
+argument_list|,
+expr|struct
+name|frame
+argument_list|,
+name|f_sr
+argument_list|)
+expr_stmt|;
+name|off
+argument_list|(
+literal|"FR_ADJ"
+argument_list|,
+expr|struct
+name|frame
+argument_list|,
+name|f_stackadj
+argument_list|)
+expr_stmt|;
 comment|/* system calls */
 name|def
 argument_list|(
@@ -1012,11 +1048,11 @@ expr_stmt|;
 comment|/* HP-UX trace bit */
 name|def
 argument_list|(
-literal|"PCB_TRCB"
+literal|"MDP_TRCB"
 argument_list|,
 name|ffs
 argument_list|(
-name|PCB_HPUXTRACE
+name|MDP_HPUXTRACE
 argument_list|)
 operator|-
 literal|1
