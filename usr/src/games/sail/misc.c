@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.3 (Berkeley) %G%"
+literal|"@(#)misc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"externs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -1049,7 +1055,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|LOGFILE
+name|_PATH_LOGFILE
 argument_list|,
 literal|"r+"
 argument_list|)

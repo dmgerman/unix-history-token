@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lo_main.c	5.4 (Berkeley) %G%"
+literal|"@(#)lo_main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|"externs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -129,7 +135,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|LOGFILE
+name|_PATH_LOGFILE
 argument_list|,
 literal|"r"
 argument_list|)
@@ -140,7 +146,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|LOGFILE
+name|_PATH_LOGFILE
 argument_list|)
 expr_stmt|;
 name|exit
@@ -189,7 +195,7 @@ break|break;
 default|default:
 name|perror
 argument_list|(
-name|LOGFILE
+name|_PATH_LOGFILE
 argument_list|)
 expr_stmt|;
 name|exit
