@@ -484,6 +484,10 @@ define|#
 directive|define
 name|LINK_UNFIREWALLED
 value|0x08
+define|#
+directive|define
+name|LINK_LAST_LINE_CRLF_TERMED
+value|0x10
 name|int
 name|timestamp
 decl_stmt|;
@@ -5182,7 +5186,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* External routines for getting or changing link data    (external to alias_db.c, but internal to alias*.c)      SetFragmentData(), GetFragmentData()     SetFragmentPtr(), GetFragmentPtr()     SetStateIn(), SetStateOut(), GetStateIn(), GetStateOut()     GetOriginalAddress(), GetDestAddress(), GetAliasAddress()     GetOriginalPort(), GetAliasPort()     SetAckModified(), GetAckModified()     GetDeltaAckIn(), GetDeltaSeqOut(), AddSeq() */
+comment|/* External routines for getting or changing link data    (external to alias_db.c, but internal to alias*.c)      SetFragmentData(), GetFragmentData()     SetFragmentPtr(), GetFragmentPtr()     SetStateIn(), SetStateOut(), GetStateIn(), GetStateOut()     GetOriginalAddress(), GetDestAddress(), GetAliasAddress()     GetOriginalPort(), GetAliasPort()     SetAckModified(), GetAckModified()     GetDeltaAckIn(), GetDeltaSeqOut(), AddSeq()     SetLastLineCrlfTermed(), GetLastLineCrlfTermed() */
 end_comment
 
 begin_function
@@ -6509,6 +6513,62 @@ name|newDefaultLink
 operator|=
 literal|0
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|SetLastLineCrlfTermed
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+name|link
+parameter_list|,
+name|int
+name|yes
+parameter_list|)
+block|{
+if|if
+condition|(
+name|yes
+condition|)
+name|link
+operator|->
+name|flags
+operator||=
+name|LINK_LAST_LINE_CRLF_TERMED
+expr_stmt|;
+else|else
+name|link
+operator|->
+name|flags
+operator|&=
+operator|~
+name|LINK_LAST_LINE_CRLF_TERMED
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|GetLastLineCrlfTermed
+parameter_list|(
+name|struct
+name|alias_link
+modifier|*
+name|link
+parameter_list|)
+block|{
+return|return
+operator|(
+name|link
+operator|->
+name|flags
+operator|&
+name|LINK_LAST_LINE_CRLF_TERMED
+operator|)
+return|;
 block|}
 end_function
 
