@@ -65,13 +65,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|vm_map_t
-name|phys_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vm_map_t
 name|exec_map
 decl_stmt|;
 end_decl_stmt

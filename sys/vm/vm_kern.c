@@ -147,14 +147,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|vm_map_t
-name|phys_map
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  *	kmem_alloc_pageable:  *  *	Allocate pageable memory to the kernel's address map.  *	"map" must be kernel_map or a submap of kernel_map.  */
 end_comment
