@@ -812,6 +812,8 @@ argument_list|,
 name|VIS_WHITE
 operator||
 name|VIS_OCTAL
+operator||
+name|VIS_GLOB
 argument_list|)
 expr_stmt|;
 if|if
