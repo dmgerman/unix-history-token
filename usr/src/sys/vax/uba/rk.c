@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.20	%G%	*/
+comment|/*	rk.c	4.21	%G%	*/
 end_comment
 
 begin_include
@@ -1677,7 +1677,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rk%d not ready"
+literal|"rk%d: not ready"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2171,17 +2171,6 @@ name|rker
 decl_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|sc_recal
-condition|)
-name|printf
-argument_list|(
-literal|"recal CERR\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|ds
 operator|&
 name|RK_WLE
@@ -2189,7 +2178,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"rk%d is write locked\n"
+literal|"rk%d: write locked\n"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -2238,29 +2227,13 @@ expr_stmt|;
 name|harderr
 argument_list|(
 name|bp
+argument_list|,
+literal|"rk"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rk%d%c cs2=%b ds=%b er=%b\n"
-argument_list|,
-name|dkunit
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
-literal|'a'
-operator|+
-operator|(
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-operator|&
-literal|07
-operator|)
+literal|"cs2=%b ds=%b er=%b\n"
 argument_list|,
 name|cs2
 argument_list|,
@@ -2967,7 +2940,7 @@ name|PGOFSET
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"soft ecc rk%d%c bn%d\n"
+literal|"rk%d%c: soft ecc bn%d\n"
 argument_list|,
 name|dkunit
 argument_list|(
@@ -3322,6 +3295,12 @@ argument|uban
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|uban
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -3341,11 +3320,6 @@ name|rk11
 operator|,
 name|unit
 expr_stmt|;
-name|int
-name|any
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 name|rk11
@@ -3386,22 +3360,13 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-if|if
-condition|(
-name|any
-operator|==
-literal|0
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|" rk"
+literal|" hk%d"
+argument_list|,
+name|rk11
 argument_list|)
 expr_stmt|;
-name|any
-operator|++
-expr_stmt|;
-block|}
 name|um
 operator|->
 name|um_tab
@@ -3685,7 +3650,9 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lost rkintr "
+literal|"hk%d: lost interrupt\n"
+argument_list|,
+name|rk11
 argument_list|)
 expr_stmt|;
 name|ubareset
