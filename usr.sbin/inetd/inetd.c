@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.35 1998/07/22 05:53:53 phk Exp $"
+literal|"$Id: inetd.c,v 1.36 1998/07/22 14:24:12 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2414,12 +2414,7 @@ name|sep
 operator|->
 name|se_time
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2444,12 +2439,7 @@ argument_list|(
 operator|&
 name|now
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2941,6 +2931,10 @@ argument_list|,
 name|sep
 operator|->
 name|se_proto
+argument_list|,
+name|sep
+operator|->
+name|se_class
 argument_list|)
 expr_stmt|;
 if|if
@@ -3681,7 +3675,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s/%s: login class error, service ignored"
+literal|"%s/%s: %s: login class error, service ignored"
 argument_list|,
 name|new
 operator|->
@@ -3690,6 +3684,10 @@ argument_list|,
 name|new
 operator|->
 name|se_proto
+argument_list|,
+name|new
+operator|->
+name|se_class
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -8587,12 +8585,7 @@ argument_list|(
 operator|&
 name|tv
 argument_list|,
-operator|(
-expr|struct
-name|timezone
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 operator|<
 literal|0
