@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.2	82/05/25	*/
+comment|/*	defs.h	4.3	82/05/26	*/
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ file|<net/route.h>
 end_include
 
 begin_comment
-comment|/*  * Internal routing table structure.  * Differs a bit from kernel tables.  */
+comment|/*  * Routing table structure; differs a bit from kernel tables.  *  * Note: the union below must agree in the first 4 members  * so the ioctl's will work.  */
 end_comment
 
 begin_struct
@@ -74,8 +74,11 @@ decl_stmt|;
 name|short
 name|rtu_retry
 decl_stmt|;
-name|int
+name|short
 name|rtu_timer
+decl_stmt|;
+name|short
+name|rtu_state
 decl_stmt|;
 name|int
 name|rtu_metric
@@ -147,7 +150,7 @@ value|rt_rtu.rtu_entry.rtu_flags
 end_define
 
 begin_comment
-comment|/* see below */
+comment|/* kernel flags */
 end_comment
 
 begin_define
@@ -170,6 +173,17 @@ end_define
 
 begin_comment
 comment|/* for invalidation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|rt_state
+value|rt_rtu.rtu_entry.rtu_state
+end_define
+
+begin_comment
+comment|/* see below */
 end_comment
 
 begin_define
@@ -202,14 +216,14 @@ value|19
 end_define
 
 begin_comment
-comment|/*  * Flags used by routing process are not  * interpreted by kernel.  */
+comment|/*  * "State" of routing table entry.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RTF_DELRT
-value|0x8
+name|RTS_DELRT
+value|0x1
 end_define
 
 begin_comment
@@ -219,8 +233,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTF_CHGRT
-value|0x10
+name|RTS_CHGRT
+value|0x2
 end_define
 
 begin_comment
@@ -230,8 +244,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTF_ADDRT
-value|0x20
+name|RTS_ADDRT
+value|0x4
 end_define
 
 begin_comment
@@ -241,8 +255,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTF_SILENT
-value|0x40
+name|RTS_SILENT
+value|0x8
 end_define
 
 begin_comment
@@ -274,7 +288,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Per address family routines.  Hash returns hash key based  * on address; netmatch verifies net # matching, output interprets  * an address in preparation for sending; portmatch interprets  * an address in verifying incoming packets were sent from the  * appropriate port; checkhost is used to decide whether an  * address is for a host, or for a network (e.g. broadcast);  * canon purges any extraneous stuff from a sender's address  * before pattern matching is performed (e.g. Internet ports).  */
+comment|/*  * Per address family routines.  */
 end_comment
 
 begin_struct
@@ -288,6 +302,7 @@ name|af_hash
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* returns keys based on address */
 name|int
 function_decl|(
 modifier|*
@@ -295,6 +310,7 @@ name|af_netmatch
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* verifies net # matching */
 name|int
 function_decl|(
 modifier|*
@@ -302,6 +318,7 @@ name|af_output
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* interprets address for sending */
 name|int
 function_decl|(
 modifier|*
@@ -309,6 +326,7 @@ name|af_portmatch
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* interprets address on receipt */
 name|int
 function_decl|(
 modifier|*
@@ -316,6 +334,7 @@ name|af_checkhost
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* tells if address for host or net */
 name|int
 function_decl|(
 modifier|*
@@ -323,9 +342,14 @@ name|af_canon
 function_decl|)
 parameter_list|()
 function_decl|;
+comment|/* purges extraneous part of address */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Structure returned by af_hash routines.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -334,9 +358,11 @@ block|{
 name|u_int
 name|afh_hosthash
 decl_stmt|;
+comment|/* host based hash */
 name|u_int
 name|afh_nethash
 decl_stmt|;
+comment|/* network based hash */
 block|}
 struct|;
 end_struct
@@ -350,6 +376,10 @@ name|AF_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* table proper */
+end_comment
 
 end_unit
 
