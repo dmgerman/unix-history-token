@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)iostat.c	8.2 (Berkeley) 1/26/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)iostat.c	8.2 (Berkeley) 1/26/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,6 +489,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -600,7 +615,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"repetition count<= 0."
+literal|"repetition count<= 0"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -640,7 +655,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"interval<= 0."
+literal|"interval<= 0"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -769,7 +784,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid dk_ndrive %d\n"
+literal|"invalid dk_ndrive %d"
 argument_list|,
 name|dk_ndrive
 argument_list|)
@@ -2071,6 +2086,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
