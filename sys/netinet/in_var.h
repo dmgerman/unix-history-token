@@ -266,13 +266,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|INADDR_HMASK
-value|(INREASS_NHASH - 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|INADDR_HASHVAL
 parameter_list|(
 name|x
