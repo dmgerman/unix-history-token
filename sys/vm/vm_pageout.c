@@ -5211,6 +5211,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Unless the page queue lock is held by the caller, this function  * should be regarded as advisory.  Specifically, the caller should  * not msleep() on&cnt.v_free_count following this function unless  * the page queue lock is held until the msleep() is performed.  */
+end_comment
+
 begin_function
 name|void
 name|pagedaemon_wakeup
