@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.11	81/12/21	*/
+comment|/*	socket.h	4.12	82/01/13	*/
 end_comment
 
 begin_comment
@@ -78,40 +78,40 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* willing to accept connection */
+comment|/* willing to accept connections */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SO_NBIO
+name|SO_NONBLOCKING
 value|0x04
 end_define
 
 begin_comment
-comment|/* don't block on this socket */
+comment|/* don't block when i/o not possible */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SO_INTNOTIFY
+name|SO_NOKEEPALIVE
 value|0x08
 end_define
 
 begin_comment
-comment|/* interrupt when data available */
+comment|/* don't keep connections alive */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SO_LETDATADRAIN
+name|SO_DONTLINGER
 value|0x10
 end_define
 
 begin_comment
-comment|/* let data drain on close */
+comment|/* don't linger on close */
 end_comment
 
 begin_comment
