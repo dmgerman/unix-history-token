@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_rec.c,v 1.8 1997/05/28 04:57:38 wpaul Exp $"
+literal|"$Id: xdr_rec.c,v 1.9 1998/05/15 22:57:31 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2610,7 +2610,7 @@ name|FALSE
 else|:
 name|TRUE
 expr_stmt|;
-comment|/* 	 * Sanity check. Try not to accept wildly incorrect 	 * record sizes. 	 */
+comment|/* 	 * Sanity check. Try not to accept wildly incorrect 	 * record sizes. Unfortunately, the only record size 	 * we can positively identify as being 'wildly incorrect' 	 * is zero. Ridiculously large record sizes may look wrong, 	 * but we don't have any way to be certain that they aren't 	 * what the client actually intended to send us. 	 */
 if|if
 condition|(
 operator|(
@@ -2621,10 +2621,8 @@ operator|~
 name|LAST_FRAG
 operator|)
 operator|)
-operator|>
-name|rstrm
-operator|->
-name|recvsize
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
