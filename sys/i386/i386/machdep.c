@@ -6552,7 +6552,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"Physical memory use set to %uK\n"
+literal|"Physical memory use set to %ldK\n"
 argument_list|,
 name|Maxmem
 operator|*
