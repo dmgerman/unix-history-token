@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.4	%G%	*/
+comment|/*	rk.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -607,7 +607,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+literal|53790
 block|,
 literal|0
 block|, }
@@ -646,9 +646,13 @@ expr_stmt|;
 name|sz
 operator|=
 operator|(
+operator|(
 name|bp
 operator|->
 name|b_bcount
+operator|+
+literal|511
+operator|)
 operator|>>
 literal|9
 operator|)
@@ -668,7 +672,7 @@ operator|+
 name|bp
 operator|->
 name|b_blkno
-operator|>=
+operator|>
 name|rk_sizes
 index|[
 name|dn
@@ -1197,7 +1201,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"DI"
+literal|"rkintr: DI\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1211,7 +1215,7 @@ name|CDA
 condition|)
 name|printf
 argument_list|(
-literal|"CDA "
+literal|"rkintr: CDA\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1263,11 +1267,6 @@ name|DCLR
 operator||
 name|GO
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"DCLR"
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1284,13 +1283,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"no SVAL\n"
-argument_list|)
-expr_stmt|;
 name|x
 operator|=
+literal|0x8000
+operator|-
 name|rkselect
 argument_list|(
 name|rkaddr
@@ -1300,7 +1296,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"x = %d\n"
+literal|"rkintr: no SVAL, delay %d\n"
 argument_list|,
 name|x
 argument_list|)
@@ -1472,11 +1468,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|printf
-argument_list|(
-literal|"reset\n"
-argument_list|)
-expr_stmt|;
 name|rkaddr
 operator|->
 name|rkcs1
