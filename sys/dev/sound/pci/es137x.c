@@ -121,6 +121,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ES1371REV_ES1371_A
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
 name|ES1371REV_ES1371_B
 value|0x09
 end_define
@@ -4845,6 +4852,19 @@ argument_list|)
 condition|)
 block|{
 case|case
+name|ES1371REV_ES1371_A
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"AudioPCI ES1371-A"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
 name|ES1371REV_ES1371_B
 case|:
 name|device_set_desc
@@ -4940,7 +4960,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Strange AudioPCI ES1371-?"
+literal|"Strange AudioPCI ES1371-? (vid=3274)"
 argument_list|)
 expr_stmt|;
 name|device_printf
