@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.20 1996/06/09 23:46:21 alex Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.21 1996/07/10 19:44:24 julian Exp $  */
 end_comment
 
 begin_comment
@@ -144,6 +144,10 @@ name|u_short
 name|fw_divert_port
 decl_stmt|;
 comment|/* Divert port (options IPDIVERT) */
+name|u_char
+name|fw_prot
+decl_stmt|;
+comment|/* IP protocol */
 block|}
 struct|;
 end_struct
@@ -169,61 +173,6 @@ end_struct
 
 begin_comment
 comment|/*  * Values for "flags" field .  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_ALL
-value|0x0000
-end_define
-
-begin_comment
-comment|/* This is a universal packet rule    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_TCP
-value|0x0001
-end_define
-
-begin_comment
-comment|/* This is a TCP packet rule          */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_UDP
-value|0x0002
-end_define
-
-begin_comment
-comment|/* This is a UDP packet rule          */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_ICMP
-value|0x0003
-end_define
-
-begin_comment
-comment|/* This is a ICMP packet rule         */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_KIND
-value|0x0003
-end_define
-
-begin_comment
-comment|/* Mask to isolate rule kind          */
 end_comment
 
 begin_define
