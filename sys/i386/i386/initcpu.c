@@ -2113,7 +2113,7 @@ name|defined
 argument_list|(
 name|CPU_UPGRADE_HW_CACHE
 argument_list|)
-comment|/* 	 * OS should flush L1 cahce by itself because no PC-98 supports 	 * non-Intel CPUs.  Use wbinvd instruction before DMA transfer 	 * when need_pre_dma_flush = 1, use invd instruction after DMA 	 * transfer when need_post_dma_flush = 1.  If your CPU upgrade 	 * product support hardware cache control, you can add 	 * UPGRADE_CPU_HW_CACHE option in your kernel configuration file. 	 * This option elminate unneeded cache flush instruction. 	 */
+comment|/* 	 * OS should flush L1 cache by itself because no PC-98 supports 	 * non-Intel CPUs.  Use wbinvd instruction before DMA transfer 	 * when need_pre_dma_flush = 1, use invd instruction after DMA 	 * transfer when need_post_dma_flush = 1.  If your CPU upgrade 	 * product supports hardware cache control, you can add the 	 * CPU_UPGRADE_HW_CACHE option in your kernel configuration file. 	 * This option eliminates unneeded cache flush instruction(s). 	 */
 if|if
 condition|(
 name|strcmp
@@ -2244,7 +2244,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
-comment|/* PC98&& !UPGRADE_CPU_HW_CACHE */
+comment|/* PC98&& !CPU_UPGRADE_HW_CACHE */
 block|}
 end_function
 
