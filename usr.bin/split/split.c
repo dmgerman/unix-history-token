@@ -524,7 +524,7 @@ operator|<=
 literal|0
 operator|||
 operator|*
-name|p
+name|ep
 condition|)
 name|errx
 argument_list|(
