@@ -1633,6 +1633,10 @@ index|]
 argument_list|,
 name|domain
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|ptr
 operator|-
 operator|(
@@ -1642,6 +1646,7 @@ operator|)
 name|data
 operator|.
 name|data
+argument_list|)
 argument_list|,
 operator|(
 name|char
