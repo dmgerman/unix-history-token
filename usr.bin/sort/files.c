@@ -66,25 +66,22 @@ directive|include
 file|<string.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|seq
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|DBT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|DBT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * this is the subroutine for file management for fsort().  * It keeps the buffers for all temporary files.  */
