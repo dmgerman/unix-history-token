@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.6 %G%"
+literal|"@(#)c21.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3994,30 +3994,7 @@ index|[
 name|RT4
 index|]
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|p
-operator|->
-name|op
-operator|==
-name|CMPV
-operator|||
-name|p
-operator|->
-name|op
-operator|==
-name|CMPZV
-condition|)
-name|lastrand
-operator|=
-name|regs
-index|[
-name|RT4
-operator|+
-literal|1
-index|]
-expr_stmt|;
+comment|/*		else if (p->op==CMPV || p->op==CMPZV) lastrand=regs[RT4+1]; */
 elseif|else
 if|if
 condition|(
