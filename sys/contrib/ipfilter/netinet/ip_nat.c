@@ -24,10 +24,6 @@ literal|"@(#)ip_nat.c	1.11 6/5/96 (C) 1995 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: ip_nat.c,v 2.2.2.11 1999/12/17 13:05:40 darrenr Exp $";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -35,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$FreeBSD$"
+literal|"@(#)$Id: ip_nat.c,v 2.2.2.12 2000/01/24 12:43:40 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,22 +181,6 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
-operator|(
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|&&
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|220000
-operator|)
-operator|)
-operator|||
-expr|\
-operator|(
 name|defined
 argument_list|(
 name|_KERNEL
@@ -209,9 +189,7 @@ operator|&&
 operator|(
 name|__FreeBSD_version
 operator|>=
-literal|40013
-operator|)
-operator|)
+literal|220000
 operator|)
 end_if
 
@@ -3893,6 +3871,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 				 * Check to see if there is an existing NAT 				 * setup for this IP address pair. 				 */
 name|natl
 operator|=
 name|nat_maplookup
@@ -3925,6 +3904,29 @@ name|natl
 operator|->
 name|nat_outip
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|in
+operator|.
+name|s_addr
+operator|&
+name|np
+operator|->
+name|in_outmsk
+operator|)
+operator|!=
+name|np
+operator|->
+name|in_outip
+condition|)
+name|in
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+else|else
 ifndef|#
 directive|ifndef
 name|sparc
@@ -3939,6 +3941,9 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+empty_stmt|;
 endif|#
 directive|endif
 block|}
@@ -9910,6 +9915,14 @@ operator|=
 name|nat
 operator|->
 name|nat_outport
+expr_stmt|;
+name|natl
+operator|.
+name|nl_p
+operator|=
+name|nat
+operator|->
+name|nat_p
 expr_stmt|;
 name|natl
 operator|.

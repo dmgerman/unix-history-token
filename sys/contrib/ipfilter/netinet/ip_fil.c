@@ -24,10 +24,6 @@ literal|"@(#)ip_fil.c	2.41 6/5/96 (C) 1993-1995 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: ip_fil.c,v 2.4.2.14 1999/12/11 05:31:08 darrenr Exp $";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -35,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$FreeBSD$"
+literal|"@(#)$Id: ip_fil.c,v 2.4.2.16 2000/01/16 10:12:42 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -839,14 +835,6 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|ipl_inited
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|ipl_unreach
 init|=
 name|ICMP_UNREACH_FILTER
@@ -1170,28 +1158,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFILTER_LKM
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|int
-name|fr_running
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
 name|fr_running
@@ -1199,11 +1165,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1558,7 +1519,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ipl_inited
+name|fr_running
 operator|||
 operator|(
 name|fr_checkp
@@ -1667,10 +1628,6 @@ return|;
 block|}
 endif|#
 directive|endif
-name|ipl_inited
-operator|=
-literal|1
-expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -1824,6 +1781,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|fr_running
+operator|=
+literal|1
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 literal|0
@@ -1904,7 +1868,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ipl_inited
+name|fr_running
 condition|)
 block|{
 name|printf
@@ -1921,11 +1885,6 @@ return|return
 literal|0
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"IP Filter: unloaded\n"
-argument_list|)
-expr_stmt|;
 name|fr_checkp
 operator|=
 name|fr_savep
@@ -1939,7 +1898,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ipl_inited
+name|fr_running
 operator|=
 literal|0
 expr_stmt|;
@@ -2523,6 +2482,14 @@ operator|==
 name|IPL_LOGNAT
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|fr_running
+condition|)
+return|return
+name|EIO
+return|;
 name|error
 operator|=
 name|nat_ioctl
@@ -2550,6 +2517,14 @@ operator|==
 name|IPL_LOGSTATE
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|fr_running
+condition|)
+return|return
+name|EIO
+return|;
 name|error
 operator|=
 name|fr_state_ioctl
@@ -2663,41 +2638,17 @@ if|if
 condition|(
 name|enable
 condition|)
-block|{
 name|error
 operator|=
 name|iplattach
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|fr_running
-operator|=
-literal|1
-expr_stmt|;
-block|}
 else|else
-block|{
 name|error
 operator|=
 name|ipldetach
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|fr_running
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 break|break;
 block|}
@@ -4317,7 +4268,7 @@ condition|(
 name|req
 operator|!=
 name|SIOCINAFR
-operator|||
+operator|&&
 name|req
 operator|!=
 name|SIOCINIFR
@@ -4346,6 +4297,11 @@ name|fp
 operator|->
 name|fr_hits
 condition|)
+block|{
+name|ftail
+operator|=
+name|fprev
+expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -4367,6 +4323,7 @@ name|f
 operator|->
 name|fr_next
 expr_stmt|;
+block|}
 name|f
 operator|=
 name|NULL
@@ -5750,6 +5707,35 @@ argument_list|)
 return|;
 else|#
 directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+return|return
+name|ip_output
+argument_list|(
+name|m
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+return|;
+else|#
+directive|else
 return|return
 name|ip_output
 argument_list|(
@@ -5769,6 +5755,8 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#

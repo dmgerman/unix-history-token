@@ -24,10 +24,6 @@ literal|"@(#)fil.c	1.36 6/5/96 (C) 1993-1996 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: fil.c,v 2.3.2.14 1999/12/07 12:53:40 darrenr Exp $";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -35,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$FreeBSD$"
+literal|"@(#)$Id: fil.c,v 2.3.2.16 2000/01/27 08:49:37 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,28 +111,6 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
-operator|(
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-operator|&&
-expr|\
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|220000
-operator|)
-operator|)
-operator|||
-expr|\
-operator|(
 name|defined
 argument_list|(
 name|_KERNEL
@@ -151,9 +125,7 @@ expr|\
 operator|(
 name|__FreeBSD_version
 operator|>=
-literal|40013
-operator|)
-operator|)
+literal|220000
 operator|)
 end_if
 
@@ -1768,6 +1740,54 @@ name|minicmpsz
 operator|=
 name|ICMP_MINLEN
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|off
+operator|&&
+operator|(
+name|icmp
+operator|->
+name|icmp_type
+operator|==
+name|ICMP_TSTAMP
+operator|||
+name|icmp
+operator|->
+name|icmp_type
+operator|==
+name|ICMP_TSTAMPREPLY
+operator|)
+condition|)
+name|minicmpsz
+operator|=
+literal|20
+expr_stmt|;
+comment|/* type(1) + code(1) + cksum(2) + id(2) + seq(2) + 3*timestamp(3*4) */
+if|if
+condition|(
+operator|!
+name|off
+operator|&&
+operator|(
+name|icmp
+operator|->
+name|icmp_type
+operator|==
+name|ICMP_MASKREQ
+operator|||
+name|icmp
+operator|->
+name|icmp_type
+operator|==
+name|ICMP_MASKREPLY
+operator|)
+condition|)
+name|minicmpsz
+operator|=
+literal|12
+expr_stmt|;
+comment|/* type(1) + code(1) + cksum(2) + id(2) + seq(2) + mask(4) */
 if|if
 condition|(
 operator|(
@@ -4307,6 +4327,26 @@ name|READ_ENTER
 argument_list|(
 operator|&
 name|ipf_mutex
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fin
+operator|->
+name|fin_fi
+operator|.
+name|fi_fl
+operator|&
+name|FI_SHORT
+condition|)
+name|ATOMIC_INC
+argument_list|(
+name|frstats
+index|[
+name|out
+index|]
+operator|.
+name|fr_short
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check auth now.  This, combined with the check below to see if apass 	 * is 0 is to ensure that we don't count the packet twice, which can 	 * otherwise occur when we reprocess it.  As it is, we only count it 	 * after it has no auth. table matchup.  This also stops NAT from 	 * occuring until after the packet has been auth'd. 	 */
@@ -6886,7 +6926,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_mbuf.c	8.2 (Berkeley) 1/4/94  * $Id: fil.c,v 2.3.2.14 1999/12/07 12:53:40 darrenr Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_mbuf.c	8.2 (Berkeley) 1/4/94  * $Id: fil.c,v 2.3.2.16 2000/01/27 08:49:37 darrenr Exp $  */
 end_comment
 
 begin_comment
@@ -8897,11 +8937,18 @@ name|if_next
 control|)
 endif|#
 directive|endif
+block|{
 name|ip_natsync
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|ip_statesync
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|WRITE_ENTER

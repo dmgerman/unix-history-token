@@ -24,10 +24,6 @@ literal|"@(#)ip_frag.c	1.11 3/24/96 (C) 1993-1995 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*static const char rcsid[] = "@(#)$Id: ip_frag.c,v 2.4.2.4 1999/11/28 04:52:10 darrenr Exp $";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -35,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$FreeBSD$"
+literal|"@(#)$Id: ip_frag.c,v 2.4.2.4 1999/11/28 04:52:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,22 +138,6 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
-operator|(
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|&&
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|220000
-operator|)
-operator|)
-operator|||
-expr|\
-operator|(
 name|defined
 argument_list|(
 name|_KERNEL
@@ -166,9 +146,7 @@ operator|&&
 operator|(
 name|__FreeBSD_version
 operator|>=
-literal|40013
-operator|)
-operator|)
+literal|220000
 operator|)
 end_if
 
