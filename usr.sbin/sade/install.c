@@ -2483,7 +2483,7 @@ operator|!
 name|msgNoYes
 argument_list|(
 literal|"Do you want to select a default security profile for\n"
-literal|"this host (select No for \"medium\" security)?"
+literal|"this host (select No for \"moderate\" security)?"
 argument_list|)
 condition|)
 name|configSecurityProfile
