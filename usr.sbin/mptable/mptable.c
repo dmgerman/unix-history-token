@@ -1,10 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mptable.c,v 1.7 1997/08/26 05:12:45 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*  * mptable.c  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_define
@@ -58,13 +84,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -867,7 +911,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|MPFloatingPointer
 parameter_list|(
 name|vm_offset_t
@@ -1122,42 +1166,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nusage: mptable [-help][-dmesg][-verbose]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"where:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"	'-dmesg' includes a dmesg dump\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"	'-grope' looks in areas it shouldn't NEED to\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"	'-help' prints this message and exits\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"	'-verbose' prints extra info\n"
+literal|"usage: mptable [-dmesg] [-verbose] [-grope] [-help]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1198,14 +1207,7 @@ name|int
 name|defaultConfig
 decl_stmt|;
 specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
 name|int
-name|optind
-decl_stmt|,
 name|optreset
 decl_stmt|;
 name|int
@@ -1369,18 +1371,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"mem open"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* probe for MP structures */
 name|apic_probe
 argument_list|(
@@ -1458,11 +1455,13 @@ expr_stmt|;
 comment|/* check whether an MP config table exists */
 if|if
 condition|(
+operator|(
 name|defaultConfig
 operator|=
 name|mpfps
 operator|.
 name|mpfb1
+operator|)
 condition|)
 name|MPConfigDefault
 argument_list|(
@@ -2255,7 +2254,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|MPFloatingPointer
 parameter_list|(
 name|vm_offset_t
@@ -2294,8 +2293,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  location:\t\t\t"
-argument_list|,
-name|where
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2441,6 +2438,10 @@ block|{
 name|printf
 argument_list|(
 literal|" warning, MP feature byte 2: 0x%02x\n"
+argument_list|,
+name|mpfps
+operator|->
+name|mpfb2
 argument_list|)
 expr_stmt|;
 block|}
@@ -2676,8 +2677,6 @@ name|cth
 decl_stmt|;
 name|int
 name|x
-decl_stmt|,
-name|y
 decl_stmt|;
 name|int
 name|totalSize
@@ -2691,13 +2690,6 @@ name|c
 decl_stmt|;
 name|int
 name|type
-decl_stmt|;
-name|vm_offset_t
-name|poemtp
-decl_stmt|;
-name|void
-modifier|*
-name|oemdata
 decl_stmt|;
 if|if
 condition|(
@@ -3184,11 +3176,13 @@ argument_list|)
 comment|/* process any extended data */
 if|if
 condition|(
+operator|(
 name|totalSize
 operator|=
 name|cth
 operator|.
 name|extended_table_length
+operator|)
 condition|)
 block|{
 name|puts
@@ -3320,18 +3314,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"oem malloc"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|seekEntry
 argument_list|(
 name|poemtp
@@ -3463,32 +3452,15 @@ argument_list|(
 name|u_char
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
-literal|"type read"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"\npfd: %d"
+literal|"type read; pfd: %d"
 argument_list|,
 name|pfd
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|lseek
@@ -3503,18 +3475,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"type seek"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|int
@@ -3553,18 +3520,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"/dev/mem seek"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3598,18 +3560,13 @@ argument_list|)
 operator|!=
 name|size
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"readEntry"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
