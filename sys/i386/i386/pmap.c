@@ -3001,6 +3001,7 @@ name|vm_offset_t
 operator|)
 name|pte
 operator|&
+operator|~
 name|PAGE_MASK
 operator|)
 operator|==
