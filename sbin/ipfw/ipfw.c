@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.26 1996/06/18 01:46:34 alex Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.27 1996/06/23 20:47:51 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -1128,7 +1128,7 @@ name|IP_FW_F_IN
 condition|)
 name|printf
 argument_list|(
-literal|" in "
+literal|" in"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1142,7 +1142,7 @@ name|IP_FW_F_OUT
 condition|)
 name|printf
 argument_list|(
-literal|" out "
+literal|" out"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1256,7 +1256,7 @@ name|IP_FW_F_FRAG
 condition|)
 name|printf
 argument_list|(
-literal|" frag "
+literal|" frag"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3848,6 +3848,50 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|rule
+operator|.
+name|fw_flg
+operator|&
+name|IP_FW_F_KIND
+operator|)
+operator|!=
+name|IP_FW_F_TCP
+operator|&&
+operator|(
+name|rule
+operator|.
+name|fw_flg
+operator|&
+name|IP_FW_F_KIND
+operator|)
+operator|!=
+name|IP_FW_F_UDP
+operator|&&
+operator|(
+name|rule
+operator|.
+name|fw_nsp
+operator|||
+name|rule
+operator|.
+name|fw_ndp
+operator|)
+condition|)
+block|{
+name|show_usage
+argument_list|(
+literal|"only TCP and UDP protocols are valid with port specifications"
+argument_list|)
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|ac
+condition|)
+block|{
+if|if
+condition|(
 name|ac
 operator|&&
 operator|!
@@ -3866,6 +3910,29 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|rule
+operator|.
+name|fw_via_ip
+operator|.
+name|s_addr
+operator|||
+operator|(
+name|rule
+operator|.
+name|fw_flg
+operator|&
+name|IP_FW_F_IFNAME
+operator|)
+condition|)
+block|{
+name|show_usage
+argument_list|(
+literal|"multiple 'via' options specified"
+argument_list|)
+expr_stmt|;
+block|}
 name|av
 operator|++
 expr_stmt|;
@@ -3988,12 +4055,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
+continue|continue;
 block|}
-while|while
-condition|(
-name|ac
-condition|)
-block|{
 if|if
 condition|(
 operator|!
