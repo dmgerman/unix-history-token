@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.45 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.46 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.45 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.46 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -789,6 +789,9 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETINET
 name|hid
 operator|=
 name|inet_addr
@@ -807,6 +810,8 @@ operator|==
 operator|-
 literal|1
 condition|)
+endif|#
+directive|endif
 block|{
 comment|/* try it as a host name (avoid MX lookup) */
 name|hp
@@ -855,6 +860,9 @@ name|EX_NOHOST
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|NETINET
 name|addr
 operator|.
 name|sin
@@ -863,6 +871,7 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+comment|/*XXX*/
 name|addr
 operator|.
 name|sin
@@ -873,6 +882,8 @@ name|s_addr
 operator|=
 name|hid
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -1064,6 +1075,9 @@ operator|.
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NETINET
 case|case
 name|AF_INET
 case|:
@@ -1084,6 +1098,8 @@ name|sockaddr_in
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NETISO
