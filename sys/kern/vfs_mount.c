@@ -6153,7 +6153,7 @@ name|VFS_OMOUNT
 argument_list|(
 name|mp
 argument_list|,
-name|NULL
+name|path
 argument_list|,
 name|NULL
 argument_list|,
