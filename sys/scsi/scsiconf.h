@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.25 1995/05/03 18:09:14 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.26 1995/05/30 08:13:47 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -625,7 +625,7 @@ struct|struct
 name|scsi_ctlr_config
 block|{
 name|int
-name|bus
+name|scbus
 decl_stmt|;
 name|char
 modifier|*
@@ -633,6 +633,9 @@ name|driver
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|;
+name|int
+name|bus
 decl_stmt|;
 block|}
 struct|;
@@ -917,102 +920,88 @@ begin_struct
 struct|struct
 name|scsi_link
 block|{
-comment|/*  1*/
 name|u_int8
 name|target
 decl_stmt|;
 comment|/* targ of this dev */
-comment|/*  2*/
 name|u_int8
 name|lun
 decl_stmt|;
 comment|/* lun of this dev */
-comment|/*  3*/
 name|u_int8
 name|adapter_targ
 decl_stmt|;
 comment|/* what are we on the scsi bus */
-comment|/*  4*/
 name|u_int8
 name|adapter_unit
 decl_stmt|;
 comment|/* e.g. the 0 in aha0 */
-comment|/*  5*/
+name|u_int8
+name|adapter_bus
+decl_stmt|;
+comment|/* e.g. the 0 in bus0 */
 name|u_int8
 name|scsibus
 decl_stmt|;
 comment|/* the Nth scsibus	*/
-comment|/*  6*/
 name|u_int8
 name|dev_unit
 decl_stmt|;
 comment|/* e.g. the 0 in sd0 */
-comment|/*  7*/
 name|u_int8
 name|opennings
 decl_stmt|;
 comment|/* available operations */
-comment|/*  8*/
 name|u_int8
 name|active
 decl_stmt|;
 comment|/* operations in progress */
-comment|/* 10*/
 name|u_int16
 name|flags
 decl_stmt|;
 comment|/* flags that all devices have */
-comment|/* 12*/
 name|u_int16
 name|quirks
 decl_stmt|;
 comment|/* device specific quirks */
-comment|/* 16*/
 name|struct
 name|scsi_adapter
 modifier|*
 name|adapter
 decl_stmt|;
 comment|/* adapter entry points etc. */
-comment|/* 20*/
 name|struct
 name|scsi_device
 modifier|*
 name|device
 decl_stmt|;
 comment|/* device entry points etc. */
-comment|/* 24*/
 name|struct
 name|scsi_xfer
 modifier|*
 name|active_xs
 decl_stmt|;
 comment|/* operations under way */
-comment|/* 28*/
 name|void
 modifier|*
 name|fordriver
 decl_stmt|;
 comment|/* for private use by the driver */
-comment|/* 32*/
 name|void
 modifier|*
 name|devmodes
 decl_stmt|;
 comment|/* device specific mode tables */
-comment|/* 36*/
 name|dev_t
 name|dev
 decl_stmt|;
 comment|/* Device major number (character) */
-comment|/* 40*/
 name|struct
 name|scsi_data
 modifier|*
 name|sd
 decl_stmt|;
 comment|/* Device data structure */
-comment|/* 44+*/
 name|struct
 name|scsi_inquiry_data
 name|inqbuf

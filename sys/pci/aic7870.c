@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      2940, aic7870, and aic7850 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.10.2.2 1995/06/09 18:06:53 davidg Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      2940, aic7870, and aic7850 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.11 1995/06/11 19:31:48 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -76,6 +76,13 @@ define|#
 directive|define
 name|PCI_BASEADR0
 value|PCI_MAP_REG_START
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ADAPTEC_3940
+value|0x72789004ul
 end_define
 
 begin_define
@@ -189,11 +196,20 @@ name|type
 condition|)
 block|{
 case|case
+name|PCI_DEVICE_ID_ADAPTEC_3940
+case|:
+return|return
+operator|(
+literal|"Adaptec 3940 SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
 name|PCI_DEVICE_ID_ADAPTEC_2940
 case|:
 return|return
 operator|(
-literal|"Adaptec 294X SCSI host adapter"
+literal|"Adaptec 2940 SCSI host adapter"
 operator|)
 return|;
 break|break;
@@ -284,6 +300,14 @@ name|PCI_ID_REG
 argument_list|)
 condition|)
 block|{
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_3940
+case|:
+name|ahc_t
+operator|=
+name|AHC_394
+expr_stmt|;
+break|break;
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_2940
 case|:
