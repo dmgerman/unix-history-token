@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: fetch.c,v 1.144 2003/07/31 05:23:59 lukem Exp $	*/
+comment|/*	$NetBSD: fetch.c,v 1.146 2003/12/10 12:34:28 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: fetch.c,v 1.144 2003/07/31 05:23:59 lukem Exp $"
+literal|"$NetBSD: fetch.c,v 1.146 2003/12/10 12:34:28 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1300,7 +1300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse URL of form:  *<type>://[<user>[:<password>@]]<host>[:<port>][/<path>]  * Returns -1 if a parse error occurred, otherwise 0.  * It's the caller's responsibility to url_decode() the returned  * user, pass and path.  *  * Sets type to url_t, each of the given char ** pointers to a  * malloc(3)ed strings of the relevant section, and port to  * the number given, or ftpport if ftp://, or httpport if http://.  *  * If<host> is surrounded by `[' and ']', it's parsed as an  * IPv6 address (as per RFC 2732).  *  * XXX: this is not totally RFC 1738 compliant;<path> will have the  * leading `/' unless it's an ftp:// URL, as this makes things easier  * for file:// and http:// URLs. ftp:// URLs have the `/' between the  * host and the URL-path removed, but any additional leading slashes  * in the URL-path are retained (because they imply that we should  * later do "CWD" with a null argument).  *  * Examples:  *	 input URL			 output path  *	 ---------			 -----------  *	"ftp://host"			NULL  *	"http://host/"			NULL  *	"file://host/dir/file"		"dir/file"  *	"ftp://host/"			""  *	"ftp://host//"			NULL  *	"ftp://host//dir/file"		"/dir/file"  */
+comment|/*  * Parse URL of form:  *<type>://[<user>[:<password>]@]<host>[:<port>][/<path>]  * Returns -1 if a parse error occurred, otherwise 0.  * It's the caller's responsibility to url_decode() the returned  * user, pass and path.  *  * Sets type to url_t, each of the given char ** pointers to a  * malloc(3)ed strings of the relevant section, and port to  * the number given, or ftpport if ftp://, or httpport if http://.  *  * If<host> is surrounded by `[' and ']', it's parsed as an  * IPv6 address (as per RFC 2732).  *  * XXX: this is not totally RFC 1738 compliant;<path> will have the  * leading `/' unless it's an ftp:// URL, as this makes things easier  * for file:// and http:// URLs. ftp:// URLs have the `/' between the  * host and the URL-path removed, but any additional leading slashes  * in the URL-path are retained (because they imply that we should  * later do "CWD" with a null argument).  *  * Examples:  *	 input URL			 output path  *	 ---------			 -----------  *	"ftp://host"			NULL  *	"http://host/"			NULL  *	"file://host/dir/file"		"dir/file"  *	"ftp://host/"			""  *	"ftp://host//"			NULL  *	"ftp://host//dir/file"		"/dir/file"  */
 end_comment
 
 begin_function
@@ -6622,17 +6622,6 @@ name|NULL
 operator|&&
 operator|*
 name|user
-operator|==
-literal|'\0'
-operator|)
-operator|||
-operator|(
-name|pass
-operator|!=
-name|NULL
-operator|&&
-operator|*
-name|pass
 operator|==
 literal|'\0'
 operator|)

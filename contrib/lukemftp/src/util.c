@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: util.c,v 1.114 2003/08/07 11:13:57 agc Exp $	*/
+comment|/*	$NetBSD: util.c,v 1.115 2004/04/10 12:21:39 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: util.c,v 1.114 2003/08/07 11:13:57 agc Exp $"
+literal|"$NetBSD: util.c,v 1.115 2004/04/10 12:21:39 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5319,7 +5319,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal version of connect(2); sets socket buffer sizes first.  */
+comment|/*  * Internal version of connect(2); sets socket buffer sizes first and  * handles the syscall being interrupted.  * Returns -1 upon failure (with errno set to the problem), or 0 on success.  */
 end_comment
 
 begin_function
@@ -5339,13 +5339,16 @@ name|int
 name|namelen
 parameter_list|)
 block|{
+name|int
+name|rv
+decl_stmt|;
 name|setupsockbufsize
 argument_list|(
 name|sock
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|rv
+operator|=
 name|connect
 argument_list|(
 name|sock
@@ -5354,6 +5357,83 @@ name|name
 argument_list|,
 name|namelen
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+block|{
+name|fd_set
+name|connfd
+decl_stmt|;
+name|FD_ZERO
+argument_list|(
+operator|&
+name|connfd
+argument_list|)
+expr_stmt|;
+name|FD_SET
+argument_list|(
+name|sock
+argument_list|,
+operator|&
+name|connfd
+argument_list|)
+expr_stmt|;
+do|do
+block|{
+name|rv
+operator|=
+name|select
+argument_list|(
+name|sock
+operator|+
+literal|1
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|connfd
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|rv
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|EINTR
+condition|)
+do|;
+if|if
+condition|(
+name|rv
+operator|>
+literal|0
+condition|)
+name|rv
+operator|=
+literal|0
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|rv
 operator|)
 return|;
 block|}
