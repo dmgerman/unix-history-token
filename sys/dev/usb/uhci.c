@@ -6384,6 +6384,9 @@ argument_list|,
 name|ii
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
 if|if
 condition|(
 name|sc
@@ -6406,6 +6409,9 @@ name|sc_softwake
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* USB_USE_SOFTINTR */
 name|sc
 operator|->
 name|sc_bus
@@ -9705,12 +9711,18 @@ operator|=
 name|splusb
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
 name|sc
 operator|->
 name|sc_softwake
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USB_USE_SOFTINTR */
 name|usb_schedsoftintr
 argument_list|(
 operator|&
@@ -9719,6 +9731,9 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -9742,6 +9757,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* USB_USE_SOFTINTR */
 name|splx
 argument_list|(
 name|s

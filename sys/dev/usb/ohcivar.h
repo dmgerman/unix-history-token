@@ -301,9 +301,15 @@ name|u_int8_t
 name|sc_conf
 decl_stmt|;
 comment|/* device configuration */
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
 name|char
 name|sc_softwake
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* USB_USE_SOFTINTR */
 name|ohci_soft_ed_t
 modifier|*
 name|sc_freeeds

@@ -397,9 +397,15 @@ decl_stmt|;
 name|u_int16_t
 name|sc_saved_frnum
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_USE_SOFTINTR
 name|char
 name|sc_softwake
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* USB_USE_SOFTINTR */
 name|char
 name|sc_isreset
 decl_stmt|;
