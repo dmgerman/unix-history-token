@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.16 1994/04/13 20:52:40 ats Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.17 1994/06/15 22:41:15 rich Exp $  */
 end_comment
 
 begin_include
@@ -798,6 +798,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|unmaphints
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|nzlist
 modifier|*
@@ -1485,6 +1498,10 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Forget hints so that hints file can go away if it is unlinked */
+name|unmaphints
+argument_list|()
+expr_stmt|;
 comment|/* Close our file descriptor */
 operator|(
 name|void
@@ -4559,6 +4576,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|long
+name|hmsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|struct
 name|hints_bucket
 modifier|*
@@ -4661,6 +4685,11 @@ operator|-
 literal|1
 condition|)
 block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|hheader
 operator|=
 operator|(
@@ -4698,6 +4727,11 @@ argument_list|,
 name|msize
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|hheader
 operator|=
 operator|(
@@ -4726,6 +4760,11 @@ argument_list|,
 name|msize
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|hheader
 operator|=
 operator|(
@@ -4738,6 +4777,10 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+name|hmsize
+operator|=
+name|msize
+expr_stmt|;
 if|if
 condition|(
 name|hheader
@@ -4747,6 +4790,12 @@ operator|>
 name|msize
 condition|)
 block|{
+name|hmsize
+operator|=
+name|hheader
+operator|->
+name|hh_ehints
+expr_stmt|;
 if|if
 condition|(
 name|mmap
@@ -4792,6 +4841,11 @@ operator|)
 name|hheader
 argument_list|,
 name|msize
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 name|hheader
@@ -4841,6 +4895,35 @@ operator|->
 name|hh_strtab
 operator|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|unmaphints
+parameter_list|()
+block|{
+if|if
+condition|(
+name|HINTS_VALID
+condition|)
+block|{
+name|munmap
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|hheader
+argument_list|,
+name|hmsize
+argument_list|)
+expr_stmt|;
+name|hheader
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
