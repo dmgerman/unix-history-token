@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.18 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,17 +114,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
-name|_opcodes
+name|_res_opcodes
 index|[]
 init|=
 block|{
@@ -164,10 +157,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
-name|_rcodes
+name|_res_resultcodes
 index|[]
 init|=
 block|{
@@ -205,11 +197,6 @@ literal|"NOCHANGE"
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|p_query
