@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.7	81/04/18	*/
+comment|/*	trace.h	4.8	81/07/25	*/
 end_comment
 
 begin_comment
@@ -266,6 +266,17 @@ end_define
 
 begin_comment
 comment|/* page in done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TR_SWAPIO
+value|34
+end_define
+
+begin_comment
+comment|/* swap i/o request arrives */
 end_comment
 
 begin_comment
