@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snake.c	5.6 (Berkeley) %G%"
+literal|"@(#)snake.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,49 +74,11 @@ directive|include
 file|"snake.h"
 end_include
 
-begin_comment
-comment|/* 	 * This is the data file for scorekeeping. 	 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SNAKERAWSCORES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SNAKERAWSCORES
-value|"/usr/games/lib/snakerawscores"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 	 * If it exists, a log is kept here.  Otherwise it isn't. 	 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOGFILE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOGFILE
-value|"/usr/games/lib/snake.log"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_define
 define|#
@@ -2171,7 +2133,7 @@ name|rawscores
 operator|=
 name|open
 argument_list|(
-name|SNAKERAWSCORES
+name|_PATH_RAWSCORES
 argument_list|,
 literal|2
 argument_list|)
@@ -4907,7 +4869,7 @@ name|logfile
 operator|=
 name|fopen
 argument_list|(
-name|LOGFILE
+name|_PATH_LOGFILE
 argument_list|,
 literal|"a"
 argument_list|)

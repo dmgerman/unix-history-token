@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snscore.c	5.3 (Berkeley) %G%"
+literal|"@(#)snscore.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -69,7 +81,7 @@ name|char
 modifier|*
 name|recfile
 init|=
-literal|"/usr/games/lib/snakerawscores"
+name|_PATH_RAWSCORES
 decl_stmt|;
 end_decl_stmt
 
