@@ -627,7 +627,10 @@ comment|/* FALLTHROUGH */
 case|case
 name|sd_empty
 case|:
-comment|/* 		 * If we're associated with a plex which is down, or which is 		 * the only one in the volume, and we're not a RAID-5 plex, we 		 * can come up without being inconsistent.  Internally, we use 		 * the force flag to bring up a RAID-5 plex after 		 * initialization. 		 */
+case|case
+name|sd_initialized
+case|:
+comment|/* 		 * If we're associated with a plex which 		 * is down, or which is the only one in 		 * the volume, and we're not a RAID-5 		 * plex, we can come up without being 		 * inconsistent.  Internally, we use the 		 * force flag to bring up a RAID-5 plex 		 * after initialization. 		 */
 if|if
 condition|(
 operator|(
@@ -661,7 +664,6 @@ operator|)
 operator|&&
 operator|(
 operator|(
-operator|(
 name|PLEX
 index|[
 name|sd
@@ -682,10 +684,27 @@ operator|->
 name|plexno
 index|]
 operator|.
-name|subdisks
-operator|>
-literal|1
+name|volno
+operator|<
+literal|0
 operator|)
+operator|||
+operator|(
+name|VOL
+index|[
+name|PLEX
+index|[
+name|sd
+operator|->
+name|plexno
+index|]
+operator|.
+name|volno
+index|]
+operator|.
+name|plexes
+operator|==
+literal|1
 operator|)
 operator|)
 condition|)
@@ -699,7 +718,7 @@ comment|/* out of date info, need reviving */
 case|case
 name|sd_obsolete
 case|:
-comment|/* 		 * 1.  If the subdisk is not part of a plex, bring it up, don't revive. 		 * 		 * 2.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's not RAID-5, we *can't revive*.  The subdisk doesn't 		 *     change its state. 		 * 		 * 3.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's RAID-5, but more than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't change its state. 		 * 		 * 4.  If the subdisk is part of a multi-plex volume, we'll change to 		 *     reviving and let the revive routines find out whether it will work 		 *     or not.  If they don't, the revive stops with an error message, 		 *     but the state doesn't change (FWIW). 		 */
+comment|/*  		 *  1.  If the subdisk is not part of a 		 *      plex, bring it up, don't revive. 		 * 		 *  2.  If the subdisk is part of a 		 *     one-plex volume or an unattached 		 *     plex, and it's not RAID-5, we 		 *     *can't revive*.  The subdisk 		 *     doesn't change its state. 		 * 		 * 3.  If the subdisk is part of a 		 *     one-plex volume or an unattached 		 *     plex, and it's RAID-5, but more 		 *     than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't 		 *     change its state. 		 * 		 * 4.  If the subdisk is part of a 		 *     multi-plex volume, we'll change to 		 *     reviving and let the revive 		 *     routines find out whether it will 		 *     work or not.  If they don't, the 		 *     revive stops with an error message, 		 *     but the state doesn't change 		 *     (FWIW). 		 */
 if|if
 condition|(
 name|sd
@@ -2258,43 +2277,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper for checksdstate.  If this is a write  * operation, it's no necessarily the end of the  * world that we can't write: there could be  * another plex which can satisfy the operation.  * We must write everything we can, though, so we  * don't want to stop when we hit a subdisk which  * is down.  Return a separate indication instead.  */
-end_comment
-
-begin_function
-name|enum
-name|requeststatus
-name|sddownstate
-parameter_list|(
-name|struct
-name|request
-modifier|*
-name|rq
-parameter_list|)
-block|{
-if|if
-condition|(
-name|rq
-operator|->
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_READ
-condition|)
-comment|/* read operation? */
-return|return
-name|REQUEST_DOWN
-return|;
-comment|/* OK, can't do it */
-else|else
-return|return
-name|REQUEST_DEGRADED
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Called from request routines when they find  * a subdisk which is not kosher.  Decide whether  * it warrants changing the state.  Return  * REQUEST_DOWN if we can't use the subdisk,  * REQUEST_OK if we can.  */
 end_comment
 
@@ -2381,10 +2363,7 @@ name|plex_striped
 condition|)
 comment|/* plex is striped, */
 return|return
-name|sddownstate
-argument_list|(
-name|rq
-argument_list|)
+name|REQUEST_DOWN
 return|;
 elseif|else
 if|if
@@ -2407,10 +2386,7 @@ literal|1
 condition|)
 comment|/* with more than one sd down, */
 return|return
-name|sddownstate
-argument_list|(
-name|rq
-argument_list|)
+name|REQUEST_DOWN
 return|;
 else|else
 comment|/* 		 * XXX We shouldn't do this if we can find a 		 * better way.  Check the other plexes 		 * first, and return a DOWN if another 		 * plex will do it better 		 */
@@ -2443,10 +2419,7 @@ operator|)
 condition|)
 comment|/* we're beyond the end */
 return|return
-name|sddownstate
-argument_list|(
-name|rq
-argument_list|)
+name|REQUEST_DOWN
 return|;
 elseif|else
 if|if
@@ -2489,10 +2462,7 @@ comment|/* and which sd last caused it */
 block|}
 else|else
 return|return
-name|sddownstate
-argument_list|(
-name|rq
-argument_list|)
+name|REQUEST_DOWN
 return|;
 block|}
 return|return
@@ -2513,10 +2483,7 @@ else|else
 comment|/* don't allow a read */
 comment|/* 	       * Handle the mapping.  We don't want to reject 	       * a read request to a reborn subdisk if that's 	       * all we have. XXX 	     */
 return|return
-name|sddownstate
-argument_list|(
-name|rq
-argument_list|)
+name|REQUEST_DOWN
 return|;
 case|case
 name|sd_down
@@ -2539,10 +2506,7 @@ argument_list|)
 expr_stmt|;
 comment|/* it's not consistent now */
 return|return
-name|sddownstate
-argument_list|(
-name|rq
-argument_list|)
+name|REQUEST_DOWN
 return|;
 case|case
 name|sd_crashed
@@ -2565,17 +2529,11 @@ argument_list|)
 expr_stmt|;
 comment|/* it's not consistent now */
 return|return
-name|sddownstate
-argument_list|(
-name|rq
-argument_list|)
+name|REQUEST_DOWN
 return|;
 default|default:
 return|return
-name|sddownstate
-argument_list|(
-name|rq
-argument_list|)
+name|REQUEST_DOWN
 return|;
 block|}
 block|}
@@ -4132,6 +4090,119 @@ name|msg
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Brute force set state function.  Don't look at  * any dependencies, just do it.  This is mainly  * intended for testing and recovery.  */
+end_comment
+
+begin_function
+name|void
+name|setstate_by_force
+parameter_list|(
+name|struct
+name|vinum_ioctl_msg
+modifier|*
+name|msg
+parameter_list|)
+block|{
+name|struct
+name|_ioctl_reply
+modifier|*
+name|ioctl_reply
+init|=
+operator|(
+expr|struct
+name|_ioctl_reply
+operator|*
+operator|)
+name|msg
+decl_stmt|;
+comment|/* format for returning replies */
+switch|switch
+condition|(
+name|msg
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|drive_object
+case|:
+name|DRIVE
+index|[
+name|msg
+operator|->
+name|index
+index|]
+operator|.
+name|state
+operator|=
+name|msg
+operator|->
+name|state
+expr_stmt|;
+break|break;
+case|case
+name|sd_object
+case|:
+name|SD
+index|[
+name|msg
+operator|->
+name|index
+index|]
+operator|.
+name|state
+operator|=
+name|msg
+operator|->
+name|state
+expr_stmt|;
+break|break;
+case|case
+name|plex_object
+case|:
+name|PLEX
+index|[
+name|msg
+operator|->
+name|index
+index|]
+operator|.
+name|state
+operator|=
+name|msg
+operator|->
+name|state
+expr_stmt|;
+break|break;
+case|case
+name|volume_object
+case|:
+name|VOL
+index|[
+name|msg
+operator|->
+name|index
+index|]
+operator|.
+name|state
+operator|=
+name|msg
+operator|->
+name|state
+expr_stmt|;
+break|break;
+default|default:
+block|}
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
