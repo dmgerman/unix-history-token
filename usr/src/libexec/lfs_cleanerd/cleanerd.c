@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.1 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,11 +211,6 @@ operator|(
 name|fsid_t
 operator|,
 name|BLOCK_INFO
-operator|*
-operator|,
-name|int
-operator|,
-name|INODE_INFO
 operator|*
 operator|,
 name|int
@@ -1435,10 +1430,6 @@ name|BLOCK_INFO
 modifier|*
 name|block_array
 decl_stmt|;
-name|INODE_INFO
-modifier|*
-name|inode_array
-decl_stmt|;
 name|SEGUSE
 modifier|*
 name|sp
@@ -1456,8 +1447,6 @@ name|caddr_t
 name|seg_buf
 decl_stmt|;
 name|int
-name|num_inodes
-decl_stmt|,
 name|num_blocks
 decl_stmt|;
 name|lfsp
@@ -1568,12 +1557,6 @@ name|block_array
 argument_list|,
 operator|&
 name|num_blocks
-argument_list|,
-operator|&
-name|inode_array
-argument_list|,
-operator|&
-name|num_inodes
 argument_list|)
 operator|<
 literal|0
@@ -1601,11 +1584,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"lfs_segmapv returned %d blocks and %d inodes\n"
+literal|"lfs_segmapv returned %d blocks\n"
 argument_list|,
 name|num_blocks
-argument_list|,
-name|num_inodes
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -1705,10 +1686,6 @@ name|BLOCK_INFO
 modifier|*
 name|_bip
 decl_stmt|;
-name|INODE_INFO
-modifier|*
-name|_iip
-decl_stmt|;
 name|u_long
 modifier|*
 name|lp
@@ -1777,42 +1754,6 @@ operator|->
 name|bi_bp
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|num_inodes
-condition|)
-name|printf
-argument_list|(
-literal|"INODE INFOS\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|_iip
-operator|=
-name|inode_array
-operator|,
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|num_inodes
-condition|;
-operator|++
-name|_iip
-operator|,
-operator|++
-name|i
-control|)
-name|PRINT_IINFO
-argument_list|(
-literal|1
-argument_list|,
-name|_iip
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -1820,10 +1761,6 @@ comment|/* rewrite the live data */
 if|if
 condition|(
 name|num_blocks
-operator|>
-literal|0
-operator|||
-name|num_inodes
 operator|>
 literal|0
 condition|)
@@ -1840,10 +1777,6 @@ argument_list|,
 name|block_array
 argument_list|,
 name|num_blocks
-argument_list|,
-name|inode_array
-argument_list|,
-name|num_inodes
 argument_list|)
 operator|<
 literal|0
@@ -1866,11 +1799,6 @@ block|}
 name|free
 argument_list|(
 name|block_array
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|inode_array
 argument_list|)
 expr_stmt|;
 name|munmap_segment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.1 (Berkeley) %G%"
+literal|"@(#)print.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -924,13 +924,33 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s0x%X\t%s%d\t%s0x%X\t%s0x%X\n%s0x%X\t%s0x%X\t"
+literal|"%s%d\t%s%d\t%s%d\n"
 argument_list|,
 literal|"bfree    "
 argument_list|,
 name|lfsp
 operator|->
 name|lfs_bfree
+argument_list|,
+literal|"avail    "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_avail
+argument_list|,
+literal|"uinodes  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_uinodes
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s%d\t%s0x%X\t%s0x%X\n%s0x%X\t%s0x%X\t"
 argument_list|,
 literal|"nfiles   "
 argument_list|,
@@ -1034,7 +1054,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%d\t%s0x%X\t%s%d\n"
+literal|"%s%d\t%s%d\t%s0x%X\t%s%d\n"
+argument_list|,
+literal|"nactive  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_nactive
 argument_list|,
 literal|"fmod     "
 argument_list|,
