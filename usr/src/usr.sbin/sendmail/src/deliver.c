@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.57	%G%"
+literal|"@(#)deliver.c	3.58	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3000,8 +3000,35 @@ name|m_flags
 argument_list|)
 condition|)
 block|{
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|rindex
+argument_list|(
+name|m
+operator|->
+name|m_mailer
+argument_list|,
+literal|'/'
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
+name|p
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"/uux"
+argument_list|)
+operator|==
+literal|0
+operator|&&
 name|strcmp
 argument_list|(
 name|m
