@@ -678,6 +678,23 @@ block|{
 comment|/* Input file. */
 if|if
 condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ifd
+operator|=
+name|STDIN_FILENO
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|ifd
 operator|=
