@@ -1,6 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1982 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_ifndef
@@ -15,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mille.c	5.1 (Berkeley) %G%"
+literal|"@(#)mille.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -66,15 +93,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|char
-name|_sobuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|main
 parameter_list|(
@@ -97,12 +115,13 @@ name|reg
 name|bool
 name|restore
 decl_stmt|;
-name|double
-name|avs
-index|[
-literal|3
-index|]
-decl_stmt|;
+comment|/* run as the user */
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -147,51 +166,6 @@ name|restore
 operator|=
 name|FALSE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOADAV
-if|if
-condition|(
-name|geteuid
-argument_list|()
-operator|!=
-name|ARNOLD
-condition|)
-block|{
-name|loadav
-argument_list|(
-name|avs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|avs
-index|[
-literal|2
-index|]
-operator|>
-literal|9.0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Sorry.  The load average is too high.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Please try again later\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|ac
@@ -230,13 +204,6 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
-expr_stmt|;
 name|Play
 operator|=
 name|PLAYER
@@ -615,6 +582,9 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -632,6 +602,9 @@ condition|)
 name|die
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -653,6 +626,9 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
