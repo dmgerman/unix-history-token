@@ -12460,7 +12460,14 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|DC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return ;
+block|}
 comment|/* Suppress unwanted interrupts */
 if|if
 condition|(
