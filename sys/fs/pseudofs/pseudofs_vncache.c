@@ -356,8 +356,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* see if the vnode is in the cache */
-comment|/* XXX linear search... not very efficient */
+comment|/* 	 * See if the vnode is in the cache.   	 * XXX linear search is not very efficient. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -424,6 +423,13 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|pfs_vncache_mutex
+argument_list|)
+expr_stmt|;
+comment|/* XXX see comment at top of pfs_lookup() */
+name|cache_purge
+argument_list|(
+operator|*
+name|vpp
 argument_list|)
 expr_stmt|;
 return|return
@@ -694,6 +700,11 @@ name|pfs_vdata
 modifier|*
 name|pvd
 decl_stmt|;
+name|cache_purge
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&

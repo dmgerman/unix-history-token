@@ -1280,7 +1280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up a file or directory  */
+comment|/*  * Look up a file or directory  *  * XXX NOTE!  pfs_lookup() has been hooked into vop_lookup_desc!  This  * will result in a lookup operation for a vnode which may already be  * cached, therefore we have to be careful to purge the VFS cache when  * reusing a vnode.  *  * This code will work, but is not really correct.  Normally we would hook  * vfs_cache_lookup() into vop_lookup_desc and hook pfs_lookup() into  * vop_cachedlookup_desc.  */
 end_comment
 
 begin_function
@@ -1761,6 +1761,7 @@ argument_list|(
 name|error
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX See comment at top of the routine. 	 */
 if|if
 condition|(
 name|cnp
