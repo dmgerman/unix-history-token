@@ -152,7 +152,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
@@ -303,7 +302,6 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -312,7 +310,6 @@ decl_stmt|,
 modifier|*
 name|ep
 decl_stmt|;
-specifier|register
 name|daddr_t
 name|start
 decl_stmt|,

@@ -269,7 +269,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -903,14 +902,12 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
 name|vdp
 decl_stmt|;
 comment|/* vnode for directory being searched */
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -923,7 +920,6 @@ modifier|*
 name|bp
 decl_stmt|;
 comment|/* a buffer of directory entries */
-specifier|register
 name|struct
 name|ext2_dir_entry_2
 modifier|*
@@ -2659,7 +2655,6 @@ name|vnode
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_dir_entry_2
 modifier|*
@@ -2825,14 +2820,12 @@ name|vnode
 modifier|*
 name|dvp
 decl_stmt|;
-specifier|register
 name|struct
 name|componentname
 modifier|*
 name|cnp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ext2_dir_entry_2
 modifier|*
@@ -2841,7 +2834,6 @@ decl_stmt|,
 modifier|*
 name|nep
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -3544,7 +3536,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -3889,7 +3880,6 @@ name|parentino
 parameter_list|,
 name|cred
 parameter_list|)
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -3904,7 +3894,6 @@ modifier|*
 name|cred
 decl_stmt|;
 block|{
-specifier|register
 name|off_t
 name|off
 decl_stmt|;
@@ -3912,7 +3901,6 @@ name|struct
 name|dirtemplate
 name|dbuf
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_dir_entry_2
 modifier|*

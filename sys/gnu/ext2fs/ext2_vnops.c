@@ -3657,7 +3657,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -3667,7 +3666,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -4492,7 +4490,6 @@ name|ap
 operator|->
 name|a_tvp
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -6185,7 +6182,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -6195,7 +6191,6 @@ name|ap
 operator|->
 name|a_dvp
 decl_stmt|;
-specifier|register
 name|struct
 name|vattr
 modifier|*
@@ -6205,7 +6200,6 @@ name|ap
 operator|->
 name|a_vap
 decl_stmt|;
-specifier|register
 name|struct
 name|componentname
 modifier|*
@@ -6215,7 +6209,6 @@ name|ap
 operator|->
 name|a_cnp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -7004,7 +6997,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -7018,7 +7010,6 @@ name|ap
 operator|->
 name|a_vpp
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -8641,7 +8632,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*

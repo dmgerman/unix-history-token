@@ -99,13 +99,11 @@ name|bpp
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|register
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|daddr_t
 name|bn
 decl_stmt|;
@@ -127,13 +125,11 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
 name|fs
 decl_stmt|;
-specifier|register
 name|daddr_t
 name|nb
 decl_stmt|;

@@ -550,13 +550,11 @@ name|int
 name|ext2_mountroot
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
 name|fs
 decl_stmt|;
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -910,7 +908,6 @@ name|ndp
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -951,7 +948,6 @@ name|ump
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
@@ -2667,7 +2663,6 @@ name|cred
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -2684,7 +2679,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -3173,7 +3167,6 @@ name|mp
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -3190,7 +3183,6 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ext2mount
 modifier|*
@@ -3201,7 +3193,6 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
@@ -3931,13 +3922,11 @@ modifier|*
 name|td
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ext2mount
 modifier|*
 name|ump
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
@@ -4233,7 +4222,6 @@ name|flags
 parameter_list|,
 name|td
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -4290,7 +4278,6 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|struct
 name|statfs
 modifier|*
@@ -4306,19 +4293,16 @@ name|unsigned
 name|long
 name|overhead
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2mount
 modifier|*
 name|ump
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
 name|fs
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_super_block
 modifier|*
@@ -5054,13 +5038,11 @@ modifier|*
 name|vpp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
 name|fs
 decl_stmt|;
-specifier|register
 name|struct
 name|inode
 modifier|*
@@ -5665,7 +5647,6 @@ name|fhp
 parameter_list|,
 name|vpp
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -5688,7 +5669,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|ufid
 modifier|*
@@ -5871,13 +5851,11 @@ modifier|*
 name|fhp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|struct
 name|ufid
 modifier|*
@@ -5955,7 +5933,6 @@ name|int
 name|waitfor
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|ext2_sb_info
 modifier|*
@@ -5965,7 +5942,6 @@ name|mp
 operator|->
 name|um_e2fs
 decl_stmt|;
-specifier|register
 name|struct
 name|ext2_super_block
 modifier|*
@@ -5975,7 +5951,6 @@ name|fs
 operator|->
 name|s_es
 decl_stmt|;
-specifier|register
 name|struct
 name|buf
 modifier|*
