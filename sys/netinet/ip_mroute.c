@@ -2488,6 +2488,23 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/*      * Currently the only function calling this ioctl routine is rtioctl().      * Typically, only root can create the raw socket in order to execute      * this ioctl method, however the request might be coming from a prison      */
+name|error
+operator|=
+name|suser
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 switch|switch
 condition|(
 name|cmd

@@ -1523,6 +1523,7 @@ name|caddr_t
 name|data
 parameter_list|)
 block|{
+comment|/* 	 * If more ioctl commands are added here, make sure the proper 	 * super-user checks are being performed because it is possible for 	 * prison-root to make it this far if raw sockets have been enabled 	 * in jails. 	 */
 ifdef|#
 directive|ifdef
 name|INET
