@@ -590,13 +590,13 @@ begin_struct
 struct|struct
 name|sysinit
 block|{
-name|unsigned
-name|int
+name|enum
+name|sysinit_sub_id
 name|subsystem
 decl_stmt|;
 comment|/* subsystem identifier*/
-name|unsigned
-name|int
+name|enum
+name|sysinit_elem_order
 name|order
 decl_stmt|;
 comment|/* init order within subsystem*/
