@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.62 1996/02/19 09:36:23 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.63 1996/03/10 07:13:14 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -736,7 +736,7 @@ name|nrst
 decl_stmt|;
 name|void
 modifier|*
-name|enrst
+name|erst
 decl_stmt|;
 comment|/* end of aliases */
 name|void
@@ -749,7 +749,7 @@ name|nrst_0
 decl_stmt|;
 name|void
 modifier|*
-name|enrst_0
+name|erst_0
 decl_stmt|;
 name|void
 modifier|*
@@ -765,7 +765,7 @@ name|nrst_1
 decl_stmt|;
 name|void
 modifier|*
-name|enrst_1
+name|erst_1
 decl_stmt|;
 name|void
 modifier|*
@@ -781,7 +781,7 @@ name|nrst_2
 decl_stmt|;
 name|void
 modifier|*
-name|enrst_2
+name|erst_2
 decl_stmt|;
 name|void
 modifier|*
@@ -797,11 +797,15 @@ name|nrst_3
 decl_stmt|;
 name|void
 modifier|*
-name|enrst_3
+name|erst_3
 decl_stmt|;
 name|void
 modifier|*
 name|ctl_3
+decl_stmt|;
+name|void
+modifier|*
+name|ctl
 decl_stmt|;
 block|}
 name|devfs_token
@@ -1630,14 +1634,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
+comment|/* XXX use these directly and change to devsw_add_devswf(). */
 define|#
 directive|define
 name|ST_GID
-value|13
+value|GID_OPERATOR
 define|#
 directive|define
 name|ST_UID
-value|0
+value|UID_ROOT
 name|sprintf
 argument_list|(
 name|name
@@ -1724,7 +1729,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%ld.0"
+literal|"erst%ld.0"
 argument_list|,
 name|unit
 argument_list|)
@@ -1733,7 +1738,7 @@ name|st
 operator|->
 name|devfs_token
 operator|.
-name|enrst_0
+name|erst_0
 operator|=
 name|devfs_add_devsw
 argument_list|(
@@ -1888,7 +1893,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%ld.1"
+literal|"erst%ld.1"
 argument_list|,
 name|unit
 argument_list|)
@@ -1897,7 +1902,7 @@ name|st
 operator|->
 name|devfs_token
 operator|.
-name|enrst_1
+name|erst_1
 operator|=
 name|devfs_add_devsw
 argument_list|(
@@ -2052,7 +2057,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%ld.2"
+literal|"erst%ld.2"
 argument_list|,
 name|unit
 argument_list|)
@@ -2061,7 +2066,7 @@ name|st
 operator|->
 name|devfs_token
 operator|.
-name|enrst_2
+name|erst_2
 operator|=
 name|devfs_add_devsw
 argument_list|(
@@ -2216,7 +2221,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%ld.3"
+literal|"erst%ld.3"
 argument_list|,
 name|unit
 argument_list|)
@@ -2225,7 +2230,7 @@ name|st
 operator|->
 name|devfs_token
 operator|.
-name|enrst_3
+name|erst_3
 operator|=
 name|devfs_add_devsw
 argument_list|(
@@ -2294,6 +2299,38 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
+name|st
+operator|->
+name|devfs_token
+operator|.
+name|ctl
+operator|=
+name|devfs_add_devswf
+argument_list|(
+operator|&
+name|st_cdevsw
+argument_list|,
+operator|(
+name|unit
+operator|<<
+literal|4
+operator|)
+operator||
+name|SCSI_CONTROL_MASK
+argument_list|,
+name|DV_CHR
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0600
+argument_list|,
+literal|"rst%d.ctl"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 comment|/** add links **/
 name|sprintf
 argument_list|(
@@ -2355,7 +2392,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"enrst%ld"
+literal|"erst%ld"
 argument_list|,
 name|unit
 argument_list|)
@@ -2364,7 +2401,7 @@ name|st
 operator|->
 name|devfs_token
 operator|.
-name|enrst
+name|erst
 operator|=
 name|dev_link
 argument_list|(
@@ -2376,7 +2413,7 @@ name|st
 operator|->
 name|devfs_token
 operator|.
-name|enrst_0
+name|erst_0
 argument_list|)
 expr_stmt|;
 endif|#
