@@ -2272,11 +2272,11 @@ define|#
 directive|define
 name|wbkgdset
 parameter_list|(
-name|w
+name|win
 parameter_list|,
 name|ch
 parameter_list|)
-value|(win->_bkgd = ch)
+value|((win)->_bkgd = ch)
 end_define
 
 begin_comment
