@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty.h	7.10 (Berkeley) 6/26/91  *	$Id: tty.h,v 1.8 1994/01/28 23:15:17 ache Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty.h	7.10 (Berkeley) 6/26/91  *	$Id: tty.h,v 1.9 1994/03/02 20:29:03 guido Exp $  */
 end_comment
 
 begin_ifndef
@@ -517,8 +517,15 @@ begin_comment
 comment|/* output stopped by ctl-s */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TS_ZOMBIE
+value|0x000200UL
+end_define
+
 begin_comment
-comment|/* was	TS_HUPCLS	0x000200UL 	 * hang up upon last close */
+comment|/* carrier dropped */
 end_comment
 
 begin_define
@@ -673,6 +680,20 @@ define|#
 directive|define
 name|TS_LOCAL
 value|(TS_BKSL|TS_ERASE|TS_LNCH|TS_TYPEN|TS_CNTTB)
+end_define
+
+begin_comment
+comment|/*  * XXX maintain a single flag to keep track of this combination and fix all  * the places that check TS_CARR_ON without checking CLOCAL or TS_ZOMBIE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAN_DO_IO
+parameter_list|(
+name|tp
+parameter_list|)
+value|(((tp)->t_state& (TS_CARR_ON | TS_ZOMBIE)) \ 			 == TS_CARR_ON || (tp)->t_cflag& CLOCAL)
 end_define
 
 begin_comment
@@ -971,17 +992,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|ttrstrt
-parameter_list|(
-name|struct
-name|tty
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX not used */
+end_comment
+
+begin_endif
+unit|extern void ttrstrt(struct tty *);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -1323,19 +1348,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|ungetc
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|ringb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX not used */
+end_comment
+
+begin_endif
+unit|extern int ungetc(int, struct ringb *);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern

@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/*  *	$Id: if_ppp.c,v 1.8 1994/03/02 20:28:53 guido Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
+comment|/*  *	$Id: if_ppp.c,v 1.10 1994/03/22 01:16:04 ache Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
 end_comment
 
 begin_include
@@ -1475,15 +1475,11 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|CAN_DO_IO
+argument_list|(
 name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_CARR_ON
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1735,15 +1731,11 @@ name|error
 decl_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
+name|CAN_DO_IO
+argument_list|(
 name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_CARR_ON
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -3097,17 +3089,13 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
+operator|!
+name|CAN_DO_IO
+argument_list|(
 name|sc
 operator|->
 name|sc_ttyp
-operator|->
-name|t_state
-operator|&
-name|TS_CARR_ON
-operator|)
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
 name|error
