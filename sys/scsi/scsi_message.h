@@ -277,7 +277,7 @@ name|lun
 parameter_list|,
 name|disc
 parameter_list|)
-value|((disc) ? 0xc0 : 0x80) | (lun))
+value|((disc) ? 0xc0 : MSG_IDENTIFYFLAG) | (lun))
 end_define
 
 begin_define
@@ -287,7 +287,7 @@ name|MSG_ISIDENTIFY
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)& MSG_INDENTIFYFLAG)
+value|((m)& MSG_IDENTIFYFLAG)
 end_define
 
 begin_comment
