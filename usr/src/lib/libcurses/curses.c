@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)curses.c	5.10 (Berkeley) %G%"
+literal|"@(#)curses.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,107 +78,6 @@ end_decl_stmt
 
 begin_comment
 comment|/*  					 * If terminal doesn't have  					 * insert/delete line capabilities  					 * for quick change on refresh. 					 */
-end_comment
-
-begin_comment
-comment|/*  * Public.  *  * XXX  * UPPERCASE isn't used by libcurses, and is left for backward  * compatibility only.  */
-end_comment
-
-begin_decl_stmt
-name|WINDOW
-modifier|*
-name|curscr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Current screen. */
-end_comment
-
-begin_decl_stmt
-name|WINDOW
-modifier|*
-name|stdscr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Standard screen. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|COLS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Columns on the screen. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|LINES
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Lines on the screen. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|My_term
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Use Def_term regardless. */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|Def_term
-init|=
-literal|"unknown"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Default terminal type. */
-end_comment
-
-begin_decl_stmt
-name|char
-name|GT
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Gtty indicates tabs. */
-end_comment
-
-begin_decl_stmt
-name|char
-name|NONL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Term can't hack LF doing a CR. */
-end_comment
-
-begin_decl_stmt
-name|char
-name|UPPERCASE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Terminal is uppercase only. */
 end_comment
 
 begin_decl_stmt
@@ -426,6 +325,107 @@ modifier|*
 name|RIGHT_PARM
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Public.  *  * XXX  * UPPERCASE isn't used by libcurses, and is left for backward  * compatibility only.  */
+end_comment
+
+begin_decl_stmt
+name|WINDOW
+modifier|*
+name|curscr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current screen. */
+end_comment
+
+begin_decl_stmt
+name|WINDOW
+modifier|*
+name|stdscr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Standard screen. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|COLS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Columns on the screen. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|LINES
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Lines on the screen. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|My_term
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use Def_term regardless. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Def_term
+init|=
+literal|"unknown"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Default terminal type. */
+end_comment
+
+begin_decl_stmt
+name|char
+name|GT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Gtty indicates tabs. */
+end_comment
+
+begin_decl_stmt
+name|char
+name|NONL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Term can't hack LF doing a CR. */
+end_comment
+
+begin_decl_stmt
+name|char
+name|UPPERCASE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Terminal is uppercase only. */
+end_comment
 
 end_unit
 
