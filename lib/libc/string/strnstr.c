@@ -120,6 +120,11 @@ do|do
 block|{
 if|if
 condition|(
+name|slen
+operator|--
+operator|<
+literal|1
+operator|||
 operator|(
 name|sc
 operator|=
@@ -129,11 +134,6 @@ operator|++
 operator|)
 operator|==
 literal|'\0'
-operator|||
-name|slen
-operator|--
-operator|<
-literal|1
 condition|)
 return|return
 operator|(
