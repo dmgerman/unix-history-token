@@ -157,13 +157,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|G_RAID3_MAX_IO_SIZE
-value|(DFLTPHYS * 2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|G_RAID3_BIO_CFLAG_REGULAR
 value|0x01
 end_define

@@ -4521,7 +4521,7 @@ name|bio_length
 operator|=
 name|MIN
 argument_list|(
-name|G_MIRROR_SYNC_BLOCK_SIZE
+name|MAXPHYS
 argument_list|,
 name|sc
 operator|->
@@ -4933,7 +4933,7 @@ operator|->
 name|ds_offset_done
 operator|%
 operator|(
-name|G_MIRROR_SYNC_BLOCK_SIZE
+name|MAXPHYS
 operator|*
 literal|100
 operator|)
@@ -6240,7 +6240,7 @@ name|bp
 operator|->
 name|bio_offset
 operator|%
-name|G_MIRROR_SYNC_BLOCK_SIZE
+name|MAXPHYS
 operator|)
 expr_stmt|;
 block|}
@@ -8058,7 +8058,7 @@ name|ds_data
 operator|=
 name|malloc
 argument_list|(
-name|G_MIRROR_SYNC_BLOCK_SIZE
+name|MAXPHYS
 argument_list|,
 name|M_MIRROR
 argument_list|,

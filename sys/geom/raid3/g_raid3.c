@@ -6641,7 +6641,7 @@ name|bio_length
 operator|=
 name|MIN
 argument_list|(
-name|G_RAID3_MAX_IO_SIZE
+name|MAXPHYS
 argument_list|,
 name|sc
 operator|->
@@ -7278,7 +7278,7 @@ operator|->
 name|ds_offset_done
 operator|%
 operator|(
-name|G_RAID3_MAX_IO_SIZE
+name|MAXPHYS
 operator|*
 literal|100
 operator|)
@@ -7660,7 +7660,7 @@ operator|-
 operator|(
 name|offset
 operator|%
-name|G_RAID3_MAX_IO_SIZE
+name|MAXPHYS
 operator|)
 expr_stmt|;
 break|break;
@@ -9789,7 +9789,7 @@ name|ds_data
 operator|=
 name|malloc
 argument_list|(
-name|G_RAID3_MAX_IO_SIZE
+name|MAXPHYS
 argument_list|,
 name|M_RAID3
 argument_list|,
