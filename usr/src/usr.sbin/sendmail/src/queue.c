@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.1 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.2 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.1 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.2 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1725,6 +1725,9 @@ name|shouldqueue
 argument_list|(
 operator|-
 literal|100000000L
+argument_list|,
+name|curtime
+argument_list|()
 argument_list|)
 condition|)
 block|{
@@ -2496,6 +2499,10 @@ argument_list|(
 name|w
 operator|->
 name|w_pri
+argument_list|,
+name|w
+operator|->
+name|w_ctime
 argument_list|)
 condition|)
 block|{
@@ -2731,10 +2738,6 @@ init|=
 name|a
 operator|->
 name|w_pri
-operator|+
-name|a
-operator|->
-name|w_ctime
 decl_stmt|;
 name|long
 name|pb
@@ -2742,10 +2745,6 @@ init|=
 name|b
 operator|->
 name|w_pri
-operator|+
-name|b
-operator|->
-name|w_ctime
 decl_stmt|;
 if|if
 condition|(
@@ -2855,6 +2854,10 @@ argument_list|(
 name|w
 operator|->
 name|w_pri
+argument_list|,
+name|w
+operator|->
+name|w_ctime
 argument_list|)
 condition|)
 block|{
@@ -4045,6 +4048,10 @@ argument_list|(
 name|w
 operator|->
 name|w_pri
+argument_list|,
+name|w
+operator|->
+name|w_ctime
 argument_list|)
 condition|)
 name|printf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.3 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5384,6 +5384,10 @@ argument_list|(
 name|e
 operator|->
 name|e_msgpriority
+argument_list|,
+name|e
+operator|->
+name|e_ctime
 argument_list|)
 condition|)
 name|mode
@@ -6104,6 +6108,20 @@ operator|->
 name|q_user
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitnset
+argument_list|(
+name|M_USR_UPPER
+argument_list|,
+name|qq
+operator|->
+name|q_mailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
 name|makelower
 argument_list|(
 name|obuf
@@ -6152,6 +6170,16 @@ operator|->
 name|e_errorqueue
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+comment|/* and set the return path to point to it */
+name|e
+operator|->
+name|e_returnpath
+operator|=
+name|newstr
+argument_list|(
+name|obuf
 argument_list|)
 expr_stmt|;
 name|ErrorMode

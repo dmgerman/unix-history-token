@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.1 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,24 +237,6 @@ name|e_flags
 argument_list|)
 condition|)
 return|return;
-if|if
-condition|(
-name|e
-operator|->
-name|e_class
-operator|<
-literal|0
-condition|)
-block|{
-name|message
-argument_list|(
-name|Arpa_Info
-argument_list|,
-literal|"Dumping junk mail"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|ForceMail
 operator|=
 name|TRUE
@@ -743,7 +725,13 @@ literal|"Unable to deliver mail"
 argument_list|,
 name|q
 argument_list|,
-name|TRUE
+operator|(
+name|e
+operator|->
+name|e_class
+operator|>=
+literal|0
+operator|)
 argument_list|,
 name|e
 argument_list|)
@@ -978,6 +966,21 @@ case|case
 name|ESM_USRTMP
 case|:
 comment|/* 			**  Log the mail in /usr/tmp/dead.letter. 			*/
+if|if
+condition|(
+name|e
+operator|->
+name|e_class
+operator|<
+literal|0
+condition|)
+block|{
+name|state
+operator|=
+name|ESM_DONE
+expr_stmt|;
+break|break;
+block|}
 name|fp
 operator|=
 name|dfopen
@@ -1095,31 +1098,12 @@ comment|/* fall through ... */
 case|case
 name|ESM_PANIC
 case|:
+comment|/* leave the locked queue& transcript files around */
 name|syserr
 argument_list|(
-literal|"savemail: HELP!!!!"
+literal|"savemail: cannot save rejected email anywhere"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
-if|if
-condition|(
-name|LogLevel
-operator|>=
-literal|1
-condition|)
-name|syslog
-argument_list|(
-name|LOG_ALERT
-argument_list|,
-literal|"savemail: HELP!!!!"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
-comment|/* leave the locked queue& transcript files around */
 name|exit
 argument_list|(
 name|EX_SOFTWARE

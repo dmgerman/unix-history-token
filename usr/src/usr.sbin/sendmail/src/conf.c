@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.5 (Berkeley) %G%"
+literal|"@(#)conf.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,34 +323,43 @@ end_macro
 
 begin_block
 block|{
-name|QueueLA
-operator|=
-literal|8
-expr_stmt|;
-name|QueueFactor
-operator|=
-literal|10000
-expr_stmt|;
-name|RefuseLA
-operator|=
-literal|12
-expr_stmt|;
 name|SpaceSub
 operator|=
 literal|' '
 expr_stmt|;
+comment|/* option B */
+name|QueueLA
+operator|=
+literal|8
+expr_stmt|;
+comment|/* option x */
+name|RefuseLA
+operator|=
+literal|12
+expr_stmt|;
+comment|/* option X */
 name|WkRecipFact
 operator|=
-literal|1000
+literal|30000L
 expr_stmt|;
+comment|/* option y */
 name|WkClassFact
 operator|=
-literal|1800
+literal|1800L
 expr_stmt|;
+comment|/* option z */
 name|WkTimeFact
 operator|=
-literal|9000
+literal|90000L
 expr_stmt|;
+comment|/* option Z */
+name|QueueFactor
+operator|=
+name|WkRecipFact
+operator|*
+literal|20
+expr_stmt|;
+comment|/* option q */
 name|FileMode
 operator|=
 operator|(
@@ -365,42 +374,77 @@ literal|0644
 else|:
 literal|0600
 expr_stmt|;
+comment|/* option F */
 name|DefUid
 operator|=
 literal|1
 expr_stmt|;
+comment|/* option u */
 name|DefGid
 operator|=
 literal|1
 expr_stmt|;
+comment|/* option g */
 name|CheckpointInterval
 operator|=
 literal|10
 expr_stmt|;
+comment|/* option C */
 name|MaxHopCount
 operator|=
-literal|17
+literal|25
 expr_stmt|;
+comment|/* option h */
 name|SendMode
 operator|=
 name|SM_FORK
 expr_stmt|;
+comment|/* option d */
 name|ErrorMode
 operator|=
 name|EM_PRINT
 expr_stmt|;
+comment|/* option e */
 name|EightBit
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* option 8 */
 name|MaxMciCache
 operator|=
 literal|1
 expr_stmt|;
+comment|/* option k */
 name|MciCacheTimeout
 operator|=
 literal|300
 expr_stmt|;
+comment|/* option K */
+name|LogLevel
+operator|=
+literal|9
+expr_stmt|;
+comment|/* option L */
+name|ReadTimeout
+operator|=
+literal|2
+operator|*
+literal|60
+operator|*
+literal|60
+expr_stmt|;
+comment|/* option r */
+name|TimeOut
+operator|=
+literal|3
+operator|*
+literal|24
+operator|*
+literal|60
+operator|*
+literal|60
+expr_stmt|;
+comment|/* option T */
 name|setdefuser
 argument_list|()
 expr_stmt|;
@@ -2159,7 +2203,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SHOULDQUEUE -- should this message be queued or sent? ** **	Compares the message cost to the load average to decide. ** **	Parameters: **		pri -- the priority of the message in question. ** **	Returns: **		TRUE -- if this message should be queued up for the **			time being. **		FALSE -- if the load is low enough to send this message. ** **	Side Effects: **		none. */
+comment|/* **  SHOULDQUEUE -- should this message be queued or sent? ** **	Compares the message cost to the load average to decide. ** **	Parameters: **		pri -- the priority of the message in question. **		ctime -- the message creation time. ** **	Returns: **		TRUE -- if this message should be queued up for the **			time being. **		FALSE -- if the load is low enough to send this message. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -2167,9 +2211,14 @@ name|bool
 name|shouldqueue
 parameter_list|(
 name|pri
+parameter_list|,
+name|ctime
 parameter_list|)
 name|long
 name|pri
+decl_stmt|;
+name|time_t
+name|ctime
 decl_stmt|;
 block|{
 if|if
