@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.15 1996/11/26 02:35:08 peter Exp $"
+literal|"$Id: syslogd.c,v 1.16 1996/12/10 17:52:23 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1488,6 +1488,14 @@ name|sunx
 operator|.
 name|sun_path
 argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|LogName
 argument_list|)
 expr_stmt|;
 name|funix
