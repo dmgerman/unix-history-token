@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: inet.c,v 3.6 1995/06/25 18:54:45 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: inet.c,v 3.8 1995/11/29 22:36:57 fenner Rel $  */
 end_comment
 
 begin_include
@@ -114,6 +114,56 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Verify that a given netmask is plausible;  * make sure that it is a series of 1's followed by  * a series of 0's with no discontiguous 1's.  */
+end_comment
+
+begin_function
+name|int
+name|inet_valid_mask
+parameter_list|(
+name|mask
+parameter_list|)
+name|u_int32
+name|mask
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|~
+operator|(
+operator|(
+operator|(
+name|mask
+operator|&
+operator|-
+name|mask
+operator|)
+operator|-
+literal|1
+operator|)
+operator||
+name|mask
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Mask is not contiguous */
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Verify that a given subnet number and mask pair are credible.  *  * With CIDR, almost any subnet and mask are credible.  mrouted still  * can't handle aggregated class A's, so we still check that, but  * otherwise the only requirements are that the subnet address is  * within the [ABC] range and that the host bits of the subnet  * are all 0.  */
 end_comment
 
@@ -171,14 +221,12 @@ condition|(
 name|subnet
 operator|==
 literal|0
-operator|&&
-name|mask
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
-name|TRUE
+name|mask
+operator|==
+literal|0
 operator|)
 return|;
 if|if
@@ -202,6 +250,14 @@ literal|0xff000000
 operator|)
 operator|==
 literal|0x7f000000
+operator|||
+operator|(
+name|subnet
+operator|&
+literal|0xff000000
+operator|)
+operator|==
+literal|0x00000000
 condition|)
 return|return
 operator|(
@@ -230,7 +286,6 @@ name|FALSE
 operator|)
 return|;
 block|}
-elseif|else
 if|if
 condition|(
 name|subnet
@@ -240,6 +295,22 @@ name|mask
 condition|)
 block|{
 comment|/* Host bits are set in the subnet */
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|inet_valid_mask
+argument_list|(
+name|mask
+argument_list|)
+condition|)
+block|{
+comment|/* Netmask is not contiguous */
 return|return
 operator|(
 name|FALSE

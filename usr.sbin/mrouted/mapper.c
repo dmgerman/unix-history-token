@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 3.6 1995/06/25 18:59:02 fenner Exp $  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 3.8 1995/11/29 22:36:57 fenner Rel $  */
 end_comment
 
 begin_comment
@@ -1436,7 +1436,7 @@ name|node
 operator|->
 name|tries
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|ask2
 argument_list|(
@@ -1863,7 +1863,7 @@ name|nb_i
 operator|->
 name|threshold
 operator|!=
-name|nb_i
+name|nb_n
 operator|->
 name|threshold
 condition|)
@@ -2231,6 +2231,21 @@ operator|&
 name|routers
 argument_list|)
 decl_stmt|;
+name|u_int
+name|broken_cisco
+init|=
+operator|(
+operator|(
+name|level
+operator|&
+literal|0xffff
+operator|)
+operator|==
+literal|0x020a
+operator|)
+decl_stmt|;
+comment|/* 10.2 */
+comment|/* well, only possibly_broken_cisco, but that's too long to type. */
 if|if
 condition|(
 name|node
@@ -2367,6 +2382,34 @@ operator|-=
 literal|4
 operator|+
 literal|4
+expr_stmt|;
+if|if
+condition|(
+name|broken_cisco
+operator|&&
+name|ncount
+operator|==
+literal|0
+condition|)
+comment|/* dumb Ciscos */
+name|ncount
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|broken_cisco
+operator|&&
+name|ncount
+operator|>
+literal|15
+condition|)
+comment|/* dumb Ciscos */
+name|ncount
+operator|=
+name|ncount
+operator|&
+literal|0xf
 expr_stmt|;
 comment|/* Fix up any alias information */
 name|ifc_node
@@ -4316,29 +4359,11 @@ name|graph
 init|=
 name|FALSE
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSV
-name|setvbuf
-argument_list|(
-name|stderr
-argument_list|,
-name|NULL
-argument_list|,
-name|_IOLBF
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|setlinebuf
 argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|geteuid
@@ -5149,6 +5174,54 @@ name|group
 decl_stmt|;
 name|int
 name|tmo
+decl_stmt|;
+block|{ }
+name|void
+name|accept_info_request
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|p
+parameter_list|,
+name|datalen
+parameter_list|)
+name|u_int32
+name|src
+decl_stmt|,
+name|dst
+decl_stmt|;
+name|u_char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|datalen
+decl_stmt|;
+block|{ }
+name|void
+name|accept_info_reply
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|p
+parameter_list|,
+name|datalen
+parameter_list|)
+name|u_int32
+name|src
+decl_stmt|,
+name|dst
+decl_stmt|;
+name|u_char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|datalen
 decl_stmt|;
 block|{ }
 end_function
