@@ -17,7 +17,6 @@ begin_define
 define|#
 directive|define
 name|_NETGRAPH_L2CAP_PRSE_H_
-value|1
 end_define
 
 begin_comment

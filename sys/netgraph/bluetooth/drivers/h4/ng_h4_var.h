@@ -13,7 +13,6 @@ begin_define
 define|#
 directive|define
 name|_NETGRAPH_H4_VAR_H_
-value|1
 end_define
 
 begin_comment

@@ -13,7 +13,6 @@ begin_define
 define|#
 directive|define
 name|_NETGRAPH_L2CAP_MISC_H_
-value|1
 end_define
 
 begin_function_decl

@@ -13,7 +13,6 @@ begin_define
 define|#
 directive|define
 name|_NETGRAPH_BTSOCKET_RFCOMM_H_
-value|1
 end_define
 
 begin_comment
