@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.79 1996/08/21 21:56:19 dyson Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.80 1996/09/08 20:44:41 dyson Exp $  */
 end_comment
 
 begin_comment
 comment|/*  *	Virtual memory object module.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
 
 begin_include
 include|#
@@ -149,30 +143,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|void
-name|DDB_vm_object_check
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -189,51 +159,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|_vm_object_in_map
-name|__P
-argument_list|(
-operator|(
-name|vm_map_t
-name|map
-operator|,
-name|vm_object_t
-name|object
-operator|,
-name|vm_map_entry_t
-name|entry
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|vm_object_in_map
-name|__P
-argument_list|(
-operator|(
-name|vm_object_t
-name|object
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -4696,11 +4621,69 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|_vm_object_in_map
+name|__P
+argument_list|(
+operator|(
+name|vm_map_t
+name|map
+operator|,
+name|vm_object_t
+name|object
+operator|,
+name|vm_map_entry_t
+name|entry
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|vm_object_in_map
+name|__P
+argument_list|(
+operator|(
+name|vm_object_t
+name|object
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -5100,17 +5083,16 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|vmochk
+argument_list|,
+argument|vm_object_check
+argument_list|)
+end_macro
 
-begin_function
-specifier|static
-name|void
-name|DDB_vm_object_check
-parameter_list|()
+begin_block
 block|{
 name|vm_object_t
 name|object
@@ -5172,7 +5154,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"vmochk: internal obj has zero ref count: %d\n"
 argument_list|,
@@ -5191,7 +5173,7 @@ name|object
 argument_list|)
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"vmochk: internal obj is not in a map: "
 literal|"ref: %d, size: %d: 0x%x, backing_object: 0x%x\n"
@@ -5217,62 +5199,46 @@ block|}
 block|}
 block|}
 block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DDB */
-end_comment
+end_block
 
 begin_comment
 comment|/*  *	vm_object_print:	[ debug ]  */
 end_comment
 
-begin_function
-name|void
-name|vm_object_print
-parameter_list|(
-name|iobject
-parameter_list|,
-name|full
-parameter_list|,
-name|dummy3
-parameter_list|,
-name|dummy4
-parameter_list|)
-comment|/* db_expr_t */
-name|int
-name|iobject
-decl_stmt|;
-name|boolean_t
-name|full
-decl_stmt|;
-comment|/* db_expr_t */
-name|int
-name|dummy3
-decl_stmt|;
-name|char
-modifier|*
-name|dummy4
-decl_stmt|;
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|object
+argument_list|,
+argument|vm_object_print_static
+argument_list|)
+end_macro
+
+begin_block
 block|{
+comment|/* XXX convert args. */
 name|vm_object_t
 name|object
 init|=
 operator|(
 name|vm_object_t
 operator|)
-name|iobject
+name|addr
 decl_stmt|;
-comment|/* XXX */
+name|boolean_t
+name|full
+init|=
+name|have_addr
+decl_stmt|;
 specifier|register
 name|vm_page_t
 name|p
 decl_stmt|;
+comment|/* XXX count is an (unused) arg.  Avoid shadowing it. */
+define|#
+directive|define
+name|count
+value|was_count
 specifier|register
 name|int
 name|count
@@ -5284,7 +5250,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|iprintf
+name|db_iprintf
 argument_list|(
 literal|"Object 0x%x: size=0x%x, res=%d, ref=%d, "
 argument_list|,
@@ -5309,7 +5275,7 @@ operator|->
 name|ref_count
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"offset=0x%x, backing_object=(0x%x)+0x%x\n"
 argument_list|,
@@ -5335,7 +5301,7 @@ operator|->
 name|backing_object_offset
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cache: next=%p, prev=%p\n"
 argument_list|,
@@ -5360,7 +5326,7 @@ operator|!
 name|full
 condition|)
 return|return;
-name|indent
+name|db_indent
 operator|+=
 literal|2
 expr_stmt|;
@@ -5400,7 +5366,7 @@ name|count
 operator|==
 literal|0
 condition|)
-name|iprintf
+name|db_iprintf
 argument_list|(
 literal|"memory:="
 argument_list|)
@@ -5413,12 +5379,12 @@ operator|==
 literal|6
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|iprintf
+name|db_iprintf
 argument_list|(
 literal|" ..."
 argument_list|)
@@ -5429,7 +5395,7 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-name|printf
+name|db_printf
 argument_list|(
 literal|","
 argument_list|)
@@ -5437,7 +5403,7 @@ expr_stmt|;
 name|count
 operator|++
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"(off=0x%lx,page=0x%lx)"
 argument_list|,
@@ -5464,22 +5430,82 @@ name|count
 operator|!=
 literal|0
 condition|)
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|indent
+name|db_indent
 operator|-=
 literal|2
 expr_stmt|;
 block|}
-end_function
+end_block
+
+begin_comment
+comment|/* XXX. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|count
+end_undef
+
+begin_comment
+comment|/* XXX need this non-static entry for calling from vm_map_print. */
+end_comment
 
 begin_function
 name|void
-name|vm_object_print_pages
-parameter_list|()
+name|vm_object_print
+parameter_list|(
+name|addr
+parameter_list|,
+name|have_addr
+parameter_list|,
+name|count
+parameter_list|,
+name|modif
+parameter_list|)
+name|db_expr_t
+name|addr
+decl_stmt|;
+name|boolean_t
+name|have_addr
+decl_stmt|;
+name|db_expr_t
+name|count
+decl_stmt|;
+name|char
+modifier|*
+name|modif
+decl_stmt|;
+block|{
+name|vm_object_print_static
+argument_list|(
+name|addr
+argument_list|,
+name|have_addr
+argument_list|,
+name|count
+argument_list|,
+name|modif
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|vmopag
+argument_list|,
+argument|vm_object_print_pages
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|vm_object_t
 name|object
@@ -5856,7 +5882,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#

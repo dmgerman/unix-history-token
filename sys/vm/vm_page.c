@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.62 1996/07/30 03:08:15 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.63 1996/09/08 20:44:44 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -10,12 +10,6 @@ end_comment
 begin_comment
 comment|/*  *	Resident memory management module.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
 
 begin_include
 include|#
@@ -113,16 +107,10 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
-name|DDB_print_page_info
+name|vm_page_queue_init
 name|__P
 argument_list|(
 operator|(
@@ -132,20 +120,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
-name|vm_page_queue_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+name|vm_page_t
+name|vm_page_select_free
+name|__P
+argument_list|(
+operator|(
+name|vm_object_t
+name|object
+operator|,
+name|vm_pindex_t
+name|pindex
+operator|,
+name|int
+name|prefqueue
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	Associated with page of user-allocatable memory is a  *	page structure.  */
@@ -626,7 +619,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|inline
-name|__pure
 name|int
 name|vm_page_hash
 name|__P
@@ -1481,7 +1473,6 @@ end_comment
 begin_function
 specifier|static
 specifier|inline
-name|__pure
 name|int
 name|vm_page_hash
 parameter_list|(
@@ -2305,6 +2296,7 @@ comment|/*  * Find a free or zero page, with specified preference.  */
 end_comment
 
 begin_function
+specifier|static
 name|vm_page_t
 name|vm_page_select_free
 parameter_list|(
@@ -5313,20 +5305,42 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"opt_ddb.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
 end_ifdef
 
-begin_function
-name|void
-name|DDB_print_page_info
-parameter_list|(
-name|void
-parameter_list|)
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|page
+argument_list|,
+argument|vm_page_print_page_info
+argument_list|)
+end_macro
+
+begin_block
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_free_count: %d\n"
 argument_list|,
@@ -5335,7 +5349,7 @@ operator|.
 name|v_free_count
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_cache_count: %d\n"
 argument_list|,
@@ -5344,7 +5358,7 @@ operator|.
 name|v_cache_count
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_inactive_count: %d\n"
 argument_list|,
@@ -5353,7 +5367,7 @@ operator|.
 name|v_inactive_count
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_active_count: %d\n"
 argument_list|,
@@ -5362,7 +5376,7 @@ operator|.
 name|v_active_count
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_wire_count: %d\n"
 argument_list|,
@@ -5371,7 +5385,7 @@ operator|.
 name|v_wire_count
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_free_reserved: %d\n"
 argument_list|,
@@ -5380,7 +5394,7 @@ operator|.
 name|v_free_reserved
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_free_min: %d\n"
 argument_list|,
@@ -5389,7 +5403,7 @@ operator|.
 name|v_free_min
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_free_target: %d\n"
 argument_list|,
@@ -5398,7 +5412,7 @@ operator|.
 name|v_free_target
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_cache_min: %d\n"
 argument_list|,
@@ -5407,7 +5421,7 @@ operator|.
 name|v_cache_min
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"cnt.v_inactive_target: %d\n"
 argument_list|,
@@ -5417,19 +5431,23 @@ name|v_inactive_target
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
-begin_function
-name|void
-name|DDB_print_pageq_info
-parameter_list|(
-name|void
-parameter_list|)
+begin_macro
+name|DB_SHOW_COMMAND
+argument_list|(
+argument|pageq
+argument_list|,
+argument|vm_page_print_pageq_info
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"PQ_FREE:"
 argument_list|)
@@ -5448,7 +5466,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|" %d"
 argument_list|,
@@ -5464,12 +5482,12 @@ name|lcnt
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"PQ_CACHE:"
 argument_list|)
@@ -5488,7 +5506,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|" %d"
 argument_list|,
@@ -5504,12 +5522,12 @@ name|lcnt
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"PQ_ZERO:"
 argument_list|)
@@ -5528,7 +5546,7 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|" %d"
 argument_list|,
@@ -5544,12 +5562,12 @@ name|lcnt
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"PQ_ACTIVE: %d, PQ_INACTIVE: %d\n"
 argument_list|,
@@ -5571,12 +5589,16 @@ name|lcnt
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
 
 end_unit
 
