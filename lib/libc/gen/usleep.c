@@ -212,6 +212,9 @@ name|mask
 decl_stmt|,
 name|omask
 decl_stmt|;
+name|int
+name|alarm_blocked
+decl_stmt|;
 if|if
 condition|(
 name|useconds
@@ -239,26 +242,7 @@ name|useconds
 operator|/
 literal|1000000
 expr_stmt|;
-comment|/* 		 * Set up handler to interrupt signanosleep and ensure 		 * SIGARLM is not blocked.  Block SIGALRM while fiddling 		 * with things. 		 */
-name|memset
-argument_list|(
-operator|&
-name|act
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|act
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|act
-operator|.
-name|sa_handler
-operator|=
-name|sleephandler
-expr_stmt|;
+comment|/* Block SIGALRM while fiddling with it */
 name|sigemptyset
 argument_list|(
 operator|&
@@ -284,6 +268,47 @@ operator|&
 name|omask
 argument_list|)
 expr_stmt|;
+name|alarm_termination
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Was SIGALRM blocked already? */
+name|alarm_blocked
+operator|=
+name|sigismember
+argument_list|(
+operator|&
+name|omask
+argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|alarm_blocked
+condition|)
+block|{
+comment|/* 			 * Set up handler to interrupt signanosleep only if 			 * SIGALRM was unblocked. (Save some syscalls) 			 */
+name|memset
+argument_list|(
+operator|&
+name|act
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|act
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|act
+operator|.
+name|sa_handler
+operator|=
+name|sleephandler
+expr_stmt|;
 name|sigaction
 argument_list|(
 name|SIGALRM
@@ -295,23 +320,8 @@ operator|&
 name|oact
 argument_list|)
 expr_stmt|;
-name|mask
-operator|=
-name|omask
-expr_stmt|;
-name|sigdelset
-argument_list|(
-operator|&
-name|mask
-argument_list|,
-name|SIGALRM
-argument_list|)
-expr_stmt|;
-name|alarm_termination
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 		 * signanosleep() uses the given mask for the lifetime of 		 * the syscall only - it resets on return.  Note that the 		 * old sleep explicitly unblocks SIGALRM during the sleep. 		 */
+block|}
+comment|/*   		 * signanosleep() uses the given mask for the lifetime of   		 * the syscall only - it resets on return.  Note that the 		 * old sleep() explicitly unblocks SIGALRM during the sleep, 		 * we don't do that now since we don't depend on SIGALRM 		 * to end the timeout.  If the process blocks SIGALRM, it 		 * gets what it asks for.   		 */
 do|do
 block|{
 name|signanosleep
@@ -323,7 +333,7 @@ operator|&
 name|time_remaining
 argument_list|,
 operator|&
-name|mask
+name|omask
 argument_list|)
 expr_stmt|;
 name|time_to_sleep
@@ -351,6 +361,12 @@ literal|0
 operator|)
 condition|)
 do|;
+if|if
+condition|(
+operator|!
+name|alarm_blocked
+condition|)
+block|{
 comment|/* Unwind */
 name|sigaction
 argument_list|(
@@ -381,6 +397,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
