@@ -1358,10 +1358,12 @@ name|sem_getvalue
 parameter_list|(
 name|sem_t
 modifier|*
+name|__restrict
 name|sem
 parameter_list|,
 name|int
 modifier|*
+name|__restrict
 name|sval
 parameter_list|)
 block|{
