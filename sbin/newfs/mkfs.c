@@ -4062,6 +4062,7 @@ name|csum
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The superblock fields 'fs_csmask' and 'fs_csshift' are no 	 * longer used. However, we still initialise them so that the 	 * filesystem remains compatible with old kernels. 	 */
 name|i
 operator|=
 name|sblock

@@ -1183,9 +1183,8 @@ operator|)
 name|sblock
 operator|.
 name|fs_csp
-index|[
-name|j
-index|]
+operator|+
+name|i
 argument_list|,
 name|fsbtodb
 argument_list|(

@@ -88,14 +88,14 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for a  * size of 128 bytes (2 million cylinder groups on machines with  * 32-bit pointers, and 1 million on 64-bit machines). One pointer  * is taken away to point to an array of cluster sizes that is  * computed as cylinder groups are inspected.  */
+comment|/*  * There is a 128-byte region in the superblock reserved for in-core  * pointers to summary information. Originally this included an array  * of pointers to blocks of struct csum; now there are just two  * pointers and the remaining space is padded with fs_ocsp[].  *  * NOCSPTRS determines the size of this padding. One pointer (fs_csp)  * is taken away to point to a contiguous array of struct csum for  * all cylinder groups; a second (fs_maxcluster) points to an array  * of cluster sizes that is computed as cylinder groups are inspected.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAXCSBUFS
-value|((128 / sizeof(void *)) - 1)
+name|NOCSPTRS
+value|((128 / sizeof(void *)) - 2)
 end_define
 
 begin_comment
@@ -157,7 +157,7 @@ value|((ufs_daddr_t)(2))
 end_define
 
 begin_comment
-comment|/*  * Per cylinder group information; summarized in blocks allocated  * from first cylinder group data blocks.  These blocks have to be  * read in from fs_csaddr (size fs_cssize) in addition to the  * super block.  *  * N.B. sizeof(struct csum) must be a power of two in order for  * the ``fs_cs'' macro to work (see below).  */
+comment|/*  * Per cylinder group information; summarized in blocks allocated  * from first cylinder group data blocks.  These blocks have to be  * read in from fs_csaddr (size fs_cssize) in addition to the  * super block.  */
 end_comment
 
 begin_struct
@@ -307,11 +307,11 @@ comment|/* actual size of super block */
 name|int32_t
 name|fs_csmask
 decl_stmt|;
-comment|/* csum block offset */
+comment|/* csum block offset (now unused) */
 name|int32_t
 name|fs_csshift
 decl_stmt|;
-comment|/* csum block number */
+comment|/* csum block number (now unused) */
 name|int32_t
 name|fs_nindir
 decl_stmt|;
@@ -429,15 +429,20 @@ name|int32_t
 name|fs_cgrotor
 decl_stmt|;
 comment|/* last cg searched */
+name|void
+modifier|*
+name|fs_ocsp
+index|[
+name|NOCSPTRS
+index|]
+decl_stmt|;
+comment|/* padding; was list of fs_cs buffers */
 name|struct
 name|csum
 modifier|*
 name|fs_csp
-index|[
-name|MAXCSBUFS
-index|]
 decl_stmt|;
-comment|/* list of fs_cs info buffers */
+comment|/* cg summary info buffer for fs_cs */
 name|int32_t
 modifier|*
 name|fs_maxcluster
@@ -716,7 +721,7 @@ value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPB(fs), NBBY)))
 end_define
 
 begin_comment
-comment|/*  * Convert cylinder group to base address of its global summary info.  *  * N.B. This macro assumes that sizeof(struct csum) is a power of two.  */
+comment|/*  * Convert cylinder group to base address of its global summary info.  */
 end_comment
 
 begin_define
@@ -728,8 +733,7 @@ name|fs
 parameter_list|,
 name|indx
 parameter_list|)
-define|\
-value|fs_csp[(indx)>> (fs)->fs_csshift][(indx)& ~(fs)->fs_csmask]
+value|fs_csp[indx]
 end_define
 
 begin_comment
