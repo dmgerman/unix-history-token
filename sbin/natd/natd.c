@@ -1216,11 +1216,19 @@ literal|"Unable to bind outgoing divert socket."
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Create routing socket if interface name specified.  */
+comment|/*  * Create routing socket if interface name specified and in dynamic mode.  */
+name|routeSock
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ifName
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|dynamicMode
 condition|)
 block|{
@@ -1247,13 +1255,18 @@ argument_list|(
 literal|"Unable to create routing info socket."
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|routeSock
+name|assignAliasAddr
 operator|=
-operator|-
 literal|1
 expr_stmt|;
+block|}
+else|else
+name|SetAliasAddressFromIfName
+argument_list|(
+name|ifName
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*  * Create socket for sending ICMP messages.  */
 name|icmpSock
 operator|=
@@ -2786,12 +2799,6 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|char
-name|msg
-index|[
-literal|80
-index|]
-decl_stmt|;
 name|struct
 name|ifreq
 modifier|*
@@ -2843,18 +2850,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|Quit
 argument_list|(
 literal|"Failed to create helper socket."
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|cf
 operator|.
 name|ifc_len
@@ -2886,18 +2886,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|Quit
 argument_list|(
 literal|"Ioctl SIOCGIFCONF failed."
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|ifIndex
 operator|=
 literal|0
@@ -3047,18 +3040,13 @@ argument_list|(
 name|helperSock
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|errx
 argument_list|(
-name|msg
+literal|1
 argument_list|,
 literal|"Unknown interface name %s.\n"
 argument_list|,
 name|ifn
-argument_list|)
-expr_stmt|;
-name|Quit
-argument_list|(
-name|msg
 argument_list|)
 expr_stmt|;
 block|}
@@ -4241,10 +4229,6 @@ name|strdup
 argument_list|(
 name|strValue
 argument_list|)
-expr_stmt|;
-name|assignAliasAddr
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
