@@ -985,9 +985,6 @@ name|YP
 comment|/* 		 * XXX   We need to be careful to avoid proceeding 		 * past this point under certain circumstances or 		 * we risk dereferencing null pointers down below. 		 */
 if|if
 condition|(
-operator|!
-name|search
-operator|&&
 name|_gr_group
 operator|.
 name|gr_name
@@ -997,11 +994,36 @@ index|]
 operator|==
 literal|'+'
 condition|)
+block|{
+switch|switch
+condition|(
+name|search
+condition|)
+block|{
+case|case
+literal|0
+case|:
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+case|case
+literal|1
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
 endif|#
 directive|endif
 comment|/* YP */
