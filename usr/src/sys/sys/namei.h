@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,25 +15,15 @@ directive|define
 name|_NAMEI_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<ufs/dir.h>
-end_include
-
 begin_comment
-comment|/* XXX */
-end_comment
-
-begin_comment
-comment|/*  * Encapsulation of namei parameters.  * One of these is located in the u. area to  * minimize space allocated on the kernel stack.  */
+comment|/*  * Encapsulation of namei parameters.  */
 end_comment
 
 begin_struct
 struct|struct
 name|nameidata
 block|{
-comment|/* arguments to namei and related context: */
+comment|/* 	 * Arguments to namei. 	 */
 name|caddr_t
 name|ni_dirp
 decl_stmt|;
@@ -47,6 +37,7 @@ name|u_long
 name|ni_nameiop
 decl_stmt|;
 comment|/* see below */
+comment|/* 	 * Arguments to lookup. 	 */
 name|struct
 name|ucred
 modifier|*
@@ -58,47 +49,14 @@ name|vnode
 modifier|*
 name|ni_startdir
 decl_stmt|;
-comment|/* alternate starting directory */
-comment|/* shared between namei, lookup routines and commit routines: */
-name|caddr_t
-name|ni_pnbuf
-decl_stmt|;
-comment|/* pathname buffer */
-name|char
+comment|/* starting directory */
+name|struct
+name|vnode
 modifier|*
-name|ni_ptr
+name|ni_rootdir
 decl_stmt|;
-comment|/* current location in pathname */
-name|char
-modifier|*
-name|ni_next
-decl_stmt|;
-comment|/* next location in pathname */
-name|u_int
-name|ni_pathlen
-decl_stmt|;
-comment|/* remaining chars in path */
-name|u_long
-name|ni_hash
-decl_stmt|;
-comment|/* hash value of current component */
-name|short
-name|ni_namelen
-decl_stmt|;
-comment|/* length of current component */
-name|short
-name|ni_loopcnt
-decl_stmt|;
-comment|/* count of symlinks encountered */
-name|char
-name|ni_makeentry
-decl_stmt|;
-comment|/* 1 => add entry to name cache */
-name|char
-name|ni_isdotdot
-decl_stmt|;
-comment|/* 1 => current component name is .. */
-comment|/* results: */
+comment|/* logical root directory */
+comment|/* 	 * Results 	 */
 name|struct
 name|vnode
 modifier|*
@@ -111,101 +69,81 @@ modifier|*
 name|ni_dvp
 decl_stmt|;
 comment|/* vnode of intermediate directory */
-name|struct
-name|direct
-name|ni_dent
+comment|/* 	 * Shared between namei, lookup routines, and commit routines. 	 */
+name|char
+modifier|*
+name|ni_pnbuf
 decl_stmt|;
-comment|/* final component name */
-comment|/* side effects: */
-comment|/* BEGIN UFS SPECIFIC */
-name|off_t
-name|ni_endoff
+comment|/* pathname buffer */
+name|long
+name|ni_pathlen
 decl_stmt|;
-comment|/* end of useful directory contents */
+comment|/* remaining chars in path */
+name|char
+modifier|*
+name|ni_ptr
+decl_stmt|;
+comment|/* current location in pathname */
+name|long
+name|ni_namelen
+decl_stmt|;
+comment|/* length of current component */
+name|char
+modifier|*
+name|ni_next
+decl_stmt|;
+comment|/* next location in pathname */
+name|u_long
+name|ni_hash
+decl_stmt|;
+comment|/* hash value of current component */
+name|u_char
+name|ni_loopcnt
+decl_stmt|;
+comment|/* count of symlinks encountered */
+name|u_char
+name|ni_makeentry
+decl_stmt|;
+comment|/* 1 => add entry to name cache */
+name|u_char
+name|ni_isdotdot
+decl_stmt|;
+comment|/* 1 => current component name is .. */
+name|u_char
+name|ni_more
+decl_stmt|;
+comment|/* 1 => symlink needs interpretation */
+comment|/* 	 * Side effects. 	 */
 struct|struct
-name|ndirinfo
+name|ufs_specific
 block|{
 comment|/* saved info for new dir entry */
-name|struct
-name|iovec
-name|nd_iovec
+name|off_t
+name|ufs_endoff
 decl_stmt|;
-comment|/* pointed to by ni_iov */
-name|struct
-name|uio
-name|nd_uio
+comment|/* end of useful directory contents */
+name|long
+name|ufs_offset
 decl_stmt|;
-comment|/* directory I/O parameters */
+comment|/* offset of free space in directory */
+name|long
+name|ufs_count
+decl_stmt|;
+comment|/* size of free slot in directory */
+name|ino_t
+name|ufs_ino
+decl_stmt|;
+comment|/* inode number of found directory */
+name|u_long
+name|ufs_reclen
+decl_stmt|;
+comment|/* size of found directory entry */
 block|}
-name|ni_nd
+name|ni_ufs
 struct|;
-comment|/* END UFS SPECIFIC */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|ni_base
-value|ni_nd.nd_iovec.iov_base
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_count
-value|ni_nd.nd_iovec.iov_len
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_uioseg
-value|ni_nd.nd_uio.uio_segflg
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_iov
-value|ni_nd.nd_uio.uio_iov
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_iovcnt
-value|ni_nd.nd_uio.uio_iovcnt
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_offset
-value|ni_nd.nd_uio.uio_offset
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_resid
-value|ni_nd.nd_uio.uio_resid
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_rw
-value|ni_nd.nd_uio.uio_rw
-end_define
-
-begin_define
-define|#
-directive|define
-name|ni_uio
-value|ni_nd.nd_uio
-end_define
 
 begin_ifdef
 ifdef|#
@@ -354,7 +292,7 @@ comment|/* mask of operational modifiers */
 end_comment
 
 begin_comment
-comment|/*  * namei parameter descriptors  */
+comment|/*  * Namei parameter descriptors.  *  * SAVENAME may be set by either the callers of namei or by VOP_LOOKUP.  * If the caller of namei sets the flag (for example execve wants to  * know the name of the program that is being executed), then it must  * free the buffer. If VOP_LOOKUP sets the flag, then the buffer must  * be freed by either the commit routine or the VOP_ABORT routine.  * SAVESTART is set only by the callers of namei. It implies SAVENAME  * plus the addition of saving the parent directory that contains the  * name in ni_startdir. It allows repeated calls to lookup for the  * name being sought. The caller is responsible for releasing the  * buffer and for vrele'ing ni_startdir.  */
 end_comment
 
 begin_define
@@ -387,29 +325,29 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* has preallocated pathname buffer */
+comment|/* has allocated pathname buffer */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|STARTDIR
+name|SAVENAME
 value|0x0800
 end_define
 
 begin_comment
-comment|/* has alternate starting directory */
+comment|/* save pathanme buffer */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SAVESTARTDIR
+name|SAVESTART
 value|0x1000
 end_define
 
 begin_comment
-comment|/* do not vrele alternate starting directory */
+comment|/* save starting directory */
 end_comment
 
 begin_define
@@ -522,6 +460,26 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|namei
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nameidata
+operator|*
+name|ndp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lookup
 name|__P
 argument_list|(
 operator|(
