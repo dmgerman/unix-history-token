@@ -256,8 +256,8 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|ohci_device_ads
+index|[]
 init|=
 literal|"ADS Technologies USB Host Controller"
 decl_stmt|;
@@ -267,8 +267,8 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|ohci_device_generic
+index|[]
 init|=
 literal|"OHCI USB Host Controller (generic)"
 decl_stmt|;
