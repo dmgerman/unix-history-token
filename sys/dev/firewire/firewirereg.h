@@ -393,11 +393,9 @@ value|10
 name|int
 name|nisodma
 decl_stmt|;
-name|u_int8_t
+name|struct
+name|fw_eui64
 name|eui
-index|[
-literal|8
-index|]
 decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
