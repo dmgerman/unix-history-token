@@ -511,7 +511,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_ID_TI6420SD
+name|PCIC_ID_TI6420SC
 value|0xac8e104cul
 end_define
 

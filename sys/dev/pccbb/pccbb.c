@@ -455,9 +455,33 @@ name|CB_TI12XX
 block|}
 block|,
 block|{
+name|PCIC_ID_TI1515
+block|,
+literal|"TI1515 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
 name|PCIC_ID_TI1520
 block|,
 literal|"TI1520 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI1530
+block|,
+literal|"TI1530 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI1620
+block|,
+literal|"TI1620 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|}
@@ -490,6 +514,86 @@ block|{
 name|PCIC_ID_TI4510
 block|,
 literal|"TI4510 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI4520
+block|,
+literal|"TI4520 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI6411
+block|,
+literal|"TI[67]x[12]1 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI6420
+block|,
+literal|"TI[67]x20 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI6420SC
+block|,
+literal|"TI[67]x20 (SC) PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7410
+block|,
+literal|"TI7410 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7510
+block|,
+literal|"TI7510 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7610
+block|,
+literal|"TI7610 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7610M
+block|,
+literal|"TI7610 (M) PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7610SD
+block|,
+literal|"TI7610 (SD) PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|}
+block|,
+block|{
+name|PCIC_ID_TI7610MS
+block|,
+literal|"TI7610 (MS) PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|}
