@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/nexusvar.h>
+file|<machine/legacyvar.h>
 end_include
 
 begin_include
@@ -1249,7 +1249,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|nexus_get_pcibus
+name|legacy_get_pcibus
 argument_list|(
 name|devs
 index|[
@@ -1300,7 +1300,7 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|nexus_set_pcibus
+name|legacy_set_pcibus
 argument_list|(
 name|child
 argument_list|,
@@ -1418,7 +1418,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|nexus_set_pcibus
+name|legacy_set_pcibus
 argument_list|(
 name|child
 argument_list|,
@@ -1547,7 +1547,7 @@ case|:
 operator|*
 name|result
 operator|=
-name|nexus_get_pcibus
+name|legacy_get_pcibus
 argument_list|(
 name|dev
 argument_list|)
@@ -1588,7 +1588,7 @@ block|{
 case|case
 name|PCIB_IVAR_BUS
 case|:
-name|nexus_set_pcibus
+name|legacy_set_pcibus
 argument_list|(
 name|dev
 argument_list|,
@@ -1777,7 +1777,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pcib
 argument_list|,
-name|nexus
+name|legacy
 argument_list|,
 name|nexus_pcib_driver
 argument_list|,
