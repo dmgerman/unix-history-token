@@ -545,7 +545,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *	Th PC-Card resource IOC_GET_RESOURCE_RANGE  */
+comment|/*  *	The PC-Card resource IOC_GET_RESOURCE_RANGE  */
 end_comment
 
 begin_struct
