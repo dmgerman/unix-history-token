@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.5 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1843,15 +1843,9 @@ name|rpm
 operator|<=
 literal|0
 condition|)
-name|fatal
-argument_list|(
-literal|"%s: no default rpm"
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
+name|rpm
+operator|=
+literal|3600
 expr_stmt|;
 block|}
 if|if
@@ -1879,7 +1873,7 @@ literal|"%s: no default #tracks"
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -1909,7 +1903,7 @@ literal|"%s: no default #sectors/track"
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -1939,7 +1933,7 @@ literal|"%s: no default sector size"
 argument_list|,
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -1964,15 +1958,9 @@ name|trackskew
 operator|<
 literal|0
 condition|)
-name|fatal
-argument_list|(
-literal|"%s: no default track skew"
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
+name|trackskew
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -1994,15 +1982,9 @@ name|interleave
 operator|<=
 literal|0
 condition|)
-name|fatal
-argument_list|(
-literal|"%s: no default interleave"
-argument_list|,
-name|argv
-index|[
+name|interleave
+operator|=
 literal|1
-index|]
-argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2121,15 +2103,9 @@ name|trackspares
 operator|<
 literal|0
 condition|)
-name|fatal
-argument_list|(
-literal|"%s: no default spares/track"
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
+name|trackspares
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|nphyssectors
@@ -2158,15 +2134,9 @@ name|cylspares
 operator|<
 literal|0
 condition|)
-name|fatal
-argument_list|(
-literal|"%s: no default spares/cylinder"
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
+name|cylspares
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|secpercyl
