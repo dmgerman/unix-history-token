@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.16 (Berkeley) %G%"
+literal|"@(#)quit.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1617,6 +1617,11 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|char
+modifier|*
+name|tmpdir
+decl_stmt|;
 specifier|register
 name|int
 name|gotcha
@@ -1856,7 +1861,7 @@ name|strcpy
 argument_list|(
 name|tempname
 argument_list|,
-name|_PATH_TMP
+name|tmpdir
 argument_list|)
 expr_stmt|;
 name|strcat

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.24 (Berkeley) %G%"
+literal|"@(#)fio.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,11 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|extern
+name|char
+modifier|*
+name|tmpdir
+decl_stmt|;
 specifier|register
 name|int
 name|c
@@ -132,7 +137,7 @@ name|linebuf
 argument_list|,
 literal|"%s/mail.XXXXXX"
 argument_list|,
-name|_PATH_TMP
+name|tmpdir
 argument_list|)
 expr_stmt|;
 if|if
