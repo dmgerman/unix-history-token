@@ -305,6 +305,17 @@ name|TCP_MSS
 value|512
 end_define
 
+begin_comment
+comment|/*  * Default maximum segment size for TCP6.  * With an IP6 MSS of 1280, this is 1220,  * but 1024 is probably more convenient. (xxx kazu in doubt)  * This should be defined as MIN(1024, IP6_MSS - sizeof (struct tcpip6hdr))  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP6_MSS
+value|1024
+end_define
+
 begin_define
 define|#
 directive|define

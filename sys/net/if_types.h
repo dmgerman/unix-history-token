@@ -533,6 +533,20 @@ begin_comment
 comment|/* Proprietary Multiplexing */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFT_GIF
+value|0x37
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_FAITH
+value|0x38
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|MINCLSIZE
-value|(MHLEN + MLEN)
+value|(MHLEN + 1)
 end_define
 
 begin_comment
@@ -400,6 +400,50 @@ begin_comment
 comment|/* protocol-specific */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_PROTO2
+value|0x0010
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO3
+value|0x0020
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO4
+value|0x0040
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PROTO5
+value|0x0080
+end_define
+
+begin_comment
+comment|/* protocol-specific */
+end_comment
+
 begin_comment
 comment|/* mbuf pkthdr flags, also in m_flags */
 end_comment
@@ -445,7 +489,7 @@ begin_define
 define|#
 directive|define
 name|M_COPYFLAGS
-value|(M_PKTHDR|M_EOR|M_PROTO1|M_BCAST|M_MCAST)
+value|(M_PKTHDR|M_EOR|M_PROTO1|M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_BCAST|M_MCAST|M_FRAG)
 end_define
 
 begin_comment

@@ -689,6 +689,10 @@ name|tcps_rcvbadoff
 decl_stmt|;
 comment|/* packets received with bad offset */
 name|u_long
+name|tcps_rcvmemdrop
+decl_stmt|;
+comment|/* packets dropped for lack of memory */
+name|u_long
 name|tcps_rcvshort
 decl_stmt|;
 comment|/* packets received too short */
@@ -999,15 +1003,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPCTL_MAXID
+name|TCPCTL_V6MSSDFLT
 value|13
+end_define
+
+begin_comment
+comment|/* MSS default for IPv6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_MAXID
+value|14
 end_define
 
 begin_define
 define|#
 directive|define
 name|TCPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ 	{ "delacktime", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ 	{ "delacktime", CTLTYPE_INT }, \ 	{ "v6mssdflt", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef

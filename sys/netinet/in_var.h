@@ -639,6 +639,16 @@ begin_comment
 comment|/* KERNEL */
 end_comment
 
+begin_comment
+comment|/* INET6 stuff */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_var.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

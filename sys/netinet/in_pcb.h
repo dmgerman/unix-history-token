@@ -768,6 +768,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|in_pcbremlists
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+name|inp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|prison_xinpcb
 name|__P

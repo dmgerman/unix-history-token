@@ -127,21 +127,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|in_pcbremlists
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|inpcb
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|in_rtchange
 name|__P
 argument_list|(
@@ -4208,7 +4193,6 @@ comment|/*  * Remove PCB from various lists.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|in_pcbremlists
 parameter_list|(

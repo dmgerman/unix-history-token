@@ -159,6 +159,10 @@ name|udps_badsum
 decl_stmt|;
 comment|/* checksum error */
 name|u_long
+name|udps_nosum
+decl_stmt|;
+comment|/* no checksum */
+name|u_long
 name|udps_badlen
 decl_stmt|;
 comment|/* data length larger than packet */
@@ -191,6 +195,10 @@ name|u_long
 name|udps_fastout
 decl_stmt|;
 comment|/* output packets on fast path */
+comment|/* of no socket on port, arrived as multicast */
+name|u_long
+name|udps_noportmcast
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -293,8 +301,45 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
+name|inpcbhead
+name|udb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
 name|inpcbinfo
 name|udbinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|udp_sendspace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|udp_recvspace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|udpstat
+name|udpstat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|log_in_vain
 decl_stmt|;
 end_decl_stmt
 
@@ -340,6 +385,39 @@ name|mbuf
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|udp_notify
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+name|inp
+operator|,
+name|int
+name|errno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|udp_shutdown
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so
 operator|)
 argument_list|)
 decl_stmt|;

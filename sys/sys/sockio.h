@@ -369,6 +369,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCALIFADDR
+value|_IOW('i', 27, struct if_laddrreq)
+end_define
+
+begin_comment
+comment|/* add IF addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGLIFADDR
+value|_IOWR('i', 28, struct if_laddrreq)
+end_define
+
+begin_comment
+comment|/* get IF addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCDLIFADDR
+value|_IOW('i', 29, struct if_laddrreq)
+end_define
+
+begin_comment
+comment|/* delete IF addr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCADDMULTI
 value|_IOW('i', 49, struct ifreq)
 end_define
@@ -452,6 +485,39 @@ end_define
 
 begin_comment
 comment|/* get net media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFPHYADDR
+value|_IOW('i', 70, struct ifaliasreq)
+end_define
+
+begin_comment
+comment|/* set gif addres */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFPSRCADDR
+value|_IOWR('i', 71, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get gif psrc addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFPDSTADDR
+value|_IOWR('i', 72, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get gif pdst addr */
 end_comment
 
 begin_define

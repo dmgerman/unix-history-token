@@ -49,6 +49,27 @@ value|{ \ 	(enaddr)[0] = 0x01; \ 	(enaddr)[1] = 0x00; \ 	(enaddr)[2] = 0x5e; \ 	
 end_define
 
 begin_comment
+comment|/*  * Macro to map an IP6 multicast address to an Ethernet multicast address.  * The high-order 16 bits of the Ethernet address are statically assigned,  * and the low-order 32 bits are taken from the low end of the IP6 address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_MAP_IPV6_MULTICAST
+parameter_list|(
+name|ip6addr
+parameter_list|,
+name|enaddr
+parameter_list|)
+define|\
+comment|/* struct	in6_addr *ip6addr; */
+define|\
+comment|/* u_char	enaddr[ETHER_ADDR_LEN]; */
+define|\
+value|{                                                                       \ 	(enaddr)[0] = 0x33;						\ 	(enaddr)[1] = 0x33;						\ 	(enaddr)[2] = ((u_char *)ip6addr)[12];				\ 	(enaddr)[3] = ((u_char *)ip6addr)[13];				\ 	(enaddr)[4] = ((u_char *)ip6addr)[14];				\ 	(enaddr)[5] = ((u_char *)ip6addr)[15];				\ }
+end_define
+
+begin_comment
 comment|/*  * Ethernet Address Resolution Protocol.  *  * See RFC 826 for protocol description.  Structure below is adapted  * to resolving internet addresses.  Field names used correspond to  * RFC 826.  */
 end_comment
 

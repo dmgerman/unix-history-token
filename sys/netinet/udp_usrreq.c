@@ -211,7 +211,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|log_in_vain
 init|=
@@ -271,7 +270,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|inpcbhead
 name|udb
@@ -308,7 +306,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|udpstat
 name|udpstat
@@ -383,23 +380,6 @@ operator|,
 expr|struct
 name|proc
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|udp_notify
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|inpcb
-operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1498,7 +1478,6 @@ comment|/*  * Notify a udp user of an asynchronous error;  * just wake up so tha
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|udp_notify
 parameter_list|(
@@ -2814,7 +2793,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|static
 name|u_long
 name|udp_sendspace
 init|=
@@ -2852,7 +2830,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_long
 name|udp_recvspace
 init|=
@@ -3487,7 +3464,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|udp_shutdown
 parameter_list|(

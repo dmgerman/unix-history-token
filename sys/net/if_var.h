@@ -103,6 +103,16 @@ comment|/* instantiation is preserved in the list */
 end_comment
 
 begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|ifprefixhead
+argument_list|,
+name|ifprefix
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
 name|ifmultihead
@@ -426,6 +436,11 @@ modifier|*
 name|if_poll_slowq
 decl_stmt|;
 comment|/* input queue for slow devices */
+name|struct
+name|ifprefixhead
+name|if_prefixhead
+decl_stmt|;
+comment|/* list of prefixes per if */
 block|}
 struct|;
 end_struct
@@ -977,6 +992,46 @@ comment|/* route installed */
 end_comment
 
 begin_comment
+comment|/*  * The prefix structure contains information about one prefix  * of an interface.  They are maintained by the different address families,  * are allocated and attached when an prefix or an address is set,  * and are linked together so all prfefixes for an interface can be located.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifprefix
+block|{
+name|struct
+name|sockaddr
+modifier|*
+name|ifpr_prefix
+decl_stmt|;
+comment|/* prefix of interface */
+name|struct
+name|ifnet
+modifier|*
+name|ifpr_ifp
+decl_stmt|;
+comment|/* back-pointer to interface */
+name|TAILQ_ENTRY
+argument_list|(
+name|ifprefix
+argument_list|)
+operator|*
+name|ifpr_list
+expr_stmt|;
+comment|/* queue macro glue */
+name|u_char
+name|ifpr_plen
+decl_stmt|;
+comment|/* prefix length in bits */
+name|u_char
+name|ifpr_type
+decl_stmt|;
+comment|/* protocol dependent prefix type */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Multicast address structure.  This is analogous to the ifaddr  * structure except that it keeps track of multicast addresses.  * Also, the reference count here is a count of requests for this  * address, not a count of pointers to this structure.  */
 end_comment
 
@@ -1044,6 +1099,16 @@ specifier|extern
 name|struct
 name|ifnethead
 name|ifnet
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ifnet
+modifier|*
+modifier|*
+name|ifindex2ifnet
 decl_stmt|;
 end_decl_stmt
 
@@ -1368,6 +1433,22 @@ name|__P
 argument_list|(
 operator|(
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|if_withname
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr
 operator|*
 operator|)
 argument_list|)

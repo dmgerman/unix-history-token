@@ -796,6 +796,70 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * bsd-api-new-02a: protocol-independent placeholder for socket addresses  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SS_MAXSIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_ALIGNSIZE
+value|(sizeof(int64_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD1SIZE
+value|(_SS_ALIGNSIZE - sizeof(u_char) * 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD2SIZE
+value|(_SS_MAXSIZE - sizeof(u_char) * 2 - \ 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
+end_define
+
+begin_struct
+struct|struct
+name|sockaddr_storage
+block|{
+name|u_char
+name|__ss_len
+decl_stmt|;
+comment|/* address length */
+name|u_char
+name|__ss_family
+decl_stmt|;
+comment|/* address family */
+name|char
+name|__ss_pad1
+index|[
+name|_SS_PAD1SIZE
+index|]
+decl_stmt|;
+name|int64_t
+name|__ss_align
+decl_stmt|;
+comment|/* force desired structure storage alignment */
+name|char
+name|__ss_pad2
+index|[
+name|_SS_PAD2SIZE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Protocol families, same as address families for now.  */
 end_comment
 
@@ -829,6 +893,13 @@ define|#
 directive|define
 name|PF_INET
 value|AF_INET
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_INET6
+value|AF_INET6
 end_define
 
 begin_define
@@ -1382,6 +1453,20 @@ value|((u_char *)((cmsg) + 1))
 end_define
 
 begin_comment
+comment|/*  * Alignment requirement for CMSG struct manipulation.  * This is different from ALIGN() defined in ARCH/include/param.h.  * XXX think again carefully about architecture dependencies.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMSG_ALIGN
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n) + 3)& ~3)
+end_define
+
+begin_comment
 comment|/* given pointer to struct cmsghdr, return pointer to next cmsghdr */
 end_comment
 
@@ -1395,7 +1480,7 @@ parameter_list|,
 name|cmsg
 parameter_list|)
 define|\
-value|(((caddr_t)(cmsg) + (cmsg)->cmsg_len + sizeof(struct cmsghdr)> \ 	    (mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + ALIGN((cmsg)->cmsg_len)))
+value|(((caddr_t)(cmsg) + (cmsg)->cmsg_len + sizeof(struct cmsghdr)> \ 	    (mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + CMSG_ALIGN((cmsg)->cmsg_len)))
 end_define
 
 begin_define
@@ -1406,6 +1491,26 @@ parameter_list|(
 name|mhdr
 parameter_list|)
 value|((struct cmsghdr *)(mhdr)->msg_control)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMSG_SPACE
+parameter_list|(
+name|l
+parameter_list|)
+value|(CMSG_ALIGN(sizeof(struct cmsghdr)) + CMSG_ALIGN(l))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMSG_LEN
+parameter_list|(
+name|l
+parameter_list|)
+value|(CMSG_ALIGN(sizeof(struct cmsghdr)) + (l))
 end_define
 
 begin_comment
@@ -1939,6 +2044,22 @@ operator|,
 name|int
 operator|,
 name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pfctlinput
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|sockaddr
 operator|*
 operator|)
 argument_list|)

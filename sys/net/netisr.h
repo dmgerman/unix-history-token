@@ -174,6 +174,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NETISR_IPV6
+value|28
+end_define
+
+begin_comment
+comment|/* same as AF_INET6 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NETISR_NATM
 value|29
 end_define

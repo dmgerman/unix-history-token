@@ -37,6 +37,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPPROTO_HOPOPTS
+value|0
+end_define
+
+begin_comment
+comment|/* IP6 hop-by-hop options */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPPROTO_ICMP
 value|1
 end_define
@@ -70,12 +81,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPPROTO_IPIP
+name|IPPROTO_IPV4
 value|4
 end_define
 
 begin_comment
-comment|/* IP encapsulation in IP */
+comment|/* IPv4 encapsulation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IPIP
+value|IPPROTO_IPV4
+end_define
+
+begin_comment
+comment|/* for compatibility */
 end_comment
 
 begin_define
@@ -466,12 +488,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPPROTO_SIP
+name|IPPROTO_IPV6
 value|41
 end_define
 
 begin_comment
-comment|/* Simple Internet Protocol */
+comment|/* IP6 header */
 end_comment
 
 begin_define
@@ -488,23 +510,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPPROTO_SIPSR
+name|IPPROTO_ROUTING
 value|43
 end_define
 
 begin_comment
-comment|/* SIP Source Route */
+comment|/* IP6 routing header */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IPPROTO_SIPFRAG
+name|IPPROTO_FRAGMENT
 value|44
 end_define
 
 begin_comment
-comment|/* SIP Fragment */
+comment|/* IP6 fragmentation header */
 end_comment
 
 begin_define
@@ -570,7 +592,7 @@ value|50
 end_define
 
 begin_comment
-comment|/* SIPP Encap Sec. Payload */
+comment|/* IP6 Encap Sec. Payload */
 end_comment
 
 begin_define
@@ -581,7 +603,7 @@ value|51
 end_define
 
 begin_comment
-comment|/* SIPP Auth Header */
+comment|/* IP6 Auth Header */
 end_comment
 
 begin_define
@@ -618,7 +640,40 @@ comment|/* Next Hop Resolution */
 end_comment
 
 begin_comment
-comment|/* 55-60: Unassigned */
+comment|/* 55-57: Unassigned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_ICMPV6
+value|58
+end_define
+
+begin_comment
+comment|/* ICMP6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_NONE
+value|59
+end_define
+
+begin_comment
+comment|/* IP6 no next header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_DSTOPTS
+value|60
+end_define
+
+begin_comment
+comment|/* IP6 destination option */
 end_comment
 
 begin_define
@@ -1061,8 +1116,30 @@ begin_comment
 comment|/* GMTP*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_IPCOMP
+value|108
+end_define
+
+begin_comment
+comment|/* payload compression (IPComp) */
+end_comment
+
 begin_comment
 comment|/* 101-254: Partly Unassigned */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_PIM
+value|103
+end_define
+
+begin_comment
+comment|/* Protocol Independent Mcast */
 end_comment
 
 begin_define
@@ -1111,6 +1188,17 @@ define|#
 directive|define
 name|IPPROTO_MAX
 value|256
+end_define
+
+begin_comment
+comment|/* last return value of *_input(), meaning "all job for this pkt is done".  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_DONE
+value|257
 end_define
 
 begin_comment
@@ -1496,6 +1584,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|INET_ADDRSTRLEN
+value|16
+end_define
+
 begin_comment
 comment|/*  * Structure used to describe IP options.  * Used to store options internally, to pass them to a process,  * or to restore options retrieved earlier.  * The ip_dst is used for the first-hop gateway when using a source route  * (this gets put into the header proper).  */
 end_comment
@@ -1744,6 +1839,32 @@ begin_comment
 comment|/* bool; receive reception if w/dgram */
 end_comment
 
+begin_comment
+comment|/* for IPSEC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_IPSEC_POLICY
+value|21
+end_define
+
+begin_comment
+comment|/* int; set/get security policy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FAITH
+value|22
+end_define
+
+begin_comment
+comment|/* bool; accept FAITH'ed connections */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1958,7 +2079,7 @@ begin_define
 define|#
 directive|define
 name|IPPROTO_MAXID
-value|(IPPROTO_IDP + 1)
+value|(IPPROTO_ESP + 1)
 end_define
 
 begin_comment
@@ -2144,8 +2265,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPCTL_MAXID
+name|IPCTL_KEEPFAITH
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPCTL_GIF_TTL
+value|16
+end_define
+
+begin_comment
+comment|/* default TTL for gif encap packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPCTL_MAXID
+value|17
 end_define
 
 begin_define
@@ -2154,6 +2293,16 @@ directive|define
 name|IPCTL_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "ttl", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "rtexpire", CTLTYPE_INT }, \ 	{ "rtminexpire", CTLTYPE_INT }, \ 	{ "rtmaxcache", CTLTYPE_INT }, \ 	{ "sourceroute", CTLTYPE_INT }, \  	{ "directed-broadcast", CTLTYPE_INT }, \ 	{ "intr-queue-maxlen", CTLTYPE_INT }, \ 	{ "intr-queue-drops", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "accept_sourceroute", CTLTYPE_INT }, \ 	{ "fastforwarding", CTLTYPE_INT }, \ }
 end_define
+
+begin_comment
+comment|/* INET6 stuff */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6.h>
+end_include
 
 begin_ifdef
 ifdef|#

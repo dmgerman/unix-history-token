@@ -295,6 +295,10 @@ name|u_long
 name|ips_notmember
 decl_stmt|;
 comment|/* multicasts for unregistered grps */
+name|u_long
+name|ips_nogif
+decl_stmt|;
+comment|/* no match gif found */
 block|}
 struct|;
 end_struct

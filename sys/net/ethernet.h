@@ -199,6 +199,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ETHERTYPE_IPV6
+value|0x86dd
+end_define
+
+begin_comment
+comment|/* IPv6 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ETHERTYPE_LOOPBACK
 value|0x9000
 end_define

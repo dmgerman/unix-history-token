@@ -195,6 +195,30 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_IP6OPT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* for INET6 */
+end_comment
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_IP6NDP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* for INET6 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
