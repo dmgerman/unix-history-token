@@ -7761,8 +7761,12 @@ operator|(
 name|kn
 operator|->
 name|kn_data
-operator|>
-literal|0
+operator|>=
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_lowat
 operator|)
 return|;
 block|}
