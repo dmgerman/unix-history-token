@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 M. Warner Losh.  All Rights Reserved.  * Copyright (c) 1997 Ted Faber All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Ted Faber.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2000, 2002 M. Warner Losh.  All Rights Reserved.  * Copyright (c) 1997 Ted Faber All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Ted Faber.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -367,6 +367,47 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pcic_ti12xx_enable_pci_clock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pcic.ti12xx_enable_pci_clock"
+argument_list|,
+operator|&
+name|pcic_ti12xx_enable_pci_clock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pcic
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ti12xx_enable_pci_clock
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pcic_ti12xx_enable_pci_clock
+argument_list|,
+literal|0
+argument_list|,
+literal|"Some TI-12xx parts need to have the PCI clock enabled.  These designs do\n\ not provide a clock themselves.  Most of the reference boards have the\n\ required oscillator parts, so the number of machines that needs this to be\n\ set is vanishingly small."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -443,21 +484,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|pcic_intr_way_t
-name|pcic_pci_pd67xx_func
+name|pcic_pci_pd6729_func
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|pcic_intr_way_t
-name|pcic_pci_pd67xx_csc
+name|pcic_pci_pd6729_csc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|pcic_init_t
-name|pcic_pci_pd67xx_init
+name|pcic_pci_pd6729_init
 decl_stmt|;
 end_decl_stmt
 
@@ -599,16 +640,16 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|pcic_chip
-name|pcic_pci_pd67xx_chip
+name|pcic_pci_pd6729_chip
 init|=
 block|{
-name|pcic_pci_pd67xx_func
+name|pcic_pci_pd6729_func
 block|,
-name|pcic_pci_pd67xx_csc
+name|pcic_pci_pd6729_csc
 block|,
 name|pcic_pci_gen_mapirq
 block|,
-name|pcic_pci_pd67xx_init
+name|pcic_pci_pd6729_init
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -770,7 +811,7 @@ block|,
 name|PCIC_DF_POWER
 block|,
 operator|&
-name|pcic_pci_pd67xx_chip
+name|pcic_pci_pd6729_chip
 block|}
 block|,
 block|{
@@ -783,7 +824,7 @@ block|,
 name|PCIC_PD_POWER
 block|,
 operator|&
-name|pcic_pci_pd67xx_chip
+name|pcic_pci_pd6729_chip
 block|}
 block|,
 block|{
@@ -1788,7 +1829,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcic_pci_pd67xx_func
+name|pcic_pci_pd6729_func
 parameter_list|(
 name|struct
 name|pcic_slot
@@ -1848,7 +1889,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pcic_pci_pd67xx_csc
+name|pcic_pci_pd6729_csc
 parameter_list|(
 name|struct
 name|pcic_slot
@@ -1908,7 +1949,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pcic_pci_pd67xx_init
+name|pcic_pci_pd6729_init
 parameter_list|(
 name|device_t
 name|dev
@@ -1924,25 +1965,35 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+comment|/* 	 * Tell the chip to do its routing thing. 	 */
+name|pcic_pci_pd6729_func
+argument_list|(
+operator|&
 name|sc
 operator|->
-name|csc_route
-operator|==
-name|pcic_iw_pci
-operator|||
+name|slots
+index|[
+literal|0
+index|]
+argument_list|,
 name|sc
 operator|->
 name|func_route
-operator|==
-name|pcic_iw_pci
-condition|)
-name|device_printf
+argument_list|)
+expr_stmt|;
+name|pcic_pci_pd6729_csc
 argument_list|(
-name|dev
+operator|&
+name|sc
+operator|->
+name|slots
+index|[
+literal|0
+index|]
 argument_list|,
-literal|"PD67xx maybe broken for PCI routing.\n"
+name|sc
+operator|->
+name|csc_route
 argument_list|)
 expr_stmt|;
 block|}
@@ -2356,7 +2407,7 @@ name|sc
 operator|->
 name|dev
 decl_stmt|;
-comment|/* 	 * The TI-1130 (and 1030 and 1131) have a different interrupt 	 * routing control than the newer cards.  assume we're not 	 * routing PCI, but enable as necessary when we find someone 	 * uses PCI interrupts.  In order to get any pci interrupts, 	 * PCI_IRQ_ENA (bit 5) must be set.  If either PCI_IREQ (bit 	 * 4) or PCI_CSC (bit 3) are set, then set bit 5 at the same 	 * time, since setting them enables the PCI interrupt routing. 	 * 	 * It also appears necessary to set the function routing bit 	 * in the bridge control register, but cardbus_init does that 	 * for us. 	 */
+comment|/* 	 * The TI-1130 (and 1030 and 1131) have a different interrupt 	 * routing control than the newer chips.  assume we're not 	 * routing either csc or func interrupts via PCI, but enable 	 * as necessary when we find someone uses PCI interrupts.  In 	 * order to get any pci interrupts, PCI_IRQ_ENA (bit 5) must 	 * be set.  If either PCI_IREQ (bit 4) or PCI_CSC (bit 3) are 	 * set, then set bit 5 at the same time, since setting them 	 * enables the PCI interrupt routing. 	 * 	 * It also appears necessary to set the function routing bit 	 * in the bridge control register, but cardbus_init does that 	 * for us. 	 */
 name|cardcntl
 operator|=
 name|pci_read_config
@@ -2623,13 +2674,28 @@ operator||=
 name|TI113X_SYSCNTL_INTRTIE
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 		 * I've had reports that we need the pci clock enabled, 		 * but I'm unsure how wise this is in general, so it 		 * is ifdef'd out at the moment 		 */
-block|syscntl |= TI12XX_SYSCNTL_PCI_CLOCK; 		pci_write_config(dev, TI113X_PCI_SYSTEM_CONTROL, syscntl, 4);
-endif|#
-directive|endif
+comment|/* 		 * I've had reports that we need the pci clock enabled, 		 * provide a hook to do so.  The number of cards that 		 * require this is quite small. 		 */
+if|if
+condition|(
+name|pcic_ti12xx_enable_pci_clock
+condition|)
+block|{
+name|syscntl
+operator||=
+name|TI12XX_SYSCNTL_PCI_CLOCK
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|TI113X_PCI_SYSTEM_CONTROL
+argument_list|,
+name|syscntl
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * Some PCI add-in cards don't have good EEPROMs on them, 		 * so they get this MUX register wrong.  The MUX register 		 * defaults to 0, which is usually wrong for this register, 		 * so we initialize it to make sense. 		 * 		 * We don't bother to turn it off in the ISA case since it 		 * is an initialization issue. 		 * 		 * A few weird TI bridges don't have MFUNC, so filter 		 * those out too. 		 */
 if|if
 condition|(
