@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	8.1 (Berkeley) %G%"
+literal|"@(#)finger.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -703,7 +703,11 @@ name|nargv
 operator|=
 name|malloc
 argument_list|(
+operator|(
 name|argc
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
