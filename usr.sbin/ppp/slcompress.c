@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.20 1998/08/26 17:39:37 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.21 1999/01/28 01:56:34 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_include
@@ -2183,7 +2183,7 @@ name|th_seq
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*    * At this point, cp points to the first byte of data in the packet.  If    * we're not aligned on a 4-byte boundary, copy the data down so the ip&    * tcp headers will be aligned.  Then back up cp by the tcp/ip header    * length to make room for the reconstructed header (we assume the packet    * we were handed has enough space to prepend 128 bytes of header).  Adjust    * the length to account for the new header& fill in the IP total length.    */
+comment|/*    * At this point, cp points to the first byte of data in the packet.    * Back up cp by the tcp/ip header length to make room for the    * reconstructed header (we assume the packet we were handed has enough    * space to prepend 128 bytes of header).  Adjust the length to account    * for the new header& fill in the IP total length.    */
 name|len
 operator|-=
 operator|(
@@ -2203,67 +2203,6 @@ comment|/*      * we must have dropped some characters (crc should detect this b
 goto|goto
 name|bad
 goto|;
-ifdef|#
-directive|ifdef
-name|notdef
-if|if
-condition|(
-operator|(
-name|int
-operator|)
-name|cp
-operator|&
-literal|3
-condition|)
-block|{
-if|if
-condition|(
-name|len
-operator|>
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|bcopy
-argument_list|(
-name|cp
-argument_list|,
-call|(
-name|caddr_t
-call|)
-argument_list|(
-operator|(
-name|int
-operator|)
-name|cp
-operator|&
-operator|~
-literal|3
-argument_list|)
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|cp
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|(
-operator|(
-name|int
-operator|)
-name|cp
-operator|&
-operator|~
-literal|3
-operator|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|cp
 operator|-=
 name|cs
@@ -2317,7 +2256,10 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|cp
+operator|&
+name|cs
+operator|->
+name|cs_ip
 decl_stmt|;
 for|for
 control|(
