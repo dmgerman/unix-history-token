@@ -139,6 +139,56 @@ define|\
 value|.size	name, . - name
 end_define
 
+begin_comment
+comment|/*  * If the kernel can be located above 4G, setx needs to be used to load  * symbol values, otherwise set is sufficient.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HIGH_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SET
+parameter_list|(
+name|sym
+parameter_list|,
+name|tmp
+parameter_list|,
+name|dst
+parameter_list|)
+define|\
+value|setx sym, tmp, dst
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SET
+parameter_list|(
+name|sym
+parameter_list|,
+name|tmp
+parameter_list|,
+name|dst
+parameter_list|)
+define|\
+value|set sym, dst
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
