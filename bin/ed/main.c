@@ -3782,6 +3782,7 @@ operator|=
 name|get_keyword
 argument_list|()
 expr_stmt|;
+break|break;
 else|#
 directive|else
 name|errmsg
@@ -3793,7 +3794,6 @@ name|ERR
 return|;
 endif|#
 directive|endif
-break|break;
 case|case
 literal|'z'
 case|:
