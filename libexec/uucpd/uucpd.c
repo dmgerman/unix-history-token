@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uucpd.c,v 1.14 1997/12/04 07:20:45 charnier Exp $"
+literal|"$Id: uucpd.c,v 1.15 1998/06/30 15:19:51 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -672,6 +672,8 @@ argument_list|(
 literal|60
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|printf
 argument_list|(
 literal|"login: "
@@ -681,6 +683,10 @@ name|fflush
 argument_list|(
 name|stdout
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -710,6 +716,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+do|while
+condition|(
+name|user
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+do|;
 comment|/* truncate username to LOGNAMESIZE characters */
 name|user
 index|[
@@ -792,6 +809,10 @@ name|fflush
 argument_list|(
 name|stdout
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
