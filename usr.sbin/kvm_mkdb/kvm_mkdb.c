@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)kvm_mkdb.c	8.3 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
@@ -129,6 +135,34 @@ operator|(
 name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|HASHINFO
+name|openinfo
+init|=
+block|{
+literal|4096
+block|,
+comment|/* bsize */
+literal|128
+block|,
+comment|/* ffactor */
+literal|1024
+block|,
+comment|/* nelem */
+literal|2048
+operator|*
+literal|1024
+block|,
+comment|/* cachesize */
+name|NULL
+block|,
+comment|/* hash() */
+literal|0
+comment|/* lorder */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -175,9 +209,6 @@ name|dbname
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|;
-name|HASHINFO
-name|hdefault
 decl_stmt|;
 while|while
 condition|(
@@ -315,40 +346,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* don't handicap db/hash by using the defaults... */
-name|memset
-argument_list|(
-operator|&
-name|hdefault
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-name|hdefault
-argument_list|)
-expr_stmt|;
-name|hdefault
-operator|.
-name|bsize
-operator|=
-name|getpagesize
-argument_list|()
-expr_stmt|;
-name|hdefault
-operator|.
-name|cachesize
-operator|=
-literal|50
-operator|*
-name|getpagesize
-argument_list|()
-expr_stmt|;
-name|hdefault
-operator|.
-name|nelem
-operator|=
-literal|1000
-expr_stmt|;
 name|db
 operator|=
 name|dbopen
@@ -374,7 +371,7 @@ argument_list|,
 name|DB_HASH
 argument_list|,
 operator|&
-name|hdefault
+name|openinfo
 argument_list|)
 expr_stmt|;
 if|if
