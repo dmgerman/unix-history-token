@@ -11480,11 +11480,9 @@ name|mountlist
 argument_list|)
 condition|)
 block|{
-name|free
+name|ExFreePool
 argument_list|(
 name|fh
-argument_list|,
-name|M_TEMP
 argument_list|)
 expr_stmt|;
 operator|*
@@ -11532,11 +11530,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|ExFreePool
 argument_list|(
 name|fh
-argument_list|,
-name|M_TEMP
 argument_list|)
 expr_stmt|;
 operator|*
