@@ -459,7 +459,40 @@ comment|/* Increment spinblock count. */
 name|_spinblock_count
 operator|++
 expr_stmt|;
-comment|/*FALLTHROUGH*/
+comment|/* No timeouts for these states. */
+name|curthread
+operator|->
+name|wakeup_time
+operator|.
+name|tv_sec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|curthread
+operator|->
+name|wakeup_time
+operator|.
+name|tv_nsec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Restart the time slice. */
+name|curthread
+operator|->
+name|slice_usec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Insert into the work queue. */
+name|PTHREAD_WORKQ_INSERT
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|PS_DEADLOCK
 case|:
@@ -828,7 +861,12 @@ argument_list|(
 name|pthread
 argument_list|)
 expr_stmt|;
-name|PTHREAD_NEW_STATE
+name|PTHREAD_PRIOQ_INSERT_TAIL
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
+name|PTHREAD_SET_STATE
 argument_list|(
 name|pthread
 argument_list|,
