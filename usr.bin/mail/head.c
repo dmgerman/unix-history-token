@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)head.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)head.c	8.2 (Berkeley) 4/20/95";
 endif|#
 directive|endif
 end_endif
@@ -589,6 +589,10 @@ condition|(
 operator|!
 name|islower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 operator|++
@@ -608,6 +612,10 @@ condition|(
 operator|!
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 operator|++
@@ -644,6 +652,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 operator|++
@@ -668,6 +680,10 @@ operator|&&
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -689,6 +705,10 @@ condition|(
 operator|!
 name|ispunct
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 operator|++
@@ -713,6 +733,10 @@ operator|&&
 operator|!
 name|ispunct
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)

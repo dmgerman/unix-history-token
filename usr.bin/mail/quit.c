@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)quit.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)quit.c	8.2 (Berkeley) 4/28/95";
 endif|#
 directive|endif
 end_endif
@@ -290,16 +290,13 @@ name|APPEND
 operator|(
 name|void
 operator|)
-name|fseek
+name|fseeko
 argument_list|(
 name|fbuf
 argument_list|,
-operator|(
-name|long
-operator|)
 name|mailsize
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 while|while
@@ -1276,6 +1273,7 @@ argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1284,7 +1282,6 @@ argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-block|}
 name|trunc
 argument_list|(
 name|obuf
@@ -2167,16 +2164,13 @@ block|}
 operator|(
 name|void
 operator|)
-name|fseek
+name|fseeko
 argument_list|(
 name|ibuf
 argument_list|,
-operator|(
-name|long
-operator|)
 name|mailsize
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 while|while
