@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -217,9 +217,17 @@ condition|(
 name|v
 operator|+
 name|c
-operator|>=
+operator|<=
+name|btoc
+argument_list|(
 name|physmem
+argument_list|)
 condition|)
+name|v
+operator|+=
+name|MACH_CACHED_MEMORY_ADDR
+expr_stmt|;
+else|else
 return|return
 operator|(
 name|EFAULT
@@ -229,14 +237,10 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
-call|(
+operator|(
 name|caddr_t
-call|)
-argument_list|(
-name|MACH_CACHED_MEMORY_ADDR
-operator|+
+operator|)
 name|v
-argument_list|)
 argument_list|,
 operator|(
 name|int
