@@ -1526,10 +1526,8 @@ name|smb_unieol
 expr_stmt|;
 name|uniplen
 operator|=
-sizeof|sizeof
-argument_list|(
-name|smb_unieol
-argument_list|)
+literal|0
+comment|/* sizeof(smb_unieol) */
 expr_stmt|;
 block|}
 name|smb_rq_wstart
