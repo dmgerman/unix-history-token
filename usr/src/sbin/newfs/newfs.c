@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.7 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2500,6 +2500,10 @@ name|blk
 index|[
 literal|1024
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 comment|/* 		 * Make name for 'c' partition. 		 */
 name|strcpy
