@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.9 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,14 @@ specifier|register
 name|char
 modifier|*
 name|mode
+decl_stmt|;
+name|mode_t
+modifier|*
+name|set
+decl_stmt|,
+modifier|*
+name|setmode
+argument_list|()
 decl_stmt|;
 name|struct
 name|stat
@@ -281,13 +289,15 @@ else|else
 block|{
 if|if
 condition|(
+operator|!
+operator|(
+name|set
+operator|=
 name|setmode
 argument_list|(
 name|mode
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|)
 condition|)
 block|{
 operator|(
@@ -425,6 +435,8 @@ name|omode
 else|:
 name|getmode
 argument_list|(
+name|set
+argument_list|,
 name|p
 operator|->
 name|statb
@@ -507,6 +519,8 @@ name|argv
 argument_list|,
 name|getmode
 argument_list|(
+name|set
+argument_list|,
 name|sb
 operator|.
 name|st_mode

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.21 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,6 +184,14 @@ name|from_sb
 decl_stmt|,
 name|to_sb
 decl_stmt|;
+name|mode_t
+modifier|*
+name|set
+decl_stmt|,
+modifier|*
+name|setmode
+argument_list|()
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -239,13 +247,15 @@ literal|'m'
 case|:
 if|if
 condition|(
+operator|!
+operator|(
+name|set
+operator|=
 name|setmode
 argument_list|(
 name|optarg
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|)
 condition|)
 block|{
 operator|(
@@ -268,6 +278,8 @@ name|mode
 operator|=
 name|getmode
 argument_list|(
+name|set
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
