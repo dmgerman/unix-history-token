@@ -7925,7 +7925,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|isalnum
+name|isprint
 argument_list|(
 name|p
 index|[
