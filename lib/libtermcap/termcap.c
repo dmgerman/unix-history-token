@@ -284,22 +284,36 @@ operator|)
 condition|)
 block|{
 comment|/* set up default */
-name|p
-operator|+=
-name|strlen
-argument_list|(
-name|home
-argument_list|)
-expr_stmt|;
-comment|/* path, looking in */
-name|strcpy
+name|strncpy
 argument_list|(
 name|pathbuf
 argument_list|,
 name|home
+argument_list|,
+name|PBUFSIZ
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* $HOME first */
+name|pathbuf
+index|[
+name|PBUFSIZ
+operator|-
+literal|2
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* -2 because we add a slash */
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|pathbuf
+argument_list|)
+expr_stmt|;
+comment|/* path, looking in */
 operator|*
 name|p
 operator|++
@@ -337,6 +351,37 @@ name|PBUFSIZ
 argument_list|)
 expr_stmt|;
 comment|/* still can be tokenized */
+name|pathbuf
+index|[
+name|PBUFSIZ
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* XXX Should really be issetguid(), but we don't have that */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|!=
+name|geteuid
+argument_list|()
+operator|||
+name|getgid
+argument_list|()
+operator|!=
+name|getegid
+argument_list|()
+condition|)
+name|strcpy
+argument_list|(
+name|pathbuf
+argument_list|,
+name|_PATH_DEF_SEC
+argument_list|)
+expr_stmt|;
 operator|*
 name|fname
 operator|++
