@@ -1033,7 +1033,7 @@ return|;
 comment|/* Note that we're now upgrading */
 name|variable_set2
 argument_list|(
-name|SYSTEM_INSTALLED
+name|SYSTEM_STATE
 argument_list|,
 literal|"upgrade"
 argument_list|)
@@ -1202,8 +1202,8 @@ literal|"cp -pr /etc/* %s"
 argument_list|,
 name|saved_etc
 argument_list|)
-block|)
-block|{ 	}
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|file_readable
@@ -1298,7 +1298,9 @@ expr_stmt|;
 if|if
 condition|(
 name|installFixup
-argument_list|()
+argument_list|(
+literal|"upgrade"
+argument_list|)
 operator|==
 name|RET_FAIL
 condition|)
@@ -1320,7 +1322,9 @@ expr_stmt|;
 if|if
 condition|(
 name|installFinal
-argument_list|()
+argument_list|(
+literal|"upgrade"
+argument_list|)
 operator|==
 name|RET_FAIL
 condition|)
