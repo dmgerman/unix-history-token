@@ -57,6 +57,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Look up an environment variable by name.  */
+end_comment
+
 begin_function
 name|char
 modifier|*
@@ -163,6 +167,78 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Return a string value from an environment variable.  */
+end_comment
+
+begin_function
+name|int
+name|getenv_string
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
+name|tmp
+operator|=
+name|getenv
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+block|{
+name|strncpy
+argument_list|(
+name|data
+argument_list|,
+name|tmp
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|data
+index|[
+name|size
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+else|else
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return an integer value from an environment variable.  */
 end_comment
 
@@ -223,7 +299,7 @@ comment|/*  * Return a quad_t value from an environment variable.  */
 end_comment
 
 begin_function
-name|quad_t
+name|int
 name|getenv_quad
 parameter_list|(
 specifier|const
