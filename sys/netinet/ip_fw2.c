@@ -431,7 +431,7 @@ name|enable
 argument_list|,
 name|CTLFLAG_RW
 operator||
-name|CTLFLAG_SECURE
+name|CTLFLAG_SECURE3
 argument_list|,
 operator|&
 name|fw_enable
@@ -475,7 +475,7 @@ name|one_pass
 argument_list|,
 name|CTLFLAG_RW
 operator||
-name|CTLFLAG_SECURE
+name|CTLFLAG_SECURE3
 argument_list|,
 operator|&
 name|fw_one_pass
@@ -519,7 +519,7 @@ name|verbose
 argument_list|,
 name|CTLFLAG_RW
 operator||
-name|CTLFLAG_SECURE
+name|CTLFLAG_SECURE3
 argument_list|,
 operator|&
 name|fw_verbose

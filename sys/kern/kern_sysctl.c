@@ -4911,6 +4911,8 @@ name|int
 name|error
 decl_stmt|,
 name|indx
+decl_stmt|,
+name|lvl
 decl_stmt|;
 name|error
 operator|=
@@ -5016,6 +5018,18 @@ name|CTLFLAG_SECURE
 operator|)
 condition|)
 block|{
+name|lvl
+operator|=
+operator|(
+name|oid
+operator|->
+name|oid_kind
+operator|&
+name|CTLMASK_SECURE
+operator|)
+operator|>>
+name|CTLSHIFT_SECURE
+expr_stmt|;
 name|error
 operator|=
 name|securelevel_gt
@@ -5026,7 +5040,7 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-literal|0
+name|lvl
 argument_list|)
 expr_stmt|;
 if|if

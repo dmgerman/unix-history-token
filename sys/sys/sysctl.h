@@ -268,6 +268,49 @@ begin_comment
 comment|/* Skip this sysctl when listing */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CTLMASK_SECURE
+value|0x00F00000
+end_define
+
+begin_comment
+comment|/* Secure level */
+end_comment
+
+begin_comment
+comment|/*  * Secure level.   Note that CTLFLAG_SECURE == CTLFLAG_SECURE1.    *  * Secure when the securelevel is raised to at least N.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLSHIFT_SECURE
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTLFLAG_SECURE1
+value|(CTLFLAG_SECURE | (0<< CTLSHIFT_SECURE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTLFLAG_SECURE2
+value|(CTLFLAG_SECURE | (1<< CTLSHIFT_SECURE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTLFLAG_SECURE3
+value|(CTLFLAG_SECURE | (2<< CTLSHIFT_SECURE))
+end_define
+
 begin_comment
 comment|/*  * USE THIS instead of a hardwired number from the categories below  * to get dynamically assigned sysctl entries using the linker-set  * technology. This is the way nearly all new sysctl variables should  * be implemented.  * e.g. SYSCTL_INT(_parent, OID_AUTO, name, CTLFLAG_RW,&variable, 0, "");  */
 end_comment
