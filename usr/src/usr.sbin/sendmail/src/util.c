@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.25 (Berkeley) %G%"
+literal|"@(#)util.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3283,10 +3283,6 @@ name|NULL
 expr_stmt|;
 while|while
 condition|(
-name|p
-operator|==
-name|NULL
-operator|&&
 operator|!
 name|feof
 argument_list|(
@@ -3317,23 +3313,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|!=
+name|NULL
+operator|||
 name|errno
-operator|==
+operator|!=
 name|EINTR
 condition|)
+break|break;
 name|clearerr
 argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|errno
-operator|==
-name|EBADF
-condition|)
-break|break;
 block|}
 comment|/* clear the event if it has not sprung */
 name|clrevent
