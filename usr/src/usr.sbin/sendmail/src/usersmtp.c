@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.8 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.9 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.8 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.9 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,11 +2320,7 @@ name|strcpy
 argument_list|(
 name|SmtpError
 argument_list|,
-operator|&
 name|SmtpReplyBuffer
-index|[
-literal|4
-index|]
 argument_list|)
 expr_stmt|;
 return|return
