@@ -278,7 +278,7 @@ name|SYSCTL_INT
 argument_list|(
 name|_machdep
 argument_list|,
-name|CPU_UNALIGNED_PRINT
+name|OID_AUTO
 argument_list|,
 name|print_usertrap
 argument_list|,
