@@ -2548,6 +2548,13 @@ comment|/* Reenable RTC updates and interrupts. */
 comment|/* XXX locking is needed for RTC access? */
 name|writertc
 argument_list|(
+name|RTC_STATUSA
+argument_list|,
+name|rtc_statusa
+argument_list|)
+expr_stmt|;
+name|writertc
+argument_list|(
 name|RTC_STATUSB
 argument_list|,
 name|RTCSB_HALT
