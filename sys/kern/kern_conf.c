@@ -517,6 +517,19 @@ name|int
 name|unit
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|unit
+operator|<=
+literal|0xffffff
+argument_list|,
+operator|(
+literal|"Invalid unit (%d) in unit2minor"
+operator|,
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
