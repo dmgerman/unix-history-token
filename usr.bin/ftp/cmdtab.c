@@ -461,7 +461,7 @@ name|char
 name|passivehelp
 index|[]
 init|=
-literal|"enter passive transfer mode"
+literal|"toggle passive transfer mode"
 decl_stmt|;
 end_decl_stmt
 
