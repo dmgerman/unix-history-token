@@ -1754,6 +1754,20 @@ operator|&
 name|_thread_gc_list
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_thr_atfork_list
+argument_list|)
+expr_stmt|;
+name|_pthread_mutex_init
+argument_list|(
+operator|&
+name|_thr_atfork_mutex
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the lock for temporary installation of signal 	 * handlers (to support sigwait() semantics) and for the 	 * process signal mask and pending signal sets. 	 */
 if|if
 condition|(
