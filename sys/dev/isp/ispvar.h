@@ -39,6 +39,23 @@ directive|include
 file|<dev/ic/ispmbox.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/ic/isp_target.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -55,6 +72,23 @@ include|#
 directive|include
 file|<dev/isp/ispmbox.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/isp/isp_target.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -73,6 +107,23 @@ directive|include
 file|"ispmbox.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"isp_target.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -89,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|10
+value|11
 end_define
 
 begin_comment
@@ -168,10 +219,10 @@ operator|,
 name|ispreq_t
 operator|*
 operator|,
-name|u_int8_t
+name|u_int16_t
 operator|*
 operator|,
-name|u_int8_t
+name|u_int16_t
 operator|)
 argument_list|)
 expr_stmt|;
@@ -368,6 +419,146 @@ value|(IS_FC(isp)? _ISP_FC_LUN(isp) : _ISP_SCSI_LUN(isp))
 end_define
 
 begin_comment
+comment|/*  * Macros to read, write ISP registers through bus specific code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_READ
+parameter_list|(
+name|isp
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|(*(isp)->isp_mdvec->dv_rd_reg)((isp), (reg))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_WRITE
+parameter_list|(
+name|isp
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|(*(isp)->isp_mdvec->dv_wr_reg)((isp), (reg), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_MBOXDMASETUP
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(*(isp)->isp_mdvec->dv_mbxdma)((isp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_DMASETUP
+parameter_list|(
+name|isp
+parameter_list|,
+name|xs
+parameter_list|,
+name|req
+parameter_list|,
+name|iptrp
+parameter_list|,
+name|optr
+parameter_list|)
+define|\
+value|(*(isp)->isp_mdvec->dv_dmaset)((isp), (xs), (req), (iptrp), (optr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_DMAFREE
+parameter_list|(
+name|isp
+parameter_list|,
+name|xs
+parameter_list|,
+name|hndl
+parameter_list|)
+define|\
+value|if ((isp)->isp_mdvec->dv_dmaclr) \ 	    (*(isp)->isp_mdvec->dv_dmaclr)((isp), (xs), (hndl))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_RESET0
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|if ((isp)->isp_mdvec->dv_reset0) (*(isp)->isp_mdvec->dv_reset0)((isp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_RESET1
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|if ((isp)->isp_mdvec->dv_reset1) (*(isp)->isp_mdvec->dv_reset1)((isp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_DUMPREGS
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|if ((isp)->isp_mdvec->dv_dregs) (*(isp)->isp_mdvec->dv_dregs)((isp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SETBITS
+parameter_list|(
+name|isp
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|(*(isp)->isp_mdvec->dv_wr_reg)((isp), (reg), ISP_READ((isp), (reg)) | (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_CLRBITS
+parameter_list|(
+name|isp
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|(*(isp)->isp_mdvec->dv_wr_reg)((isp), (reg), ISP_READ((isp), (reg))& ~(val))
+end_define
+
+begin_comment
 comment|/* this is the size of a queue entry (request and response) */
 end_comment
 
@@ -472,6 +663,19 @@ name|qlen
 parameter_list|)
 define|\
 value|((in == out)? (qlen - 1) : ((in> out)? \ 	((qlen - 1) - (in - out)) : (out - in - 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_ADD_REQUEST
+parameter_list|(
+name|isp
+parameter_list|,
+name|iptr
+parameter_list|)
+define|\
+value|ISP_WRITE(isp, INMAILBOX4, iptr), isp->isp_reqidx = iptr
 end_define
 
 begin_comment
@@ -1012,76 +1216,86 @@ name|struct
 name|isposinfo
 name|isp_osinfo
 decl_stmt|;
-comment|/* 	 * Pointer to bus specific data 	 */
+comment|/* 	 * Pointer to bus specific functions and data 	 */
 name|struct
 name|ispmdvec
 modifier|*
 name|isp_mdvec
 decl_stmt|;
-comment|/* 	 * Mostly nonvolatile state. 	 */
-name|u_int
-name|isp_clock
-range|:
-literal|8
-decl_stmt|,
-name|isp_confopts
-range|:
-literal|8
-decl_stmt|,
-name|isp_fast_mttr
-range|:
-literal|1
-decl_stmt|,
-range|:
-literal|1
-decl_stmt|,
-name|isp_used
-range|:
-literal|1
-decl_stmt|,
-name|isp_dblev
-range|:
-literal|3
-decl_stmt|,
-name|isp_dogactive
-range|:
-literal|1
-decl_stmt|,
-name|isp_bustype
-range|:
-literal|1
-decl_stmt|,
-comment|/* BUS Implementation */
-name|isp_type
-range|:
-literal|8
+comment|/* 	 * (Mostly) nonvolatile state. Board specific parameters 	 * may contain some volatile state (e.g., current loop state). 	 */
+name|void
+modifier|*
+name|isp_param
 decl_stmt|;
-comment|/* HBA Type and Revision */
+comment|/* type specific */
 name|u_int16_t
 name|isp_fwrev
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* Running F/W revision */
+comment|/* Loaded F/W revision */
 name|u_int16_t
 name|isp_romfw_rev
 index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* 'ROM' F/W revision */
+comment|/* PROM F/W revision */
 name|u_int16_t
 name|isp_maxcmds
 decl_stmt|;
-comment|/* max active I/O cmds */
-name|void
-modifier|*
-name|isp_param
+comment|/* max possible I/O cmds */
+name|u_int8_t
+name|isp_type
 decl_stmt|;
+comment|/* HBA Chip Type */
+name|u_int8_t
+name|isp_revision
+decl_stmt|;
+comment|/* HBA Chip H/W Revision */
+name|u_int32_t
+label|:
+literal|4
+operator|,
+name|isp_touched
+operator|:
+literal|1
+operator|,
+comment|/* board ever seen? */
+name|isp_fast_mttr
+operator|:
+literal|1
+operator|,
+comment|/* fast sram */
+name|isp_bustype
+operator|:
+literal|1
+operator|,
+comment|/* SBus or PCI */
+name|isp_dogactive
+operator|:
+literal|1
+operator|,
+comment|/* watchdog running */
+name|isp_dblev
+operator|:
+literal|8
+operator|,
+comment|/* debug level */
+name|isp_clock
+operator|:
+literal|8
+operator|,
+comment|/* input clock */
+name|isp_confopts
+operator|:
+literal|8
+expr_stmt|;
+comment|/* config options */
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
-name|u_int
+name|u_int32_t
 operator|:
 literal|9
 operator|,
@@ -1124,7 +1338,7 @@ name|u_int16_t
 name|isp_lasthdls
 decl_stmt|;
 comment|/* last handle seed */
-comment|/* 	 * Active commands are stored here, found by handle functions. 	 */
+comment|/* 	 * Active commands are stored here, indexed by handle functions. 	 */
 name|ISP_SCSI_XFER_T
 modifier|*
 modifier|*
@@ -1233,7 +1447,18 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Fibre Channel Only */
+comment|/* Full Duplex (Fibre Channel only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CFG_OWNWWN
+value|0x02
+end_define
+
+begin_comment
+comment|/* override NVRAM wwn */
 end_comment
 
 begin_define
@@ -1422,146 +1647,6 @@ value|(isp->isp_type& ISP_HA_FC)
 end_define
 
 begin_comment
-comment|/*  * Macros to read, write ISP registers through bus specific code.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_READ
-parameter_list|(
-name|isp
-parameter_list|,
-name|reg
-parameter_list|)
-define|\
-value|(*(isp)->isp_mdvec->dv_rd_reg)((isp), (reg))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_WRITE
-parameter_list|(
-name|isp
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|(*(isp)->isp_mdvec->dv_wr_reg)((isp), (reg), (val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_MBOXDMASETUP
-parameter_list|(
-name|isp
-parameter_list|)
-define|\
-value|(*(isp)->isp_mdvec->dv_mbxdma)((isp))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_DMASETUP
-parameter_list|(
-name|isp
-parameter_list|,
-name|xs
-parameter_list|,
-name|req
-parameter_list|,
-name|iptrp
-parameter_list|,
-name|optr
-parameter_list|)
-define|\
-value|(*(isp)->isp_mdvec->dv_dmaset)((isp), (xs), (req), (iptrp), (optr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_DMAFREE
-parameter_list|(
-name|isp
-parameter_list|,
-name|xs
-parameter_list|,
-name|hndl
-parameter_list|)
-define|\
-value|if ((isp)->isp_mdvec->dv_dmaclr) \ 	    (*(isp)->isp_mdvec->dv_dmaclr)((isp), (xs), (hndl))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_RESET0
-parameter_list|(
-name|isp
-parameter_list|)
-define|\
-value|if ((isp)->isp_mdvec->dv_reset0) (*(isp)->isp_mdvec->dv_reset0)((isp))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_RESET1
-parameter_list|(
-name|isp
-parameter_list|)
-define|\
-value|if ((isp)->isp_mdvec->dv_reset1) (*(isp)->isp_mdvec->dv_reset1)((isp))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_DUMPREGS
-parameter_list|(
-name|isp
-parameter_list|)
-define|\
-value|if ((isp)->isp_mdvec->dv_dregs) (*(isp)->isp_mdvec->dv_dregs)((isp))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SETBITS
-parameter_list|(
-name|isp
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|(*(isp)->isp_mdvec->dv_wr_reg)((isp), (reg), ISP_READ((isp), (reg)) | (val))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_CLRBITS
-parameter_list|(
-name|isp
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|(*(isp)->isp_mdvec->dv_wr_reg)((isp), (reg), ISP_READ((isp), (reg))& ~(val))
-end_define
-
-begin_comment
 comment|/*  * Function Prototypes  */
 end_comment
 
@@ -1673,6 +1758,17 @@ comment|/* Abort Command */
 name|ISPCTL_UPDATE_PARAMS
 block|,
 comment|/* Update Operating Parameters */
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_MODE
+name|ISPCTL_ENABLE_LUN
+block|,
+comment|/* enable a LUN */
+name|ISPCTL_MODIFY_LUN
+block|,
+comment|/* enable a LUN */
+endif|#
+directive|endif
 name|ISPCTL_FCLINK_TEST
 comment|/* Test FC Link Status */
 block|}
@@ -1727,6 +1823,11 @@ comment|/* FC SNS Change Notification */
 name|ISPASYNC_FABRIC_DEV
 block|,
 comment|/* FC New Fabric Device */
+name|ISPASYNC_TARGET_CMD
+block|,
+comment|/* New target command */
+name|ISPASYNC_TARGET_EVENT
+comment|/* New target event */
 block|}
 name|ispasync_t
 typedef|;
