@@ -2515,8 +2515,6 @@ return|;
 block|}
 if|if
 condition|(
-name|td
-operator|&&
 name|jailed
 argument_list|(
 name|td
@@ -2542,8 +2540,6 @@ return|;
 block|}
 if|if
 condition|(
-name|td
-operator|&&
 operator|(
 name|error
 operator|=

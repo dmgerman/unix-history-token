@@ -3801,8 +3801,6 @@ name|addr
 expr_stmt|;
 if|if
 condition|(
-name|td
-operator|&&
 name|jailed
 argument_list|(
 name|td
@@ -4930,8 +4928,6 @@ name|nam
 expr_stmt|;
 if|if
 condition|(
-name|td
-operator|&&
 name|jailed
 argument_list|(
 name|td
