@@ -13774,16 +13774,21 @@ block|}
 else|else
 block|{
 comment|/* MPI-350 */
-if|#
-directive|if
+comment|/* Disable interrupts. */
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|AN_INT_EN
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
+argument_list|,
 literal|0
-comment|/* HACK */
-block|{ 			struct an_command	cmd_struct; 			struct an_reply		reply;
-comment|/* 			 * Allocate TX descriptor 			 */
-block|bzero(&reply,sizeof(reply)); 			cmd_struct.an_cmd   = AN_CMD_ALLOC_DESC; 			cmd_struct.an_parm0 = AN_DESCRIPTOR_TX; 			cmd_struct.an_parm1 = AN_TX_DESC_OFFSET; 			cmd_struct.an_parm2 = AN_MAX_TX_DESC; 			if (an_cmd_struct(sc,&cmd_struct,&reply)) { 				printf("an%d: failed to allocate TX " 				    "descriptor\n",  				    sc->an_unit); 				return; 			} 		}
-comment|/* HACK */
-endif|#
-directive|endif
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|sc
@@ -14163,6 +14168,26 @@ operator|=
 literal|5
 expr_stmt|;
 block|}
+comment|/* Re-enable interrupts. */
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|AN_INT_EN
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
+argument_list|,
+name|AN_INTRS
+argument_list|(
+name|sc
+operator|->
+name|mpi350
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
