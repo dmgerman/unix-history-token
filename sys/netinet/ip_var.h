@@ -404,6 +404,12 @@ name|ipstat
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RANDOM_IP_ID
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|u_short
@@ -414,6 +420,11 @@ end_decl_stmt
 begin_comment
 comment|/* ip packet ctr, for ids */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -700,6 +711,29 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RANDOM_IP_ID
+end_ifdef
+
+begin_decl_stmt
+name|u_int16_t
+name|ip_randomid
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int

@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_random_ip_id.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1342,12 +1348,17 @@ name|nmbclusters
 operator|/
 literal|4
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RANDOM_IP_ID
 name|ip_id
 operator|=
 name|time_second
 operator|&
 literal|0xffff
 expr_stmt|;
+endif|#
+directive|endif
 name|ipintrq
 operator|.
 name|ifq_maxlen

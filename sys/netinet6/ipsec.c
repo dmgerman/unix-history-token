@@ -9476,6 +9476,18 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|RANDOM_IP_ID
+name|ip
+operator|->
+name|ip_id
+operator|=
+name|ip_randomid
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|ip
 operator|->
 name|ip_id
@@ -9486,6 +9498,8 @@ name|ip_id
 operator|++
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bcopy
 argument_list|(
 operator|&
