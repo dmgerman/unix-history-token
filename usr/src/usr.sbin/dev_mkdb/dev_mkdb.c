@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.9 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,7 +323,7 @@ argument_list|)
 expr_stmt|;
 name|db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|dbtmp
 argument_list|,
@@ -335,10 +335,8 @@ name|O_EXCL
 argument_list|,
 name|DEFFILEMODE
 argument_list|,
-operator|(
-name|HASHINFO
-operator|*
-operator|)
+name|DB_HASH
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
