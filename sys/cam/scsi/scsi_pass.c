@@ -1176,9 +1176,13 @@ name|softc
 operator|->
 name|pd_type
 operator|=
+name|SID_TYPE
+argument_list|(
+operator|&
 name|cgd
 operator|->
-name|pd_type
+name|inq_data
+argument_list|)
 expr_stmt|;
 name|bufq_init
 argument_list|(
@@ -1225,7 +1229,7 @@ name|DEVSTAT_NO_BLOCKSIZE
 operator||
 name|DEVSTAT_NO_ORDERED_TAGS
 argument_list|,
-name|cgd
+name|softc
 operator|->
 name|pd_type
 operator||

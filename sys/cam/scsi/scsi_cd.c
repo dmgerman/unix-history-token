@@ -2042,21 +2042,25 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|SID_TYPE
+argument_list|(
+operator|&
 name|cgd
 operator|->
-name|pd_type
+name|inq_data
+argument_list|)
 operator|!=
 name|T_CDROM
-operator|)
 operator|&&
-operator|(
+name|SID_TYPE
+argument_list|(
+operator|&
 name|cgd
 operator|->
-name|pd_type
+name|inq_data
+argument_list|)
 operator|!=
 name|T_WORM
-operator|)
 condition|)
 break|break;
 comment|/* 		 * Allocate a peripheral instance for 		 * this device and start the probe 		 * process. 		 */
@@ -2483,7 +2487,7 @@ name|quirks
 operator|=
 name|CD_Q_NONE
 expr_stmt|;
-comment|/* 	 * We need to register the statistics structure for this device, 	 * but we don't have the blocksize yet for it.  So, we register 	 * the structure and indicate that we don't have the blocksize 	 * yet.  Unlike other SCSI peripheral drivers, we explicitly set 	 * the device type here to be CDROM, rather than just ORing in 	 * cgd->pd_type.  This is because this driver can attach to either 	 * CDROM or WORM devices, and we want this peripheral driver to 	 * show up in the devstat list as a CD peripheral driver, not a 	 * WORM peripheral driver.  WORM drives will also have the WORM 	 * driver attached to them. 	 */
+comment|/* 	 * We need to register the statistics structure for this device, 	 * but we don't have the blocksize yet for it.  So, we register 	 * the structure and indicate that we don't have the blocksize 	 * yet.  Unlike other SCSI peripheral drivers, we explicitly set 	 * the device type here to be CDROM, rather than just ORing in 	 * the device type.  This is because this driver can attach to either 	 * CDROM or WORM devices, and we want this peripheral driver to 	 * show up in the devstat list as a CD peripheral driver, not a 	 * WORM peripheral driver.  WORM drives will also have the WORM 	 * driver attached to them. 	 */
 name|devstat_add_entry
 argument_list|(
 operator|&
@@ -6676,9 +6680,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|SID_TYPE
+argument_list|(
+operator|&
 name|cgd
 operator|.
-name|pd_type
+name|inq_data
+argument_list|)
 operator|==
 name|T_CDROM
 condition|)
