@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.36 (Berkeley) %G%"
+literal|"@(#)func.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6167,23 +6167,10 @@ operator|>
 operator|(
 name|float
 operator|)
-literal|0x7fffffff
+name|RLIM_INFINITY
 condition|)
 return|return
-literal|0x7fffffff
-return|;
-elseif|else
-if|if
-condition|(
-name|f
-operator|<
-operator|(
-name|float
-operator|)
-literal|0x80000000
-condition|)
-return|return
-literal|0x80000000
+name|RLIM_INFINITY
 return|;
 else|else
 return|return
