@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.13 (Berkeley) %G%"
+literal|"@(#)file.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2678,6 +2678,9 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|u_char
+operator|)
 name|bp
 index|[
 name|j

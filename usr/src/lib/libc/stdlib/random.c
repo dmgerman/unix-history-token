@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	5.3 (Berkeley) %G%"
+literal|"@(#)random.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,6 +469,10 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|long
+name|random
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|rand_type
