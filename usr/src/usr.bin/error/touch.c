@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)touch.c	1.1 (Berkeley) %G%"
+literal|"@(#)touch.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -841,7 +841,10 @@ decl_stmt|;
 name|int
 name|n_pissed_on
 decl_stmt|;
-comment|/* how many files touched*/
+comment|/* # of file touched*/
+name|int
+name|previewed
+decl_stmt|;
 for|for
 control|(
 name|fileindex
@@ -944,6 +947,10 @@ name|ntrueerrors
 argument_list|)
 expr_stmt|;
 comment|/* 		 *	What does the operator want? 		 */
+name|previewed
+operator|=
+literal|0
+expr_stmt|;
 name|errordest
 operator|=
 name|TOSTDOUT
@@ -972,6 +979,10 @@ literal|"Do you want to preview the errors first?"
 argument_list|)
 condition|)
 block|{
+name|previewed
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|erpp
@@ -1077,6 +1088,18 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|previewed
+operator|&&
+operator|(
+name|errordest
+operator|==
+name|TOSTDOUT
+operator|)
+condition|)
+continue|continue;
+comment|/* with the next file */
 comment|/* 		 *	go through and print each error message, 		 *	diverting to the right place 		 */
 if|if
 condition|(
@@ -1095,6 +1118,11 @@ index|]
 operator|)
 operator|!=
 name|ntrueerrors
+condition|)
+if|if
+condition|(
+operator|!
+name|previewed
 condition|)
 name|fprintf
 argument_list|(
@@ -1149,6 +1177,11 @@ block|{
 case|case
 name|TOSTDOUT
 case|:
+if|if
+condition|(
+operator|!
+name|previewed
+condition|)
 name|errorprint
 argument_list|(
 name|stdout
@@ -1182,6 +1215,11 @@ comment|/* switch */
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|previewed
+condition|)
 name|errorprint
 argument_list|(
 name|stdout
