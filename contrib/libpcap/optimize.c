@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: optimize.c,v 1.59 96/07/15 00:48:49 leres Exp $ (LBL)"
+literal|"@(#) $Header: optimize.c,v 1.60 96/09/26 23:28:14 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

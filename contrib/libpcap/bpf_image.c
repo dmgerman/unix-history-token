@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: bpf_image.c,v 1.21 96/07/15 00:48:36 leres Exp $ (LBL)"
+literal|"@(#) $Header: bpf_image.c,v 1.22 96/09/26 23:27:56 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

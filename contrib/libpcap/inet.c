@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: inet.c,v 1.18 96/07/15 00:48:49 leres Exp $ (LBL)"
+literal|"@(#) $Header: inet.c,v 1.20 96/10/19 14:58:47 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -560,6 +561,13 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENXIO
+condition|)
+continue|continue;
 operator|(
 name|void
 operator|)
@@ -567,7 +575,21 @@ name|sprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"SIOCGIFFLAGS: %s"
+literal|"SIOCGIFFLAGS: %.*s: %s"
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+argument_list|,
+name|ifr
+operator|.
+name|ifr_name
 argument_list|,
 name|pcap_strerror
 argument_list|(

@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: pcap.c,v 1.25 96/06/05 21:45:26 leres Exp $ (LBL)"
+literal|"@(#) $Header: pcap.c,v 1.27 96/11/27 18:43:25 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,6 +733,30 @@ operator|->
 name|buffer
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|linux
+if|if
+condition|(
+name|p
+operator|->
+name|md
+operator|.
+name|device
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|p
+operator|->
+name|md
+operator|.
+name|device
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|p
