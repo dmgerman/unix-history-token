@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.6 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,12 +307,17 @@ block|,
 operator|&
 name|RIGHT_PARM
 block|, 		}
-decl_stmt|,
-modifier|*
-name|tgoto
-argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|tgoto
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|char
