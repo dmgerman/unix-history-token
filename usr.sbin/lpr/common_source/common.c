@@ -164,16 +164,6 @@ comment|/* daeomon user-id */
 end_comment
 
 begin_decl_stmt
-name|long
-name|FC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flags to clear if lp is a tty */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|FF
@@ -182,16 +172,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* form feed string */
-end_comment
-
-begin_decl_stmt
-name|long
-name|FS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flags to set if lp is a tty */
 end_comment
 
 begin_decl_stmt
@@ -503,32 +483,23 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
+name|MS
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mode set, a la stty */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
 name|VF
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* name of vplot filter (per job) */
-end_comment
-
-begin_decl_stmt
-name|long
-name|XC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flags to clear for local mode */
-end_comment
-
-begin_decl_stmt
-name|long
-name|XS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flags to set for local mode */
 end_comment
 
 begin_decl_stmt
