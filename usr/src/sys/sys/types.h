@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -165,6 +165,17 @@ define|\
 value|((++((q).val[_QUAD_LOWWORD]) == 0) ? ++((q).val[_QUAD_HIGHWORD]) : 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ZEROQUAD
+parameter_list|(
+name|q
+parameter_list|)
+define|\
+value|(q).val[0] = (q).val[1] = 0
+end_define
+
 begin_else
 else|#
 directive|else
@@ -243,6 +254,16 @@ parameter_list|(
 name|q
 parameter_list|)
 value|(q)++
+end_define
+
+begin_define
+define|#
+directive|define
+name|ZEROQUAD
+parameter_list|(
+name|q
+parameter_list|)
+value|(q) = 0
 end_define
 
 begin_endif
