@@ -2014,6 +2014,65 @@ name|st_nlink
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Only regular files have data. */
+if|if
+condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|archive_entry_mode
+argument_list|(
+name|entry_main
+argument_list|)
+argument_list|)
+condition|)
+name|archive_entry_set_size
+argument_list|(
+name|entry_main
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Pax-restricted does not store data for hardlinks, in order 	 * to improve compatibility with ustar. 	 */
+if|if
+condition|(
+name|a
+operator|->
+name|archive_format
+operator|!=
+name|ARCHIVE_FORMAT_TAR_PAX_INTERCHANGE
+operator|&&
+name|archive_entry_hardlink
+argument_list|(
+name|entry_main
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|archive_entry_set_size
+argument_list|(
+name|entry_main
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX Full pax interchange format does permit a hardlink 	 * entry to have data associated with it.  I'm not supporting 	 * that here because the client expects me to tell them whether 	 * or not this format expects data for hardlinks.  If I 	 * don't check here, then every pax archive will end up with 	 * duplicated data for hardlinks.  Someday, there may be 	 * need to select this behavior, in which case the following 	 * will need to be revisited. XXX 	 */
+if|if
+condition|(
+name|archive_entry_hardlink
+argument_list|(
+name|entry_main
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|archive_entry_set_size
+argument_list|(
+name|entry_main
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Format 'ustar' header for main entry. */
 comment|/* We don't care if this returns an error. */
 name|__archive_write_format_header_ustar
@@ -2404,25 +2463,17 @@ name|ARCHIVE_FATAL
 else|:
 name|ARCHIVE_OK
 expr_stmt|;
-comment|/* Only regular files have data.  Note that pax, unlike ustar, 	 * does permit a hardlink to have data associated with it. */
-if|if
-condition|(
-operator|!
-name|S_ISREG
+comment|/* 	 * Inform the client of the on-disk size we're using, so 	 * they can avoid unnecessarily writing a body for something 	 * that we're just going to ignore. 	 */
+name|archive_entry_set_size
 argument_list|(
-name|archive_entry_mode
+name|entry_original
+argument_list|,
+name|archive_entry_size
 argument_list|(
 name|entry_main
 argument_list|)
 argument_list|)
-condition|)
-name|pax
-operator|->
-name|entry_bytes_remaining
-operator|=
-literal|0
 expr_stmt|;
-else|else
 name|pax
 operator|->
 name|entry_bytes_remaining
