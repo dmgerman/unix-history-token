@@ -212,23 +212,6 @@ end_define
 
 begin_decl_stmt
 name|int
-name|mp_hardware
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|mp_ipi_vector
-index|[
-name|IPI_COUNT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|mp_ipi_test
 init|=
 literal|0
@@ -498,33 +481,39 @@ end_macro
 
 begin_block
 block|{
-comment|/* 	 * We've already discovered any APs when they're present. 	 * Just return the result here. 	 */
-if|if
-condition|(
-name|mp_hardware
-condition|)
-block|{
-name|mp_maxid
+comment|/* 	 * Count the number of processors in the system by walking the ACPI 	 * tables. Note that we record the actual number of processors, even 	 * if this is larger than MAXCPU. We only activate MAXCPU processors. 	 */
+name|mp_ncpus
 operator|=
-name|ia64_count_aps
+name|ia64_count_cpus
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
+comment|/* 	 * Set the largest cpuid we're going to use. This is necessary for 	 * VM initialization. 	 */
 name|mp_maxid
-operator|>
-literal|0
-operator|)
-return|;
-block|}
-else|else
-block|{
+operator|=
+name|min
+argument_list|(
+name|mp_ncpus
+argument_list|,
+name|MAXCPU
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 	 * If there's only 1 processor, or we don't have a wake-up vector, 	 * we're not going to enable SMP. Note that no wake-up vector can 	 * also mean that the wake-up mechanism is not supported. In this 	 * case we can have multiple processors, but we simply can't wake 	 * them up... 	 */
 return|return
 operator|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|&&
+name|ipi_vector
+index|[
+name|IPI_AP_WAKEUP
+index|]
+operator|!=
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_block
 
@@ -550,27 +539,14 @@ decl_stmt|;
 name|u_int64_t
 name|lid
 decl_stmt|;
-comment|/* Count all CPUs, even the ones we cannot use */
-name|mp_ncpus
-operator|++
-expr_stmt|;
 comment|/* Ignore any processor numbers outside our range */
 if|if
 condition|(
 name|acpiid
-operator|>=
-name|MAXCPU
+operator|>
+name|mp_maxid
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"SMP: cpu%d skipped; increase MAXCPU\n"
-argument_list|,
-name|acpiid
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|KASSERT
 argument_list|(
 operator|(
@@ -702,8 +678,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -973,8 +949,9 @@ name|cpus
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|mp_hardware
+name|mp_ncpus
+operator|<=
+literal|1
 condition|)
 return|return;
 if|if
@@ -1272,7 +1249,7 @@ call|(
 name|u_int64_t
 call|)
 argument_list|(
-name|mp_ipi_vector
+name|ipi_vector
 index|[
 name|ipi
 index|]

@@ -633,7 +633,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ia64_count_aps
+name|ia64_count_cpus
 parameter_list|(
 name|void
 parameter_list|)

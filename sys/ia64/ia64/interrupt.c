@@ -409,7 +409,7 @@ if|if
 condition|(
 name|vector
 operator|==
-name|mp_ipi_vector
+name|ipi_vector
 index|[
 name|IPI_AST
 index|]
@@ -433,7 +433,7 @@ if|if
 condition|(
 name|vector
 operator|==
-name|mp_ipi_vector
+name|ipi_vector
 index|[
 name|IPI_RENDEZVOUS
 index|]
@@ -460,7 +460,7 @@ if|if
 condition|(
 name|vector
 operator|==
-name|mp_ipi_vector
+name|ipi_vector
 index|[
 name|IPI_STOP
 index|]
@@ -562,7 +562,7 @@ if|if
 condition|(
 name|vector
 operator|==
-name|mp_ipi_vector
+name|ipi_vector
 index|[
 name|IPI_TEST
 index|]

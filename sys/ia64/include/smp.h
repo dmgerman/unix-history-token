@@ -22,7 +22,11 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Interprocessor interrupts for SMP. The following values are indices  * into the IPI vector table. The SAL gives us the vector used for AP  * wake-up. We base the other vectors on that. Keep IPI_AP_WAKEUP at  * index 0.  */
+comment|/*  * Interprocessor interrupts for SMP. The following values are indices  * into the IPI vector table. The SAL gives us the vector used for AP  * wake-up. We base the other vectors on that. Keep IPI_AP_WAKEUP at  * index 0 and IPI_MCA_RENDEZ at index 1. See sal.c for details.  */
+end_comment
+
+begin_comment
+comment|/* Architecture specific IPIs. */
 end_comment
 
 begin_define
@@ -32,47 +36,57 @@ name|IPI_AP_WAKEUP
 value|0
 end_define
 
-begin_comment
-comment|/* ia64 specific */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|IPI_AST
+name|IPI_MCA_RENDEZ
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPI_RENDEZVOUS
+name|IPI_MCA_CMCV
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|IPI_STOP
+name|IPI_TEST
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPI_TEST
-value|4
-end_define
-
 begin_comment
-comment|/* ia64 specific */
+comment|/* Machine independent IPIs. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IPI_COUNT
+name|IPI_AST
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_RENDEZVOUS
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_STOP
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_COUNT
+value|7
 end_define
 
 begin_ifndef
@@ -84,14 +98,7 @@ end_ifndef
 begin_decl_stmt
 specifier|extern
 name|int
-name|mp_hardware
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mp_ipi_vector
+name|ipi_vector
 index|[]
 decl_stmt|;
 end_decl_stmt
