@@ -315,10 +315,10 @@ begin_typedef
 typedef|typedef
 name|void
 name|unpendhand_t
-name|__P
-typedef|((
+parameter_list|(
 name|void
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_define

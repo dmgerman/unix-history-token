@@ -77,20 +77,17 @@ directive|include
 file|<machine/elf.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|db_elf_find_strtab
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_symtab_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
