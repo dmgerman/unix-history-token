@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -27,6 +28,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -69,16 +84,14 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|deprecated
-decl_stmt|;
 name|char
 name|buf
 index|[
 literal|10
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
+specifier|const
 modifier|*
 name|str
 decl_stmt|;
@@ -102,12 +115,6 @@ comment|/* case '\a': */
 case|case
 literal|'\007'
 case|:
-if|if
-condition|(
-name|deprecated
-condition|)
-comment|/* od didn't know about \a */
-break|break;
 name|str
 operator|=
 literal|"\\a"
@@ -168,11 +175,6 @@ goto|;
 case|case
 literal|'\v'
 case|:
-if|if
-condition|(
-name|deprecated
-condition|)
-break|break;
 name|str
 operator|=
 literal|"\\v"
@@ -220,8 +222,6 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|str
-operator|=
 name|buf
 argument_list|,
 literal|"%03o"
@@ -232,6 +232,10 @@ operator|)
 operator|*
 name|p
 argument_list|)
+expr_stmt|;
+name|str
+operator|=
+name|buf
 expr_stmt|;
 name|strpr
 label|:
@@ -275,12 +279,9 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|deprecated
-decl_stmt|;
 specifier|static
 name|char
+specifier|const
 modifier|*
 name|list
 index|[]
@@ -369,7 +370,7 @@ literal|'s'
 expr_stmt|;
 if|if
 condition|(
-name|deprecated
+name|odmode
 operator|&&
 operator|*
 name|p
@@ -438,7 +439,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|deprecated
+name|odmode
 operator|&&
 operator|*
 name|p
