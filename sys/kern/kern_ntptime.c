@@ -959,6 +959,10 @@ name|ntv
 operator|.
 name|modes
 expr_stmt|;
+if|if
+condition|(
+name|modes
+condition|)
 name|error
 operator|=
 name|suser
