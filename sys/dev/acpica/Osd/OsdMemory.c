@@ -55,7 +55,7 @@ name|void
 modifier|*
 name|AcpiOsAllocate
 parameter_list|(
-name|UINT32
+name|ACPI_SIZE
 name|Size
 parameter_list|)
 block|{
@@ -100,7 +100,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 name|Length
 parameter_list|,
 name|void
@@ -150,7 +150,7 @@ name|void
 modifier|*
 name|LogicalAddress
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 name|Length
 parameter_list|)
 block|{
