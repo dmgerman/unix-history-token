@@ -1191,13 +1191,6 @@ literal|"\""
 argument_list|)
 operator|)
 operator|&&
-name|name
-index|[
-name|len
-index|]
-operator|==
-literal|'\0'
-operator|&&
 name|strncasecmp
 argument_list|(
 name|name
@@ -1208,6 +1201,13 @@ name|len
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|name
+index|[
+name|len
+index|]
+operator|==
+literal|'\0'
 operator|&&
 name|strchr
 argument_list|(
