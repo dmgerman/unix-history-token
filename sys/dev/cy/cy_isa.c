@@ -1700,15 +1700,6 @@ block|,
 comment|/* ioctl */
 name|sioioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|ttypoll
 block|,
@@ -1721,9 +1712,6 @@ block|,
 comment|/* name */
 name|driver_name
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|CDEV_MAJOR
 block|,
@@ -1735,9 +1723,6 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TTY
-block|,
-comment|/* maxio */
-literal|0
 block|,
 comment|/* bmaj */
 operator|-

@@ -101,12 +101,6 @@ name|physwrite
 block|,
 name|vinumioctl
 block|,
-name|nostop
-block|,
-name|noreset
-block|,
-name|nodevtotty
-block|,
 name|seltrue
 block|,
 name|nommap
@@ -115,8 +109,6 @@ name|vinumstrategy
 block|,
 literal|"vinum"
 block|,
-name|noparms
-block|,
 name|CDEV_MAJOR
 block|,
 name|vinumdump
@@ -124,8 +116,6 @@ block|,
 name|vinumsize
 block|,
 name|D_DISK
-block|,
-literal|0
 block|,
 name|BDEV_MAJOR
 block|}

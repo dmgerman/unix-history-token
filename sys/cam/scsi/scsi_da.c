@@ -814,15 +814,6 @@ block|,
 comment|/* ioctl */
 name|daioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|nopoll
 block|,
@@ -835,9 +826,6 @@ block|,
 comment|/* name */
 literal|"da"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|DA_CDEV_MAJOR
 block|,
@@ -849,9 +837,6 @@ name|dasize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* maxio */
-literal|0
 block|,
 comment|/* bmaj */
 name|DA_BDEV_MAJOR

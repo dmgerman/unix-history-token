@@ -1512,15 +1512,6 @@ block|,
 comment|/* ioctl */
 name|fbioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|nopoll
 block|,
@@ -1533,9 +1524,6 @@ block|,
 comment|/* name */
 name|FB_DRIVER_NAME
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|CDEV_MAJOR
 block|,
@@ -1546,9 +1534,6 @@ comment|/* psize */
 name|nopsize
 block|,
 comment|/* flags */
-literal|0
-block|,
-comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */

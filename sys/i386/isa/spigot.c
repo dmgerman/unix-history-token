@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Video spigot capture driver.  *  * Copyright (c) 1995, Jim Lowe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This is the minimum driver code required to make a spigot work.  * Unfortunatly, I can't include a real driver since the information  * on the spigot is under non-disclosure.  You can pick up a library  * that will work with this driver from  * ftp://ftp.cs.uwm.edu/pub/FreeBSD-UWM.  The library contains the  * source that I can release as well as several object modules and  * functions that allows one to read spigot data.  See the code for  * spigot_grab.c that is included with the library data.  *  * The vendor will not allow me to release the spigot library code.  * Please don't ask me for it.  *  * To use this driver you will need the spigot library.  The library is  * available from:  *  *	ftp.cs.uwm.edu://pub/FreeBSD-UWM/spigot/spigot.tar.gz  *  * Version 1.7, December 1995.  *  */
+comment|/*  * Video spigot capture driver.  *  * Copyright (c) 1995, Jim Lowe.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This is the minimum driver code required to make a spigot work.  * Unfortunatly, I can't include a real driver since the information  * on the spigot is under non-disclosure.  You can pick up a library  * that will work with this driver from  * ftp://ftp.cs.uwm.edu/pub/FreeBSD-UWM.  The library contains the  * source that I can release as well as several object modules and  * functions that allows one to read spigot data.  See the code for  * spigot_grab.c that is included with the library data.  *  * The vendor will not allow me to release the spigot library code.  * Please don't ask me for it.  *  * To use this driver you will need the spigot library.  The library is  * available from:  *  *	ftp.cs.uwm.edu://pub/FreeBSD-UWM/spigot/spigot.tar.gz  *  * Version 1.7, December 1995.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -236,15 +236,6 @@ block|,
 comment|/* ioctl */
 name|spigot_ioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|nopoll
 block|,
@@ -257,9 +248,6 @@ block|,
 comment|/* name */
 literal|"spigot"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|CDEV_MAJOR
 block|,
@@ -270,9 +258,6 @@ comment|/* psize */
 name|nopsize
 block|,
 comment|/* flags */
-literal|0
-block|,
-comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */

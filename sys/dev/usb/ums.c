@@ -483,15 +483,6 @@ block|,
 comment|/* ioctl */
 name|ums_ioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|ums_poll
 block|,
@@ -504,9 +495,6 @@ block|,
 comment|/* name */
 literal|"ums"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|UMS_CDEV_MAJOR
 block|,
@@ -517,9 +505,6 @@ comment|/* psize */
 name|nopsize
 block|,
 comment|/* flags */
-literal|0
-block|,
-comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */

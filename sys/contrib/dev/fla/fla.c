@@ -287,15 +287,6 @@ block|,
 comment|/* ioctl */
 name|flaioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|nopoll
 block|,
@@ -307,9 +298,6 @@ name|flastrategy
 block|,
 comment|/* name */
 literal|"fla"
-block|,
-comment|/* parms */
-name|noparms
 block|,
 comment|/* maj */
 name|CDEV_MAJOR
@@ -324,9 +312,6 @@ comment|/* flags */
 name|D_DISK
 operator||
 name|D_CANFREE
-block|,
-comment|/* maxio */
-literal|0
 block|,
 comment|/* bmaj */
 name|BDEV_MAJOR

@@ -904,15 +904,6 @@ block|,
 comment|/* ioctl */
 name|i4btelioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|POLLFIELD
 block|,
@@ -925,9 +916,6 @@ block|,
 comment|/* name */
 literal|"i4btel"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|CDEV_MAJOR
 block|,
@@ -938,9 +926,6 @@ comment|/* psize */
 name|nopsize
 block|,
 comment|/* flags */
-literal|0
-block|,
-comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */

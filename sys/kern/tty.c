@@ -12122,5 +12122,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+name|void
+name|nottystop
+parameter_list|(
+name|tp
+parameter_list|,
+name|rw
+parameter_list|)
+name|struct
+name|tty
+modifier|*
+name|tp
+decl_stmt|;
+name|int
+name|rw
+decl_stmt|;
+block|{
+return|return;
+block|}
+end_function
+
 end_unit
 

@@ -572,15 +572,6 @@ block|,
 comment|/* ioctl */
 name|ulptioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|nopoll
 block|,
@@ -593,9 +584,6 @@ block|,
 comment|/* name */
 literal|"ulpt"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|ULPT_CDEV_MAJOR
 block|,
@@ -606,9 +594,6 @@ comment|/* psize */
 name|nopsize
 block|,
 comment|/* flags */
-literal|0
-block|,
-comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */

@@ -1213,6 +1213,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|nottystop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|,
+name|int
+name|rw
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|nextc

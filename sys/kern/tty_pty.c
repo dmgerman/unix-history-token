@@ -293,15 +293,6 @@ block|,
 comment|/* ioctl */
 name|ptyioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|ttypoll
 block|,
@@ -314,9 +305,6 @@ block|,
 comment|/* name */
 literal|"pts"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|CDEV_MAJOR_S
 block|,
@@ -328,9 +316,6 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TTY
-block|,
-comment|/* maxio */
-literal|0
 block|,
 comment|/* bmaj */
 operator|-
@@ -368,15 +353,6 @@ block|,
 comment|/* ioctl */
 name|ptyioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|ptcpoll
 block|,
@@ -389,9 +365,6 @@ block|,
 comment|/* name */
 literal|"ptc"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|CDEV_MAJOR_C
 block|,
@@ -403,9 +376,6 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_TTY
-block|,
-comment|/* maxio */
-literal|0
 block|,
 comment|/* bmaj */
 operator|-

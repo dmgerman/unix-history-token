@@ -402,45 +402,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|void
-name|d_stop_t
-name|__P
-typedef|((struct
-name|tty
-modifier|*
-name|tp
-typedef|,
-name|int
-name|rw
-typedef|));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|d_reset_t
-name|__P
-typedef|((
-name|dev_t
-name|dev
-typedef|));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|tty
-modifier|*
-name|d_devtotty_t
-name|__P
-typedef|((
-name|dev_t
-name|dev
-typedef|));
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|int
 name|d_poll_t
 name|__P
@@ -814,11 +775,6 @@ modifier|*
 name|d_name
 decl_stmt|;
 comment|/* base device name, e.g. 'vn' */
-name|d_parms_t
-modifier|*
-name|d_bogoparms
-decl_stmt|;
-comment|/* XXX not used */
 name|int
 name|d_maj
 decl_stmt|;
@@ -833,10 +789,6 @@ decl_stmt|;
 name|u_int
 name|d_flags
 decl_stmt|;
-name|int
-name|d_bogomaxio
-decl_stmt|;
-comment|/* XXX not used */
 name|int
 name|d_bmaj
 decl_stmt|;
@@ -1049,24 +1001,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|d_stop_t
-name|nostop
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_reset_t
-name|noreset
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_devtotty_t
-name|nodevtotty
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|d_mmap_t
 name|nommap
 decl_stmt|;
@@ -1077,13 +1011,6 @@ define|#
 directive|define
 name|nostrategy
 value|((d_strategy_t *)NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|noparms
-value|((d_parms_t *)NULL)
 end_define
 
 begin_define

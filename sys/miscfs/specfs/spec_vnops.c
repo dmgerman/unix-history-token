@@ -1290,7 +1290,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Warning:%s: no t_stop, using nostop\n"
+literal|"Warning:%s: no t_stop, using nottystop\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -1302,7 +1302,7 @@ name|tp
 operator|->
 name|t_stop
 operator|=
-name|nostop
+name|nottystop
 expr_stmt|;
 block|}
 block|}

@@ -1835,15 +1835,6 @@ block|,
 comment|/* ioctl */
 name|xptioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|nopoll
 block|,
@@ -1856,9 +1847,6 @@ block|,
 comment|/* name */
 literal|"xpt"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|XPT_CDEV_MAJOR
 block|,
@@ -1869,9 +1857,6 @@ comment|/* psize */
 name|nopsize
 block|,
 comment|/* flags */
-literal|0
-block|,
-comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */

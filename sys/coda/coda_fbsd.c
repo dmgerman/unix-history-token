@@ -132,15 +132,6 @@ block|,
 comment|/* ioctl */
 name|vc_nb_ioctl
 block|,
-comment|/* stop */
-name|nostop
-block|,
-comment|/* reset */
-name|noreset
-block|,
-comment|/* devtotty */
-name|nodevtotty
-block|,
 comment|/* poll */
 name|vc_nb_poll
 block|,
@@ -153,9 +144,6 @@ block|,
 comment|/* name */
 literal|"Coda"
 block|,
-comment|/* parms */
-name|noparms
-block|,
 comment|/* maj */
 name|VC_DEV_NO
 block|,
@@ -166,9 +154,6 @@ comment|/* psize */
 name|nopsize
 block|,
 comment|/* flags */
-literal|0
-block|,
-comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */
