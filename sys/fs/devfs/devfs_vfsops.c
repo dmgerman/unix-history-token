@@ -152,14 +152,17 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * XXX: flag changes. 	 */
 if|if
 condition|(
 name|mp
 operator|->
 name|mnt_flag
 operator|&
+operator|(
 name|MNT_UPDATE
+operator||
+name|MNT_NODEV
+operator|)
 condition|)
 return|return
 operator|(
