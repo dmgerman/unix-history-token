@@ -2937,6 +2937,22 @@ operator|=
 name|NAFC_RST_CLRD
 expr_stmt|;
 block|}
+name|na
+operator|->
+name|na_header
+operator|.
+name|rqs_entry_type
+operator|=
+name|RQSTYPE_NOTIFY_ACK
+expr_stmt|;
+name|na
+operator|->
+name|na_header
+operator|.
+name|rqs_entry_count
+operator|=
+literal|1
+expr_stmt|;
 name|ISP_SWIZ_NOT_ACK_FC
 argument_list|(
 name|isp
@@ -3025,7 +3041,7 @@ condition|)
 block|{
 name|na
 operator|->
-name|na_flags
+name|na_event
 operator|=
 name|NA_RST_CLRD
 expr_stmt|;
@@ -3035,11 +3051,27 @@ else|else
 block|{
 name|na
 operator|->
-name|na_flags
+name|na_event
 operator|=
 name|NA_RST_CLRD
 expr_stmt|;
 block|}
+name|na
+operator|->
+name|na_header
+operator|.
+name|rqs_entry_type
+operator|=
+name|RQSTYPE_NOTIFY_ACK
+expr_stmt|;
+name|na
+operator|->
+name|na_header
+operator|.
+name|rqs_entry_count
+operator|=
+literal|1
+expr_stmt|;
 name|ISP_SWIZ_NOT_ACK
 argument_list|(
 name|isp
@@ -3535,6 +3567,18 @@ case|:
 comment|/* 		 * There are generally 3 possibilities as to why we'd get 		 * this condition: 		 * 	We disconnected after receiving a CDB. 		 * 	We sent or received data. 		 * 	We sent status& command complete. 		 */
 if|if
 condition|(
+name|ct
+operator|->
+name|ct_flags
+operator|&
+name|CT_SENDSTATUS
+condition|)
+block|{
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
 operator|(
 name|ct
 operator|->
@@ -3552,11 +3596,15 @@ argument_list|(
 name|pl
 argument_list|,
 operator|(
-literal|"%s: CTIO- initiator disconnected OK\n"
+literal|"%s:CTIO- iid %d disconnected OK\n"
 operator|,
 name|isp
 operator|->
 name|isp_name
+operator|,
+name|ct
+operator|->
+name|ct_iid
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3881,7 +3929,7 @@ argument_list|(
 name|pl
 argument_list|,
 operator|(
-literal|"%s: status CTIO complete\n"
+literal|"%s:status CTIO complete\n"
 operator|,
 name|isp
 operator|->
