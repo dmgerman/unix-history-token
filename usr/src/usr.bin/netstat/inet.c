@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.11 (Berkeley) %G%"
+literal|"@(#)inet.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,13 +91,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip.h>
+file|<netinet/in_pcb.h>
 end_include
 
 begin_include
