@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.55 1998/05/12 09:32:19 kato Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.56 1998/06/08 08:55:47 kato Exp $  */
 end_comment
 
 begin_comment
@@ -1383,6 +1383,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|d_read_t
+name|wdread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|wdwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|d_close_t
 name|wdclose
 decl_stmt|;
@@ -1435,35 +1449,44 @@ specifier|static
 name|struct
 name|cdevsw
 name|wd_cdevsw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|bdevsw
-name|wd_bdevsw
 init|=
 block|{
 name|wdopen
 block|,
 name|wdclose
 block|,
-name|wdstrategy
+name|wdread
+block|,
+name|wdwrite
 block|,
 name|wdioctl
 block|,
-comment|/*0*/
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+name|seltrue
+block|,
+name|nommap
+block|,
+name|wdstrategy
+block|,
+literal|"wd"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|,
 name|wddump
 block|,
 name|wdsize
 block|,
 name|D_DISK
 block|,
-literal|"wd"
-block|,
-operator|&
-name|wd_cdevsw
+literal|0
 block|,
 operator|-
 literal|1
@@ -3102,7 +3125,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|wd_bdevsw
+name|wd_cdevsw
 argument_list|,
 name|mynor
 argument_list|,
@@ -3566,6 +3589,76 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|SLICE
+specifier|static
+name|int
+name|wdread
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|int
+name|ioflag
+parameter_list|)
+block|{
+return|return
+operator|(
+name|physio
+argument_list|(
+name|wdstrategy
+argument_list|,
+name|NULL
+argument_list|,
+name|dev
+argument_list|,
+literal|1
+argument_list|,
+name|minphys
+argument_list|,
+name|uio
+argument_list|)
+operator|)
+return|;
+block|}
+specifier|static
+name|int
+name|wdwrite
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|struct
+name|uio
+modifier|*
+name|uio
+parameter_list|,
+name|int
+name|ioflag
+parameter_list|)
+block|{
+return|return
+operator|(
+name|physio
+argument_list|(
+name|wdstrategy
+argument_list|,
+name|NULL
+argument_list|,
+name|dev
+argument_list|,
+literal|0
+argument_list|,
+name|minphys
+argument_list|,
+name|uio
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/* Read/write routine for a buffer.  Finds the proper unit, range checks  * arguments, and schedules the transfer.  Does not wait for the transfer  * to complete.  Multi-page transfers are supported.  All I/O requests must  * be a multiple of a sector in length.  */
 name|void
 name|wdstrategy
@@ -4900,7 +4993,7 @@ argument|wdsleep(du->dk_ctrlr,
 literal|"wdopn1"
 argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN; 	{ 	struct disklabel label;  	bzero(&label, sizeof label); 	label.d_secsize = du->dk_dd.d_secsize; 	label.d_nsectors = du->dk_dd.d_nsectors; 	label.d_ntracks = du->dk_dd.d_ntracks; 	label.d_ncylinders = du->dk_dd.d_ncylinders; 	label.d_secpercyl = du->dk_dd.d_secpercyl; 	label.d_secperunit = du->dk_dd.d_secperunit; 	error = dsopen(
 literal|"wd"
-argument|, dev, fmt,&du->dk_slices,&label, wdstrategy1, 		       (ds_setgeom_t *)NULL,&wd_bdevsw,&wd_cdevsw); 	} 	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
+argument|, dev, fmt,&du->dk_slices,&label, wdstrategy1, 		       (ds_setgeom_t *)NULL,&wd_cdevsw,&wd_cdevsw); 	} 	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
 literal|"wdopn2"
 argument|); 	return (error);
 else|#
@@ -6116,13 +6209,13 @@ directive|ifndef
 name|SLICE
 argument|static wd_devsw_installed =
 literal|0
-argument|;  static void 	wd_drvinit(void *unused) {  	if( ! wd_devsw_installed ) { 		if (wd_bdevsw.d_maxio ==
+argument|;  static void 	wd_drvinit(void *unused) {  	if( ! wd_devsw_installed ) { 		if (wd_cdevsw.d_maxio ==
 literal|0
-argument|) 			wd_bdevsw.d_maxio =
+argument|) 			wd_cdevsw.d_maxio =
 literal|248
 argument|*
 literal|512
-argument|; 		bdevsw_add_generic(BDEV_MAJOR,CDEV_MAJOR,&wd_bdevsw); 		wd_devsw_installed =
+argument|; 		cdevsw_add_generic(BDEV_MAJOR,CDEV_MAJOR,&wd_cdevsw); 		wd_devsw_installed =
 literal|1
 argument|;     	} }  SYSINIT(wddev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,wd_drvinit,NULL)
 endif|#
