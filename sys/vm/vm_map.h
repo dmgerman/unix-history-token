@@ -563,10 +563,6 @@ name|pmap
 name|vm_pmap
 decl_stmt|;
 comment|/* private physical map */
-name|int
-name|vm_refcnt
-decl_stmt|;
-comment|/* number of references */
 name|struct
 name|shmmap_state
 modifier|*
@@ -614,6 +610,10 @@ name|int
 name|vm_exitingcnt
 decl_stmt|;
 comment|/* several processes zombied in exit1  */
+name|int
+name|vm_refcnt
+decl_stmt|;
+comment|/* number of references */
 block|}
 struct|;
 end_struct
