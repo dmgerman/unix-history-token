@@ -791,7 +791,7 @@ condition|)
 name|bsdtar
 operator|->
 name|extract_flags
-operator|=
+operator||=
 name|ARCHIVE_EXTRACT_OWNER
 expr_stmt|;
 name|bsdtar
