@@ -224,7 +224,7 @@ define|#
 directive|define
 name|CARDBUS_QUIRK_MAP_REG
 value|1
-comment|/* PCI map register in wierd place */
+comment|/* PCI map register in weird place */
 name|int
 name|arg1
 decl_stmt|;

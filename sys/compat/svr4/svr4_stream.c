@@ -10545,7 +10545,7 @@ name|struct
 name|read_args
 name|ra
 decl_stmt|;
-comment|/* More wierdness:  Again, I can't find documentation 			 * to back this up, but when a process does a generic 			 * "getmsg()" call it seems that the command field is 			 * zero and the length of the data area is zero.  I 			 * think processes expect getmsg() to fill in dat.len 			 * after reading at most dat.maxlen octets from the 			 * stream.  Since we're using sockets I can let  			 * read() look after it and frob return values 			 * appropriately (or inappropriately :-) 			 *   -- newton@atdot.dotat.org        XXX 			 */
+comment|/* More weirdness:  Again, I can't find documentation 			 * to back this up, but when a process does a generic 			 * "getmsg()" call it seems that the command field is 			 * zero and the length of the data area is zero.  I 			 * think processes expect getmsg() to fill in dat.len 			 * after reading at most dat.maxlen octets from the 			 * stream.  Since we're using sockets I can let  			 * read() look after it and frob return values 			 * appropriately (or inappropriately :-) 			 *   -- newton@atdot.dotat.org        XXX 			 */
 name|SCARG
 argument_list|(
 operator|&

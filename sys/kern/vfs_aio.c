@@ -10650,7 +10650,7 @@ name|VFS_AIO
 end_ifdef
 
 begin_comment
-comment|/*  * This is a wierd hack so that we can post a signal.  It is safe to do so from  * a timeout routine, but *not* from an interrupt routine.  */
+comment|/*  * This is a weird hack so that we can post a signal.  It is safe to do so from  * a timeout routine, but *not* from an interrupt routine.  */
 end_comment
 
 begin_function
