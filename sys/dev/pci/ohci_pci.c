@@ -209,13 +209,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCI_OHCI_VENDORID_ADS
-value|0x
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCI_OHCI_VENDORID_ALI
 value|0x10b9
 end_define
@@ -238,28 +231,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|ohci_device_aladdin_v
-init|=
-literal|"AcerLabs M5237 (Aladdin-V) USB Host Controller"
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|PCI_OHCI_DEVICEID_ADS
-value|0x
-end_define
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|ohci_device_ads
 index|[]
 init|=
-literal|"ADS Technologies USB Host Controller"
+literal|"AcerLabs M5237 (Aladdin-V) USB Host Controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,7 +360,6 @@ operator|(
 name|ohci_device_aladdin_v
 operator|)
 return|;
-comment|/* 	} else if (device_id == PCI_OHCI_DEVICEID_ADS) { 		return (ohci_device_ads); 	*/
 block|}
 else|else
 block|{
@@ -611,7 +585,6 @@ argument_list|,
 literal|"AcerLabs"
 argument_list|)
 expr_stmt|;
-comment|/* 	else if (PCI_VENDOR(id) == PCI_OHCI_VENDORID_ADS) 		sprintf(sc->sc_vendor, "ADS"); 	*/
 elseif|else
 if|if
 condition|(
@@ -755,7 +728,6 @@ name|ohci_device_aladdin_v
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	case PCI_OHCI_DEVICEID_ADS: 		device_set_desc(sc->sc_bus.bdev, ohci_device_ads); 		break; 	*/
 default|default:
 name|printf
 argument_list|(
