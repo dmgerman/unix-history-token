@@ -375,7 +375,7 @@ name|char
 modifier|*
 name|tar_opts
 init|=
-literal|"+Bb:C:cF:f:HhjkLlmnOoPprtT:UuvW:wX:xyZz"
+literal|"+Bb:C:cF:f:HhI:jkLlmnOoPprtT:UuvW:wX:xyZz"
 decl_stmt|;
 end_decl_stmt
 
@@ -2068,21 +2068,6 @@ literal|"Must specify one of -c, -r, -t, -u, -x"
 argument_list|)
 expr_stmt|;
 comment|/* Check boolean options only permitted in certain modes. */
-if|if
-condition|(
-name|bsdtar
-operator|->
-name|option_absolute_paths
-condition|)
-name|only_mode
-argument_list|(
-name|bsdtar
-argument_list|,
-literal|"-P"
-argument_list|,
-literal|"xcru"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bsdtar
