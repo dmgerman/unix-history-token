@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_vv.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_vv.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -481,6 +481,10 @@ name|vs_parity
 decl_stmt|;
 comment|/* number of parity errors on 10 meg, */
 comment|/* link data errors on 80 meg */
+name|short
+name|vs_ipl
+decl_stmt|;
+comment|/* interrupt priority on Q-bus */
 block|}
 name|vv_softc
 index|[
@@ -508,12 +512,22 @@ begin_macro
 name|vvprobe
 argument_list|(
 argument|reg
+argument_list|,
+argument|ui
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|caddr_t
 name|reg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uba_device
+modifier|*
+name|ui
 decl_stmt|;
 end_decl_stmt
 
@@ -558,6 +572,17 @@ operator|)
 name|reg
 expr_stmt|;
 comment|/* reset interface, enable, and wait till dust settles */
+ifdef|#
+directive|ifdef
+name|QBA
+operator|(
+name|void
+operator|)
+name|spl6
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|->
 name|vvicsr
@@ -612,6 +637,25 @@ argument_list|(
 literal|100000
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QBA
+name|vv_softc
+index|[
+name|ui
+operator|->
+name|ui_unit
+index|]
+operator|.
+name|vs_ipl
+operator|=
+name|br
+operator|=
+name|qbgetpri
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|->
 name|vvocsr
@@ -634,7 +678,11 @@ expr_stmt|;
 comment|/* backup so vector => receive */
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vvreg
+argument_list|)
 operator|)
 return|;
 block|}
@@ -987,6 +1035,18 @@ name|ui_addr
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_RUNNING
+operator|)
+operator|==
+literal|0
+operator|&&
 name|if_ubainit
 argument_list|(
 operator|&
@@ -1034,6 +1094,14 @@ name|IFF_UP
 expr_stmt|;
 return|return;
 block|}
+name|vs
+operator|->
+name|vs_if
+operator|.
+name|if_flags
+operator||=
+name|IFF_RUNNING
+expr_stmt|;
 comment|/* 	 * Now that the uba is set up, figure out our address and 	 * update complete our host address. 	 */
 if|if
 condition|(
@@ -1231,7 +1299,7 @@ name|vs_if
 operator|.
 name|if_flags
 operator||=
-name|IFF_RUNNING
+name|IFF_UP
 expr_stmt|;
 name|vvxint
 argument_list|(
@@ -2258,6 +2326,9 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* ship it */
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|vs
@@ -2285,6 +2356,8 @@ operator|.
 name|ifrw_bdp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|addr
 operator|=
 operator|(
@@ -2438,6 +2511,21 @@ specifier|register
 name|int
 name|oc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|QBA
+name|splx
+argument_list|(
+name|vv_softc
+index|[
+name|unit
+index|]
+operator|.
+name|vs_ipl
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ui
 operator|=
 name|vvinfo
@@ -2776,6 +2864,21 @@ decl_stmt|;
 name|short
 name|resid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|QBA
+name|splx
+argument_list|(
+name|vv_softc
+index|[
+name|unit
+index|]
+operator|.
+name|vs_ipl
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vs
 operator|=
 operator|&
@@ -4293,12 +4396,6 @@ block|{
 case|case
 name|SIOCSIFADDR
 case|:
-name|ifp
-operator|->
-name|if_flags
-operator||=
-name|IFF_UP
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4335,7 +4432,9 @@ name|error
 operator|=
 name|ENETDOWN
 expr_stmt|;
-comment|/*                  * Attempt to check agreement of protocol address                  * and board address.                  */
+else|else
+block|{
+comment|/* 			 * Attempt to check agreement of protocol address 			 * and board address. 			 */
 switch|switch
 condition|(
 name|ifa
@@ -4350,6 +4449,7 @@ name|AF_INET
 case|:
 if|if
 condition|(
+operator|(
 name|in_lnaof
 argument_list|(
 name|IA_SIN
@@ -4359,6 +4459,9 @@ argument_list|)
 operator|->
 name|sin_addr
 argument_list|)
+operator|&
+literal|0xff
+operator|)
 operator|!=
 name|vv_softc
 index|[
@@ -4374,6 +4477,7 @@ operator|=
 name|EADDRNOTAVAIL
 expr_stmt|;
 break|break;
+block|}
 block|}
 break|break;
 default|default:
