@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.4 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,12 +68,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|topq
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|down
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -167,6 +170,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|downhelp
+index|[]
+init|=
+literal|"do a 'stop' followed by 'disable' and put a message in status"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|topqhelp
 index|[]
 init|=
@@ -227,6 +239,16 @@ block|,
 name|disablehelp
 block|,
 name|disable
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"down"
+block|,
+name|downhelp
+block|,
+name|down
 block|,
 literal|1
 block|}
