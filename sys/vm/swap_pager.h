@@ -407,32 +407,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* choose underlying swap device and queue up I/O */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|buf
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|void
-name|swstrategy
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* probably needs to move elsewhere */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
