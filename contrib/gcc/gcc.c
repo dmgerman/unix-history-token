@@ -17062,9 +17062,6 @@ directive|endif
 comment|/* FREEBSD_NATIVE */
 ifndef|#
 directive|ifndef
-name|FREEBSD_NATIVE
-ifndef|#
-directive|ifndef
 name|OS2
 name|add_prefix
 argument_list|(
@@ -17082,6 +17079,9 @@ argument_list|,
 name|warn_std_ptr
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 name|add_prefix
 argument_list|(
 operator|&
@@ -17116,6 +17116,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* not FREEBSD_NATIVE */
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 name|add_prefix
 argument_list|(
 operator|&
