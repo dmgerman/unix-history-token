@@ -23,6 +23,13 @@ directive|include
 file|<opt_sched.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|kse
+value|td_sched
+end_define
+
 begin_include
 include|#
 directive|include
@@ -406,38 +413,99 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * These datastructures are allocated within their parent datastructure but  * are scheduler specific.  */
+comment|/*  * The schedulable entity that can be given a context to run.  * A process may have several of these. Probably one per processor  * but posibly a few more. In this universe they are grouped  * with a KSEG that contains the priority and niceness  * for the group.  */
 end_comment
 
 begin_struct
 struct|struct
-name|ke_sched
+name|kse
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|kse
+argument_list|)
+name|ke_kglist
+expr_stmt|;
+comment|/* (*) Queue of threads in ke_ksegrp. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|kse
+argument_list|)
+name|ke_kgrlist
+expr_stmt|;
+comment|/* (*) Queue of threads in this state.*/
+name|TAILQ_ENTRY
+argument_list|(
+argument|kse
+argument_list|)
+name|ke_procq
+expr_stmt|;
+comment|/* (j/z) Run queue. */
 name|int
-name|ske_slice
+name|ke_flags
+decl_stmt|;
+comment|/* (j) KEF_* flags. */
+name|struct
+name|thread
+modifier|*
+name|ke_thread
+decl_stmt|;
+comment|/* (*) Active associated thread. */
+name|fixpt_t
+name|ke_pctcpu
+decl_stmt|;
+comment|/* (j) %cpu during p_swtime. */
+name|u_char
+name|ke_oncpu
+decl_stmt|;
+comment|/* (j) Which cpu we are on. */
+name|char
+name|ke_rqindex
+decl_stmt|;
+comment|/* (j) Run queue index. */
+enum|enum
+block|{
+name|KES_THREAD
+init|=
+literal|0x0
+block|,
+comment|/* slaved to thread state */
+name|KES_ONRUNQ
+block|}
+name|ke_state
+enum|;
+comment|/* (j) thread sched specific status. */
+name|int
+name|ke_slptime
+decl_stmt|;
+name|int
+name|ke_pinned
+decl_stmt|;
+name|int
+name|ke_slice
 decl_stmt|;
 name|struct
 name|runq
 modifier|*
-name|ske_runq
+name|ke_runq
 decl_stmt|;
+name|u_char
+name|ke_cpu
+decl_stmt|;
+comment|/* CPU that we have affinity for. */
 comment|/* The following variables are only used for pctcpu calculation */
 name|int
-name|ske_ltick
+name|ke_ltick
 decl_stmt|;
 comment|/* Last tick that we were running on */
 name|int
-name|ske_ftick
+name|ke_ftick
 decl_stmt|;
 comment|/* First tick that we were running on */
 name|int
-name|ske_ticks
+name|ke_ticks
 decl_stmt|;
 comment|/* Tick count */
-comment|/* CPU that we have affinity for. */
-name|u_char
-name|ske_cpu
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -445,44 +513,104 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ke_slice
-value|ke_sched->ske_slice
+name|td_kse
+value|td_sched
 end_define
 
 begin_define
 define|#
 directive|define
-name|ke_runq
-value|ke_sched->ske_runq
+name|td_slptime
+value|td_kse->ke_slptime
 end_define
 
 begin_define
 define|#
 directive|define
-name|ke_ltick
-value|ke_sched->ske_ltick
+name|ke_proc
+value|ke_thread->td_proc
 end_define
 
 begin_define
 define|#
 directive|define
-name|ke_ftick
-value|ke_sched->ske_ftick
+name|ke_ksegrp
+value|ke_thread->td_ksegrp
 end_define
+
+begin_comment
+comment|/* flags kept in ke_flags */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ke_ticks
-value|ke_sched->ske_ticks
+name|KEF_SCHED0
+value|0x00001
 end_define
+
+begin_comment
+comment|/* For scheduler-specific use. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ke_cpu
-value|ke_sched->ske_cpu
+name|KEF_SCHED1
+value|0x00002
 end_define
+
+begin_comment
+comment|/* For scheduler-specific use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_SCHED2
+value|0x00004
+end_define
+
+begin_comment
+comment|/* For scheduler-specific use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_SCHED3
+value|0x00008
+end_define
+
+begin_comment
+comment|/* For scheduler-specific use. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_DIDRUN
+value|0x02000
+end_define
+
+begin_comment
+comment|/* Thread actually ran. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_EXIT
+value|0x04000
+end_define
+
+begin_comment
+comment|/* Thread is being killed. */
+end_comment
+
+begin_comment
+comment|/*  * These datastructures are allocated within their parent datastructure but  * are scheduler specific.  */
+end_comment
 
 begin_define
 define|#
@@ -499,7 +627,7 @@ value|KEF_SCHED0
 end_define
 
 begin_comment
-comment|/* KSE is being migrated. */
+comment|/* Thread is being migrated. */
 end_comment
 
 begin_define
@@ -510,7 +638,7 @@ value|KEF_SCHED1
 end_define
 
 begin_comment
-comment|/* KSE can not migrate. */
+comment|/* Thread can not migrate. */
 end_comment
 
 begin_define
@@ -521,7 +649,7 @@ value|KEF_SCHED2
 end_define
 
 begin_comment
-comment|/* KSE was added as transferable. */
+comment|/* Thread was added as transferable. */
 end_comment
 
 begin_define
@@ -532,13 +660,20 @@ value|KEF_SCHED3
 end_define
 
 begin_comment
-comment|/* KSE is temporarily bound. */
+comment|/* Thread is temporarily bound. */
 end_comment
 
 begin_struct
 struct|struct
 name|kg_sched
 block|{
+name|struct
+name|thread
+modifier|*
+name|skg_last_assigned
+decl_stmt|;
+comment|/* (j) Last thread assigned to */
+comment|/* the system scheduler */
 name|int
 name|skg_slptime
 decl_stmt|;
@@ -547,6 +682,18 @@ name|int
 name|skg_runtime
 decl_stmt|;
 comment|/* Number of ticks we were running */
+name|int
+name|skg_avail_opennings
+decl_stmt|;
+comment|/* (j) Num unfilled slots in group.*/
+name|int
+name|skg_concurrency
+decl_stmt|;
+comment|/* (j) Num threads requested in group.*/
+name|int
+name|skg_runq_threads
+decl_stmt|;
+comment|/* (j) Num KSEs on runq. */
 block|}
 struct|;
 end_struct
@@ -554,8 +701,29 @@ end_struct
 begin_define
 define|#
 directive|define
-name|kg_slptime
-value|kg_sched->skg_slptime
+name|kg_last_assigned
+value|kg_sched->skg_last_assigned
+end_define
+
+begin_define
+define|#
+directive|define
+name|kg_avail_opennings
+value|kg_sched->skg_avail_opennings
+end_define
+
+begin_define
+define|#
+directive|define
+name|kg_concurrency
+value|kg_sched->skg_concurrency
+end_define
+
+begin_define
+define|#
+directive|define
+name|kg_runq_threads
+value|kg_sched->skg_runq_threads
 end_define
 
 begin_define
@@ -565,85 +733,26 @@ name|kg_runtime
 value|kg_sched->skg_runtime
 end_define
 
-begin_struct
-struct|struct
-name|td_sched
-block|{
-name|int
-name|std_slptime
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
-name|td_slptime
-value|td_sched->std_slptime
+name|kg_slptime
+value|kg_sched->skg_slptime
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
-name|td_sched
-name|td_sched
+name|kse
+name|kse0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|ke_sched
-name|ke_sched
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|kg_sched
-name|kg_sched
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ke_sched
-modifier|*
-name|kse0_sched
-init|=
-operator|&
-name|ke_sched
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|kg_sched
-modifier|*
-name|ksegrp0_sched
-init|=
-operator|&
-name|kg_sched
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|p_sched
-modifier|*
-name|proc0_sched
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|td_sched
-modifier|*
-name|thread0_sched
-init|=
-operator|&
-name|td_sched
+name|kg_sched0
 decl_stmt|;
 end_decl_stmt
 
@@ -792,7 +901,7 @@ value|(SCHED_SLICE_MAX - SCHED_SLICE_SCALE((nice), SCHED_SLICE_NTHRESH))
 end_define
 
 begin_comment
-comment|/*  * This macro determines whether or not the kse belongs on the current or  * next run queue.  */
+comment|/*  * This macro determines whether or not the thread belongs on the current or  * next run queue.  */
 end_comment
 
 begin_define
@@ -1119,6 +1228,35 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|static
+name|void
+name|slot_fill
+parameter_list|(
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|kse
+modifier|*
+name|sched_choose
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX Should be thread * */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -5024,6 +5162,75 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Very early in the boot some setup of scheduler-specific  * parts of proc0 and of soem scheduler resources needs to be done.  * Called from:  *  proc0_init()  */
+end_comment
+
+begin_function
+name|void
+name|schedinit
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * Set up the scheduler specific parts of proc0. 	 */
+name|ksegrp0
+operator|.
+name|kg_sched
+operator|=
+operator|&
+name|kg_sched0
+expr_stmt|;
+name|proc0
+operator|.
+name|p_sched
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* XXX */
+name|thread0
+operator|.
+name|td_kse
+operator|=
+operator|&
+name|kse0
+expr_stmt|;
+name|kse0
+operator|.
+name|ke_thread
+operator|=
+operator|&
+name|thread0
+expr_stmt|;
+name|kse0
+operator|.
+name|ke_oncpu
+operator|=
+name|NOCPU
+expr_stmt|;
+comment|/* wrong.. can we use PCPU(cpuid) yet? */
+name|kse0
+operator|.
+name|ke_state
+operator|=
+name|KES_THREAD
+expr_stmt|;
+name|kg_sched0
+operator|.
+name|skg_concurrency
+operator|=
+literal|1
+expr_stmt|;
+name|kg_sched0
+operator|.
+name|skg_avail_opennings
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we are already running */
+block|}
+end_function
+
+begin_comment
 comment|/*  * This is only somewhat accurate since given many processes of the same  * priority they will switch when their slices run out, which will be  * at most SCHED_SLICE_MAX.  */
 end_comment
 
@@ -5293,12 +5500,6 @@ name|td_kse
 expr_stmt|;
 name|td
 operator|->
-name|td_last_kse
-operator|=
-name|ke
-expr_stmt|;
-name|td
-operator|->
 name|td_lastcpu
 operator|=
 name|td
@@ -5325,6 +5526,33 @@ operator|&=
 operator|~
 name|TDP_OWEPREEMPT
 expr_stmt|;
+comment|/* 	 * If we bring in a thread,  	 * then account for it as if it had been added to the run queue and then chosen. 	 */
+if|if
+condition|(
+name|newtd
+condition|)
+block|{
+name|newtd
+operator|->
+name|td_ksegrp
+operator|->
+name|kg_avail_opennings
+operator|--
+expr_stmt|;
+name|newtd
+operator|->
+name|td_kse
+operator|->
+name|ke_flags
+operator||=
+name|KEF_DIDRUN
+expr_stmt|;
+name|TD_SET_RUNNING
+argument_list|(
+name|newtd
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * If the KSE has been assigned it may be in the process of switching 	 * to the new cpu.  This is the case in sched_bind(). 	 */
 if|if
 condition|(
@@ -5355,7 +5583,16 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+comment|/* We are ending our run so make our slot available again */
+name|td
+operator|->
+name|td_ksegrp
+operator|->
+name|kg_avail_opennings
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|TD_IS_RUNNING
@@ -5376,7 +5613,7 @@ argument_list|,
 name|ke
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Don't allow the kse to migrate from a preemption. 			 */
+comment|/* 				 * Don't allow the thread to migrate 				 * from a preemption. 				 */
 name|ke
 operator|->
 name|ke_flags
@@ -5431,7 +5668,7 @@ condition|)
 name|kdb_backtrace
 argument_list|()
 expr_stmt|;
-comment|/* 			 * We will not be on the run queue. So we must be 			 * sleeping or similar. 			 */
+comment|/* 				 * We will not be on the run queue. 				 * So we must be sleeping or similar. 				 */
 if|if
 condition|(
 name|td
@@ -5440,13 +5677,16 @@ name|td_proc
 operator|->
 name|p_flag
 operator|&
-name|P_SA
+name|P_HADTHREADS
 condition|)
-name|kse_reassign
+name|slot_fill
 argument_list|(
-name|ke
+name|td
+operator|->
+name|td_ksegrp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -5570,13 +5810,19 @@ operator|==
 name|PRI_TIMESHARE
 condition|)
 block|{
-name|FOREACH_KSE_IN_GROUP
+name|FOREACH_THREAD_IN_GROUP
 argument_list|(
 argument|kg
 argument_list|,
-argument|ke
+argument|td
 argument_list|)
 block|{
+name|ke
+operator|=
+name|td
+operator|->
+name|td_kse
+expr_stmt|;
 if|if
 condition|(
 name|ke
@@ -5684,11 +5930,9 @@ name|CTR2
 argument_list|(
 name|KTR_ULE
 argument_list|,
-literal|"sleep kse %p (tick: %d)"
+literal|"sleep thread %p (tick: %d)"
 argument_list|,
 name|td
-operator|->
-name|td_kse
 argument_list|,
 name|td
 operator|->
@@ -5789,12 +6033,6 @@ argument_list|(
 name|kg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|->
-name|td_kse
-condition|)
 name|sched_slice
 argument_list|(
 name|td
@@ -5806,11 +6044,9 @@ name|CTR2
 argument_list|(
 name|KTR_ULE
 argument_list|,
-literal|"wakeup kse %p (%d ticks)"
+literal|"wakeup thread %p (%d ticks)"
 argument_list|,
 name|td
-operator|->
-name|td_kse
 argument_list|,
 name|hzticks
 argument_list|)
@@ -5846,9 +6082,9 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p1
+name|childtd
 parameter_list|)
 block|{
 name|mtx_assert
@@ -5859,118 +6095,21 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|p1
-operator|->
-name|p_nice
-operator|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_nice
-expr_stmt|;
 name|sched_fork_ksegrp
 argument_list|(
 name|td
 argument_list|,
-name|FIRST_KSEGRP_IN_PROC
-argument_list|(
-name|p1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sched_fork_kse
-argument_list|(
-name|td
-argument_list|,
-name|FIRST_KSE_IN_PROC
-argument_list|(
-name|p1
-argument_list|)
+name|childtd
+operator|->
+name|td_ksegrp
 argument_list|)
 expr_stmt|;
 name|sched_fork_thread
 argument_list|(
 name|td
 argument_list|,
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p1
+name|childtd
 argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sched_fork_kse
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|kse
-modifier|*
-name|child
-parameter_list|)
-block|{
-name|struct
-name|kse
-modifier|*
-name|ke
-init|=
-name|td
-operator|->
-name|td_kse
-decl_stmt|;
-name|child
-operator|->
-name|ke_slice
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Attempt to quickly learn interactivity. */
-name|child
-operator|->
-name|ke_cpu
-operator|=
-name|ke
-operator|->
-name|ke_cpu
-expr_stmt|;
-name|child
-operator|->
-name|ke_runq
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Grab our parents cpu estimation information. */
-name|child
-operator|->
-name|ke_ticks
-operator|=
-name|ke
-operator|->
-name|ke_ticks
-expr_stmt|;
-name|child
-operator|->
-name|ke_ltick
-operator|=
-name|ke
-operator|->
-name|ke_ltick
-expr_stmt|;
-name|child
-operator|->
-name|ke_ftick
-operator|=
-name|ke
-operator|->
-name|ke_ftick
 expr_stmt|;
 block|}
 end_function
@@ -5999,11 +6138,10 @@ name|td
 operator|->
 name|td_ksegrp
 decl_stmt|;
-name|PROC_LOCK_ASSERT
+name|mtx_assert
 argument_list|(
-name|child
-operator|->
-name|kg_proc
+operator|&
+name|sched_lock
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -6102,7 +6240,81 @@ name|thread
 modifier|*
 name|child
 parameter_list|)
-block|{ }
+block|{
+name|struct
+name|kse
+modifier|*
+name|ke
+decl_stmt|;
+name|struct
+name|kse
+modifier|*
+name|ke2
+decl_stmt|;
+name|sched_newthread
+argument_list|(
+name|child
+argument_list|)
+expr_stmt|;
+name|ke
+operator|=
+name|td
+operator|->
+name|td_kse
+expr_stmt|;
+name|ke2
+operator|=
+name|child
+operator|->
+name|td_kse
+expr_stmt|;
+name|ke2
+operator|->
+name|ke_slice
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Attempt to quickly learn interactivity. */
+name|ke2
+operator|->
+name|ke_cpu
+operator|=
+name|ke
+operator|->
+name|ke_cpu
+expr_stmt|;
+name|ke2
+operator|->
+name|ke_runq
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Grab our parents cpu estimation information. */
+name|ke2
+operator|->
+name|ke_ticks
+operator|=
+name|ke
+operator|->
+name|ke_ticks
+expr_stmt|;
+name|ke2
+operator|->
+name|ke_ltick
+operator|=
+name|ke
+operator|->
+name|ke_ltick
+expr_stmt|;
+name|ke2
+operator|->
+name|ke_ftick
+operator|=
+name|ke
+operator|->
+name|ke_ftick
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -6127,6 +6339,11 @@ name|struct
 name|kse
 modifier|*
 name|ke
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 name|int
 name|nclass
@@ -6167,13 +6384,19 @@ operator|->
 name|kg_pri_class
 argument_list|)
 expr_stmt|;
-name|FOREACH_KSE_IN_GROUP
+name|FOREACH_THREAD_IN_GROUP
 argument_list|(
 argument|kg
 argument_list|,
-argument|ke
+argument|td
 argument_list|)
 block|{
+name|ke
+operator|=
+name|td
+operator|->
+name|td_kse
+expr_stmt|;
 if|if
 condition|(
 name|ke
@@ -6319,7 +6542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return some of the child's priority and interactivity to the parent.  */
+comment|/*  * Return some of the child's priority and interactivity to the parent.  * Avoid using sched_exit_thread to avoid having to decide which  * thread in the parent gets the honour since it isn't used.  */
 end_comment
 
 begin_function
@@ -6334,7 +6557,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
+name|childtd
 parameter_list|)
 block|{
 name|mtx_assert
@@ -6345,16 +6568,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|sched_exit_kse
-argument_list|(
-name|FIRST_KSE_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|sched_exit_ksegrp
 argument_list|(
 name|FIRST_KSEGRP_IN_PROC
@@ -6362,39 +6575,21 @@ argument_list|(
 name|p
 argument_list|)
 argument_list|,
-name|td
+name|childtd
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|sched_exit_kse
-parameter_list|(
-name|struct
-name|kse
-modifier|*
-name|ke
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-block|{
 name|kseq_load_rem
 argument_list|(
 name|KSEQ_CPU
 argument_list|(
-name|td
+name|childtd
 operator|->
 name|td_kse
 operator|->
 name|ke_cpu
 argument_list|)
 argument_list|,
-name|td
+name|childtd
 operator|->
 name|td_kse
 argument_list|)
@@ -6448,9 +6643,26 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|child
+name|childtd
 parameter_list|)
-block|{ }
+block|{
+name|kseq_load_rem
+argument_list|(
+name|KSEQ_CPU
+argument_list|(
+name|childtd
+operator|->
+name|td_kse
+operator|->
+name|ke_cpu
+argument_list|)
+argument_list|,
+name|childtd
+operator|->
+name|td_kse
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -6618,9 +6830,9 @@ name|CTR4
 argument_list|(
 name|KTR_ULE
 argument_list|,
-literal|"Tick kse %p (slice: %d, slptime: %d, runtime: %d)"
+literal|"Tick thread %p (slice: %d, slptime: %d, runtime: %d)"
 argument_list|,
-name|ke
+name|td
 argument_list|,
 name|ke
 operator|->
@@ -7014,9 +7226,11 @@ name|CTR4
 argument_list|(
 name|KTR_ULE
 argument_list|,
-literal|"Run kse %p from %p (slice: %d, pri: %d)"
+literal|"Run thread %p from %p (slice: %d, pri: %d)"
 argument_list|,
 name|ke
+operator|->
+name|ke_thread
 argument_list|,
 name|ke
 operator|->
@@ -7178,38 +7392,6 @@ name|kseq
 operator|=
 name|KSEQ_SELF
 argument_list|()
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|ke
-operator|->
-name|ke_thread
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"sched_add: No thread on KSE"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|ke
-operator|->
-name|ke_thread
-operator|->
-name|td_kse
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"sched_add: No KSE on thread"
-operator|)
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -7593,7 +7775,7 @@ name|ke
 operator|->
 name|ke_ksegrp
 operator|->
-name|kg_runq_kses
+name|kg_runq_threads
 operator|++
 expr_stmt|;
 name|ke
@@ -7688,7 +7870,7 @@ name|ke
 operator|->
 name|ke_ksegrp
 operator|->
-name|kg_runq_kses
+name|kg_runq_threads
 operator|--
 expr_stmt|;
 name|kseq
@@ -7927,7 +8109,7 @@ name|ke
 operator|->
 name|ke_ksegrp
 operator|->
-name|kg_runq_kses
+name|kg_runq_threads
 operator|--
 expr_stmt|;
 name|kseq_load_rem
@@ -8056,31 +8238,6 @@ end_function
 
 begin_function
 name|int
-name|sched_sizeof_kse
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|kse
-argument_list|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ke_sched
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
 name|sched_sizeof_ksegrp
 parameter_list|(
 name|void
@@ -8147,6 +8304,19 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|KERN_SWITCH_INCLUDE
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|"kern/kern_switch.c"
+end_include
 
 end_unit
 

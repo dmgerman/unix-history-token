@@ -829,11 +829,6 @@ modifier|*
 name|td2
 decl_stmt|;
 name|struct
-name|kse
-modifier|*
-name|ke2
-decl_stmt|;
-name|struct
 name|ksegrp
 modifier|*
 name|kg2
@@ -1795,13 +1790,6 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-name|ke2
-operator|=
-name|FIRST_KSE_IN_KSEGRP
-argument_list|(
-name|kg2
-argument_list|)
-expr_stmt|;
 comment|/* Allocate and switch to an alternate kstack if specified. */
 if|if
 condition|(
@@ -1855,27 +1843,6 @@ argument_list|,
 name|p_startzero
 argument_list|,
 name|p_endzero
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|ke2
-operator|->
-name|ke_startzero
-argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|RANGEOF
-argument_list|(
-expr|struct
-name|kse
-argument_list|,
-name|ke_startzero
-argument_list|,
-name|ke_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2012,25 +1979,6 @@ name|td
 operator|->
 name|td_sigstk
 expr_stmt|;
-comment|/* Set up the thread as an active thread (as if runnable). */
-name|ke2
-operator|->
-name|ke_state
-operator|=
-name|KES_THREAD
-expr_stmt|;
-name|ke2
-operator|->
-name|ke_thread
-operator|=
-name|td2
-expr_stmt|;
-name|td2
-operator|->
-name|td_kse
-operator|=
-name|ke2
-expr_stmt|;
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats substruct is set in vm_forkproc. 	 */
 name|p2
 operator|->
@@ -2068,7 +2016,7 @@ name|sched_fork
 argument_list|(
 name|td
 argument_list|,
-name|p2
+name|td2
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -3216,7 +3164,7 @@ name|td
 argument_list|,
 name|td
 operator|->
-name|td_kse
+name|td_sched
 argument_list|,
 name|p
 operator|->

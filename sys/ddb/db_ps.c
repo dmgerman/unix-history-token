@@ -354,7 +354,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_SA
+name|P_HADTHREADS
 condition|)
 name|db_printf
 argument_list|(
@@ -442,7 +442,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_SA
+name|P_HADTHREADS
 condition|)
 name|db_printf
 argument_list|(
@@ -629,9 +629,12 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_SA
+name|P_HADTHREADS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KEF_DIDRUN
 if|if
 condition|(
 name|td
@@ -647,6 +650,8 @@ operator|->
 name|td_kse
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|db_printf
 argument_list|(
 literal|"\n"

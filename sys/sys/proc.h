@@ -295,18 +295,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      q - td_contested lock  *      r - p_peers lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads/kse/ksegroup lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
+comment|/*-  * Description of a process.  *  * This structure contains the information needed to manage a thread of  * control, known in UN*X as a process; it has references to substructures  * containing descriptions of things that the process uses, but may share  * with related processes.  The process structure and the substructures  * are always addressable except for those marked "(CPU)" below,  * which might be addressable only on a processor on which the process  * is running.  *  * Below is a key of locks used to protect each member of struct proc.  The  * lock is indicated by a reference to a specific character in parens in the  * associated comment.  *      * - not yet protected  *      a - only touched by curproc or parent during fork/wait  *      b - created at fork, never changes  *		(exception aiods switch vmspaces, but they are also  *		marked 'P_SYSTEM' so hopefully it will be left alone)  *      c - locked by proc mtx  *      d - locked by allproc_lock lock  *      e - locked by proctree_lock lock  *      f - session mtx  *      g - process group mtx  *      h - callout_lock mtx  *      i - by curproc or the master session mtx  *      j - locked by sched_lock mtx  *      k - only accessed by curthread  *      l - the attaching proc or attaching proc parent  *      m - Giant  *      n - not locked, lazy  *      o - ktrace lock  *      p - select lock (sellock)  *      q - td_contested lock  *      r - p_peers lock  *      x - created at fork, only changes during single threading in exec  *      z - zombie threads/ksegroup lock  *  * If the locking key specifies two identifiers (for example, p_pptr) then  * either lock is sufficient for read access, but both locks must be held  * for write access.  */
 end_comment
 
 begin_struct_decl
 struct_decl|struct
 name|ithd
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|ke_sched
 struct_decl|;
 end_struct_decl
 
@@ -353,7 +347,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Here we define the four structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *  * It is important to remember that a particular thread structure only  * exists as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance. (basically to save freeing and then re-allocating it) The KSE  * keeps a cached thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  */
+comment|/*  * Here we define the three structures used for process information.  *  * The first is the thread. It might be thought of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of  * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *  * It is important to remember that a particular thread structure may only  * exist as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance. (basically to save freeing and then re-allocating it) The existing  * thread keeps a cached spare thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inheritance schemes.  */
 end_comment
 
 begin_struct_decl
@@ -363,17 +357,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * The second structure is the Kernel Schedulable Entity. (KSE)  * It represents the ability to take a slot in the scheduler queue.  * As long as this is scheduled, it could continue to run any threads that  * are assigned to the KSEGRP (see later) until either it runs out  * of runnable threads of high enough priority, or CPU.  * It runs on one CPU and is assigned a quantum of time. When a thread is  * blocked, The KSE continues to run and will search for another thread  * in a runnable state amongst those it has. It May decide to return to user  * mode with a new 'empty' thread if there are no runnable threads.  * Threads are temporarily associated with a KSE for scheduling reasons.  */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|kse
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * its KSEs, each of which should be running in a different CPU.  * BASE priority and total available quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * it's parent process.  */
+comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * its threads, each of which should be running in a different CPU.  * BASE priority and total available quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * it's parent process.  */
 end_comment
 
 begin_struct_decl
@@ -393,7 +377,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/***************  * In pictures:  With a single run queue used by all processors:   RUNQ: --->KSE---KSE--...               SLEEPQ:[]---THREAD---THREAD---THREAD 	   |   /                               []---THREAD 	   KSEG---THREAD--THREAD--THREAD       [] 					       []---THREAD---THREAD    (processors run THREADs from the KSEG until they are exhausted or   the KSEG exhausts its quantum)  With PER-CPU run queues: KSEs on the separate run queues directly They would be given priorities calculated from the KSEG.   *  *****************/
+comment|/***************  * In pictures:  With a single run queue used by all processors:   RUNQ: --->KSE---KSE--...               SLEEPQ:[]---THREAD---THREAD---THREAD 	     \      \                          []---THREAD       KSEG---THREAD--THREAD--THREAD            [] 					       []---THREAD---THREAD    (processors run THREADs from the KSEG until they are exhausted or   the KSEG exhausts its quantum)  With PER-CPU run queues: KSEs on the separate run queues directly They would be given priorities calculated from the KSEG.   *  *****************/
 end_comment
 
 begin_comment
@@ -493,18 +477,6 @@ name|int
 name|td_pflags
 decl_stmt|;
 comment|/* (k) Private thread (TDP_*) flags. */
-name|struct
-name|kse
-modifier|*
-name|td_last_kse
-decl_stmt|;
-comment|/* (j) Previous value of td_kse. */
-name|struct
-name|kse
-modifier|*
-name|td_kse
-decl_stmt|;
-comment|/* (j) Current KSE if any. */
 name|int
 name|td_dupfd
 decl_stmt|;
@@ -1034,7 +1006,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_SCHED1
+name|TDF_SCHED0
 value|0x01000000
 end_define
 
@@ -1045,7 +1017,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_SCHED2
+name|TDF_SCHED1
 value|0x02000000
 end_define
 
@@ -1056,7 +1028,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_SCHED3
+name|TDF_SCHED2
 value|0x04000000
 end_define
 
@@ -1067,7 +1039,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_SCHED4
+name|TDF_SCHED3
 value|0x08000000
 end_define
 
@@ -1627,176 +1599,6 @@ value|(td)->td_state = TDS_CAN_RUN
 end_define
 
 begin_comment
-comment|/*  * The schedulable entity that can be given a context to run.  * A process may have several of these. Probably one per processor  * but posibly a few more. In this universe they are grouped  * with a KSEG that contains the priority and niceness  * for the group.  */
-end_comment
-
-begin_struct
-struct|struct
-name|kse
-block|{
-name|struct
-name|proc
-modifier|*
-name|ke_proc
-decl_stmt|;
-comment|/* (*) Associated process. */
-name|struct
-name|ksegrp
-modifier|*
-name|ke_ksegrp
-decl_stmt|;
-comment|/* (*) Associated KSEG. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|kse
-argument_list|)
-name|ke_kglist
-expr_stmt|;
-comment|/* (*) Queue of KSEs in ke_ksegrp. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|kse
-argument_list|)
-name|ke_kgrlist
-expr_stmt|;
-comment|/* (*) Queue of KSEs in this state. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|kse
-argument_list|)
-name|ke_procq
-expr_stmt|;
-comment|/* (j/z) Run queue. */
-define|#
-directive|define
-name|ke_startzero
-value|ke_flags
-name|int
-name|ke_flags
-decl_stmt|;
-comment|/* (j) KEF_* flags. */
-name|struct
-name|thread
-modifier|*
-name|ke_thread
-decl_stmt|;
-comment|/* (*) Active associated thread. */
-name|fixpt_t
-name|ke_pctcpu
-decl_stmt|;
-comment|/* (j) %cpu during p_swtime. */
-name|u_char
-name|ke_oncpu
-decl_stmt|;
-comment|/* (j) Which cpu we are on. */
-name|char
-name|ke_rqindex
-decl_stmt|;
-comment|/* (j) Run queue index. */
-enum|enum
-block|{
-name|KES_UNUSED
-init|=
-literal|0x0
-block|,
-name|KES_IDLE
-block|,
-name|KES_ONRUNQ
-block|,
-name|KES_UNQUEUED
-block|,
-comment|/* in transit */
-name|KES_THREAD
-comment|/* slaved to thread state */
-block|}
-name|ke_state
-enum|;
-comment|/* (j) KSE status. */
-define|#
-directive|define
-name|ke_endzero
-value|ke_sched
-name|struct
-name|ke_sched
-modifier|*
-name|ke_sched
-decl_stmt|;
-comment|/* (*) Scheduler-specific data. */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* flags kept in ke_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED0
-value|0x00001
-end_define
-
-begin_comment
-comment|/* For scheduler-specific use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED1
-value|0x00002
-end_define
-
-begin_comment
-comment|/* For scheduler-specific use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED2
-value|0X00004
-end_define
-
-begin_comment
-comment|/* For scheduler-specific use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_SCHED3
-value|0x00008
-end_define
-
-begin_comment
-comment|/* For scheduler-specific use. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_DIDRUN
-value|0x02000
-end_define
-
-begin_comment
-comment|/* KSE actually ran. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KEF_EXIT
-value|0x04000
-end_define
-
-begin_comment
-comment|/* KSE is being killed. */
-end_comment
-
-begin_comment
 comment|/*  * The upcall management structure.  * The upcall is used when returning to userland.  If a thread does not have  * an upcall on return to userland the thread exports its context and exits.  */
 end_comment
 
@@ -1897,22 +1699,6 @@ comment|/* (*) Queue of KSEGs in kg_proc. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|kse
-argument_list|)
-name|kg_kseq
-expr_stmt|;
-comment|/* (ke_kglist) All KSEs. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|kse
-argument_list|)
-name|kg_iq
-expr_stmt|;
-comment|/* (ke_kgrlist) All idle KSEs. */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
 argument|thread
 argument_list|)
 name|kg_threads
@@ -1954,24 +1740,10 @@ name|u_int
 name|kg_slptime
 decl_stmt|;
 comment|/* (j) How long completely blocked. */
-name|struct
-name|thread
-modifier|*
-name|kg_last_assigned
-decl_stmt|;
-comment|/* (j) Last thread assigned to a KSE. */
 name|int
 name|kg_runnable
 decl_stmt|;
 comment|/* (j) Num runnable threads on queue. */
-name|int
-name|kg_runq_kses
-decl_stmt|;
-comment|/* (j) Num KSEs on runq. */
-name|int
-name|kg_idle_kses
-decl_stmt|;
-comment|/* (j) Num KSEs on iq. */
 name|int
 name|kg_numupcalls
 decl_stmt|;
@@ -2018,14 +1790,6 @@ name|int
 name|kg_numthreads
 decl_stmt|;
 comment|/* (j) Num threads in total. */
-name|int
-name|kg_kses
-decl_stmt|;
-comment|/* (j) Num KSEs in group. */
-name|int
-name|kg_concurrency
-decl_stmt|;
-comment|/* (j) Num KSEs requested in group. */
 name|struct
 name|kg_sched
 modifier|*
@@ -2037,7 +1801,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The old fashionned process. May have multiple threads, KSEGRPs  * and KSEs. Starts off with a single embedded KSEGRP, KSE and THREAD.  */
+comment|/*  * The old fashionned process. May have multiple threads, KSEGRPs  * and KSEs. Starts off with a single embedded KSEGRP and THREAD.  */
 end_comment
 
 begin_struct
@@ -2093,7 +1857,7 @@ modifier|*
 name|p_fdtol
 decl_stmt|;
 comment|/* (b) Ptr to tracking node */
-comment|/* Accumulated stats for all KSEs? */
+comment|/* Accumulated stats for all threads? */
 name|struct
 name|pstats
 modifier|*
@@ -2136,7 +1900,7 @@ block|,
 comment|/* In creation */
 name|PRS_NORMAL
 block|,
-comment|/* KSEs can be run. */
+comment|/* threads can be run. */
 name|PRS_ZOMBIE
 block|}
 name|p_state
@@ -3159,19 +2923,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FOREACH_KSE_IN_GROUP
-parameter_list|(
-name|kg
-parameter_list|,
-name|ke
-parameter_list|)
-define|\
-value|TAILQ_FOREACH((ke),&(kg)->kg_kseq, ke_kglist)
-end_define
-
-begin_define
-define|#
-directive|define
 name|FOREACH_UPCALL_IN_GROUP
 parameter_list|(
 name|kg
@@ -3217,26 +2968,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|TAILQ_FIRST(&(p)->p_ksegrps)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIRST_KSE_IN_KSEGRP
-parameter_list|(
-name|kg
-parameter_list|)
-value|TAILQ_FIRST(&(kg)->kg_kseq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIRST_KSE_IN_PROC
-parameter_list|(
-name|p
-parameter_list|)
-value|FIRST_KSE_IN_KSEGRP(FIRST_KSEGRP_IN_PROC(p))
 end_define
 
 begin_comment
@@ -3691,18 +3422,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Primary ksegrp in proc0. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|kse
-name|kse0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Primary kse in proc0. */
 end_comment
 
 begin_decl_stmt
@@ -4310,11 +4029,6 @@ modifier|*
 name|kg
 parameter_list|,
 name|struct
-name|kse
-modifier|*
-name|ke
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -4638,10 +4352,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|kse
-modifier|*
-name|kse_alloc
+name|void
+name|kse_GC
 parameter_list|(
 name|void
 parameter_list|)
@@ -4650,24 +4362,9 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|kse_free
+name|kseinit
 parameter_list|(
-name|struct
-name|kse
-modifier|*
-name|ke
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
-name|kse_stash
-parameter_list|(
-name|struct
-name|kse
-modifier|*
-name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4775,47 +4472,6 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|kse_reassign
-parameter_list|(
-name|struct
-name|kse
-modifier|*
-name|ke
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|kse_link
-parameter_list|(
-name|struct
-name|kse
-modifier|*
-name|ke
-parameter_list|,
-name|struct
-name|ksegrp
-modifier|*
-name|kg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|kse_unlink
-parameter_list|(
-name|struct
-name|kse
-modifier|*
-name|ke
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5225,13 +4881,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|thread
+modifier|*
 name|thread_switchout
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|newtd
 parameter_list|)
 function_decl|;
 end_function_decl

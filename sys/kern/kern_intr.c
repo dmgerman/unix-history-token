@@ -2262,6 +2262,7 @@ name|cookiep
 argument_list|)
 operator|)
 return|;
+comment|/* XXKSE.. think of a better way to get separate queues */
 block|}
 end_function
 
