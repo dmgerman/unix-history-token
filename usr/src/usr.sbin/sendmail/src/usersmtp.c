@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -296,6 +296,10 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
+name|r
+operator|<
+literal|0
+operator|||
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -333,6 +337,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_if
+if|if
+condition|(
+name|r
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
+elseif|else
 if|if
 condition|(
 name|REPLYTYPE
@@ -417,6 +433,10 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
+name|r
+operator|<
+literal|0
+operator|||
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -524,6 +544,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|r
+operator|<
+literal|0
+operator|||
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -657,6 +681,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|r
+operator|<
+literal|0
+operator|||
 name|REPLYTYPE
 argument_list|(
 name|r
@@ -740,6 +768,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|r
+operator|<
+literal|0
+operator|||
 name|REPLYTYPE
 argument_list|(
 name|r

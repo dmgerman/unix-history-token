@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.105
+literal|3.106
 operator|%
 name|G
 operator|%
@@ -94,10 +94,6 @@ modifier|*
 name|m
 decl_stmt|;
 comment|/* mailer for this recipient */
-specifier|register
-name|int
-name|i
-decl_stmt|;
 specifier|extern
 name|bool
 name|checkcompat
@@ -175,6 +171,11 @@ init|=
 name|TRUE
 decl_stmt|;
 comment|/* set if connection not quite open */
+specifier|register
+name|int
+name|rcode
+decl_stmt|;
+comment|/* response code */
 name|errno
 operator|=
 literal|0
@@ -875,7 +876,7 @@ name|clever
 condition|)
 block|{
 comment|/* send the initial SMTP protocol */
-name|i
+name|rcode
 operator|=
 name|smtpinit
 argument_list|(
@@ -908,7 +909,13 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMTP
-name|i
+if|if
+condition|(
+name|rcode
+operator|==
+name|EX_OK
+condition|)
+name|rcode
 operator|=
 name|smtprcpt
 argument_list|(
@@ -917,17 +924,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|rcode
 operator|!=
 name|EX_OK
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|QUEUE
 if|if
 condition|(
-name|i
+name|rcode
 operator|==
 name|EX_TEMPFAIL
 condition|)
@@ -938,9 +942,6 @@ operator||=
 name|QQUEUEUP
 expr_stmt|;
 else|else
-endif|#
-directive|endif
-endif|QUEUE
 name|to
 operator|->
 name|q_flags
@@ -949,7 +950,7 @@ name|QBADADDR
 expr_stmt|;
 name|giveresponse
 argument_list|(
-name|i
+name|rcode
 argument_list|,
 name|TRUE
 argument_list|,
@@ -1033,7 +1034,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
-name|i
+name|rcode
 operator|=
 name|mailfile
 argument_list|(
@@ -1047,7 +1048,7 @@ argument_list|)
 expr_stmt|;
 name|giveresponse
 argument_list|(
-name|i
+name|rcode
 argument_list|,
 name|TRUE
 argument_list|,
@@ -1317,7 +1318,7 @@ condition|(
 name|clever
 condition|)
 block|{
-name|i
+name|rcode
 operator|=
 name|smtpfinish
 argument_list|(
@@ -1328,13 +1329,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|i
+name|rcode
 operator|!=
 name|EX_OK
 condition|)
 name|giveresponse
 argument_list|(
-name|i
+name|rcode
 argument_list|,
 name|TRUE
 argument_list|,
@@ -1348,7 +1349,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|i
+name|rcode
 operator|==
 name|EX_OK
 argument_list|)
@@ -1358,7 +1359,7 @@ else|else
 endif|#
 directive|endif
 endif|SMTP
-name|i
+name|rcode
 operator|=
 name|sendoff
 argument_list|(
@@ -1370,12 +1371,9 @@ name|ctladdr
 argument_list|)
 expr_stmt|;
 comment|/* 	**  If we got a temporary failure, arrange to queue the 	**  addressees. 	*/
-ifdef|#
-directive|ifdef
-name|QUEUE
 if|if
 condition|(
-name|i
+name|rcode
 operator|==
 name|EX_TEMPFAIL
 condition|)
@@ -1403,9 +1401,6 @@ operator||=
 name|QQUEUEUP
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|QUEUE
 name|errno
 operator|=
 literal|0
@@ -1423,7 +1418,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|i
+name|rcode
 operator|)
 return|;
 block|}
@@ -2758,19 +2753,20 @@ condition|)
 block|{
 name|statmsg
 operator|=
-literal|"sent"
+literal|"250 sent"
 expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_Info
 argument_list|,
+operator|&
 name|statmsg
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|QUEUE
 elseif|else
 if|if
 condition|(
@@ -2787,9 +2783,6 @@ literal|"deferred"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|QUEUE
 else|else
 block|{
 name|Errors
@@ -2888,8 +2881,6 @@ name|Verbose
 condition|)
 name|usrerr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|statmsg
 argument_list|)
 expr_stmt|;
@@ -2900,7 +2891,11 @@ name|Xscript
 argument_list|,
 literal|"%s\n"
 argument_list|,
+operator|&
 name|statmsg
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -2919,7 +2914,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"error %d"
+literal|"554 error %d"
 argument_list|,
 name|stat
 argument_list|)
@@ -2985,25 +2980,23 @@ argument_list|,
 name|TRUE
 argument_list|)
 argument_list|,
+operator|&
 name|statmsg
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 block|}
 endif|#
 directive|endif
 endif|LOG
-ifdef|#
-directive|ifdef
-name|QUEUE
 if|if
 condition|(
 name|stat
 operator|!=
 name|EX_TEMPFAIL
 condition|)
-endif|#
-directive|endif
-endif|QUEUE
 name|setstat
 argument_list|(
 name|stat

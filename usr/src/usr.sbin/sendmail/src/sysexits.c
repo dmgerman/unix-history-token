@@ -21,7 +21,7 @@ operator|)
 name|sysexits
 operator|.
 name|c
-literal|3.4
+literal|3.5
 operator|%
 name|G
 operator|%
@@ -41,43 +41,43 @@ index|[]
 init|=
 block|{
 comment|/* 64 USAGE */
-literal|"Bad usage"
+literal|"500 Bad usage"
 block|,
 comment|/* 65 DATAERR */
-literal|"Data format error"
+literal|"501 Data format error"
 block|,
 comment|/* 66 NOINPUT */
-literal|"Cannot open input"
+literal|"550 Cannot open input"
 block|,
 comment|/* 67 NOUSER */
-literal|"User unknown"
+literal|"550 User unknown"
 block|,
 comment|/* 68 NOHOST */
-literal|"Host unknown"
+literal|"550 Host unknown"
 block|,
 comment|/* 69 UNAVAILABLE */
-literal|"Service unavailable"
+literal|"554 Service unavailable"
 block|,
 comment|/* 70 SOFTWARE */
-literal|"Internal error"
+literal|"554 Internal error"
 block|,
 comment|/* 71 OSERR */
-literal|"Operating system error"
+literal|"451 Operating system error"
 block|,
 comment|/* 72 OSFILE */
-literal|"System file missing"
+literal|"554 System file missing"
 block|,
 comment|/* 73 CANTCREAT */
-literal|"Can't create output"
+literal|"550 Can't create output"
 block|,
 comment|/* 74 IOERR */
-literal|"I/O error"
+literal|"451 I/O error"
 block|,
 comment|/* 75 TEMPFAIL */
-literal|"Temporary failure"
+literal|"250 Temporary failure"
 block|,
 comment|/* 76 PROTOCOL */
-literal|"Remote protocol error"
+literal|"554 Remote protocol error"
 block|, }
 decl_stmt|;
 end_decl_stmt
