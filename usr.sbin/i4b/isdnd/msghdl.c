@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - message from kernel handling routines  *	--------------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec 19 09:57:16 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - message from kernel handling routines  *	--------------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Mon Jul 26 13:55:57 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -726,6 +726,10 @@ name|cfg_entry_t
 modifier|*
 name|cep
 decl_stmt|;
+name|char
+modifier|*
+name|device
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -824,6 +828,15 @@ name|hangup
 operator|=
 literal|0
 expr_stmt|;
+name|device
+operator|=
+name|bdrivername
+argument_list|(
+name|cep
+operator|->
+name|usrdevicename
+argument_list|)
+expr_stmt|;
 comment|/* set the B-channel to active */
 if|if
 condition|(
@@ -862,7 +875,7 @@ name|log
 argument_list|(
 name|LL_CHD
 argument_list|,
-literal|"%05d %s outgoing call active (ctl %d, ch %d)"
+literal|"%05d %s outgoing call active (ctl %d, ch %d, %s%d)"
 argument_list|,
 name|cep
 operator|->
@@ -879,6 +892,17 @@ argument_list|,
 name|cep
 operator|->
 name|isdnchannelused
+argument_list|,
+name|bdrivername
+argument_list|(
+name|cep
+operator|->
+name|usrdevicename
+argument_list|)
+argument_list|,
+name|cep
+operator|->
+name|usrdeviceunit
 argument_list|)
 expr_stmt|;
 block|}
@@ -888,7 +912,7 @@ name|log
 argument_list|(
 name|LL_CHD
 argument_list|,
-literal|"%05d %s incoming call active (ctl %d, ch %d)"
+literal|"%05d %s incoming call active (ctl %d, ch %d, %s%d)"
 argument_list|,
 name|cep
 operator|->
@@ -905,6 +929,17 @@ argument_list|,
 name|cep
 operator|->
 name|isdnchannelused
+argument_list|,
+name|bdrivername
+argument_list|(
+name|cep
+operator|->
+name|usrdevicename
+argument_list|)
+argument_list|,
+name|cep
+operator|->
+name|usrdeviceunit
 argument_list|)
 expr_stmt|;
 block|}
@@ -2065,7 +2100,7 @@ name|log
 argument_list|(
 name|LL_DBG
 argument_list|,
-literal|"%s%d: switched to state %d\n"
+literal|"%s%d: switched to state %d"
 argument_list|,
 name|device
 argument_list|,
@@ -2169,9 +2204,6 @@ name|cdid
 operator|=
 name|CDID_UNUSED
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|set_channel_idle
 argument_list|(
 name|cep
@@ -2185,16 +2217,6 @@ operator|->
 name|saved_call
 operator|.
 name|channel
-argument_list|)
-operator|)
-operator|==
-name|ERROR
-condition|)
-name|log
-argument_list|(
-name|LL_ERR
-argument_list|,
-literal|"msg_disconnect_ind: set_channel_idle failed!"
 argument_list|)
 expr_stmt|;
 name|incr_free_channels
@@ -2688,9 +2710,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* set the B-channel inactive */
-if|if
-condition|(
-operator|(
 name|set_channel_idle
 argument_list|(
 name|cep
@@ -2700,16 +2719,6 @@ argument_list|,
 name|cep
 operator|->
 name|isdnchannelused
-argument_list|)
-operator|)
-operator|==
-name|ERROR
-condition|)
-name|log
-argument_list|(
-name|LL_ERR
-argument_list|,
-literal|"msg_disconnect_ind: set_channel_idle failed!"
 argument_list|)
 expr_stmt|;
 name|incr_free_channels
@@ -2855,6 +2864,162 @@ argument_list|(
 name|LL_DBG
 argument_list|,
 literal|"msg_dialout: get_cdid() returned 0!"
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|cep
+operator|->
+name|charge
+operator|=
+literal|0
+expr_stmt|;
+name|cep
+operator|->
+name|last_charge
+operator|=
+literal|0
+expr_stmt|;
+name|next_state
+argument_list|(
+name|cep
+argument_list|,
+name|EV_MDO
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	handle incoming DIALOUTNUMBER message  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|msg_dialoutnumber
+parameter_list|(
+name|msg_dialoutnumber_ind_t
+modifier|*
+name|mp
+parameter_list|)
+block|{
+name|cfg_entry_t
+modifier|*
+name|cep
+decl_stmt|;
+name|DBGL
+argument_list|(
+name|DL_DRVR
+argument_list|,
+operator|(
+name|log
+argument_list|(
+name|LL_DBG
+argument_list|,
+literal|"msg_dialoutnumber: dial req from %s, unit %d"
+argument_list|,
+name|bdrivername
+argument_list|(
+name|mp
+operator|->
+name|driver
+argument_list|)
+argument_list|,
+name|mp
+operator|->
+name|driver_unit
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cep
+operator|=
+name|find_by_device_for_dialoutnumber
+argument_list|(
+name|mp
+operator|->
+name|driver
+argument_list|,
+name|mp
+operator|->
+name|driver_unit
+argument_list|,
+name|mp
+operator|->
+name|cmdlen
+argument_list|,
+name|mp
+operator|->
+name|cmd
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|DBGL
+argument_list|(
+name|DL_DRVR
+argument_list|,
+operator|(
+name|log
+argument_list|(
+name|LL_DBG
+argument_list|,
+literal|"msg_dialoutnumber: config entry reserved or no match"
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|cep
+operator|->
+name|inout
+operator|==
+name|DIR_INONLY
+condition|)
+block|{
+name|dialresponse
+argument_list|(
+name|cep
+argument_list|,
+name|DSTAT_INONLY
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|(
+name|cep
+operator|->
+name|cdid
+operator|=
+name|get_cdid
+argument_list|()
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|DBGL
+argument_list|(
+name|DL_DRVR
+argument_list|,
+operator|(
+name|log
+argument_list|(
+name|LL_DBG
+argument_list|,
+literal|"msg_dialoutnumber: get_cdid() returned 0!"
 argument_list|)
 operator|)
 argument_list|)
@@ -3615,7 +3780,20 @@ name|cep
 operator|->
 name|usrdeviceunit
 expr_stmt|;
+comment|/* setup the shorthold data */
 name|mcr
+operator|.
+name|shorthold_data
+operator|.
+name|shorthold_algorithm
+operator|=
+name|cep
+operator|->
+name|shorthold_algorithm
+expr_stmt|;
+name|mcr
+operator|.
+name|shorthold_data
 operator|.
 name|unitlen_time
 operator|=
@@ -3625,6 +3803,8 @@ name|unitlength
 expr_stmt|;
 name|mcr
 operator|.
+name|shorthold_data
+operator|.
 name|idle_time
 operator|=
 name|cep
@@ -3632,6 +3812,8 @@ operator|->
 name|idle_time_out
 expr_stmt|;
 name|mcr
+operator|.
+name|shorthold_data
 operator|.
 name|earlyhup_time
 operator|=

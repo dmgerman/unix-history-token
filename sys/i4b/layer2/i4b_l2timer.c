@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l2timer.c - layer 2 timer handling  *	--------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:29:13 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l2timer.c - layer 2 timer handling  *	--------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Wed Apr 21 09:17:58 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -249,6 +249,15 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|l2sc
+operator|->
+name|T200
+operator|==
+name|TIMER_ACTIVE
+condition|)
+return|return;
 name|DBGL2
 argument_list|(
 name|L2_T_MSG
@@ -336,6 +345,10 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
 if|if
 condition|(
 name|l2sc
@@ -398,6 +411,8 @@ operator|=
 name|TIMER_IDLE
 expr_stmt|;
 block|}
+name|CRIT_END
+expr_stmt|;
 name|DBGL2
 argument_list|(
 name|L2_T_MSG
@@ -429,6 +444,10 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
 if|if
 condition|(
 name|l2sc
@@ -437,6 +456,7 @@ name|T200
 operator|!=
 name|TIMER_IDLE
 condition|)
+block|{
 if|#
 directive|if
 name|defined
@@ -483,13 +503,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 else|else
+block|{
 name|l2sc
 operator|->
 name|T200
 operator|=
 name|TIMER_ACTIVE
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -540,6 +563,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CRIT_END
+expr_stmt|;
 name|DBGL2
 argument_list|(
 name|L2_T_MSG
@@ -628,6 +653,15 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
+if|if
+condition|(
+name|l2sc
+operator|->
+name|N202
+operator|==
+name|TIMER_ACTIVE
+condition|)
+return|return;
 name|DBGL2
 argument_list|(
 name|L2_T_MSG
@@ -721,6 +755,10 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
 if|if
 condition|(
 name|l2sc
@@ -783,6 +821,8 @@ operator|=
 name|TIMER_IDLE
 expr_stmt|;
 block|}
+name|CRIT_END
+expr_stmt|;
 name|DBGL2
 argument_list|(
 name|L2_T_MSG
@@ -867,6 +907,15 @@ block|{
 if|#
 directive|if
 name|I4B_T203_ACTIVE
+if|if
+condition|(
+name|l2sc
+operator|->
+name|T203
+operator|==
+name|TIMER_ACTIVE
+condition|)
+return|return;
 name|DBGL2
 argument_list|(
 name|L2_T_MSG
@@ -959,6 +1008,10 @@ block|{
 if|#
 directive|if
 name|I4B_T203_ACTIVE
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
 if|if
 condition|(
 name|l2sc
@@ -1021,6 +1074,8 @@ operator|=
 name|TIMER_IDLE
 expr_stmt|;
 block|}
+name|CRIT_END
+expr_stmt|;
 name|DBGL2
 argument_list|(
 name|L2_T_MSG
@@ -1057,6 +1112,10 @@ block|{
 if|#
 directive|if
 name|I4B_T203_ACTIVE
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
 if|if
 condition|(
 name|l2sc
@@ -1065,6 +1124,7 @@ name|T203
 operator|!=
 name|TIMER_IDLE
 condition|)
+block|{
 if|#
 directive|if
 name|defined
@@ -1111,13 +1171,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 else|else
+block|{
 name|l2sc
 operator|->
 name|T203
 operator|=
 name|TIMER_ACTIVE
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -1168,6 +1231,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CRIT_END
+expr_stmt|;
 name|DBGL2
 argument_list|(
 name|L2_T_MSG

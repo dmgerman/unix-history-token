@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	main.c - i4b set debug options  *	------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:13:55 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	main.c - i4b set debug options  *	------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Fri Jul 30 08:14:34 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -263,6 +263,164 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|opt_lapd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|opt_rlapd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	usage display and exit  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"isdndebug - i4b set debug level, version %d.%d.%d, compiled %s %s\n"
+argument_list|,
+name|VERSION
+argument_list|,
+name|REL
+argument_list|,
+name|STEP
+argument_list|,
+name|__DATE__
+argument_list|,
+name|__TIME__
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: isdndebug -e -g -h -l<layer> -m -q -r -s<value> -u<unit> -z -H -Q\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -e            set error only debugging output\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -g            get current debugging values\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -h            get HSCX event counters\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -l layer      specify layer (1...4)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -m            set maximum debugging output\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -q            get Q.921 statistics\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -r            reset values(s) to compiled in default\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -s value      set new debugging value for layer\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -u unit       unit number for -h, -q, -H and -Q commands\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -z            set zero (=no) debugging output\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -H            reset HSCX event counters to zero\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -Q            reset Q.921 statistics\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	program entry  *---------------------------------------------------------------------------*/
 end_comment
@@ -300,11 +458,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"eghl:mrs:u:zH?"
+literal|"eghl:mqrs:u:zHQ"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -332,6 +491,14 @@ case|case
 literal|'h'
 case|:
 name|opt_hscx
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|opt_lapd
 operator|=
 literal|1
 expr_stmt|;
@@ -444,6 +611,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+name|opt_rlapd
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -486,6 +661,14 @@ operator|&&
 name|opt_rhscx
 operator|==
 literal|0
+operator|&&
+name|opt_lapd
+operator|==
+literal|0
+operator|&&
+name|opt_rlapd
+operator|==
+literal|0
 condition|)
 block|{
 name|usage
@@ -510,6 +693,10 @@ operator|+
 name|opt_hscx
 operator|+
 name|opt_rhscx
+operator|+
+name|opt_lapd
+operator|+
+name|opt_rlapd
 operator|)
 operator|>
 literal|1
@@ -876,6 +1063,394 @@ argument_list|,
 name|hst
 operator|.
 name|chan
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|opt_lapd
+condition|)
+block|{
+name|l2stat_t
+name|l2s
+decl_stmt|;
+name|l2s
+operator|.
+name|unit
+operator|=
+name|opt_unit
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|ioctl
+argument_list|(
+name|isdnfd
+argument_list|,
+name|I4B_CTL_GET_LAPDSTAT
+argument_list|,
+operator|&
+name|l2s
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ioctl I4B_CTL_GET_LAPDSTAT failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"unit %d Q.921 statistics: receive     transmit\n"
+argument_list|,
+name|opt_unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"---------------------------------------------\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of I-frames       %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_i
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_i
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of RR-frames      %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_rr
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_rr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of RNR-frames     %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_rnr
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_rnr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of REJ-frames     %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_rej
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_rej
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of SABME-frames   %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_sabme
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_sabme
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of DM-frames      %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_dm
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_dm
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of DISC-frames    %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_disc
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_disc
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of UA-frames      %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_ua
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_ua
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of FRMR-frames    %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_frmr
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_frmr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of TEI-frames     %12lu %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_tei
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|tx_tei
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of UI-frames      %12lu      \n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_ui
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of XID-frames     %12lu      \n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|rx_xid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"                                       errors\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"---------------------------------------------\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of frames with incorrect length%12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|err_rx_len
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of frames with bad frame type  %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|err_rx_badf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of bad S frames                %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|err_rx_bads
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of bad U frames                %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|err_rx_badu
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"# of bad UI frames               %12lu\n"
+argument_list|,
+name|l2s
+operator|.
+name|lapdstat
+operator|.
+name|err_rx_badui
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|opt_rlapd
+condition|)
+block|{
+name|int
+name|unit
+decl_stmt|;
+name|unit
+operator|=
+name|opt_unit
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|ioctl
+argument_list|(
+name|isdnfd
+argument_list|,
+name|I4B_CTL_CLR_LAPDSTAT
+argument_list|,
+operator|&
+name|unit
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ioctl I4B_CTL_CLR_LAPDSTAT failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"Q.921 statistics counters unit %d reset to zero!\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1919,168 +2494,67 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                         || ||||\n"
+literal|"                                   ||| |||| ||||\n"
 argument_list|)
 operator|,
 name|printf
 argument_list|(
-literal|"                                         || |||+- general error messages\n"
+literal|"                                   ||| |||| |||+- general error messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                         || ||+-- general messages\n"
+literal|"                                   ||| |||| ||+-- general messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                         || |+--- B-ch timeout messages\n"
+literal|"                                   ||| |||| |+--- B-ch timeout messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                         || +---- network driver dial state\n"
+literal|"                                   ||| |||| +---- network driver dial state\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                         |+------ ipr driver debug messages\n"
+literal|"                                   ||| |||+------ ipr driver debug messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                                         +------- rbch driver debug messages\n"
+literal|"                                   ||| ||+------- rbch driver debug messages\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"         ++++-++++-++++-++++-++++-++++-++-------- unassigned\n"
+literal|"                                   ||| |+-------- isp driver debug messages\n"
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	usage display and exit  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
+literal|"                                   ||| +--------- tel driver debug messages\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"isdndebug - i4b set debug level, version %02d.%02d, compiled %s %s\n"
-argument_list|,
-name|VERSION
-argument_list|,
-name|REL
-argument_list|,
-name|__DATE__
-argument_list|,
-name|__TIME__
+literal|"                                   ||+----------- tina driver debug messages\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: isdndebug -e -h -g -l<layer> -m -r -s<value> -u<unit> -z -H\n"
+literal|"                                   |+------------ tina driver messages\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"       -e            set error only debugging output\n"
+literal|"                                   +------------- tina driver error messages\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"       -g            get current debugging values\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -h            get HSCX event counters\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -l layer      specify layer (1...4)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -m            set maximum debugging output\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -r            reset values(s) to compiled in default\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -s value      set new debugging value for layer\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -u unit       unit number for -h and -H commands\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -z            set zero (=no) debugging output\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -H            reset HSCX event counters to zero\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"         ++++-++++-++++-++++-++++-+-------------- unassigned\n"
 argument_list|)
 expr_stmt|;
 block|}

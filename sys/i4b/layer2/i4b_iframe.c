@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_iframe.c - i frame handling routines  *	------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:26:16 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_iframe.c - i frame handling routines  *	------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Fri May 28 15:52:41 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -206,7 +206,7 @@ file|<i4b/layer2/i4b_l2fsm.h>
 end_include
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	process i frame  *	implements the routine "I COMMAND" Q.921 03/93 pp 77  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	process i frame  *	implements the routine "I COMMAND" Q.921 03/93 pp 68 and pp 77  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -249,9 +249,8 @@ decl_stmt|;
 name|int
 name|p
 decl_stmt|;
-name|int
-name|x
-decl_stmt|;
+name|CRIT_VAR
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -326,11 +325,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|x
-operator|=
-name|SPLI4B
-argument_list|()
+name|CRIT_BEG
 expr_stmt|;
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|rx_i
+operator|++
+expr_stmt|;
+comment|/* update frame count */
 name|nr
 operator|=
 name|GETINR
@@ -596,10 +600,7 @@ name|va
 operator|=
 name|nr
 expr_stmt|;
-name|splx
-argument_list|(
-name|x
-argument_list|)
+name|CRIT_END
 expr_stmt|;
 return|return;
 block|}
@@ -691,10 +692,7 @@ operator|=
 name|ST_AW_EST
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|x
-argument_list|)
+name|CRIT_END
 expr_stmt|;
 block|}
 end_function
@@ -712,9 +710,6 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
-name|int
-name|x
-decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
@@ -724,11 +719,37 @@ name|u_char
 modifier|*
 name|ptr
 decl_stmt|;
-name|x
-operator|=
-name|SPLI4B
-argument_list|()
+name|CRIT_VAR
 expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|l2sc
+operator|->
+name|peer_busy
+operator|)
+operator|||
+operator|(
+name|l2sc
+operator|->
+name|vs
+operator|==
+operator|(
+operator|(
+name|l2sc
+operator|->
+name|va
+operator|+
+name|MAX_K_VALUE
+operator|)
+operator|&
+literal|127
+operator|)
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|l2sc
@@ -743,21 +764,10 @@ argument_list|,
 literal|"i4b_i_frame_queued_up"
 argument_list|,
 operator|(
-literal|"peer busy!\n"
+literal|"regen IFQUP, cause: peer busy!\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|i4b_print_l2var
-argument_list|(
-name|l2sc
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -780,40 +790,94 @@ condition|)
 block|{
 name|DBGL2
 argument_list|(
-name|L2_I_ERR
+name|L2_I_MSG
 argument_list|,
 literal|"i4b_i_frame_queued_up"
 argument_list|,
 operator|(
-literal|"V(S) == ((V(A) + k)& 127)!\n"
+literal|"regen IFQUP, cause: vs=va+k!\n"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 		 * XXX see: Q.921, page 36, 5.6.1 ".. may retransmit an I 		 * frame ...", shall we retransmit the last i frame ? 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|IF_QEMPTY
+argument_list|(
+operator|&
+name|l2sc
+operator|->
+name|i_queue
+argument_list|)
+operator|)
+condition|)
+block|{
 name|DBGL2
 argument_list|(
-name|L2_I_ERR
+name|L2_I_MSG
 argument_list|,
 literal|"i4b_i_frame_queued_up"
 argument_list|,
 operator|(
-literal|"state = %s\n"
-operator|,
-name|i4b_print_l2state
-argument_list|(
-name|l2sc
-argument_list|)
+literal|"re-scheduling IFQU call!\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|i4b_print_l2var
+if|#
+directive|if
+name|defined
 argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|300001
 name|l2sc
+operator|->
+name|IFQU_callout
+operator|=
+name|timeout
+argument_list|(
+operator|(
+name|TIMEOUT_FUNC_T
+operator|)
+name|i4b_i_frame_queued_up
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|l2sc
+argument_list|,
+name|IFQU_DLY
 argument_list|)
 expr_stmt|;
-name|splx
+else|#
+directive|else
+name|timeout
 argument_list|(
-name|x
+operator|(
+name|TIMEOUT_FUNC_T
+operator|)
+name|i4b_i_frame_queued_up
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|l2sc
+argument_list|,
+name|IFQU_DLY
 argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+name|CRIT_END
 expr_stmt|;
 return|return;
 block|}
@@ -845,10 +909,7 @@ literal|"ERROR, mbuf NULL after IF_DEQUEUE\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|x
-argument_list|)
+name|CRIT_END
 expr_stmt|;
 return|return;
 block|}
@@ -922,6 +983,14 @@ operator|&
 literal|0xfe
 expr_stmt|;
 comment|/* P bit = 0 */
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|tx_i
+operator|++
+expr_stmt|;
+comment|/* update frame counter */
 name|PH_Data_Req
 argument_list|(
 name|l2sc
@@ -1008,10 +1077,7 @@ name|ack_pend
 operator|=
 literal|0
 expr_stmt|;
-name|splx
-argument_list|(
-name|x
-argument_list|)
+name|CRIT_END
 expr_stmt|;
 if|if
 condition|(

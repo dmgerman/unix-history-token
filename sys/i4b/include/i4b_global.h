@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_global.h - i4b global include file  *	--------------------------------------  *  * $FreeBSD$  *  *	last edit-date: [Sat Dec  5 18:03:41 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_global.h - i4b global include file  *	--------------------------------------  *  * $FreeBSD$  *  *	last edit-date: [Mon Apr 26 11:10:26 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -15,38 +15,20 @@ directive|define
 name|_I4B_GLOBAL_H_
 end_define
 
-begin_define
-define|#
-directive|define
-name|SPLI4B
-parameter_list|()
-value|splimp()
-end_define
-
 begin_comment
-comment|/* spl for i4b		*/
+comment|/*---------------------------------------------------------------------------*  *	hiding OS differences in the kernel  *---------------------------------------------------------------------------*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIMER_IDLE
-value|1
-end_define
-
 begin_comment
-comment|/* a timer is running	*/
+comment|/*---------------*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIMER_ACTIVE
-value|2
-end_define
+begin_comment
+comment|/* time handling */
+end_comment
 
 begin_comment
-comment|/* a timer is idle	*/
+comment|/*---------------*/
 end_comment
 
 begin_ifdef
@@ -161,6 +143,11 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
 end_if
 
 begin_define
@@ -194,6 +181,160 @@ end_endif
 
 begin_comment
 comment|/* __NetBSD__ */
+end_comment
+
+begin_comment
+comment|/*----------------------*/
+end_comment
+
+begin_comment
+comment|/* poll/select handling */
+end_comment
+
+begin_comment
+comment|/*----------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+expr|\
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|300001
+operator|)
+operator|)
+operator|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|OS_USES_SELECT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OS_USES_POLL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	misc globally used things in the kernel  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_comment
+comment|/* timer states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_IDLE
+value|1
+end_define
+
+begin_comment
+comment|/* a timer is running	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMER_ACTIVE
+value|2
+end_define
+
+begin_comment
+comment|/* a timer is idle	*/
+end_comment
+
+begin_comment
+comment|/* i4b's spl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPLI4B
+parameter_list|()
+value|splimp()
+end_define
+
+begin_comment
+comment|/* spl for i4b		*/
+end_comment
+
+begin_comment
+comment|/* critial code region handling macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRIT_VAR
+value|int _svd_spl_
+end_define
+
+begin_comment
+comment|/* declare variable	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRIT_BEG
+value|_svd_spl_ = SPLI4B()
+end_define
+
+begin_comment
+comment|/* save spl	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRIT_END
+value|splx(_svd_spl_)
+end_define
+
+begin_comment
+comment|/* restore spl		*/
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1998 Martin Husemann. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - network monitor server module  *	------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Fri Jul 17 18:07:00 1998]  *  *	-mh	created  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1998 Martin Husemann. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - network monitor server module  *	------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sun May 30 10:33:05 1999]  *  *	-mh	created  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -892,6 +892,11 @@ name|local_rights
 operator|=
 name|i
 expr_stmt|;
+name|DBGL
+argument_list|(
+name|DL_RCCF
+argument_list|,
+operator|(
 name|log
 argument_list|(
 name|LL_DBG
@@ -899,6 +904,8 @@ argument_list|,
 literal|"system: monitor = %s"
 argument_list|,
 name|clientspec
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -938,6 +945,11 @@ name|rights
 operator||=
 name|rights_mask
 expr_stmt|;
+name|DBGL
+argument_list|(
+name|DL_RCCF
+argument_list|,
+operator|(
 name|log
 argument_list|(
 name|LL_DBG
@@ -945,6 +957,8 @@ argument_list|,
 literal|"system: monitor-access = 0x%x"
 argument_list|,
 name|rights_mask
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1535,8 +1549,11 @@ operator|)
 operator|&
 name|sa
 argument_list|,
-sizeof|sizeof
+name|SUN_LEN
+argument_list|(
+operator|&
 name|sa
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1564,6 +1581,20 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|chmod
+argument_list|(
+name|VARA_AT
+argument_list|(
+name|rights
+argument_list|,
+name|local_rights
+argument_list|)
+operator|.
+name|name
+argument_list|,
+literal|0500
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|listen
@@ -2781,6 +2812,15 @@ operator|==
 literal|0
 condition|)
 block|{
+name|log
+argument_list|(
+name|LL_ERR
+argument_list|,
+literal|"monitor #%d, read 0 bytes"
+argument_list|,
+name|con_index
+argument_list|)
+expr_stmt|;
 comment|/* socket closed by peer */
 name|close
 argument_list|(
@@ -2815,10 +2855,23 @@ name|bytes
 operator|<
 name|I4B_MON_CMD_HDR
 condition|)
+block|{
+name|log
+argument_list|(
+name|LL_ERR
+argument_list|,
+literal|"monitor #%d, read only %d bytes"
+argument_list|,
+name|con_index
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
 comment|/* errh? something must be wrong... */
+block|}
 name|bytes
 operator|=
 name|I4B_GET_2B
@@ -2845,7 +2898,7 @@ name|log
 argument_list|(
 name|LL_ERR
 argument_list|,
-literal|"garbage on monitor connection #%d, closing it"
+literal|"monitor #%d, garbage on connection"
 argument_list|,
 name|con_index
 argument_list|)
@@ -2869,6 +2922,15 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|log
+argument_list|(
+name|LL_ERR
+argument_list|,
+literal|"monitor #%d, read<= 0"
+argument_list|,
+name|con_index
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd

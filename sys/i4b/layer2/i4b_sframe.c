@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_sframe.c - s frame handling routines  *	----------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:30:02 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_sframe.c - s frame handling routines  *	----------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Fri May 28 16:14:04 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -323,6 +323,14 @@ block|{
 case|case
 name|RR
 case|:
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|rx_rr
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 name|DBGL2
 argument_list|(
 name|L2_S_MSG
@@ -349,6 +357,14 @@ break|break;
 case|case
 name|RNR
 case|:
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|rx_rnr
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 name|DBGL2
 argument_list|(
 name|L2_S_MSG
@@ -375,6 +391,14 @@ break|break;
 case|case
 name|REJ
 case|:
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|rx_rej
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 name|DBGL2
 argument_list|(
 name|L2_S_MSG
@@ -399,6 +423,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|err_rx_bads
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 name|DBGL2
 argument_list|(
 name|L2_S_ERR
@@ -491,6 +523,14 @@ argument_list|,
 name|MBUF_FREE
 argument_list|)
 expr_stmt|;
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|tx_rr
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 block|}
 end_function
 
@@ -554,6 +594,14 @@ argument_list|,
 name|MBUF_FREE
 argument_list|)
 expr_stmt|;
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|tx_rr
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 block|}
 end_function
 
@@ -617,6 +665,14 @@ argument_list|,
 name|MBUF_FREE
 argument_list|)
 expr_stmt|;
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|tx_rnr
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 block|}
 end_function
 
@@ -680,6 +736,14 @@ argument_list|,
 name|MBUF_FREE
 argument_list|)
 expr_stmt|;
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|tx_rnr
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 block|}
 end_function
 
@@ -743,6 +807,14 @@ argument_list|,
 name|MBUF_FREE
 argument_list|)
 expr_stmt|;
+name|l2sc
+operator|->
+name|stat
+operator|.
+name|tx_rej
+operator|++
+expr_stmt|;
+comment|/* update statistics */
 block|}
 end_function
 

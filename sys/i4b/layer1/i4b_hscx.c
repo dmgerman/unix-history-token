@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b - Siemens HSCX chip (B-channel) handling  *	--------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:23:36 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b - Siemens HSCX chip (B-channel) handling  *	--------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Wed Mar 17 11:59:05 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -132,11 +132,22 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__bsdi__
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<machine/bus.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1191,35 +1202,7 @@ name|m_data
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* move rx'd data to rx queue */
-name|IF_ENQUEUE
-argument_list|(
-operator|&
-name|chan
-operator|->
-name|rx_queue
-argument_list|,
-name|chan
-operator|->
-name|in_mbuf
-argument_list|)
-expr_stmt|;
-call|(
-modifier|*
-name|chan
-operator|->
-name|drvr_linktab
-operator|->
-name|bch_rx_data_ready
-call|)
-argument_list|(
-name|chan
-operator|->
-name|drvr_linktab
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
+comment|/* silence detection */
 if|if
 condition|(
 operator|!
@@ -1243,6 +1226,60 @@ condition|)
 name|activity
 operator|=
 name|ACT_RX
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|IF_QFULL
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|rx_queue
+argument_list|)
+operator|)
+condition|)
+block|{
+name|IF_ENQUEUE
+argument_list|(
+operator|&
+name|chan
+operator|->
+name|rx_queue
+argument_list|,
+name|chan
+operator|->
+name|in_mbuf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|i4b_Bfreembuf
+argument_list|(
+name|chan
+operator|->
+name|in_mbuf
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* signal upper driver that data is available */
+call|(
+modifier|*
+name|chan
+operator|->
+name|drvr_linktab
+operator|->
+name|bch_rx_data_ready
+call|)
+argument_list|(
+name|chan
+operator|->
+name|drvr_linktab
+operator|->
+name|unit
+argument_list|)
 expr_stmt|;
 comment|/* alloc new buffer */
 if|if

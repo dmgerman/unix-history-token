@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_q931.c - Q931 received messages handling  *	--------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:33:36 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_q931.c - Q931 received messages handling  *	--------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Tue Apr 27 12:04:35 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -961,7 +961,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_SENDCOMPL\n"
@@ -1010,7 +1010,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_BEARERCAP - Telephony\n"
@@ -1033,7 +1033,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_BEARERCAP - Raw HDLC\n"
@@ -1053,7 +1053,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_BEARERCAP - No Protocol\n"
@@ -1092,7 +1092,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_CAUSE = %d\n"
@@ -1124,7 +1124,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_CAUSE = %d\n"
@@ -1168,7 +1168,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_ERR
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_CHANNELID, unsupported value 0x%x\n"
@@ -1253,7 +1253,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_CHANNELID - channel %d, exclusive = %d\n"
@@ -1336,7 +1336,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_ERR
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IE ChannelID, Channel NOT free!!\n"
@@ -1358,7 +1358,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IE ChannelID, SETUP with channel = No channel (CW)\n"
@@ -1373,7 +1373,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_ERR
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"ERROR: IE ChannelID, SETUP with channel = Any channel!\n"
@@ -1516,7 +1516,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_CALLINGPN = %s\n"
@@ -1580,7 +1580,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_CALLED = %s\n"
@@ -1611,7 +1611,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_CALLSTATE = %d\n"
@@ -1631,7 +1631,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_PROGRESSINDICATOR\n"
@@ -1688,7 +1688,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_DISPLAY = %s\n"
@@ -1772,7 +1772,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_DATETIME = %s\n"
@@ -1792,7 +1792,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_FACILITY\n"
@@ -1825,7 +1825,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_CONCTDNO\n"
@@ -1841,7 +1841,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_NETSPCFAC\n"
@@ -1857,7 +1857,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_LLCOMPAT\n"
@@ -1873,10 +1873,42 @@ name|DBGL3
 argument_list|(
 name|L3_P_MSG
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"IEI_HLCOMPAT\n"
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEI_CALLINGPS
+case|:
+comment|/* calling party subaddress */
+name|DBGL3
+argument_list|(
+name|L3_P_MSG
+argument_list|,
+literal|"i4b_decode_q931_cs0_ie"
+argument_list|,
+operator|(
+literal|"IEI_CALLINGPS\n"
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEI_CALLEDPS
+case|:
+comment|/* called party subaddress */
+name|DBGL3
+argument_list|(
+name|L3_P_MSG
+argument_list|,
+literal|"i4b_decode_q931_cs0_ie"
+argument_list|,
+operator|(
+literal|"IEI_CALLEDPS\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1886,7 +1918,7 @@ name|DBGL3
 argument_list|(
 name|L3_P_ERR
 argument_list|,
-literal|"i4b_decode_q931_codeset0"
+literal|"i4b_decode_q931_cs0_ie"
 argument_list|,
 operator|(
 literal|"Unknown IE %d - "

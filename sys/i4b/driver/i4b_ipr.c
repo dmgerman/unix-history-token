@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ipr.c - isdn4bsd IP over raw HDLC ISDN network driver  *	---------------------------------------------------------  *  * $FreeBSD$  *  *	last edit-date: [Fri Dec 18 11:50:47 1998]  *  *---------------------------------------------------------------------------*  *  *	statistics counter usage (interface lifetime):  *	----------------------------------------------  *	sc->sc_if.if_ipackets	# of received packets  *	sc->sc_if.if_ierrors	# of error packets not going to upper layers  *	sc->sc_if.if_opackets	# of transmitted packets  *	sc->sc_if.if_oerrors	# of error packets not being transmitted  *	sc->sc_if.if_collisions	# of invalid ip packets after VJ decompression  *	sc->sc_if.if_ibytes	# of bytes coming in from the line (before VJ)  *	sc->sc_if.if_obytes	# of bytes going out to the line (after VJ)  *	sc->sc_if.if_imcasts	  (currently unused)  *	sc->sc_if.if_omcasts	# of frames sent out of the fastqueue  *	sc->sc_if.if_iqdrops	# of frames dropped on input because queue full  *	sc->sc_if.if_noproto	# of frames dropped on output because !AF_INET  *  *	statistics counter usage (connection lifetime):  *	-----------------------------------------------  *	sc->sc_iinb		# of ISDN incoming bytes from HSCX  *	sc->sc_ioutb		# of ISDN outgoing bytes from HSCX  *	sc->sc_inb		# of incoming bytes after decompression  *	sc->sc_outb		# of outgoing bytes before compression  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ipr.c - isdn4bsd IP over raw HDLC ISDN network driver  *	---------------------------------------------------------  *  * $FreeBSD$  *  *	last edit-date: [Thu Jul 22 19:46:53 1999]  *  *---------------------------------------------------------------------------*  *  *	statistics counter usage (interface lifetime):  *	----------------------------------------------  *	sc->sc_if.if_ipackets	# of received packets  *	sc->sc_if.if_ierrors	# of error packets not going to upper layers  *	sc->sc_if.if_opackets	# of transmitted packets  *	sc->sc_if.if_oerrors	# of error packets not being transmitted  *	sc->sc_if.if_collisions	# of invalid ip packets after VJ decompression  *	sc->sc_if.if_ibytes	# of bytes coming in from the line (before VJ)  *	sc->sc_if.if_obytes	# of bytes going out to the line (after VJ)  *	sc->sc_if.if_imcasts	  (currently unused)  *	sc->sc_if.if_omcasts	# of frames sent out of the fastqueue  *	sc->sc_if.if_iqdrops	# of frames dropped on input because queue full  *	sc->sc_if.if_noproto	# of frames dropped on output because !AF_INET  *  *	statistics counter usage (connection lifetime):  *	-----------------------------------------------  *	sc->sc_iinb		# of ISDN incoming bytes from HSCX  *	sc->sc_ioutb		# of ISDN outgoing bytes from HSCX  *	sc->sc_inb		# of incoming bytes after decompression  *	sc->sc_outb		# of outgoing bytes before compression  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -243,16 +243,49 @@ begin_comment
 comment|/* IPR_VJ */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|400008
+end_if
+
+begin_include
+include|#
+directive|include
+file|"bpf.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"bpfilter.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
 name|NBPFILTER
+operator|>
+literal|0
+operator|||
+name|NBPF
 operator|>
 literal|0
 end_if
@@ -388,6 +421,42 @@ directive|define
 name|PDEVSTATIC
 value|static
 end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|IPR_FMT
+value|"ipr%d: "
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPR_ARG
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->sc_if.if_unit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDEVSTATIC
+end_define
+
+begin_comment
+comment|/* not static */
+end_comment
 
 begin_else
 else|#
@@ -662,6 +731,44 @@ block|}
 enum|;
 end_enum
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|THE_UNIT
+value|sc->sc_if.if_unit
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|THE_UNIT
+value|sc->sc_unit
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -693,12 +800,35 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IOCTL_CMD_T
+value|u_long
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|IOCTL_CMD_T
 value|int
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -787,6 +917,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__bsdi__
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|iprwatchdog
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 specifier|static
 name|void
@@ -799,6 +951,11 @@ name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -991,6 +1148,28 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_unit
+operator|=
+name|i
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_name
+operator|=
+literal|"ipr"
+expr_stmt|;
 name|sc
 operator|->
 name|sc_if
@@ -1362,6 +1541,10 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
+operator|||
+name|NBPF
+operator|>
+literal|0
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -1468,9 +1651,17 @@ operator|=
 name|SPLI4B
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
 name|unit
 operator|=
 name|ifp
@@ -2010,9 +2201,17 @@ argument_list|)
 endif|#
 directive|endif
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
 name|struct
 name|ipr_softc
 modifier|*
@@ -2155,9 +2354,17 @@ name|IFF_RUNNING
 condition|)
 block|{
 comment|/* disconnect ISDN line */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
 name|i4b_l4_drvrdisc
 argument_list|(
 name|BDRV_IPR
@@ -2296,7 +2503,23 @@ directive|ifdef
 name|IPR_VJ
 block|case IPRIOCSMAXCID: 			{ 			struct proc *p = curproc;
 comment|/* XXX */
-block|if((error = suser(p->p_ucred,&p->p_acflag)) != 0) 				return (error); 		        sl_compress_setup(sc->sc_compr, *(int *)data); 			} 			break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|400005
+block|if((error = suser(p)) != 0)
+else|#
+directive|else
+block|if((error = suser(p->p_ucred,&p->p_acflag)) != 0)
+endif|#
+directive|endif
+block|return (error); 		        sl_compress_setup(sc->sc_compr, *(int *)data); 			} 			break;
 endif|#
 directive|endif
 endif|#
@@ -2435,7 +2658,23 @@ begin_comment
 comment|/*---------------------------------------------------------------------------*  *	watchdog routine  *---------------------------------------------------------------------------*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__bsdi__
+end_ifdef
+
 begin_function
+specifier|static
+name|int
+name|iprwatchdog
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+block|{
+else|#
+directive|else
 specifier|static
 name|void
 name|iprwatchdog
@@ -2446,6 +2685,8 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -2466,6 +2707,36 @@ name|ipr_softc
 index|[
 name|unit
 index|]
+decl_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+name|struct
+name|ipr_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|ipr_softc
+index|[
+name|unit
+index|]
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|ipr_softc
+index|[
+name|unit
+index|]
+operator|.
+name|sc_if
 decl_stmt|;
 else|#
 directive|else
@@ -2681,46 +2952,30 @@ name|if_timer
 operator|=
 name|I4BIPRACCTINTVL
 expr_stmt|;
-block|}
-end_function
-
-begin_endif
+ifdef|#
+directive|ifdef
+name|__bsdi__
+return|return
+literal|0
+return|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
+block|}
+endif|#
+directive|endif
 comment|/* I4BIPRACCT */
-end_comment
-
-begin_comment
 comment|/*===========================================================================*  *			ISDN INTERFACE ROUTINES  *===========================================================================*/
-end_comment
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	start transmitting after connect  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|i4bipr_connect_startio
 parameter_list|(
-name|int
-name|unit
-parameter_list|)
-block|{
 name|struct
 name|ipr_softc
 modifier|*
 name|sc
-init|=
-operator|&
-name|ipr_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
+parameter_list|)
+block|{
 name|int
 name|s
 init|=
@@ -2744,7 +2999,7 @@ name|ST_CONNECTED_A
 expr_stmt|;
 name|ipr_tx_queue_empty
 argument_list|(
-name|unit
+name|THE_UNIT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2754,13 +3009,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	this routine is called from L4 handler at connect time  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ipr_connect
@@ -2924,7 +3173,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|unit
+name|sc
 argument_list|,
 name|sc
 operator|->
@@ -2963,13 +3212,7 @@ name|sc_cdp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	this routine is called from L4 handler at disconnect time  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ipr_disconnect
@@ -3127,13 +3370,7 @@ operator|=
 name|ST_IDLE
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	this routine is used to give a feedback from userland daemon  *	in case of dial problems  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ipr_dialresponse
@@ -3143,6 +3380,9 @@ name|unit
 parameter_list|,
 name|int
 name|status
+parameter_list|,
+name|cause_t
+name|cause
 parameter_list|)
 block|{
 name|struct
@@ -3183,14 +3423,34 @@ name|sc_dialresp
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|DSTAT_NONE
+condition|)
+block|{
+name|DBGL4
+argument_list|(
+name|L4_IPRDBG
+argument_list|,
+literal|"ipr_dialresponse"
+argument_list|,
+operator|(
+literal|"ipr%d: clearing queues\n"
+operator|,
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|iprclearqueues
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
-end_function
-
-begin_comment
+block|}
 comment|/*---------------------------------------------------------------------------*  *	interface soft up/down  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ipr_updown
@@ -3220,13 +3480,7 @@ operator|=
 name|updown
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	this routine is called from the HSCX interrupt handler  *	when a new frame (mbuf) has been received and was put on  *	the rx queue. It is assumed that this routines runs at  *	pri level splimp() ! Keep it short !  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ipr_rx_data_rdy
@@ -3826,6 +4080,10 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
+operator|||
+name|NBPF
+operator|>
+literal|0
 if|if
 condition|(
 name|sc
@@ -3901,7 +4159,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
-comment|/* NBPFILTER> 0 */
+comment|/* NBPFILTER> 0  || NBPF> 0 */
 if|if
 condition|(
 name|IF_QFULL
@@ -3967,13 +4225,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	this routine is called from the HSCX interrupt handler  *	when the last frame has been sent out and there is no  *	further frame (mbuf) in the tx queue.  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ipr_tx_queue_empty
@@ -4088,6 +4340,10 @@ expr_stmt|;
 if|#
 directive|if
 name|NBPFILTER
+operator|>
+literal|0
+operator|||
+name|NBPF
 operator|>
 literal|0
 if|if
@@ -4247,6 +4503,40 @@ name|x
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|IF_QFULL
+argument_list|(
+name|isdn_linktab
+index|[
+name|unit
+index|]
+operator|->
+name|tx_queue
+argument_list|)
+condition|)
+block|{
+name|DBGL4
+argument_list|(
+name|L4_IPRDBG
+argument_list|,
+literal|"ipr_rx_data_rdy"
+argument_list|,
+operator|(
+literal|"ipr%d: tx queue full!\n"
+operator|,
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|IF_ENQUEUE
 argument_list|(
 name|isdn_linktab
@@ -4279,6 +4569,7 @@ name|if_opackets
 operator|++
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|x
@@ -4309,13 +4600,7 @@ name|channel
 operator|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	this routine is called from the HSCX interrupt handler  *	each time a packet is received or transmitted. It should  *	be used to implement an activity timeout mechanism.  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ipr_activity
@@ -4339,13 +4624,7 @@ operator|=
 name|SECOND
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	return this drivers linktab address  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 name|drvr_link_t
 modifier|*
 name|ipr_ret_linktab
@@ -4364,13 +4643,7 @@ index|]
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	setup the isdn_linktab for this driver  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 name|void
 name|ipr_set_linktab
 parameter_list|(
@@ -4390,13 +4663,7 @@ operator|=
 name|ilt
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*---------------------------------------------------------------------------*  *	initialize this drivers linktab  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|ipr_init_linktab

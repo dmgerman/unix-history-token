@@ -296,6 +296,25 @@ name|tinapoll
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|POLLFIELD
+value|tinapoll
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|POLLFIELD
+value|noselect
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -315,73 +334,51 @@ name|cdevsw
 name|tina_cdevsw
 init|=
 block|{
+comment|/* open */
 name|tinaopen
 block|,
+comment|/* close */
 name|tinaclose
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|tinaioctl
 block|,
-name|nostop
+comment|/* poll */
+name|POLLFIELD
 block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-name|tinapoll
-block|,
+comment|/* mmap */
 name|nommap
 block|,
-name|NULL
+comment|/* strategy */
+name|nostrategy
 block|,
+comment|/* name */
 literal|"tina"
 block|,
-name|NULL
+comment|/* maj */
+name|CDEV_MAJOR
 block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+literal|0
+block|,
+comment|/* bmaj */
 operator|-
 literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|noselect
-operator|,
-name|nommap
-operator|,
-name|NULL
-operator|,
-literal|"tina"
-operator|,
-name|NULL
-operator|,
-operator|-
-literal|1
-end_expr_stmt
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -777,27 +774,10 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|dev_t
-name|dev
-decl_stmt|;
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cdevsw_add
 argument_list|(
 operator|&
-name|dev
-argument_list|,
-operator|&
 name|tina_cdevsw
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}

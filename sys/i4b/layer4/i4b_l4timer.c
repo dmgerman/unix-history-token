@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l4timer.c - timer and timeout handling for layer 4  *	--------------------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:36:07 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l4timer.c - timer and timeout handling for layer 4  *	--------------------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Wed Apr 21 09:49:08 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -197,6 +197,15 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
+if|if
+condition|(
+name|cd
+operator|->
+name|T400
+operator|==
+name|TIMER_ACTIVE
+condition|)
+return|return;
 name|DBGL4
 argument_list|(
 name|L4_MSG
@@ -284,20 +293,9 @@ modifier|*
 name|cd
 parameter_list|)
 block|{
-name|DBGL4
-argument_list|(
-name|L4_MSG
-argument_list|,
-literal|"T400_stop"
-argument_list|,
-operator|(
-literal|"cr = %d\n"
-operator|,
-name|cd
-operator|->
-name|cr
-operator|)
-argument_list|)
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
 expr_stmt|;
 if|if
 condition|(
@@ -308,12 +306,6 @@ operator|==
 name|TIMER_ACTIVE
 condition|)
 block|{
-name|cd
-operator|->
-name|T400
-operator|=
-name|TIMER_IDLE
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -360,7 +352,30 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|cd
+operator|->
+name|T400
+operator|=
+name|TIMER_IDLE
+expr_stmt|;
 block|}
+name|CRIT_END
+expr_stmt|;
+name|DBGL4
+argument_list|(
+name|L4_MSG
+argument_list|,
+literal|"T400_stop"
+argument_list|,
+operator|(
+literal|"cr = %d\n"
+operator|,
+name|cd
+operator|->
+name|cr
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1998 Matthias Apitz. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	Fritz!Card pcmcia specific routines for isic driver  *	---------------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Tue Dec  1 22:03:51 1998]  *  *	-ap	added support for AVM PCMCIA Fritz!Card  *	-mh	split into separate file  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1998 Matthias Apitz. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	Fritz!Card pcmcia specific routines for isic driver  *	---------------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sun May  2 12:01:16 1999]  *  *	-ap	added support for AVM PCMCIA Fritz!Card  *	-mh	split into separate file  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -50,7 +50,7 @@ literal|0
 operator|&&
 name|defined
 argument_list|(
-name|AVM_PCMCIA
+name|AVM_A1_PCMCIA
 argument_list|)
 end_if
 
@@ -235,17 +235,17 @@ directive|include
 file|<i4b/layer1/i4b_hscx.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i4b/layer1/pcmcia_isic.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|__FreeBSD__
 end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<i4b/layer1/pcmcia_isic.h>
+end_include
 
 begin_comment
 comment|/* PCMCIA support routines */
@@ -1795,7 +1795,7 @@ end_ifdef
 
 begin_function
 name|int
-name|isic_attach_fritzpcmica
+name|isic_attach_fritzpcmcia
 parameter_list|(
 name|struct
 name|isa_device
@@ -1803,19 +1803,6 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|isic_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|isic_sc
-index|[
-name|dev
-operator|->
-name|id_unit
-index|]
-decl_stmt|;
 comment|/* ResetController again just to make sure... */
 name|outb
 argument_list|(
@@ -2309,7 +2296,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NISIC> 0&& defined(AVM_PCMCIA) */
+comment|/* NISIC> 0&& defined(AVM_A1_PCMCIA) */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1998 Ignatios Souvatzis. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isic_supio.c - Amiga supio pseudo bus frontend for i4b_isic driver  *	supports:  *		- ISDN Blaster	5001/1  *		- ISDN Master	2092/64  *	But we attach to the supio, so just see "isic".  *	-----------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Mon Nov 16 12:29:19 1998]  *  *	-is	original implementation  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1998 Ignatios Souvatzis. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isic_supio.c - Amiga supio pseudo bus frontend for i4b_isic driver  *	supports:  *		- ISDN Blaster	5001/1  *		- ISDN MasterII	5000/1  *		- ISDN Master	2092/64  *	But we attach to the supio, so just see "isic" or "isicII".  *	-----------------------------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Mon Mar 22 22:49:20 MET 1999]  *  *	-is	ISDN Master II support added.  *	-is	original implementation [Sun Feb 14 10:29:19 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -392,6 +392,16 @@ name|sap
 operator|->
 name|supio_name
 argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+literal|"isicII"
+argument_list|,
+name|sap
+operator|->
+name|supio_name
+argument_list|)
 operator|)
 return|;
 block|}
@@ -476,6 +486,11 @@ decl_stmt|;
 name|bus_space_handle_t
 name|h
 decl_stmt|;
+name|int
+name|o1
+decl_stmt|,
+name|o2
+decl_stmt|;
 comment|/* setup parameters */
 name|sc
 operator|->
@@ -506,6 +521,40 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|sap
+operator|->
+name|supio_name
+argument_list|,
+literal|"isic"
+argument_list|)
+condition|)
+block|{
+name|o1
+operator|=
+literal|0x300
+expr_stmt|;
+name|o2
+operator|=
+literal|0x100
+expr_stmt|;
+block|}
+else|else
+comment|/* "isic-II" */
+block|{
+name|o1
+operator|=
+literal|0x100
+expr_stmt|;
+name|o2
+operator|=
+literal|0x300
+expr_stmt|;
+block|}
 name|bst
 operator|=
 name|sap
@@ -560,7 +609,7 @@ index|]
 operator|.
 name|offset
 operator|=
-literal|0x300
+name|o1
 operator|/
 literal|2
 expr_stmt|;
@@ -608,7 +657,7 @@ index|]
 operator|.
 name|offset
 operator|=
-literal|0x100
+name|o2
 operator|/
 literal|2
 expr_stmt|;
@@ -656,7 +705,11 @@ index|]
 operator|.
 name|offset
 operator|=
-literal|0x180
+operator|(
+name|o2
+operator|+
+literal|0x80
+operator|)
 operator|/
 literal|2
 expr_stmt|;

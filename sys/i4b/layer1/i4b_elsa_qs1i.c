@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isic - I4B Siemens ISDN Chipset Driver for ELSA Quickstep 1000pro ISA  *	=====================================================================  *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 14 17:27:08 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isic - I4B Siemens ISDN Chipset Driver for ELSA Quickstep 1000pro ISA  *	=====================================================================  *  * $FreeBSD$  *  *      last edit-date: [Tue Mar 16 15:42:10 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -51,6 +51,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*   * this driver works for both the ELSA QuickStep 1000 PNP and the ELSA  * PCC-16  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -61,6 +65,8 @@ literal|0
 operator|)
 operator|&&
 operator|(
+operator|(
+operator|(
 name|NPNP
 operator|>
 literal|0
@@ -70,6 +76,13 @@ name|defined
 argument_list|(
 name|ELSA_QS1ISA
 argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|ELSA_PCC16
+argument_list|)
+operator|)
 end_if
 
 begin_include
@@ -156,11 +169,9 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/pnp.h>
-end_include
+begin_comment
+comment|/* #include<i386/isa/pnp.h> */
+end_comment
 
 begin_else
 else|#
@@ -266,9 +277,17 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_comment
-comment|/* static void i4b_eq1i_clrirq(void* base); */
-end_comment
+begin_function_decl
+specifier|static
+name|void
+name|i4b_eq1i_clrirq
+parameter_list|(
+name|void
+modifier|*
+name|base
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -453,12 +472,6 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -483,11 +496,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -2142,7 +2150,12 @@ operator|->
 name|id_iobase
 expr_stmt|;
 comment|/* setup access routines */
-comment|/* XXX no "sc_clearirq" in sight... /phk 	sc->sc_clearirq = i4b_eq1i_clrirq; */
+name|sc
+operator|->
+name|clearirq
+operator|=
+name|i4b_eq1i_clrirq
+expr_stmt|;
 name|sc
 operator|->
 name|readreg

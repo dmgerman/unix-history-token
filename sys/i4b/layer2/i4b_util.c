@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_util.c - layer 2 utility routines  *	-------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Sat Dec  5 18:31:10 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_util.c - layer 2 utility routines  *	-------------------------------------  *  * $FreeBSD$   *  *      last edit-date: [Thu Apr 15 10:47:52 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -255,6 +255,10 @@ modifier|*
 name|l2sc
 parameter_list|)
 block|{
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
 comment|/*XXX -------------------------------------------------------------- */
 comment|/*XXX is this really appropriate here or should it moved elsewhere ? */
 name|i4b_Dcleanifq
@@ -312,6 +316,8 @@ operator|->
 name|ack_pend
 operator|=
 literal|0
+expr_stmt|;
+name|CRIT_END
 expr_stmt|;
 block|}
 end_function
@@ -459,6 +465,10 @@ name|int
 name|nr
 parameter_list|)
 block|{
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
 name|DBGL2
 argument_list|(
 name|L2_ERROR
@@ -488,7 +498,7 @@ argument_list|,
 literal|"i4b_invoke_retransmission"
 argument_list|,
 operator|(
-literal|"nr != vs, nr = %d, vs = %d\n"
+literal|"nr(%d) != vs(%d)\n"
 operator|,
 name|nr
 operator|,
@@ -527,6 +537,31 @@ name|ua_num
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|IF_QFULL
+argument_list|(
+operator|&
+name|l2sc
+operator|->
+name|i_queue
+argument_list|)
+condition|)
+block|{
+name|DBGL2
+argument_list|(
+name|L2_ERROR
+argument_list|,
+literal|"i4b_invoke_retransmission"
+argument_list|,
+operator|(
+literal|"ERROR, I-queue full!\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|IF_ENQUEUE
 argument_list|(
 operator|&
@@ -545,6 +580,7 @@ name|ua_num
 operator|=
 name|UA_EMPTY
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -575,6 +611,8 @@ name|l2sc
 argument_list|)
 expr_stmt|;
 block|}
+name|CRIT_END
+expr_stmt|;
 block|}
 end_function
 
@@ -795,9 +833,10 @@ operator|!=
 name|UA_EMPTY
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
+name|CRIT_VAR
+expr_stmt|;
+name|CRIT_BEG
+expr_stmt|;
 name|M128DEC
 argument_list|(
 name|nr
@@ -828,11 +867,6 @@ name|ua_num
 operator|)
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|SPLI4B
-argument_list|()
-expr_stmt|;
 name|i4b_Dfreembuf
 argument_list|(
 name|l2sc
@@ -846,10 +880,7 @@ name|ua_num
 operator|=
 name|UA_EMPTY
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|CRIT_END
 expr_stmt|;
 block|}
 block|}
