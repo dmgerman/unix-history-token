@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.5 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1231,15 +1231,31 @@ literal|'C'
 case|:
 comment|/* word class */
 comment|/* scan the list of words and set class for all */
-for|for
-control|(
-name|p
-operator|=
+name|expand
+argument_list|(
 operator|&
 name|bp
 index|[
 literal|2
 index|]
+argument_list|,
+name|exbuf
+argument_list|,
+operator|&
+name|exbuf
+index|[
+sizeof|sizeof
+name|exbuf
+index|]
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|exbuf
 init|;
 operator|*
 name|p
