@@ -15,24 +15,11 @@ directive|define
 name|_MACHINE_TTE_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/atomic.h>
-end_include
-
 begin_define
 define|#
 directive|define
 name|TTE_SHIFT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|STTE_SHIFT
-value|5
+value|(4)
 end_define
 
 begin_define
@@ -74,21 +61,21 @@ begin_define
 define|#
 directive|define
 name|TT_CTX_MASK
-value|((1L<< TT_CTX_SIZE) - 1)
+value|((1UL<< TT_CTX_SIZE) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TT_VA_MASK
-value|((1L<< TT_VA_SIZE) - 1)
+value|((1UL<< TT_VA_SIZE) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TT_G
-value|(1L<< 63)
+value|(1UL<< 63)
 end_define
 
 begin_define
@@ -185,35 +172,35 @@ begin_define
 define|#
 directive|define
 name|TD_SIZE_MASK
-value|(((1L<< TD_SIZE_SIZE) - 1)<< TD_SIZE_SHIFT)
+value|(((1UL<< TD_SIZE_SIZE) - 1)<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_SOFT2_MASK
-value|(((1L<< TD_SOFT2_SIZE) - 1)<< TD_SOFT2_SHIFT)
+value|(((1UL<< TD_SOFT2_SIZE) - 1)<< TD_SOFT2_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_DIAG_MASK
-value|(((1L<< TD_DIAG_SIZE) - 1)<< TD_DIAG_SHIFT)
+value|(((1UL<< TD_DIAG_SIZE) - 1)<< TD_DIAG_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_PA_MASK
-value|(((1L<< TD_PA_SIZE) - 1)<< TD_PA_SHIFT)
+value|(((1UL<< TD_PA_SIZE) - 1)<< TD_PA_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_SOFT_MASK
-value|(((1L<< TD_SOFT_SIZE) - 1)<< TD_SOFT_SHIFT)
+value|(((1UL<< TD_SOFT_SIZE) - 1)<< TD_SOFT_SHIFT)
 end_define
 
 begin_define
@@ -234,84 +221,84 @@ begin_define
 define|#
 directive|define
 name|TS_EXEC
-value|(1L<< 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TS_INIT
-value|(1L<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TS_MNG
-value|(1L<< 2)
+value|(1UL<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TS_REF
-value|(1L<< 1)
+value|(1UL<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_PV
+value|(1UL<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TS_W
-value|(1L<< 0)
+value|(1UL<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_WIRED
+value|(1UL<< 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_V
-value|(1L<< 63)
+value|(1UL<< 63)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_8K
-value|(0L<< TD_SIZE_SHIFT)
+value|(0UL<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_64K
-value|(1L<< TD_SIZE_SHIFT)
+value|(1UL<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_512K
-value|(2L<< TD_SIZE_SHIFT)
+value|(2UL<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_4M
-value|(3L<< TD_SIZE_SHIFT)
+value|(3UL<< TD_SIZE_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_NFO
-value|(1L<< 60)
+value|(1UL<< 60)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_IE
-value|(1L<< 59)
+value|(1UL<< 59)
 end_define
 
 begin_define
@@ -354,22 +341,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_INIT
-value|(TS_INIT<< TD_SOFT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TD_MNG
-value|(TS_MNG<< TD_SOFT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TD_REF
 value|(TS_REF<< TD_SOFT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_PV
+value|(TS_PV<< TD_SOFT_SHIFT)
 end_define
 
 begin_define
@@ -382,50 +362,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|TD_WIRED
+value|(TS_WIRED<< TD_SOFT_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TD_L
-value|(1L<< 6)
+value|(1UL<< 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_CP
-value|(1L<< 5)
+value|(1UL<< 5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_CV
-value|(1L<< 4)
+value|(1UL<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_E
-value|(1L<< 3)
+value|(1UL<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_P
-value|(1L<< 2)
+value|(1UL<< 2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_W
-value|(1L<< 1)
+value|(1UL<< 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TD_G
-value|(1L<< 0)
+value|(1UL<< 0)
 end_define
 
 begin_define
@@ -438,6 +425,26 @@ parameter_list|)
 value|(((tag)>> TT_CTX_SHIFT)& TT_CTX_MASK)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TD_GET_SIZE
+parameter_list|(
+name|d
+parameter_list|)
+value|(((d)>> TD_SIZE_SHIFT)& 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_GET_PA
+parameter_list|(
+name|d
+parameter_list|)
+value|((d)& TD_PA_MASK)
+end_define
+
 begin_struct
 struct|struct
 name|tte
@@ -447,24 +454,6 @@ name|tte_tag
 decl_stmt|;
 name|u_long
 name|tte_data
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|stte
-block|{
-name|struct
-name|tte
-name|st_tte
-decl_stmt|;
-name|vm_offset_t
-name|st_next
-decl_stmt|;
-name|vm_offset_t
-name|st_prev
 decl_stmt|;
 block|}
 struct|;
@@ -532,31 +521,6 @@ operator|<<
 name|PAGE_SHIFT
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|tte_invalidate
-parameter_list|(
-name|struct
-name|tte
-modifier|*
-name|tp
-parameter_list|)
-block|{
-name|atomic_clear_long
-argument_list|(
-operator|&
-name|tp
-operator|->
-name|tte_data
-argument_list|,
-name|TD_V
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
