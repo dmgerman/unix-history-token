@@ -97,21 +97,8 @@ comment|/* others */
 end_comment
 
 begin_comment
-comment|/*  * Register offsets/total  */
+comment|/*  * Register offsets  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ED_NOVELL_NIC_OFFSET
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ED_NOVELL_NIC_OFFSET
-value|sc->edreg.nic_offset
-end_define
 
 begin_undef
 undef|#
@@ -161,7 +148,7 @@ value|sc->edreg.reset
 end_define
 
 begin_comment
-comment|/*  * Card types.  *  * Type  Card  * 0x00  Allied Telesis CenterCom LA-98-T.  * 0x10  MELCO LPC-TJ, LPC-TS / IO-DATA PCLA/T.  * 0x20  PLANET SMART COM 98 EN-2298 / ELECOM LANEED LD-BDN[123]A.  * 0x30  MELCO EGY-98 / Contec C-NET(98)E-A/L-A.  * 0x40  MELCO LGY-98, IND-SP, IND-SS / MACNICA NE2098(XXX).  * 0x50  ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET /  *       D-Link DE-298P{T,CAT}, DE-298{T,TP,CAT}.  * 0x60  Allied Telesis SIC-98.  * 0x80  NEC PC-9801-108.  * 0x90  IO-DATA LA-98.  * 0xa0  Contec C-NET(98).  * 0xb0  Contec C-NET(98)E/L.  */
+comment|/*  * Card types.  *  * Type  Card  * 0x00  Allied Telesis CenterCom LA-98-T.  * 0x10  NE2000 PCMCIA on old 98Note.  * 0x20  PLANET SMART COM 98 EN-2298 / ELECOM LANEED LD-BDN[123]A.  * 0x30  MELCO EGY-98 / Contec C-NET(98)E-A/L-A.  * 0x40  MELCO LGY-98, IND-SP, IND-SS / MACNICA NE2098(XXX).  * 0x50  ICM DT-ET-25, DT-ET-T5, IF-2766ET, IF-2771ET /  *       D-Link DE-298P{T,CAT}, DE-298{T,TP,CAT}.  * 0x60  Allied Telesis SIC-98.  * 0x70  ** RESERVED **  * 0x80  NEC PC-9801-108.  * 0x90  IO-DATA LA-98.  * 0xa0  Contec C-NET(98).  * 0xb0  Contec C-NET(98)E/L.  * 0xc0  ** RESERVED **  * 0xd0  Networld EC/EP-98X.  */
 end_comment
 
 begin_define
@@ -181,9 +168,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_TYPE98_LPC
+name|ED_TYPE98_PCIC98
 value|0x81
 end_define
+
+begin_comment
+comment|/* OLD NOTE PCMCIA */
+end_comment
 
 begin_define
 define|#
@@ -251,8 +242,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_TYPE98_UE2212
-value|0x8c
+name|ED_TYPE98_NW98X
+value|0x8d
 end_define
 
 begin_define
@@ -1061,55 +1052,45 @@ value|sc->edreg.port[0x0f]
 end_define
 
 begin_comment
-comment|/* PCCARD */
+comment|/* PCIC98 support */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ED_PC_MISC
-end_undef
-
 begin_define
 define|#
 directive|define
-name|ED_PC_MISC
-value|sc->edreg.pc_misc
+name|ED_PCIC98_16BIT_ON
+parameter_list|()
+value|outb(0x2a8e, 0x94)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|ED_PC_RESET
-end_undef
-
 begin_define
 define|#
 directive|define
-name|ED_PC_RESET
-value|sc->edreg.pc_reset
+name|ED_PCIC98_16BIT_OFF
+parameter_list|()
+value|outb(0x2a8e, 0xb4)
 end_define
 
 begin_comment
-comment|/* LPC-T support */
+comment|/*  * C-NET(98)& C-NET(98)EL  */
+end_comment
+
+begin_comment
+comment|/*  * NIC Initial Register(on board JP1).  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LPCT_1d0_ON
-parameter_list|()
-define|\
-value|{							\ 	outb(0x2a8e, 0x84);		\ 	outw(0x4a8e, 0x1d0);	\ 	outw(0x5a8e, 0x0310);	\ }
+name|ED_CNET98_INIT
+value|0xaaed
 end_define
 
 begin_define
 define|#
 directive|define
-name|LPCT_1d0_OFF
-parameter_list|()
-define|\
-value|{							\ 	outb(0x2a8e, 0xa4);		\ 	outw(0x4a8e, 0xd0);		\ 	outw(0x5a8e, 0x0300);	\ }
+name|ED_CNET98_INIT2
+value|0x55ed
 end_define
 
 begin_comment
@@ -1119,23 +1100,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ED_CNET98_INIT_ADDR
-value|0xaaed
-end_define
-
-begin_comment
-comment|/* 0xaaed reset register.  */
-end_comment
-
-begin_comment
-comment|/* 0xaaef i/o address set. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ED_CNET98_IO_PORTS
-value|32
+value|16
 end_define
 
 begin_comment
@@ -1384,26 +1350,8 @@ comment|/* INT 6 */
 end_comment
 
 begin_comment
-comment|/*  * C-NET(98)E/L  */
+comment|/* C-NET(98)E/L */
 end_comment
-
-begin_comment
-comment|/*  * NIC Initial Register(on board JP1).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ED_CNET98EL_INIT
-value|0xaaed
-end_define
-
-begin_define
-define|#
-directive|define
-name|ED_CNET98EL_INIT2
-value|0x55ed
-end_define
 
 begin_define
 define|#
@@ -1527,13 +1475,62 @@ value|0x05
 end_define
 
 begin_comment
-comment|/* NE2000, LGY-98, ICM, LPC-T, C-NET(98)E/L */
+comment|/*  * Networld EC/EP-98X  */
+end_comment
+
+begin_comment
+comment|/*  * Interrupt Status Register (offset from ASIC base).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_NW98X_IRQ
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NW98X_IRQ3
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NW98X_IRQ5
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NW98X_IRQ6
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NW98X_IRQ12
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_NW98X_IRQ13
+value|0x02
+end_define
+
+begin_comment
+comment|/* NE2000, LGY-98, ICM, C-NET(98)E/L */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|u_short
 name|edp_generic
 index|[
 literal|16
@@ -1581,8 +1578,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|u_short
 name|edp_egy98
 index|[
 literal|16
@@ -1630,8 +1626,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|u_short
 name|edp_sic98
 index|[
 literal|16
@@ -1679,8 +1674,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|u_short
 name|edp_la98
 index|[
 literal|16
@@ -1728,8 +1722,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|u_short
 name|edp_nec108
 index|[
 literal|16
@@ -1777,8 +1770,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|int
+name|u_short
 name|edp_cnet98
 index|[
 literal|16
@@ -1816,6 +1808,54 @@ block|,
 literal|0x040c
 block|,
 literal|0x040e
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Networld EC/EP-98X */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|u_short
+name|edp_nw98x
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|0x0000
+block|,
+literal|0x0100
+block|,
+literal|0x0200
+block|,
+literal|0x0300
+block|,
+literal|0x0400
+block|,
+literal|0x0500
+block|,
+literal|0x0600
+block|,
+literal|0x0700
+block|,
+literal|0x0800
+block|,
+literal|0x0900
+block|,
+literal|0x0a00
+block|,
+literal|0x0b00
+block|,
+literal|0x0c00
+block|,
+literal|0x0d00
+block|,
+literal|0x0e00
+block|,
+literal|0x0f00
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1884,21 +1924,12 @@ name|type
 operator|=
 name|type
 expr_stmt|;
-name|ED_PC_MISC
-operator|=
-literal|0x18
-expr_stmt|;
-comment|/* dummy for NON-PCCard */
-name|ED_PC_RESET
-operator|=
-literal|0x1f
-expr_stmt|;
-comment|/* same above */
 switch|switch
 condition|(
 name|type
 condition|)
 block|{
+default|default:
 case|case
 name|ED_TYPE98_GENERIC
 case|:
@@ -1909,10 +1940,6 @@ operator|.
 name|port
 operator|=
 name|edp_generic
-expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
@@ -1942,10 +1969,6 @@ name|port
 operator|=
 name|edp_generic
 expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
-expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
 literal|0x0200
@@ -1974,10 +1997,6 @@ name|port
 operator|=
 name|edp_egy98
 expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
-expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
 literal|0x0200
@@ -1998,6 +2017,9 @@ break|break;
 case|case
 name|ED_TYPE98_ICM
 case|:
+case|case
+name|ED_TYPE98_PCIC98
+case|:
 name|sc
 operator|->
 name|edreg
@@ -2005,10 +2027,6 @@ operator|.
 name|port
 operator|=
 name|edp_generic
-expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
@@ -2038,10 +2056,6 @@ name|port
 operator|=
 name|edp_la98
 expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
-expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
 literal|0x0100
@@ -2070,10 +2084,6 @@ name|port
 operator|=
 name|edp_sic98
 expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
-expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
 literal|0x2000
@@ -2091,46 +2101,6 @@ comment|/* dummy */
 name|nports
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-name|ED_TYPE98_LPC
-case|:
-name|sc
-operator|->
-name|edreg
-operator|.
-name|port
-operator|=
-name|edp_generic
-expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
-expr_stmt|;
-name|ED_NOVELL_ASIC_OFFSET
-operator|=
-literal|0x0100
-expr_stmt|;
-name|ED_NOVELL_DATA
-operator|=
-literal|0x0000
-expr_stmt|;
-name|ED_NOVELL_RESET
-operator|=
-literal|0x0200
-expr_stmt|;
-name|ED_PC_MISC
-operator|=
-literal|0x108
-expr_stmt|;
-name|ED_PC_RESET
-operator|=
-literal|0x10f
-expr_stmt|;
-name|nports
-operator|=
-literal|16
 expr_stmt|;
 break|break;
 case|case
@@ -2153,10 +2123,6 @@ literal|0xf000
 operator|)
 operator|/
 literal|2
-expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
@@ -2192,10 +2158,6 @@ name|port
 operator|=
 name|edp_la98
 expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
-expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
 literal|0x0100
@@ -2223,10 +2185,6 @@ operator|.
 name|port
 operator|=
 name|edp_generic
-expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
 expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
@@ -2257,10 +2215,6 @@ name|port
 operator|=
 name|edp_cnet98
 expr_stmt|;
-name|ED_NOVELL_NIC_OFFSET
-operator|=
-literal|0x0000
-expr_stmt|;
 name|ED_NOVELL_ASIC_OFFSET
 operator|=
 literal|0x0400
@@ -2278,6 +2232,34 @@ comment|/* dummy */
 name|nports
 operator|=
 literal|16
+expr_stmt|;
+break|break;
+case|case
+name|ED_TYPE98_NW98X
+case|:
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
+operator|=
+name|edp_nw98x
+expr_stmt|;
+name|ED_NOVELL_ASIC_OFFSET
+operator|=
+literal|0x1000
+expr_stmt|;
+name|ED_NOVELL_DATA
+operator|=
+literal|0x0000
+expr_stmt|;
+name|ED_NOVELL_RESET
+operator|=
+literal|0x0f00
+expr_stmt|;
+name|nports
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 block|}
