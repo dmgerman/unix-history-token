@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.13 (Berkeley) %G%"
+literal|"@(#)cp.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -954,8 +954,8 @@ argument_list|(
 operator|&
 name|from_stat
 argument_list|,
-operator|&
-name|to_stat
+operator|!
+name|dne
 argument_list|)
 expr_stmt|;
 if|if
@@ -1997,7 +1997,7 @@ name|copy_special
 argument_list|(
 argument|from_stat
 argument_list|,
-argument|to_stat
+argument|exists
 argument_list|)
 end_macro
 
@@ -2006,9 +2006,12 @@ name|struct
 name|stat
 modifier|*
 name|from_stat
-decl_stmt|,
-modifier|*
-name|to_stat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|exists
 decl_stmt|;
 end_decl_stmt
 
@@ -2016,12 +2019,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|to_stat
-operator|->
-name|st_ino
-operator|!=
-operator|-
-literal|1
+name|exists
 operator|&&
 name|unlink
 argument_list|(
