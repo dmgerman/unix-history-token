@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id$"
+literal|"@(#)$Id: getnetnamadr.c,v 1.1 1994/09/25 02:12:29 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getnetnamadr.c,v 1.1 1994/09/25 02:12:29 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,12 +203,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_NETCONF
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_PATH_NETCONF
-value|"/etc/net.conf"
+value|"/etc/host.conf"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_enum
 enum|enum
@@ -253,25 +264,25 @@ index|[]
 init|=
 block|{
 block|{
-literal|"nets"
+literal|"hosts"
 block|,
 name|SERVICE_TABLE
 block|}
 block|,
 block|{
-literal|"/etc/nets"
+literal|"/etc/hosts"
 block|,
 name|SERVICE_TABLE
 block|}
 block|,
 block|{
-literal|"nettable"
+literal|"hosttable"
 block|,
 name|SERVICE_TABLE
 block|}
 block|,
 block|{
-literal|"ntable"
+literal|"htable"
 block|,
 name|SERVICE_TABLE
 block|}
