@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.27	82/12/21	*/
+comment|/*	sys_generic.c	5.28	82/12/28	*/
 end_comment
 
 begin_include
@@ -2223,9 +2223,10 @@ name|error
 condition|)
 return|return
 operator|(
-name|error
+name|EFAULT
 operator|)
 return|;
+comment|/* XXX */
 break|break;
 case|case
 literal|1
