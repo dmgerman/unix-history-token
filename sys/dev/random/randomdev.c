@@ -129,6 +129,12 @@ directive|include
 file|<dev/random/yarrow.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_noblockrandom.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -505,6 +511,10 @@ name|void
 modifier|*
 name|random_buf
 decl_stmt|;
+comment|/* XXX Temporary ifndef to allow users to have a nonblocking device */
+ifndef|#
+directive|ifndef
+name|NOBLOCKRANDOM
 while|while
 condition|(
 operator|!
@@ -550,6 +560,8 @@ return|return
 name|error
 return|;
 block|}
+endif|#
+directive|endif
 name|c
 operator|=
 name|min
