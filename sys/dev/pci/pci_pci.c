@@ -81,17 +81,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pcib_attach
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|pcib_route_interrupt
 parameter_list|(
 name|device_t
@@ -844,7 +833,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcib_attach
 parameter_list|(

@@ -83,6 +83,16 @@ struct|;
 end_struct
 
 begin_function_decl
+name|int
+name|pcib_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pcib_attach_common
 parameter_list|(
