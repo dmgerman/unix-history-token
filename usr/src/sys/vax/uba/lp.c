@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.6	12/31/80	*/
+comment|/*	lp.c	4.6	81/02/16	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NLP
+name|NLP11
 operator|>
 literal|0
 end_if
