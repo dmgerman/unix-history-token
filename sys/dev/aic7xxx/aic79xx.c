@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#199 $  *  * $FreeBSD$  */
+comment|/*  * Core routines and tables shareable across OS platforms.  *  * Copyright (c) 1994-2002 Justin T. Gibbs.  * Copyright (c) 2000-2003 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx.c#200 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -2980,7 +2980,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Somehow need to know if this 			 * is from a selection or reselection. 			 * From that, we can termine target 			 * ID so we at least have an I_T nexus. 			 */
+comment|/* 			 * Somehow need to know if this 			 * is from a selection or reselection. 			 * From that, we can determine target 			 * ID so we at least have an I_T nexus. 			 */
 block|}
 else|else
 block|{
@@ -9814,6 +9814,7 @@ argument_list|,
 name|SIMODE1
 argument_list|)
 expr_stmt|;
+comment|/* 			 * We don't clear ENBUSFREE.  Unfortunately 			 * we cannot re-enable busfree detection within 			 * the current connection, so we must leave it 			 * on while single stepping. 			 */
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -9888,15 +9889,7 @@ operator|->
 name|unpause
 argument_list|)
 expr_stmt|;
-do|do
-block|{
-name|ahd_delay
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-block|}
-do|while
+while|while
 condition|(
 operator|!
 name|ahd_is_paused
@@ -9904,7 +9897,11 @@ argument_list|(
 name|ahd
 argument_list|)
 condition|)
-do|;
+name|ahd_delay
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
 name|ahd_update_modes
 argument_list|(
 name|ahd
@@ -16673,6 +16670,12 @@ name|ahd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ahd_clear_msg_state
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Perform the equivalent of a clear_target_state. 			 */
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -16682,9 +16685,15 @@ argument_list|,
 name|P_BUSFREE
 argument_list|)
 expr_stmt|;
-name|ahd_clear_msg_state
+name|ahd_outb
 argument_list|(
 name|ahd
+argument_list|,
+name|SEQ_FLAGS
+argument_list|,
+name|NOT_IDENTIFIED
+operator||
+name|NO_CDB_SENT
 argument_list|)
 expr_stmt|;
 name|ahd_outb
@@ -19742,15 +19751,7 @@ name|wait
 operator|=
 literal|1000
 expr_stmt|;
-do|do
-block|{
-name|ahd_delay
-argument_list|(
-literal|100
-argument_list|)
-expr_stmt|;
-block|}
-do|while
+while|while
 condition|(
 operator|--
 name|wait
@@ -19767,7 +19768,11 @@ operator|&
 name|FIFOFREE
 operator|)
 condition|)
-do|;
+name|ahd_delay
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|wait
@@ -27563,6 +27568,9 @@ argument_list|,
 name|CLRSCSIINT
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NEEDS_MORE_TESTING
 comment|/* 	 * Always enable abort on incoming L_Qs if this feature is 	 * supported.  We use this to catch invalid SCB references. 	 */
 if|if
 condition|(
@@ -27586,6 +27594,8 @@ name|ABORTPENDING
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|ahd_outb
 argument_list|(
 name|ahd
@@ -33171,6 +33181,11 @@ operator||
 name|SCSIRSTO
 argument_list|)
 expr_stmt|;
+name|ahd_flush_device_writes
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
 name|ahd_delay
 argument_list|(
 name|AHD_BUSRESET_DELAY
@@ -33184,6 +33199,16 @@ argument_list|,
 name|SCSISEQ0
 argument_list|,
 name|scsiseq
+argument_list|)
+expr_stmt|;
+name|ahd_flush_device_writes
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
+name|ahd_delay
+argument_list|(
+name|AHD_BUSRESET_DELAY
 argument_list|)
 expr_stmt|;
 if|if
@@ -33200,11 +33225,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * 2A Razor #474 		 * Certain chip state is not cleared for 		 * SCSI bus resets that we initiate, so 		 * we must reset the chip. 		 */
-name|ahd_delay
-argument_list|(
-name|AHD_BUSRESET_DELAY
-argument_list|)
-expr_stmt|;
 name|ahd_reset
 argument_list|(
 name|ahd
