@@ -288,6 +288,28 @@ directive|include
 file|<i386/isa/cxreg.h>
 end_include
 
+begin_function_decl
+specifier|extern
+name|void
+name|cxswitch
+parameter_list|(
+name|cx_chan_t
+modifier|*
+name|c
+parameter_list|,
+name|cx_soft_opt_t
+name|new
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|timeout_t
+name|cxtimeout
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -491,8 +513,11 @@ name|CDEV_MAJOR
 value|42
 end_define
 
+begin_comment
+comment|/* Don't make this static.  if_cx.c  uses it. */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|struct
 name|cdevsw
 name|cx_cdevsw
@@ -586,20 +611,6 @@ name|struct
 name|termios
 modifier|*
 name|t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cxswitch
-parameter_list|(
-name|cx_chan_t
-modifier|*
-name|c
-parameter_list|,
-name|cx_soft_opt_t
-name|new
 parameter_list|)
 function_decl|;
 end_function_decl
