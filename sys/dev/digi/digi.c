@@ -1518,9 +1518,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|model
-operator|==
-name|PCIXR
+name|pcibus
 condition|)
 name|PCIPORT
 operator|=
@@ -1548,9 +1546,7 @@ operator|(
 operator|(
 name|sc
 operator|->
-name|model
-operator|==
-name|PCIXR
+name|pcibus
 condition|?
 name|PCIPORT
 else|:
@@ -1582,13 +1578,17 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"digi%d: init reset failed\n"
+literal|"digi%d: %s init reset failed\n"
 argument_list|,
 name|sc
 operator|->
 name|res
 operator|.
 name|unit
+argument_list|,
+name|sc
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 return|return
@@ -1848,9 +1848,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|model
-operator|==
-name|PCIXR
+name|pcibus
 condition|)
 block|{
 name|PCIPORT
@@ -1916,9 +1914,7 @@ operator|(
 operator|(
 name|sc
 operator|->
-name|model
-operator|==
-name|PCIXR
+name|pcibus
 condition|?
 name|PCIPORT
 else|:
