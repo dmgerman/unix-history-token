@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	1.1 (Lucasfilm) %G%"
+literal|"@(#)iostat.c	1.2 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ literal|20
 argument_list|,
 literal|70
 argument_list|,
-literal|3
+literal|4
 argument_list|,
 literal|5
 argument_list|)
@@ -775,6 +775,26 @@ name|row
 operator|=
 literal|5
 expr_stmt|;
+name|move
+argument_list|(
+name|row
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|clrtoeol
+argument_list|()
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+name|row
+operator|++
+argument_list|,
+literal|10
+argument_list|,
+literal|"/0   /10  /20  /30  /40  /50  /60  /70  /80  /90  /100"
+argument_list|)
+expr_stmt|;
 name|mvaddstr
 argument_list|(
 name|row
@@ -1278,6 +1298,8 @@ name|etime
 argument_list|,
 literal|60
 argument_list|,
+literal|1.0
+argument_list|,
 literal|'X'
 argument_list|)
 expr_stmt|;
@@ -1303,6 +1325,8 @@ operator|/
 name|etime
 argument_list|,
 literal|60
+argument_list|,
+literal|1.0
 argument_list|,
 literal|'X'
 argument_list|)
@@ -1340,6 +1364,8 @@ else|:
 literal|0
 argument_list|,
 literal|60
+argument_list|,
+literal|1.0
 argument_list|,
 literal|'X'
 argument_list|)
@@ -1437,6 +1463,8 @@ name|time
 argument_list|,
 literal|60
 argument_list|,
+literal|0.5
+argument_list|,
 literal|'X'
 argument_list|)
 expr_stmt|;
@@ -1449,6 +1477,8 @@ argument_list|(
 argument|val
 argument_list|,
 argument|colwidth
+argument_list|,
+argument|scale
 argument_list|,
 argument|c
 argument_list|)
@@ -1463,6 +1493,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|colwidth
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|double
+name|scale
 decl_stmt|;
 end_decl_stmt
 
@@ -1493,9 +1529,11 @@ name|int
 call|)
 argument_list|(
 name|val
+operator|*
+name|scale
+argument_list|)
 operator|+
 literal|0.5
-argument_list|)
 decl_stmt|;
 name|k
 operator|=
@@ -1517,7 +1555,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|" %d"
+literal|"%4.1f"
 argument_list|,
 name|v
 argument_list|)
