@@ -276,8 +276,14 @@ begin_decl_stmt
 name|__BEGIN_DECLS
 specifier|extern
 name|FILE
-name|__sF
-index|[]
+modifier|*
+name|__stdinp
+decl_stmt|,
+modifier|*
+name|__stdoutp
+decl_stmt|,
+modifier|*
+name|__stderrp
 decl_stmt|;
 end_decl_stmt
 
@@ -448,15 +454,15 @@ directive|endif
 define|#
 directive|define
 name|stdin
-value|(&__sF[0])
+value|(__stdinp)
 define|#
 directive|define
 name|stdout
-value|(&__sF[1])
+value|(__stdoutp)
 define|#
 directive|define
 name|stderr
-value|(&__sF[2])
+value|(__stderrp)
 comment|/*  * Functions defined in ANSI C standard.  */
 name|__BEGIN_DECLS
 name|void
