@@ -818,5 +818,19 @@ return|;
 block|}
 end_function
 
+begin_function
+name|time_t
+name|getsecs
+parameter_list|()
+block|{
+return|return
+name|time
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 
