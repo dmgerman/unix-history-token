@@ -1830,7 +1830,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"fd %d %s %d bytes\n"
+literal|"fd %d %s %d byte%s\n"
 argument_list|,
 name|ktr
 operator|->
@@ -1847,6 +1847,14 @@ else|:
 literal|"wrote"
 argument_list|,
 name|datalen
+argument_list|,
+name|datalen
+operator|==
+literal|1
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|)
 expr_stmt|;
 if|if
