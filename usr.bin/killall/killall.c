@@ -1149,7 +1149,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|KERN_PROC_UID
+name|KERN_PROC_RUID
 expr_stmt|;
 name|mib
 index|[
