@@ -1634,7 +1634,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BRGPHY_RES_10HD
+name|BRGPHY_RES_10FD
 value|0x0200
 end_define
 
@@ -1645,7 +1645,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BRGPHY_RES_10FD
+name|BRGPHY_RES_10HD
 value|0x0100
 end_define
 
