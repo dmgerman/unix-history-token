@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: label.c,v 1.23.2.2 1994/11/21 03:53:45 phk Exp $  */
+comment|/*  * $Id: label.c,v 1.31 1994/12/27 23:26:51 jkh Exp $  */
 end_comment
 
 begin_include
@@ -1909,29 +1909,6 @@ case|:
 case|case
 literal|'A'
 case|:
-if|if
-condition|(
-name|memcmp
-argument_list|(
-name|lbl
-argument_list|,
-name|Dlbl
-index|[
-name|diskno
-index|]
-argument_list|,
-sizeof|sizeof
-expr|*
-name|lbl
-argument_list|)
-condition|)
-block|{
-name|yip
-operator|=
-literal|"Please (W)rite changed partition information first"
-expr_stmt|;
-break|break;
-block|}
 name|j
 operator|=
 name|AskWhichPartition
