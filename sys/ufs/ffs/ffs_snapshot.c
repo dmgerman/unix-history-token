@@ -2766,6 +2766,10 @@ expr_stmt|;
 if|if
 condition|(
 name|len
+operator|!=
+literal|0
+operator|&&
+name|len
 operator|<
 name|fs
 operator|->
