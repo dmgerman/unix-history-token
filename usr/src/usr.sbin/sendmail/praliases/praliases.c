@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)praliases.c	8.1 (Berkeley) %G%"
+literal|"@(#)praliases.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,7 +416,7 @@ for|for
 control|(
 name|key
 operator|=
-name|dbm_nextkey
+name|dbm_firstkey
 argument_list|(
 name|dbp
 argument_list|)
