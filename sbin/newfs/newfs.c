@@ -732,18 +732,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|mntflags
-init|=
-name|MNT_ASYNC
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* flags to be passed to mount */
-end_comment
-
-begin_decl_stmt
-name|int
 name|t_or_u_flag
 init|=
 literal|0
@@ -763,23 +751,6 @@ end_decl_stmt
 begin_comment
 comment|/* virtual memory available */
 end_comment
-
-begin_decl_stmt
-name|caddr_t
-name|membase
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* start address of memory based filesystem */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1054,14 +1025,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-case|case
-literal|'F'
-case|:
-name|filename
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
 case|case
 literal|'U'
 case|:

@@ -590,25 +590,6 @@ begin_comment
 comment|/* virtual memory available */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|caddr_t
-name|membase
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* start address of memory based filesystem */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-end_decl_stmt
-
 begin_union
 union|union
 block|{
