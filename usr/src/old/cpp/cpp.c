@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.7 %G%"
+literal|"@(#)cpp.c	1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8846,13 +8846,6 @@ operator|==
 name|stdout
 condition|)
 block|{
-specifier|extern
-name|char
-name|_sobuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|NULL
@@ -8889,20 +8882,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|fclose
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|setbuf
-argument_list|(
-name|fout
-argument_list|,
-name|_sobuf
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
