@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.7 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,7 +371,10 @@ name|lseek
 argument_list|(
 name|rfd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_CUR
 argument_list|)
