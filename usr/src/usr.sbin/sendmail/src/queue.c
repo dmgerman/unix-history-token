@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.83 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.84 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.83 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.84 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3354,6 +3354,47 @@ if|if
 condition|(
 operator|++
 name|wn
+operator|>
+name|MaxQueueRun
+operator|&&
+name|MaxQueueRun
+operator|>
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|wn
+operator|==
+name|MaxQueueRun
+operator|+
+literal|1
+operator|&&
+name|LogLevel
+operator|>
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"WorkList for %s maxed out at %d"
+argument_list|,
+name|QueueDir
+argument_list|,
+name|MaxQueueRun
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+continue|continue;
+block|}
+if|if
+condition|(
+name|wn
 operator|>=
 name|WorkListSize
 condition|)
@@ -4160,8 +4201,16 @@ operator|)
 return|;
 end_return
 
+begin_escape
+unit|}
+end_escape
+
+begin_comment
+comment|/* **  GROW_WLIST -- make the work list larger ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Adds another QUEUESEGSIZE entries to WorkList if possible. **		It can fail if there isn't enough memory, so WorkListSize **		should be checked again upon return. */
+end_comment
+
 begin_expr_stmt
-unit|}  grow_wlist
+unit|grow_wlist
 operator|(
 operator|)
 block|{
@@ -4184,41 +4233,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_if
-if|if
-condition|(
-name|MaxQueueRun
-operator|>
-literal|0
-operator|&&
-name|WorkListSize
-operator|>=
-name|MaxQueueRun
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|LOG
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|0
-condition|)
-name|syslog
-argument_list|(
-name|LOG_ALERT
-argument_list|,
-literal|"WorkList for %s maxed out at %d"
-argument_list|,
-name|QueueDir
-argument_list|,
-name|WorkListSize
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-elseif|else
 if|if
 condition|(
 name|WorkList
