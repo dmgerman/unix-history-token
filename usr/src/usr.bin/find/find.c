@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.1 (Berkeley) %G%"
+literal|"@(#)find.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1207,7 +1207,7 @@ name|gmatch
 argument_list|(
 name|b
 argument_list|,
-literal|"[0-9][0-9]*"
+literal|"[0-9]*"
 argument_list|)
 condition|)
 return|return
