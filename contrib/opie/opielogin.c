@@ -1190,6 +1190,8 @@ block|}
 else|else
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|ttyprompt
 argument_list|)
 expr_stmt|;
