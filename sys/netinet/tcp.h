@@ -548,6 +548,179 @@ begin_comment
 comment|/* use MD5 digests (RFC2385) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TCP_INFO
+value|0x20
+end_define
+
+begin_comment
+comment|/* retrieve tcp_info structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPI_OPT_TIMESTAMPS
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPI_OPT_SACK
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPI_OPT_WSCALE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCPI_OPT_ECN
+value|0x08
+end_define
+
+begin_comment
+comment|/*  * The TCP_INFO socket option comes from the Linux 2.6 TCP API, and permits  * the caller to query certain information about the state of a TCP  * connection.  We provide an overlapping set of fields with the Linux  * implementation, but since this is a fixed size structure, room has been  * left for growth.  In order to maximize potential future compatibility with  * the Linux API, the same variable names and order have been adopted, and  * padding left to make room for omitted fields in case they are added later.  *  * XXX: This is currently an unstable ABI/API, in that it is expected to  * change.  */
+end_comment
+
+begin_struct
+struct|struct
+name|tcp_info
+block|{
+name|u_int8_t
+name|tcpi_state
+decl_stmt|;
+comment|/* TCP FSM state. */
+name|u_int8_t
+name|__tcpi_ca_state
+decl_stmt|;
+name|u_int8_t
+name|__tcpi_retransmits
+decl_stmt|;
+name|u_int8_t
+name|__tcpi_probes
+decl_stmt|;
+name|u_int8_t
+name|__tcpi_backoff
+decl_stmt|;
+name|u_int8_t
+name|tcpi_options
+decl_stmt|;
+comment|/* Options enabled on conn. */
+name|u_int8_t
+name|tcpi_snd_wscale
+range|:
+literal|4
+decl_stmt|,
+comment|/* RFC1323 send shift value. */
+name|tcpi_rcv_wscale
+range|:
+literal|4
+decl_stmt|;
+comment|/* RFC1323 recv shift value. */
+name|u_int32_t
+name|__tcpi_rto
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_ato
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_snd_mss
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_rcv_mss
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_unacked
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_sacked
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_lost
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_retrans
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_fackets
+decl_stmt|;
+comment|/* Times; measurements in usecs. */
+name|u_int32_t
+name|__tcpi_last_data_sent
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_last_ack_sent
+decl_stmt|;
+comment|/* Also unimpl. on Linux? */
+name|u_int32_t
+name|__tcpi_last_data_recv
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_last_ack_recv
+decl_stmt|;
+comment|/* Metrics; variable units. */
+name|u_int32_t
+name|__tcpi_pmtu
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_rcv_ssthresh
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_rtt
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_rttvar
+decl_stmt|;
+name|u_int32_t
+name|tcpi_snd_ssthresh
+decl_stmt|;
+comment|/* Slow start threshold. */
+name|u_int32_t
+name|tcpi_snd_cwnd
+decl_stmt|;
+comment|/* Send congestion window. */
+name|u_int32_t
+name|__tcpi_advmss
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_reordering
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_rcv_rtt
+decl_stmt|;
+name|u_int32_t
+name|__tcpi_rcv_space
+decl_stmt|;
+comment|/* FreeBSD extensions to tcp_info. */
+name|u_int32_t
+name|tcpi_snd_wnd
+decl_stmt|;
+comment|/* Advertised send window. */
+name|u_int32_t
+name|tcpi_snd_bwnd
+decl_stmt|;
+comment|/* Bandwidth send window. */
+comment|/* Padding to grow without breaking ABI. */
+name|u_int32_t
+name|__tcpi_pad
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* Padding. */
+block|}
+struct|;
+end_struct
+
 begin_endif
 endif|#
 directive|endif
