@@ -2862,6 +2862,21 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|re_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
+name|re_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Put some data in the mbuf */
 name|eh
 operator|=
