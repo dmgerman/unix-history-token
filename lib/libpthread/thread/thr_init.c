@@ -1195,6 +1195,16 @@ operator|->
 name|tcb_tmbx
 argument_list|)
 expr_stmt|;
+comment|/* 	 * activate threaded mode as soon as possible if we are 	 * being debugged 	 */
+if|if
+condition|(
+name|_libkse_debug
+condition|)
+name|_kse_setthreaded
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
