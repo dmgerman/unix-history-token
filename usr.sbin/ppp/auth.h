@@ -105,7 +105,7 @@ name|auth_Failure
 parameter_list|(
 name|a
 parameter_list|)
-value|(*a->fn.failure)(a);
+value|(*(a)->fn.failure)(a)
 end_define
 
 begin_define
@@ -115,7 +115,7 @@ name|auth_Success
 parameter_list|(
 name|a
 parameter_list|)
-value|(*a->fn.success)(a);
+value|(*(a)->fn.success)(a)
 end_define
 
 begin_function_decl

@@ -81,6 +81,16 @@ modifier|*
 name|routes
 decl_stmt|;
 comment|/* FRAMED Routes */
+name|char
+modifier|*
+name|repstr
+decl_stmt|;
+comment|/* Reply-Message */
+name|char
+modifier|*
+name|errstr
+decl_stmt|;
+comment|/* Error-Message */
 struct|struct
 block|{
 name|char
