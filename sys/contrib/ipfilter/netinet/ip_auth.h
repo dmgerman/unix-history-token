@@ -244,6 +244,13 @@ name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
+operator|||
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300003
+operator|)
 end_if
 
 begin_decl_stmt

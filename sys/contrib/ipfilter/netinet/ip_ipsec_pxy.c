@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple ISAKMP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ipsec_pxy.c,v 1.1.2.10 2002/01/13 04:58:29 darrenr Exp $  *  */
+comment|/*  * Simple ISAKMP transparent proxy for in-kernel use.  For use with the NAT  * code.  *  * $Id: ip_ipsec_pxy.c,v 1.1.2.10 2002/01/13 04:58:29 darrenr Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_define

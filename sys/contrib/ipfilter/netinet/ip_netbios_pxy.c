@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Simple netbios-dgm transparent proxy for in-kernel use.  * For use with the NAT code.  * $Id: ip_netbios_pxy.c,v 1.1.2.3 2002/01/09 09:28:37 darrenr Exp $  */
+comment|/*  * Simple netbios-dgm transparent proxy for in-kernel use.  * For use with the NAT code.  * $Id: ip_netbios_pxy.c,v 1.1.2.3 2002/01/09 09:28:37 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
