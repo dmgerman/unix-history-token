@@ -937,6 +937,14 @@ operator|=
 literal|"Madison"
 expr_stmt|;
 break|break;
+case|case
+literal|0x02
+case|:
+name|model_name
+operator|=
+literal|"Madison II"
+expr_stmt|;
+break|break;
 block|}
 break|break;
 block|}
