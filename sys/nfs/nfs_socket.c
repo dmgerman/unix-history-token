@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tprintf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -9670,39 +9664,17 @@ end_function
 
 begin_block
 block|{
-name|tpr_t
-name|tpr
-decl_stmt|;
-if|if
-condition|(
-name|p
-condition|)
-name|tpr
-operator|=
-name|tprintf_open
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-else|else
-name|tpr
-operator|=
-name|NULL
-expr_stmt|;
 name|tprintf
 argument_list|(
-name|tpr
+name|p
+argument_list|,
+name|LOG_INFO
 argument_list|,
 literal|"nfs server %s: %s\n"
 argument_list|,
 name|server
 argument_list|,
 name|msg
-argument_list|)
-expr_stmt|;
-name|tprintf_close
-argument_list|(
-name|tpr
 argument_list|)
 expr_stmt|;
 return|return
