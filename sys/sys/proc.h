@@ -44,6 +44,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_comment
+comment|/* For lockmgr. */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -1969,6 +1979,14 @@ name|struct
 name|vm_zone
 modifier|*
 name|proc_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|lock
+name|allproc_lock
 decl_stmt|;
 end_decl_stmt
 

@@ -2001,6 +2001,18 @@ argument_list|(
 literal|"mount: lost mount"
 argument_list|)
 expr_stmt|;
+name|lockmgr
+argument_list|(
+operator|&
+name|allproc_lock
+argument_list|,
+name|LK_SHARED
+argument_list|,
+name|NULL
+argument_list|,
+name|CURPROC
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|p
@@ -2073,6 +2085,18 @@ name|newdp
 expr_stmt|;
 block|}
 block|}
+name|lockmgr
+argument_list|(
+operator|&
+name|allproc_lock
+argument_list|,
+name|LK_RELEASE
+argument_list|,
+name|NULL
+argument_list|,
+name|CURPROC
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rootvnode
