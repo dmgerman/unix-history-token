@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.69 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2347,6 +2347,38 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|cnp
+operator|->
+name|cn_nameiop
+operator|==
+name|CREATE
+operator|||
+name|cnp
+operator|->
+name|cn_nameiop
+operator|==
+name|RENAME
+operator|)
+operator|&&
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|ISLASTCN
+operator|)
+operator|&&
+name|error
+operator|==
+name|ENOENT
+condition|)
+name|error
+operator|=
+name|EJUSTRETURN
+expr_stmt|;
 if|if
 condition|(
 name|cnp
@@ -5445,12 +5477,17 @@ begin_function
 name|int
 name|nfs_link
 parameter_list|(
-name|vp
-parameter_list|,
 name|tdvp
+parameter_list|,
+name|vp
 parameter_list|,
 name|cnp
 parameter_list|)
+name|struct
+name|vnode
+modifier|*
+name|tdvp
+decl_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -5458,11 +5495,6 @@ modifier|*
 name|vp
 decl_stmt|;
 comment|/* source vnode */
-name|struct
-name|vnode
-modifier|*
-name|tdvp
-decl_stmt|;
 name|struct
 name|componentname
 modifier|*
