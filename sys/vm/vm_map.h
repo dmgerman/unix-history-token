@@ -287,6 +287,28 @@ begin_comment
 comment|/* don't include in a core */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_GROWS_DOWN
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Top-down stacks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_GROWS_UP
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Bottom-up stacks */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
