@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1987 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1987, 1988 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	4.10 (Berkeley) %G%"
+literal|"@(#)ping.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,6 +280,14 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|npackets
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|burst
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,6 +1102,8 @@ name|int
 name|i
 decl_stmt|,
 name|cc
+decl_stmt|,
+name|n
 decl_stmt|;
 specifier|register
 name|struct
@@ -1213,6 +1223,20 @@ name|cc
 argument_list|)
 expr_stmt|;
 comment|/* cc = sendto(s, msg, len, flags, to, tolen) */
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|burst
+condition|;
+name|n
+operator|++
+control|)
+block|{
 name|i
 operator|=
 name|sendto
@@ -1230,8 +1254,7 @@ name|whereto
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|sockaddr
+name|whereto
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1273,6 +1296,7 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
@@ -1989,6 +2013,13 @@ if|if
 condition|(
 name|ntransmitted
 condition|)
+block|{
+if|if
+condition|(
+name|nreceived
+operator|<=
+name|ntransmitted
+condition|)
 name|printf
 argument_list|(
 literal|"%d%% packet loss"
@@ -2011,6 +2042,23 @@ name|ntransmitted
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%.2f responses per request"
+argument_list|,
+operator|(
+name|float
+operator|)
+name|nreceived
+operator|/
+operator|(
+name|float
+operator|)
+name|ntransmitted
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
