@@ -230,6 +230,13 @@ name|NO_OBJ
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|BEFORE_DEPEND
+value|8
+end_define
+
 begin_struct
 struct|struct
 name|idlst
