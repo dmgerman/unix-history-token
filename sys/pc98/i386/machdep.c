@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.83 1998/05/19 12:58:05 kato Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.84 1998/05/28 13:50:13 kato Exp $  */
 end_comment
 
 begin_include
@@ -12,7 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ether.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"npx.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_atalk.h"
 end_include
 
 begin_include
@@ -31,6 +43,18 @@ begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_ipx.h"
 end_include
 
 begin_include
@@ -306,11 +330,67 @@ directive|include
 file|<ddb/ddb.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IPX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NATM
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NETATALK
+argument_list|)
+expr|\
+operator|||
+name|NETHER
+operator|>
+literal|0
+operator|||
+name|defined
+argument_list|(
+name|NS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NETISR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETISR
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<net/netisr.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -954,6 +1034,12 @@ name|PHYS_AVAIL_ARRAY_END
 value|((sizeof(phys_avail) / sizeof(vm_offset_t)) - 2)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETISR
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -969,9 +1055,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX declare elsewhere */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -999,6 +1086,12 @@ name|pager_eva
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETISR
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1006,6 +1099,11 @@ name|linker_set
 name|netisr_set
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1181,6 +1279,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|NETISR
 comment|/* 	 * Quickly wire in netisrs. 	 */
 name|setup_netisrs
 argument_list|(
@@ -1188,6 +1289,8 @@ operator|&
 name|netisr_set
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Calculate callout wheel size 	 */
 for|for
 control|(
@@ -1968,6 +2071,9 @@ endif|#
 directive|endif
 comment|/* SMP */
 block|}
+ifdef|#
+directive|ifdef
+name|NETISR
 name|int
 name|register_netisr
 parameter_list|(
@@ -2097,6 +2203,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* NETISR */
 comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * at top to call routine, followed by kcall  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, and the  * frame pointer, it returns to the user  * specified pc, psl.  */
 name|void
 name|sendsig
