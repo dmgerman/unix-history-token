@@ -141,19 +141,19 @@ literal|"\t-N tag[:[rev]]  Same as -n except override existing tag.\n"
 block|,
 literal|"\t-o range   Delete (outdate) specified range of revisions:\n"
 block|,
+literal|"\t   rev1:rev2   Between rev1 and rev2, including rev1 and rev2.\n"
+block|,
 literal|"\t   rev1::rev2  Between rev1 and rev2, excluding rev1 and rev2.\n"
 block|,
+literal|"\t   rev:        rev and following revisions on the same branch.\n"
+block|,
 literal|"\t   rev::       After rev on the same branch.\n"
+block|,
+literal|"\t   :rev        rev and previous revisions on the same branch.\n"
 block|,
 literal|"\t   ::rev       Before rev on the same branch.\n"
 block|,
 literal|"\t   rev         Just rev.\n"
-block|,
-literal|"\t   rev1:rev2   Between rev1 and rev2, including rev1 and rev2.\n"
-block|,
-literal|"\t   rev:        rev and following revisions on the same branch.\n"
-block|,
-literal|"\t   :rev        rev and previous revisions on the same branch.\n"
 block|,
 literal|"\t-q         Run quietly.\n"
 block|,
@@ -222,10 +222,6 @@ decl_stmt|;
 comment|/* Interactive (-I).  Problematic with client/server.  */
 name|int
 name|interactive
-decl_stmt|;
-comment|/* Quiet (-q).  Not the same as the global -q option, which is a bit        on the confusing side, perhaps.  */
-name|int
-name|quiet
 decl_stmt|;
 comment|/* This is the cheesy part.  It is a vector with the options which        we don't deal with above (e.g. "-afoo" "-abar,baz").  In the future        this presumably will be replaced by other variables which break        out the data in a more convenient fashion.  AV as well as each of        the strings it points to is malloc'd.  */
 name|int
@@ -1057,9 +1053,8 @@ break|break;
 case|case
 literal|'q'
 case|:
-name|admin_data
-operator|.
-name|quiet
+comment|/* Silently set the global really_quiet flag.  This keeps admin in 		 * sync with the RCS man page and allows us to silently support 		 * older servers when necessary. 		 * 		 * Some logic says we might want to output a deprecation warning 		 * here, but I'm opting not to in order to stay quietly in sync 		 * with the RCS man page. 		 */
+name|really_quiet
 operator|=
 literal|1
 expr_stmt|;
@@ -1169,76 +1164,145 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CVS_ADMIN_GROUP
+comment|/* The use of `cvs admin -k' is unrestricted.  However, any other        option is restricted if the group CVS_ADMIN_GROUP exists.  */
+if|if
+condition|(
+operator|!
+name|only_k_option
+operator|&&
+operator|(
 name|grp
 operator|=
 name|getgrnam
 argument_list|(
 name|CVS_ADMIN_GROUP
 argument_list|)
-expr_stmt|;
-comment|/* skip usage right check if group CVS_ADMIN_GROUP does not exist */
-if|if
-condition|(
-name|grp
+operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
-name|char
+ifdef|#
+directive|ifdef
+name|HAVE_GETGROUPS
+name|gid_t
 modifier|*
-name|me
-init|=
-name|getcaller
-argument_list|()
+name|grps
 decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|grnam
-init|=
-name|grp
-operator|->
-name|gr_mem
-decl_stmt|;
-comment|/* The use of `cvs admin -k' is unrestricted.  However, any 	   other option is restricted.  */
 name|int
-name|denied
-init|=
-operator|!
-name|only_k_option
+name|n
 decl_stmt|;
-while|while
-condition|(
-operator|*
-name|grnam
-condition|)
-block|{
+comment|/* get number of auxiliary groups */
+name|n
+operator|=
+name|getgroups
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|grnam
-argument_list|,
-name|me
-argument_list|)
-operator|==
+name|n
+operator|<
 literal|0
 condition|)
-block|{
-name|denied
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"unable to get number of auxiliary groups"
+argument_list|)
+expr_stmt|;
+name|grps
+operator|=
+operator|(
+name|gid_t
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+operator|(
+name|n
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+expr|*
+name|grps
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|getgroups
+argument_list|(
+name|n
+argument_list|,
+name|grps
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"unable to get list of auxiliary groups"
+argument_list|)
+expr_stmt|;
+name|grps
+index|[
+name|n
+index|]
+operator|=
+name|getgid
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|i
 operator|=
 literal|0
-expr_stmt|;
-break|break;
-block|}
-name|grnam
+init|;
+name|i
+operator|<=
+name|n
+condition|;
+name|i
 operator|++
-expr_stmt|;
-block|}
+control|)
 if|if
 condition|(
-name|denied
+name|grps
+index|[
+name|i
+index|]
+operator|==
+name|grp
+operator|->
+name|gr_gid
+condition|)
+break|break;
+name|free
+argument_list|(
+name|grps
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+name|n
 condition|)
 name|error
 argument_list|(
@@ -1251,6 +1315,73 @@ argument_list|,
 name|CVS_ADMIN_GROUP
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|char
+modifier|*
+name|me
+init|=
+name|getcaller
+argument_list|()
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|grnam
+decl_stmt|;
+for|for
+control|(
+name|grnam
+operator|=
+name|grp
+operator|->
+name|gr_mem
+init|;
+operator|*
+name|grnam
+condition|;
+name|grnam
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|grnam
+argument_list|,
+name|me
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+operator|!
+operator|*
+name|grnam
+operator|&&
+name|getgid
+argument_list|()
+operator|!=
+name|grp
+operator|->
+name|gr_gid
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"usage is restricted to members of the group %s"
+argument_list|,
+name|CVS_ADMIN_GROUP
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
@@ -1462,7 +1593,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 comment|/* We're the client side.  Fire up the remote server.  */
@@ -1655,11 +1788,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Send this for all really_quiets since we know that it will be silently 	 * ignored when unneeded.  This supports old servers. 	 */
 if|if
 condition|(
-name|admin_data
-operator|.
-name|quiet
+name|really_quiet
 condition|)
 name|send_arg
 argument_list|(
@@ -1754,6 +1886,8 @@ argument_list|,
 name|argv
 argument_list|,
 literal|0
+argument_list|,
+name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|)
@@ -2096,9 +2230,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|admin_data
-operator|->
-name|quiet
+name|really_quiet
 condition|)
 block|{
 name|cvs_output
@@ -3123,13 +3255,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
 name|error
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"%s: Symbolic name or revision %s is undefined"
+literal|"%s: Symbolic name or revision %s is undefined."
 argument_list|,
 name|rcs
 operator|->
@@ -3567,7 +3704,6 @@ expr_stmt|;
 comment|/* can't happen */
 block|}
 block|}
-comment|/* TODO: reconcile the weird discrepancies between        admin_data->quiet and quiet. */
 if|if
 condition|(
 name|status
@@ -3587,9 +3723,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|admin_data
-operator|->
-name|quiet
+name|really_quiet
 condition|)
 name|cvs_output
 argument_list|(
@@ -3602,13 +3736,18 @@ block|}
 else|else
 block|{
 comment|/* Note that this message should only occur after another 	   message has given a more specific error.  The point of this 	   additional message is to make it clear that the previous problems 	   caused CVS to forget about the idea of modifying the RCS file.  */
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
 name|error
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"cannot modify RCS file for `%s'"
+literal|"RCS file for `%s' not modified."
 argument_list|,
 name|finfo
 operator|->

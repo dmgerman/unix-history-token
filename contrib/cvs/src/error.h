@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_error_h_
+name|ERROR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_error_h_
+name|ERROR_H
 end_define
 
 begin_comment
@@ -257,7 +257,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _error_h_ */
+comment|/* ERROR_H */
 end_comment
 
 end_unit

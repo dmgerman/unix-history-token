@@ -240,7 +240,9 @@ name|CLIENT_SUPPORT
 if|if
 condition|(
 operator|!
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 endif|#
 directive|endif
@@ -255,7 +257,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -268,7 +272,7 @@ argument_list|(
 name|CVSROOTADM_WRAPPER
 argument_list|)
 operator|+
-literal|10
+literal|3
 argument_list|)
 expr_stmt|;
 comment|/* Then add entries found in repository, if it exists.  */
@@ -281,7 +285,9 @@ name|file
 argument_list|,
 literal|"%s/%s/%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|CVSROOTADM
 argument_list|,

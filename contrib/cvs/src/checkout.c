@@ -90,7 +90,7 @@ name|checkout_usage
 index|[]
 init|=
 block|{
-literal|"Usage:\n  %s %s [-ANPRcflnps] [-r rev | -D date] [-d dir]\n"
+literal|"Usage:\n  %s %s [-ANPRcflnps] [-r rev] [-D date] [-d dir]\n"
 block|,
 literal|"    [-j rev1] [-j rev2] [-k kopt] modules...\n"
 block|,
@@ -120,7 +120,7 @@ literal|"\t-D date\tCheck out revisions as of date. (implies -P) (is sticky)\n"
 block|,
 literal|"\t-d dir\tCheck out into dir instead of module name.\n"
 block|,
-literal|"\t-k kopt\tUse RCS kopt -k option on checkout.\n"
+literal|"\t-k kopt\tUse RCS kopt -k option on checkout. (is sticky)\n"
 block|,
 literal|"\t-j rev\tMerge in changes made between current revision and rev.\n"
 block|,
@@ -141,7 +141,7 @@ name|export_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-NRfln] [-r rev | -D date] [-d dir] [-k kopt] module...\n"
+literal|"Usage: %s %s [-NRfln] [-r rev] [-D date] [-d dir] [-k kopt] module...\n"
 block|,
 literal|"\t-N\tDon't shorten module paths if -d specified.\n"
 block|,
@@ -599,6 +599,8 @@ break|break;
 case|case
 literal|'s'
 case|:
+name|cat
+operator|=
 name|status
 operator|=
 literal|1
@@ -702,11 +704,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|cat
-operator|||
-name|status
-operator|)
 operator|&&
 name|argc
 operator|!=
@@ -724,11 +722,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
 name|cat
-operator|||
-name|status
-operator|)
 operator|&&
 name|argc
 operator|==
@@ -833,6 +827,9 @@ directive|endif
 if|if
 condition|(
 operator|!
+name|cat
+operator|&&
+operator|!
 name|safe_location
 argument_list|()
 condition|)
@@ -852,7 +849,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|int
@@ -870,9 +869,6 @@ operator|=
 operator|(
 operator|!
 name|cat
-operator|&&
-operator|!
-name|status
 operator|&&
 operator|!
 name|pipeout
@@ -976,6 +972,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cat
+operator|&&
+operator|!
+name|status
 condition|)
 name|send_arg
 argument_list|(
@@ -1133,8 +1132,6 @@ comment|/* CLIENT_SUPPORT */
 if|if
 condition|(
 name|cat
-operator|||
-name|status
 condition|)
 block|{
 name|cat_module
@@ -1273,6 +1270,9 @@ name|local
 argument_list|,
 name|run_module_prog
 argument_list|,
+operator|!
+name|pipeout
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -1340,7 +1340,9 @@ name|x
 operator|=
 name|readlink
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|hardpath
 argument_list|,
@@ -1371,7 +1373,9 @@ name|strcpy
 argument_list|(
 name|hardpath
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 block|}
@@ -1634,23 +1638,23 @@ name|repository
 argument_list|,
 name|sticky
 condition|?
+name|tag
+else|:
 operator|(
 name|char
 operator|*
 operator|)
 name|NULL
-else|:
-name|tag
 argument_list|,
 name|sticky
 condition|?
+name|date
+else|:
 operator|(
 name|char
 operator|*
 operator|)
 name|NULL
-else|:
-name|date
 argument_list|,
 comment|/* FIXME?  This is a guess.  If it is important 			     for nonbranch to be set correctly here I 			     think we need to write it one way now and 			     then rewrite it later via WriteTag, once 			     we've had a chance to call RCS_nodeisbranch 			     on each file.  */
 literal|0
@@ -1824,7 +1828,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 name|strlen
@@ -1860,7 +1866,9 @@ name|repository
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|argv
 index|[
@@ -2392,11 +2400,15 @@ name|strncmp
 argument_list|(
 name|repository
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 argument_list|)
 operator|!=
@@ -2412,7 +2424,9 @@ literal|"\ internal error: %s doesn't start with %s in checkout_proc"
 argument_list|,
 name|repository
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 comment|/* We always create at least one directory, which corresponds to 	   the entire strings for WHERE and REPOSITORY.  */
@@ -2647,7 +2661,9 @@ name|strcmp
 argument_list|(
 name|reposcopy
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|==
 literal|0
@@ -2664,65 +2680,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|where_orig
-operator|!=
-name|NULL
-operator|)
-operator|&&
-operator|(
-name|strcmp
-argument_list|(
-name|new
-operator|->
-name|dirpath
-argument_list|,
-name|where_orig
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-comment|/* It's the case that the user specified a 		     * destination directory with the "-d" flag.  The 		     * repository in this directory should be "." 		     * since the user's command is equivalent to: 		     * 		     *   cd<dir>; cvs co blah   */
-name|strcpy
-argument_list|(
-name|reposcopy
-argument_list|,
-name|CVSroot_directory
-argument_list|)
-expr_stmt|;
-goto|goto
-name|allocate_repos
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|mwhere
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* This is a generated directory, so point to                        CVSNULLREPOS. */
-name|new
-operator|->
-name|repository
-operator|=
-name|emptydir_name
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* It's a directory in the repository! */
 name|char
 modifier|*
 name|rp
 decl_stmt|;
-comment|/* We'll always be below CVSROOT, but check for 		       paranoia's sake. */
+comment|/* We'll always be below CVSROOT, but check for 		   paranoia's sake. */
 name|rp
 operator|=
 name|strrchr
@@ -2754,8 +2717,6 @@ name|rp
 operator|=
 literal|'\0'
 expr_stmt|;
-name|allocate_repos
-label|:
 name|new
 operator|->
 name|repository
@@ -2788,13 +2749,15 @@ name|strcmp
 argument_list|(
 name|reposcopy
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* Special case -- the repository name needs 			   to be "/path/to/repos/." (the trailing dot 			   is important).  We might be able to get rid 			   of this after the we check out the other 			   code that handles repository names. */
+comment|/* Special case -- the repository name needs 		       to be "/path/to/repos/." (the trailing dot 		       is important).  We might be able to get rid 		       of this after the we check out the other 		       code that handles repository names. */
 operator|(
 name|void
 operator|)
@@ -2807,7 +2770,6 @@ argument_list|,
 literal|"/."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -2826,7 +2788,7 @@ argument_list|(
 name|where
 argument_list|)
 decl_stmt|;
-comment|/* The top-level CVSADM directory should always be 	       CVSroot_directory.  Create it, but only if WHERE is 	       relative.  If WHERE is absolute, our current directory 	       may not have a thing to do with where the sources are 	       being checked out.  If it does, build_dirs_and_chdir 	       will take care of creating adm files here. */
+comment|/* The top-level CVSADM directory should always be 	       current_parsed_root->directory.  Create it, but only if WHERE is 	       relative.  If WHERE is absolute, our current directory 	       may not have a thing to do with where the sources are 	       being checked out.  If it does, build_dirs_and_chdir 	       will take care of creating adm files here. */
 comment|/* FIXME: checking where_is_absolute is a horrid kludge; 	       I suspect we probably can just skip the call to 	       build_one_dir whenever the -d command option was specified 	       to checkout.  */
 if|if
 condition|(
@@ -2839,7 +2801,9 @@ block|{
 comment|/* It may be argued that we shouldn't set any sticky 		   bits for the top-level repository.  FIXME?  */
 name|build_one_dir
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 literal|"."
 argument_list|,
@@ -2860,7 +2824,9 @@ name|server_clear_entstat
 argument_list|(
 literal|"."
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3455,6 +3421,10 @@ argument_list|,
 name|join_rev2
 argument_list|,
 name|preload_update_dir
+argument_list|,
+name|m_type
+operator|==
+name|CHECKOUT
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3755,6 +3725,10 @@ argument_list|,
 name|join_rev2
 argument_list|,
 name|preload_update_dir
+argument_list|,
+name|m_type
+operator|==
+name|CHECKOUT
 argument_list|)
 expr_stmt|;
 name|out
@@ -3858,7 +3832,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -3871,7 +3847,7 @@ argument_list|(
 name|CVSNULLREPOS
 argument_list|)
 operator|+
-literal|10
+literal|3
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3883,7 +3859,9 @@ name|repository
 argument_list|,
 literal|"%s/%s/%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|CVSROOTADM
 argument_list|,

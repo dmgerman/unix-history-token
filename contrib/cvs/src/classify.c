@@ -245,6 +245,7 @@ name|vn_rcs
 argument_list|)
 condition|)
 block|{
+comment|/* there is an RCS file, but it's dead */
 if|if
 condition|(
 name|vers
@@ -280,41 +281,16 @@ name|T_UNKNOWN
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-comment|/* there is an rcs file */
-if|if
-condition|(
-name|vers
-operator|->
-name|ts_user
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* There is no user file; needs checkout */
-name|ret
-operator|=
-name|T_CHECKOUT
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|pipeout
-condition|)
-block|{
-comment|/* 		     * The user file doesn't necessarily have anything 		     * to do with this. 		     */
-name|ret
-operator|=
-name|T_CHECKOUT
-expr_stmt|;
-block|}
-comment|/* 		 * There is a user file; print a warning and add it to the 		 * conflict list, only if it is indeed different from what we 		 * plan to extract 		 */
 elseif|else
 if|if
 condition|(
+operator|!
+name|pipeout
+operator|&&
+name|vers
+operator|->
+name|ts_user
+operator|&&
 name|No_Difference
 argument_list|(
 name|finfo
@@ -348,13 +324,11 @@ name|T_CONFLICT
 expr_stmt|;
 block|}
 else|else
-comment|/* since there was no difference, still needs checkout */
+comment|/* no user file or no difference, just checkout */
 name|ret
 operator|=
 name|T_CHECKOUT
 expr_stmt|;
-block|}
-block|}
 block|}
 elseif|else
 if|if
@@ -405,9 +379,7 @@ operator|=
 name|T_REMOVE_ENTRY
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* There is a user file */
+elseif|else
 if|if
 condition|(
 name|vers
@@ -415,15 +387,7 @@ operator|->
 name|vn_rcs
 operator|==
 name|NULL
-condition|)
-comment|/* There is no RCS file, added file */
-name|ret
-operator|=
-name|T_ADDED
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+operator|||
 name|RCS_isdead
 argument_list|(
 name|vers
@@ -435,7 +399,7 @@ operator|->
 name|vn_rcs
 argument_list|)
 condition|)
-comment|/* we are resurrecting. */
+comment|/* No RCS file or RCS file revision is dead  */
 name|ret
 operator|=
 name|T_ADDED
@@ -461,7 +425,7 @@ operator|&
 name|VALID
 condition|)
 block|{
-comment|/* This file has been added on some branch other than 		       the one we are looking at.  In the branch we are 		       looking at, the file was already valid.  */
+comment|/* This file has been added on some branch other than 		   the one we are looking at.  In the branch we are 		   looking at, the file was already valid.  */
 if|if
 condition|(
 operator|!
@@ -473,7 +437,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"\ conflict: %s has been added, but already exists"
+literal|"conflict: %s has been added, but already exists"
 argument_list|,
 name|finfo
 operator|->
@@ -483,7 +447,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		     * There is an RCS file, so someone else must have checked 		     * one in behind our back; conflict 		     */
+comment|/* 		 * There is an RCS file, so someone else must have checked 		 * one in behind our back; conflict 		 */
 if|if
 condition|(
 operator|!
@@ -495,7 +459,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"\ conflict: %s created independently by second party"
+literal|"conflict: %s created independently by second party"
 argument_list|,
 name|finfo
 operator|->
@@ -507,7 +471,6 @@ name|ret
 operator|=
 name|T_CONFLICT
 expr_stmt|;
-block|}
 block|}
 block|}
 elseif|else
@@ -563,21 +526,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|vers
-operator|->
-name|vn_rcs
-operator|==
-name|NULL
-condition|?
-name|vers
-operator|->
-name|vn_user
-index|[
-literal|1
-index|]
-operator|==
-literal|'\0'
-else|:
 name|strcmp
 argument_list|(
 name|vers
@@ -597,6 +545,16 @@ comment|/* 		 * The RCS file is the same version as the user file was, and 		 * 
 name|ret
 operator|=
 name|T_REMOVED
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pipeout
+condition|)
+comment|/* 		 * The RCS file doesn't match the user's file, but it doesn't 		 * matter in this case 		 */
+name|ret
+operator|=
+name|T_NEEDS_MERGE
 expr_stmt|;
 else|else
 block|{
@@ -662,6 +620,17 @@ operator|->
 name|vn_rcs
 operator|==
 name|NULL
+operator|||
+name|RCS_isdead
+argument_list|(
+name|vers
+operator|->
+name|srcfile
+argument_list|,
+name|vers
+operator|->
+name|vn_rcs
+argument_list|)
 condition|)
 block|{
 comment|/* There is no RCS file */
@@ -739,9 +708,7 @@ operator|=
 name|T_REMOVE_ENTRY
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* 		 * The user file has been modified and since it is no longer 		 * in the repository, a conflict is raised 		 */
+elseif|else
 if|if
 condition|(
 name|No_Difference
@@ -801,7 +768,6 @@ name|ret
 operator|=
 name|T_REMOVE_ENTRY
 expr_stmt|;
-block|}
 block|}
 block|}
 elseif|else
@@ -930,9 +896,7 @@ name|T_UPTODATE
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-comment|/* 		 * The user file appears to have been modified, but we call 		 * No_Difference to verify that it really has been modified 		 */
+elseif|else
 if|if
 condition|(
 name|No_Difference
@@ -943,7 +907,7 @@ name|vers
 argument_list|)
 condition|)
 block|{
-comment|/* 		     * they really are different; modified if we aren't 		     * changing any sticky -k options, else needs merge 		     */
+comment|/* 		 * they really are different; modified if we aren't 		 * changing any sticky -k options, else needs merge 		 */
 ifdef|#
 directive|ifdef
 name|XXX_FIXME_WHEN_RCSMERGE_IS_FIXED
@@ -999,9 +963,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-else|else
-block|{
-comment|/* file has not changed; check out if -k changed */
+elseif|else
 if|if
 condition|(
 name|strcmp
@@ -1028,6 +990,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* file has not changed; check out if -k changed */
 name|ret
 operator|=
 name|T_CHECKOUT
@@ -1035,13 +998,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * else -> note that No_Difference will Register the 			 * file already for us, using the new tag/date. This 			 * is the desired behaviour 			 */
+comment|/* 		 * else -> note that No_Difference will Register the 		 * file already for us, using the new tag/date. This 		 * is the desired behaviour 		 */
 name|ret
 operator|=
 name|T_UPTODATE
 expr_stmt|;
-block|}
-block|}
 block|}
 block|}
 else|else
@@ -1110,9 +1071,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * The user file is still unmodified, so just get it as well 		 */
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 if|if
 condition|(
 name|strcmp
@@ -1167,17 +1125,8 @@ name|ret
 operator|=
 name|T_PATCH
 expr_stmt|;
-else|#
-directive|else
-name|ret
-operator|=
-name|T_CHECKOUT
-expr_stmt|;
-endif|#
-directive|endif
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|No_Difference
@@ -1192,9 +1141,6 @@ name|ret
 operator|=
 name|T_NEEDS_MERGE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 elseif|else
 if|if
 condition|(
@@ -1253,17 +1199,6 @@ name|ret
 operator|=
 name|T_PATCH
 expr_stmt|;
-else|#
-directive|else
-else|else
-comment|/* not really modified, check it out */
-name|ret
-operator|=
-name|T_CHECKOUT
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 block|}
 block|}
 comment|/* free up the vers struct, or just return it */

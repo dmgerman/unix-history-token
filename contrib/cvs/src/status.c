@@ -247,7 +247,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|start_server
@@ -462,9 +464,6 @@ operator|=
 literal|"Needs Checkout"
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
 case|case
 name|T_PATCH
 case|:
@@ -473,8 +472,6 @@ operator|=
 literal|"Needs Patch"
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|T_CONFLICT
 case|:

@@ -279,7 +279,9 @@ name|cvsroot_len
 operator|=
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 comment|/* First some sanity checks.  I know that the CVS case is (sort of)        also handled by add_directory, but we need to check here so the        client won't get all confused in send_file_names.  */
@@ -350,6 +352,11 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|error
 argument_list|(
 literal|0
@@ -463,7 +470,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|int
@@ -685,7 +694,9 @@ name|strncmp
 argument_list|(
 name|repository
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|cvsroot_len
 argument_list|)
@@ -1183,7 +1194,9 @@ name|strncmp
 argument_list|(
 name|repository
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|cvsroot_len
 argument_list|)
@@ -1343,7 +1356,7 @@ condition|(
 operator|(
 name|dp
 operator|=
-name|readdir
+name|CVS_READDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -1423,7 +1436,7 @@ operator|.
 name|repository
 argument_list|)
 expr_stmt|;
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|dirp
 argument_list|)
@@ -1941,6 +1954,12 @@ else|else
 block|{
 if|if
 condition|(
+operator|!
+name|quiet
+condition|)
+block|{
+if|if
+condition|(
 name|vers
 operator|->
 name|tag
@@ -1967,7 +1986,7 @@ name|vn_rcs
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* I'm not sure that mentioning 			       vers->vn_rcs makes any sense here; I 			       can't think of a way to word the 			       message which is not confusing.  */
+comment|/* I'm not sure that mentioning 				   vers->vn_rcs makes any sense here; I 				   can't think of a way to word the 				   message which is not confusing.  */
 name|error
 argument_list|(
 literal|0
@@ -1985,6 +2004,7 @@ operator|->
 name|vn_rcs
 argument_list|)
 expr_stmt|;
+block|}
 name|Register
 argument_list|(
 name|entries
@@ -2062,6 +2082,11 @@ literal|'\0'
 condition|)
 block|{
 comment|/* 	     * An entry for a new-born file, ts_rcs is dummy, but that is 	     * inappropriate here 	     */
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|error
 argument_list|(
 literal|0
@@ -2306,6 +2331,11 @@ block|}
 else|else
 block|{
 comment|/* A normal entry, ts_rcs is valid, so it must already be there */
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|error
 argument_list|(
 literal|0
@@ -2463,6 +2493,9 @@ block|}
 if|if
 condition|(
 name|added_files
+operator|&&
+operator|!
+name|really_quiet
 condition|)
 name|error
 argument_list|(
