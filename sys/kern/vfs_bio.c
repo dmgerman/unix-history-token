@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.193.2.1 1999/01/22 05:36:12 dillon Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.193.2.2 1999/01/25 01:59:26 dg Exp $  */
 end_comment
 
 begin_comment
@@ -6587,11 +6587,39 @@ expr_stmt|;
 comment|/* 		 * Check that the constituted buffer really deserves for the 		 * B_CACHE bit to be set.  B_VMIO type buffers might not 		 * contain fully valid pages.  Normal (old-style) buffers 		 * should be fully valid. 		 */
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_VMIO
+operator||
+name|B_CACHE
+operator|)
+operator|)
+operator|==
+operator|(
+name|B_VMIO
+operator||
+name|B_CACHE
+operator|)
+operator|&&
+operator|(
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_tag
+operator|!=
+name|VT_NFS
+operator|||
+name|bp
+operator|->
+name|b_validend
+operator|<=
+literal|0
+operator|)
 condition|)
 block|{
 name|int
