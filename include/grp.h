@@ -119,7 +119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|setgrent
 name|__P
 argument_list|(
