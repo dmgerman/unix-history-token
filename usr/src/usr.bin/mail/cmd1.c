@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	1.2 %G%"
+literal|"@(#)cmd1.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -600,6 +600,34 @@ condition|)
 name|dispc
 operator|=
 literal|'P'
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|m_flag
+operator|&
+name|MREAD
+operator|)
+operator|==
+literal|0
+condition|)
+name|dispc
+operator|=
+literal|'U'
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|m_flag
+operator|&
+name|MNEW
+condition|)
+name|dispc
+operator|=
+literal|'N'
 expr_stmt|;
 name|parse
 argument_list|(
