@@ -1554,7 +1554,6 @@ name|Bcmp
 argument_list|(
 operator|(
 name|caddr_t
-operator|*
 operator|)
 name|genmask
 operator|+
@@ -1562,7 +1561,6 @@ literal|1
 argument_list|,
 operator|(
 name|caddr_t
-operator|*
 operator|)
 name|t
 operator|->
