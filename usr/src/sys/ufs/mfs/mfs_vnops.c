@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vnops.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vnops.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -891,6 +891,48 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* 	 * Finish any pending I/O requests. 	 */
+while|while
+condition|(
+name|bp
+operator|=
+name|mfsp
+operator|->
+name|mfs_buflist
+condition|)
+block|{
+name|mfsp
+operator|->
+name|mfs_buflist
+operator|=
+name|bp
+operator|->
+name|av_forw
+expr_stmt|;
+name|mfs_doio
+argument_list|(
+name|bp
+argument_list|,
+name|mfsp
+operator|->
+name|mfs_baseoff
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * On last close of a memory filesystem 	 * we must invalidate any in core blocks, so that 	 * we can, free up its vnode. 	 */
 name|bflush
 argument_list|(
@@ -913,7 +955,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * We don't want to really close the device if it is still 	 * in use. Since every use (buffer, inode, swap, cmap) 	 * holds a reference to the vnode, and because we ensure 	 * that there cannot be more than one vnode per device, 	 * we need only check that we are down to the last 	 * reference before closing. 	 */
+comment|/* 	 * There should be no way to have any more uses of this 	 * vnode, so if we find any other uses, it is a panic. 	 */
 if|if
 condition|(
 name|vp
@@ -922,7 +964,6 @@ name|v_count
 operator|>
 literal|1
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"mfs_close: ref count %d> 1\n"
@@ -932,25 +973,24 @@ operator|->
 name|v_count
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* 	 * Send a request to the filesystem server to exit. 	 */
-while|while
+if|if
 condition|(
+name|vp
+operator|->
+name|v_count
+operator|>
+literal|1
+operator|||
 name|mfsp
 operator|->
 name|mfs_buflist
 condition|)
-name|sleep
+name|panic
 argument_list|(
-operator|&
-name|lbolt
+literal|"mfs_close"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Send a request to the filesystem server to exit. 	 */
 name|mfsp
 operator|->
 name|mfs_buflist
