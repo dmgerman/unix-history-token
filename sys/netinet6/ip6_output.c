@@ -5901,8 +5901,10 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* XXX */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|soopt_getm
@@ -5912,11 +5914,15 @@ argument_list|,
 operator|&
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
-comment|/* XXX */
 break|break;
+comment|/* XXX */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|soopt_mcopyin
@@ -5925,8 +5931,10 @@ name|sopt
 argument_list|,
 name|m
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
-comment|/* XXX */
 break|break;
 name|error
 operator|=
