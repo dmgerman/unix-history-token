@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -98,6 +104,38 @@ name|null_node_hash
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|lock
+name|null_hashlock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NULLFSHASH
+argument_list|,
+literal|"NULLFS hash"
+argument_list|,
+literal|"NULLFS hash table"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NULLFSNODE
+argument_list|,
+literal|"NULLFS node"
+argument_list|,
+literal|"NULLFS vnode private part"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -158,27 +196,36 @@ modifier|*
 name|vfsp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NULLFSDEBUG
 argument_list|(
 literal|"nullfs_init\n"
 argument_list|)
 expr_stmt|;
 comment|/* printed during system boot */
-endif|#
-directive|endif
 name|null_node_hashtbl
 operator|=
 name|hashinit
 argument_list|(
 name|NNULLNODECACHE
 argument_list|,
-name|M_CACHE
+name|M_NULLFSHASH
 argument_list|,
 operator|&
 name|null_node_hash
+argument_list|)
+expr_stmt|;
+name|lockinit
+argument_list|(
+operator|&
+name|null_hashlock
+argument_list|,
+name|PVFS
+argument_list|,
+literal|"nullhs"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -189,8 +236,41 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|nullfs_uninit
+parameter_list|(
+name|vfsp
+parameter_list|)
+name|struct
+name|vfsconf
+modifier|*
+name|vfsp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|null_node_hashtbl
+condition|)
+block|{
+name|free
+argument_list|(
+name|null_node_hashtbl
+argument_list|,
+name|M_NULLFSHASH
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * Return a VREF'ed alias for lower vnode if already exists, else 0.  */
+comment|/*  * Return a VREF'ed alias for lower vnode if already exists, else 0.  * Lower vnode should be locked on entry and will be left locked on exit.  */
 end_comment
 
 begin_function
@@ -248,6 +328,18 @@ argument_list|)
 expr_stmt|;
 name|loop
 label|:
+name|lockmgr
+argument_list|(
+operator|&
+name|null_hashlock
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|NULL
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|a
@@ -294,6 +386,18 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|lockmgr
+argument_list|(
+operator|&
+name|null_hashlock
+argument_list|,
+name|LK_RELEASE
+argument_list|,
+name|NULL
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 			 * We need vget for the VXLOCK 			 * stuff, but we don't want to lock 			 * the lower node. 			 */
 if|if
 condition|(
@@ -324,6 +428,18 @@ operator|)
 return|;
 block|}
 block|}
+name|lockmgr
+argument_list|(
+operator|&
+name|null_hashlock
+argument_list|,
+name|LK_RELEASE
+argument_list|,
+name|NULL
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 name|NULLVP
 return|;
@@ -363,6 +479,14 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|null_node_hashhead
 modifier|*
 name|hd
@@ -398,7 +522,7 @@ expr|struct
 name|null_node
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_NULLFSNODE
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -425,7 +549,7 @@ name|FREE
 argument_list|(
 name|xp
 argument_list|,
-name|M_TEMP
+name|M_NULLFSNODE
 argument_list|)
 expr_stmt|;
 return|return
@@ -480,11 +604,17 @@ condition|(
 name|othervp
 condition|)
 block|{
+name|vp
+operator|->
+name|v_data
+operator|=
+name|NULL
+expr_stmt|;
 name|FREE
 argument_list|(
 name|xp
 argument_list|,
-name|M_TEMP
+name|M_NULLFSNODE
 argument_list|)
 expr_stmt|;
 name|vp
@@ -494,13 +624,11 @@ operator|=
 name|VBAD
 expr_stmt|;
 comment|/* node is discarded */
+name|vrele
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
-comment|/* XXX */
 operator|*
 name|vpp
 operator|=
@@ -517,6 +645,18 @@ name|lowervp
 argument_list|)
 expr_stmt|;
 comment|/* Extra VREF will be vrele'd in null_node_create */
+name|lockmgr
+argument_list|(
+operator|&
+name|null_hashlock
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|NULL
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|hd
 operator|=
 name|NULL_NHASH
@@ -533,6 +673,18 @@ argument_list|,
 name|null_hash
 argument_list|)
 expr_stmt|;
+name|lockmgr
+argument_list|(
+operator|&
+name|null_hashlock
+argument_list|,
+name|LK_RELEASE
+argument_list|,
+name|NULL
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -540,7 +692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try to find an existing null_node vnode refering  * to it, otherwise make a new null_node vnode which  * contains a reference to the lower vnode.  */
+comment|/*  * Try to find an existing null_node vnode refering to the given underlying  * vnode (which should be locked). If no vnode found, create a new null_node  * vnode which contains a reference to the lower vnode.  */
 end_comment
 
 begin_function
@@ -592,7 +744,7 @@ block|{
 comment|/* 		 * null_node_find has taken another reference 		 * to the alias vnode. 		 */
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|NULLFS_DEBUG
 name|vprint
 argument_list|(
 literal|"null_node_create: exists"
@@ -610,16 +762,11 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 		 * Get new vnode. 		 */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
+name|NULLFSDEBUG
 argument_list|(
 literal|"null_node_create: create new alias vnode\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Make new vnode reference the null_node. 		 */
 name|error
 operator|=
@@ -685,7 +832,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|NULLFS_DEBUG
 name|vprint
 argument_list|(
 literal|"null_node_create: alias"
