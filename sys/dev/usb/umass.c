@@ -3791,7 +3791,9 @@ name|err
 operator|=
 name|usbd_set_interface
 argument_list|(
-literal|0
+name|uaa
+operator|->
+name|iface
 argument_list|,
 literal|1
 argument_list|)
