@@ -173,14 +173,11 @@ name|pflag
 decl_stmt|;
 name|mode_t
 name|omode
-decl_stmt|,
+decl_stmt|;
+name|void
 modifier|*
 name|set
 init|=
-operator|(
-name|mode_t
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 name|char
