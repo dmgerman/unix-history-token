@@ -2197,7 +2197,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s: %s %u, limits (soft = %u, hard = %u)\n"
+literal|"%s: %s %lu, limits (soft = %lu, hard = %lu)\n"
 argument_list|,
 name|qup
 operator|->
@@ -2261,22 +2261,34 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s %u, limits (soft = %u, hard = %u)\n"
+literal|"%s %lu, limits (soft = %lu, hard = %lu)\n"
 argument_list|,
 literal|"\tinodes in use:"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|qup
 operator|->
 name|dqblk
 operator|.
 name|dqb_curinodes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|qup
 operator|->
 name|dqblk
 operator|.
 name|dqb_isoftlimit
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|qup
 operator|->
 name|dqblk
@@ -2329,6 +2341,22 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fd
+decl_stmt|;
+name|unsigned
+name|long
+name|bhardlimit
+decl_stmt|,
+name|bsoftlimit
+decl_stmt|,
+name|curblocks
+decl_stmt|;
+name|unsigned
+name|long
+name|ihardlimit
+decl_stmt|,
+name|isoftlimit
+decl_stmt|,
+name|curinodes
 decl_stmt|;
 name|int
 name|cnt
@@ -2509,22 +2537,16 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" blocks in use: %u, limits (soft = %u, hard = %u)"
+literal|" blocks in use: %lu, limits (soft = %lu, hard = %lu)"
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_curblocks
+name|curblocks
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_bsoftlimit
+name|bsoftlimit
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_bhardlimit
+name|bhardlimit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2558,9 +2580,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|dqblk
-operator|.
-name|dqb_curblocks
+name|curblocks
 operator|*
 literal|1024
 argument_list|)
@@ -2574,9 +2594,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|dqblk
-operator|.
-name|dqb_bsoftlimit
+name|bsoftlimit
 operator|*
 literal|1024
 argument_list|)
@@ -2590,9 +2608,7 @@ argument_list|(
 operator|(
 name|off_t
 operator|)
-name|dqblk
-operator|.
-name|dqb_bhardlimit
+name|bhardlimit
 operator|*
 literal|1024
 argument_list|)
@@ -2634,22 +2650,16 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|"\tinodes in use: %u, limits (soft = %u, hard = %u)"
+literal|"\tinodes in use: %lu, limits (soft = %lu, hard = %lu)"
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_curinodes
+name|curinodes
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_isoftlimit
+name|isoftlimit
 argument_list|,
 operator|&
-name|dqblk
-operator|.
-name|dqb_ihardlimit
+name|ihardlimit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2674,6 +2684,24 @@ literal|0
 operator|)
 return|;
 block|}
+name|dqblk
+operator|.
+name|dqb_curinodes
+operator|=
+name|curinodes
+expr_stmt|;
+name|dqblk
+operator|.
+name|dqb_isoftlimit
+operator|=
+name|isoftlimit
+expr_stmt|;
+name|dqblk
+operator|.
+name|dqb_ihardlimit
+operator|=
+name|ihardlimit
+expr_stmt|;
 for|for
 control|(
 name|qup
@@ -3165,6 +3193,11 @@ name|iseconds
 decl_stmt|,
 name|bseconds
 decl_stmt|;
+name|long
+name|l_itime
+decl_stmt|,
+name|l_btime
+decl_stmt|;
 name|char
 modifier|*
 name|fsp
@@ -3341,12 +3374,12 @@ argument_list|,
 literal|" block grace period: %ld %s file grace period: %ld %s"
 argument_list|,
 operator|&
-name|btime
+name|l_btime
 argument_list|,
 name|bunits
 argument_list|,
 operator|&
-name|itime
+name|l_itime
 argument_list|,
 name|iunits
 argument_list|)
@@ -3373,6 +3406,14 @@ literal|0
 operator|)
 return|;
 block|}
+name|btime
+operator|=
+name|l_btime
+expr_stmt|;
+name|itime
+operator|=
+name|l_itime
+expr_stmt|;
 if|if
 condition|(
 name|cvtatos
@@ -3578,6 +3619,9 @@ name|buf
 argument_list|,
 literal|"%ld day%s"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|time
 argument_list|,
 name|time
@@ -3616,6 +3660,9 @@ name|buf
 argument_list|,
 literal|"%ld hour%s"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|time
 argument_list|,
 name|time
@@ -3648,6 +3695,9 @@ name|buf
 argument_list|,
 literal|"%ld minute%s"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|time
 argument_list|,
 name|time
@@ -3667,6 +3717,9 @@ name|buf
 argument_list|,
 literal|"%ld second%s"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|time
 argument_list|,
 name|time
