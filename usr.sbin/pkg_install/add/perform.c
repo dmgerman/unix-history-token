@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.36 1996/07/31 21:52:33 jkh Exp $"
+literal|"$Id: perform.c,v 1.37 1996/10/14 19:41:42 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2004,13 +2004,27 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|LogDir
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|fp
 operator|=
 name|fopen
 argument_list|(
-name|p
-operator|->
-name|name
+name|buf
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2067,11 +2081,9 @@ block|}
 else|else
 name|whinge
 argument_list|(
-literal|"Cannot open display file `%s'."
+literal|"Cannot open %s as display file."
 argument_list|,
-name|p
-operator|->
-name|name
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
