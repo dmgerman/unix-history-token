@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.57	82/10/31	*/
+comment|/*	hp.c	4.58	82/11/13	*/
 end_comment
 
 begin_ifdef
@@ -657,6 +657,51 @@ literal|98
 block|,
 comment|/* H=cyl 98 thru 667 */
 block|}
+struct|,
+name|hpfj_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 18 */
+literal|33440
+block|,
+literal|19
+block|,
+comment|/* B=cyl 19 thru 58 */
+literal|723991
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 841 */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|381711
+block|,
+literal|398
+block|,
+comment|/* G=cyl 398 thru 841 */
+literal|291346
+block|,
+literal|59
+block|,
+comment|/* H=cyl 59 thru 397 */
+block|}
 struct|;
 end_struct
 
@@ -775,11 +820,18 @@ literal|1
 block|,
 define|#
 directive|define
-name|HPDT_RM02
+name|HPDT_EAGLE
 value|11
+operator|-
+literal|1
+block|,
+define|#
+directive|define
+name|HPDT_RM02
+value|12
 name|MBDT_RM02
 block|,
-comment|/* beware, actually capricorn */
+comment|/* beware, actually capricorn or eagle */
 literal|0
 block|}
 decl_stmt|;
@@ -1006,6 +1058,19 @@ block|,
 name|hpam_sizes
 block|,
 comment|/* AMPEX capricorn */
+literal|43
+block|,
+literal|20
+block|,
+literal|43
+operator|*
+literal|20
+block|,
+literal|843
+block|,
+name|hpfj_sizes
+block|,
+comment|/* Fujitsu EAGLE */
 block|}
 struct|;
 end_struct
@@ -1382,7 +1447,7 @@ directive|endif
 block|}
 break|break;
 block|}
-comment|/* 	 * CAPRICORN KLUDGE...poke the holding register 	 * to find out the number of tracks.  If it's 15 	 * we believe it's a Capricorn. 	 */
+comment|/* 	 * CAPRICORN KLUDGE...poke the holding register 	 * we believe it's a Capricorn.  Otherwise assume 	 * its an Eagle. 	 */
 case|case
 name|HPDT_RM02
 case|:
@@ -1425,6 +1490,24 @@ operator|->
 name|mi_type
 operator|=
 name|HPDT_CAPRICORN
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"hp%d: eagle\n"
+argument_list|,
+name|mi
+operator|->
+name|mi_unit
+argument_list|)
+expr_stmt|;
+name|mi
+operator|->
+name|mi_type
+operator|=
+name|HPDT_EAGLE
 expr_stmt|;
 block|}
 name|hpaddr
