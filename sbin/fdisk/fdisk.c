@@ -632,7 +632,7 @@ block|,
 block|{
 literal|0x04
 block|,
-literal|"Primary DOS with 16 bit FAT (<= 32MB)"
+literal|"Primary DOS with 16 bit FAT (< 32MB)"
 block|}
 block|,
 block|{
@@ -644,7 +644,7 @@ block|,
 block|{
 literal|0x06
 block|,
-literal|"Primary 'big' DOS (> 32MB)"
+literal|"Primary 'big' DOS (>= 32MB)"
 block|}
 block|,
 block|{
@@ -656,7 +656,7 @@ block|,
 block|{
 literal|0x08
 block|,
-literal|"AIX filesystem"
+literal|"AIX filesystem or SplitDrive"
 block|}
 block|,
 block|{
@@ -668,7 +668,7 @@ block|,
 block|{
 literal|0x0A
 block|,
-literal|"OS/2 Boot Manager or OPUS"
+literal|"OS/2 Boot Manager, OPUS or Coherent swap"
 block|}
 block|,
 block|{
@@ -680,25 +680,73 @@ block|,
 block|{
 literal|0x0C
 block|,
-literal|"DOS or Windows 95 with 32 bit FAT, LBA"
+literal|"DOS or Windows 95 with 32 bit FAT (LBA)"
 block|}
 block|,
 block|{
 literal|0x0E
 block|,
-literal|"Primary 'big' DOS (> 32MB, LBA)"
+literal|"Primary 'big' DOS (>= 32MB, LBA)"
 block|}
 block|,
 block|{
 literal|0x0F
 block|,
-literal|"Extended DOS, LBA"
+literal|"Extended DOS (LBA)"
 block|}
 block|,
 block|{
 literal|0x10
 block|,
 literal|"OPUS"
+block|}
+block|,
+block|{
+literal|0x11
+block|,
+literal|"OS/2 BM: hidden DOS with 12-bit FAT"
+block|}
+block|,
+block|{
+literal|0x12
+block|,
+literal|"Compaq diagnostics"
+block|}
+block|,
+block|{
+literal|0x14
+block|,
+literal|"OS/2 BM: hidden DOS with 16-bit FAT (< 32MB)"
+block|}
+block|,
+block|{
+literal|0x16
+block|,
+literal|"OS/2 BM: hidden DOS with 16-bit FAT (>= 32MB)"
+block|}
+block|,
+block|{
+literal|0x17
+block|,
+literal|"OS/2 BM: hidden IFS (e.g. HPFS)"
+block|}
+block|,
+block|{
+literal|0x18
+block|,
+literal|"AST Windows swapfile"
+block|}
+block|,
+block|{
+literal|0x24
+block|,
+literal|"NEC DOS"
+block|}
+block|,
+block|{
+literal|0x3C
+block|,
+literal|"PartitionMagic recovery"
 block|}
 block|,
 block|{
@@ -711,6 +759,24 @@ block|{
 literal|0x40
 block|,
 literal|"VENIX 286"
+block|}
+block|,
+block|{
+literal|0x41
+block|,
+literal|"Linux/MINIX (sharing disk with DRDOS)"
+block|}
+block|,
+block|{
+literal|0x42
+block|,
+literal|"SFS or Linux swap (sharing disk with DRDOS)"
+block|}
+block|,
+block|{
+literal|0x43
+block|,
+literal|"Linux native (sharing disk with DRDOS)"
 block|}
 block|,
 block|{
@@ -734,13 +800,13 @@ block|,
 block|{
 literal|0x50
 block|,
-literal|"DM"
+literal|"DM (disk manager)"
 block|}
 block|,
 block|{
 literal|0x51
 block|,
-literal|"DM"
+literal|"DM6 Aux1 (or Novell)"
 block|}
 block|,
 block|{
@@ -750,33 +816,64 @@ literal|"CP/M or Microport SysV/AT"
 block|}
 block|,
 block|{
+literal|0x53
+block|,
+literal|"DM6 Aux3"
+block|}
+block|,
+block|{
+literal|0x54
+block|,
+literal|"DM6"
+block|}
+block|,
+block|{
+literal|0x55
+block|,
+literal|"EZ-Drive (disk manager)"
+block|}
+block|,
+block|{
 literal|0x56
 block|,
-literal|"GB"
+literal|"Golden Bow (disk manager)"
 block|}
+block|,
+block|{
+literal|0x5c
+block|,
+literal|"Priam Edisk (disk manager)"
+block|}
+comment|/* according to S. Widlake */
 block|,
 block|{
 literal|0x61
 block|,
-literal|"Speed"
+literal|"SpeedStor"
 block|}
 block|,
 block|{
 literal|0x63
 block|,
-literal|"ISC UNIX, other System V/386, GNU HURD or Mach"
+literal|"System V/386 (such as ISC UNIX), GNU HURD or Mach"
 block|}
 block|,
 block|{
 literal|0x64
 block|,
-literal|"Novell Netware 2.xx"
+literal|"Novell Netware/286 2.xx"
 block|}
 block|,
 block|{
 literal|0x65
 block|,
-literal|"Novell Netware 3.xx"
+literal|"Novell Netware/386 3.xx"
+block|}
+block|,
+block|{
+literal|0x70
+block|,
+literal|"DiskSecure Multi-Boot"
 block|}
 block|,
 block|{
@@ -786,15 +883,33 @@ literal|"PCIX"
 block|}
 block|,
 block|{
+literal|0x77
+block|,
+literal|"QNX4.x"
+block|}
+block|,
+block|{
+literal|0x78
+block|,
+literal|"QNX4.x 2nd part"
+block|}
+block|,
+block|{
+literal|0x79
+block|,
+literal|"QNX4.x 3rd part"
+block|}
+block|,
+block|{
 literal|0x80
 block|,
-literal|"Minix 1.1 ... 1.4a"
+literal|"Minix until 1.4a"
 block|}
 block|,
 block|{
 literal|0x81
 block|,
-literal|"Minix 1.4b ... 1.5.10"
+literal|"Minix since 1.4b, early Linux partition or Mitac (disk manager)"
 block|}
 block|,
 block|{
@@ -806,7 +921,31 @@ block|,
 block|{
 literal|0x83
 block|,
-literal|"Linux filesystem"
+literal|"Linux native"
+block|}
+block|,
+block|{
+literal|0x84
+block|,
+literal|"OS/2 hidden C: drive"
+block|}
+block|,
+block|{
+literal|0x85
+block|,
+literal|"Linux extended"
+block|}
+block|,
+block|{
+literal|0x86
+block|,
+literal|"NTFS volume set??"
+block|}
+block|,
+block|{
+literal|0x87
+block|,
+literal|"NTFS volume set??"
 block|}
 block|,
 block|{
@@ -848,7 +987,7 @@ block|,
 block|{
 literal|0xA7
 block|,
-literal|"NEXTSTEP"
+literal|"NeXTSTEP"
 block|}
 block|,
 block|{
@@ -870,27 +1009,57 @@ literal|"BSDI BSD/386 swap"
 block|}
 block|,
 block|{
+literal|0xC1
+block|,
+literal|"DRDOS/sec with 12-bit FAT"
+block|}
+block|,
+block|{
+literal|0xC4
+block|,
+literal|"DRDOS/sec with 16-bit FAT (< 32MB)"
+block|}
+block|,
+block|{
+literal|0xC6
+block|,
+literal|"DRDOS/sec with 16-bit FAT (>= 32MB)"
+block|}
+block|,
+block|{
+literal|0xC7
+block|,
+literal|"Syrinx"
+block|}
+block|,
+block|{
 literal|0xDB
 block|,
-literal|"Concurrent CPM or C.DOS or CTOS"
+literal|"CP/M, Concurrent CP/M, Concurrent DOS or CTOS"
 block|}
 block|,
 block|{
 literal|0xE1
 block|,
-literal|"Speed"
+literal|"DOS access or SpeedStor with 12-bit FAT extended partition"
 block|}
 block|,
 block|{
 literal|0xE3
 block|,
-literal|"Speed"
+literal|"DOS R/O or SpeedStor"
 block|}
 block|,
 block|{
 literal|0xE4
 block|,
-literal|"Speed"
+literal|"SpeedStor with 16-bit FAT extended partition< 1024 cyl."
+block|}
+block|,
+block|{
+literal|0xEB
+block|,
+literal|"BeOS filesystem"
 block|}
 block|,
 block|{
@@ -908,7 +1077,7 @@ block|,
 block|{
 literal|0xF1
 block|,
-literal|"Speed"
+literal|"SpeedStor"
 block|}
 block|,
 block|{
@@ -920,13 +1089,19 @@ block|,
 block|{
 literal|0xF4
 block|,
-literal|"Speed"
+literal|"SpeedStor large partition"
+block|}
+block|,
+block|{
+literal|0xFE
+block|,
+literal|"SpeedStor>1024 cyl. or LANstep"
 block|}
 block|,
 block|{
 literal|0xFF
 block|,
-literal|"BBT (Bad Blocks Table)"
+literal|"Xenix bad blocks table"
 block|}
 block|}
 struct|;
@@ -2180,7 +2355,11 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sysid %d,(%s)\n"
+literal|"sysid %d (%#04x),(%s)\n"
+argument_list|,
+name|partp
+operator|->
+name|dp_typ
 argument_list|,
 name|partp
 operator|->
