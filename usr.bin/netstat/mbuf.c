@@ -281,11 +281,10 @@ name|void
 name|mbpr
 parameter_list|()
 block|{
-specifier|register
-name|int
+name|u_long
 name|totmem
 decl_stmt|,
-name|totfree
+name|totpossible
 decl_stmt|,
 name|totmbufs
 decl_stmt|;
@@ -639,7 +638,7 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u/%lu/%u mbufs in use (current/peak/max):\n"
+literal|"%lu/%lu/%u mbufs in use (current/peak/max):\n"
 argument_list|,
 name|totmbufs
 argument_list|,
@@ -779,44 +778,31 @@ name|m_clusters
 operator|*
 name|MCLBYTES
 expr_stmt|;
-name|totfree
+name|totpossible
 operator|=
-name|mbstat
-operator|.
-name|m_clfree
+name|nmbclusters
 operator|*
 name|MCLBYTES
 operator|+
 name|MSIZE
 operator|*
-operator|(
-name|mbstat
-operator|.
-name|m_mbufs
-operator|-
-name|totmbufs
-operator|)
+name|nmbufs
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u Kbytes allocated to network (%d%% in use)\n"
+literal|"%lu Kbytes allocated to network (%lu%% of mb_map in use)\n"
 argument_list|,
 name|totmem
 operator|/
 literal|1024
 argument_list|,
-call|(
-name|unsigned
-call|)
-argument_list|(
+operator|(
 name|totmem
-operator|-
-name|totfree
-argument_list|)
 operator|*
 literal|100
+operator|)
 operator|/
-name|totmem
+name|totpossible
 argument_list|)
 expr_stmt|;
 name|printf
