@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c 4.7 %G%"
+literal|"@(#)ld.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ld - string table version for VAX  */
@@ -59,12 +70,6 @@ begin_include
 include|#
 directive|include
 file|<stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pagsiz.h>
 end_include
 
 begin_comment
@@ -1022,6 +1027,16 @@ name|curstr
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * System software page size, as returned by getpagesize.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|pagesize
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|char
 name|get
@@ -1121,6 +1136,11 @@ operator|=
 name|argv
 operator|+
 literal|1
+expr_stmt|;
+name|pagesize
+operator|=
+name|getpagesize
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Scan files once to find where symbols are defined. 	 */
 for|for
@@ -3880,7 +3900,7 @@ name|nflag
 operator|||
 name|zflag
 condition|?
-name|PAGSIZ
+name|pagesize
 else|:
 sizeof|sizeof
 argument_list|(
@@ -4696,7 +4716,7 @@ name|tsize
 argument_list|,
 name|zflag
 condition|?
-name|PAGSIZ
+name|pagesize
 else|:
 sizeof|sizeof
 argument_list|(
@@ -4714,7 +4734,7 @@ name|round
 argument_list|(
 name|dsize
 argument_list|,
-name|PAGSIZ
+name|pagesize
 argument_list|)
 else|:
 name|dsize
@@ -4879,7 +4899,7 @@ name|bopen
 argument_list|(
 name|tout
 argument_list|,
-name|PAGSIZ
+name|pagesize
 argument_list|)
 expr_stmt|;
 block|}
@@ -9479,7 +9499,7 @@ name|filhdr
 operator|.
 name|a_text
 argument_list|,
-name|PAGSIZ
+name|pagesize
 argument_list|)
 expr_stmt|;
 name|cbrel

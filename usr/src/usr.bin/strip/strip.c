@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)strip.c	4.3 (Berkeley) %G%"
+literal|"@(#)strip.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -19,12 +30,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pagsiz.h>
 end_include
 
 begin_define
@@ -68,6 +73,12 @@ name|tf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|pagesize
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -83,6 +94,11 @@ decl_stmt|;
 block|{
 specifier|register
 name|i
+expr_stmt|;
+name|pagesize
+operator|=
+name|getpagesize
+argument_list|()
 expr_stmt|;
 name|signal
 argument_list|(
@@ -395,7 +411,7 @@ name|ZMAGIC
 condition|)
 name|size
 operator|+=
-name|PAGSIZ
+name|pagesize
 operator|-
 sizeof|sizeof
 argument_list|(
