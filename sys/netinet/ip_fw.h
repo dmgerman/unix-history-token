@@ -891,8 +891,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_IF_TCPEST
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* established TCP connection	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_IF_TCPMSK
-value|0x0000001f
+value|0x0000003f
 end_define
 
 begin_comment
@@ -1128,13 +1139,6 @@ define|#
 directive|define
 name|IP_FW_TCPF_URG
 value|TH_URG
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_TCPF_ESTAB
-value|0x40
 end_define
 
 begin_comment
