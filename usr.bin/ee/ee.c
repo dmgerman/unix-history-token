@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ee.c,v 1.9 1998/01/12 07:51:07 charnier Exp $"
+literal|"$Id: ee.c,v 1.10 1998/04/30 12:49:11 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"@(#) ee, version 1.3  $Revision: 1.9 $"
+literal|"@(#) ee, version 1.3  $Revision: 1.10 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1047,7 +1047,7 @@ name|char
 modifier|*
 name|print_command
 init|=
-literal|"lp"
+literal|"lpr"
 decl_stmt|;
 end_decl_stmt
 
@@ -25307,7 +25307,7 @@ name|catgetlocal
 argument_list|(
 literal|154
 argument_list|,
-literal|"^[ (escape) menu  ^y search prompt  ^k delete line   ^p prev li   ^g prev page"
+literal|"^[ (escape) menu ^y search prompt ^k delete line    ^p prev line  ^g prev page"
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
@@ -25319,7 +25319,7 @@ name|catgetlocal
 argument_list|(
 literal|155
 argument_list|,
-literal|"^o ascii code     ^x search         ^l undelete line ^n next li   ^v next page"
+literal|"^o ascii code    ^x search        ^l undelete line  ^n next line  ^v next page"
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
@@ -25331,7 +25331,7 @@ name|catgetlocal
 argument_list|(
 literal|156
 argument_list|,
-literal|"^u end of file    ^a begin of line  ^w delete word   ^b back 1 char           "
+literal|"^u end of file   ^a begin of line ^w delete word    ^b back char  ^z next word"
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
@@ -25343,7 +25343,7 @@ name|catgetlocal
 argument_list|(
 literal|157
 argument_list|,
-literal|"^t top of text    ^e end of line    ^r restore word  ^f forward 1 char        "
+literal|"^t top of text   ^e end of line   ^r restore word   ^f forward char           "
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
@@ -25355,7 +25355,7 @@ name|catgetlocal
 argument_list|(
 literal|158
 argument_list|,
-literal|"^c command        ^d delete char    ^j undelete char ^z next word              "
+literal|"^c command       ^d delete char   ^j undelete char              ESC-Enter: exit"
 argument_list|)
 expr_stmt|;
 name|EMACS_string
