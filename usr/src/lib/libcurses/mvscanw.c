@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mvscanw.c	5.4 (Berkeley) %G%"
+literal|"@(#)mvscanw.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,34 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -35,8 +63,32 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * implement the mvscanw commands.  Due to the variable number of  * arguments, they cannot be macros.  Another sigh....  *  */
+comment|/*  * implement the mvscanw commands.  Due to the variable number of  * arguments, they cannot be macros.  Another sigh....  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_macro
+name|mvscanw
+argument_list|(
+argument|reg int y
+argument_list|,
+argument|reg int x
+argument_list|,
+argument|const char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_macro
 name|mvscanw
@@ -47,7 +99,7 @@ argument|x
 argument_list|,
 argument|fmt
 argument_list|,
-argument|args
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -67,38 +119,103 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|args
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|va_dcl
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
-return|return
+name|va_list
+name|ap
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+if|if
+condition|(
 name|move
 argument_list|(
 name|y
 argument_list|,
 name|x
 argument_list|)
-operator|==
+operator|!=
 name|OK
-condition|?
+condition|)
+return|return
+name|ERR
+return|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ret
+operator|=
 name|_sscans
 argument_list|(
 name|stdscr
 argument_list|,
 name|fmt
 argument_list|,
-operator|&
-name|args
+name|ap
 argument_list|)
-else|:
-name|ERR
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_macro
+name|mvwscanw
+argument_list|(
+argument|reg WINDOW *win
+argument_list|,
+argument|reg int y
+argument_list|,
+argument|reg int x
+argument_list|,
+argument|const char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_macro
 name|mvwscanw
@@ -111,7 +228,7 @@ argument|x
 argument_list|,
 argument|fmt
 argument_list|,
-argument|args
+argument|va_alist
 argument_list|)
 end_macro
 
@@ -139,37 +256,74 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|args
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|va_dcl
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
-return|return
-name|wmove
+name|va_list
+name|ap
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+if|if
+condition|(
+name|move
 argument_list|(
-name|win
-argument_list|,
 name|y
 argument_list|,
 name|x
 argument_list|)
-operator|==
+operator|!=
 name|OK
-condition|?
+condition|)
+return|return
+name|ERR
+return|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|ret
+operator|=
 name|_sscans
 argument_list|(
 name|win
 argument_list|,
 name|fmt
 argument_list|,
-operator|&
-name|args
+name|ap
 argument_list|)
-else|:
-name|ERR
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_block

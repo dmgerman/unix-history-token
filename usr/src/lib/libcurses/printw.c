@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printw.c	5.7 (Berkeley) %G%"
+literal|"@(#)printw.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,14 +29,36 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * printw and friends  *  */
+comment|/*  * printw and friends.  *  * These routines make nonportable assumptions about varargs if __STDC__  * is not in effect.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|<varargs.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -48,16 +70,50 @@ begin_comment
 comment|/*  *	This routine implements a printf on the standard screen.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
 begin_macro
 name|printw
 argument_list|(
+argument|const char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|printw
+argument_list|(
+argument|fmt
+argument_list|,
 argument|va_alist
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|va_dcl
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -67,16 +123,32 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|va_start
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 name|_sprintw
 argument_list|(
 name|stdscr
+argument_list|,
+name|fmt
 argument_list|,
 name|ap
 argument_list|)
@@ -98,49 +170,96 @@ begin_comment
 comment|/*  *	This routine implements a printf on the given window.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
 begin_macro
 name|wprintw
 argument_list|(
+argument|WINDOW *win
+argument_list|,
+argument|const char *fmt
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|wprintw
+argument_list|(
+argument|win
+argument_list|,
+argument|fmt
+argument_list|,
 argument|va_alist
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|WINDOW
+modifier|*
+name|win
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|va_dcl
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|WINDOW
-modifier|*
-name|win
-decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|va_start
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|win
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|WINDOW
-operator|*
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 name|_sprintw
 argument_list|(
 name|win
+argument_list|,
+name|fmt
 argument_list|,
 name|ap
 argument_list|)
@@ -177,7 +296,7 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
-name|reg
+specifier|register
 name|char
 modifier|*
 name|buf
@@ -186,7 +305,7 @@ name|int
 name|n
 decl_stmt|;
 block|{
-name|reg
+specifier|register
 name|WINDOW
 modifier|*
 name|win
@@ -197,7 +316,7 @@ operator|*
 operator|)
 name|cookie
 decl_stmt|;
-name|reg
+specifier|register
 name|int
 name|c
 init|=
@@ -238,13 +357,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	This routine actually executes the printf and adds it to the window.  *	It must not be declared static as it is used in mvprintw.c.  */
+comment|/*  *	This routine actually executes the printf and adds it to the window.  *	It must not be declared static as it is used in mvprintw.c.  *	THIS SHOULD BE RENAMED vwprintw AND EXPORTED  */
 end_comment
 
 begin_macro
 name|_sprintw
 argument_list|(
 argument|win
+argument_list|,
+argument|fmt
 argument_list|,
 argument|ap
 argument_list|)
@@ -257,6 +378,37 @@ name|win
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|va_list
 name|ap
@@ -268,10 +420,6 @@ block|{
 name|FILE
 modifier|*
 name|f
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
 decl_stmt|;
 if|if
 condition|(
@@ -295,16 +443,6 @@ condition|)
 return|return
 name|ERR
 return|;
-name|fmt
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
