@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Diomidis Spinellis.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Diomidis Spinellis of Imperial College, University of London.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Diomidis Spinellis.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Diomidis Spinellis of Imperial College, University of London.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -85,11 +85,6 @@ modifier|*
 name|re
 decl_stmt|;
 comment|/* Regular expression */
-name|regmatch_t
-modifier|*
-name|pmatch
-decl_stmt|;
-comment|/* Array of match strucs */
 name|int
 name|maxbref
 decl_stmt|;
@@ -248,6 +243,58 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_enum
+enum|enum
+name|e_spflag
+block|{
+name|APPEND
+block|,
+comment|/* Append to the contents. */
+name|APPENDNL
+block|,
+comment|/* Append, with newline. */
+name|REPLACE
+block|,
+comment|/* Replace the contents. */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Structure for a space (process, hold, otherwise).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+modifier|*
+name|space
+decl_stmt|;
+comment|/* Current space pointer. */
+name|size_t
+name|len
+decl_stmt|;
+comment|/* Current length. */
+name|int
+name|deleted
+decl_stmt|;
+comment|/* If deleted. */
+name|char
+modifier|*
+name|back
+decl_stmt|;
+comment|/* Backing memory. */
+name|size_t
+name|blen
+decl_stmt|;
+comment|/* Backing memory length. */
+block|}
+name|SPACE
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Error severity codes:  */
