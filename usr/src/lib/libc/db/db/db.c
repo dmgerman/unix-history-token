@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)db.c	5.5 (Berkeley) %G%"
+literal|"@(#)db.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,6 +209,19 @@ comment|/* The only thing that can succeed is a close. */
 name|dbp
 operator|->
 name|del
+operator|=
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+name|__dberr
+expr_stmt|;
+name|dbp
+operator|->
+name|fd
 operator|=
 operator|(
 name|int
