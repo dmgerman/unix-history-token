@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)socketvar.h	8.3 (Berkeley) 2/19/95  * $Id: socketvar.h,v 1.16 1996/02/29 00:07:13 hsu Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)socketvar.h	8.3 (Berkeley) 2/19/95  * $Id: socketvar.h,v 1.12 1996/03/11 02:22:23 hsu Exp $  */
 end_comment
 
 begin_ifndef
@@ -86,26 +86,33 @@ modifier|*
 name|so_head
 decl_stmt|;
 comment|/* back pointer to accept socket */
-name|struct
-name|socket
-modifier|*
-name|so_q0
-decl_stmt|;
-comment|/* queue of partial connections */
-name|struct
-name|socket
-modifier|*
-name|so_q
-decl_stmt|;
-comment|/* queue of incoming connections */
-name|short
-name|so_q0len
-decl_stmt|;
-comment|/* partials on so_q0 */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|socket
+argument_list|)
+name|so_incomp
+expr_stmt|;
+comment|/* queue of partial unaccepted connections */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|socket
+argument_list|)
+name|so_comp
+expr_stmt|;
+comment|/* queue of complete unaccepted connections */
+name|TAILQ_ENTRY
+argument_list|(
+argument|socket
+argument_list|)
+name|so_list
+expr_stmt|;
+comment|/* list of unaccepted connections */
 name|short
 name|so_qlen
 decl_stmt|;
-comment|/* number of connections on so_q */
+comment|/* number of unaccepted connections */
 name|short
 name|so_qlimit
 decl_stmt|;
@@ -253,7 +260,7 @@ begin_define
 define|#
 directive|define
 name|SS_NOFDREF
-value|0x001
+value|0x0001
 end_define
 
 begin_comment
@@ -264,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|SS_ISCONNECTED
-value|0x002
+value|0x0002
 end_define
 
 begin_comment
@@ -275,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|SS_ISCONNECTING
-value|0x004
+value|0x0004
 end_define
 
 begin_comment
@@ -286,7 +293,7 @@ begin_define
 define|#
 directive|define
 name|SS_ISDISCONNECTING
-value|0x008
+value|0x0008
 end_define
 
 begin_comment
@@ -297,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|SS_CANTSENDMORE
-value|0x010
+value|0x0010
 end_define
 
 begin_comment
@@ -308,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|SS_CANTRCVMORE
-value|0x020
+value|0x0020
 end_define
 
 begin_comment
@@ -319,7 +326,7 @@ begin_define
 define|#
 directive|define
 name|SS_RCVATMARK
-value|0x040
+value|0x0040
 end_define
 
 begin_comment
@@ -330,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|SS_PRIV
-value|0x080
+value|0x0080
 end_define
 
 begin_comment
@@ -341,7 +348,7 @@ begin_define
 define|#
 directive|define
 name|SS_NBIO
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
@@ -352,7 +359,7 @@ begin_define
 define|#
 directive|define
 name|SS_ASYNC
-value|0x200
+value|0x0200
 end_define
 
 begin_comment
@@ -363,11 +370,33 @@ begin_define
 define|#
 directive|define
 name|SS_ISCONFIRMING
-value|0x400
+value|0x0400
 end_define
 
 begin_comment
 comment|/* deciding to accept connection req */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_INCOMP
+value|0x0800
+end_define
+
+begin_comment
+comment|/* unaccepted, incomplete connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SS_COMP
+value|0x1000
+end_define
+
+begin_comment
+comment|/* unaccepted, complete connection */
 end_comment
 
 begin_comment
@@ -416,7 +445,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_state& SS_CANTRCVMORE) || \ 	(so)->so_qlen || (so)->so_error)
+value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_state& SS_CANTRCVMORE) || \ 	(so)->so_comp.tqh_first || (so)->so_error)
 end_define
 
 begin_comment
@@ -1284,47 +1313,6 @@ name|head
 operator|,
 name|int
 name|connstatus
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|soqinsque
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-name|head
-operator|,
-expr|struct
-name|socket
-operator|*
-name|so
-operator|,
-name|int
-name|q
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|soqremque
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|socket
-operator|*
-name|so
-operator|,
-name|int
-name|q
 operator|)
 argument_list|)
 decl_stmt|;
