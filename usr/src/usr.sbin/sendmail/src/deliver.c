@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.54	%G%"
+literal|"@(#)deliver.c	3.54.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,8 @@ operator|&&
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QPSEUDO
 argument_list|,
 name|to
 operator|->
@@ -801,6 +803,8 @@ operator|&&
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QPSEUDO
 argument_list|,
 name|to
 operator|->
@@ -4110,6 +4114,8 @@ argument_list|(
 name|QDONTSEND
 operator||
 name|QBADADDR
+operator||
+name|QPSEUDO
 argument_list|,
 name|q
 operator|->

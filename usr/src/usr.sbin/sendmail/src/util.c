@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -47,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	3.12	%G%"
+literal|"@(#)util.c	3.12.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -921,31 +927,23 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  BUILDFNAME -- build full name from gecos style entry. ** **	This routine interprets the strange entry that would appear **	in the GECOS field of the password file. ** **	Parameters: **		p -- name to build. **		login -- the login name of this user (for&). **		buf -- place to put the result. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  FULLNAME -- extract full name from a passwd file entry. ** **	Parameters: **		pw -- password entry to start from. **		buf -- buffer to store result in. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_expr_stmt
-name|buildfname
+name|fullname
 argument_list|(
-name|p
-argument_list|,
-name|login
+name|pw
 argument_list|,
 name|buf
 argument_list|)
 specifier|register
-name|char
+expr|struct
+name|passwd
 operator|*
-name|p
+name|pw
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|login
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -962,6 +960,15 @@ modifier|*
 name|bp
 init|=
 name|buf
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|pw
+operator|->
+name|pw_gecos
 decl_stmt|;
 if|if
 condition|(
@@ -1006,7 +1013,9 @@ name|strcpy
 argument_list|(
 name|bp
 argument_list|,
-name|login
+name|pw
+operator|->
+name|pw_name
 argument_list|)
 expr_stmt|;
 operator|*

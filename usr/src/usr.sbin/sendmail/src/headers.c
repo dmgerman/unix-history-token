@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	3.10	%G%"
+literal|"@(#)headers.c	3.10.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,12 @@ decl_stmt|;
 specifier|extern
 name|u_long
 name|mfencode
+parameter_list|()
+function_decl|;
+specifier|extern
+name|ADDRESS
+modifier|*
+name|sendto
 parameter_list|()
 function_decl|;
 comment|/* strip off trailing newline */
@@ -507,6 +513,9 @@ operator|->
 name|h_flags
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|sendto
 argument_list|(
 name|h
@@ -520,6 +529,8 @@ name|ADDRESS
 operator|*
 operator|)
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return

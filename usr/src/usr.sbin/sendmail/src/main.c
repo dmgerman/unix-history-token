@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.53	%G%"
+literal|"@(#)main.c	3.53.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,6 +184,12 @@ decl_stmt|;
 specifier|extern
 name|time_t
 name|convtime
+parameter_list|()
+function_decl|;
+specifier|extern
+name|ADDRESS
+modifier|*
+name|recipient
 parameter_list|()
 function_decl|;
 name|bool
@@ -1332,6 +1338,9 @@ condition|(
 operator|!
 name|MeToo
 condition|)
+operator|(
+name|void
+operator|)
 name|recipient
 argument_list|(
 operator|&
@@ -2126,13 +2135,9 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-name|buildfname
+name|fullname
 argument_list|(
 name|pw
-operator|->
-name|pw_gecos
-argument_list|,
-name|realname
 argument_list|,
 name|nbuf
 argument_list|)

@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	3.4	%G%"
+literal|"@(#)queue.c	3.4.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1713,6 +1713,12 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+specifier|extern
+name|ADDRESS
+modifier|*
+name|sendto
+parameter_list|()
+function_decl|;
 comment|/* 	**  Open the file created by queueup. 	*/
 name|f
 operator|=
@@ -1774,6 +1780,9 @@ case|case
 literal|'R'
 case|:
 comment|/* specify recipient */
+operator|(
+name|void
+operator|)
 name|sendto
 argument_list|(
 operator|&
@@ -1789,6 +1798,8 @@ name|ADDRESS
 operator|*
 operator|)
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;

@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.52	%G%"
+literal|"@(#)sendmail.h	3.52.1.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,7 +191,7 @@ comment|/* the message number for Arpanet info */
 end_comment
 
 begin_comment
-comment|/* **  Address structure. **	Addresses are stored internally in this structure. */
+comment|/* **  Address structure. **	Addresses are stored internally in this structure. ** **	Each address is on two chains and in one tree. **		The q_next chain is used to link together addresses **		  for one mailer (and is rooted in a mailer). **		The q_chain chain is used to maintain a list of **		  addresses originating from one call to sendto, and **		  is used primarily for printing messages. **		The q_alias, q_sibling, and q_child tree maintains **		  a complete tree of the aliases.  q_alias points to **		  the parent -- obviously, there can be several, and **		  so this points to "one" of them.  Ditto for q_sibling. */
 end_comment
 
 begin_struct
@@ -240,6 +240,15 @@ modifier|*
 name|q_home
 decl_stmt|;
 comment|/* home dir (local mailer only) */
+name|char
+modifier|*
+name|q_fullname
+decl_stmt|;
+comment|/* full name of this person */
+name|time_t
+name|q_timeout
+decl_stmt|;
+comment|/* timeout for this address */
 name|struct
 name|address
 modifier|*
@@ -251,11 +260,19 @@ name|address
 modifier|*
 name|q_alias
 decl_stmt|;
-comment|/* address this results from */
-name|time_t
-name|q_timeout
+comment|/* parent in alias tree */
+name|struct
+name|address
+modifier|*
+name|q_sibling
 decl_stmt|;
-comment|/* timeout for this address */
+comment|/* sibling in alias tree */
+name|struct
+name|address
+modifier|*
+name|q_child
+decl_stmt|;
+comment|/* child in alias tree */
 block|}
 struct|;
 end_struct
@@ -321,6 +338,17 @@ end_define
 
 begin_comment
 comment|/* queue for later transmission */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QPSEUDO
+value|000040
+end_define
+
+begin_comment
+comment|/* only on the list for verification */
 end_comment
 
 begin_comment

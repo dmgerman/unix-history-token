@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.26	%G%	(with DBM)"
+literal|"@(#)alias.c	3.26.1.1	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.26	%G%	(without DBM)"
+literal|"@(#)alias.c	3.26.1.1	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,12 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|extern
+name|ADDRESS
+modifier|*
+name|sendto
+parameter_list|()
+function_decl|;
 ifndef|#
 directive|ifndef
 name|DBM
@@ -305,6 +311,10 @@ expr_stmt|;
 name|AliasLevel
 operator|++
 expr_stmt|;
+name|a
+operator|->
+name|q_child
+operator|=
 name|sendto
 argument_list|(
 name|p
@@ -312,6 +322,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|a
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|AliasLevel
