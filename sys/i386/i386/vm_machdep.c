@@ -1688,9 +1688,6 @@ name|SMP
 name|u_int
 name|map
 decl_stmt|;
-name|int
-name|cnt
-decl_stmt|;
 if|if
 condition|(
 name|smp_active
