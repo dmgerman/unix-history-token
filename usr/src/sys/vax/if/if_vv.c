@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_vv.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_vv.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Proteon proNET-10 and proNET-80 token ring driver.  * The name of this device driver derives from the old MIT  * name of V2LNI for the proNET hardware, would would abbreviate  * to "v2", but this won't work right. Thus the name is "vv".  *  * This driver is compatible with the proNET 10 meagbit and  * 80 megabit token ring interfaces (models p1000 and p1080).  * A unit may be marked as 80 megabit using "flags 1" in the  * config file.  *  * TRAILERS: This driver has a new implementation of trailers that  * is at least a tolerable neighbor on the ring. The offset is not  * stored in the protocol type, but instead only in the vh_info  * field. Also, the vh_info field, and the two shorts before the  * trailing header, are in network byte order, not VAX byte order.  *  * Of course, nothing but BSD UNIX supports trailers on ProNET.  * If you need interoperability with anything else, turn off  * trailers using the -trailers option to /etc/ifconfig!  *  * HARDWARE COMPATABILITY: This driver prefers that the HSBU (p1001)  * have a serial number>= 040, which is about March, 1982. Older  * HSBUs do not carry across 64kbyte boundaries. They can be supported  * by adding "| UBA_NEED16" to the vs_ifuba.ifu_flags initialization  * in vvattach().  *  * The old warning about use without Wire Centers applies only to CTL  * (p1002) cards with serial<= 057, which have not received ECO 176-743,  * which was implemented in March, 1982. Most such CTLs have received  * this ECO.  */
+comment|/*  * Proteon ProNET-10 and ProNET-80 token ring driver.  * The name of this device driver derives from the old MIT  * name of V2LNI for the proNET hardware, would would abbreviate  * to "v2", but this won't work right in config. Thus the name is "vv".  *  * This driver is compatible with the Unibus ProNET 10 megabit and  * 80 megabit token ring interfaces (models p1000 and p1080).  * A unit may be marked as 80 megabit using "flags 1" in the  * config file.  *  * This driver is also compatible with the Q-bus ProNET 10 megabit and  * 80 megabit token ring interfaces (models p1100 and p1180), but  * only on a MicroVAX-II or MicroVAX-III.  No attempt is made to  * support the MicroVAX-I.  *  * TRAILERS: This driver has a new implementation of trailers that  * is at least a tolerable neighbor on the ring. The offset is not  * stored in the protocol type, but instead only in the vh_info  * field. Also, the vh_info field, and the two shorts before the  * trailing header, are in network byte order, not VAX byte order.  *  * Of course, nothing but BSD UNIX supports trailers on ProNET.  * If you need interoperability with anything else (like the p4200),  * turn off trailers using the -trailers option to /etc/ifconfig!  *  * HARDWARE COMPATABILITY: This driver prefers that the HSBU (p1001)  * have a serial number>= 040, which is about March, 1982. Older  * HSBUs do not carry across 64kbyte boundaries. They can be supported  * by adding "| UBA_NEED16" to the vs_ifuba.ifu_flags initialization  * in vvattach().  *  * The old warning about use without Wire Centers applies only to CTL  * (p1002) cards with serial<= 057, which have not received ECO 176-743,  * which was implemented in March, 1982. Most such CTLs have received  * this ECO.  */
 end_comment
 
 begin_include
@@ -171,21 +171,21 @@ file|"../vaxuba/ubavar.h"
 end_include
 
 begin_comment
-comment|/*  *    maximum transmission unit definition --  *        you can set VVMTU at anything from 576 to 2024.  *        1536 is a popular "large" value, because it is a multiple  *	  of 512, which the trailer scheme likes.  *        The absolute maximum size is 2024, which is enforced.  */
+comment|/*  *    maximum transmission unit definition --  *        you can set VVMTU at anything from 576 to 2036.  *        1536 is a popular "large" value, because it is a multiple  *	  of 512, which the trailer scheme likes.  *        The absolute maximum size is 2036, which is enforced.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VVMTU
-value|(1536)
+value|(2036)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VVMRU
-value|(VVMTU + 16)
+value|(VVMTU + (2 * sizeof(u_short)))
 end_define
 
 begin_define
@@ -200,7 +200,7 @@ if|#
 directive|if
 name|VVMTU
 operator|>
-literal|2024
+literal|2036
 end_if
 
 begin_undef
@@ -239,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|VVMTU
-value|(VVMRU - 16)
+value|(VVMRU - (2 * sizeof(u_short)))
 end_define
 
 begin_endif
@@ -939,7 +939,7 @@ name|addr
 decl_stmt|;
 specifier|register
 name|int
-name|ubainfo
+name|ubaaddr
 decl_stmt|,
 name|s
 decl_stmt|;
@@ -1009,7 +1009,7 @@ name|int
 operator|)
 name|btoc
 argument_list|(
-name|VVMTU
+name|VVMRU
 argument_list|)
 argument_list|)
 operator|==
@@ -1161,8 +1161,10 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|ubainfo
+name|ubaaddr
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|vs
 operator|->
 name|vs_ifuba
@@ -1170,6 +1172,7 @@ operator|.
 name|ifu_r
 operator|.
 name|ifrw_info
+argument_list|)
 expr_stmt|;
 name|addr
 operator|->
@@ -1178,7 +1181,7 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|ubainfo
+name|ubaaddr
 expr_stmt|;
 name|addr
 operator|->
@@ -1188,7 +1191,7 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|ubainfo
+name|ubaaddr
 operator|>>
 literal|16
 argument_list|)
@@ -1319,7 +1322,7 @@ name|v
 decl_stmt|;
 specifier|register
 name|int
-name|ubainfo
+name|ubaaddr
 decl_stmt|;
 specifier|register
 name|int
@@ -1543,8 +1546,10 @@ operator|)
 condition|)
 block|{
 comment|/* start a receive */
-name|ubainfo
+name|ubaaddr
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|vs
 operator|->
 name|vs_ifuba
@@ -1552,6 +1557,7 @@ operator|.
 name|ifu_r
 operator|.
 name|ifrw_info
+argument_list|)
 expr_stmt|;
 name|addr
 operator|->
@@ -1572,7 +1578,7 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|ubainfo
+name|ubaaddr
 expr_stmt|;
 name|addr
 operator|->
@@ -1582,7 +1588,7 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|ubainfo
+name|ubaaddr
 operator|>>
 literal|16
 argument_list|)
@@ -1640,8 +1646,10 @@ name|ifrw_bdp
 argument_list|)
 expr_stmt|;
 comment|/* do a transmit */
-name|ubainfo
+name|ubaaddr
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|vs
 operator|->
 name|vs_ifuba
@@ -1649,6 +1657,7 @@ operator|.
 name|ifu_w
 operator|.
 name|ifrw_info
+argument_list|)
 expr_stmt|;
 name|addr
 operator|->
@@ -1664,7 +1673,7 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|ubainfo
+name|ubaaddr
 expr_stmt|;
 name|addr
 operator|->
@@ -1674,7 +1683,7 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|ubainfo
+name|ubaaddr
 operator|>>
 literal|16
 argument_list|)
@@ -2097,7 +2106,7 @@ specifier|register
 name|int
 name|unit
 decl_stmt|,
-name|ubainfo
+name|ubaaddr
 decl_stmt|,
 name|dest
 decl_stmt|,
@@ -2287,8 +2296,10 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-name|ubainfo
+name|ubaaddr
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|vs
 operator|->
 name|vs_ifuba
@@ -2296,6 +2307,7 @@ operator|.
 name|ifu_w
 operator|.
 name|ifrw_info
+argument_list|)
 expr_stmt|;
 name|addr
 operator|->
@@ -2304,7 +2316,7 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|ubainfo
+name|ubaaddr
 expr_stmt|;
 name|addr
 operator|->
@@ -2314,7 +2326,7 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|ubainfo
+name|ubaaddr
 operator|>>
 literal|16
 argument_list|)
@@ -2753,7 +2765,7 @@ modifier|*
 name|m
 decl_stmt|;
 name|int
-name|ubainfo
+name|ubaaddr
 decl_stmt|,
 name|len
 decl_stmt|,
@@ -3420,8 +3432,10 @@ expr_stmt|;
 comment|/* 	 * Reset for the next packet. 	 */
 name|setup
 label|:
-name|ubainfo
+name|ubaaddr
 operator|=
+name|UBAI_ADDR
+argument_list|(
 name|vs
 operator|->
 name|vs_ifuba
@@ -3429,6 +3443,7 @@ operator|.
 name|ifu_r
 operator|.
 name|ifrw_info
+argument_list|)
 expr_stmt|;
 name|addr
 operator|->
@@ -3437,7 +3452,7 @@ operator|=
 operator|(
 name|u_short
 operator|)
-name|ubainfo
+name|ubaaddr
 expr_stmt|;
 name|addr
 operator|->
@@ -3447,7 +3462,7 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|ubainfo
+name|ubaaddr
 operator|>>
 literal|16
 argument_list|)
