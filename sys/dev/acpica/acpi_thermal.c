@@ -2224,7 +2224,13 @@ condition|(
 name|sc
 operator|->
 name|tz_requested
-operator|>
+operator|!=
+name|TZ_ACTIVE_NONE
+operator|&&
+name|sc
+operator|->
+name|tz_requested
+operator|<
 name|newactive
 condition|)
 name|newactive
