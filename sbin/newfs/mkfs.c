@@ -511,7 +511,7 @@ name|randinit
 operator|=
 literal|1
 expr_stmt|;
-name|srandomdev
+name|arc4random_stir
 argument_list|()
 expr_stmt|;
 block|}
@@ -2241,7 +2241,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|random
+name|arc4random
 argument_list|()
 expr_stmt|;
 name|sblock
@@ -4057,7 +4057,7 @@ name|dp1
 operator|->
 name|di_gen
 operator|=
-name|random
+name|arc4random
 argument_list|()
 expr_stmt|;
 name|dp1
@@ -4070,7 +4070,7 @@ name|dp2
 operator|->
 name|di_gen
 operator|=
-name|random
+name|arc4random
 argument_list|()
 expr_stmt|;
 name|dp2
@@ -4173,7 +4173,7 @@ name|dp1
 operator|->
 name|di_gen
 operator|=
-name|random
+name|arc4random
 argument_list|()
 expr_stmt|;
 name|dp1

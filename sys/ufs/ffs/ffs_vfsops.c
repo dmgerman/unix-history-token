@@ -6649,7 +6649,7 @@ name|ip
 operator|->
 name|i_gen
 operator|=
-name|random
+name|arc4random
 argument_list|()
 operator|/
 literal|2
