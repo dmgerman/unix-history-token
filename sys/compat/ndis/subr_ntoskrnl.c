@@ -4777,7 +4777,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* do nothing */
+comment|/* sit and spin */
 empty_stmt|;
 return|return;
 block|}
@@ -4799,7 +4799,7 @@ decl_stmt|;
 asm|__asm__
 specifier|__volatile__
 asm|("" : "=c" (lock));
-name|atomic_cmpset_rel_int
+name|atomic_store_rel_int
 argument_list|(
 operator|(
 specifier|volatile
@@ -4807,8 +4807,6 @@ name|u_int
 operator|*
 operator|)
 name|lock
-argument_list|,
-literal|1
 argument_list|,
 literal|0
 argument_list|)
