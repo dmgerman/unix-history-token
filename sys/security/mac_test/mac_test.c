@@ -371,7 +371,7 @@ name|ASSERT_MBUF_LABEL
 parameter_list|(
 name|x
 parameter_list|)
-value|KASSERT(SLOT(x) == MBUFMAGIC ||		\ 	SLOT(x) == 0, ("%s: Bad MBUF label", __func__ ))
+value|KASSERT(x == NULL ||			\ 	SLOT(x) == MBUFMAGIC ||	SLOT(x) == 0,				\ 	("%s: Bad MBUF label", __func__ ))
 end_define
 
 begin_define
