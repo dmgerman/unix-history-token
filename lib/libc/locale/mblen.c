@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<stddef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -45,21 +45,17 @@ begin_function
 name|int
 name|mblen
 parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
-name|char
 specifier|const
+name|char
 modifier|*
 name|e
 decl_stmt|;
@@ -67,19 +63,19 @@ if|if
 condition|(
 name|s
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|*
 name|s
 operator|==
-literal|0
+literal|'\0'
 condition|)
+comment|/* No support for state dependent encodings. */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* No support for state dependent encodings. */
 if|if
 condition|(
 name|sgetrune
