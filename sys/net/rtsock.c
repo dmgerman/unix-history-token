@@ -5103,6 +5103,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 block|}
 end_function
 

@@ -4501,7 +4501,6 @@ goto|;
 comment|/* Check queue. */
 if|if
 condition|(
-operator|!
 name|netisr_queue
 argument_list|(
 name|isr
@@ -4510,6 +4509,7 @@ name|m
 argument_list|)
 condition|)
 block|{
+comment|/* (0) on success. */
 if|if
 condition|(
 name|debug

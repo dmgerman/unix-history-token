@@ -3907,6 +3907,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 comment|/*      * normally we would need a "schednetisr(NETISR_IP)"      * here but we were called by ip_input and it is going      * to loop back& try to dequeue the packet we just      * queued as soon as we return so we avoid the      * unnecessary software interrrupt.      *      * XXX      * This no longer holds - we may have direct-dispatched the packet,      * or there may be a queue processing limit.      */
 block|}
 end_function

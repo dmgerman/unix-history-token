@@ -1497,7 +1497,6 @@ expr_stmt|;
 comment|/* 		 * Schedule callback 		 */
 if|if
 condition|(
-operator|!
 name|netisr_queue
 argument_list|(
 name|NETISR_ATM
@@ -1506,6 +1505,7 @@ name|mhead
 argument_list|)
 condition|)
 block|{
+comment|/* (0) on success. */
 name|fup
 operator|->
 name|fu_stats

@@ -2129,13 +2129,16 @@ comment|/* record data transfer */
 comment|/* 	 * Re-dispatch via software interrupt. 	 */
 if|if
 condition|(
-operator|!
+operator|(
+name|error
+operator|=
 name|netisr_queue
 argument_list|(
 name|NETISR_IP
 argument_list|,
 name|m
 argument_list|)
+operator|)
 condition|)
 block|{
 name|IPSEC_ISTAT
@@ -2167,7 +2170,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-name|ENOBUFS
+name|error
 return|;
 block|}
 return|return

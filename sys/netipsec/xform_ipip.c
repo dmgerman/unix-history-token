@@ -1334,7 +1334,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|netisr_queue
 argument_list|(
 name|isr
@@ -1343,6 +1342,7 @@ name|m
 argument_list|)
 condition|)
 block|{
+comment|/* (0) on success. */
 name|ipipstat
 operator|.
 name|ipips_qfull

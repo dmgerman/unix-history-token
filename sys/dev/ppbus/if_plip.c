@@ -2160,6 +2160,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 block|}
 goto|goto
 name|done
@@ -2425,6 +2426,7 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+comment|/* mbuf is free'd on failure. */
 block|}
 block|}
 goto|goto

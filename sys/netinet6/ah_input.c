@@ -1737,7 +1737,6 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
 name|netisr_queue
 argument_list|(
 name|NETISR_IP
@@ -1746,6 +1745,7 @@ name|m
 argument_list|)
 condition|)
 block|{
+comment|/* (0) on success. */
 name|ipsecstat
 operator|.
 name|in_inval
@@ -3469,7 +3469,6 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
 name|netisr_queue
 argument_list|(
 name|NETISR_IPV6
@@ -3478,6 +3477,7 @@ name|m
 argument_list|)
 condition|)
 block|{
+comment|/* (0) on success. */
 name|ipsec6stat
 operator|.
 name|in_inval
