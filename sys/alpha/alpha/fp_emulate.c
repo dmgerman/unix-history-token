@@ -1439,7 +1439,11 @@ name|fpregs
 operator|->
 name|fpr_cr
 operator|&
+operator|(
 name|FPCR_DYN_MASK
+operator||
+name|FPCR_STATUS_MASK
+operator|)
 expr_stmt|;
 name|fpcr
 operator||=

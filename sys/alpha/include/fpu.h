@@ -231,6 +231,13 @@ name|FPCR_MASK
 value|(~0LL<< 49)
 end_define
 
+begin_define
+define|#
+directive|define
+name|FPCR_STATUS_MASK
+value|(FPCR_INV | FPCR_DZE | FPCR_OVF | \ 				 FPCR_UNF | FPCR_INE | FPCR_IOV)
+end_define
+
 begin_comment
 comment|/*  * Exception summary bits.  *  * From Alpha AXP Architecture Reference Manual, DEC OSF/1 Exceptions  * and Interrupts (II-B) PP 5-5.  */
 end_comment
