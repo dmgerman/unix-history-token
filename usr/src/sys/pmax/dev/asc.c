@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)asc.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -724,7 +724,7 @@ name|SCRIPT_GET_STATUS
 index|]
 block|}
 block|,
-comment|/* continue data in after a chuck is finished */
+comment|/* continue data in after a chunk is finished */
 block|{
 name|SCRIPT_MATCH
 argument_list|(
@@ -796,7 +796,7 @@ name|SCRIPT_GET_STATUS
 index|]
 block|}
 block|,
-comment|/* continue data out after a chuck is finished */
+comment|/* continue data out after a chunk is finished */
 block|{
 name|SCRIPT_MATCH
 argument_list|(
@@ -3554,9 +3554,6 @@ operator|->
 name|asc_cmd
 argument_list|)
 expr_stmt|;
-name|MachEmptyWriteBuffer
-argument_list|()
-expr_stmt|;
 name|DELAY
 argument_list|(
 literal|2
@@ -5365,9 +5362,6 @@ operator|->
 name|asc_cmd
 argument_list|)
 expr_stmt|;
-name|MachEmptyWriteBuffer
-argument_list|()
-expr_stmt|;
 block|}
 name|state
 operator|->
@@ -6224,9 +6218,6 @@ name|regs
 operator|->
 name|asc_cmd
 argument_list|)
-expr_stmt|;
-name|MachEmptyWriteBuffer
-argument_list|()
 expr_stmt|;
 block|}
 name|state
@@ -7372,9 +7363,6 @@ operator|->
 name|asc_cmd
 argument_list|)
 expr_stmt|;
-name|MachEmptyWriteBuffer
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|state
@@ -7685,9 +7673,6 @@ name|regs
 operator|->
 name|asc_cmd
 argument_list|)
-expr_stmt|;
-name|MachEmptyWriteBuffer
-argument_list|()
 expr_stmt|;
 block|}
 name|done
@@ -8475,29 +8460,8 @@ expr_stmt|;
 name|lp
 operator|=
 name|asc_logp
-operator|+
-literal|1
 expr_stmt|;
-if|if
-condition|(
-name|lp
-operator|>
-operator|&
-name|asc_log
-index|[
-name|NLOG
-index|]
-condition|)
-name|lp
-operator|=
-name|asc_log
-expr_stmt|;
-while|while
-condition|(
-name|lp
-operator|!=
-name|asc_logp
-condition|)
+do|do
 block|{
 name|status
 operator|=
@@ -8571,6 +8535,13 @@ operator|=
 name|asc_log
 expr_stmt|;
 block|}
+do|while
+condition|(
+name|lp
+operator|!=
+name|asc_logp
+condition|)
+do|;
 block|}
 end_block
 
