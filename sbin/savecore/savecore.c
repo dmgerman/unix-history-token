@@ -119,6 +119,17 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/* The size of the buffer used for I/O. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUFFERSIZE
+value|(1024*1024)
+end_define
+
 begin_decl_stmt
 name|int
 name|compress
@@ -915,9 +926,7 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-literal|1024
-operator|*
-literal|1024
+name|BUFFERSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1630,10 +1639,7 @@ condition|)
 block|{
 name|wl
 operator|=
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|BUFFERSIZE
 expr_stmt|;
 if|if
 condition|(
