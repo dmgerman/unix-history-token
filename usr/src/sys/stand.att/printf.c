@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_comment
@@ -555,16 +561,27 @@ name|int
 name|base
 decl_stmt|;
 block|{
+comment|/* hold a long in base 8 */
 name|char
 modifier|*
 name|p
 decl_stmt|,
 name|buf
 index|[
-literal|11
+operator|(
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+operator|*
+name|NBBY
+operator|/
+literal|3
+operator|)
+operator|+
+literal|1
 index|]
 decl_stmt|;
-comment|/* hold 2^32 in base 8 */
 name|p
 operator|=
 name|buf
