@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.84 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.85 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2856,7 +2856,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in labeled **			fields.  The fields are: **			   A -- the argv for this mailer **			   C -- the character set for MIME conversions **			   D -- the directory to run in **			   E -- the eol string **			   F -- the flags associated with the mailer **			   L -- the maximum line length **			   M -- the maximum message size **			   P -- the path to the mailer **			   R -- the recipient rewriting set **			   S -- the sender rewriting set **			   T -- the mailer type (for DSNs) **			   U -- the uid to run as **			The first word is the canonical name of the mailer. ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
+comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in labeled **			fields.  The fields are: **			   A -- the argv for this mailer **			   C -- the character set for MIME conversions **			   D -- the directory to run in **			   E -- the eol string **			   F -- the flags associated with the mailer **			   L -- the maximum line length **			   M -- the maximum message size **			   N -- the niceness at which to run **			   P -- the path to the mailer **			   R -- the recipient rewriting set **			   S -- the sender rewriting set **			   T -- the mailer type (for DSNs) **			   U -- the uid to run as **			The first word is the canonical name of the mailer. ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
 end_comment
 
 begin_macro
@@ -3384,6 +3384,20 @@ comment|/* maximum line length */
 name|m
 operator|->
 name|m_linelimit
+operator|=
+name|atoi
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+comment|/* run niceness */
+name|m
+operator|->
+name|m_nice
 operator|=
 name|atoi
 argument_list|(

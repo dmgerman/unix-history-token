@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.142 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.143 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4860,6 +4860,22 @@ argument_list|(
 name|SIGTERM
 argument_list|,
 name|SIG_DFL
+argument_list|)
+expr_stmt|;
+comment|/* tweak niceness */
+if|if
+condition|(
+name|m
+operator|->
+name|m_nice
+operator|!=
+literal|0
+condition|)
+name|nice
+argument_list|(
+name|m
+operator|->
+name|m_nice
 argument_list|)
 expr_stmt|;
 comment|/* reset user and group */
