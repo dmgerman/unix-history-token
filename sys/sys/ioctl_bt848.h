@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $Id: ioctl_bt848.h,v 1.19 1998/09/30 21:06:55 sos Exp $  */
+comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $Id: ioctl_bt848.h,v 1.20 1999/01/28 16:32:52 roger Exp $  */
 end_comment
 
 begin_comment
@@ -797,6 +797,122 @@ end_define
 
 begin_comment
 comment|/* get luma notch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_MAX_CHNLSET_NAME_LEN
+value|16
+end_define
+
+begin_struct
+struct|struct
+name|bktr_chnlset
+block|{
+name|short
+name|index
+decl_stmt|;
+name|short
+name|max_channel
+decl_stmt|;
+name|char
+name|name
+index|[
+name|BT848_MAX_CHNLSET_NAME_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TVTUNER_GETCHNLSET
+value|_IOWR('x', 57, struct bktr_chnlset)
+end_define
+
+begin_comment
+comment|/* get channelset */
+end_comment
+
+begin_struct
+struct|struct
+name|bktr_remote
+block|{
+name|unsigned
+name|char
+name|data
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|REMOTE_GETKEY
+value|_IOR('x', 58, struct bktr_remote)
+end_define
+
+begin_comment
+comment|/*get remote keypress*/
+end_comment
+
+begin_comment
+comment|/*returns raw data*/
+end_comment
+
+begin_comment
+comment|/*  * Direct access to GPIO pins  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_GPIO_SET_EN
+value|_IOW('x', 59, int)
+end_define
+
+begin_comment
+comment|/* set gpio_out_en */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_GPIO_GET_EN
+value|_IOR('x', 60, int)
+end_define
+
+begin_comment
+comment|/* get gpio_out_en */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_GPIO_SET_DATA
+value|_IOW('x', 61, int)
+end_define
+
+begin_comment
+comment|/* set gpio_data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_GPIO_GET_DATA
+value|_IOR('x', 62, int)
+end_define
+
+begin_comment
+comment|/* get gpio_data */
 end_comment
 
 begin_comment
