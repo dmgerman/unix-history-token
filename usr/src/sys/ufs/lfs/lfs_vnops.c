@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.64 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.64.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4731,6 +4731,14 @@ argument_list|(
 literal|"ufs_rename: lost to startdir"
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_spare
+index|[
+literal|1
+index|]
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -5221,6 +5229,14 @@ name|panic
 argument_list|(
 literal|"ufs_rename: lost from startdir"
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_spare
+index|[
+literal|1
+index|]
+operator|--
 expr_stmt|;
 operator|(
 name|void
