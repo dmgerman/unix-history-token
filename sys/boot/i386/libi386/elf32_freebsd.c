@@ -90,6 +90,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|elf32_obj_exec
+parameter_list|(
+name|struct
+name|preloaded_file
+modifier|*
+name|amp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|file_format
@@ -99,6 +112,19 @@ block|{
 name|elf32_loadfile
 block|,
 name|elf32_exec
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|file_format
+name|i386_elf_obj
+init|=
+block|{
+name|elf32_obj_loadfile
+block|,
+name|elf32_obj_exec
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -265,6 +291,25 @@ argument_list|(
 literal|"exec returned"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|elf32_obj_exec
+parameter_list|(
+name|struct
+name|preloaded_file
+modifier|*
+name|fp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|EFTYPE
+operator|)
+return|;
 block|}
 end_function
 
