@@ -985,7 +985,10 @@ name|sc_bus
 operator|.
 name|bdev
 argument_list|,
+operator|&
 name|sc
+operator|->
+name|sc_bus
 argument_list|)
 expr_stmt|;
 comment|/* ohci_pci_match will never return NULL if ohci_pci_probe succeeded */
