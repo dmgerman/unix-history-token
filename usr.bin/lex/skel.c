@@ -23,7 +23,7 @@ literal|""
 block|,
 literal|"/* Scanner skeleton version:"
 block|,
-literal|" * $Header: /home/daffy/u0/vern/flex/RCS/flex.skl,v 2.89 96/05/25 21:02:21 vern Exp $"
+literal|" * $Header: /home/daffy/u0/vern/flex/RCS/flex.skl,v 2.91 96/09/10 16:58:48 vern Exp $"
 block|,
 literal|" */"
 block|,
@@ -521,7 +521,7 @@ literal|""
 block|,
 literal|"YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, yy_size_t size ));"
 block|,
-literal|"YY_BUFFER_STATE yy_scan_string YY_PROTO(( yyconst char *str ));"
+literal|"YY_BUFFER_STATE yy_scan_string YY_PROTO(( yyconst char *yy_str ));"
 block|,
 literal|"YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len ));"
 block|,
@@ -1587,7 +1587,7 @@ literal|"		 * just force an EOF"
 block|,
 literal|"		 */"
 block|,
-literal|"		yy_n_chars = 0;"
+literal|"		yy_current_buffer->yy_n_chars = yy_n_chars = 0;"
 block|,
 literal|""
 block|,
@@ -1696,6 +1696,10 @@ block|,
 literal|"		YY_INPUT( (&yy_current_buffer->yy_ch_buf[number_to_move]),"
 block|,
 literal|"			yy_n_chars, num_to_read );"
+block|,
+literal|""
+block|,
+literal|"		yy_current_buffer->yy_n_chars = yy_n_chars;"
 block|,
 literal|"		}"
 block|,
@@ -1915,7 +1919,9 @@ literal|"		yy_cp += (int) (dest - source);"
 block|,
 literal|"		yy_bp += (int) (dest - source);"
 block|,
-literal|"		yy_n_chars = yy_current_buffer->yy_buf_size;"
+literal|"		yy_current_buffer->yy_n_chars ="
+block|,
+literal|"			yy_n_chars = yy_current_buffer->yy_buf_size;"
 block|,
 literal|""
 block|,
@@ -2015,19 +2021,45 @@ literal|"			switch ( yy_get_next_buffer() )"
 block|,
 literal|"				{"
 block|,
+literal|"				case EOB_ACT_LAST_MATCH:"
+block|,
+literal|"					/* This happens because yy_g_n_b()"
+block|,
+literal|"					 * sees that we've accumulated a"
+block|,
+literal|"					 * token and flags that we need to"
+block|,
+literal|"					 * try matching the token before"
+block|,
+literal|"					 * proceeding.  But for input(),"
+block|,
+literal|"					 * there's no matching to consider."
+block|,
+literal|"					 * So convert the EOB_ACT_LAST_MATCH"
+block|,
+literal|"					 * to EOB_ACT_END_OF_FILE."
+block|,
+literal|"					 */"
+block|,
+literal|""
+block|,
+literal|"					/* Reset buffer status. */"
+block|,
+literal|"					yyrestart( yyin );"
+block|,
+literal|""
+block|,
+literal|"					/* fall through */"
+block|,
+literal|""
+block|,
 literal|"				case EOB_ACT_END_OF_FILE:"
 block|,
 literal|"					{"
 block|,
 literal|"					if ( yywrap() )"
 block|,
-literal|"						{"
-block|,
-literal|"						yy_c_buf_p = yytext_ptr + offset;"
-block|,
 literal|"						return EOF;"
-block|,
-literal|"						}"
 block|,
 literal|""
 block|,
@@ -2054,24 +2086,6 @@ block|,
 literal|"					yy_c_buf_p = yytext_ptr + offset;"
 block|,
 literal|"					break;"
-block|,
-literal|""
-block|,
-literal|"				case EOB_ACT_LAST_MATCH:"
-block|,
-literal|"#ifdef __cplusplus"
-block|,
-literal|"					YY_FATAL_ERROR("
-block|,
-literal|"					\"unexpected last match in yyinput()\" );"
-block|,
-literal|"#else"
-block|,
-literal|"					YY_FATAL_ERROR("
-block|,
-literal|"					\"unexpected last match in input()\" );"
-block|,
-literal|"#endif"
 block|,
 literal|"				}"
 block|,
@@ -2467,6 +2481,12 @@ literal|"%*"
 block|,
 literal|"	{"
 block|,
+literal|"	if ( ! b )"
+block|,
+literal|"		return;"
+block|,
+literal|""
+block|,
 literal|"	b->yy_n_chars = 0;"
 block|,
 literal|""
@@ -2593,13 +2613,13 @@ literal|"%-"
 block|,
 literal|"#ifdef YY_USE_PROTOS"
 block|,
-literal|"YY_BUFFER_STATE yy_scan_string( yyconst char *str )"
+literal|"YY_BUFFER_STATE yy_scan_string( yyconst char *yy_str )"
 block|,
 literal|"#else"
 block|,
-literal|"YY_BUFFER_STATE yy_scan_string( str )"
+literal|"YY_BUFFER_STATE yy_scan_string( yy_str )"
 block|,
-literal|"yyconst char *str;"
+literal|"yyconst char *yy_str;"
 block|,
 literal|"#endif"
 block|,
@@ -2607,13 +2627,13 @@ literal|"	{"
 block|,
 literal|"	int len;"
 block|,
-literal|"	for ( len = 0; str[len]; ++len )"
+literal|"	for ( len = 0; yy_str[len]; ++len )"
 block|,
 literal|"		;"
 block|,
 literal|""
 block|,
-literal|"	return yy_scan_bytes( str, len );"
+literal|"	return yy_scan_bytes( yy_str, len );"
 block|,
 literal|"	}"
 block|,
