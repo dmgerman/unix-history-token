@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.9  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.10  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"curses.ext"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cr_ex.h"
 end_include
 
 begin_decl_stmt
@@ -93,6 +87,9 @@ operator|&
 name|CM
 block|,
 operator|&
+name|CR
+block|,
+operator|&
 name|DC
 block|,
 operator|&
@@ -130,6 +127,9 @@ name|MA
 block|,
 operator|&
 name|ND
+block|,
+operator|&
+name|NL
 block|,
 operator|&
 name|xPC
@@ -768,7 +768,7 @@ do|;
 comment|/* 	 * get string values 	 */
 name|namp
 operator|=
-literal|"albcbtcdceclcmdcdldmdoedeihoicimipllmandpcsesfsosrtatetiucueupusvbvsve"
+literal|"albcbtcdceclcmcrdcdldmdoedeihoicimipllmandnlpcsesfsosrtatetiucueupusvbvsve"
 expr_stmt|;
 ifdef|#
 directive|ifdef

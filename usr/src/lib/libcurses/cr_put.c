@@ -5,12 +5,6 @@ directive|include
 file|"curses.ext"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cr_ex.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -35,7 +29,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Terminal driving and line formatting routines.  * Basic motion optimizations are done here as well  * as formatting of lines (printing of control characters,  * line numbering and the like).  *  * %G% (Berkeley) @(#)cr_put.c	1.1  */
+comment|/*  * Terminal driving and line formatting routines.  * Basic motion optimizations are done here as well  * as formatting of lines (printing of control characters,  * line numbering and the like).  *  * %G% (Berkeley) @(#)cr_put.c	1.2  */
 end_comment
 
 begin_comment
@@ -52,8 +46,6 @@ decl_stmt|,
 name|destcol
 decl_stmt|,
 name|destline
-decl_stmt|,
-name|plodcnt
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +124,42 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_function
+name|char
+name|_putchar
+parameter_list|(
+name|c
+parameter_list|)
+name|reg
+name|char
+name|c
+decl_stmt|;
+block|{
+name|putchar
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|fprintf
+argument_list|(
+name|outf
+argument_list|,
+literal|"_PUTCHAR(%s)\n"
+argument_list|,
+name|unctrl
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_macro
 name|fgoto
@@ -212,18 +240,46 @@ operator|>
 literal|0
 condition|)
 block|{
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|_pfast
 condition|)
-name|putchar
+if|if
+condition|(
+name|CR
+condition|)
+name|tputs
+argument_list|(
+name|CR
+argument_list|,
+literal|0
+argument_list|,
+name|_putchar
+argument_list|)
+expr_stmt|;
+else|else
+name|_putchar
 argument_list|(
 literal|'\r'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NL
+condition|)
+name|tputs
+argument_list|(
+name|NL
+argument_list|,
+literal|0
+argument_list|,
+name|_putchar
+argument_list|)
+expr_stmt|;
+else|else
+name|_putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|l
@@ -324,7 +380,25 @@ operator|-
 literal|1
 condition|)
 block|{
-name|putchar
+comment|/* 			 * The following linefeed (or simulation thereof) 			 * is supposed to scroll up the screen, since we 			 * are on the bottom line.  We make the assumption 			 * that linefeed will scroll.  If ns is in the 			 * capability list this won't work.  We should 			 * probably have an sc capability but sf will 			 * generally take the place if it works. 			 * 			 * Superbee glitch:  in the middle of the screen we 			 * have to use esc B (down) because linefeed screws up 			 * in "Efficient Paging" (what a joke) mode (which is 			 * essential in some SB's because CRLF mode puts garbage 			 * in at end of memory), but you must use linefeed to 			 * scroll since down arrow won't go past memory end. 			 * I turned this off after recieving Paul Eggert's 			 * Superbee description which wins better. 			 */
+if|if
+condition|(
+name|NL
+comment|/*&& !XB */
+operator|&&
+name|_pfast
+condition|)
+name|tputs
+argument_list|(
+name|NL
+argument_list|,
+literal|0
+argument_list|,
+name|_putchar
+argument_list|)
+expr_stmt|;
+else|else
+name|_putchar
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -355,14 +429,17 @@ operator|(
 name|CA
 operator|||
 name|UP
-operator|!=
-name|NULL
 operator|)
 condition|)
 name|destline
 operator|=
 name|outline
 expr_stmt|;
+if|if
+condition|(
+name|CA
+condition|)
+block|{
 name|cgp
 operator|=
 name|tgoto
@@ -374,10 +451,6 @@ argument_list|,
 name|destline
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|CA
-condition|)
 if|if
 condition|(
 name|plod
@@ -405,6 +478,7 @@ argument_list|,
 name|_putchar
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|plod
 argument_list|(
@@ -422,55 +496,43 @@ expr_stmt|;
 block|}
 end_block
 
-begin_function
-name|char
-name|_putchar
-parameter_list|(
-name|c
-parameter_list|)
-name|reg
-name|char
-name|c
-decl_stmt|;
-block|{
-name|putchar
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
-argument_list|(
-name|outf
-argument_list|,
-literal|"_PUTCHAR(%s)\n"
-argument_list|,
-name|unctrl
-argument_list|(
-name|c
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
+begin_comment
+comment|/*  * Move (slowly) to destination.  * Hard thing here is using home cursor on really deficient terminals.  * Otherwise just use cursor motions, hacking use of tabs and overtabbing  * and backspace.  */
+end_comment
 
 begin_decl_stmt
-specifier|extern
-name|bool
+specifier|static
+name|int
+name|plodcnt
+decl_stmt|,
 name|plodflg
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
+begin_macro
+name|plodput
+argument_list|(
+argument|c
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|plodflg
+condition|)
 name|plodcnt
-decl_stmt|;
-end_decl_stmt
+operator|--
+expr_stmt|;
+else|else
+name|_putchar
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_macro
 name|plod
@@ -479,15 +541,9 @@ argument|cnt
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|int
-name|cnt
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
-name|reg
+specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -495,15 +551,11 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-name|reg
+specifier|register
 name|int
 name|soutcol
 decl_stmt|,
 name|soutline
-decl_stmt|;
-name|reg
-name|char
-name|c
 decl_stmt|;
 name|plodcnt
 operator|=
@@ -519,11 +571,13 @@ name|soutline
 operator|=
 name|outline
 expr_stmt|;
+comment|/* 	 * Consider homing and moving down/right from there, vs moving 	 * directly with local motions to the right spot. 	 */
 if|if
 condition|(
 name|HO
 condition|)
 block|{
+comment|/* 		 * i is the cost to home and tab/space to the right to 		 * get to the proper column.  This assumes ND space costs 		 * 1 char.  So i+destcol is cost of motion with home. 		 */
 if|if
 condition|(
 name|GT
@@ -547,6 +601,7 @@ name|i
 operator|=
 name|destcol
 expr_stmt|;
+comment|/* 		 * j is cost to move locally without homing 		 */
 if|if
 condition|(
 name|destcol
@@ -554,6 +609,7 @@ operator|>=
 name|outcol
 condition|)
 block|{
+comment|/* if motion is to the right */
 name|j
 operator|=
 name|destcol
@@ -585,6 +641,7 @@ name|outcol
 expr_stmt|;
 block|}
 elseif|else
+comment|/* leftward motion only works if we can backspace. */
 if|if
 condition|(
 name|outcol
@@ -607,6 +664,7 @@ name|outcol
 operator|-
 name|destcol
 expr_stmt|;
+comment|/* cheaper to backspace */
 else|else
 name|j
 operator|=
@@ -614,6 +672,8 @@ name|i
 operator|+
 literal|1
 expr_stmt|;
+comment|/* impossibly expensive */
+comment|/* k is the absolute value of vertical distance */
 name|k
 operator|=
 name|outline
@@ -635,6 +695,7 @@ name|j
 operator|+=
 name|k
 expr_stmt|;
+comment|/* 		 * Decision.  We may not have a choice if no UP. 		 */
 if|if
 condition|(
 name|i
@@ -642,8 +703,18 @@ operator|+
 name|destline
 operator|<
 name|j
+operator|||
+operator|(
+operator|!
+name|UP
+operator|&&
+name|destline
+operator|<
+name|outline
+operator|)
 condition|)
 block|{
+comment|/* 			 * Cheaper to home.  Do it now and pretend it's a 			 * regular local motion. 			 */
 name|tputs
 argument_list|(
 name|HO
@@ -666,6 +737,7 @@ condition|(
 name|LL
 condition|)
 block|{
+comment|/* 			 * Quickly consider homing down and moving from there. 			 * Assume cost of LL is 2. 			 */
 name|k
 operator|=
 operator|(
@@ -685,6 +757,14 @@ operator|+
 literal|2
 operator|<
 name|j
+operator|&&
+operator|(
+name|k
+operator|<=
+literal|0
+operator|||
+name|UP
+operator|)
 condition|)
 block|{
 name|tputs
@@ -709,6 +789,22 @@ expr_stmt|;
 block|}
 block|}
 block|}
+elseif|else
+comment|/* 	 * No home and no up means it's impossible, so we return an 	 * incredibly big number to make cursor motion win out. 	 */
+if|if
+condition|(
+operator|!
+name|UP
+operator|&&
+name|destline
+operator|<
+name|outline
+condition|)
+return|return
+operator|(
+literal|500
+operator|)
+return|;
 if|if
 condition|(
 name|GT
@@ -728,7 +824,7 @@ name|i
 operator|=
 name|destcol
 expr_stmt|;
-comment|/* 	if (BT&& outcol> destcol&& (j = (((outcol+7)& ~7) - destcol - 1)>> 3)) { 		j *= (k = strlen(BT)); 		if ((k += (destcol&7))> 4) 			j += 8 - (destcol&7); 		else 			j += k; 	} else */
+comment|/* 	if (BT&& outcol> destcol&& (j = (((outcol+7)& ~7) - destcol - 1)>> 3)) { 		j *= (k = strlen(BT)); 		if ((k += (destcol&7))> 4) 			j += 8 - (destcol&7); 		else 			j += k; 	} 	else */
 name|j
 operator|=
 name|outcol
@@ -784,6 +880,21 @@ operator|!
 name|BC
 condition|)
 block|{
+comment|/* 		 * BUG: this doesn't take the (possibly long) length 		 * of CR into account. 		 */
+if|if
+condition|(
+name|CR
+condition|)
+name|tputs
+argument_list|(
+name|CR
+argument_list|,
+literal|0
+argument_list|,
+name|plodput
+argument_list|)
+expr_stmt|;
+else|else
 name|plodput
 argument_list|(
 literal|'\r'
@@ -794,6 +905,20 @@ condition|(
 name|NC
 condition|)
 block|{
+if|if
+condition|(
+name|NL
+condition|)
+name|tputs
+argument_list|(
+name|NL
+argument_list|,
+literal|0
+argument_list|,
+name|plodput
+argument_list|)
+expr_stmt|;
+else|else
 name|plodput
 argument_list|(
 literal|'\n'
@@ -820,6 +945,22 @@ block|{
 name|outline
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|NL
+operator|&&
+name|_pfast
+condition|)
+name|tputs
+argument_list|(
+name|NL
+argument_list|,
+literal|0
+argument_list|,
+name|plodput
+argument_list|)
+expr_stmt|;
+else|else
 name|plodput
 argument_list|(
 literal|'\n'
@@ -874,7 +1015,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 		if (BT&& outcol - destcol> 4+k) { 			tputs(BT, 0, plodput); 			outcol--; 			outcol&= ~7; 			continue; 		} */
+comment|/* 		if (BT&& outcol - destcol> k + 4) { 			tputs(BT, 0, plodput); 			outcol--; 			outcol&= ~7; 			continue; 		} */
 name|outcol
 operator|--
 expr_stmt|;
@@ -946,15 +1087,12 @@ control|)
 block|{
 name|i
 operator|=
-operator|(
+name|tabcol
+argument_list|(
 name|outcol
-operator|/
+argument_list|,
 name|HARDTABS
-operator|+
-literal|1
-operator|)
-operator|*
-name|HARDTABS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1068,6 +1206,7 @@ operator|<
 name|destcol
 condition|)
 block|{
+comment|/* 		 * move one char to the right.  We don't use ND space 		 * because it's better to just print the char we are 		 * moving over. 		 */
 if|if
 condition|(
 name|_win
@@ -1084,7 +1223,7 @@ operator|--
 expr_stmt|;
 else|else
 block|{
-name|c
+name|i
 operator|=
 name|_win
 operator|->
@@ -1107,7 +1246,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|c
+name|i
 operator|&
 name|_STANDOUT
 operator|)
@@ -1122,7 +1261,7 @@ operator|)
 condition|)
 name|putchar
 argument_list|(
-name|c
+name|i
 argument_list|)
 expr_stmt|;
 else|else
@@ -1190,112 +1329,73 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Move (slowly) to destination.  * Hard thing here is using home cursor on really deficient terminals.  * Otherwise just use cursor motions, hacking use of tabs and overtabbing  * and backspace.  */
+comment|/*  * Return the column number that results from being in column col and  * hitting a tab, where tabs are set every ts columns.  Work right for  * the case where col> COLS, even if ts does not divide COLS.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|bool
-name|plodflg
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
-name|plodput
+name|tabcol
 argument_list|(
-argument|c
+argument|col
+argument_list|,
+argument|ts
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|reg
-name|char
-name|c
+name|int
+name|col
+decl_stmt|,
+name|ts
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|offset
+decl_stmt|,
+name|result
+decl_stmt|;
 if|if
 condition|(
-name|plodflg
+name|col
+operator|>=
+name|COLS
 condition|)
-name|plodcnt
-operator|--
+block|{
+name|offset
+operator|=
+name|COLS
+operator|*
+operator|(
+name|col
+operator|/
+name|COLS
+operator|)
 expr_stmt|;
+name|col
+operator|-=
+name|offset
+expr_stmt|;
+block|}
 else|else
-block|{
-name|putchar
-argument_list|(
-name|c
-argument_list|)
+name|offset
+operator|=
+literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
-argument_list|(
-name|outf
-argument_list|,
-literal|"PLODPUT(%s)\n"
-argument_list|,
-name|unctrl
-argument_list|(
-name|c
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-block|}
-end_block
-
-begin_comment
-comment|/*  * Put with padding  */
-end_comment
-
-begin_macro
-name|putpad
-argument_list|(
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|fprintf
-argument_list|(
-name|outf
-argument_list|,
-literal|"PUTPAD: _puts(\"%s\")\n"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|_puts
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
+return|return
+name|col
+operator|+
+name|ts
+operator|-
+operator|(
+name|col
+operator|%
+name|ts
+operator|)
+operator|+
+name|offset
+return|;
 block|}
 end_block
 
