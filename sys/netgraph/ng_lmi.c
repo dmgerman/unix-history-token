@@ -1405,6 +1405,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Allocate a meta struct (and leave some slop for options to be 	 * added by other modules). */
 comment|/* MALLOC(meta, meta_p, sizeof( struct ng_meta) + META_PAD, 	 * M_NETGRAPH, M_NOWAIT); */
 name|MALLOC
