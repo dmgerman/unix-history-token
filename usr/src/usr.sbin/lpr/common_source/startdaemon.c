@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startdaemon.c	5.4 (Berkeley) %G%"
+literal|"@(#)startdaemon.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,52 +347,34 @@ end_expr_stmt
 begin_block
 block|{
 specifier|extern
+name|int
+name|errno
+decl_stmt|;
+specifier|extern
 name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-specifier|extern
 name|char
 modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
+name|strerror
+parameter_list|()
+function_decl|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"%s: %s: "
+literal|"%s: %s: %s\n"
 argument_list|,
 name|name
 argument_list|,
 name|msg
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-name|errno
-operator|<
-name|sys_nerr
-condition|?
-name|sys_errlist
-index|[
-name|errno
-index|]
-else|:
-literal|"Unknown error"
 argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-name|putchar
+name|strerror
 argument_list|(
-literal|'\n'
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

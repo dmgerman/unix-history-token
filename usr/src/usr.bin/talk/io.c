@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.3 (Berkeley) %G%"
+literal|"@(#)io.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_comment
 comment|/*  * This file contains the I/O handling and the exchange of   * edit characters. This connection itself is established in  * ctl.c  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_include
 include|#
@@ -53,7 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<string.h>
 end_include
 
 begin_define
@@ -73,13 +79,6 @@ end_define
 begin_comment
 comment|/* the bit mask for standard 					   input */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * The routine to do the actual talking  */
@@ -322,15 +321,6 @@ name|sys_nerr
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * p_error prints the system error message on the standard location  * on the screen and then exits. (i.e. a curses version of perror)  */
 end_comment
@@ -351,27 +341,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|sys
-decl_stmt|;
-name|sys
-operator|=
-literal|"Unknown error"
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|<
-name|sys_nerr
-condition|)
-name|sys
-operator|=
-name|sys_errlist
-index|[
-name|errno
-index|]
-expr_stmt|;
 name|wmove
 argument_list|(
 name|my_win
@@ -397,7 +366,10 @@ literal|"[%s : %s (%d)]\n"
 argument_list|,
 name|string
 argument_list|,
-name|sys
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|,
 name|errno
 argument_list|)

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.13 (Berkeley) %G%"
+literal|"@(#)ld.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,19 +59,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -95,13 +95,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -4830,22 +4836,16 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|int
 name|bss
 decl_stmt|;
 name|struct
 name|stat
 name|stbuf
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|ofilemode
 operator|=
@@ -4894,10 +4894,10 @@ name|error
 argument_list|(
 literal|1
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* kludge */

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.15 (Berkeley) %G%"
+literal|"@(#)file.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -58,22 +64,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -596,23 +586,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s\n"
+name|stderr
 argument_list|,
-operator|(
-name|unsigned
-operator|)
+literal|"file: %s: %s\n"
+argument_list|,
+name|file
+argument_list|,
+name|strerror
+argument_list|(
 name|errno
-operator|<
-name|sys_nerr
-condition|?
-name|sys_errlist
-index|[
-name|errno
-index|]
-else|:
-literal|"Cannot stat"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -764,23 +749,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s\n"
+name|stderr
 argument_list|,
-operator|(
-name|unsigned
-operator|)
+literal|"file: %s: %s\n"
+argument_list|,
+name|file
+argument_list|,
+name|strerror
+argument_list|(
 name|errno
-operator|<
-name|sys_nerr
-condition|?
-name|sys_errlist
-index|[
-name|errno
-index|]
-else|:
-literal|"Cannot read"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;

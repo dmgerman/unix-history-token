@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tftp.c	5.7 (Berkeley) %G%"
+literal|"@(#)tftp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1587,6 +1587,12 @@ begin_block
 block|{
 specifier|register
 name|struct
+name|errmsg
+modifier|*
+name|pe
+decl_stmt|;
+specifier|register
+name|struct
 name|tftphdr
 modifier|*
 name|tp
@@ -1594,18 +1600,11 @@ decl_stmt|;
 name|int
 name|length
 decl_stmt|;
-specifier|register
-name|struct
-name|errmsg
-modifier|*
-name|pe
-decl_stmt|;
-specifier|extern
 name|char
 modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
+name|strerror
+parameter_list|()
+function_decl|;
 name|tp
 operator|=
 operator|(
@@ -1676,12 +1675,12 @@ name|pe
 operator|->
 name|e_msg
 operator|=
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|error
 operator|-
 literal|100
-index|]
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->

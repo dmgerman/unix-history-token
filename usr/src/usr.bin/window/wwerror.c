@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwerror.c	3.5 (Berkeley) %G%"
+literal|"@(#)wwerror.c	3.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,15 @@ modifier|*
 name|wwerror
 parameter_list|()
 block|{
-extern|extern errno;
 specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|char
 modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
+name|strerror
+parameter_list|()
+function_decl|;
 switch|switch
 condition|(
 name|wwerrno
@@ -62,10 +64,10 @@ case|case
 name|WWE_SYS
 case|:
 return|return
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 return|;
 case|case
 name|WWE_NOMEM
