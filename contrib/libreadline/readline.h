@@ -3162,7 +3162,11 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-literal|1
+operator|!
+name|defined
+argument_list|(
+name|RL_NO_COMPAT
+argument_list|)
 end_if
 
 begin_comment
@@ -4473,6 +4477,16 @@ directive|if
 operator|!
 name|defined
 argument_list|(
+name|RL_NO_COMPAT
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|savestring
 argument_list|)
 end_if
@@ -4502,6 +4516,11 @@ end_decl_stmt
 begin_comment
 comment|/* XXX backwards compatibility */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
