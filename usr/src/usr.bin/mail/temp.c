@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)temp.c	1.1 %G%"
+literal|"@(#)temp.c	1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,7 +95,7 @@ decl_stmt|;
 name|char
 name|uname
 index|[
-literal|9
+name|PATHSIZE
 index|]
 decl_stmt|;
 specifier|register
