@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)suff.c	8.2 (Berkeley) %G%"
+literal|"@(#)suff.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5446,6 +5446,12 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
+name|targ
+operator|->
+name|children
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	     * Allocate room for the prefix, whose end is found by subtracting 	     * the length of the suffix from the end of the name. 	     */
 name|prefLen
 operator|=
@@ -5601,6 +5607,12 @@ name|Src
 operator|*
 operator|)
 name|NULL
+expr_stmt|;
+name|targ
+operator|->
+name|children
+operator|=
+literal|0
 expr_stmt|;
 name|targ
 operator|->
