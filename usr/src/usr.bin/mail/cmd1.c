@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.16 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,6 +588,9 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|readline
 argument_list|(
 name|setinput
@@ -596,6 +599,8 @@ name|mp
 argument_list|)
 argument_list|,
 name|headline
+argument_list|,
+name|LINESIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1695,6 +1700,8 @@ argument_list|(
 name|ibuf
 argument_list|,
 name|linebuf
+argument_list|,
+name|LINESIZE
 argument_list|)
 operator|<
 literal|0

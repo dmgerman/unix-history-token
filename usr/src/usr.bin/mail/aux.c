@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.15 (Berkeley) %G%"
+literal|"@(#)aux.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -397,6 +397,8 @@ argument_list|(
 name|ibuf
 argument_list|,
 name|linebuf
+argument_list|,
+name|LINESIZE
 argument_list|)
 operator|<
 literal|0
@@ -551,6 +553,8 @@ argument_list|(
 name|f
 argument_list|,
 name|linebuf
+argument_list|,
+name|LINESIZE
 argument_list|)
 operator|)
 operator|<=
@@ -679,6 +683,8 @@ argument_list|(
 name|f
 argument_list|,
 name|line2
+argument_list|,
+name|LINESIZE
 argument_list|)
 operator|)
 operator|<
@@ -2024,6 +2030,8 @@ argument_list|(
 name|ibuf
 argument_list|,
 name|linebuf
+argument_list|,
+name|LINESIZE
 argument_list|)
 operator|<
 literal|0
@@ -2128,6 +2136,8 @@ argument_list|(
 name|ibuf
 argument_list|,
 name|linebuf
+argument_list|,
+name|LINESIZE
 argument_list|)
 operator|<
 literal|0

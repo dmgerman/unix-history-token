@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.18 (Berkeley) %G%"
+literal|"@(#)fio.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -644,6 +644,8 @@ argument_list|(
 argument|ibuf
 argument_list|,
 argument|linebuf
+argument_list|,
+argument|linesize
 argument_list|)
 end_macro
 
@@ -678,7 +680,7 @@ name|fgets
 argument_list|(
 name|linebuf
 argument_list|,
-name|LINESIZE
+name|linesize
 argument_list|,
 name|ibuf
 argument_list|)
