@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	6.3	84/11/27	*/
+comment|/*	ut.c	6.4	85/03/13	*/
 end_comment
 
 begin_include
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
 end_include
 
 begin_include
@@ -397,6 +403,12 @@ name|short
 name|sc_tact
 decl_stmt|;
 comment|/* timeout is active flag */
+name|struct
+name|tty
+modifier|*
+name|sc_ttyp
+decl_stmt|;
+comment|/* record user's tty for errors */
 block|}
 name|tj_softc
 index|[
@@ -934,6 +946,14 @@ operator|->
 name|sc_dens
 operator|=
 name|dens
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ttyp
+operator|=
+name|u
+operator|.
+name|u_ttyp
 expr_stmt|;
 comment|/* 	 * For 6250 bpi take exclusive use of the UNIBUS. 	 */
 name|ui
@@ -2586,8 +2606,12 @@ operator|!=
 name|UT_NRZI
 condition|)
 block|{
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"ut%d: soft error bn%d cs1=%b er=%b cs2=%b ds=%b\n"
 argument_list|,
 name|tjunit
@@ -2787,8 +2811,12 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 		 * Couldn't recover error. 		 */
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"ut%d: hard error bn%d cs1=%b er=%b cs2=%b ds=%b\n"
 argument_list|,
 name|tjunit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	6.3	84/11/27	*/
+comment|/*	ts.c	6.4	85/03/13	*/
 end_comment
 
 begin_include
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tty.h"
 end_include
 
 begin_include
@@ -343,6 +349,12 @@ name|short
 name|sc_mapped
 decl_stmt|;
 comment|/* is ts_sfotc mapped in Unibus space? */
+name|struct
+name|tty
+modifier|*
+name|sc_ttyp
+decl_stmt|;
+comment|/* record user's tty for errors */
 block|}
 name|ts_softc
 index|[
@@ -808,6 +820,14 @@ operator|->
 name|sc_lastiow
 operator|=
 literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_ttyp
+operator|=
+name|u
+operator|.
+name|u_ttyp
 expr_stmt|;
 return|return
 operator|(
@@ -2596,8 +2616,12 @@ name|s_xs0
 operator|&
 name|TS_WLE
 condition|)
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"ts%d: write locked\n"
 argument_list|,
 name|TSUNIT
@@ -2622,8 +2646,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"ts%d: offline\n"
 argument_list|,
 name|TSUNIT
@@ -2637,8 +2665,12 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * Couldn't recover error 		 */
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"ts%d: hard error bn%d xs0=%b"
 argument_list|,
 name|TSUNIT
@@ -2669,8 +2701,12 @@ name|sc_sts
 operator|.
 name|s_xs1
 condition|)
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|" xs1=%b"
 argument_list|,
 name|sc
@@ -2690,8 +2726,12 @@ name|sc_sts
 operator|.
 name|s_xs2
 condition|)
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|" xs2=%b"
 argument_list|,
 name|sc
@@ -2711,8 +2751,12 @@ name|sc_sts
 operator|.
 name|s_xs3
 condition|)
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|" xs3=%b"
 argument_list|,
 name|sc
@@ -2724,8 +2768,12 @@ argument_list|,
 name|TSXS3_BITS
 argument_list|)
 expr_stmt|;
-name|printf
+name|tprintf
 argument_list|(
+name|sc
+operator|->
+name|sc_ttyp
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
