@@ -234,6 +234,17 @@ begin_comment
 comment|/* Intel Pentium III */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CPU_4
+value|16
+end_define
+
+begin_comment
+comment|/* Intel Pentium 4 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
