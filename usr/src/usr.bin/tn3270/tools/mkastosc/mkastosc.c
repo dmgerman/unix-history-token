@@ -57,7 +57,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../general.h"
+file|"../general/general.h"
 end_include
 
 begin_define
@@ -69,7 +69,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../keyboard/m4.out"
+file|"../ascii/m4.out"
 end_include
 
 begin_undef

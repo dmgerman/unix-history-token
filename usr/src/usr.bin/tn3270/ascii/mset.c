@@ -80,7 +80,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"keyboard/state.h"
+file|"state.h"
 end_include
 
 begin_define
@@ -92,19 +92,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"keyboard/m4.out"
+file|"m4.out"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../system/globals.h"
+file|"../general/globals.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"keyboard/map3270.ext"
+file|"map3270.ext"
 end_include
 
 begin_struct
