@@ -3446,6 +3446,10 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|MAKEFILE
+decl_stmt|;
 name|int
 name|setMAKEFILE
 decl_stmt|;
@@ -3542,6 +3546,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|MAKEFILE
+operator|=
+name|fname
+expr_stmt|;
 name|fname
 operator|=
 name|path
@@ -3564,6 +3572,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|MAKEFILE
+operator|=
+name|fname
+expr_stmt|;
 name|fname
 operator|=
 name|path
@@ -3633,6 +3645,8 @@ operator|(
 name|FALSE
 operator|)
 return|;
+name|MAKEFILE
+operator|=
 name|fname
 operator|=
 name|name
@@ -3648,7 +3662,7 @@ name|Var_Set
 argument_list|(
 literal|"MAKEFILE"
 argument_list|,
-name|fname
+name|MAKEFILE
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)
