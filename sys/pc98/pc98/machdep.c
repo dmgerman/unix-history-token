@@ -6880,6 +6880,9 @@ name|PG_RW
 operator||
 name|PG_U
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* 	 * map page 1 R/W into the kernel page table so we can use it 	 * as a buffer.  The kernel will unmap this page later. 	 */
 name|pte
 operator|=
@@ -6910,9 +6913,6 @@ name|PG_RW
 operator||
 name|PG_V
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 comment|/* 	 * get memory map with INT 15:E820 	 */
 name|vmc
 operator|.
