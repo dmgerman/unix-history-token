@@ -160,7 +160,7 @@ begin_function_decl
 name|void
 name|die
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -310,10 +310,6 @@ name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
-operator|(
-name|__sighandler_t
-operator|*
-operator|)
 name|die
 argument_list|)
 expr_stmt|;
@@ -1398,7 +1394,12 @@ end_function
 begin_function
 name|void
 name|die
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|fprintf
 argument_list|(
