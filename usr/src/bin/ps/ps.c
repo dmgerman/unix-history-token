@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.8 (Berkeley) %G%"
+literal|"@(#)ps.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,7 +287,7 @@ define|#
 directive|define
 name|X_MBMAP
 value|21
-literal|"_nch"
+literal|"_namecache"
 block|,
 define|#
 directive|define
