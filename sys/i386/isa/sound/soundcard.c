@@ -1961,10 +1961,6 @@ name|char
 modifier|*
 name|dname
 decl_stmt|;
-name|void
-modifier|*
-name|tmp
-decl_stmt|;
 comment|/*      * Associate interrupt handlers with devices.  XXX this may be incomplete.      */
 name|dname
 operator|=
