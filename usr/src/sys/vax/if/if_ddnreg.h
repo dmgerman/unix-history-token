@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	@(#)if_ddnreg.h	6.2 (Berkeley) %G% */
+end_comment
+
+begin_comment
 comment|/************************************************************************\       ________________________________________________________     /                                                        \    |          AAA          CCCCCCCCCCCCCC    CCCCCCCCCCCCCC   |    |         AAAAA        CCCCCCCCCCCCCCCC  CCCCCCCCCCCCCCCC  |    |        AAAAAAA       CCCCCCCCCCCCCCCCC CCCCCCCCCCCCCCCCC |    |       AAAA AAAA      CCCC              CCCC              |    |      AAAA   AAAA     CCCC              CCCC              |    |     AAAA     AAAA    CCCC              CCCC              |    |    AAAA       AAAA   CCCC              CCCC              |    |   AAAA  AAAAAAAAAAA  CCCCCCCCCCCCCCCCC CCCCCCCCCCCCCCCCC |    |  AAAA    AAAAAAAAAAA CCCCCCCCCCCCCCCC  CCCCCCCCCCCCCCCC  |    | AAAA      AAAAAAAAA   CCCCCCCCCCCCCC    CCCCCCCCCCCCCC   |     \________________________________________________________/  	Copyright (c) 1985 by Advanced Computer Communications 	720 Santa Barbara Street, Santa Barbara, California  93101 	(805) 963-9431  	This software may be duplicated and used on systems 	which are licensed to run U.C. Berkeley versions of 	the UNIX operating system.  Any duplication of any 	part of this software must include a copy of ACC's 	copyright notice.   File: 		if_ddnreg.h  Author: 		Art Berggreen  Project: 		4.2 DDN X.25 network driver  Function: 		This file contains definitions of the hardware 		interface of the ACP625 (IF-11/X25).  Components:  Revision History: 		16-May-1985:	V1.0 - First release. 				Art Berggreen.  \************************************************************************/
 end_comment
 
