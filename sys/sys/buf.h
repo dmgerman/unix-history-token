@@ -1,7 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)buf.h	7.11 (Berkeley) 5/9/90  *	$Id$  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)buf.h	7.11 (Berkeley) 5/9/90  *	$Id: buf.h,v 1.2 1993/10/16 17:16:21 rgrimes Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_BUF_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SYS_BUF_H_
+value|1
+end_define
 
 begin_comment
 comment|/*  * The header for buffers in the buffer pool and otherwise used  * to describe a block i/o request is given here.  *  * Each buffer in the pool is usually doubly linked into 2 lists:  * hashed into a chain by<dev,blkno> so it can be located in the cache,  * and (usually) on (one of several) queues.  These lists are circular and  * doubly linked for easy removal.  *  * There are currently three queues for buffers:  *	one for buffers which must be kept permanently (super blocks)  * 	one for buffers containing ``useful'' information (the cache)  *	one for buffers containing ``non-useful'' information  *		(and empty buffers, pushed onto the front)  * The latter two queues contain the buffers which are available for  * reallocation, are kept in lru order.  When not on one of these queues,  * the buffers are ``checked out'' to drivers which use the available list  * pointers to keep track of them in their i/o active queues.  */
@@ -345,6 +358,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|buf
 modifier|*
@@ -357,6 +371,7 @@ comment|/* the buffer pool itself */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|buffers
@@ -364,6 +379,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nbuf
 decl_stmt|;
@@ -374,6 +390,7 @@ comment|/* number of buffer headers */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bufpages
 decl_stmt|;
@@ -384,6 +401,7 @@ comment|/* number of memory pages in the buffer pool */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|buf
 modifier|*
@@ -396,12 +414,14 @@ comment|/* swap I/O headers */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nswbuf
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|bufhd
 name|bufhash
@@ -416,6 +436,7 @@ comment|/* heads of hash lists */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|buf
 name|bfreelist
@@ -430,6 +451,7 @@ comment|/* heads of available lists */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|buf
 name|bswlist
@@ -441,6 +463,7 @@ comment|/* head of free swap header list */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|buf
 modifier|*
@@ -1018,6 +1041,15 @@ end_define
 
 begin_comment
 comment|/* do all allocations synchronously */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_BUF_H_ */
 end_comment
 
 end_unit
