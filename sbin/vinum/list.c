@@ -4063,9 +4063,13 @@ case|case
 name|loginfo_user_bp
 case|:
 comment|/* this is the bp when strategy is called */
+case|case
+name|loginfo_sdio
+case|:
+comment|/* subdisk I/O */
 name|printf
 argument_list|(
-literal|"%s 1VS %s %p\t%d.%-6d 0x%-9x\t%ld\n"
+literal|"%s %dVS %s %p\t%d.%-6d 0x%-9x\t%ld\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4074,6 +4078,10 @@ name|rq
 operator|.
 name|timestamp
 argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|type
 argument_list|,
 name|rq
 operator|.
@@ -4123,9 +4131,13 @@ case|case
 name|loginfo_user_bpl
 case|:
 comment|/* and this is the bp at launch time */
+case|case
+name|loginfo_sdiol
+case|:
+comment|/* subdisk I/O launch */
 name|printf
 argument_list|(
-literal|"%s 2LR %s %p\t%d.%-6d 0x%-9x\t%ld\n"
+literal|"%s %dLR %s %p\t%d.%-6d 0x%-9x\t%ld\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4134,6 +4146,10 @@ name|rq
 operator|.
 name|timestamp
 argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|type
 argument_list|,
 name|rq
 operator|.
