@@ -1058,35 +1058,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Wildcard Socket  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*pre-RFC2553*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6_IS_ADDR_ANY
-parameter_list|(
-name|a
-parameter_list|)
-value|IN6_IS_ADDR_UNSPECIFIED(a)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
