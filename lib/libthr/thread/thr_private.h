@@ -1901,6 +1901,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * libthread_db.so support.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|int
+name|_libthr_debug
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+literal|0
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Undefine the storage class specifier: */
 end_comment
 
