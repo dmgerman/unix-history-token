@@ -107,6 +107,10 @@ directive|define
 name|IPV6_FW_MAX_PORTS
 value|10
 comment|/* A reasonable maximum */
+name|u_int
+name|fw_ipflg
+decl_stmt|;
+comment|/* IP flags word */
 name|u_short
 name|fw_pts
 index|[
@@ -511,6 +515,32 @@ comment|/* All possible flag bits mask		*/
 end_comment
 
 begin_comment
+comment|/*   * Flags for the 'fw_ipflg' field, for comparing values of ip and its protocols. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_FW_IF_TCPEST
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* established TCP connection	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6_FW_IF_TCPMSK
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* mask of all TCP values */
+end_comment
+
+begin_comment
 comment|/*  * For backwards compatibility with rules specifying "via iface" but  * not restricted to only "in" or "out" packets, we define this combination  * of bits to represent this configuration.  */
 end_comment
 
@@ -633,13 +663,6 @@ define|#
 directive|define
 name|IPV6_FW_TCPF_URG
 value|TH_URG
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPV6_FW_TCPF_ESTAB
-value|0x40
 end_define
 
 begin_comment
