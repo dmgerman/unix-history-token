@@ -210,5 +210,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ep_get_macaddr
+parameter_list|(
+name|struct
+name|ep_softc
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

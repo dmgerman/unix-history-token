@@ -275,6 +275,23 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For some reason the 3c574 needs this. 	 */
+name|ep_get_macaddr
+argument_list|(
+name|sc
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
+argument_list|)
+expr_stmt|;
 name|ep_free
 argument_list|(
 name|dev
