@@ -1,20 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_format[] = "@(#)format.h	1.3";  *  * format parser definitions  */
+comment|/* char id_format[] = "@(#)format.h	1.4";  *  * format parser definitions  */
 end_comment
 
 begin_struct
 struct|struct
 name|syl
 block|{
-name|int
+name|short
 name|op
 decl_stmt|,
 name|p1
 decl_stmt|,
 name|p2
 decl_stmt|,
-name|p3
+name|rpcnt
 decl_stmt|;
 block|}
 struct|;
@@ -302,23 +302,39 @@ name|FMTERR
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|FMT_COMP
+value|0x101
+end_define
+
+begin_comment
+comment|/* indicates pre-compiled formats */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
 name|syl
-name|syl
-index|[]
+modifier|*
+name|syl_ptr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|pc
-decl_stmt|,
 name|parenlvl
 decl_stmt|,
 name|revloc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|short
+name|pc
 decl_stmt|;
 end_decl_stmt
 

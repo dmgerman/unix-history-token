@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.5";  *  * formatted read routines  */
+comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.6";  *  * formatted read routines  */
 end_comment
 
 begin_include
@@ -34,6 +34,14 @@ name|c
 parameter_list|)
 value|(c>='a'&& c<='z')
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|s_init
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|rd_ed
@@ -137,13 +145,20 @@ break|break;
 case|case
 name|A
 case|:
-name|p
-operator|->
-name|p1
+name|n
 operator|=
+operator|(
+name|rd_AW
+argument_list|(
+name|ptr
+argument_list|,
 name|len
+argument_list|,
+name|len
+argument_list|)
+operator|)
 expr_stmt|;
-comment|/* cheap trick */
+break|break;
 case|case
 name|AW
 case|:
@@ -294,13 +309,13 @@ return|return
 operator|(
 name|rd_POS
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
+operator|&
+name|s_init
+index|[
 name|p
 operator|->
 name|p1
+index|]
 argument_list|)
 operator|)
 return|;
@@ -316,13 +331,13 @@ name|p
 operator|->
 name|p1
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
+operator|&
+name|s_init
+index|[
 name|p
 operator|->
 name|p2
+index|]
 argument_list|)
 operator|)
 return|;

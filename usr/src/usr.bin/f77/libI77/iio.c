@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_iio[] = "@(#)iio.c	1.5";  *  * internal (character array) i/o  */
+comment|/* char id_iio[] = "@(#)iio.c	1.6";  *  * internal (character array) i/o  */
 end_comment
 
 begin_include
@@ -609,9 +609,7 @@ expr_stmt|;
 if|if
 condition|(
 name|pars_f
-argument_list|(
-name|fmtbuf
-argument_list|)
+argument_list|()
 condition|)
 name|err
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_sfe[] = "@(#)sfe.c	1.8";  *  * sequential formatted external routines  */
+comment|/* char id_sfe[] = "@(#)sfe.c	1.9";  *  * sequential formatted external routines  */
 end_comment
 
 begin_include
@@ -145,9 +145,7 @@ expr_stmt|;
 if|if
 condition|(
 name|pars_f
-argument_list|(
-name|fmtbuf
-argument_list|)
+argument_list|()
 condition|)
 name|err
 argument_list|(
@@ -734,9 +732,7 @@ expr_stmt|;
 if|if
 condition|(
 name|pars_f
-argument_list|(
-name|fmtbuf
-argument_list|)
+argument_list|()
 condition|)
 name|err
 argument_list|(
