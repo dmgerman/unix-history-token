@@ -1956,7 +1956,7 @@ operator|||
 operator|*
 name|pager
 operator|==
-name|NULL
+literal|'\0'
 condition|)
 name|pager
 operator|=
