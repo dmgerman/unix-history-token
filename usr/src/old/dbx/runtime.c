@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runtime.c 1.7 %G%"
+literal|"@(#)runtime.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1260,6 +1260,15 @@ name|f
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|not
+name|isinline
+argument_list|(
+name|f
+argument_list|)
+condition|)
+block|{
 name|printparams
 argument_list|(
 name|f
@@ -1267,6 +1276,7 @@ argument_list|,
 name|frp
 argument_list|)
 expr_stmt|;
+block|}
 name|line
 operator|=
 name|srcline
@@ -1337,6 +1347,24 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|isinline
+argument_list|(
+name|f
+argument_list|)
+condition|)
+block|{
+name|f
+operator|=
+name|container
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|frp
 operator|=
 name|nextframe
@@ -1360,6 +1388,7 @@ operator|->
 name|save_pc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 do|while
