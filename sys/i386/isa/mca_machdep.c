@@ -293,8 +293,8 @@ operator|(
 name|vmf
 operator|.
 name|vmf_flags
-operator|!=
-literal|0
+operator|&
+literal|0x01
 operator|)
 condition|)
 block|{
