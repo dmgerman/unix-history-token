@@ -466,8 +466,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*   * Shared mutex to restrict busywaits between smp_rendezvous() and  * smp(_targeted)_tlb_shootdown().  A deadlock occurs if both of these  * functions trigger at once and cause multiple CPUs to busywait with  * interrupts disabled.   */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|struct
 name|mtx
 name|smp_rv_mtx

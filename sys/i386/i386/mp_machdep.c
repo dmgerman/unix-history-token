@@ -722,13 +722,6 @@ name|smp_tlb_wait
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|mtx
-name|smp_tlb_mtx
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Local data and functions.  */
 end_comment
@@ -1549,18 +1542,6 @@ name|GCODE_SEL
 argument_list|,
 name|SEL_KPL
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|smp_tlb_mtx
-argument_list|,
-literal|"tlb"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* Set boot_cpu_id if needed. */
@@ -3993,7 +3974,7 @@ comment|/* no other cpus */
 name|mtx_assert
 argument_list|(
 operator|&
-name|smp_tlb_mtx
+name|smp_rv_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -4251,7 +4232,7 @@ block|}
 name|mtx_assert
 argument_list|(
 operator|&
-name|smp_tlb_mtx
+name|smp_rv_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
