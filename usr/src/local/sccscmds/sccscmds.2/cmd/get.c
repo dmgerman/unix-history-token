@@ -45,7 +45,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)get.c	4.10	%G%"
+literal|"@(#)get.c	4.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3701,6 +3701,13 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+else|else
+operator|*
+name|tp
+operator|++
+operator|=
+literal|'%'
+expr_stmt|;
 block|}
 operator|*
 name|tp
