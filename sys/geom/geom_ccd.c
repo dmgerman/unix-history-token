@@ -2494,6 +2494,10 @@ expr_stmt|;
 if|if
 condition|(
 name|sc
+operator|!=
+name|NULL
+operator|&&
+name|sc
 operator|->
 name|sc_unit
 operator|==
@@ -3318,6 +3322,11 @@ name|softc
 expr_stmt|;
 if|if
 condition|(
+name|cs
+operator|==
+name|NULL
+operator|||
+operator|(
 name|unit
 operator|>=
 literal|0
@@ -3327,6 +3336,7 @@ operator|!=
 name|cs
 operator|->
 name|sc_unit
+operator|)
 condition|)
 continue|continue;
 name|sbuf_printf
