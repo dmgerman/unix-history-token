@@ -840,7 +840,7 @@ name|defined
 argument_list|(
 name|LAZY_PS
 argument_list|)
-literal|"aCcefghjLlM:mN:O:o:p:rSTt:U:uv:wxZ"
+literal|"aCcefghjLlM:mN:O:o:p:rSTt:U:uvwxZ"
 argument_list|)
 operator|)
 operator|!=
@@ -849,7 +849,7 @@ literal|1
 condition|)
 else|#
 directive|else
-literal|"aCceghjLlM:mN:O:o:p:rSTt:U:uv:wxZ"
+literal|"aCceghjLlM:mN:O:o:p:rSTt:U:uvwxZ"
 block|)
 end_function
 
