@@ -1441,13 +1441,13 @@ literal|"ums_attach: Y\t%d/%d\n"
 operator|,
 name|sc
 operator|->
-name|sc_loc_x
+name|sc_loc_y
 operator|.
 name|pos
 operator|,
 name|sc
 operator|->
-name|sc_loc_x
+name|sc_loc_y
 operator|.
 name|size
 operator|)
