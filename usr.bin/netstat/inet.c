@@ -2327,6 +2327,41 @@ argument_list|,
 literal|"\t%lu cookie%s received\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sack_recovery_episode
+argument_list|,
+literal|"\t%lu SACK recovery episode%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sack_rexmits
+argument_list|,
+literal|"\t%lu segment rexmit%s in SACK recovery episodes\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sack_rexmit_bytes
+argument_list|,
+literal|"\t%lu byte rexmit%s in SACK recovery episodes\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sack_rcv_blocks
+argument_list|,
+literal|"\t%lu SACK option%s (SACK blocks) received\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_sack_send_blocks
+argument_list|,
+literal|"\t%lu SACK option%s (SACK blocks) sent\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
