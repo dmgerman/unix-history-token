@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)save.c	5.1 (Berkeley) %G%"
+literal|"@(#)save.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,6 +597,9 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* 	 * initialize some necessary values 	 */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|Initstr
