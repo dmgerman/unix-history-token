@@ -4070,7 +4070,7 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-name|u_short
+name|u_int
 name|init_addr
 init|=
 name|ED_CNET98_INIT
