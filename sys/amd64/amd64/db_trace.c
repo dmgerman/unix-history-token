@@ -1071,11 +1071,11 @@ decl_stmt|;
 name|db_expr_t
 name|offset
 decl_stmt|;
+name|c_db_sym_t
+name|sym
+decl_stmt|;
 specifier|const
 name|char
-modifier|*
-name|sym
-decl_stmt|,
 modifier|*
 name|name
 decl_stmt|;
