@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_ASYNC_COOKIE
-value|886473716
+value|886473717
 end_define
 
 begin_comment
@@ -132,10 +132,6 @@ name|u_char
 name|enabled
 decl_stmt|;
 comment|/* Turn encoding on/off */
-name|u_char
-name|acfcomp
-decl_stmt|;
-comment|/* Address/control field compression */
 name|u_int16_t
 name|amru
 decl_stmt|;
