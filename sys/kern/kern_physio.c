@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.11 1995/05/30 08:05:36 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.12 1995/09/08 11:08:36 bde Exp $  */
 end_comment
 
 begin_include
@@ -373,6 +373,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+condition|)
+block|{
+if|if
+condition|(
 name|rw
 operator|&&
 operator|!
@@ -426,11 +435,13 @@ goto|goto
 name|doerror
 goto|;
 block|}
+comment|/* bring buffer into kernel space */
 name|vmapbuf
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* perform transfer */
 call|(
 modifier|*
@@ -476,6 +487,15 @@ argument_list|(
 name|spl
 argument_list|)
 expr_stmt|;
+comment|/* release mapping into kernel space */
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+condition|)
 name|vunmapbuf
 argument_list|(
 name|bp
