@@ -891,30 +891,106 @@ argument_list|)
 undef|#
 directive|undef
 name|ATOMIC_ACQ_REL
-comment|/*  * We assume that a = b will do atomic loads and stores.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
 define|#
 directive|define
 name|ATOMIC_STORE_LOAD
 parameter_list|(
 name|TYPE
+parameter_list|,
+name|LOP
+parameter_list|,
+name|SOP
+parameter_list|)
+define|\
+value|u_##TYPE	atomic_load_acq_##TYPE(volatile u_##TYPE *p);	\ void		atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v);
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I386_CPU
+argument_list|)
+comment|/*  * We assume that a = b will do atomic loads and stores.  *  * XXX: This is _NOT_ safe on a P6 or higher because it does not guarantee  * memory ordering.  These should only be used on a 386.  */
+define|#
+directive|define
+name|ATOMIC_STORE_LOAD
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|LOP
+parameter_list|,
+name|SOP
 parameter_list|)
 define|\
 value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	return (*p);					\ }							\ 							\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	*p = v;						\ 	__asm __volatile("" : : : "memory");		\ }
+else|#
+directive|else
+define|#
+directive|define
+name|ATOMIC_STORE_LOAD
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|LOP
+parameter_list|,
+name|SOP
+parameter_list|)
+define|\
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "+a" (res),
+comment|/* 0 (result) */
+value|\ 	  "+m" (*p)
+comment|/* 1 */
+value|\ 	: : "memory");				 	\ 							\ 	return (res);					\ }							\ 							\
+comment|/*							\  * The XCHG instruction asserts LOCK automagically.	\  */
+value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(SOP				\ 	: "+m" (*p),
+comment|/* 0 */
+value|\ 	  "+r" (v)
+comment|/* 1 */
+value|\ 	: : "memory");				 	\ }
+endif|#
+directive|endif
+comment|/* defined(I386_CPU) */
+endif|#
+directive|endif
+comment|/* defined(KLD_MODULE) */
 name|ATOMIC_STORE_LOAD
 argument_list|(
 argument|char
+argument_list|,
+literal|"cmpxchgb %b0,%1"
+argument_list|,
+literal|"xchgb %b1,%0"
 argument_list|)
 name|ATOMIC_STORE_LOAD
 argument_list|(
 argument|short
+argument_list|,
+literal|"cmpxchgw %w0,%1"
+argument_list|,
+literal|"xchgw %w1,%0"
 argument_list|)
 name|ATOMIC_STORE_LOAD
 argument_list|(
 argument|int
+argument_list|,
+literal|"cmpxchgl %0,%1"
+argument_list|,
+literal|"xchgl %1,%0"
 argument_list|)
 name|ATOMIC_STORE_LOAD
 argument_list|(
 argument|long
+argument_list|,
+literal|"cmpxchgl %0,%1"
+argument_list|,
+literal|"xchgl %1,%0"
 argument_list|)
 undef|#
 directive|undef
