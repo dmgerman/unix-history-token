@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.2 (Berkeley) %G%  *  * from: $Header: pmap.c,v 1.40 93/09/27 19:20:44 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.3 (Berkeley) %G%  *  * from: $Header: pmap.c,v 1.43 93/10/31 05:34:56 torek Exp $  */
 end_comment
 
 begin_comment
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<sparc/sparc/cache.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sparc/sparc/vaddrs.h>
 end_include
 
 begin_ifdef
@@ -260,7 +266,7 @@ define|#
 directive|define
 name|splpmap
 parameter_list|()
-value|splbio()
+value|splimp()
 end_define
 
 begin_comment
@@ -3304,6 +3310,7 @@ name|pager_sva
 decl_stmt|,
 name|pager_eva
 decl_stmt|;
+comment|/* 				 * Bizarreness:  we never clear PG_W on 				 * pager pages, nor PG_NC on DVMA pages. 				 */
 if|if
 condition|(
 name|bic
@@ -3317,6 +3324,21 @@ operator|&&
 name|va
 operator|<
 name|pager_eva
+condition|)
+continue|continue;
+if|if
+condition|(
+name|bic
+operator|==
+name|PG_NC
+operator|&&
+name|va
+operator|>=
+name|DVMA_BASE
+operator|&&
+name|va
+operator|<
+name|DVMA_END
 condition|)
 continue|continue;
 name|setcontext
