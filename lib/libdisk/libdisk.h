@@ -199,31 +199,6 @@ decl_stmt|;
 name|u_long
 name|flags
 decl_stmt|;
-define|#
-directive|define
-name|CHUNK_BSD_COMPAT
-value|2
-comment|/* this chunk is in the BSD-compatibility, and has a 		 * short name too, ie wd0s4f -> wd0f 		*/
-define|#
-directive|define
-name|CHUNK_ALIGN
-value|8
-comment|/* This chunk should be aligned */
-define|#
-directive|define
-name|CHUNK_IS_ROOT
-value|16
-comment|/* This 'part' is a rootfs, allocate 'a' */
-define|#
-directive|define
-name|CHUNK_ACTIVE
-value|32
-comment|/* This is the active slice in the MBR */
-define|#
-directive|define
-name|CHUNK_FORCE_ALL
-value|64
-comment|/* Force a dedicated disk for FreeBSD, bypassing 		 * all BIOS geometry considerations 		 */
 name|void
 function_decl|(
 modifier|*
@@ -253,6 +228,73 @@ comment|/* For data private to the application, and the management 	 * thereof. 
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * flags:  *  * BSD_COMPAT	-	This chunk is in the BSD-compatibility, and has  *			a short name too, ie wd0s4f -> wd0f  * ALIGN	-	This chunk should be aligned  * IS_ROOT	-	This 'part' is a rootfs, allocate 'a'  * ACTIVE	-	This is the active slice in the MBR  * FORCE_ALL	-	Force a dedicated disk for FreeBSD, bypassing  *			all BIOS geometry considerations  * AUTO_SIZE	-	This chunk was auto-sized and can fill-out a  *			following chunk if the following chunk is deleted.  * NEWFS	-	newfs pending, used to enable auto-resizing on  *			delete (along with AUTO_SIZE).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHUNK_BSD_COMPAT
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHUNK_ALIGN
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHUNK_IS_ROOT
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHUNK_ACTIVE
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHUNK_FORCE_ALL
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHUNK_AUTO_SIZE
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHUNK_NEWFS
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELCHUNK_NORMAL
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELCHUNK_RECOVER
+value|0x0001
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -390,6 +432,29 @@ end_function_decl
 
 begin_comment
 comment|/* Set the bios geometry to something sane  */
+end_comment
+
+begin_function_decl
+name|int
+name|Delete_Chunk2
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|disk
+parameter_list|,
+name|struct
+name|chunk
+modifier|*
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Free a chunk of disk_space modified by the passed  * flags.  */
 end_comment
 
 begin_function_decl
