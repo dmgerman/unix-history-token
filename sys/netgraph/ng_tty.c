@@ -97,33 +97,6 @@ directive|include
 file|<netgraph/ng_tty.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_comment
-comment|/* fiddle with the spl locking */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ipl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Misc defs */
 end_comment
