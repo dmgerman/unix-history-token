@@ -5158,7 +5158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a new open file structure and allocate  * a file decriptor for the process that refers to it.  */
+comment|/*  * Create a new open file structure and allocate  * a file decriptor for the process that refers to it.  * We add one reference to the file for the descriptor table  * and one reference for resultfp. This is to prevent us being  * prempted and the entry in the descriptor table closed after  * we release the FILEDESC lock.  */
 end_comment
 
 begin_function
@@ -5331,6 +5331,15 @@ name|f_count
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|resultfp
+condition|)
+name|fp
+operator|->
+name|f_count
+operator|++
+expr_stmt|;
 name|fp
 operator|->
 name|f_cred
@@ -5425,6 +5434,17 @@ operator|->
 name|p_fd
 argument_list|)
 expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|resultfp
+condition|)
 name|fdrop
 argument_list|(
 name|fp
@@ -7628,6 +7648,8 @@ decl_stmt|,
 name|flags
 decl_stmt|,
 name|devnull
+decl_stmt|,
+name|extraref
 decl_stmt|;
 name|fdp
 operator|=
@@ -7710,6 +7732,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
+comment|/* Note extra ref on `fp' held for us by falloc(). */
 name|KASSERT
 argument_list|(
 name|fd
@@ -7766,11 +7789,28 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 				 * Someone may have closed the entry in the 				 * file descriptor table, so check it hasn't 				 * changed before dropping the reference count. 				 */
+name|extraref
+operator|=
+literal|0
+expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fdp
+operator|->
+name|fd_ofiles
+index|[
+name|fd
+index|]
+operator|==
+name|fp
+condition|)
+block|{
 name|fdp
 operator|->
 name|fd_ofiles
@@ -7780,11 +7820,27 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+name|extraref
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|extraref
+condition|)
 name|fdrop
 argument_list|(
 name|fp

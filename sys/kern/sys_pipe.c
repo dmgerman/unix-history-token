@@ -1045,11 +1045,7 @@ name|error
 operator|)
 return|;
 block|}
-name|fhold
-argument_list|(
-name|rf
-argument_list|)
-expr_stmt|;
+comment|/* An extra reference on `rf' has been held for us by falloc(). */
 name|td
 operator|->
 name|td_retval
@@ -1196,6 +1192,7 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* An extra reference on `wf' has been held for us by falloc(). */
 name|FILE_LOCK
 argument_list|(
 name|wf
@@ -1231,6 +1228,13 @@ expr_stmt|;
 name|FILE_UNLOCK
 argument_list|(
 name|wf
+argument_list|)
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|wf
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|td

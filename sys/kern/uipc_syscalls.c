@@ -467,11 +467,7 @@ condition|)
 goto|goto
 name|done2
 goto|;
-name|fhold
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
+comment|/* An extra reference on `fp' has been held for us by falloc(). */
 name|error
 operator|=
 name|socreate
@@ -1347,11 +1343,7 @@ goto|goto
 name|done
 goto|;
 block|}
-name|fhold
-argument_list|(
-name|nfp
-argument_list|)
-expr_stmt|;
+comment|/* An extra reference on `nfp' has been held for us by falloc(). */
 name|td
 operator|->
 name|td_retval
@@ -2400,6 +2392,7 @@ condition|)
 goto|goto
 name|free1
 goto|;
+comment|/* On success extra reference to `fp1' and 'fp2' is set by falloc. */
 name|error
 operator|=
 name|falloc
@@ -2420,11 +2413,6 @@ condition|)
 goto|goto
 name|free2
 goto|;
-name|fhold
-argument_list|(
-name|fp1
-argument_list|)
-expr_stmt|;
 name|sv
 index|[
 literal|0
@@ -2459,11 +2447,6 @@ condition|)
 goto|goto
 name|free3
 goto|;
-name|fhold
-argument_list|(
-name|fp2
-argument_list|)
-expr_stmt|;
 name|fp2
 operator|->
 name|f_data

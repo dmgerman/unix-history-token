@@ -3275,6 +3275,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* An extra reference on `nfp' has been held for us by falloc(). */
 name|fp
 operator|=
 name|nfp
@@ -3321,12 +3322,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* XXX check for fdopen */
-comment|/* 	 * Bump the ref count to prevent another process from closing 	 * the descriptor while we are blocked in vn_open() 	 */
-name|fhold
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|vn_open
@@ -18546,15 +18541,10 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* An extra reference on `nfp' has been held for us by falloc(). */
 name|fp
 operator|=
 name|nfp
-expr_stmt|;
-comment|/* 	 * Hold an extra reference to avoid having fp ripped out  	 * from under us while we block in the lock op 	 */
-name|fhold
-argument_list|(
-name|fp
-argument_list|)
 expr_stmt|;
 name|nfp
 operator|->

@@ -3894,11 +3894,7 @@ name|error
 operator|)
 return|;
 block|}
-name|fhold
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
+comment|/* falloc automatically provides an extra reference to 'f'. */
 name|f
 operator|->
 name|f_flag

@@ -1819,6 +1819,7 @@ condition|)
 goto|goto
 name|done2
 goto|;
+comment|/* An extra reference on `nfp' has been held for us by falloc(). */
 name|kq
 operator|=
 name|malloc
@@ -1887,6 +1888,13 @@ expr_stmt|;
 name|FILE_UNLOCK
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK
