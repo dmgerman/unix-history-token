@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -2441,6 +2447,36 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_decl_stmt
+specifier|static
+name|int
+name|doslowdown
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|doslowdown
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|doslowdown
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Just call the device strategy routine  */
 end_comment
@@ -2535,6 +2571,8 @@ expr_stmt|;
 comment|/* 	 * Slow down disk requests for niced processes. 	 */
 if|if
 condition|(
+name|doslowdown
+operator|&&
 name|td
 operator|&&
 name|td
