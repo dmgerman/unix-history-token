@@ -42,6 +42,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DOSPARTSIZE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|NDOSPART
 value|4
 end_define
@@ -51,6 +58,20 @@ define|#
 directive|define
 name|NEXTDOSPART
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOSMAGICOFFSET
+value|510
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOSMAGIC
+value|0xAA55
 end_define
 
 begin_define
@@ -190,7 +211,7 @@ expr|struct
 name|dos_partition
 argument_list|)
 operator|==
-literal|16
+name|DOSPARTSIZE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
