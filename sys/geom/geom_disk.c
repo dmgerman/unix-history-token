@@ -412,6 +412,11 @@ name|struct
 name|dumperinfo
 name|di
 decl_stmt|;
+name|struct
+name|g_geom
+modifier|*
+name|gp
+decl_stmt|;
 name|gkd
 operator|=
 operator|(
@@ -423,9 +428,23 @@ name|bp
 operator|->
 name|bio_data
 expr_stmt|;
-name|printf
+name|gp
+operator|=
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|geom
+expr_stmt|;
+name|g_trace
 argument_list|(
-literal|"Kerneldump off=%jd len=%jd\n"
+name|G_T_TOPOLOGY
+argument_list|,
+literal|"g_disk_kernedump(%s, %jd, %jd)"
+argument_list|,
+name|gp
+operator|->
+name|name
 argument_list|,
 operator|(
 name|intmax_t
