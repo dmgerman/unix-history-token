@@ -567,6 +567,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN6ADDR_INTFACELOCAL_ALLNODES_INIT
+define|\
+value|{{{ 0xff, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }}}
+end_define
+
+begin_define
+define|#
+directive|define
 name|IN6ADDR_LINKLOCAL_ALLNODES_INIT
 define|\
 value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }}}
@@ -578,14 +586,6 @@ directive|define
 name|IN6ADDR_LINKLOCAL_ALLROUTERS_INIT
 define|\
 value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }}}
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6ADDR_LINKLOCAL_ALLMDNS_INIT
-define|\
-value|{{{ 0xff, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \ 	    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfb }}}
 end_define
 
 begin_endif
@@ -822,6 +822,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPV6_ADDR_SCOPE_LINKLOCAL
 value|0x02
 end_define
@@ -860,6 +867,13 @@ begin_define
 define|#
 directive|define
 name|__IPV6_ADDR_SCOPE_NODELOCAL
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|__IPV6_ADDR_SCOPE_INTFACELOCAL
 value|0x01
 end_define
 
@@ -1003,6 +1017,17 @@ name|a
 parameter_list|)
 define|\
 value|(IN6_IS_ADDR_MULTICAST(a)&&	\ 	 (IPV6_ADDR_MC_SCOPE(a) == IPV6_ADDR_SCOPE_NODELOCAL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN6_IS_ADDR_MC_INTFACELOCAL
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|(IN6_IS_ADDR_MULTICAST(a)&&	\ 	 (IPV6_ADDR_MC_SCOPE(a) == IPV6_ADDR_SCOPE_INTFACELOCAL))
 end_define
 
 begin_define

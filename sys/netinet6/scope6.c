@@ -176,7 +176,7 @@ name|sid
 operator|->
 name|s6id_list
 index|[
-name|IPV6_ADDR_SCOPE_NODELOCAL
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
 index|]
 operator|=
 name|ifp
@@ -346,6 +346,36 @@ name|i
 index|]
 condition|)
 block|{
+comment|/* 			 * An interface zone ID must be the corresponding 			 * interface index by definition. 			 */
+if|if
+condition|(
+name|i
+operator|==
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
+operator|&&
+name|idlist
+operator|->
+name|s6id_list
+index|[
+name|i
+index|]
+operator|!=
+name|ifp
+operator|->
+name|if_index
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|i
@@ -482,7 +512,7 @@ if|if
 condition|(
 name|addr
 operator|->
-name|s6_addr8
+name|s6_addr
 index|[
 literal|0
 index|]
@@ -494,7 +524,7 @@ name|scope
 operator|=
 name|addr
 operator|->
-name|s6_addr8
+name|s6_addr
 index|[
 literal|1
 index|]
@@ -532,7 +562,7 @@ if|if
 condition|(
 name|addr
 operator|->
-name|s6_addr8
+name|s6_addr
 index|[
 literal|0
 index|]
@@ -544,7 +574,7 @@ name|scope
 operator|=
 name|addr
 operator|->
-name|s6_addr8
+name|s6_addr
 index|[
 literal|1
 index|]
@@ -558,10 +588,10 @@ name|scope
 condition|)
 block|{
 case|case
-name|IPV6_ADDR_SCOPE_NODELOCAL
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
 case|:
 return|return
-name|IPV6_ADDR_SCOPE_NODELOCAL
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
 return|;
 break|break;
 case|case
@@ -585,6 +615,7 @@ return|;
 break|break;
 block|}
 block|}
+comment|/* 	 * Regard loopback and unspecified addresses as global, since 	 * they have no ambiguity. 	 */
 if|if
 condition|(
 name|bcmp
@@ -610,7 +641,7 @@ if|if
 condition|(
 name|addr
 operator|->
-name|s6_addr8
+name|s6_addr
 index|[
 literal|15
 index|]
@@ -619,13 +650,13 @@ literal|1
 condition|)
 comment|/* loopback */
 return|return
-name|IPV6_ADDR_SCOPE_NODELOCAL
+name|IPV6_ADDR_SCOPE_LINKLOCAL
 return|;
 if|if
 condition|(
 name|addr
 operator|->
-name|s6_addr8
+name|s6_addr
 index|[
 literal|15
 index|]
@@ -634,8 +665,9 @@ literal|0
 condition|)
 comment|/* unspecified */
 return|return
-name|IPV6_ADDR_SCOPE_LINKLOCAL
+name|IPV6_ADDR_SCOPE_GLOBAL
 return|;
+comment|/* XXX: correct? */
 block|}
 return|return
 name|IPV6_ADDR_SCOPE_GLOBAL
@@ -643,13 +675,19 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * When we introduce the "4+28" split semantics in sin6_scope_id,  * a 32bit integer is not enough to tell a large ID from an error (-1).  * So, we intentionally use a large type as the return value.  */
+end_comment
+
 begin_function
 name|int
-name|in6_addr2scopeid
+name|in6_addr2zoneid
 parameter_list|(
 name|ifp
 parameter_list|,
 name|addr
+parameter_list|,
+name|ret_id
 parameter_list|)
 name|struct
 name|ifnet
@@ -663,9 +701,19 @@ modifier|*
 name|addr
 decl_stmt|;
 comment|/* must not be NULL */
+name|u_int32_t
+modifier|*
+name|ret_id
+decl_stmt|;
+comment|/* must not be NULL */
 block|{
 name|int
 name|scope
+decl_stmt|;
+name|u_int32_t
+name|zoneid
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|scope6_id
@@ -691,6 +739,20 @@ comment|/* should not happen */
 name|panic
 argument_list|(
 literal|"in6_addr2zoneid: scope array is NULL"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|ret_id
+operator|==
+name|NULL
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"in6_addr2zoneid: return ID is null"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -724,12 +786,19 @@ literal|1
 operator|)
 return|;
 else|else
+block|{
+operator|*
+name|ret_id
+operator|=
+literal|0
+expr_stmt|;
+comment|/* there's no ambiguity */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* there's no ambiguity */
+block|}
 block|}
 name|scope
 operator|=
@@ -744,62 +813,76 @@ name|scope
 condition|)
 block|{
 case|case
-name|IPV6_ADDR_SCOPE_NODELOCAL
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
 case|:
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-comment|/* XXX: is this an appropriate value? */
+comment|/* should be interface index */
+name|zoneid
+operator|=
+name|sid
+operator|->
+name|s6id_list
+index|[
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
+index|]
+expr_stmt|;
+break|break;
 case|case
 name|IPV6_ADDR_SCOPE_LINKLOCAL
 case|:
-return|return
-operator|(
+name|zoneid
+operator|=
 name|sid
 operator|->
 name|s6id_list
 index|[
 name|IPV6_ADDR_SCOPE_LINKLOCAL
 index|]
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 name|IPV6_ADDR_SCOPE_SITELOCAL
 case|:
-return|return
-operator|(
+name|zoneid
+operator|=
 name|sid
 operator|->
 name|s6id_list
 index|[
 name|IPV6_ADDR_SCOPE_SITELOCAL
 index|]
-operator|)
-return|;
+expr_stmt|;
+break|break;
 case|case
 name|IPV6_ADDR_SCOPE_ORGLOCAL
 case|:
-return|return
-operator|(
+name|zoneid
+operator|=
 name|sid
 operator|->
 name|s6id_list
 index|[
 name|IPV6_ADDR_SCOPE_ORGLOCAL
 index|]
-operator|)
-return|;
+expr_stmt|;
+break|break;
 default|default:
+name|zoneid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX: treat as global. */
+break|break;
+block|}
+operator|*
+name|ret_id
+operator|=
+name|zoneid
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* XXX: treat as global. */
-block|}
 block|}
 end_function
 
@@ -826,7 +909,7 @@ name|sid_default
 operator|.
 name|s6id_list
 index|[
-name|IPV6_ADDR_SCOPE_NODELOCAL
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
 index|]
 operator|=
 name|ifp
@@ -851,7 +934,7 @@ name|sid_default
 operator|.
 name|s6id_list
 index|[
-name|IPV6_ADDR_SCOPE_NODELOCAL
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
 index|]
 operator|=
 literal|0

@@ -2018,27 +2018,15 @@ operator|=
 operator|*
 name|taddr6
 expr_stmt|;
-if|if
-condition|(
-name|IN6_IS_SCOPE_LINKLOCAL
+name|in6_clearscope
 argument_list|(
 operator|&
 name|nd_ns
 operator|->
 name|nd_ns_target
 argument_list|)
-condition|)
-name|nd_ns
-operator|->
-name|nd_ns_target
-operator|.
-name|s6_addr16
-index|[
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
+comment|/* XXX */
 comment|/* 	 * Add source link-layer address option. 	 * 	 *				spec		implementation 	 *				---		--- 	 * DAD packet			MUST NOT	do not add the option 	 * there's no link layer address: 	 *				impossible	do not add the option 	 * there's link layer address: 	 *	Multicast NS		MUST add one	add the option 	 *	Unicast NS		SHOULD add one	add the option 	 */
 if|if
 condition|(
@@ -3861,27 +3849,15 @@ operator|=
 operator|*
 name|taddr6
 expr_stmt|;
-if|if
-condition|(
-name|IN6_IS_SCOPE_LINKLOCAL
+name|in6_clearscope
 argument_list|(
 operator|&
 name|nd_na
 operator|->
 name|nd_na_target
 argument_list|)
-condition|)
-name|nd_na
-operator|->
-name|nd_na_target
-operator|.
-name|s6_addr16
-index|[
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
+comment|/* XXX */
 comment|/* 	 * "tlladdr" indicates NS's condition for adding tlladdr or not. 	 * see nd6_ns_input() for details. 	 * Basically, if NS packet is sent to unicast/anycast addr, 	 * target lladdr option SHOULD NOT be included. 	 */
 if|if
 condition|(

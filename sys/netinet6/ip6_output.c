@@ -2524,7 +2524,7 @@ expr_stmt|;
 comment|/* 		 * If the destination is a node-local scope multicast, 		 * the packet should be loop-backed only. 		 */
 if|if
 condition|(
-name|IN6_IS_ADDR_MC_NODELOCAL
+name|IN6_IS_ADDR_MC_INTFACELOCAL
 argument_list|(
 operator|&
 name|ip6
@@ -8384,7 +8384,7 @@ block|{
 comment|/* 			 * If the multicast address is in node-local scope, 			 * the interface should be a loopback interface. 			 * Otherwise, look up the routing table for the 			 * address, and choose the outgoing interface. 			 *   XXX: is it a good approach? 			 */
 if|if
 condition|(
-name|IN6_IS_ADDR_MC_NODELOCAL
+name|IN6_IS_ADDR_MC_INTFACELOCAL
 argument_list|(
 operator|&
 name|mreq

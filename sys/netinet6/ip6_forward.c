@@ -379,6 +379,11 @@ modifier|*
 name|origifp
 decl_stmt|;
 comment|/* maybe unnecessary */
+name|u_int32_t
+name|srczone
+decl_stmt|,
+name|dstzone
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -1210,7 +1215,7 @@ expr_stmt|;
 comment|/* 	 * Scope check: if a packet can't be delivered to its destination 	 * for the reason that the destination is beyond the scope of the 	 * source address, discard the packet and return an icmp6 destination 	 * unreachable error with Code 2 (beyond scope of source address). 	 * [draft-ietf-ipngwg-icmp-v3-02.txt, Section 3.1] 	 */
 if|if
 condition|(
-name|in6_addr2scopeid
+name|in6_addr2zoneid
 argument_list|(
 name|m
 operator|->
@@ -1222,9 +1227,12 @@ operator|&
 name|ip6
 operator|->
 name|ip6_src
+argument_list|,
+operator|&
+name|srczone
 argument_list|)
-operator|!=
-name|in6_addr2scopeid
+operator|||
+name|in6_addr2zoneid
 argument_list|(
 name|rt
 operator|->
@@ -1234,7 +1242,14 @@ operator|&
 name|ip6
 operator|->
 name|ip6_src
+argument_list|,
+operator|&
+name|dstzone
 argument_list|)
+operator|||
+name|srczone
+operator|!=
+name|dstzone
 condition|)
 block|{
 name|ip6stat

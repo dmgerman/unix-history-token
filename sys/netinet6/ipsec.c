@@ -9860,48 +9860,22 @@ name|ip6_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Fake link-local scope-class addresses */
-if|if
-condition|(
-name|IN6_IS_SCOPE_LINKLOCAL
+comment|/* XXX: Fake scoped addresses */
+name|in6_clearscope
 argument_list|(
 operator|&
 name|oip6
 operator|->
 name|ip6_src
 argument_list|)
-condition|)
-name|oip6
-operator|->
-name|ip6_src
-operator|.
-name|s6_addr16
-index|[
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
-if|if
-condition|(
-name|IN6_IS_SCOPE_LINKLOCAL
+name|in6_clearscope
 argument_list|(
 operator|&
 name|oip6
 operator|->
 name|ip6_dst
 argument_list|)
-condition|)
-name|oip6
-operator|->
-name|ip6_dst
-operator|.
-name|s6_addr16
-index|[
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 comment|/* construct new IPv6 header. see RFC 2401 5.1.2.2 */
 comment|/* ECN consideration. */

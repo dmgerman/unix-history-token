@@ -1994,7 +1994,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|in6_addr2scopeid
+name|in6_addr2zoneid
 name|__P
 argument_list|(
 operator|(
@@ -2004,6 +2004,9 @@ operator|*
 operator|,
 expr|struct
 name|in6_addr
+operator|*
+operator|,
+name|u_int32_t
 operator|*
 operator|)
 argument_list|)

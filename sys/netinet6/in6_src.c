@@ -486,7 +486,7 @@ name|ifp
 operator|==
 name|NULL
 operator|&&
-name|IN6_IS_ADDR_MC_NODELOCAL
+name|IN6_IS_ADDR_MC_INTFACELOCAL
 argument_list|(
 name|dst
 argument_list|)
@@ -1756,7 +1756,7 @@ name|ifp
 decl_stmt|;
 block|{
 name|u_int32_t
-name|scopeid
+name|zoneid
 decl_stmt|;
 name|sin6
 operator|->
@@ -1778,10 +1778,15 @@ name|IN6_IS_SCOPE_LINKLOCAL
 argument_list|(
 name|in6
 argument_list|)
+operator|||
+name|IN6_IS_ADDR_MC_INTFACELOCAL
+argument_list|(
+name|in6
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * KAME assumption: link id == interface id 		 */
-name|scopeid
+name|zoneid
 operator|=
 name|ntohs
 argument_list|(
@@ -1797,19 +1802,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|scopeid
+name|zoneid
 condition|)
 block|{
 comment|/* sanity check */
 if|if
 condition|(
-name|scopeid
+name|zoneid
 operator|<
 literal|0
 operator|||
 name|if_index
 operator|<
-name|scopeid
+name|zoneid
 condition|)
 return|return
 name|ENXIO
@@ -1822,7 +1827,7 @@ name|ifp
 operator|->
 name|if_index
 operator|!=
-name|scopeid
+name|zoneid
 condition|)
 return|return
 name|ENXIO
@@ -1842,7 +1847,7 @@ name|sin6
 operator|->
 name|sin6_scope_id
 operator|=
-name|scopeid
+name|zoneid
 expr_stmt|;
 block|}
 block|}
@@ -1853,7 +1858,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * just clear the embedded scope identifier.  * XXX: currently used for bsdi4 only as a supplement function.  */
+comment|/*  * just clear the embedded scope identifier.  */
 end_comment
 
 begin_function
@@ -1871,6 +1876,11 @@ block|{
 if|if
 condition|(
 name|IN6_IS_SCOPE_LINKLOCAL
+argument_list|(
+name|addr
+argument_list|)
+operator|||
+name|IN6_IS_ADDR_MC_INTFACELOCAL
 argument_list|(
 name|addr
 argument_list|)

@@ -499,7 +499,7 @@ operator|->
 name|in6m_addr
 argument_list|)
 operator|>
-name|IPV6_ADDR_SCOPE_NODELOCAL
+name|IPV6_ADDR_SCOPE_INTFACELOCAL
 condition|)
 name|mld6_sendpkt
 argument_list|(
