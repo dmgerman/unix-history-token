@@ -625,25 +625,15 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|args
 index|[
 literal|0
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|ExcludeFrom
-condition|)
-name|sprintf
-argument_list|(
-name|args
-argument_list|,
-literal|"-X %s "
-argument_list|,
-name|ExcludeFrom
-argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -695,6 +685,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ExcludeFrom
+condition|)
+name|ret
+operator|=
+name|vsystem
+argument_list|(
+literal|"tar %sX %s %s ."
+argument_list|,
+name|args
+argument_list|,
+name|tball
+argument_list|,
+name|ExcludeFrom
+argument_list|)
+expr_stmt|;
+else|else
+name|ret
+operator|=
 name|vsystem
 argument_list|(
 literal|"tar %s %s ."
@@ -703,10 +711,16 @@ name|args
 argument_list|,
 name|tball
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 condition|)
 name|barf
 argument_list|(
-literal|"tar command failed!"
+literal|"tar command failed with code %d"
+argument_list|,
+name|ret
 argument_list|)
 expr_stmt|;
 block|}
