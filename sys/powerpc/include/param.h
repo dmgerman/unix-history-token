@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * Machine dependent constants for PowerPC (32-bit only currently)  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
-end_include
-
 begin_comment
 comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value  * for all data types (int, long, ...).   The result is unsigned int  * and must be cast to any desired pointer type.  */
 end_comment
