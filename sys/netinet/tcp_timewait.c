@@ -9409,8 +9409,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 block|{
@@ -9429,6 +9428,10 @@ operator|*
 operator|)
 name|data
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
