@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_lfs.c	8.2 (Berkeley) %G%"
+literal|"@(#)mount_lfs.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -104,19 +98,32 @@ end_include
 begin_include
 include|#
 directive|include
+file|"mntopts.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEFAULT_ROOTUID
-value|-2
-end_define
-
-begin_comment
-comment|/* copied from mount's UFS code */
-end_comment
+begin_decl_stmt
+name|struct
+name|mntopt
+name|mopts
+index|[]
+init|=
+block|{
+name|MOPT_STDOPTS
+block|,
+name|MOPT_UPDATE
+block|,
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -176,14 +183,20 @@ name|int
 name|ch
 decl_stmt|,
 name|mntflags
-decl_stmt|;
-name|int
+decl_stmt|,
 name|noclean
 decl_stmt|;
 name|char
 modifier|*
 name|fs_name
+decl_stmt|,
+modifier|*
+name|options
 decl_stmt|;
+name|options
+operator|=
+name|NULL
+expr_stmt|;
 name|mntflags
 operator|=
 name|noclean
@@ -201,7 +214,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"F:nsd"
+literal|"dno:s"
 argument_list|)
 operator|)
 operator|!=
@@ -213,14 +226,11 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'F'
+literal|'d'
 case|:
-name|mntflags
+name|cleaner_debug
 operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -232,17 +242,23 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'s'
+literal|'o'
 case|:
-name|short_rds
-operator|=
-literal|1
+name|getmntopts
+argument_list|(
+name|optarg
+argument_list|,
+name|mopts
+argument_list|,
+operator|&
+name|mntflags
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'d'
+literal|'s'
 case|:
-name|cleaner_debug
+name|short_rds
 operator|=
 literal|1
 expr_stmt|;
@@ -290,7 +306,10 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* the mount point */
-comment|/* copied from mount's UFS code */
+define|#
+directive|define
+name|DEFAULT_ROOTUID
+value|-2
 name|args
 operator|.
 name|export
@@ -336,68 +355,27 @@ operator|&
 name|args
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mount_lfs: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|noclean
 condition|)
-block|{
-comment|/* 		 * invoke the lfs_cleanerd for this filesystem as its arg! 		 */
 name|invoke_cleaner
 argument_list|(
 name|fs_name
 argument_list|)
 expr_stmt|;
-comment|/* never returns */
-block|}
+comment|/* NOTREACHED */
 name|exit
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|usage
-parameter_list|()
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: mount_lfs [ -nsd ] [ -F fsoptions ] device mount_point\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -427,7 +405,7 @@ name|ap
 init|=
 name|args
 decl_stmt|;
-comment|/* build the argument list */
+comment|/* Build the argument list. */
 operator|*
 name|ap
 operator|++
@@ -479,9 +457,32 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"exec of %x failed"
+literal|"exec %s"
 argument_list|,
 name|_PATH_LFS_CLEANERD
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: mount_lfs [-dns] [-o options] special node\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,55 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.redist.c.%  *  *	@(#)mount_kernfs.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1992, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)mount_kernfs.c	8.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -18,7 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -44,6 +93,28 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"mntopts.h"
+end_include
+
+begin_decl_stmt
+name|struct
+name|mntopt
+name|mopts
+index|[]
+init|=
+block|{
+name|MOPT_STDOPTS
+block|,
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -94,7 +165,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"F:"
+literal|"o:"
 argument_list|)
 operator|)
 operator|!=
@@ -106,13 +177,16 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'F'
+literal|'o'
 case|:
-name|mntflags
-operator|=
-name|atoi
+name|getmntopts
 argument_list|(
 name|optarg
+argument_list|,
+name|mopts
+argument_list|,
+operator|&
+name|mntflags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -157,28 +231,13 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mount_kernfs: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
@@ -199,7 +258,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_kernfs [ -F fsoptions ] /kern mount_point\n"
+literal|"usage: mount_kernfs [-o options] /kern mount_point\n"
 argument_list|)
 expr_stmt|;
 name|exit
