@@ -35,7 +35,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.8 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_endif
@@ -551,7 +551,8 @@ name|oicp
 operator|->
 name|icmp_otime
 operator|=
-operator|(
+name|ntohl
+argument_list|(
 operator|(
 name|tcur
 operator|.
@@ -567,7 +568,7 @@ operator|.
 name|tv_usec
 operator|/
 literal|1000
-operator|)
+argument_list|)
 expr_stmt|;
 name|oicp
 operator|->
