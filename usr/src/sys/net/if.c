@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -253,22 +253,17 @@ begin_comment
 comment|/*  * Attach an interface to the  * list of "active" interfaces.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|if_attach
-argument_list|(
-argument|ifp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifp
+parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|unsigned
 name|socksize
@@ -319,17 +314,11 @@ literal|8
 decl_stmt|;
 extern|extern link_rtrequest(
 block|)
-end_block
-
-begin_operator
 operator|,
-end_operator
-
-begin_expr_stmt
-name|ether_output
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+function|ether_output
+parameter_list|()
+function|;
+end_function
 
 begin_while
 while|while
@@ -1734,22 +1723,31 @@ begin_comment
 comment|/*  * Default action when installing a route with a Link Level gateway.  * Lookup an appropriate real ifa to point to.  * This should be moved to /sys/net/link.c eventually.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|link_rtrequest
 argument_list|(
-name|cmd
+argument|cmd
 argument_list|,
-name|rt
+argument|rt
 argument_list|,
-name|sa
+argument|sa
 argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
-expr|struct
+name|struct
 name|rtentry
-operator|*
+modifier|*
 name|rt
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
