@@ -188,7 +188,7 @@ file|<net/bridge.h>
 end_include
 
 begin_comment
-comment|/*  * We keep a private variable for the simulation time, but we could  * probably use an existing one ("softticks" in sys/kern/kern_timer.c)  */
+comment|/*  * We keep a private variable for the simulation time, but we could  * probably use an existing one ("softticks" in sys/kern/kern_timeout.c)  */
 end_comment
 
 begin_decl_stmt
