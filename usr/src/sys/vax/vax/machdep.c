@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.4	84/02/02	*/
+comment|/*	machdep.c	6.5	84/03/22	*/
 end_comment
 
 begin_include
@@ -2556,9 +2556,29 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"mcr%d: soft ecc addr %x syn %x\n"
+literal|"mcr%d: %s"
 argument_list|,
 name|m
+argument_list|,
+operator|(
+name|amcr
+operator|.
+name|mc_reg
+index|[
+literal|0
+index|]
+operator|&
+name|M750_UNCORR
+operator|)
+condition|?
+literal|"hard error"
+else|:
+literal|"soft ecc"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" addr %x syn %x\n"
 argument_list|,
 name|M750_ADDR
 argument_list|(
