@@ -309,6 +309,8 @@ argument_list|(
 name|_PATH_DEV
 argument_list|)
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|tty
 operator|+=
