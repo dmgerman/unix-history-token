@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostnamadr.c	4.7	85/01/21	*/
+comment|/*	gethostnamadr.c	4.8	85/02/18	*/
 end_comment
 
 begin_include
@@ -125,7 +125,6 @@ modifier|*
 modifier|*
 name|ap
 decl_stmt|;
-specifier|register
 name|int
 name|naliases
 decl_stmt|;
@@ -201,14 +200,22 @@ name|cp
 operator|++
 condition|)
 empty_stmt|;
-name|naliases
-operator|=
-operator|*
+name|bcopy
+argument_list|(
+name|cp
+argument_list|,
 operator|(
-name|int
+name|char
 operator|*
 operator|)
-name|cp
+operator|&
+name|naliases
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
