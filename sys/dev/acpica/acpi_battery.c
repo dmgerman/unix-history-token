@@ -458,6 +458,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/*          * No security check required: information retrieval only.  If          * new functions are added here, a check might be required.          */
 switch|switch
 condition|(
 name|cmd

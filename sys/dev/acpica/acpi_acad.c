@@ -761,6 +761,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
+comment|/*          * No security check required: information retrieval only.  If          * new functions are added here, a check might be required.          */
 switch|switch
 condition|(
 name|cmd

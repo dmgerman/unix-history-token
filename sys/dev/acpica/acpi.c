@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -2365,7 +2371,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0600
+literal|0644
 argument_list|,
 literal|"acpi"
 argument_list|)
@@ -7756,6 +7762,21 @@ name|out
 goto|;
 block|}
 block|}
+block|}
+comment|/*      * Core ioctls are  not permitted for non-writable user.      * Currently, other ioctls just fetch information.      * Not changing system behavior.      */
+if|if
+condition|(
+operator|!
+operator|(
+name|flag
+operator|&
+name|FWRITE
+operator|)
+condition|)
+block|{
+return|return
+name|EPERM
+return|;
 block|}
 comment|/*      * Core system ioctls.      */
 switch|switch
