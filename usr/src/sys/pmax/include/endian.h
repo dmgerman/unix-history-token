@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)endian.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)endian.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Definitions for byte order,  * according to byte significance from low address to high.  */
+comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
 end_comment
 
 begin_define
@@ -15,7 +15,7 @@ value|1234
 end_define
 
 begin_comment
-comment|/* least-significant byte first (vax) */
+comment|/* LSB first: i386, vax */
 end_comment
 
 begin_define
@@ -26,7 +26,7 @@ value|4321
 end_define
 
 begin_comment
-comment|/* most-significant byte first (IBM, net) */
+comment|/* MSB first: 68000, ibm, net */
 end_comment
 
 begin_define
@@ -37,7 +37,7 @@ value|3412
 end_define
 
 begin_comment
-comment|/* LSB first in word, MSW first in long (pdp) */
+comment|/* LSB first in word, MSW first in long */
 end_comment
 
 begin_define
@@ -47,9 +47,83 @@ name|BYTE_ORDER
 value|LITTLE_ENDIAN
 end_define
 
-begin_comment
-comment|/* byte order on vax */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|unsigned
+name|long
+name|htonl
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|short
+name|htons
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|short
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|ntohl
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|short
+name|ntohs
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|short
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_comment
 comment|/*  * Macros for network/external number representation conversion.  */
@@ -153,95 +227,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"cdefs.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|__BEGIN_DECLS
-name|unsigned
-name|long
-name|htonl
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|short
-name|htons
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-name|short
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|long
-name|ntohl
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|short
-name|ntohs
-name|__P
-argument_list|(
-operator|(
-name|unsigned
-name|short
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|__END_DECLS
-end_macro
 
 begin_define
 define|#
