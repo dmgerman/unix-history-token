@@ -162,15 +162,14 @@ file|<machine/md_var.h>
 end_include
 
 begin_comment
-comment|/*  * XXX ISA_HOLE_START is defined in<machine/pmap.h>, but it  * carries too much baggage  */
+comment|/*  * XXX We shouldn't be using processor-specific/bus-specific code in  * here, but we need the start of the ISA hole (IOM_BEGIN).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ISA_HOLE_START
-value|0xA0000
-end_define
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa.h>
+end_include
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -2730,7 +2729,7 @@ name|mem
 operator|+
 name|atdevbase
 operator|-
-name|ISA_HOLE_START
+name|IOM_BEGIN
 argument_list|)
 expr_stmt|;
 else|else
@@ -4755,7 +4754,7 @@ name|pccard_mem
 operator|+
 name|atdevbase
 operator|-
-name|ISA_HOLE_START
+name|IOM_BEGIN
 operator|)
 expr_stmt|;
 break|break;
@@ -5014,6 +5013,7 @@ name|int
 name|size
 parameter_list|)
 block|{
+comment|/* XXX - What's magic about 0xC0000?? */
 if|if
 condition|(
 name|adr
@@ -5026,7 +5026,7 @@ operator|+
 name|size
 operator|)
 operator|>
-literal|0x100000
+name|IOM_END
 condition|)
 return|return
 operator|(
