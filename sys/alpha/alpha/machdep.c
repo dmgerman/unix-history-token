@@ -4902,9 +4902,11 @@ operator|)
 operator|*
 literal|16
 expr_stmt|;
-name|PROC_LOCK
+name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|psp
@@ -5596,11 +5598,6 @@ name|sig
 argument_list|)
 condition|)
 block|{
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|osendsig
 argument_list|(
 name|catcher
