@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *         Kendy Kutzner  *  * Redistribution of this software and documentation and use in source and  * binary forms, with or without modification, are permitted provided that  * the following conditions are met:  *  * 1. Redistributions of source code or documentation must retain the above  *    copyright notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED BY FRAUNHOFER FOKUS  * AND ITS CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * FRAUNHOFER FOKUS OR ITS CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Begemot: bsnmp/lib/snmpclient.c,v 1.24 2003/01/28 13:44:34 hbb Exp $  *  * Support functions for SNMP clients.  */
+comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *         Kendy Kutzner  *  * Redistribution of this software and documentation and use in source and  * binary forms, with or without modification, are permitted provided that  * the following conditions are met:  *  * 1. Redistributions of source code or documentation must retain the above  *    copyright notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED BY FRAUNHOFER FOKUS  * AND ITS CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * FRAUNHOFER FOKUS OR ITS CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Begemot: bsnmp/lib/snmpclient.c,v 1.27 2003/12/08 17:11:58 hbb Exp $  *  * Support functions for SNMP clients.  */
 end_comment
 
 begin_include
@@ -4319,9 +4319,9 @@ name|SNMP_V2c
 expr_stmt|;
 name|c
 operator|->
-name|local
+name|trans
 operator|=
-literal|0
+name|SNMP_TRANS_UDP
 expr_stmt|;
 name|c
 operator|->
@@ -4979,6 +4979,9 @@ name|char
 modifier|*
 name|ptr
 decl_stmt|;
+name|int
+name|stype
+decl_stmt|;
 if|if
 condition|(
 name|snmp_client
@@ -5104,6 +5107,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|snmp_client
+operator|.
+name|trans
+operator|==
+name|SNMP_TRANS_LOC_DGRAM
+condition|)
+name|stype
+operator|=
+name|SOCK_DGRAM
+expr_stmt|;
+else|else
+name|stype
+operator|=
+name|SOCK_STREAM
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|snmp_client
 operator|.
@@ -5113,7 +5133,7 @@ name|socket
 argument_list|(
 name|PF_LOCAL
 argument_list|,
-name|SOCK_DGRAM
+name|stype
 argument_list|,
 literal|0
 argument_list|)
@@ -5553,14 +5573,16 @@ name|write_community
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
-operator|!
 name|snmp_client
 operator|.
-name|local
+name|trans
 condition|)
 block|{
+case|case
+name|SNMP_TRANS_UDP
+case|:
 if|if
 condition|(
 name|open_client_udp
@@ -5576,9 +5598,13 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|SNMP_TRANS_LOC_DGRAM
+case|:
+case|case
+name|SNMP_TRANS_LOC_STREAM
+case|:
 if|if
 condition|(
 name|open_client_local
@@ -5586,6 +5612,19 @@ argument_list|(
 name|host
 argument_list|)
 condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+break|break;
+default|default:
+name|seterr
+argument_list|(
+literal|"bad transport mapping"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -5662,7 +5701,12 @@ if|if
 condition|(
 name|snmp_client
 operator|.
-name|local
+name|local_path
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 operator|(
 name|void
@@ -5743,7 +5787,12 @@ if|if
 condition|(
 name|snmp_client
 operator|.
-name|local
+name|local_path
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 operator|(
 name|void
