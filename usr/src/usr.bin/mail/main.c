@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	2.3 %G%"
+literal|"@(#)main.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,10 @@ name|char
 name|_sobuf
 index|[]
 decl_stmt|;
+name|struct
+name|sgttyb
+name|tbuf
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|signal
@@ -117,6 +121,31 @@ name|isatty
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|outtty
+condition|)
+block|{
+name|gtty
+argument_list|(
+literal|1
+argument_list|,
+operator|&
+name|tbuf
+argument_list|)
+expr_stmt|;
+name|baud
+operator|=
+name|tbuf
+operator|.
+name|sg_ospeed
+expr_stmt|;
+block|}
+else|else
+name|baud
+operator|=
+name|B9600
 expr_stmt|;
 name|image
 operator|=
