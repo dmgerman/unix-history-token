@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.31 1998/07/05 20:33:18 julian Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.32 1998/07/15 06:51:14 bde Exp $  */
 end_comment
 
 begin_comment
@@ -70,13 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
@@ -155,12 +149,6 @@ begin_include
 include|#
 directive|include
 file|<sys/shm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_include
@@ -2779,11 +2767,6 @@ decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
-specifier|static
-name|nperline
-operator|=
-literal|0
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -5755,18 +5738,19 @@ name|intptr_t
 operator|)
 name|jobrefid
 expr_stmt|;
-name|jobrefid
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|jobrefid
-operator|>
-name|INT_MAX
+operator|==
+name|LONG_MAX
 condition|)
 name|jobrefid
 operator|=
 literal|1
+expr_stmt|;
+else|else
+name|jobrefid
+operator|++
 expr_stmt|;
 if|if
 condition|(
