@@ -2858,7 +2858,7 @@ name|VOP_SPECSTRATEGY
 argument_list|(
 name|vp
 argument_list|,
-name|bp
+name|rabp
 argument_list|)
 expr_stmt|;
 else|else
@@ -2866,7 +2866,7 @@ name|VOP_STRATEGY
 argument_list|(
 name|vp
 argument_list|,
-name|bp
+name|rabp
 argument_list|)
 expr_stmt|;
 block|}
