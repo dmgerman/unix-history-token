@@ -435,7 +435,7 @@ name|u_int16_t
 name|type
 decl_stmt|;
 name|u_int16_t
-name|class
+name|rr_class
 decl_stmt|;
 name|u_int32_t
 name|ttl
@@ -484,7 +484,7 @@ name|ns_rr_class
 parameter_list|(
 name|rr
 parameter_list|)
-value|((rr).class + 0)
+value|((rr).rr_class + 0)
 end_define
 
 begin_define

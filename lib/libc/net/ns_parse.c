@@ -882,7 +882,7 @@ name|NS_GET16
 argument_list|(
 name|rr
 operator|->
-name|class
+name|rr_class
 argument_list|,
 name|handle
 operator|->
