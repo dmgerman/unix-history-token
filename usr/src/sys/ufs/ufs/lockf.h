@@ -1,11 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)lockf.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Scooter Morris at Genentech Inc.  *  * %sccs.include.redist.c%  *  *	@(#)lockf.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * The lockf structure is a kernel structure which contains the information  * associated with a byte range lock.  The lockf structures are linked into  * the inode structure. Locks are sorted by the starting byte of the lock for  * efficiency.  */
 end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|locklist
+argument_list|,
+name|lockf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -14,7 +24,7 @@ block|{
 name|short
 name|lf_flags
 decl_stmt|;
-comment|/* Lock semantics: F_POSIX, F_FLOCK, F_WAIT */
+comment|/* Semantics: F_POSIX, F_FLOCK, F_WAIT */
 name|short
 name|lf_type
 decl_stmt|;
@@ -22,15 +32,15 @@ comment|/* Lock type: F_RDLCK, F_WRLCK */
 name|off_t
 name|lf_start
 decl_stmt|;
-comment|/* The byte # of the start of the lock */
+comment|/* Byte # of the start of the lock */
 name|off_t
 name|lf_end
 decl_stmt|;
-comment|/* The byte # of the end of the lock (-1=EOF)*/
+comment|/* Byte # of the end of the lock (-1=EOF) */
 name|caddr_t
 name|lf_id
 decl_stmt|;
-comment|/* The id of the resource holding the lock */
+comment|/* Id of the resource holding the lock */
 name|struct
 name|inode
 modifier|*
@@ -42,13 +52,19 @@ name|lockf
 modifier|*
 name|lf_next
 decl_stmt|;
-comment|/* A pointer to the next lock on this inode */
+comment|/* Pointer to the next lock on this inode */
 name|struct
-name|lockf
-modifier|*
-name|lf_block
+name|locklist
+name|lf_blkhd
 decl_stmt|;
-comment|/* The list of blocked locks */
+comment|/* List of requests blocked on this lock */
+name|TAILQ_ENTRY
+argument_list|(
+argument|lockf
+argument_list|)
+name|lf_block
+expr_stmt|;
+comment|/* A request waiting for a lock */
 block|}
 struct|;
 end_struct
