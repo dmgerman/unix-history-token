@@ -1063,20 +1063,6 @@ argument_list|(
 literal|"Scanning for DHCP servers..."
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|k
-operator|=
-literal|1
-init|;
-name|k
-operator|<
-literal|4
-condition|;
-name|k
-operator|++
-control|)
-block|{
 if|if
 condition|(
 literal|0
@@ -1100,17 +1086,31 @@ name|use_dhcp
 operator|=
 name|TRUE
 expr_stmt|;
-break|break;
 block|}
-name|msgNotify
-argument_list|(
-literal|"Scanning for DHCP servers...  Retry: %d"
-argument_list|,
-name|k
-argument_list|)
+else|else
+name|use_dhcp
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
-block|}
+comment|/* Special hack so it doesn't show up oddly in the tcpip setup menu */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|gateway
+argument_list|,
+literal|"NO"
+argument_list|)
+condition|)
+name|gateway
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* Get old IP address from variable space, if available */
 if|if
 condition|(
@@ -1371,6 +1371,13 @@ expr_stmt|;
 if|if
 condition|(
 name|tmp
+operator|&&
+name|strcmp
+argument_list|(
+name|tmp
+argument_list|,
+literal|"NO"
+argument_list|)
 condition|)
 name|SAFE_STRCPY
 argument_list|(
