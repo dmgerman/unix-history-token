@@ -157,9 +157,6 @@ specifier|extern
 name|char
 name|termtab
 index|[]
-decl_stmt|,
-name|fontfile
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -298,14 +295,6 @@ name|int
 name|apts
 decl_stmt|,
 name|apts1
-decl_stmt|,
-name|pts
-decl_stmt|,
-name|pts1
-decl_stmt|,
-name|font
-decl_stmt|,
-name|font1
 decl_stmt|;
 end_decl_stmt
 
@@ -587,6 +576,28 @@ specifier|extern
 name|int
 name|fontlab
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|stip1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|stip
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tchar
+modifier|*
+name|stiplab
 decl_stmt|;
 end_decl_stmt
 
@@ -904,8 +915,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|nel
-decl_stmt|,
-name|un
 decl_stmt|;
 end_decl_stmt
 
@@ -941,6 +950,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|nfonts
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nstips
 decl_stmt|;
 end_decl_stmt
 

@@ -49,6 +49,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ST
+value|1
+end_define
+
+begin_comment
+comment|/* default stipple */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LL
 value|(unsigned) 65*INCH/10
 end_define
@@ -535,6 +546,17 @@ end_define
 
 begin_comment
 comment|/* wiggly line with spline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRAWPOLY
+value|'p'
+end_define
+
+begin_comment
+comment|/* polygon with stipples */
 end_comment
 
 begin_define
