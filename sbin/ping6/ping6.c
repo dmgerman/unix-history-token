@@ -7040,6 +7040,11 @@ expr_stmt|;
 if|if
 condition|(
 name|l
+operator|==
+operator|-
+literal|1
+operator|||
+name|l
 operator|>=
 sizeof|sizeof
 argument_list|(

@@ -1462,6 +1462,8 @@ name|int
 name|first
 init|=
 literal|1
+decl_stmt|,
+name|n
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2077,8 +2079,11 @@ operator|<
 name|cpe
 condition|)
 comment|/* start with sa->sa_data */
-name|cp
-operator|+=
+if|if
+condition|(
+operator|(
+name|n
+operator|=
 name|snprintf
 argument_list|(
 name|cp
@@ -2092,6 +2097,13 @@ argument_list|,
 operator|*
 name|s
 argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+name|cp
+operator|+=
+name|n
 expr_stmt|;
 break|break;
 block|}
@@ -2154,6 +2166,8 @@ name|u_long
 name|i
 decl_stmt|;
 name|int
+name|n
+decl_stmt|,
 name|subnetshift
 decl_stmt|;
 ifdef|#
@@ -2888,8 +2902,11 @@ name|cp
 operator|<
 name|cpe
 condition|)
-name|cp
-operator|+=
+if|if
+condition|(
+operator|(
+name|n
+operator|=
 name|snprintf
 argument_list|(
 name|cp
@@ -2904,6 +2921,13 @@ operator|*
 name|s
 operator|++
 argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+name|cp
+operator|+=
+name|n
 expr_stmt|;
 break|break;
 block|}

@@ -4161,6 +4161,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|j
+operator|==
+operator|-
+literal|1
+condition|)
+name|j
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|i
 operator|+
 name|j
