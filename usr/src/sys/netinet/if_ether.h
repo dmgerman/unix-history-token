@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ether.h	4.4	83/03/15	*/
+comment|/*	if_ether.h	4.5	83/05/15	*/
 end_comment
 
 begin_comment
@@ -99,19 +99,6 @@ name|ETHERMIN
 value|(60-14)
 end_define
 
-begin_decl_stmt
-name|u_char
-name|etherbroadcastaddr
-index|[
-literal|6
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 6 bytes of 0xFF */
-end_comment
-
 begin_comment
 comment|/*  * Ethernet Address Resolution Protocol.  *  * See RFC 826 for protocol description.  Structure below is adapted  * to resolving internet addresses.  Field names used correspond to   * RFC 826.  */
 end_comment
@@ -186,12 +173,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_comment
 comment|/*  * Structure shared between the ethernet driver modules and  * the address resolution code.  For example, each ec_softc or il_softc  * begins with this structure.  */
 end_comment
@@ -221,6 +202,25 @@ comment|/* link to next ether driver */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|u_char
+name|etherbroadcastaddr
+index|[
+literal|6
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 6 bytes of 0xFF */
+end_comment
 
 begin_function_decl
 name|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.67	83/05/12	*/
+comment|/*	ip_input.c	1.68	83/05/15	*/
 end_comment
 
 begin_include
@@ -780,11 +780,12 @@ literal|0
 comment|/* 	 * Diskless machines don't initially know 	 * their address, so take packets from them 	 * if we're acting as a network disk server. 	 */
 if|if
 condition|(
+name|in_netof
+argument_list|(
 name|ip
 operator|->
 name|ip_dst
-operator|.
-name|s_addr
+argument_list|)
 operator|==
 name|INADDR_ANY
 operator|&&
