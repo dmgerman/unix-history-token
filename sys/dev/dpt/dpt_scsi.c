@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.2 1998/02/10 17:36:44 eivind Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.3 1998/02/20 13:11:45 bde Exp $"
 end_empty
 
 begin_define
@@ -12834,12 +12834,16 @@ directive|ifdef
 name|DPT_FREELIST_IS_STACK
 name|TAILQ_INSERT_HEAD
 argument_list|(
-argument|&dpt->free_ccbs
+operator|&
+name|dpt
+operator|->
+name|free_ccbs
 argument_list|,
-argument|ccb
+name|ccb
 argument_list|,
-argument|links
+name|links
 argument_list|)
+expr_stmt|;
 else|#
 directive|else
 name|TAILQ_INSERT_TAIL
