@@ -151,14 +151,14 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MAJOR
-value|1
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|16
+value|0
 end_define
 
 begin_comment
@@ -231,7 +231,7 @@ expr|struct
 name|ispsoftc
 operator|*
 operator|,
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|,
 name|ispreq_t
@@ -255,7 +255,7 @@ expr|struct
 name|ispsoftc
 operator|*
 operator|,
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|,
 name|u_int32_t
@@ -298,6 +298,10 @@ operator|(
 expr|struct
 name|ispsoftc
 operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 expr_stmt|;
@@ -308,19 +312,6 @@ name|dv_ispfw
 decl_stmt|;
 comment|/* ptr to f/w */
 name|u_int16_t
-name|dv_fwlen
-decl_stmt|;
-comment|/* length of f/w */
-name|u_int16_t
-name|dv_codeorg
-decl_stmt|;
-comment|/* code ORG for f/w */
-name|u_int32_t
-name|dv_fwrev
-decl_stmt|;
-comment|/* f/w revision */
-comment|/* 	 * Initial values for conf1 register 	 */
-name|u_int16_t
 name|dv_conf1
 decl_stmt|;
 name|u_int16_t
@@ -330,6 +321,10 @@ comment|/* clock frequency */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Overall parameters  */
+end_comment
 
 begin_define
 define|#
@@ -389,7 +384,7 @@ value|(isp)->isp_maxluns
 end_define
 
 begin_comment
-comment|/*  * Macros to read, write ISP registers through bus specific code.  */
+comment|/*  * Macros to access ISP registers through bus specific layers-  * mostly wrappers to vector through the mdvec structure.  */
 end_comment
 
 begin_define
@@ -493,9 +488,11 @@ directive|define
 name|ISP_DUMPREGS
 parameter_list|(
 name|isp
+parameter_list|,
+name|m
 parameter_list|)
 define|\
-value|if ((isp)->isp_mdvec->dv_dregs) (*(isp)->isp_mdvec->dv_dregs)((isp))
+value|if ((isp)->isp_mdvec->dv_dregs) (*(isp)->isp_mdvec->dv_dregs)((isp),(m))
 end_define
 
 begin_define
@@ -529,7 +526,70 @@ value|(*(isp)->isp_mdvec->dv_wr_reg)((isp), (reg), ISP_READ((isp), (reg))& ~(val
 end_define
 
 begin_comment
-comment|/* this is the size of a queue entry (request and response) */
+comment|/*  * The MEMORYBARRIER macro is defined per platform (to provide synchronization  * on Request and Response Queues, Scratch DMA areas, and Registers)  *  * Defined Memory Barrier Synchronization Types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNC_REQUEST
+value|0
+end_define
+
+begin_comment
+comment|/* request queue synchronization */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNC_RESULT
+value|1
+end_define
+
+begin_comment
+comment|/* result queue synchronization */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNC_SFORDEV
+value|2
+end_define
+
+begin_comment
+comment|/* scratch, sync for ISP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNC_SFORCPU
+value|3
+end_define
+
+begin_comment
+comment|/* scratch, sync for CPU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNC_REG
+value|4
+end_define
+
+begin_comment
+comment|/* for registers */
+end_comment
+
+begin_comment
+comment|/*  * Request/Response Queue defines and macros.  * The maximum is defined per platform (and can be based on board type).  */
+end_comment
+
+begin_comment
+comment|/* This is the size of a queue entry (request and response) */
 end_comment
 
 begin_define
@@ -540,51 +600,29 @@ value|64
 end_define
 
 begin_comment
-comment|/* both request and result queue length must be a power of two */
+comment|/* Both request and result queue length must be a power of two */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RQUEST_QUEUE_LEN
-value|MAXISPREQUEST
+parameter_list|(
+name|x
+parameter_list|)
+value|MAXISPREQUEST(x)
 end_define
-
-begin_comment
-comment|/* I've seen wierdnesses with the result queue< 64 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|MAXISPREQUEST
-operator|>
-literal|64
-end_if
 
 begin_define
 define|#
 directive|define
 name|RESULT_QUEUE_LEN
-value|(MAXISPREQUEST/2)
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((MAXISPREQUEST(x)>> 2)< 64)? 64 : MAXISPREQUEST(x)>> 2)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RESULT_QUEUE_LEN
-value|MAXISPREQUEST
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -645,7 +683,7 @@ parameter_list|,
 name|iptr
 parameter_list|)
 define|\
-value|ISP_WRITE(isp, INMAILBOX4, iptr), isp->isp_reqidx = iptr
+value|MEMORYBARRIER(isp, SYNC_REQUEST, iptr, QENTRY_LEN); \ 	ISP_WRITE(isp, INMAILBOX4, iptr); \ 	isp->isp_reqidx = iptr
 end_define
 
 begin_comment
@@ -1268,41 +1306,38 @@ name|isp_maxluns
 decl_stmt|;
 comment|/* maximum luns supported */
 name|u_int32_t
-label|:
-literal|4
-operator|,
 name|isp_touched
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* board ever seen? */
 name|isp_fast_mttr
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* fast sram */
 name|isp_bustype
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 comment|/* SBus or PCI */
-operator|:
+range|:
 literal|1
-operator|,
+decl_stmt|,
 name|isp_dblev
-operator|:
-literal|8
-operator|,
-comment|/* debug level */
+range|:
+literal|12
+decl_stmt|,
+comment|/* debug log mask */
 name|isp_clock
-operator|:
+range|:
 literal|8
-operator|,
+decl_stmt|,
 comment|/* input clock */
 name|isp_confopts
-operator|:
+range|:
 literal|8
-expr_stmt|;
+decl_stmt|;
 comment|/* config options */
 comment|/* 	 * Volatile state 	 */
 specifier|volatile
@@ -1362,7 +1397,7 @@ name|MAX_MAILBOX
 index|]
 decl_stmt|;
 comment|/* 	 * Active commands are stored here, indexed by handle functions. 	 */
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 modifier|*
 name|isp_xflist
@@ -1405,7 +1440,7 @@ value|((fcparam *) (isp)->isp_param)
 end_define
 
 begin_comment
-comment|/*  * ISP States  */
+comment|/*  * ISP Driver Run States  */
 end_comment
 
 begin_define
@@ -1493,6 +1528,21 @@ end_define
 
 begin_comment
 comment|/* try to force N- instead of L-Port */
+end_comment
+
+begin_comment
+comment|/*  * Firmware related defines  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_CODE_ORG
+value|0x1000
+end_define
+
+begin_comment
+comment|/* default f/w code start */
 end_comment
 
 begin_define
@@ -1775,7 +1825,31 @@ value|(isp->isp_type == ISP_HA_FC_2200)
 end_define
 
 begin_comment
-comment|/*  * Function Prototypes  */
+comment|/*  * DMA cookie macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA_MSW
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMA_LSW
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xffff))
+end_define
+
+begin_comment
+comment|/*  * Core System Function Prototypes  */
 end_comment
 
 begin_comment
@@ -1820,7 +1894,7 @@ end_comment
 
 begin_decl_stmt
 name|void
-name|isp_restart
+name|isp_reinit
 name|__P
 argument_list|(
 operator|(
@@ -1850,16 +1924,81 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Command Entry Point  */
+comment|/*  * Command Entry Point- Platform Dependent layers call into this  */
 end_comment
 
 begin_decl_stmt
-name|int32_t
-name|ispscsicmd
+name|int
+name|isp_start
 name|__P
 argument_list|(
 operator|(
-name|ISP_SCSI_XFER_T
+name|XS_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* these values are what isp_start returns */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_COMPLETE
+value|101
+end_define
+
+begin_comment
+comment|/* command completed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_EAGAIN
+value|102
+end_define
+
+begin_comment
+comment|/* busy- maybe retry later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_QUEUED
+value|103
+end_define
+
+begin_comment
+comment|/* command has been queued for execution */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_RQLATER
+value|104
+end_define
+
+begin_comment
+comment|/* requeue this command later */
+end_comment
+
+begin_comment
+comment|/*  * Command Completion Point- Core layers call out from this with completed cmds  */
+end_comment
+
+begin_decl_stmt
+name|void
+name|isp_done
+name|__P
+argument_list|(
+operator|(
+name|XS_T
 operator|*
 operator|)
 argument_list|)
@@ -1979,12 +2118,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * lost command routine (XXXX IN TRANSITION XXXX)  */
+comment|/*  * Platform Dependent Error and Debug Printout  */
 end_comment
 
 begin_decl_stmt
 name|void
-name|isp_lostcmd
+name|isp_prt
 name|__P
 argument_list|(
 operator|(
@@ -1992,12 +2131,154 @@ expr|struct
 name|ispsoftc
 operator|*
 operator|,
-name|ISP_SCSI_XFER_T
+name|int
+name|level
+operator|,
+specifier|const
+name|char
 operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGALL
+value|0x0
+end_define
+
+begin_comment
+comment|/* log always */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGCONFIG
+value|0x1
+end_define
+
+begin_comment
+comment|/* log configuration messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGINFO
+value|0x2
+end_define
+
+begin_comment
+comment|/* log informational messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGWARN
+value|0x4
+end_define
+
+begin_comment
+comment|/* log warning messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGERR
+value|0x8
+end_define
+
+begin_comment
+comment|/* log error messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGDEBUG0
+value|0x10
+end_define
+
+begin_comment
+comment|/* log simple debug messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGDEBUG1
+value|0x20
+end_define
+
+begin_comment
+comment|/* log intermediate debug messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGDEBUG2
+value|0x40
+end_define
+
+begin_comment
+comment|/* log most debug messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGDEBUG3
+value|0x100
+end_define
+
+begin_comment
+comment|/* log high frequency debug messages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGTDEBUG0
+value|0x200
+end_define
+
+begin_comment
+comment|/* log simple debug messages (target mode) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGTDEBUG1
+value|0x400
+end_define
+
+begin_comment
+comment|/* log intermediate debug messages (target) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_LOGTDEBUG2
+value|0x800
+end_define
+
+begin_comment
+comment|/* log all debug messages (target) */
+end_comment
+
+begin_comment
+comment|/*  * Each Platform provides it's own isposinfo substructure of the ispsoftc  * defined above.  *  * Each platform must also provide the following macros/defines:  *  *  *	INLINE		-	platform specific define for 'inline' functions  *  *	ISP2100_FABRIC	-	defines whether FABRIC support is enabled  *	ISP2100_SCRLEN	-	length for the Fibre Channel scratch DMA area  *  *	MEMZERO(dst, src)			platform zeroing function  *	MEMCPY(dst, src, count)			platform copying function  *	SNPRINTF(buf, bufsize, fmt, ...)	snprintf  *	STRNCAT(dstbuf, size, srcbuf)		strncat  *	USEC_DELAY(usecs)			microsecond spindelay function  *  *	NANOTIME_T				nanosecond time type  *  *	GET_NANOTIME(NANOTIME_T *)		get current nanotime.  *  *	GET_NANOSEC(NANOTIME_T *)		get u_int64_t from NANOTIME_T  *  *	NANOTIME_SUB(NANOTIME_T *, NANOTIME_T *)  *						subtract two NANOTIME_T values  *  *  *	MAXISPREQUEST(struct ispsoftc *)	maximum request queue size  *						for this particular board type  *  *	MEMORYBARRIER(struct ispsoftc *, barrier_type, offset, size)  *  *		Function/Macro the provides memory synchronization on  *		various objects so that the ISP's and the system's view  *		of the same object is consistent.  *  *	MBOX_ACQUIRE(struct ispsoftc *)		acquire lock on mailbox regs  *	MBOX_WAIT_COMPLETE(struct ispsoftc *)	wait for mailbox cmd to be done  *	MBOX_NOTIFY_COMPLETE(struct ispsoftc *)	notification of mbox cmd donee  *	MBOX_RELEASE(struct ispsoftc *)		release lock on mailbox regs  *   *  *	SCSI_GOOD	SCSI 'Good' Status  *	SCSI_CHECK	SCSI 'Check Condition' Status  *	SCSI_BUSY	SCSI 'Busy' Status  *	SCSI_QFULL	SCSI 'Queue Full' Status  *  *	XS_T		Platform SCSI transaction type (i.e., command for HBA)  *	XS_ISP(xs)	gets an instance out of an XS_T  *	XS_CHANNEL(xs)	gets the channel (bus # for DUALBUS cards) ""  *	XS_TGT(xs)	gets the target ""  *	XS_LUN(xs)	gets the lun ""  *	XS_CDBP(xs)	gets a pointer to the scsi CDB ""  *	XS_CDBLEN(xs)	gets the CDB's length ""  *	XS_XFRLEN(xs)	gets the associated data transfer length ""  *	XS_TIME(xs)	gets the time (in milliseconds) for this command  *	XS_RESID(xs)	gets the current residual count  *	XS_STSP(xs)	gets a pointer to the SCSI status byte ""  *	XS_SNSP(xs)	gets a pointer to the associate sense data  *	XS_SNSLEN(xs)	gets the length of sense data storage  *	XS_SNSKEY(xs)	dereferences XS_SNSP to get the current stored Sense Key  *	XS_TAG_P(xs)	predicate of whether this command should be tagged  *	XS_TAG_TYPE(xs)	which type of tag to use  *	XS_SETERR(xs)	set error state  *  *		HBA_NOERROR	command has no erros  *		HBA_BOTCH	hba botched something  *		HBA_CMDTIMEOUT	command timed out  *		HBA_SELTIMEOUT	selection timed out (also port logouts for FC)  *		HBA_TGTBSY	target returned a BUSY status  *		HBA_BUSRESET	bus reset destroyed command  *		HBA_ABORTED	command was aborted (by request)  *		HBA_DATAOVR	a data overrun was detected  *		HBA_ARQFAIL	Automatic Request Sense failed  *  *	XS_ERR(xs)	return current error state  *	XS_NOERR(xs)	there is no error currently set  *	XS_INITERR(xs)	initialize error state  *  *	XS_SAVE_SENSE(xs, sp)		save sense data  *  *	XS_SET_STATE_STAT(isp, sp, xs)	platform dependent interpreter of  *					response queue entry status bits  *  *  *	DEFAULT_IID(struct ispsoftc *)		Default SCSI initiator ID  *  *	DEFAULT_LOOPID(struct ispsoftc *)	Default FC Loop ID  *	DEFAULT_NODEWWN(struct ispsoftc *)	Default FC Node WWN  *	DEFAULT_PORTWWN(struct ispsoftc *)	Default FC Port WWN  *  *	PORT_FROM_NODE_WWN(struct ispsoftc *, u_int64_t nwwn)  *  *		Node to Port WWN generator- this needs to be platform  *		specific so that given a NAA=2 WWN dragged from the Qlogic  *		card's NVRAM, a Port WWN can be generated that has the  *		appropriate bits set in bits 48..60 that are likely to be  *		based on the device instance number.  *  *	(XXX these do endian specific transformations- in transition XXX)  *	ISP_SWIZZLE_ICB  *	ISP_UNSWIZZLE_AND_COPY_PDBP  *	ISP_SWIZZLE_CONTINUATION  *	ISP_SWIZZLE_REQUEST  *	ISP_UNSWIZZLE_RESPONSE  *	ISP_SWIZZLE_SNS_REQ  *	ISP_UNSWIZZLE_SNS_RSP  *	ISP_SWIZZLE_NVRAM_WORD  *  *  */
+end_comment
 
 begin_endif
 endif|#
