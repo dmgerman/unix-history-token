@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.165 (Berkeley) %G%"
+literal|"@(#)conf.c	8.166 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7833,6 +7833,10 @@ literal|0
 index|]
 operator|==
 literal|'\0'
+operator|||
+name|ConfigLevel
+operator|<=
+literal|1
 condition|)
 return|return
 name|TRUE
