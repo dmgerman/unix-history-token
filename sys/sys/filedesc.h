@@ -486,9 +486,9 @@ modifier|*
 name|fdcopy
 parameter_list|(
 name|struct
-name|thread
+name|filedesc
 modifier|*
-name|td
+name|fdp
 parameter_list|)
 function_decl|;
 end_function_decl

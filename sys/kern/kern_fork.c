@@ -1079,6 +1079,10 @@ operator|=
 name|fdcopy
 argument_list|(
 name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
 argument_list|)
 expr_stmt|;
 name|FILEDESC_UNLOCK
@@ -1709,6 +1713,10 @@ operator|=
 name|fdcopy
 argument_list|(
 name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
 argument_list|)
 expr_stmt|;
 name|FILEDESC_UNLOCK

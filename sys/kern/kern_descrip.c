@@ -5505,7 +5505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy a filedesc structure.  */
+comment|/*  * Copy a filedesc structure.  * A NULL pointer in returns a NULL reference, this is to ease callers,  * not catch errors.  */
 end_comment
 
 begin_function
@@ -5514,21 +5514,18 @@ name|filedesc
 modifier|*
 name|fdcopy
 parameter_list|(
-name|td
+name|fdp
 parameter_list|)
 name|struct
-name|thread
+name|filedesc
 modifier|*
-name|td
+name|fdp
 decl_stmt|;
 block|{
 name|struct
 name|filedesc
 modifier|*
 name|newfdp
-decl_stmt|,
-modifier|*
-name|fdp
 decl_stmt|;
 name|struct
 name|file
@@ -5542,14 +5539,6 @@ decl_stmt|,
 name|j
 decl_stmt|;
 comment|/* Certain daemons might not have file descriptors. */
-name|fdp
-operator|=
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
-expr_stmt|;
 if|if
 condition|(
 name|fdp
