@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.25	81/08/31	*/
+comment|/*	kern_clock.c	4.26	81/10/16	*/
 end_comment
 
 begin_include
@@ -126,6 +126,23 @@ end_include
 begin_comment
 comment|/*  * Hardclock is called straight from  * the real time clock interrupt.  * We limit the work we do at real clock interrupt time to:  *	reloading clock  *	decrementing time to callouts  *	recording cpu time usage  *	modifying priority of current process  *	arrange for soft clock interrupt  *	kernel pc profiling  *  * At software (softclock) interrupt time we:  *	implement callouts  *	maintain date  *	lightning bolt wakeup (every second)  *	alarm clock signals  *	jab the scheduler  *  * On the vax softclock interrupts are implemented by  * software interrupts.  Note that we may have multiple softclock  * interrupts compressed into one (due to excessive interrupt load),  * but that hardclock interrupts should never be lost.  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|kcounts
+index|[
+literal|20000
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|kprof
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -377,6 +394,32 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|k
+init|=
+operator|(
+operator|(
+name|int
+operator|)
+name|pc
+operator|&
+literal|0x7fffffff
+operator|)
+operator|/
+literal|8
+decl_stmt|;
+if|if
+condition|(
+name|k
+operator|<
+literal|20000
+condition|)
+name|kcounts
+index|[
+name|k
+index|]
+operator|++
+expr_stmt|;
 name|cpstate
 operator|=
 name|CP_SYS
