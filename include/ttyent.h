@@ -46,6 +46,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_TTYS_INSECURE
+value|"insecure"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_TTYS_WINDOW
 value|"window"
 end_define
