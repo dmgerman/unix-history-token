@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)error.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)error.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -759,34 +759,6 @@ end_define
 begin_comment
 comment|/*  *	Defines and resources for determing if a given line  *	is to be discarded because it refers to a file not to  *	be touched, or if the function reference is to a  *	function the user doesn't want recorded.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IG_FILE1
-value|"llib-lc"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IG_FILE2
-value|"llib-port"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IG_FILE3
-value|"/usr/lib/llib-lc"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IG_FILE4
-value|"/usr/lib/llib-port"
-end_define
 
 begin_define
 define|#

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lmain.c	4.3 (Berkeley) %G%"
+literal|"@(#)lmain.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_include
 include|#
@@ -474,7 +480,7 @@ name|NCH
 condition|)
 name|cname
 operator|=
-literal|"/usr/lib/lex/ebcform"
+name|_PATH_EBCFORM
 expr_stmt|;
 name|fother
 operator|=

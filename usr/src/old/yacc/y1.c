@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)y1.c	4.1	(Berkeley)	%G%"
+literal|"@(#)y1.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"dextern"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -439,7 +445,7 @@ name|finput
 operator|=
 name|fopen
 argument_list|(
-name|PARSER
+name|_PATH_PARSER
 argument_list|,
 literal|"r"
 argument_list|)
@@ -454,7 +460,7 @@ name|error
 argument_list|(
 literal|"cannot find parser %s"
 argument_list|,
-name|PARSER
+name|_PATH_PARSER
 argument_list|)
 expr_stmt|;
 name|warray

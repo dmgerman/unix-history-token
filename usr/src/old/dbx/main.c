@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,12 @@ begin_include
 include|#
 directive|include
 file|"coredump.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_ifndef
@@ -1000,7 +1006,7 @@ name|tmpfile
 operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/dbxXXXX"
+name|_PATH_TMP
 argument_list|)
 expr_stmt|;
 name|setout
@@ -1709,7 +1715,7 @@ condition|)
 block|{
 name|corename
 operator|=
-literal|"/dev/mem"
+name|_PATH_MEM
 expr_stmt|;
 name|corefile
 operator|=
@@ -1729,7 +1735,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"can't open /dev/mem"
+literal|"can't open %s"
+argument_list|,
+name|_PATH_MEM
 argument_list|)
 expr_stmt|;
 block|}

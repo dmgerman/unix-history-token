@@ -16,7 +16,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)m4.c	1.4 (Berkeley) %G%"
+literal|"@(#)m4.c	1.5 (Berkeley) %G%"
 expr_stmt|;
 end_expr_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -832,7 +838,7 @@ name|char
 name|tempname
 index|[]
 init|=
-literal|"/tmp/m4aXXXXX"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 

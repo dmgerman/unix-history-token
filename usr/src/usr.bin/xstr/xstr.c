@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xstr.c	5.4 (Berkeley) %G%"
+literal|"@(#)xstr.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_include
 include|#
@@ -67,13 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -337,7 +343,7 @@ name|mktemp
 argument_list|(
 name|savestr
 argument_list|(
-literal|"/tmp/xstrXXXXXX"
+name|_PATH_TMP
 argument_list|)
 argument_list|)
 expr_stmt|;

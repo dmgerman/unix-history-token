@@ -46,6 +46,12 @@ directive|include
 file|<sys/file.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 name|FILEP
 name|infile
@@ -1070,7 +1076,9 @@ name|sprintf
 argument_list|(
 name|cdatafname
 argument_list|,
-literal|"/tmp/fortcd.%d"
+literal|"%s/fortcd.%d"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|pid
 argument_list|)
@@ -1079,7 +1087,9 @@ name|sprintf
 argument_list|(
 name|cchkfname
 argument_list|,
-literal|"/tmp/fortcc.%d"
+literal|"%s/fortcc.%d"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|pid
 argument_list|)
@@ -1088,7 +1098,9 @@ name|sprintf
 argument_list|(
 name|vdatafname
 argument_list|,
-literal|"/tmp/fortvd.%d"
+literal|"%s/fortvd.%d"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|pid
 argument_list|)
@@ -1097,7 +1109,9 @@ name|sprintf
 argument_list|(
 name|vchkfname
 argument_list|,
-literal|"/tmp/fortvc.%d"
+literal|"%s/fortvc.%d"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|pid
 argument_list|)

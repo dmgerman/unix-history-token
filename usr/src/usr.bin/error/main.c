@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|"error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -146,7 +152,7 @@ name|char
 name|im_on
 index|[]
 init|=
-literal|"/dev/tty"
+name|_PATH_TTY
 decl_stmt|;
 end_decl_stmt
 

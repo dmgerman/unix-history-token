@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makedefs.c	5.3 (Berkeley) %G%"
+literal|"@(#)makedefs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -281,7 +287,7 @@ name|tmpname
 operator|=
 name|mktemp
 argument_list|(
-literal|"/tmp/makedefsXXXXXX"
+name|_PATH_TMP
 argument_list|)
 expr_stmt|;
 block|}

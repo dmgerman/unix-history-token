@@ -112,7 +112,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"drivedefs.h"
+file|"pathnames.h"
 end_include
 
 begin_include
@@ -261,7 +261,7 @@ name|char
 modifier|*
 name|shellname
 init|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 decl_stmt|;
 end_decl_stmt
 
@@ -271,7 +271,7 @@ name|char
 modifier|*
 name|cppname
 init|=
-literal|"/lib/cpp"
+name|_PATH_CPP
 decl_stmt|;
 end_decl_stmt
 
@@ -3491,10 +3491,6 @@ argument|sys(str) char *str; { register char *s
 argument_list|,
 argument|*t; char *argv[
 literal|100
-argument|]
-argument_list|,
-argument|path[
-literal|100
 argument|]; char *inname
 argument_list|,
 argument|*outname; int append; int waitpid; int argc;   if(debugflag) 	fprintf(diagfile,
@@ -3529,11 +3525,7 @@ argument|return(-
 literal|1
 argument|); argv[argc] =
 literal|0
-argument|;  s = path; t =
-literal|"/usr/bin/"
-argument|; while(*t) 	*s++ = *t++; for(t = argv[
-literal|1
-argument|] ; *s++ = *t++ ; ) 	; if((waitpid = fork()) ==
+argument|;  if((waitpid = fork()) ==
 literal|0
 argument|) 	{ 	if(inname) 		freopen(inname,
 literal|"r"
@@ -3541,21 +3533,13 @@ argument|, stdin); 	if(outname) 		freopen(outname, (append ?
 literal|"a"
 argument|:
 literal|"w"
-argument|), stdout); 	enbint(SIG_DFL);  	texec(path+
-literal|9
-argument|, argv);
-comment|/* command */
-argument|texec(path+
-literal|4
-argument|, argv);
-comment|/*  /bin/command */
-argument|texec(path  , argv);
-comment|/* /usr/bin/command */
-argument|fatalstr(
+argument|), stdout); 	enbint(SIG_DFL);  	texec(argv[
+literal|1
+argument|]  , argv);  	fatalstr(
 literal|"Cannot load %s"
-argument|,path+
-literal|9
-argument|); 	}  return( await(waitpid) ); }
+argument|, argv[
+literal|1
+argument|]); 	}  return( await(waitpid) ); }
 include|#
 directive|include
 file|"errno.h"
@@ -3750,8 +3734,8 @@ literal|'\0'
 argument|) 	unlink(fn); }      LOCAL fname(name, suff) char *name
 argument_list|,
 argument|*suff; { sprintf(name,
-literal|"/tmp/%s%d.%s"
-argument|, temppref, pid, suff); }     dotchar(s) register char *s; { for( ; *s ; ++s) 	if(s[
+literal|"%s/%s%d.%s"
+argument|, _PATH_TMP, temppref, pid, suff); }     dotchar(s) register char *s; { for( ; *s ; ++s) 	if(s[
 literal|0
 argument|]==
 literal|'.'

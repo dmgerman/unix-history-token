@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)f77.c	5.4 (Berkeley) %G%"
+literal|"@(#)f77.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,6 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -58,13 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<stdio.h>
 end_include
 
 begin_ifdef
@@ -129,7 +129,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"drivedefs.h"
+file|"pathnames.h"
 end_include
 
 begin_include
@@ -278,7 +278,7 @@ name|char
 modifier|*
 name|shellname
 init|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 decl_stmt|;
 end_decl_stmt
 
@@ -288,7 +288,7 @@ name|char
 modifier|*
 name|cppname
 init|=
-literal|"/lib/cpp"
+name|_PATH_CPP
 decl_stmt|;
 end_decl_stmt
 
@@ -4078,11 +4078,6 @@ name|argv
 index|[
 literal|100
 index|]
-decl_stmt|,
-name|path
-index|[
-literal|100
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -4281,46 +4276,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|s
-operator|=
-name|path
-expr_stmt|;
-name|t
-operator|=
-literal|"/usr/bin/"
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|t
-condition|)
-operator|*
-name|s
-operator|++
-operator|=
-operator|*
-name|t
-operator|++
-expr_stmt|;
-for|for
-control|(
-name|t
-operator|=
-name|argv
-index|[
-literal|1
-index|]
-init|;
-operator|*
-name|s
-operator|++
-operator|=
-operator|*
-name|t
-operator|++
-condition|;
-control|)
-empty_stmt|;
 if|if
 condition|(
 operator|(
@@ -4394,39 +4349,22 @@ argument_list|)
 expr_stmt|;
 name|texec
 argument_list|(
-name|path
-operator|+
-literal|9
+name|argv
+index|[
+literal|1
+index|]
 argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* command */
-name|texec
-argument_list|(
-name|path
-operator|+
-literal|4
-argument_list|,
-name|argv
-argument_list|)
-expr_stmt|;
-comment|/*  /bin/command */
-name|texec
-argument_list|(
-name|path
-argument_list|,
-name|argv
-argument_list|)
-expr_stmt|;
-comment|/* /usr/bin/command */
 name|fatalstr
 argument_list|(
 literal|"Cannot load %s"
 argument_list|,
-name|path
-operator|+
-literal|9
+name|argv
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -5419,7 +5357,9 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"/tmp/%s%d.%s"
+literal|"%s/%s%d.%s"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|temppref
 argument_list|,

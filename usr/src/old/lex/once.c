@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	once.c	4.1	83/08/11	*/
+comment|/*	once.c	4.2	89/05/10	*/
 end_comment
 
 begin_comment
@@ -924,7 +924,7 @@ name|char
 modifier|*
 name|cname
 init|=
-literal|"/usr/lib/lex/ncform"
+name|_PATH_NCFORM
 decl_stmt|;
 end_decl_stmt
 
@@ -933,7 +933,7 @@ name|char
 modifier|*
 name|ratname
 init|=
-literal|"/usr/lib/lex/nrform"
+name|_PATH_NRFORM
 decl_stmt|;
 end_decl_stmt
 

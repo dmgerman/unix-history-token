@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	5.4 (Berkeley) %G%"
+literal|"@(#)touch.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,18 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
 
 begin_include
 include|#
@@ -55,13 +43,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -2242,7 +2248,7 @@ name|char
 modifier|*
 name|canon_name
 init|=
-literal|"/tmp/ErrorXXXXXX"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printgprof.c	5.5 (Berkeley) %G%"
+literal|"@(#)printgprof.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"gprof.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_macro
@@ -330,7 +336,7 @@ condition|)
 block|{
 name|printblurb
 argument_list|(
-name|FLAT_BLURB
+name|_PATH_FLAT_BLURB
 argument_list|)
 expr_stmt|;
 block|}
@@ -578,7 +584,7 @@ condition|)
 block|{
 name|printblurb
 argument_list|(
-name|CALLG_BLURB
+name|_PATH_CALLG_BLURB
 argument_list|)
 expr_stmt|;
 block|}

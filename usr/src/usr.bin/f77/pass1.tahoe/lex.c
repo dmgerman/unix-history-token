@@ -41,6 +41,12 @@ directive|include
 file|"tokdefs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -753,7 +759,9 @@ name|sprintf
 argument_list|(
 name|temp
 argument_list|,
-literal|"/usr/include/%s"
+literal|"%s/%s"
+argument_list|,
+name|_PATH_INCLUDES
 argument_list|,
 name|name
 argument_list|)
