@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cards.c	5.2 (Berkeley) %G%"
+literal|"@(#)cards.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"monop.ext"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -61,7 +67,7 @@ name|char
 modifier|*
 name|cardfile
 init|=
-literal|"/usr/games/lib/cards.pck"
+name|_PATH_CARDS
 decl_stmt|;
 end_decl_stmt
 
