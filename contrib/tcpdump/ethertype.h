@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/ethertype.h,v 1.16 2001/06/21 17:56:02 itojun Exp $ (LBL)  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1993, 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/tcpdump/ethertype.h,v 1.20 2003/07/01 19:10:26 guy Exp $ (LBL)  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -232,24 +232,6 @@ define|#
 directive|define
 name|ETHERTYPE_SCA
 value|0x6007
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ETHERTYPE_REVARP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_REVARP
-value|0x8035
 end_define
 
 begin_endif
@@ -580,6 +562,60 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_VMAN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_VMAN
+value|0x9100
+end_define
+
+begin_comment
+comment|/* Extreme VMAN Protocol */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_ISO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_ISO
+value|0xfefe
+end_define
+
+begin_comment
+comment|/* nonstandard - used in Cisco HDLC encapsulation */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|tok
+name|ethertype_values
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

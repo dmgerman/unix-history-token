@@ -1003,13 +1003,9 @@ file|"interface.h"
 end_include
 
 begin_function
-name|void
+name|u_int
 name|fr_if_print
 parameter_list|(
-name|u_char
-modifier|*
-name|user
-parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/token.h,v 1.3 2000/10/03 02:55:03 itojun Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/token.h,v 1.6 2002/12/11 07:14:12 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -126,7 +126,7 @@ name|SEGMENT_COUNT
 parameter_list|(
 name|trp
 parameter_list|)
-value|((RIF_LENGTH(trp) - 2) / 2)
+value|((int)((RIF_LENGTH(trp) - 2) / 2))
 end_define
 
 begin_struct

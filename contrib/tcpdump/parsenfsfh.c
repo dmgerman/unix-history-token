@@ -19,8 +19,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.23 2001/09/17 21:57:53 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.25.2.2 2003/11/16 08:51:07 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,19 +50,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -332,6 +321,7 @@ specifier|static
 name|int
 name|is_UCX
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -358,7 +348,9 @@ parameter_list|,
 name|ourself
 parameter_list|)
 specifier|register
-name|caddr_t
+specifier|const
+name|unsigned
+name|char
 modifier|*
 name|fh
 decl_stmt|;
@@ -393,16 +385,12 @@ decl_stmt|;
 comment|/* true if file handle was generated on this host */
 block|{
 specifier|register
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|fhp
 init|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|fh
 decl_stmt|;
 name|u_int32_t
@@ -2147,6 +2135,7 @@ name|is_UCX
 parameter_list|(
 name|fhp
 parameter_list|)
+specifier|const
 name|unsigned
 name|char
 modifier|*

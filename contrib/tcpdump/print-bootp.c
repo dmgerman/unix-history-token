@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bootp.c,v 1.60.4.2 2002/06/01 23:51:11 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bootp.c,v 1.75.2.3 2004/03/02 07:45:13 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,31 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -148,6 +125,60 @@ literal|" [|bootp]"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|tok
+name|bootp_flag_values
+index|[]
+init|=
+block|{
+block|{
+literal|0x8000
+block|,
+literal|"Broadcast"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|tok
+name|bootp_op_values
+index|[]
+init|=
+block|{
+block|{
+name|BOOTPREQUEST
+block|,
+literal|"Request"
+block|}
+block|,
+block|{
+name|BOOTPREPLY
+block|,
+literal|"Reply"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Print bootp requests  */
 end_comment
@@ -164,12 +195,6 @@ name|cp
 parameter_list|,
 name|u_int
 name|length
-parameter_list|,
-name|u_short
-name|sport
-parameter_list|,
-name|u_short
-name|dport
 parameter_list|)
 block|{
 specifier|register
@@ -216,64 +241,81 @@ operator|->
 name|bp_op
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|bp
-operator|->
-name|bp_op
-condition|)
-block|{
-case|case
-name|BOOTREQUEST
-case|:
-comment|/* Usually, a request goes from a client to a server */
-if|if
-condition|(
-name|sport
-operator|!=
-name|IPPORT_BOOTPC
-operator|||
-name|dport
-operator|!=
-name|IPPORT_BOOTPS
-condition|)
 name|printf
 argument_list|(
-literal|" (request)"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|BOOTREPLY
-case|:
-comment|/* Usually, a reply goes from a server to a client */
-if|if
-condition|(
-name|sport
-operator|!=
-name|IPPORT_BOOTPS
-operator|||
-name|dport
-operator|!=
-name|IPPORT_BOOTPC
-condition|)
-name|printf
+literal|"BOOTP/DHCP, %s"
+argument_list|,
+name|tok2str
 argument_list|(
-literal|" (reply)"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|" bootp-#%d"
+name|bootp_op_values
+argument_list|,
+literal|"unknown (0x%02x)"
 argument_list|,
 name|bp
 operator|->
 name|bp_op
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|bp_htype
+operator|==
+literal|1
+operator|&&
+name|bp
+operator|->
+name|bp_hlen
+operator|==
+literal|6
+operator|&&
+name|bp
+operator|->
+name|bp_op
+operator|==
+name|BOOTPREQUEST
+condition|)
+block|{
+name|TCHECK2
+argument_list|(
+name|bp
+operator|->
+name|bp_chaddr
+index|[
+literal|0
+index|]
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" from %s"
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|bp
+operator|->
+name|bp_chaddr
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|", length: %u"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vflag
+condition|)
+return|return;
 name|TCHECK
 argument_list|(
 name|bp
@@ -292,7 +334,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|" htype-#%d"
+literal|", htype-#%d"
 argument_list|,
 name|bp
 operator|->
@@ -316,7 +358,7 @@ literal|6
 condition|)
 name|printf
 argument_list|(
-literal|" hlen:%d"
+literal|", hlen:%d"
 argument_list|,
 name|bp
 operator|->
@@ -332,7 +374,7 @@ name|bp_hops
 condition|)
 name|printf
 argument_list|(
-literal|" hops:%d"
+literal|", hops:%d"
 argument_list|,
 name|bp
 operator|->
@@ -347,13 +389,11 @@ name|bp_xid
 condition|)
 name|printf
 argument_list|(
-literal|" xid:0x%x"
+literal|", xid:0x%x"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|bp
 operator|->
 name|bp_xid
@@ -368,28 +408,50 @@ name|bp_secs
 condition|)
 name|printf
 argument_list|(
-literal|" secs:%d"
+literal|", secs:%d"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|bp
 operator|->
 name|bp_secs
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|printf
+argument_list|(
+literal|", flags: [%s]"
+argument_list|,
+name|bittok2str
+argument_list|(
+name|bootp_flag_values
+argument_list|,
+literal|"none"
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
 name|bp
 operator|->
 name|bp_flags
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
-literal|" flags:0x%x"
+literal|" (0x%04x)"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|bp
 operator|->
 name|bp_flags
@@ -414,7 +476,7 @@ name|s_addr
 condition|)
 name|printf
 argument_list|(
-literal|" C:%s"
+literal|"\n\t  Client IP: %s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -443,7 +505,7 @@ name|s_addr
 condition|)
 name|printf
 argument_list|(
-literal|" Y:%s"
+literal|"\n\t  Your IP: %s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -472,7 +534,7 @@ name|s_addr
 condition|)
 name|printf
 argument_list|(
-literal|" S:%s"
+literal|"\n\t  Server IP: %s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -501,7 +563,7 @@ name|s_addr
 condition|)
 name|printf
 argument_list|(
-literal|" G:%s"
+literal|"\n\t  Gateway IP: %s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -528,19 +590,6 @@ operator|==
 literal|6
 condition|)
 block|{
-specifier|register
-specifier|const
-name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
-specifier|register
-specifier|const
-name|char
-modifier|*
-name|e
-decl_stmt|;
 name|TCHECK2
 argument_list|(
 name|bp
@@ -553,89 +602,9 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-name|eh
-operator|=
-operator|(
-specifier|const
-expr|struct
-name|ether_header
-operator|*
-operator|)
-name|packetp
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|bp_op
-operator|==
-name|BOOTREQUEST
-condition|)
-name|e
-operator|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|ESRC
-argument_list|(
-name|eh
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|bp
-operator|->
-name|bp_op
-operator|==
-name|BOOTREPLY
-condition|)
-name|e
-operator|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|EDST
-argument_list|(
-name|eh
-argument_list|)
-expr_stmt|;
-else|else
-name|e
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|e
-operator|==
-literal|0
-operator|||
-name|memcmp
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|bp
-operator|->
-name|bp_chaddr
-argument_list|,
-name|e
-argument_list|,
-literal|6
-argument_list|)
-operator|!=
-literal|0
-condition|)
 name|printf
 argument_list|(
-literal|" ether %s"
+literal|"\n\t  Client Ethernet Address: %s"
 argument_list|,
 name|etheraddr_string
 argument_list|(
@@ -669,7 +638,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" sname \""
+literal|"\n\t  sname \""
 argument_list|)
 expr_stmt|;
 if|if
@@ -710,7 +679,7 @@ name|TCHECK2
 argument_list|(
 name|bp
 operator|->
-name|bp_sname
+name|bp_file
 index|[
 literal|0
 index|]
@@ -729,7 +698,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" file \""
+literal|"\n\t  file \""
 argument_list|)
 expr_stmt|;
 if|if
@@ -861,7 +830,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"vend-#0x%x"
+literal|"\n\t  Vendor-#0x%x"
 argument_list|,
 name|ul
 argument_list|)
@@ -1408,7 +1377,7 @@ block|,
 literal|"iSUBNET"
 block|}
 block|,
-comment|/* ftp://ftp.isi.edu/.../assignments/bootp-dhcp-extensions */
+comment|/* http://www.iana.org/assignments/bootp-dhcp-extensions/index.htm */
 block|{
 name|TAG_USER_CLASS
 block|,
@@ -1771,7 +1740,7 @@ name|uc
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" vend-rfc1048"
+literal|"\n\t  Vendor-rfc1048:"
 argument_list|)
 expr_stmt|;
 comment|/* Step over magic cookie */
@@ -1873,7 +1842,7 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %s:"
+literal|"\n\t    %s:"
 argument_list|,
 name|cp
 argument_list|)
@@ -1912,11 +1881,11 @@ operator|>=
 name|snapend
 condition|)
 block|{
-name|fputs
+name|printf
 argument_list|(
-name|tstr
+literal|"[|bootp %u]"
 argument_list|,
-name|stdout
+name|len
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2727,6 +2696,21 @@ break|break;
 case|case
 name|TAG_CLIENT_FQDN
 case|:
+comment|/* option 81 should be at least 4 bytes long */
+if|if
+condition|(
+name|len
+operator|<
+literal|4
+condition|)
+name|printf
+argument_list|(
+literal|"ERROR: options 81 len %u< 4 bytes"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
 if|if
 condition|(
 operator|*
@@ -2840,6 +2824,14 @@ argument_list|(
 literal|'"'
 argument_list|)
 expr_stmt|;
+name|bp
+operator|+=
+name|size
+expr_stmt|;
+name|size
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 else|else
@@ -2924,6 +2916,7 @@ if|if
 condition|(
 name|size
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"[len %u]"
@@ -2931,6 +2924,11 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|bp
+operator|+=
+name|size
+expr_stmt|;
+block|}
 block|}
 return|return;
 name|trunc

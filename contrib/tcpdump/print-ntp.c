@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.32.4.1 2002/07/10 07:13:37 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.37.2.2 2003/11/16 08:51:36 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,31 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -84,6 +61,23 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRFTIME
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -94,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_ifdef
@@ -253,7 +253,7 @@ literal|3
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" v%d"
+literal|"NTPv%d"
 argument_list|,
 name|version
 argument_list|)
@@ -417,7 +417,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" strat %d"
+literal|", strat %d"
 argument_list|,
 name|bp
 operator|->
@@ -433,7 +433,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" poll %d"
+literal|", poll %d"
 argument_list|,
 name|bp
 operator|->
@@ -452,7 +452,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" prec %d"
+literal|", prec %d"
 argument_list|,
 name|bp
 operator|->
@@ -496,7 +496,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|" disp "
+literal|", disp "
 argument_list|,
 name|stdout
 argument_list|)
@@ -518,7 +518,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|" ref "
+literal|", ref "
 argument_list|,
 name|stdout
 argument_list|)
@@ -768,8 +768,9 @@ name|ff
 decl_stmt|;
 name|i
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sfp
 operator|->
 name|int_part
@@ -777,8 +778,9 @@ argument_list|)
 expr_stmt|;
 name|f
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|sfp
 operator|->
 name|fraction
@@ -852,8 +854,9 @@ name|ff
 decl_stmt|;
 name|i
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lfp
 operator|->
 name|int_part
@@ -861,8 +864,9 @@ argument_list|)
 expr_stmt|;
 name|uf
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lfp
 operator|->
 name|fraction
@@ -906,6 +910,69 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRFTIME
+comment|/* 	 * For extra verbosity, print the time in human-readable format. 	 */
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+operator|&&
+name|i
+condition|)
+block|{
+name|time_t
+name|seconds
+init|=
+name|i
+operator|-
+name|JAN_1970
+decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|tm
+decl_stmt|;
+name|char
+name|time_buf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|tm
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|seconds
+argument_list|)
+expr_stmt|;
+name|strftime
+argument_list|(
+name|time_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|time_buf
+argument_list|)
+argument_list|,
+literal|"%Y/%m/%d %H:%M:%S"
+argument_list|,
+name|tm
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" (%s)"
+argument_list|,
+name|time_buf
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -939,10 +1006,14 @@ name|i
 decl_stmt|;
 specifier|register
 name|u_int32_t
+name|u
+decl_stmt|,
 name|uf
 decl_stmt|;
 specifier|register
 name|u_int32_t
+name|ou
+decl_stmt|,
 name|ouf
 decl_stmt|;
 specifier|register
@@ -956,17 +1027,21 @@ decl_stmt|;
 name|int
 name|signbit
 decl_stmt|;
-name|i
+name|u
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lfp
 operator|->
 name|int_part
 argument_list|)
-operator|-
-name|ntohl
+expr_stmt|;
+name|ou
+operator|=
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|olfp
 operator|->
 name|int_part
@@ -974,8 +1049,9 @@ argument_list|)
 expr_stmt|;
 name|uf
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|lfp
 operator|->
 name|fraction
@@ -983,12 +1059,37 @@ argument_list|)
 expr_stmt|;
 name|ouf
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|olfp
 operator|->
 name|fraction
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ou
+operator|==
+literal|0
+operator|&&
+name|ouf
+operator|==
+literal|0
+condition|)
+block|{
+name|p_ntp_time
+argument_list|(
+name|lfp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|i
+operator|=
+name|u
+operator|-
+name|ou
 expr_stmt|;
 if|if
 condition|(

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/nfs.h,v 1.7 2002/12/11 07:13:55 guy Exp $ (LBL) */
+end_comment
+
+begin_comment
 comment|/*	$NetBSD: nfs.h,v 1.1 1996/05/23 22:49:53 fvdl Exp $	*/
 end_comment
 

@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sunrpc.c,v 1.39.6.1 2002/06/01 23:51:16 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sunrpc.c,v 1.43.2.2 2003/11/16 08:51:47 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,25 +46,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
@@ -89,23 +72,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIN32
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<rpc/pmap_prot.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
+begin_comment
+comment|/* WIN32 */
+end_comment
 
 begin_include
 include|#
@@ -129,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"addrtoname.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_include
@@ -310,11 +302,9 @@ argument_list|)
 argument_list|,
 literal|"0x%x"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|rm_xid
@@ -347,11 +337,9 @@ argument_list|)
 argument_list|,
 literal|"0x%x"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|rm_xid
@@ -499,11 +487,9 @@ name|proc2str
 argument_list|,
 literal|" proc #%u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|rm_call
@@ -515,8 +501,9 @@ argument_list|)
 expr_stmt|;
 name|x
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|rm_call
@@ -539,8 +526,9 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|rm_call
@@ -563,8 +551,9 @@ name|PMAPPROC_CALLIT
 case|:
 name|x
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|rm_call
@@ -599,11 +588,9 @@ name|printf
 argument_list|(
 literal|".%u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|rp
 operator|->
 name|rm_call
@@ -629,12 +616,17 @@ name|u_int32_t
 name|prog
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|WIN32
 specifier|register
 name|struct
 name|rpcent
 modifier|*
 name|rp
 decl_stmt|;
+endif|#
+directive|endif
 specifier|static
 name|char
 name|buf
@@ -643,7 +635,7 @@ literal|32
 index|]
 decl_stmt|;
 specifier|static
-name|int
+name|u_int32_t
 name|lastprog
 init|=
 literal|0
@@ -663,6 +655,9 @@ operator|(
 name|buf
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|WIN32
 name|rp
 operator|=
 name|getrpcbynumber
@@ -676,6 +671,9 @@ name|rp
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
+comment|/* WIN32 */
 operator|(
 name|void
 operator|)
@@ -693,6 +691,9 @@ argument_list|,
 name|prog
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|WIN32
 else|else
 name|strlcpy
 argument_list|(
@@ -708,6 +709,8 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|buf
