@@ -548,7 +548,7 @@ define|#
 directive|define
 name|gpbc
 parameter_list|()
-value|(bp> bufbase) ? *--bp : getc(infile[ilevel])
+value|(bp> bufbase) ? (*--bp ? *bp : EOF) : getc(infile[ilevel])
 end_define
 
 begin_define

@@ -431,6 +431,7 @@ name|pbstr
 name|__P
 argument_list|(
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -585,6 +586,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|bp
@@ -597,6 +599,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|buf
 index|[]
@@ -609,6 +612,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|bufbase
@@ -621,6 +625,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|bbase
@@ -657,6 +662,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 modifier|*
 name|endpbb

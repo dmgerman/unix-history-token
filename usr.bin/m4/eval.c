@@ -1154,11 +1154,13 @@ name|argc
 decl_stmt|;
 block|{
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|t
 decl_stmt|;
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -2451,6 +2453,7 @@ name|argc
 decl_stmt|;
 block|{
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|ap

@@ -137,6 +137,7 @@ comment|/* hash table for macros etc.  */
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|buf
 index|[
@@ -146,10 +147,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* push-back buffer	       */
+comment|/* push-back buffer            */
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|bufbase
@@ -163,6 +165,7 @@ comment|/* the base for current ilevel */
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|bbase
@@ -177,6 +180,7 @@ comment|/* the base for each ilevel    */
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|bp
@@ -190,6 +194,7 @@ comment|/* first available character   */
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|endpbb
@@ -1153,10 +1158,16 @@ operator|)
 operator|==
 literal|'_'
 operator|||
+operator|(
+name|t
+operator|!=
+name|EOF
+operator|&&
 name|isalpha
 argument_list|(
 name|t
 argument_list|)
+operator|)
 condition|)
 block|{
 name|putback
@@ -1513,12 +1524,18 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|isspace
-argument_list|(
+operator|(
 name|l
 operator|=
 name|gpbc
 argument_list|()
+operator|)
+operator|!=
+name|EOF
+operator|&&
+name|isspace
+argument_list|(
+name|l
 argument_list|)
 condition|)
 empty_stmt|;
@@ -1648,12 +1665,18 @@ expr_stmt|;
 comment|/* new argument   */
 while|while
 condition|(
-name|isspace
-argument_list|(
+operator|(
 name|l
 operator|=
 name|gpbc
 argument_list|()
+operator|)
+operator|!=
+name|EOF
+operator|&&
+name|isspace
+argument_list|(
+name|l
 argument_list|)
 condition|)
 empty_stmt|;
@@ -1705,7 +1728,7 @@ name|tp
 decl_stmt|;
 block|{
 specifier|register
-name|char
+name|int
 name|c
 decl_stmt|;
 specifier|register
@@ -1738,12 +1761,18 @@ decl_stmt|;
 while|while
 condition|(
 operator|(
-name|isalnum
-argument_list|(
 name|c
 operator|=
 name|gpbc
 argument_list|()
+operator|)
+operator|!=
+name|EOF
+operator|&&
+operator|(
+name|isalnum
+argument_list|(
+name|c
 argument_list|)
 operator|||
 name|c
