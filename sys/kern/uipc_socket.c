@@ -2527,8 +2527,6 @@ name|resid
 operator|+
 name|clen
 operator|&&
-name|uio
-operator|&&
 operator|(
 name|atomic
 operator|||
