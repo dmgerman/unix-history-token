@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)size.c	8.1 (Berkeley) %G%"
+literal|"@(#)size.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +345,14 @@ name|head
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|err
 argument_list|(
 literal|"%s: not in a.out format"
