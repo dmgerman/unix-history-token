@@ -1210,6 +1210,7 @@ parameter_list|,
 name|int
 name|perms
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
