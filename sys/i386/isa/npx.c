@@ -3048,6 +3048,20 @@ name|fpcurthread
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+if|if
+condition|(
+operator|!
+name|cpu_fxsr
+condition|)
+endif|#
+directive|endif
+name|fnclex
+argument_list|()
+expr_stmt|;
+comment|/* As in npxdrop(). */
 name|fpurstor
 argument_list|(
 name|addr
