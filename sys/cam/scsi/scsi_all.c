@@ -9707,6 +9707,7 @@ name|csio
 operator|->
 name|sense_data
 argument_list|,
+operator|&
 name|sense
 argument_list|,
 sizeof|sizeof
