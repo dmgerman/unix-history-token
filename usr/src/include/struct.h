@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	struct.h	4.1	83/05/03	*/
+comment|/*-  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)struct.h	5.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * access to information relating to the fields of a structure  */
+comment|/* Offset of the field in the structure. */
 end_comment
 
 begin_define
@@ -12,37 +12,48 @@ define|#
 directive|define
 name|fldoff
 parameter_list|(
-name|str
+name|name
 parameter_list|,
-name|fld
+name|field
 parameter_list|)
-value|((int)&(((struct str *)0)->fld))
+define|\
+value|((int)&(((struct name *)0)->field))
 end_define
+
+begin_comment
+comment|/* Size of the field in the structure. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|fldsiz
 parameter_list|(
-name|str
+name|name
 parameter_list|,
-name|fld
+name|field
 parameter_list|)
-value|(sizeof(((struct str *)0)->fld))
+define|\
+value|(sizeof(((struct name *)0)->field))
 end_define
+
+begin_comment
+comment|/* Address of the structure from a field. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|strbase
 parameter_list|(
-name|str
+name|name
 parameter_list|,
-name|ptr
+name|addr
 parameter_list|,
-name|fld
+name|field
 parameter_list|)
-value|((struct str *)((char *)(ptr)-fldoff(str, fld)))
+define|\
+value|((struct name *)((char *)(addr) - fldoff(name, field)))
 end_define
 
 end_unit
