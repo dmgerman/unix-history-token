@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	8.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)stat.h	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -513,6 +513,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|S_IFWHT
+value|0160000
+end_define
+
+begin_comment
+comment|/* whiteout */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|S_ISVTX
 value|0001000
 end_define
@@ -630,6 +641,20 @@ begin_comment
 comment|/* fifo or socket */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|S_ISWHT
+parameter_list|(
+name|m
+parameter_list|)
+value|((m& 0170000) == 0160000)
+end_define
+
+begin_comment
+comment|/* whiteout */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -733,6 +758,17 @@ begin_comment
 comment|/* writes to file may only append */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UF_OPAQUE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* directory is opaque wrt. union */
+end_comment
+
 begin_comment
 comment|/*  * Super-user changeable flags.  */
 end_comment
@@ -790,6 +826,13 @@ end_ifdef
 begin_comment
 comment|/*  * Shorthand abbreviations of above.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OPAQUE
+value|(UF_OPAQUE)
+end_define
 
 begin_define
 define|#
