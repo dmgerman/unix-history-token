@@ -1449,6 +1449,23 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|mtx
+operator|->
+name|mtx_recurse
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"sleeping on recursed mutex %s"
+operator|,
+name|mtx
+operator|->
+name|mtx_description
+operator|)
+argument_list|)
+expr_stmt|;
 name|WITNESS_SAVE
 argument_list|(
 name|mtx
