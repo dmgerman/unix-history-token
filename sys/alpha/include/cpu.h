@@ -121,8 +121,7 @@ name|need_proftick
 parameter_list|(
 name|p
 parameter_list|)
-define|\
-value|do { (p)->p_flag |= P_OWEUPC; aston(); } while (0)
+value|do {						\ 	mtx_enter(&sched_lock, MTX_SPIN);				\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	mtx_exit(&sched_lock, MTX_SPIN);				\ 	aston();							\ } while (0)
 end_define
 
 begin_comment
