@@ -317,7 +317,7 @@ comment|/* maximum in-progress async I/O's	*/
 end_comment
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|struct
 name|vnode
 modifier|*
@@ -326,7 +326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XXX: This is not quite a real vnode */
+comment|/* from vm_swap.c */
 end_comment
 
 begin_expr_stmt
@@ -982,35 +982,6 @@ operator|=
 name|n
 operator|-
 literal|1
-expr_stmt|;
-name|n
-operator|=
-name|getnewvnode
-argument_list|(
-name|VT_NON
-argument_list|,
-name|NULL
-argument_list|,
-name|spec_vnodeop_p
-argument_list|,
-operator|&
-name|swapdev_vp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-condition|)
-name|panic
-argument_list|(
-literal|"Cannot get vnode for swapdev"
-argument_list|)
-expr_stmt|;
-name|swapdev_vp
-operator|->
-name|v_type
-operator|=
-name|VBLK
 expr_stmt|;
 block|}
 end_function
@@ -3148,14 +3119,18 @@ index|]
 operator|->
 name|pindex
 expr_stmt|;
-comment|/* 	 * perform the I/O.  NOTE!!!  bp cannot be considered valid after 	 * this point because we automatically release it on completion. 	 * Instead, we look at the one page we are interested in which we 	 * still hold a lock on even through the I/O completion. 	 * 	 * The other pages in our m[] array are also released on completion, 	 * so we cannot assume they are valid anymore either. 	 * 	 * NOTE: b_blkno is destroyed by the call to swstrategy() 	 */
+comment|/* 	 * perform the I/O.  NOTE!!!  bp cannot be considered valid after 	 * this point because we automatically release it on completion. 	 * Instead, we look at the one page we are interested in which we 	 * still hold a lock on even through the I/O completion. 	 * 	 * The other pages in our m[] array are also released on completion, 	 * so we cannot assume they are valid anymore either. 	 * 	 * NOTE: b_blkno is destroyed by the call to VOP_STRATEGY 	 */
 name|BUF_KERNPROC
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|swstrategy
+name|VOP_STRATEGY
 argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3268,7 +3243,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	swap_pager_putpages:   *  *	Assign swap (if necessary) and initiate I/O on the specified pages.  *  *	We support both OBJT_DEFAULT and OBJT_SWAP objects.  DEFAULT objects  *	are automatically converted to SWAP objects.  *  *	In a low memory situation we may block in swstrategy(), but the new   *	vm_page reservation system coupled with properly written VFS devices   *	should ensure that no low-memory deadlock occurs.  This is an area  *	which needs work.  *  *	The parent has N vm_object_pip_add() references prior to  *	calling us and will remove references for rtvals[] that are  *	not set to VM_PAGER_PEND.  We need to remove the rest on I/O  *	completion.  *  *	The parent has soft-busy'd the pages it passes us and will unbusy  *	those whos rtvals[] entry is not set to VM_PAGER_PEND on return.  *	We need to unbusy the rest on I/O completion.  */
+comment|/*  *	swap_pager_putpages:   *  *	Assign swap (if necessary) and initiate I/O on the specified pages.  *  *	We support both OBJT_DEFAULT and OBJT_SWAP objects.  DEFAULT objects  *	are automatically converted to SWAP objects.  *  *	In a low memory situation we may block in VOP_STRATEGY(), but the new   *	vm_page reservation system coupled with properly written VFS devices   *	should ensure that no low-memory deadlock occurs.  This is an area  *	which needs work.  *  *	The parent has N vm_object_pip_add() references prior to  *	calling us and will remove references for rtvals[] that are  *	not set to VM_PAGER_PEND.  We need to remove the rest on I/O  *	completion.  *  *	The parent has soft-busy'd the pages it passes us and will unbusy  *	those whos rtvals[] entry is not set to VM_PAGER_PEND on return.  *	We need to unbusy the rest on I/O completion.  */
 end_comment
 
 begin_function
@@ -3862,7 +3837,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 		 * asynchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to swstrategy() 		 */
+comment|/* 		 * asynchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to VOP_STRATEGY 		 */
 if|if
 condition|(
 name|sync
@@ -3881,8 +3856,12 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|swstrategy
+name|VOP_STRATEGY
 argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3910,15 +3889,19 @@ name|VM_PAGER_PEND
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * synchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to swstrategy() 		 */
+comment|/* 		 * synchronous 		 * 		 * NOTE: b_blkno is destroyed by the call to VOP_STRATEGY 		 */
 name|bp
 operator|->
 name|b_iodone
 operator|=
 name|swp_pager_sync_iodone
 expr_stmt|;
-name|swstrategy
+name|VOP_STRATEGY
 argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
