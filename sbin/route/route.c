@@ -374,14 +374,6 @@ name|rtm_inits
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|struct
-name|in_addr
-name|inet_makeaddr
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|atalk_aton
@@ -3912,16 +3904,6 @@ specifier|register
 name|sup
 name|su
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NS
-name|struct
-name|ns_addr
-name|ns_addr
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
 name|struct
 name|hostent
 modifier|*
