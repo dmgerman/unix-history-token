@@ -282,6 +282,14 @@ literal|"D-Link DFE-530TX+ 10/100BaseTX"
 block|}
 block|,
 block|{
+name|NORTEL_VENDORID
+block|,
+name|ACCTON_DEVICEID_5030
+block|,
+literal|"Nortel Networks 10/100BaseTX"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0

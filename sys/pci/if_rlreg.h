@@ -2144,6 +2144,17 @@ value|0x1211
 end_define
 
 begin_comment
+comment|/*  * Nortel PCI vendor ID  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NORTEL_VENDORID
+value|0x126C
+end_define
+
+begin_comment
 comment|/*  * Delta Electronics Vendor ID.  */
 end_comment
 
