@@ -594,6 +594,10 @@ operator|!
 name|pid
 condition|)
 block|{
+specifier|extern
+name|int
+name|_interactiveHack
+decl_stmt|;
 name|dup2
 argument_list|(
 name|pfd
@@ -612,6 +616,12 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|_interactiveHack
+condition|)
+block|{
 name|dup2
 argument_list|(
 name|DebugFD
@@ -624,6 +634,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|pfd
