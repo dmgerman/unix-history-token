@@ -57,6 +57,12 @@ directive|include
 file|<sys/errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"syscons.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|verbose
