@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.30.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -588,6 +588,20 @@ name|nfssvc_sock
 name|nfssvc_sockhead
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SLP_DEREFFREE
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLP_CLRFREE
+value|0x200
+end_define
 
 begin_comment
 comment|/*  * Nfs server psuedo system call for the nfsd's  * Based on the flag value it either:  * - adds a socket to the selection list  * - remains in the kernel as an nfsd  * - remains in the kernel as an nfsiod  */
@@ -1776,6 +1790,13 @@ argument_list|,
 name|M_NFSSVC
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Alloc nfssvc_sock 0x%x\n"
+argument_list|,
+name|slp
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -4156,6 +4177,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NOTYET
 name|slp
 operator|->
 name|ns_prev
@@ -4186,6 +4210,76 @@ argument_list|,
 name|M_NFSSVC
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|slp
+operator|->
+name|ns_flag
+operator|&
+name|SLP_DEREFFREE
+condition|)
+name|panic
+argument_list|(
+literal|"deref dup free 0x%x of deref free\n"
+argument_list|,
+name|slp
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|slp
+operator|->
+name|ns_prev
+operator|->
+name|ns_next
+operator|=
+name|slp
+operator|->
+name|ns_next
+expr_stmt|;
+name|slp
+operator|->
+name|ns_next
+operator|->
+name|ns_prev
+operator|=
+name|slp
+operator|->
+name|ns_prev
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|slp
+operator|->
+name|ns_flag
+operator|&
+name|SLP_CLRFREE
+condition|)
+name|panic
+argument_list|(
+literal|"deref dup free 0x%x of clrall free\n"
+argument_list|,
+name|slp
+argument_list|)
+expr_stmt|;
+name|slp
+operator|->
+name|ns_flag
+operator||=
+name|SLP_DEREFFREE
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Free deref sock 0x%x\n"
+argument_list|,
+name|slp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -4296,6 +4390,9 @@ name|slp
 operator|->
 name|ns_next
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTYET
 name|free
 argument_list|(
 operator|(
@@ -4306,6 +4403,53 @@ argument_list|,
 name|M_NFSSVC
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|oslp
+operator|->
+name|ns_flag
+operator|&
+name|SLP_DEREFFREE
+condition|)
+name|panic
+argument_list|(
+literal|"clrall dup free 0x%x of deref free\n"
+argument_list|,
+name|oslp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|oslp
+operator|->
+name|ns_flag
+operator|&
+name|SLP_CLRFREE
+condition|)
+name|panic
+argument_list|(
+literal|"clrall dup free 0x%x of clrall free\n"
+argument_list|,
+name|oslp
+argument_list|)
+expr_stmt|;
+name|oslp
+operator|->
+name|ns_flag
+operator||=
+name|SLP_CLRFREE
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Free all socks 0x%x\n"
+argument_list|,
+name|oslp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|nfsrv_cleancache
 argument_list|()
@@ -4330,6 +4474,13 @@ argument_list|,
 name|M_NFSSVC
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Alloc nfs_udpsock 0x%x\n"
+argument_list|,
+name|nfs_udpsock
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -4364,6 +4515,13 @@ argument_list|,
 name|M_NFSSVC
 argument_list|,
 name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Alloc nfs_cltpsock 0x%x\n"
+argument_list|,
+name|nfs_cltpsock
 argument_list|)
 expr_stmt|;
 name|bzero
