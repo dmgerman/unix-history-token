@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_req.c,v 8.113 2000/04/21 06:54:11 vixie Exp $"
+literal|"$Id: ns_req.c,v 8.118 2000/07/17 07:57:56 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -685,6 +685,12 @@ block|{
 name|error
 operator|=
 name|ns_r_badkey
+expr_stmt|;
+name|hp
+operator|->
+name|rcode
+operator|=
+name|ns_r_notauth
 expr_stmt|;
 name|ns_debug
 argument_list|(
@@ -1401,6 +1407,12 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
+name|msg
+operator|+
+name|HFIXEDSZ
+expr_stmt|;
 block|}
 comment|/* 	 * If the query had a TSIG and the message is truncated or there was 	 * a TSIG error, build a new message with no data and a TSIG. 	 */
 if|if
@@ -2039,6 +2051,36 @@ name|Finish
 operator|)
 return|;
 block|}
+comment|/* valid notify's are authoritative */
+if|if
+condition|(
+operator|!
+name|hp
+operator|->
+name|aa
+condition|)
+block|{
+name|ns_debug
+argument_list|(
+name|ns_log_notify
+argument_list|,
+literal|1
+argument_list|,
+literal|"FORMERR Notify request without AA"
+argument_list|)
+expr_stmt|;
+name|hp
+operator|->
+name|rcode
+operator|=
+name|ns_r_formerr
+expr_stmt|;
+return|return
+operator|(
+name|Finish
+operator|)
+return|;
+block|}
 name|n
 operator|=
 name|dn_expand
@@ -2389,6 +2431,12 @@ operator|->
 name|rcode
 operator|=
 name|ns_r_noerror
+expr_stmt|;
+name|hp
+operator|->
+name|aa
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -3346,8 +3394,12 @@ block|}
 operator|*
 name|buflenp
 operator|-=
+operator|(
 operator|*
 name|msglenp
+operator|-
+name|HFIXEDSZ
+operator|)
 expr_stmt|;
 name|count
 operator|=
@@ -5200,6 +5252,10 @@ if|if
 condition|(
 operator|!
 name|ixfr_found
+operator|&&
+name|type
+operator|==
+name|ns_t_ixfr
 condition|)
 block|{
 name|qsp
@@ -6395,15 +6451,12 @@ operator|*
 name|cpp
 argument_list|)
 expr_stmt|;
-operator|*
-name|cpp
-operator|+=
-name|dlen
-expr_stmt|;
 if|if
 condition|(
 operator|*
 name|cpp
+operator|+
+name|dlen
 operator|!=
 name|eom
 condition|)
@@ -6429,6 +6482,11 @@ name|Finish
 operator|)
 return|;
 block|}
+operator|*
+name|cpp
+operator|+=
+name|dlen
+expr_stmt|;
 comment|/* 	 * not all inverse queries are handled. 	 */
 switch|switch
 condition|(
@@ -8309,7 +8367,7 @@ name|cp
 argument_list|,
 name|buflen
 argument_list|,
-name|dnptrs
+name|comp_ptrs
 argument_list|,
 name|edp
 argument_list|)

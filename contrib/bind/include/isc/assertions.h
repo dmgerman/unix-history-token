@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: assertions.h,v 8.2 1999/01/08 19:23:01 vixie Exp $  */
+comment|/*  * $Id: assertions.h,v 8.3 2000/07/17 07:53:59 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -279,7 +279,7 @@ name|REQUIRE
 parameter_list|(
 name|cond
 parameter_list|)
-value|((void) 0)
+value|((void) (cond))
 end_define
 
 begin_define
@@ -289,7 +289,7 @@ name|REQUIRE_ERR
 parameter_list|(
 name|cond
 parameter_list|)
-value|((void) 0)
+value|((void) (cond))
 end_define
 
 begin_endif
@@ -343,7 +343,7 @@ name|ENSURE
 parameter_list|(
 name|cond
 parameter_list|)
-value|((void) 0)
+value|((void) (cond))
 end_define
 
 begin_define
@@ -353,7 +353,7 @@ name|ENSURE_ERR
 parameter_list|(
 name|cond
 parameter_list|)
-value|((void) 0)
+value|((void) (cond))
 end_define
 
 begin_endif
@@ -407,7 +407,7 @@ name|INSIST
 parameter_list|(
 name|cond
 parameter_list|)
-value|((void) 0)
+value|((void) (cond))
 end_define
 
 begin_define
@@ -417,7 +417,7 @@ name|INSIST_ERR
 parameter_list|(
 name|cond
 parameter_list|)
-value|((void) 0)
+value|((void) (cond))
 end_define
 
 begin_endif
@@ -471,7 +471,7 @@ name|INVARIANT
 parameter_list|(
 name|cond
 parameter_list|)
-value|((void) 0)
+value|((void) (cond))
 end_define
 
 begin_define
@@ -481,7 +481,7 @@ name|INVARIANT_ERR
 parameter_list|(
 name|cond
 parameter_list|)
-value|((void) 0)
+value|((void) (cond))
 end_define
 
 begin_endif

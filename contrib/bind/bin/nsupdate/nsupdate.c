@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsupdate.c,v 8.23 2000/02/04 07:51:04 vixie Exp $"
+literal|"$Id: nsupdate.c,v 8.24 2000/07/11 06:32:01 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_load.c,v 8.103 2000/04/21 06:54:02 vixie Exp $"
+literal|"$Id: db_load.c,v 8.104 2000/07/17 07:48:09 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2435,7 +2435,7 @@ name|z_origin
 argument_list|,
 name|filename
 argument_list|,
-literal|"No default TTL set using SOA minimum instead"
+literal|"No default TTL ($TTL<value>) set, using SOA minimum instead"
 argument_list|)
 expr_stmt|;
 name|default_warn

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_resp.c,v 8.143 2000/05/09 07:38:38 vixie Exp $"
+literal|"$Id: ns_resp.c,v 8.144 2000/07/11 08:26:09 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2761,7 +2761,15 @@ name|ns_info
 argument_list|(
 name|ns_log_notify
 argument_list|,
-literal|"Received NOTIFY answer from %s for \"%s %s %s\""
+literal|"Received NOTIFY answer (%sAA) from %s for \"%s %s %s\""
+argument_list|,
+name|hp
+operator|->
+name|aa
+condition|?
+literal|""
+else|:
+literal|"!"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -11717,6 +11725,16 @@ condition|?
 literal|1
 else|:
 literal|0
+operator|)
+expr_stmt|;
+name|hp
+operator|->
+name|aa
+operator|=
+operator|(
+name|opcode
+operator|==
+name|NS_NOTIFY_OP
 operator|)
 expr_stmt|;
 comment|/* First check for an already pending query for this data. */
