@@ -5095,18 +5095,6 @@ literal|"ThumbDrive"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_TREK
-block|,
-name|USB_PRODUCT_TREK_THUMBDRIVE_8MB
-block|,
-literal|0
-block|,
-literal|"Trek Technology"
-block|,
-literal|"ThumbDrive"
-block|, 	}
-block|,
-block|{
 name|USB_VENDOR_ULTIMA
 block|,
 name|USB_PRODUCT_ULTIMA_1200UBPLUS

@@ -8296,17 +8296,6 @@ begin_comment
 comment|/* Fusion Digital Gamepad */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_TREK_THUMBDRIVE_8MB
-value|0x9988
-end_define
-
-begin_comment
-comment|/* ThumbDrive 8MB */
-end_comment
-
 begin_comment
 comment|/* Trek Technology products */
 end_comment
