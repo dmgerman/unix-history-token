@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|PATCH_VERSION
-value|"2.1"
+value|"2.5"
 end_define
 
 end_unit
