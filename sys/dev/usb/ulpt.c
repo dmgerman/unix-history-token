@@ -1059,12 +1059,7 @@ operator|->
 name|bInterfaceProtocol
 operator|==
 name|UIPROTO_PRINTER_BI
-operator|||
-name|id
-operator|->
-name|bInterfaceProtocol
-operator|==
-name|UIPROTO_PRINTER_1284
+comment|/* || 			     id->bInterfaceProtocol == UIPROTO_PRINTER_1284 */
 operator|)
 condition|)
 goto|goto
