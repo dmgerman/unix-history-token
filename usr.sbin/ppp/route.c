@@ -69,23 +69,6 @@ directive|include
 file|<sys/un.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOINET6
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/in6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
