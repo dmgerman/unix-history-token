@@ -2458,6 +2458,35 @@ name|UMATCH_VENDOR_PRODUCT
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idVendor
+argument_list|)
+operator|==
+name|USB_VENDOR_SIGMATEL
+operator|&&
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idProduct
+argument_list|)
+operator|==
+name|USB_PRODUCT_SIGMATEL_I_BEAD100
+condition|)
+block|{
+comment|/* XXX Really need SHUTTLE_INIT quirk from FreeBSD-current */
+name|sc
+operator|->
+name|drive
+operator|=
+name|SHUTTLE_EUSB
+expr_stmt|;
+block|}
 comment|/* 	 * The Pentax Optio cameras require RS_NO_CLEAR_UA 	 * PR: kern/46369, kern/50271 	 */
 if|if
 condition|(
