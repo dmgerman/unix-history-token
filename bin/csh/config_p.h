@@ -192,6 +192,12 @@ begin_comment
 comment|/****************** configurable hacks ****************/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/* have been moved to config_f.h */
 end_comment
@@ -215,6 +221,16 @@ begin_define
 define|#
 directive|define
 name|NLS_BUGS
+end_define
+
+begin_comment
+comment|/* we want to use the system malloc when we install as /bin/csh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYSMALLOC
 end_define
 
 begin_endif
