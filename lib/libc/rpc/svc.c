@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc.c,v 1.6 1996/08/12 14:00:24 peter Exp $"
+literal|"$Id: svc.c,v 1.7 1996/12/30 15:07:33 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1537,21 +1537,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-name|void
-name|svc_getreqset2
-name|__P
-argument_list|(
-operator|(
-name|fd_set
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
