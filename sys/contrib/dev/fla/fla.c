@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: fla.c,v 1.1 1999/08/06 15:59:07 phk Exp $   *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: fla.c,v 1.2 1999/08/07 13:11:12 bde Exp $   *  */
 end_comment
 
 begin_include
@@ -808,18 +808,20 @@ name|dk_slices
 argument_list|,
 operator|&
 name|dk_dd
-argument_list|,
-name|flastrategy
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|fla_cdevsw
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -995,10 +997,6 @@ operator|&
 name|sc
 operator|->
 name|dk_slices
-argument_list|,
-name|flastrategy
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1054,6 +1052,8 @@ decl_stmt|;
 if|if
 condition|(
 name|fla_debug
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -1271,6 +1271,8 @@ expr_stmt|;
 if|if
 condition|(
 name|fla_debug
+operator|>
+literal|1
 operator|||
 name|error
 condition|)
@@ -1420,10 +1422,6 @@ operator|&
 name|sc
 operator|->
 name|dk_slices
-argument_list|,
-name|flaopen
-argument_list|,
-name|flaclose
 argument_list|)
 operator|)
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.84 1999/05/31 11:28:44 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.85 1999/08/09 10:35:04 phk Exp $  */
 end_comment
 
 begin_comment
@@ -1058,19 +1058,6 @@ parameter_list|,
 name|char
 modifier|*
 name|wmesg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|wdstrategy1
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3426,23 +3413,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-specifier|static
-name|void
-name|wdstrategy1
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-block|{
-comment|/* 	 * XXX - do something to make wdstrategy() but not this block while 	 * we're doing dsinit() and dsioctl(). 	 */
-name|wdstrategy
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*  * Routine to queue a command to the controller.  The unit's  * request is linked into the active list for the controller.  * If the controller is idle, the transfer is started.  */
 specifier|static
 name|void
@@ -4180,7 +4150,7 @@ argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN; 	{ 	struc
 literal|"wd"
 argument|, dev, fmt,
 literal|0
-argument|,&du->dk_slices,&label, wdstrategy1, 		       (ds_setgeom_t *)NULL,&wd_cdevsw); 	} 	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
+argument|,&du->dk_slices,&label); 	} 	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
 literal|"wdopn2"
 argument|); 	return (error);
 else|#
@@ -4191,7 +4161,7 @@ argument|) {
 comment|/* 		 * wdtab[ctrlr].b_active != 0 implies  XXX applicable now ?? 		 * drive_queue[lunit].b_act == NULL (?)  XXX applicable now ?? 		 * so the following guards most things (until the next i/o). 		 * It doesn't guard against a new i/o starting and being 		 * affected by the label being changed.  Sigh. 		 */
 argument|wdsleep(du->dk_ctrlr,
 literal|"wdopn1"
-argument|);  		du->dk_flags |= DKFL_LABELLING; 		du->dk_state = WANTOPEN;  		error = dsinit(dkmodpart(dev, RAW_PART), wdstrategy,&du->dk_dd,&du->dk_slices); 		if (error !=
+argument|);  		du->dk_flags |= DKFL_LABELLING; 		du->dk_state = WANTOPEN;  		error = dsinit(dkmodpart(dev, RAW_PART),&du->dk_dd,&du->dk_slices); 		if (error !=
 literal|0
 argument|) { 			du->dk_flags&= ~DKFL_LABELLING; 			return (error); 		}
 comment|/* XXX check value returned by wdwsetctlr(). */
@@ -4199,9 +4169,9 @@ argument|wdwsetctlr(du); 		if (dkslice(dev) == WHOLE_DISK_SLICE) { 			dsopen(dev
 literal|0
 argument|); 		}
 comment|/* 		 * Read label using RAW_PART partition. 		 * 		 * If the drive has an MBR, then the current geometry (from 		 * wdgetctlr()) is used to read it; then the BIOS/DOS 		 * geometry is inferred and used to read the label off the 		 * 'c' partition.  Otherwise the label is read using the 		 * current geometry.  The label gives the final geometry. 		 * If bad sector handling is enabled, then this geometry 		 * is used to read the bad sector table.  The geometry 		 * changes occur inside readdisklabel() and are propagated 		 * to the driver by resetting the state machine. 		 * 		 * XXX can now handle changes directly since dsinit() doesn't 		 * do too much. 		 */
-argument|msg = correct_readdisklabel(dkmodpart(dev, RAW_PART), wdstrategy,&du->dk_dd);
+argument|msg = correct_readdisklabel(dkmodpart(dev, RAW_PART),&du->dk_dd);
 comment|/* XXX check value returned by wdwsetctlr(). */
-argument|wdwsetctlr(du); 		if (msg == NULL&& du->dk_dd.d_flags& D_BADSECT) 			msg = readbad144(dkmodpart(dev, RAW_PART), wdstrategy,&du->dk_dd,&du->dk_bad); 		du->dk_flags&= ~DKFL_LABELLING; 		if (msg != NULL) { 			log(LOG_WARNING,
+argument|wdwsetctlr(du); 		if (msg == NULL&& du->dk_dd.d_flags& D_BADSECT) 			msg = readbad144(dkmodpart(dev, RAW_PART),&du->dk_dd,&du->dk_bad); 		du->dk_flags&= ~DKFL_LABELLING; 		if (msg != NULL) { 			log(LOG_WARNING,
 literal|"wd%d: cannot find label (%s)\n"
 argument|, 			    lunit, msg); 			if (part != RAW_PART) 				return (EINVAL);
 comment|/* XXX needs translation */
@@ -4786,7 +4756,7 @@ argument|du = wddrives[lunit]; 	wdsleep(du->dk_ctrlr,
 literal|"wdioct"
 argument|); 	error = dsioctl(
 literal|"wd"
-argument|, dev, cmd, addr, flags,&du->dk_slices, 			wdstrategy1, (ds_setgeom_t *)NULL); 	if (error != ENOIOCTL) 		return (error);
+argument|, dev, cmd, addr, flags,&du->dk_slices); 	if (error != ENOIOCTL) 		return (error);
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4824,7 +4794,9 @@ argument|default: 		return (ENOTTY); 	} }
 ifdef|#
 directive|ifdef
 name|B_FORMAT
-argument|int wdformat(struct buf *bp) {  	bp->b_flags |= B_FORMAT; 	wdstrategy(bp);
+argument|int wdformat(struct buf *bp) {  	bp->b_flags |= B_FORMAT; 	BUF_STRATEGY(bp,
+literal|0
+argument|);
 comment|/* 	 * phk put this here, better that return(wdstrategy(bp)); 	 * XXX 	 */
 argument|return -
 literal|1
@@ -4848,7 +4820,7 @@ literal|2
 argument|);
 endif|#
 directive|endif
-argument|return (dssize(dev,&du->dk_slices, wdopen, wdclose)); }   int wddump(dev_t dev) {
+argument|return (dssize(dev,&du->dk_slices)); }   int wddump(dev_t dev) {
 ifdef|#
 directive|ifdef
 name|PC98

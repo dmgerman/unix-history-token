@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.34 1999/05/08 06:39:37 phk Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.35 1999/06/26 02:46:02 mckusick Exp $  */
 end_comment
 
 begin_include
@@ -103,13 +103,6 @@ return|return
 operator|(
 name|physio
 argument_list|(
-name|devsw
-argument_list|(
-name|dev
-argument_list|)
-operator|->
-name|d_strategy
-argument_list|,
 name|NULL
 argument_list|,
 name|dev
@@ -145,13 +138,6 @@ return|return
 operator|(
 name|physio
 argument_list|(
-name|devsw
-argument_list|(
-name|dev
-argument_list|)
-operator|->
-name|d_strategy
-argument_list|,
 name|NULL
 argument_list|,
 name|dev
@@ -171,8 +157,6 @@ begin_function_decl
 name|int
 name|physio
 parameter_list|(
-name|strategy
-parameter_list|,
 name|bp
 parameter_list|,
 name|dev
@@ -183,10 +167,6 @@ name|minp
 parameter_list|,
 name|uio
 parameter_list|)
-name|d_strategy_t
-modifier|*
-name|strategy
-decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -523,12 +503,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* perform transfer */
-call|(
-modifier|*
-name|strategy
-call|)
+name|BUF_STRATEGY
 argument_list|(
 name|bp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|spl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.50 1999/07/17 19:58:37 phk Exp $ */
+comment|/* $Id: ccd.c,v 1.51 1999/07/18 14:30:57 phk Exp $ */
 end_comment
 
 begin_comment
@@ -6041,8 +6041,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-name|ccdstrategy
-argument_list|,
 operator|&
 name|cs
 operator|->
@@ -6880,9 +6878,6 @@ name|sc_label
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Call the generic disklabel extraction routine. 	 */
-if|if
-condition|(
-operator|(
 name|errstring
 operator|=
 name|readdisklabel
@@ -6892,14 +6887,15 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-name|ccdstrategy
-argument_list|,
 operator|&
 name|cs
 operator|->
 name|sc_label
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|errstring
 operator|!=
 name|NULL
 condition|)
