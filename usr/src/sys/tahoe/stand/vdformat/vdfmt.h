@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdfmt.h	1.1	86/07/05	*/
+comment|/*	vdfmt.h	1.2	86/11/04	*/
 end_comment
 
 begin_comment
-comment|/* ** */
+comment|/*  * VERSAbus disk controller (vd) disk formatter.  */
 end_comment
 
 begin_include
@@ -70,6 +70,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* found in prf.c */
+end_comment
+
+begin_comment
 comment|/*  * Poll console and return 1 if input is present.  */
 end_comment
 
@@ -83,7 +87,7 @@ value|(uncache(&cpin.cp_hdr.cp_unit), (cpin.cp_hdr.cp_unit&CPDONE))
 end_define
 
 begin_comment
-comment|/* Configuration parameters */
+comment|/*  * Configuration parameters  */
 end_comment
 
 begin_define
@@ -198,14 +202,16 @@ begin_define
 define|#
 directive|define
 name|HARD_ERROR
-value|(DRVNRDY | INVDADR | DNEMEM | PARERR | OPABRT | \ 			 WPTERR | DSEEKERR | NOTCYLERR)
+define|\
+value|(DRVNRDY|INVDADR|DNEMEM|PARERR|OPABRT|WPTERR|DSEEKERR|NOTCYLERR)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATA_ERROR
-value|(CTLRERR | UCDATERR | DCOMPERR | DSERLY | DSLATE | \ 			 TOPLUS | TOMNUS | CPDCRT | \ 			 HRDERR | SFTERR)
+define|\
+value|(CTLRERR|UCDATERR|DCOMPERR|DSERLY|DSLATE|TOPLUS|TOMNUS|CPDCRT|HRDERR|SFTERR)
 end_define
 
 begin_define
@@ -250,10 +256,6 @@ name|ALT_SECTOR
 value|(short)(VDALT)
 end_define
 
-begin_comment
-comment|/* New types used by VDFORMAT */
-end_comment
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -265,10 +267,6 @@ block|}
 name|boolean
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* Standard boolean expression */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -285,7 +283,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Free bad block allocation bit map */
+comment|/*  * Free bad block allocation bit map  */
 end_comment
 
 begin_typedef
@@ -308,10 +306,6 @@ name|fmt_free
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Type of relocation that took place */
-end_comment
-
 begin_typedef
 typedef|typedef
 enum|enum
@@ -325,7 +319,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Error table format */
+comment|/* relocation type */
+end_comment
+
+begin_comment
+comment|/*  * Error table format  */
 end_comment
 
 begin_typedef
@@ -347,109 +345,142 @@ begin_comment
 comment|/* utilities */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|blkcopy
-argument_list|()
-decl_stmt|,
-name|blkzero
-argument_list|()
-decl_stmt|,
-name|to_sector
-argument_list|()
-decl_stmt|,
-name|to_track
-argument_list|()
-decl_stmt|,
-name|data_ok
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+name|int
+name|blkzero
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|to_sector
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|to_track
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|data_ok
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|boolean
 name|blkcmp
-argument_list|()
-decl_stmt|,
-name|get_yes_no
-argument_list|()
-decl_stmt|,
-name|is_in_map
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+name|boolean
+name|get_yes_no
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean
+name|is_in_map
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|boolean
 name|is_formatted
-argument_list|()
-decl_stmt|,
-name|read_bad_sector_map
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+name|boolean
+name|read_bad_sector_map
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|dskadr
 modifier|*
 name|from_sector
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|dskadr
 modifier|*
 name|from_track
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|dskadr
 modifier|*
 name|from_unix
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|dskadr
 name|is_relocated
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|dskadr
 modifier|*
 name|new_location
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Operation table */
+comment|/*  * Operation table  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
 name|int
-name|format
-argument_list|()
-decl_stmt|,
-name|verify
-argument_list|()
-decl_stmt|,
-name|relocate
-argument_list|()
-decl_stmt|,
-name|info
-argument_list|()
+function_decl|(
+modifier|*
+name|routine
+function_decl|)
+parameter_list|()
+function_decl|;
+name|char
+modifier|*
+name|op_name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|correct
-argument_list|()
-decl_stmt|,
-name|profile
-argument_list|()
-decl_stmt|,
-name|exercise
-argument_list|()
+name|char
+modifier|*
+name|op_action
 decl_stmt|;
-end_decl_stmt
+block|}
+name|op_tbl
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -458,8 +489,17 @@ name|NUMOPS
 value|7
 end_define
 
+begin_decl_stmt
+name|op_tbl
+name|operations
+index|[
+name|NUMOPS
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* operation bit mask values (must match order in operations table) */
+comment|/*  * Operation bit mask values (must match order in operations table)  */
 end_comment
 
 begin_define
@@ -539,41 +579,39 @@ begin_comment
 comment|/* Exercise operation bit */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
+begin_decl_stmt
+specifier|extern
 name|int
-function_decl|(
-modifier|*
-name|routine
-function_decl|)
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|op_name
+name|format
+argument_list|()
+decl_stmt|,
+name|verify
+argument_list|()
+decl_stmt|,
+name|relocate
+argument_list|()
+decl_stmt|,
+name|info
+argument_list|()
 decl_stmt|;
-name|char
-modifier|*
-name|op_action
-decl_stmt|;
-block|}
-name|op_tbl
-typedef|;
-end_typedef
+end_decl_stmt
 
 begin_decl_stmt
-name|op_tbl
-name|operations
-index|[
-name|NUMOPS
-index|]
+specifier|extern
+name|int
+name|correct
+argument_list|()
+decl_stmt|,
+name|profile
+argument_list|()
+decl_stmt|,
+name|exercise
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Operation table type and definitions */
+comment|/*  * Operation table type and definitions  */
 end_comment
 
 begin_typedef
@@ -604,7 +642,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Contains all the current parameters */
+comment|/*  * Contains all the current parameters  */
 end_comment
 
 begin_typedef
@@ -642,6 +680,8 @@ block|,
 name|exec
 block|,
 name|prof
+block|,
+name|setup
 block|}
 name|state
 typedef|;
@@ -670,7 +710,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Different environments for setjumps */
+comment|/*  * Different environments for setjumps  */
 end_comment
 
 begin_decl_stmt
@@ -704,7 +744,7 @@ comment|/* Use when nothing can be done to recover */
 end_comment
 
 begin_comment
-comment|/* Flaw map definitions and storage */
+comment|/*  * Flaw map definitions and storage  */
 end_comment
 
 begin_typedef
@@ -774,7 +814,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Controller specific information */
+comment|/*  * Controller specific information  */
 end_comment
 
 begin_typedef
@@ -828,6 +868,13 @@ name|ctlr_info
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|C_INFO
+value|c_info[cur.controller]
+end_define
+
 begin_decl_stmt
 name|ctlr_info
 name|c_info
@@ -838,7 +885,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* drive specific information */
+comment|/*  * Drive specific information  */
 end_comment
 
 begin_typedef
@@ -873,6 +920,20 @@ name|drive_info
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|D_INFO
+value|d_info[cur.controller][cur.drive]
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURRENT
+value|D_INFO.info
+end_define
+
 begin_decl_stmt
 name|drive_info
 name|d_info
@@ -884,27 +945,6 @@ name|MAXDRIVE
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|D_INFO
-value|d_info[cur.controller][cur.drive]
-end_define
-
-begin_define
-define|#
-directive|define
-name|C_INFO
-value|c_info[cur.controller]
-end_define
-
-begin_define
-define|#
-directive|define
-name|CURRENT
-value|D_INFO.info
-end_define
 
 begin_typedef
 typedef|typedef
@@ -972,7 +1012,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pattern buffers and the sort */
+comment|/*  * Pattern buffers and the sort  */
 end_comment
 
 begin_decl_stmt
@@ -1121,10 +1161,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Will be filled in at boot time with pointers to above patterns */
-end_comment
-
 begin_decl_stmt
 name|long
 modifier|*
@@ -1136,7 +1172,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Double buffer for scanning existing file systems and general scratch */
+comment|/* pointers to pattern_* */
+end_comment
+
+begin_comment
+comment|/*  * Double buffer for scanning existing  * file systems and general scratch  */
 end_comment
 
 begin_decl_stmt
@@ -1405,6 +1445,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ndrives
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|smddrives
 decl_stmt|;
 end_decl_stmt
 
