@@ -4480,7 +4480,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"USB_EVENT_DRIVER_DETACH\n"
+literal|"USB_EVENT_DRIVER_ATTACH\n"
 argument_list|)
 expr_stmt|;
 break|break;
