@@ -1010,7 +1010,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tail [-f | -r] [-b # | -c # | -n #] [file ...]\n"
+literal|"usage: tail [-F | -f | -r] [-b # | -c # | -n #] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
