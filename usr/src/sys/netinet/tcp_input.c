@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.27 81/11/22 */
+comment|/* tcp_input.c 1.28 81/11/23 */
 end_comment
 
 begin_include
@@ -461,6 +461,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ti
 operator|->
 name|ti_sum
@@ -471,6 +472,9 @@ name|m
 argument_list|,
 name|len
 argument_list|)
+operator|)
+operator|!=
+literal|0xffff
 condition|)
 block|{
 name|tcpstat
@@ -536,59 +540,7 @@ operator|-
 name|off
 expr_stmt|;
 comment|/* PROCESS OPTIONS */
-comment|/* 	 * Convert addresses and ports to host format. 	 * Locate pcb for segment. 	 */
-name|ti
-operator|->
-name|ti_src
-operator|.
-name|s_addr
-operator|=
-name|ntohl
-argument_list|(
-name|ti
-operator|->
-name|ti_src
-operator|.
-name|s_addr
-argument_list|)
-expr_stmt|;
-name|ti
-operator|->
-name|ti_dst
-operator|.
-name|s_addr
-operator|=
-name|ntohl
-argument_list|(
-name|ti
-operator|->
-name|ti_dst
-operator|.
-name|s_addr
-argument_list|)
-expr_stmt|;
-name|ti
-operator|->
-name|ti_sport
-operator|=
-name|ntohs
-argument_list|(
-name|ti
-operator|->
-name|ti_sport
-argument_list|)
-expr_stmt|;
-name|ti
-operator|->
-name|ti_dport
-operator|=
-name|ntohs
-argument_list|(
-name|ti
-operator|->
-name|ti_dport
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Locate pcb for segment. 	 */
 name|inp
 operator|=
 name|in_pcblookup
@@ -2111,6 +2063,19 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
+expr_stmt|;
+operator|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+name|ti
+operator|)
+operator|->
+name|ip_ttl
+operator|=
+name|MAXTTL
 expr_stmt|;
 name|ip_output
 argument_list|(
