@@ -73,6 +73,12 @@ directive|include
 file|"md4.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LITTLE_ENDIAN
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -123,6 +129,11 @@ end_endif
 begin_comment
 comment|/* Almost all other machines are big-endian */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Crunch a key:  * concatenate the seed and the password, run through MD4 and  * collapse to 64 bits. This is defined as the user's starting key.  */
