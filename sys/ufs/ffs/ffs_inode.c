@@ -871,6 +871,11 @@ condition|(
 name|length
 operator|>
 literal|0
+operator|||
+name|softdep_slowdown
+argument_list|(
+name|ovp
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * If a file is only partially truncated, then 			 * we have to clean up the data structures 			 * describing the allocation past the truncation 			 * point. Finding and deallocating those structures 			 * is a lot of work. Since partial truncation occurs 			 * rarely, we solve the problem by syncing the file 			 * so that it will have no data structures left. 			 */
@@ -1429,17 +1434,7 @@ name|UFS_UPDATE
 argument_list|(
 name|ovp
 argument_list|,
-operator|(
-operator|(
-name|length
-operator|>
-literal|0
-operator|)
-condition|?
-literal|0
-else|:
 literal|1
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Having written the new inode to disk, save its new configuration 	 * and put back the old block pointers long enough to process them. 	 * Note that we save the new block configuration so we can check it 	 * when we are done. 	 */

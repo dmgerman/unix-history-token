@@ -788,6 +788,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|softdep_slowdown
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
