@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)setbuffer.c	4.3 (Berkeley) %G% */
+comment|/* @(#)setbuffer.c	4.4 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -146,6 +146,10 @@ end_expr_stmt
 
 begin_block
 block|{
+name|char
+modifier|*
+name|buf
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -161,10 +165,30 @@ name|setbuffer
 argument_list|(
 name|iop
 argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|buf
+operator|=
 name|malloc
 argument_list|(
 name|BUFSIZ
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|!=
+name|NULL
+condition|)
+block|{
+name|setbuffer
+argument_list|(
+name|iop
+argument_list|,
+name|buf
 argument_list|,
 name|BUFSIZ
 argument_list|)
@@ -177,6 +201,7 @@ name|_IOLBF
 operator||
 name|_IOMYBUF
 expr_stmt|;
+block|}
 block|}
 end_block
 
