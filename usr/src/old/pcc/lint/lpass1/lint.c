@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.6	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1350,7 +1350,7 @@ comment|/* put out a common declaration */
 argument|if( stab[i].sclass == STATIC ) outdef(&stab[i], LST, USUAL ); 	else outdef(&stab[i], libflag?LIB:LDC, USUAL ); 	}  isitfloat ( s ) char *s; {
 comment|/* s is a character string; 	   if floating point is implemented, set dcon to the value of s */
 comment|/* lint version 	*/
-argument|dcon = atof( s ); 	return( FCON ); 	}  fldcon( p ) register NODE *p; {
+argument|dcon = atof( s ); 	return( DCON ); 	}  fldcon( p ) register NODE *p; {
 comment|/* p is an assignment of a constant to a field */
 comment|/* check to see if the assignment is going to overflow, or otherwise cause trouble */
 argument|register s; 	CONSZ v;  	if( !hflag& !pflag ) return;  	s = UPKFSZ(p->in.left->tn.rval); 	v = p->in.right->tn.lval;  	switch( p->in.left->in.type ){  	case CHAR: 	case INT: 	case SHORT: 	case LONG: 	case ENUMTY: 		if( v>=
