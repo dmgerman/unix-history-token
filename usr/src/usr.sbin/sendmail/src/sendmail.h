@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	4.7		%G%"
+literal|"@(#)sendmail.h	4.8		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1317,7 +1317,7 @@ begin_define
 define|#
 directive|define
 name|MATCHNCLASS
-value|'\034'
+value|'\024'
 end_define
 
 begin_comment
@@ -1328,7 +1328,7 @@ begin_define
 define|#
 directive|define
 name|MATCHREPL
-value|'\024'
+value|'\025'
 end_define
 
 begin_comment
@@ -1365,7 +1365,7 @@ begin_define
 define|#
 directive|define
 name|CANONNET
-value|'\025'
+value|'\026'
 end_define
 
 begin_comment
@@ -1376,7 +1376,7 @@ begin_define
 define|#
 directive|define
 name|CANONHOST
-value|'\026'
+value|'\027'
 end_define
 
 begin_comment
@@ -1387,7 +1387,7 @@ begin_define
 define|#
 directive|define
 name|CANONUSER
-value|'\027'
+value|'\030'
 end_define
 
 begin_comment
@@ -1398,7 +1398,7 @@ begin_define
 define|#
 directive|define
 name|CALLSUBR
-value|'\030'
+value|'\031'
 end_define
 
 begin_comment
@@ -1413,7 +1413,7 @@ begin_define
 define|#
 directive|define
 name|CONDIF
-value|'\031'
+value|'\032'
 end_define
 
 begin_comment
@@ -1424,7 +1424,7 @@ begin_define
 define|#
 directive|define
 name|CONDELSE
-value|'\032'
+value|'\033'
 end_define
 
 begin_comment
@@ -1435,7 +1435,7 @@ begin_define
 define|#
 directive|define
 name|CONDFI
-value|'\033'
+value|'\034'
 end_define
 
 begin_comment
@@ -1450,7 +1450,7 @@ begin_define
 define|#
 directive|define
 name|HOSTBEGIN
-value|'\034'
+value|'\035'
 end_define
 
 begin_comment
@@ -1461,7 +1461,7 @@ begin_define
 define|#
 directive|define
 name|HOSTEND
-value|'\035'
+value|'\036'
 end_define
 
 begin_comment
