@@ -34,13 +34,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)ktrace.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)ktrace.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,13 +111,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -113,38 +132,29 @@ directive|include
 file|"ktrace.h"
 end_include
 
-begin_function
+begin_decl_stmt
 name|void
-name|noktrace
-parameter_list|()
-block|{
+name|no_ktrace
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
 operator|(
 name|void
 operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ktrace: ktrace not enabled in kernel,to use ktrace\n"
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"you need to add a line \"options KTRACE\" to your kernel\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -223,14 +233,6 @@ expr_stmt|;
 name|tracefile
 operator|=
 name|DEF_TRACEFILE
-expr_stmt|;
-comment|/* set up a signal handler for SIGSYS, this indicates that ktrace 	is not enabled in the kernel */
-name|signal
-argument_list|(
-name|SIGSYS
-argument_list|,
-name|noktrace
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -357,14 +359,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ktrace: unknown facility in %s\n"
+literal|"unknown facility in %s"
 argument_list|,
 name|optarg
 argument_list|)
@@ -411,6 +408,16 @@ condition|)
 name|trpoints
 operator||=
 name|KTRFAC_INHERIT
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGSYS
+argument_list|,
+name|no_ktrace
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -465,8 +472,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 name|tracefile
 argument_list|)
 expr_stmt|;
@@ -503,8 +512,10 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 name|tracefile
 argument_list|)
 expr_stmt|;
@@ -538,8 +549,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|error
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|tracefile
+argument_list|)
 expr_stmt|;
 name|execvp
 argument_list|(
@@ -555,17 +570,16 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"exec of '%s' failed"
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -585,8 +599,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
 name|tracefile
 argument_list|)
 expr_stmt|;
@@ -624,14 +640,9 @@ name|first
 operator|++
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ktrace: only one -g or -p flag is permitted.\n"
+literal|"only one -g or -p flag is permitted."
 argument_list|)
 expr_stmt|;
 name|usage
@@ -645,14 +656,9 @@ operator|*
 name|p
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ktrace: illegal process id.\n"
+literal|"illegal process id."
 argument_list|)
 expr_stmt|;
 name|usage
@@ -670,53 +676,10 @@ return|;
 block|}
 end_block
 
-begin_macro
-name|error
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-operator|(
+begin_function
 name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ktrace: %s: %s.\n"
-argument_list|,
-name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -734,7 +697,35 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_function
+name|void
+name|no_ktrace
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"error:\tktrace() system call not supported in the running kernel\n\tre-compile kernel with 'options KTRACE'\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 
