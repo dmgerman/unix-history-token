@@ -387,7 +387,7 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-name|ring_sent
+name|ring_sent_acked
 argument_list|(
 operator|&
 name|netoring
