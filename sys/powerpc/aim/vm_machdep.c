@@ -491,6 +491,17 @@ name|register_t
 operator|)
 name|fork_trampoline
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_usr
+operator|=
+name|kernel_pmap
+operator|->
+name|pm_sr
+index|[
+name|USER_SR
+index|]
+expr_stmt|;
 comment|/*  	 * Now cpu_switch() can schedule the new process. 	 */
 block|}
 end_function

@@ -48,6 +48,10 @@ name|register_t
 name|pcb_lr
 decl_stmt|;
 comment|/* link register */
+name|register_t
+name|pcb_usr
+decl_stmt|;
+comment|/* USER_SR segment register */
 name|struct
 name|pmap
 modifier|*
