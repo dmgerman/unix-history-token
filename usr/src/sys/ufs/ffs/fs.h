@@ -332,9 +332,41 @@ name|fs_maxbpg
 decl_stmt|;
 comment|/* max number of blks per cyl group */
 name|long
+name|fs_fragshift
+decl_stmt|;
+comment|/* block to frag shift */
+name|long
+name|fs_fsbtodb
+decl_stmt|;
+comment|/* fsbtodb and dbtofsb shift constant */
+name|long
+name|fs_sbsize
+decl_stmt|;
+comment|/* actual size of super block */
+name|long
+name|fs_csmask
+decl_stmt|;
+comment|/* csum block offset */
+name|long
+name|fs_csshift
+decl_stmt|;
+comment|/* csum block number */
+name|long
+name|fs_nindir
+decl_stmt|;
+comment|/* value of NINDIR */
+name|long
+name|fs_inopb
+decl_stmt|;
+comment|/* value of INOPB */
+name|long
+name|fs_nspf
+decl_stmt|;
+comment|/* value of NSPF */
+name|long
 name|fs_sparecon
 index|[
-literal|14
+literal|6
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
