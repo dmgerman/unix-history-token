@@ -708,8 +708,6 @@ name|rval
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
