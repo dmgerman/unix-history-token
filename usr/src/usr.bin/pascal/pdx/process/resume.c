@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)resume.c 1.4 %G%"
+literal|"@(#)resume.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,7 +327,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * Find the location in the Pascal object where execution was suspended.  */
+comment|/*  * Find the location in the Pascal object where execution was suspended.  *  * We basically walk back through the frames looking for saved  * register 11's.  Each time we find one, we remember it.  When we reach  * the frame associated with the interpreter procedure, the most recently  * saved register 11 is the one we want.  */
 end_comment
 
 begin_typedef
@@ -390,6 +390,18 @@ name|Vaxframe
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|regsaved
+parameter_list|(
+name|frame
+parameter_list|,
+name|n
+parameter_list|)
+value|((frame.fr_mask&(1<< n)) != 0)
+end_define
+
 begin_function
 name|LOCAL
 name|ADDRESS
@@ -421,6 +433,15 @@ name|p
 operator|=
 name|process
 expr_stmt|;
+name|r
+operator|=
+name|p
+operator|->
+name|reg
+index|[
+literal|11
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -434,14 +455,7 @@ name|framep
 condition|)
 block|{
 return|return
-operator|(
-name|p
-operator|->
-name|reg
-index|[
-literal|11
-index|]
-operator|)
+name|r
 return|;
 block|}
 name|savfp
@@ -485,6 +499,39 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|regsaved
+argument_list|(
+name|vframe
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+block|{
+name|dread
+argument_list|(
+operator|&
+name|r
+argument_list|,
+name|savfp
+operator|+
+literal|5
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|r
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+expr_stmt|;
+block|}
 name|savfp
 operator|=
 operator|(
@@ -528,24 +575,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|regsaved
+argument_list|(
 name|vframe
-operator|.
-name|fr_mask
-operator|==
-literal|0
-condition|)
-block|{
-name|r
-operator|=
-name|p
-operator|->
-name|reg
-index|[
+argument_list|,
 literal|11
-index|]
-expr_stmt|;
-block|}
-else|else
+argument_list|)
+condition|)
 block|{
 name|dread
 argument_list|(
