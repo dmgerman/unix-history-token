@@ -345,6 +345,85 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|__ia64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GET_BSP_JB
+parameter_list|(
+name|jb
+parameter_list|)
+value|(*((unsigned long*)JMPBUF_ADDR_OF(jb,J_BSP)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|)
+value|(*((unsigned long*)JMPBUF_ADDR_OF(jb,J_SP)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_STACK_SJB
+parameter_list|(
+name|sjb
+parameter_list|)
+value|GET_STACK_JB(sjb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_RETURN_ADDR_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|ra
+parameter_list|)
+define|\
+value|do {							\ 	*((unsigned long*)JMPBUF_ADDR_OF(jb,J_B0)) = ((long*)(ra))[0];	\ 	*((unsigned long*)JMPBUF_ADDR_OF(jb,J_PFS))&= ~0x1FFFFFFFFFUL;	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|stk
+parameter_list|,
+name|sz
+parameter_list|)
+define|\
+value|do {							\ 	UPD_STACK_JB(jb, stk + sz - 16);		\ 	GET_BSP_JB(jb) = (long)(stk);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPD_STACK_JB
+parameter_list|(
+name|jb
+parameter_list|,
+name|stk
+parameter_list|)
+value|GET_STACK_JB(jb) = (long)(stk)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__sparc64__
 argument_list|)
 end_elif
@@ -1283,12 +1362,39 @@ begin_comment
 comment|/*  * Miscellaneous definitions.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|PTHREAD_STACK_DEFAULT
 value|65536
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK_DEFAULT
+value|0x40000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Size of default red zone at the end of each stack.  In actuality, this "red  * zone" is merely an unmapped region, except in the case of the initial stack.  * Since mmap() makes it possible to specify the maximum growth of a MAP_STACK  * region, an unmapped gap between thread stacks achieves the same effect as  * explicitly mapped red zones.  * This is declared and initialized in uthread_init.c.  */
@@ -1312,12 +1418,39 @@ begin_comment
 comment|/*  * Maximum size of initial thread's stack.  This perhaps deserves to be larger  * than the stacks of other threads, since many applications are likely to run  * almost entirely on this stack.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|PTHREAD_STACK_INITIAL
 value|0x100000
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK_INITIAL
+value|0x400000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Define the different priority ranges.  All applications have thread  * priorities constrained within 0-31.  The threads library raises the  * priority when delivering signals in order to ensure that signal  * delivery happens (from the POSIX spec) "as soon as possible".  * In the future, the threads library will also be able to map specific  * threads into real-time (cooperating) processes or kernel threads.  * The RT and SIGNAL priorities will be used internally and added to  * thread base priorities so that the scheduling queue can handle both  * normal and RT priority threads with and without signal handling.  *  * The approach taken is that, within each class, signal delivery  * always has priority over thread execution.  */

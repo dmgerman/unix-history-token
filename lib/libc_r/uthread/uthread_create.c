@@ -483,6 +483,13 @@ argument_list|,
 name|_thread_start
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 comment|/* The stack starts high and builds down: */
 name|SET_STACK_JB
 argument_list|(
@@ -509,6 +516,30 @@ name|double
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|SET_STACK_JB
+argument_list|(
+name|new_thread
+operator|->
+name|ctx
+operator|.
+name|jb
+argument_list|,
+operator|(
+name|long
+operator|)
+name|new_thread
+operator|->
+name|stack
+argument_list|,
+name|pattr
+operator|->
+name|stacksize_attr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Copy the thread attributes: */
 name|memcpy
 argument_list|(
