@@ -2759,7 +2759,7 @@ literal|"=other"
 block|}
 block|,
 block|{
-literal|" 4.0 SNAP Server"
+literal|" 5.0 SNAP Server"
 block|,
 literal|"current.freebsd.org"
 block|,
@@ -2777,9 +2777,9 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|" 3.0 SNAP Server"
+literal|" 4.0 SNAP Server"
 block|,
-literal|"releng3.freebsd.org"
+literal|"releng4.freebsd.org"
 block|,
 name|NULL
 block|,
@@ -2790,7 +2790,7 @@ block|,
 name|VAR_FTP_PATH
 name|_AS
 argument_list|(
-literal|"=ftp://releng3.freebsd.org/pub/FreeBSD/snapshots/"
+literal|"=ftp://releng4.freebsd.org/pub/FreeBSD/snapshots/"
 argument_list|)
 block|}
 block|,
