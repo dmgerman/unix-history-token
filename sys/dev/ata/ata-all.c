@@ -257,6 +257,14 @@ name|ATA_BMADDR_RID
 value|2
 end_define
 
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -266,6 +274,26 @@ name|dev
 parameter_list|)
 value|((pci_get_progif(dev)& 0x80)&& \ 				 (pci_get_progif(dev)& 0x05) != 0x05)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATA_MASTERDEV
+parameter_list|(
+name|dev
+parameter_list|)
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* prototypes */
@@ -3697,6 +3725,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|scp
+operator|->
+name|flags
+operator|&
+name|ATA_USE_16BIT
+operator|||
 name|ATA_MASTERDEV
 argument_list|(
 name|device_get_parent

@@ -6906,6 +6906,22 @@ end_comment
 
 begin_function
 name|void
+modifier|*
+name|ata_dmaalloc
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+name|scp
+parameter_list|,
+name|int
+name|device
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
 name|ata_dmainit
 parameter_list|(
 name|struct
@@ -6940,15 +6956,16 @@ parameter_list|,
 name|int
 name|device
 parameter_list|,
-name|int8_t
+name|struct
+name|ata_dmaentry
 modifier|*
+name|dmatab
+parameter_list|,
+name|caddr_t
 name|data
 parameter_list|,
 name|int32_t
 name|count
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 return|return
@@ -6966,6 +6983,17 @@ name|struct
 name|ata_softc
 modifier|*
 name|scp
+parameter_list|,
+name|int
+name|device
+parameter_list|,
+name|struct
+name|ata_dmaentry
+modifier|*
+name|dmatab
+parameter_list|,
+name|int
+name|dir
 parameter_list|)
 block|{ }
 end_function
