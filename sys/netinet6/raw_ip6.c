@@ -1229,7 +1229,7 @@ operator|)
 name|in6_pcbnotify
 argument_list|(
 operator|&
-name|ripcb
+name|ripcbinfo
 argument_list|,
 name|sa
 argument_list|,

@@ -255,7 +255,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|inpcbhead
+name|inpcbinfo
 operator|*
 operator|,
 expr|struct

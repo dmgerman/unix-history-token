@@ -2610,7 +2610,7 @@ begin_decl_stmt
 name|void
 name|in6_pcbnotify
 argument_list|(
-name|head
+name|pcbinfo
 argument_list|,
 name|dst
 argument_list|,
@@ -2627,9 +2627,9 @@ argument_list|,
 name|notify
 argument_list|)
 decl|struct
-name|inpcbhead
+name|inpcbinfo
 modifier|*
-name|head
+name|pcbinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -2694,6 +2694,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|inpcbhead
+modifier|*
+name|head
+decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -2850,6 +2855,17 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|head
+operator|=
+name|pcbinfo
+operator|->
+name|listhead
+expr_stmt|;
+name|INP_INFO_WLOCK
+argument_list|(
+name|pcbinfo
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|inp
@@ -2868,6 +2884,11 @@ operator|=
 name|ninp
 control|)
 block|{
+name|INP_LOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|ninp
 operator|=
 name|LIST_NEXT
@@ -2889,7 +2910,14 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 		 * If the error designates a new path MTU for a destination 		 * and the application (associated with this socket) wanted to 		 * know the value, notify. Note that we notify for all 		 * disconnected sockets if the corresponding application 		 * wanted. This is because some UDP applications keep sending 		 * sockets disconnected. 		 * XXX: should we avoid to notify the value to TCP sockets? 		 */
 if|if
 condition|(
@@ -3063,7 +3091,14 @@ operator|!=
 name|fport
 operator|)
 condition|)
+block|{
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 name|do_notify
 label|:
 if|if
@@ -3080,7 +3115,17 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 block|}
+name|INP_INFO_WUNLOCK
+argument_list|(
+name|pcbinfo
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

@@ -1670,7 +1670,7 @@ operator|)
 name|in6_pcbnotify
 argument_list|(
 operator|&
-name|udb
+name|udbinfo
 argument_list|,
 name|sa
 argument_list|,
@@ -1706,7 +1706,7 @@ operator|)
 name|in6_pcbnotify
 argument_list|(
 operator|&
-name|udb
+name|udbinfo
 argument_list|,
 name|sa
 argument_list|,

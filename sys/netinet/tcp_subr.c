@@ -6078,7 +6078,7 @@ expr_stmt|;
 name|in6_pcbnotify
 argument_list|(
 operator|&
-name|tcb
+name|tcbinfo
 argument_list|,
 name|sa
 argument_list|,
@@ -6167,7 +6167,7 @@ else|else
 name|in6_pcbnotify
 argument_list|(
 operator|&
-name|tcb
+name|tcbinfo
 argument_list|,
 name|sa
 argument_list|,
