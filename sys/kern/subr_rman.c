@@ -1102,9 +1102,9 @@ argument_list|(
 operator|(
 literal|"candidate region: [%#lx, %#lx], size %#lx\n"
 operator|,
-name|rend
-operator|,
 name|rstart
+operator|,
+name|rend
 operator|,
 operator|(
 name|rend
