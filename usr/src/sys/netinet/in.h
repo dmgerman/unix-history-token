@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -147,7 +147,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Definitions of bits in internet address integers.  */
+comment|/*  * Definitions of bits in internet address integers.  * On subnets, the decomposition of addresses to host and net parts  * is done according to subnet mask, not the masks here.  */
 end_comment
 
 begin_define
@@ -272,88 +272,8 @@ value|0xffffffff
 end_define
 
 begin_comment
-comment|/*  * Macros for subnetworks.  A subnet is distinguished by  * 	(1) the network number is a `local' network number, and  *	(2) the most significant bit of the host part is set.  * Such addresses include one additional byte in the network number,  * and use one less byte in the host part (i.e., a subnet of a Class A  * network uses the rules for Class B net/host number extraction,  * a Class B subnet is dealt with as if it were a Class C net).  * Subnets of Class C nets are not supported.  */
+comment|/* must be masked */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SUBNETSHIFT
-value|8
-end_define
-
-begin_comment
-comment|/* used to get main net number from subnet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_SUBNETA
-parameter_list|(
-name|i
-parameter_list|)
-value|((((long)(i))&0x80800000)==0x00800000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_CLASSA_SUBNET
-value|0xffff0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_CLASSA_SUBNSHIFT
-value|(IN_CLASSA_NSHIFT - SUBNETSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_CLASSA_SUBHOST
-value|0x0000ffff
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_SUBNETB
-parameter_list|(
-name|i
-parameter_list|)
-value|((((long)(i))&0xc0008000)==0x80008000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_CLASSB_SUBNET
-value|0xffffff00
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_CLASSB_SUBNSHIFT
-value|(IN_CLASSB_NSHIFT - SUBNETSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_CLASSA_SUBHOST
-value|0x0000ffff
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_CLASSB_SUBHOST
-value|0x000000ff
-end_define
 
 begin_comment
 comment|/*  * Socket address, internet style.  */
