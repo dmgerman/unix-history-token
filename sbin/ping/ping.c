@@ -1191,7 +1191,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:LQRT:c:adfi:l:np:qrs:t:v"
+literal|"I:LQRS:T:c:adfi:l:np:qrs:t:v"
 argument_list|)
 operator|)
 operator|!=
@@ -1214,7 +1214,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:LQRT:c:adfi:l:np:qrs:t:vP:"
+literal|"I:LQRS:T:c:adfi:l:np:qrs:t:vP:"
 argument_list|)
 operator|)
 operator|!=
