@@ -2570,7 +2570,7 @@ decl_stmt|;
 name|int
 name|more
 init|=
-literal|0
+literal|1
 decl_stmt|;
 name|c
 operator|=
