@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.15 (Berkeley) 83/01/16"
+literal|"@(#)shutdown.c	4.16 (Berkeley) 83/04/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -781,6 +781,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|signal
+argument_list|(
+name|SIGTTOU
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
