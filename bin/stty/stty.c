@@ -570,6 +570,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|i
+operator|.
+name|set
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 name|err
