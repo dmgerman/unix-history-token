@@ -13509,7 +13509,7 @@ name|kernel_pmap
 operator|&&
 name|va
 operator|>
-name|VM_MAXUSER_ADDRESS
+name|UPT_MAX_ADDRESS
 condition|)
 continue|continue;
 name|ptep
