@@ -438,6 +438,17 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|pci_cfgregopen
+argument_list|()
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev

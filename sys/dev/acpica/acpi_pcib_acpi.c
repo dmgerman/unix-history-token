@@ -481,6 +481,17 @@ literal|"PNP0A03"
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|pci_cfgregopen
+argument_list|()
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* 	 * Set device description  	 */
 name|device_set_desc
 argument_list|(
