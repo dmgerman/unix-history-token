@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.31 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1448,8 +1448,8 @@ name|errno
 operator|==
 name|ECONNREFUSED
 condition|)
-name|hp
-operator|=
+return|return
+operator|(
 name|_gethtbyaddr
 argument_list|(
 name|addr
@@ -1458,7 +1458,8 @@ name|len
 argument_list|,
 name|type
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 return|return
 operator|(
 operator|(
