@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -17,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -123,6 +135,18 @@ argument_list|(
 name|so
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_socket
+argument_list|(
+name|so
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|M_PREPEND
 argument_list|(
 name|m
@@ -873,6 +897,18 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_create_mbuf_from_mbuf
+argument_list|(
+name|m
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|m0
 operator|->
 name|m_next

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -19,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1732,6 +1744,32 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+name|mac_check_socket_deliver
+argument_list|(
+name|ddp
+operator|->
+name|ddp_socket
+argument_list|,
+name|m
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 comment|/*       * If we found one, deliver th epacket to the socket      */
 if|if
 condition|(
