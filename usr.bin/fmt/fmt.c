@@ -2187,6 +2187,10 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|line
 argument_list|)
