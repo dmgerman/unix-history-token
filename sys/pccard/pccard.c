@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"crd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -30,31 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -90,37 +66,11 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98.h>
+file|<sys/uio.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PC98 */
-end_comment
 
 begin_include
 include|#
