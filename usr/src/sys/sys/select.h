@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)select.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)select.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -46,15 +46,15 @@ begin_comment
 comment|/* collision occurred */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct
-name|selinfo
+name|proc
 struct_decl|;
 end_struct_decl
 
@@ -90,6 +90,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
