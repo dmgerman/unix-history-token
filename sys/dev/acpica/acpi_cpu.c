@@ -341,7 +341,7 @@ begin_define
 define|#
 directive|define
 name|CPU_QUIRK_NO_C3
-value|0x0001
+value|(1<<0)
 end_define
 
 begin_comment
@@ -352,11 +352,22 @@ begin_define
 define|#
 directive|define
 name|CPU_QUIRK_NO_THROTTLE
-value|0x0002
+value|(1<<1)
 end_define
 
 begin_comment
 comment|/* Throttling is not usable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_QUIRK_NO_BM_CTRL
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* No bus mastering control. */
 end_comment
 
 begin_define
@@ -2281,7 +2292,7 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* Bus mastering arbitration control is needed for C3. */
+comment|/*      * Bus mastering arbitration control is needed to keep caches coherent      * while sleeping in C3.  If it's not present, we flush the caches before      * entering C3 instead.      */
 if|if
 condition|(
 name|AcpiGbl_FADT
@@ -2299,14 +2310,14 @@ condition|)
 block|{
 name|cpu_quirks
 operator||=
-name|CPU_QUIRK_NO_C3
+name|CPU_QUIRK_NO_BM_CTRL
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"acpi_cpu%d: No BM control, C3 disabled\n"
+literal|"acpi_cpu%d: no BM control, using flush cache method\n"
 operator|,
 name|device_get_unit
 argument_list|(
@@ -3898,7 +3909,18 @@ name|i
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Check for bus master activity.  If there was activity, clear      * the bit and use the lowest non-C3 state.  Note that the USB      * driver polling for new devices keeps this bit set all the      * time if USB is loaded.      */
+comment|/*      * Check for bus master activity.  If there was activity, clear      * the bit and use the lowest non-C3 state.  Note that the USB      * driver polling for new devices keeps this bit set all the      * time if USB is loaded.  If bus mastering control is not available,      * flush caches.  This can be quite slow but may be useful since not      * all systems support BM control.      */
+if|if
+condition|(
+operator|(
+name|cpu_quirks
+operator|&
+name|CPU_QUIRK_NO_BM_CTRL
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|AcpiGetRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_STATUS
@@ -3935,6 +3957,11 @@ name|cpu_non_c3
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+name|ACPI_FLUSH_CPU_CACHE
+argument_list|()
+expr_stmt|;
 comment|/* Select the next state and update statistics. */
 name|cx_next
 operator|=
@@ -4075,6 +4102,14 @@ operator|->
 name|type
 operator|==
 name|ACPI_STATE_C3
+operator|&&
+operator|(
+name|cpu_quirks
+operator|&
+name|CPU_QUIRK_NO_BM_CTRL
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|AcpiSetRegister
@@ -4227,7 +4262,7 @@ literal|1
 condition|)
 name|cpu_quirks
 operator||=
-name|CPU_QUIRK_NO_C3
+name|CPU_QUIRK_NO_BM_CTRL
 expr_stmt|;
 ifdef|#
 directive|ifdef
