@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.86 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.87 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1806,6 +1806,10 @@ operator|->
 name|a_ioflag
 decl_stmt|;
 name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|struct
 name|buf
 modifier|*
 name|bp
@@ -2343,6 +2347,11 @@ operator|&
 name|IO_SYNC
 operator|)
 condition|)
+block|{
+name|tv
+operator|=
+name|time
+expr_stmt|;
 name|error
 operator|=
 name|VOP_UPDATE
@@ -2350,14 +2359,15 @@ argument_list|(
 name|vp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -2412,6 +2422,10 @@ name|struct
 name|buf
 modifier|*
 name|bp
+decl_stmt|;
+name|struct
+name|timeval
+name|tv
 decl_stmt|;
 name|struct
 name|buf
@@ -2597,6 +2611,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|tv
+operator|=
+name|time
+expr_stmt|;
 return|return
 operator|(
 name|VOP_UPDATE
@@ -2606,10 +2624,10 @@ operator|->
 name|a_vp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 name|ap
 operator|->
@@ -2659,6 +2677,10 @@ name|VTOI
 argument_list|(
 name|vp
 argument_list|)
+decl_stmt|;
+name|struct
+name|timeval
+name|tv
 decl_stmt|;
 name|int
 name|mode
@@ -2849,19 +2871,25 @@ operator||
 name|IMOD
 operator|)
 condition|)
+block|{
+name|tv
+operator|=
+name|time
+expr_stmt|;
 name|VOP_UPDATE
 argument_list|(
 name|vp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|IUNLOCK
 argument_list|(
 name|ip

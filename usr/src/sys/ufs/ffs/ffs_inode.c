@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.60 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -484,7 +484,7 @@ comment|/* index of triple indirect block */
 end_comment
 
 begin_comment
-comment|/*  * Truncate the inode ip to at most length size.  Free affected disk  * blocks -- the blocks of the file are removed in reverse order.  *  * NB: triple indirect blocks are untested.  */
+comment|/*  * Truncate the inode ip to at most length size.  Free affected disk  * blocks -- the blocks of the file are removed in reverse order.  */
 end_comment
 
 begin_macro
@@ -575,6 +575,10 @@ name|blocksreleased
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 specifier|register
 name|int
 name|i
@@ -599,6 +603,10 @@ name|VTOI
 argument_list|(
 name|ovp
 argument_list|)
+expr_stmt|;
+name|tv
+operator|=
+name|time
 expr_stmt|;
 if|if
 condition|(
@@ -673,10 +681,10 @@ argument_list|(
 name|ovp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
@@ -707,10 +715,10 @@ argument_list|(
 name|ovp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 literal|1
 argument_list|)
@@ -1092,10 +1100,10 @@ argument_list|(
 name|ovp
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 operator|&
-name|time
+name|tv
 argument_list|,
 name|MNT_WAIT
 argument_list|)
