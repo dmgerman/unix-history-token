@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.10 (Berkeley) %G%"
+literal|"@(#)msgs.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sgtty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_include
@@ -595,6 +601,12 @@ name|bool
 name|lastcmd
 init|=
 name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|jmp_buf
+name|tstpbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -1995,10 +2007,6 @@ expr_stmt|;
 comment|/* 		 * Print header 		 */
 name|again
 label|:
-name|tstpflag
-operator|=
-name|NO
-expr_stmt|;
 if|if
 condition|(
 name|totty
@@ -2008,6 +2016,14 @@ argument_list|(
 name|SIGTSTP
 argument_list|,
 name|onsusp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setjmp
+argument_list|(
+name|tstpbuf
 argument_list|)
 expr_stmt|;
 name|nlines
@@ -2184,14 +2200,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Loop if we've been suspended 		 */
-if|if
-condition|(
-name|tstpflag
-condition|)
-goto|goto
-name|again
-goto|;
 name|cmnd
 label|:
 name|in
@@ -2752,10 +2760,6 @@ end_macro
 
 begin_block
 block|{
-name|tstpflag
-operator|=
-name|YES
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -2775,12 +2779,16 @@ argument_list|,
 name|SIGTSTP
 argument_list|)
 expr_stmt|;
-comment|/* the pc stops here */
 name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
 name|onsusp
+argument_list|)
+expr_stmt|;
+name|longjmp
+argument_list|(
+name|tstpbuf
 argument_list|)
 expr_stmt|;
 block|}
