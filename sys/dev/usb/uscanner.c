@@ -1466,6 +1466,16 @@ name|uscanner_cdevsw
 init|=
 block|{
 operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
+name|d_flags
+operator|=
+name|D_NEEDGIANT
+block|,
+operator|.
 name|d_open
 operator|=
 name|uscanneropen

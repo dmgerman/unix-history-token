@@ -1596,6 +1596,11 @@ name|matcd_cdevsw
 init|=
 block|{
 operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
 name|d_open
 operator|=
 name|matcdopen
@@ -1642,9 +1647,9 @@ operator|.
 name|d_flags
 operator|=
 name|D_DISK
-block|,
-comment|/* flags */
-block|}
+operator||
+name|D_NEEDGIANT
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -143,6 +143,11 @@ name|g_dev_cdevsw
 init|=
 block|{
 operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
 name|d_open
 operator|=
 name|g_dev_open
@@ -188,8 +193,6 @@ operator|=
 name|D_DISK
 operator||
 name|D_TRACKCLOSE
-operator||
-name|D_NOGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -914,13 +914,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|D_NOGIANT
+name|D_NEEDGIANT
 value|0x00400000
 end_define
 
 begin_comment
-comment|/* Doesn't want Giant */
+comment|/* driver want Giant */
 end_comment
+
+begin_comment
+comment|/*  * Version numbers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|D_VERSION_00
+value|0x20011966
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_VERSION
+value|D_VERSION_00
+end_define
 
 begin_comment
 comment|/*  * Character device switch table  */
@@ -930,6 +948,9 @@ begin_struct
 struct|struct
 name|cdevsw
 block|{
+name|int
+name|d_version
+decl_stmt|;
 name|int
 name|d_maj
 decl_stmt|;

@@ -1398,8 +1398,12 @@ parameter_list|)
 init|=
 block|{
 operator|.
-name|d_open
+name|d_version
 operator|=
+name|D_VERSION
+operator|,
+function_decl|.d_open
+init|=
 name|DRM
 argument_list|(
 name|open
@@ -1447,6 +1451,8 @@ operator|,
 function_decl|.d_flags
 init|=
 name|D_TRACKCLOSE
+operator||
+name|D_NEEDGIANT
 operator|,
 if|#
 directive|if

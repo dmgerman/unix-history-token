@@ -296,6 +296,11 @@ name|pts_cdevsw
 init|=
 block|{
 operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
 name|d_open
 operator|=
 name|ptsopen
@@ -334,6 +339,8 @@ operator|.
 name|d_flags
 operator|=
 name|D_TTY
+operator||
+name|D_NEEDGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -352,6 +359,11 @@ name|cdevsw
 name|ptc_cdevsw
 init|=
 block|{
+operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
 operator|.
 name|d_open
 operator|=
@@ -396,6 +408,8 @@ operator|.
 name|d_flags
 operator|=
 name|D_TTY
+operator||
+name|D_NEEDGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt

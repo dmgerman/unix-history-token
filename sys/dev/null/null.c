@@ -145,6 +145,11 @@ name|null_cdevsw
 init|=
 block|{
 operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
 name|d_read
 operator|=
 operator|(
@@ -172,11 +177,6 @@ operator|.
 name|d_maj
 operator|=
 name|CDEV_MAJOR
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_NOGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -188,6 +188,11 @@ name|cdevsw
 name|zero_cdevsw
 init|=
 block|{
+operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
 operator|.
 name|d_read
 operator|=
@@ -212,8 +217,6 @@ operator|.
 name|d_flags
 operator|=
 name|D_MMAP_ANON
-operator||
-name|D_NOGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt

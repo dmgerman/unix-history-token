@@ -214,6 +214,11 @@ name|__FreeBSD_version
 operator|>=
 literal|500104
 operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
 name|d_open
 operator|=
 name|fw_open
@@ -262,6 +267,8 @@ operator|.
 name|d_flags
 operator|=
 name|D_MEM
+operator||
+name|D_NEEDGIANT
 else|#
 directive|else
 name|fw_open

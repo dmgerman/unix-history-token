@@ -214,6 +214,16 @@ name|ncp_cdevsw
 init|=
 block|{
 operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
+name|d_flags
+operator|=
+name|D_NEEDGIANT
+block|,
+operator|.
 name|d_ioctl
 operator|=
 name|ncp_ioctl

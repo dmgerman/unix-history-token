@@ -1357,13 +1357,6 @@ name|blink_screen
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|12
-end_define
-
 begin_decl_stmt
 specifier|static
 name|cn_probe_t
@@ -1498,6 +1491,11 @@ name|sc_cdevsw
 init|=
 block|{
 operator|.
+name|d_version
+operator|=
+name|D_VERSION
+block|,
+operator|.
 name|d_open
 operator|=
 name|scopen
@@ -1528,14 +1526,11 @@ operator|=
 literal|"sc"
 block|,
 operator|.
-name|d_maj
-operator|=
-name|CDEV_MAJOR
-block|,
-operator|.
 name|d_flags
 operator|=
 name|D_TTY
+operator||
+name|D_NEEDGIANT
 block|, }
 decl_stmt|;
 end_decl_stmt
