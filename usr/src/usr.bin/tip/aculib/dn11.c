@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn11.c	4.1	81/05/09	*/
+comment|/*	dn11.c	4.2	81/06/04	*/
 end_comment
 
 begin_comment
@@ -74,6 +74,16 @@ name|connected
 init|=
 literal|1
 decl_stmt|;
+name|ioctl
+argument_list|(
+name|FD
+argument_list|,
+name|TIOCNXCL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* get rid of exclusive open from hunt() */
 if|if
 condition|(
 operator|(
