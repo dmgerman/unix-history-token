@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -1750,20 +1750,6 @@ block|)
 function|;
 end_function
 
-begin_expr_stmt
-name|ev
-operator|=
-name|setevent
-argument_list|(
-name|ReadTimeout
-argument_list|,
-name|readtimeout
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|if
 condition|(
@@ -1780,6 +1766,20 @@ name|NULL
 operator|)
 return|;
 end_if
+
+begin_expr_stmt
+name|ev
+operator|=
+name|setevent
+argument_list|(
+name|ReadTimeout
+argument_list|,
+name|readtimeout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|p
