@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|NDSLOTTYPE
-value|unsigned long
+value|u_long
 end_define
 
 begin_define
@@ -188,7 +188,7 @@ name|struct
 name|mtx
 name|fd_mtx
 decl_stmt|;
-comment|/* mtx to protect the members of struct filedesc */
+comment|/* protects members of this struct */
 name|int
 name|fd_holdleaderscount
 decl_stmt|;
@@ -242,7 +242,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure to keep track of (process leader, struct fildedesc) tuples.  * Each process has a pointer to such a structure when detailed tracking  * is needed. e.g. when rfork(RFPROC | RFMEM) causes a file descriptor  * table to be shared by processes having different "p_leader" pointers  * and thus distinct POSIX style locks.  *  * fdl_refcount and fdl_holdcount are protected by struct filedesc mtx.  */
+comment|/*  * Structure to keep track of (process leader, struct fildedesc) tuples.  * Each process has a pointer to such a structure when detailed tracking  * is needed, e.g., when rfork(RFPROC | RFMEM) causes a file descriptor  * table to be shared by processes having different "p_leader" pointers  * and thus distinct POSIX style locks.  *  * fdl_refcount and fdl_holdcount are protected by struct filedesc mtx.  */
 end_comment
 
 begin_struct
@@ -267,7 +267,7 @@ modifier|*
 name|fdl_leader
 decl_stmt|;
 comment|/* owner of POSIX locks */
-comment|/* Circular list */
+comment|/* Circular list: */
 name|struct
 name|filedesc_to_leader
 modifier|*
@@ -385,7 +385,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -426,7 +426,7 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|file
@@ -448,7 +448,7 @@ parameter_list|(
 name|struct
 name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 name|minfd
