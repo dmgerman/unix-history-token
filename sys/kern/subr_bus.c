@@ -9852,9 +9852,11 @@ if|if
 condition|(
 name|bootverbose
 operator|&&
+operator|(
 name|flags
 operator|&
 name|INTR_MPSAFE
+operator|)
 condition|)
 name|device_printf
 argument_list|(
