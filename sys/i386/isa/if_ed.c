@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.39 1994/05/18 06:32:19 swallace Exp $  */
+comment|/*  * $Id: if_ed.c,v 1.40 1994/05/25 20:06:47 ats Exp $  */
 end_comment
 
 begin_include
@@ -8282,9 +8282,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+break|break;
 else|#
 directive|else
-break|break;
 case|case
 name|SIOCADDMULTI
 case|:
