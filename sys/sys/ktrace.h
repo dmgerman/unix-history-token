@@ -315,6 +315,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_USER_MAXLEN
+value|2048
+end_define
+
+begin_comment
+comment|/* maximum length of passed data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_USER
 value|7
 end_define
