@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.16 1999/04/18 15:50:32 peter Exp $  */
+comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.17 1999/04/18 19:03:50 peter Exp $  */
 end_comment
 
 begin_comment
@@ -4233,6 +4233,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|bt
+operator|->
+name|num_ccbs
+operator|>=
+name|bt
+operator|->
+name|max_ccbs
+condition|)
+comment|/* Can't allocate any more */
+return|return;
 name|next_ccb
 operator|=
 operator|&
@@ -4266,7 +4278,9 @@ name|sg_map
 operator|==
 name|NULL
 condition|)
-return|return;
+goto|goto
+name|error_exit
+goto|;
 comment|/* Allocate S/G space for the next batch of CCBS */
 if|if
 condition|(
@@ -4304,7 +4318,9 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|error_exit
+goto|;
 block|}
 name|SLIST_INSERT_HEAD
 argument_list|(
@@ -4505,6 +4521,30 @@ name|links
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|SLIST_FIRST
+argument_list|(
+operator|&
+name|bt
+operator|->
+name|free_bt_ccbs
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return;
+name|error_exit
+label|:
+name|device_printf
+argument_list|(
+name|bt
+operator|->
+name|dev
+argument_list|,
+literal|"Can't malloc BCCBs\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4688,18 +4728,8 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_elseif
-elseif|else
-if|if
-condition|(
-name|bt
-operator|->
-name|num_ccbs
-operator|<
-name|bt
-operator|->
-name|max_ccbs
-condition|)
+begin_else
+else|else
 block|{
 name|btallocccbs
 argument_list|(
@@ -4719,19 +4749,9 @@ expr_stmt|;
 if|if
 condition|(
 name|bccb
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|device_printf
-argument_list|(
-name|bt
-operator|->
-name|dev
-argument_list|,
-literal|"Can't malloc BCCB\n"
-argument_list|)
-expr_stmt|;
-else|else
 block|{
 name|SLIST_REMOVE_HEAD
 argument_list|(
@@ -4750,7 +4770,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_elseif
+end_else
 
 begin_expr_stmt
 name|splx
