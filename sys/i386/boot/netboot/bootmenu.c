@@ -276,7 +276,7 @@ literal|"flags"
 block|,
 name|cmd_flags
 block|,
-literal|"[bcdhsv]  set boot flags"
+literal|"[bcdghsv] set boot flags"
 block|}
 block|,
 block|{
