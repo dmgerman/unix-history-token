@@ -57,17 +57,124 @@ directive|include
 file|<sys/rman.h>
 end_include
 
+begin_comment
+comment|/* And all this for BIOS_PADDRTOVADDR() */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pc/bios.h>
+end_include
+
 begin_include
 include|#
 directive|include
 file|<machine/smapi.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/smapi/smapi_var.h>
-end_include
+begin_define
+define|#
+directive|define
+name|SMAPI_START
+value|0xf0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAPI_STEP
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAPI_OFF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAPI_LEN
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMAPI_SIG
+value|"$SMB"
+end_define
+
+begin_define
+define|#
+directive|define
+name|RES2HDR
+parameter_list|(
+name|res
+parameter_list|)
+value|((struct smapi_bios_header *)rman_get_virtual(res))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDR2HDR
+parameter_list|(
+name|res
+parameter_list|)
+value|((struct smapi_bios_header *)BIOS_PADDRTOVADDR(addr))
+end_define
+
+begin_struct
+struct|struct
+name|smapi_softc
+block|{
+name|dev_t
+name|cdev
+decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|int
+name|rid
+decl_stmt|;
+name|u_int32_t
+name|smapi32_entry
+decl_stmt|;
+name|struct
+name|smapi_bios_header
+modifier|*
+name|header
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 name|u_long
@@ -96,31 +203,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_open_t
-name|smapi_open
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_close_t
-name|smapi_close
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_ioctl_t
 name|smapi_ioctl
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|183
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -132,12 +218,12 @@ block|{
 operator|.
 name|d_open
 operator|=
-name|smapi_open
+name|nullopen
 block|,
 operator|.
 name|d_close
 operator|=
-name|smapi_close
+name|nullclose
 block|,
 operator|.
 name|d_ioctl
@@ -152,7 +238,7 @@ block|,
 operator|.
 name|d_maj
 operator|=
-name|CDEV_MAJOR
+name|MAJOR_AUTO
 block|,
 operator|.
 name|d_flags
@@ -162,75 +248,111 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_function_decl
 specifier|static
-name|int
-name|smapi_open
+name|void
+name|smapi_identify
 parameter_list|(
-name|dev
-parameter_list|,
-name|oflags
-parameter_list|,
-name|devtype
-parameter_list|,
-name|td
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|int
-name|oflags
-decl_stmt|;
-name|int
-name|devtype
-decl_stmt|;
-name|d_thread_t
+name|driver_t
 modifier|*
-name|td
-decl_stmt|;
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+parameter_list|,
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_function
+begin_function_decl
 specifier|static
 name|int
-name|smapi_close
+name|smapi_probe
 parameter_list|(
-name|dev
-parameter_list|,
-name|fflag
-parameter_list|,
-name|devtype
-parameter_list|,
-name|td
+name|device_t
 parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
-name|fflag
-decl_stmt|;
+name|smapi_attach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
-name|devtype
-decl_stmt|;
-name|d_thread_t
+name|smapi_detach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|smapi_modevent
+parameter_list|(
+name|module_t
+parameter_list|,
+name|int
+parameter_list|,
+name|void
 modifier|*
-name|td
-decl_stmt|;
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|smapi_header_cksum
+parameter_list|(
+name|struct
+name|smapi_bios_header
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|smapi32
+parameter_list|(
+name|struct
+name|smapi_bios_parameter
+modifier|*
+parameter_list|,
+name|struct
+name|smapi_bios_parameter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|smapi32_new
+parameter_list|(
+name|u_long
+parameter_list|,
+name|u_short
+parameter_list|,
+name|struct
+name|smapi_bios_parameter
+modifier|*
+parameter_list|,
+name|struct
+name|smapi_bios_parameter
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -359,15 +481,101 @@ directive|else
 argument|error = smapi32_new(sc->smapi32_entry, SMAPI32_SEGMENT,
 endif|#
 directive|endif
-argument|(struct smapi_bios_parameter *)data, 				(struct smapi_bios_parameter *)data); 		break; 	default: 		error = ENOTTY; 	}  fail: 	return (error); }  int smapi_attach (struct smapi_softc *sc) {  	sc->cdev = make_dev(&smapi_cdevsw, 			device_get_unit(sc->dev), 			UID_ROOT, GID_WHEEL,
+argument|(struct smapi_bios_parameter *)data, 				(struct smapi_bios_parameter *)data); 		break; 	default: 		error = ENOTTY; 	}  fail: 	return (error); }  static int smapi_header_cksum (struct smapi_bios_header *header) { 	u_int8_t *ptr; 	u_int8_t cksum; 	int i;  	ptr = (u_int8_t *)header; 	cksum =
+literal|0
+argument|; 	for (i =
+literal|0
+argument|; i< header->length; i++) { 		cksum += ptr[i];	 	}  	return (cksum); }  static void smapi_identify (driver_t *driver, device_t parent) { 	device_t child; 	u_int32_t addr; 	int length; 	int rid;  	if (!device_is_alive(parent)) 		return;  	addr = bios_sigsearch(SMAPI_START, SMAPI_SIG, SMAPI_LEN,                               SMAPI_STEP, SMAPI_OFF); 	if (addr !=
+literal|0
+argument|) { 		rid =
+literal|0
+argument|; 		length = ADDR2HDR(res)->length;  		child = BUS_ADD_CHILD(parent,
+literal|0
+argument|,
+literal|"smapi"
+argument|, -
+literal|1
+argument|); 		device_set_driver(child, driver); 		bus_set_resource(child, SYS_RES_MEMORY, rid, addr, length); 		device_set_desc(child,
+literal|"SMAPI BIOS"
+argument|); 	}  	return; }  static int smapi_probe (device_t dev) { 	struct resource *res; 	int rid; 	int error;  	error =
+literal|0
+argument|; 	rid =
+literal|0
+argument|; 	res = bus_alloc_resource(dev, SYS_RES_MEMORY,&rid,
+literal|0ul
+argument|, ~
+literal|0ul
+argument|,
+literal|1
+argument|, RF_ACTIVE); 	if (res == NULL) { 		device_printf(dev,
+literal|"Unable to allocate memory resource.\n"
+argument|); 		error = ENOMEM; 		goto bad; 	}  	if (smapi_header_cksum(RES2HDR(res))) { 		device_printf(dev,
+literal|"SMAPI header checksum failed.\n"
+argument|); 		error = ENXIO; 		goto bad; 	}  bad: 	if (res) 		bus_release_resource(dev, SYS_RES_MEMORY, rid, res); 	return (error); }  static int smapi_attach (device_t dev) { 	struct smapi_softc *sc; 	int error;  	sc = device_get_softc(dev); 	error =
+literal|0
+argument|;  	sc->dev = dev; 	sc->rid =
+literal|0
+argument|; 	sc->res = bus_alloc_resource(dev, SYS_RES_MEMORY,&sc->rid,
+literal|0ul
+argument|, ~
+literal|0ul
+argument|,
+literal|1
+argument|, RF_ACTIVE); 	if (sc->res == NULL) { 		device_printf(dev,
+literal|"Unable to allocate memory resource.\n"
+argument|); 		error = ENOMEM; 		goto bad; 	} 	sc->header = (struct smapi_bios_header *)rman_get_virtual(sc->res); 	sc->smapi32_entry = (u_int32_t)BIOS_PADDRTOVADDR( 					sc->header->prot32_segment + 					sc->header->prot32_offset);          sc->cdev = make_dev(&smapi_cdevsw, 			device_get_unit(sc->dev), 			UID_ROOT, GID_WHEEL,
 literal|0600
 argument|,
 literal|"%s%d"
-argument|, 			smapi_cdevsw.d_name, 			device_get_unit(sc->dev));  	return (
+argument|, 			smapi_cdevsw.d_name, 			device_get_unit(sc->dev));  	device_printf(dev,
+literal|"Version: %d.%02d, Length: %d, Checksum: 0x%02x\n"
+argument|, 		bcd2bin(sc->header->version_major), 		bcd2bin(sc->header->version_minor), 		sc->header->length, 		sc->header->checksum); 	device_printf(dev,
+literal|"Information=0x%b\n"
+argument|, 		sc->header->information,
+literal|"\020"
+literal|"\001REAL_VM86"
+literal|"\002PROTECTED_16"
+literal|"\003PROTECTED_32"
+argument|);  	if (bootverbose) { 		if (sc->header->information& SMAPI_REAL_VM86) 			device_printf(dev,
+literal|"Real/VM86 mode: Segment 0x%04x, Offset 0x%04x\n"
+argument|, 				sc->header->real16_segment, 				sc->header->real16_offset); 		if (sc->header->information& SMAPI_PROT_16BIT) 			device_printf(dev,
+literal|"16-bit Protected mode: Segment 0x%08x, Offset 0x%04x\n"
+argument|, 				sc->header->prot16_segment, 				sc->header->prot16_offset); 		if (sc->header->information& SMAPI_PROT_32BIT) 			device_printf(dev,
+literal|"32-bit Protected mode: Segment 0x%08x, Offset 0x%08x\n"
+argument|, 				sc->header->prot32_segment, 				sc->header->prot32_offset); 	}  	return (
 literal|0
-argument|); }  int smapi_detach (struct smapi_softc *sc) {  	destroy_dev(sc->cdev); 	return (
+argument|); bad: 	if (sc->res) 		bus_release_resource(dev, SYS_RES_MEMORY, sc->rid, sc->res); 	return (error); }  static int smapi_detach (device_t dev) { 	struct smapi_softc *sc;  	sc = device_get_softc(dev);  	destroy_dev(sc->cdev);  	if (sc->res) 		bus_release_resource(dev, SYS_RES_MEMORY, sc->rid, sc->res);  	return (
 literal|0
-argument|); }
+argument|); }  static int smapi_modevent (mod, what, arg)         module_t        mod;         int             what;         void *          arg; { 	device_t *	devs; 	int		count; 	int		i;  	switch (what) { 	case MOD_LOAD: 		break; 	case MOD_UNLOAD: 		devclass_get_devices(smapi_devclass,&devs,&count); 		for (i =
+literal|0
+argument|; i< count; i++) { 			device_delete_child(device_get_parent(devs[i]), devs[i]); 		} 		break; 	default: 		break; 	}  	return (
+literal|0
+argument|); }  static device_method_t smapi_methods[] = {
+comment|/* Device interface */
+argument|DEVMETHOD(device_identify,      smapi_identify)
+argument_list|,
+argument|DEVMETHOD(device_probe,         smapi_probe)
+argument_list|,
+argument|DEVMETHOD(device_attach,        smapi_attach)
+argument_list|,
+argument|DEVMETHOD(device_detach,        smapi_detach)
+argument_list|,
+argument|{
+literal|0
+argument_list|,
+literal|0
+argument|} };  static driver_t smapi_driver = {
+literal|"smapi"
+argument_list|,
+argument|smapi_methods
+argument_list|,
+argument|sizeof(struct smapi_softc)
+argument_list|,
+argument|};  DRIVER_MODULE(smapi, nexus, smapi_driver, smapi_devclass, smapi_modevent,
+literal|0
+argument|); MODULE_VERSION(smapi,
+literal|1
+argument|);
 end_function
 
 end_unit
