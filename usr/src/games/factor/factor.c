@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)factor.c	4.4 (Berkeley) %G%"
+literal|"@(#)factor.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -885,16 +891,22 @@ name|val
 condition|)
 block|{
 case|case
-operator|-
-literal|2147483648
+name|LONG_MIN
 case|:
-comment|/* avoid negation problems */
-name|puts
+comment|/* avoid negation problems - assumes LONG_MIN is even  XXX */
+name|printf
 argument_list|(
-literal|"-2147483648: -1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2\n"
+literal|"%ld: -1 2"
+argument_list|,
+name|val
 argument_list|)
 expr_stmt|;
-return|return;
+name|val
+operator|/=
+operator|-
+literal|2
+expr_stmt|;
+break|break;
 case|case
 operator|-
 literal|1
@@ -944,7 +956,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"%ld:"
@@ -952,14 +963,13 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 comment|/* 	 * factor value 	 */
 name|fact
 operator|=
