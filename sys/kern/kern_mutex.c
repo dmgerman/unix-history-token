@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -723,7 +729,7 @@ define|#
 directive|define
 name|MPROF_AVG
 value|3
-name|u_int64_t
+name|uintmax_t
 name|counter
 index|[
 literal|4
@@ -1116,7 +1122,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%12llu %12llu %12llu %12llu %s:%d (%s)\n"
+literal|"%12ju %12ju %12ju %12ju %s:%d (%s)\n"
 argument_list|,
 name|mprof_buf
 index|[
