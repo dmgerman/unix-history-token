@@ -8614,13 +8614,20 @@ operator|=
 name|type
 expr_stmt|;
 block|}
-comment|/*  * XXX I think using __i386__ is wrong here since we actually want to probe  * for the machine type, not the CPU type (so non-PC arch's like the PC98 will  * fail the probe).  However, for whatever reason, testing for _MACHINE_ARCH  * == i386 breaks the test on FreeBSD/Alpha.  */
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__i386__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
+operator|)
 operator|||
 name|defined
 argument_list|(
@@ -8652,25 +8659,6 @@ name|unit
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|fdc
-operator|->
-name|flags
-operator|&
-name|FDC_ISPCMCIA
-operator|)
-condition|)
-comment|/* 				 * Somewhat special.  No need to force the 				 * user to set device flags, since the Y-E 				 * Data PCMCIA floppy is always a 1.44 MB 				 * device. 				 */
-name|fd
-operator|->
-name|type
-operator|=
-name|FDT_144M
-expr_stmt|;
-else|else
 name|fd
 operator|->
 name|type
@@ -8686,9 +8674,7 @@ operator|)
 operator|>>
 literal|4
 expr_stmt|;
-block|}
 else|else
-block|{
 name|fd
 operator|->
 name|type
@@ -8700,7 +8686,6 @@ argument_list|)
 operator|&
 literal|0x0f
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|fd

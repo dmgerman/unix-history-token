@@ -373,12 +373,6 @@ name|fdc_dev
 operator|=
 name|dev
 expr_stmt|;
-name|sc
-operator|->
-name|flags
-operator||=
-name|FDC_ISPNP
-expr_stmt|;
 comment|/* Initialize variables and get a temporary buffer for _FDE. */
 name|error
 operator|=

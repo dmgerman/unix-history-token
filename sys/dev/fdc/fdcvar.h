@@ -36,9 +36,6 @@ name|fdcu
 decl_stmt|;
 comment|/* our unit number */
 name|int
-name|dmacnt
-decl_stmt|;
-name|int
 name|dmachan
 decl_stmt|;
 name|int
@@ -64,14 +61,6 @@ define|#
 directive|define
 name|FDC_NODMA
 value|0x40
-define|#
-directive|define
-name|FDC_ISPNP
-value|0x80
-define|#
-directive|define
-name|FDC_ISPCMCIA
-value|0x100
 name|struct
 name|fd_data
 modifier|*
