@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	6.6 (Berkeley) %G%"
+literal|"@(#)telnet.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7483,6 +7483,14 @@ name|fmt
 operator|=
 name|dont
 expr_stmt|;
+name|hisopts
+index|[
+name|option
+index|]
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 block|}
 name|sprintf
 argument_list|(
@@ -8125,6 +8133,10 @@ name|InitTerminal
 argument_list|()
 expr_stmt|;
 comment|/* Start terminal going */
+name|LocalClearScreen
+argument_list|()
+expr_stmt|;
+comment|/* Make sure the screen is clear */
 name|setconnmode
 argument_list|()
 expr_stmt|;
