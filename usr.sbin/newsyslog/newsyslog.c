@@ -758,12 +758,6 @@ name|numdays
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|int
-name|perm
-parameter_list|,
-name|int
-name|sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2155,14 +2149,6 @@ argument_list|,
 name|ent
 operator|->
 name|flags
-argument_list|,
-name|ent
-operator|->
-name|permissions
-argument_list|,
-name|ent
-operator|->
-name|sig
 argument_list|)
 expr_stmt|;
 block|}
@@ -4554,12 +4540,6 @@ name|numdays
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|int
-name|perm
-parameter_list|,
-name|int
-name|sig
 parameter_list|)
 block|{
 name|char
@@ -5178,7 +5158,9 @@ name|printf
 argument_list|(
 literal|"chmod %o %s\n"
 argument_list|,
-name|perm
+name|ent
+operator|->
+name|permissions
 argument_list|,
 name|zfile2
 argument_list|)
@@ -5233,14 +5215,22 @@ argument_list|,
 name|zfile2
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|chmod
 argument_list|(
 name|zfile2
 argument_list|,
-name|perm
+name|ent
+operator|->
+name|permissions
+argument_list|)
+condition|)
+name|warn
+argument_list|(
+literal|"can't chmod %s"
+argument_list|,
+name|file2
 argument_list|)
 expr_stmt|;
 if|if
@@ -5368,7 +5358,9 @@ name|log
 argument_list|,
 name|file1
 argument_list|,
-name|perm
+name|ent
+operator|->
+name|permissions
 argument_list|,
 name|ent
 operator|->
@@ -5438,7 +5430,9 @@ name|creat
 argument_list|(
 name|tfile
 argument_list|,
-name|perm
+name|ent
+operator|->
+name|permissions
 argument_list|)
 expr_stmt|;
 if|if
@@ -5543,7 +5537,9 @@ name|printf
 argument_list|(
 literal|"chmod %o %s...\n"
 argument_list|,
-name|perm
+name|ent
+operator|->
+name|permissions
 argument_list|,
 name|log
 argument_list|)
@@ -5557,7 +5553,9 @@ name|chmod
 argument_list|(
 name|tfile
 argument_list|,
-name|perm
+name|ent
+operator|->
+name|permissions
 argument_list|)
 expr_stmt|;
 if|if
@@ -5640,6 +5638,8 @@ name|printf
 argument_list|(
 literal|"kill -%d %d\n"
 argument_list|,
+name|ent
+operator|->
 name|sig
 argument_list|,
 operator|(
@@ -5656,6 +5656,8 @@ name|kill
 argument_list|(
 name|pid
 argument_list|,
+name|ent
+operator|->
 name|sig
 argument_list|)
 condition|)
