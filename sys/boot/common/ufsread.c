@@ -19,6 +19,24 @@ directive|include
 file|<ufs/ffs/fs.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|cgbase
+end_undef
+
+begin_define
+define|#
+directive|define
+name|cgbase
+parameter_list|(
+name|fs
+parameter_list|,
+name|c
+parameter_list|)
+value|((ufs2_daddr_t)((fs)->fs_fpg * (c)))
+end_define
+
 begin_comment
 comment|/*  * We use 4k `virtual' blocks for filesystem data, whatever the actual  * filesystem block size. FFS blocks are always a multiple of 4k.  */
 end_comment
