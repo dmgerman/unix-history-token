@@ -58,6 +58,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../ufs/dir.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -95,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|"ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"time.h"
 end_include
 
 begin_include
@@ -2180,9 +2186,17 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|suser
-argument_list|()
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_acflag
+argument_list|)
 condition|)
 return|return
 operator|(

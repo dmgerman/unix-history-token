@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1367,6 +1367,8 @@ name|soft
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|error
 decl_stmt|;
 comment|/* 	 * If the ioctl involves modification, 	 * hang if in the background. 	 */
 switch|switch
@@ -2508,13 +2510,23 @@ directive|ifndef
 name|UCONSOLE
 if|if
 condition|(
-operator|!
+name|error
+operator|=
 name|suser
-argument_list|()
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_acflag
+argument_list|)
 condition|)
 return|return
 operator|(
-name|EPERM
+name|error
 operator|)
 return|;
 endif|#

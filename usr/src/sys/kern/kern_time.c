@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_time.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_time.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -265,11 +265,28 @@ condition|(
 name|uap
 operator|->
 name|tzp
-operator|&&
+operator|==
+literal|0
+operator|||
+operator|(
+name|u
+operator|.
+name|u_error
+operator|=
 name|suser
-argument_list|()
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_acflag
+argument_list|)
+operator|)
 condition|)
-block|{
+return|return;
 name|u
 operator|.
 name|u_error
@@ -308,7 +325,6 @@ operator|=
 name|atz
 expr_stmt|;
 block|}
-block|}
 end_block
 
 begin_macro
@@ -333,9 +349,21 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-operator|!
+name|u
+operator|.
+name|u_error
+operator|=
 name|suser
-argument_list|()
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_acflag
+argument_list|)
 condition|)
 return|return;
 comment|/* WHAT DO WE DO ABOUT PENDING REAL-TIME TIMEOUTS??? */
@@ -464,9 +492,21 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-operator|!
+name|u
+operator|.
+name|u_error
+operator|=
 name|suser
-argument_list|()
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_acflag
+argument_list|)
 condition|)
 return|return;
 name|u
