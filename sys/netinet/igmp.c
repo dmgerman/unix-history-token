@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Stephen Deering.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)igmp.c	8.1 (Berkeley) 7/19/93  * $Id: igmp.c,v 1.16 1996/03/14 16:59:16 fenner Exp $  */
+comment|/*  * Copyright (c) 1988 Stephen Deering.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)igmp.c	8.1 (Berkeley) 7/19/93  * $Id: igmp.c,v 1.17 1996/03/26 19:16:42 fenner Exp $  */
 end_comment
 
 begin_comment
@@ -1471,6 +1471,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|route
+name|igmprt
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1512,8 +1520,12 @@ name|ip
 decl_stmt|;
 name|struct
 name|ip_moptions
-modifier|*
 name|imo
+decl_stmt|;
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin
 decl_stmt|;
 name|MGETHDR
 argument_list|(
@@ -1531,36 +1543,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|MALLOC
-argument_list|(
-name|imo
-argument_list|,
-expr|struct
-name|ip_moptions
-operator|*
-argument_list|,
-sizeof|sizeof
-expr|*
-name|imo
-argument_list|,
-name|M_IPMOPTS
-argument_list|,
-name|M_DONTWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|imo
-condition|)
-block|{
-name|m_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|m
 operator|->
 name|m_pkthdr
@@ -1746,7 +1728,7 @@ operator|.
 name|s_addr
 expr_stmt|;
 name|imo
-operator|->
+operator|.
 name|imo_multicast_ifp
 operator|=
 name|inm
@@ -1754,13 +1736,13 @@ operator|->
 name|inm_ifp
 expr_stmt|;
 name|imo
-operator|->
+operator|.
 name|imo_multicast_ttl
 operator|=
 literal|1
 expr_stmt|;
 name|imo
-operator|->
+operator|.
 name|imo_multicast_vif
 operator|=
 operator|-
@@ -1768,7 +1750,7 @@ literal|1
 expr_stmt|;
 comment|/*          * Request loopback of the report if we are acting as a multicast          * router, so that the process-level routing demon can hear it.          */
 name|imo
-operator|->
+operator|.
 name|imo_multicast_loop
 operator|=
 operator|(
@@ -1777,29 +1759,20 @@ operator|!=
 name|NULL
 operator|)
 expr_stmt|;
+comment|/* 	 * XXX 	 * Do we have to worry about reentrancy here?  Don't think so. 	 */
 name|ip_output
 argument_list|(
 name|m
 argument_list|,
 name|router_alert
 argument_list|,
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
-literal|0
+operator|&
+name|igmprt
 argument_list|,
 literal|0
 argument_list|,
+operator|&
 name|imo
-argument_list|)
-expr_stmt|;
-name|FREE
-argument_list|(
-name|imo
-argument_list|,
-name|M_IPMOPTS
 argument_list|)
 expr_stmt|;
 operator|++

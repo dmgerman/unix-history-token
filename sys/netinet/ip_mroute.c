@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.30 1996/03/11 17:11:23 fenner Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.31 1996/03/26 19:16:44 fenner Exp $  */
 end_comment
 
 begin_include
@@ -9044,6 +9044,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+specifier|static
+name|struct
+name|route
+name|ro
+decl_stmt|;
 name|int
 name|s
 init|=
@@ -9071,12 +9076,10 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
-literal|0
+operator|&
+name|vifp
+operator|->
+name|v_route
 argument_list|,
 name|IP_FORWARDING
 argument_list|,
@@ -9129,6 +9132,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 	 * Re-entrancy should not be a problem here, because 	 * the packets that we send out and are looped back at us 	 * should get rejected because they appear to come from 	 * the loopback interface, thus preventing looping. 	 */
 name|error
 operator|=
 name|ip_output
@@ -9142,12 +9146,8 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
-literal|0
+operator|&
+name|ro
 argument_list|,
 name|IP_FORWARDING
 argument_list|,
