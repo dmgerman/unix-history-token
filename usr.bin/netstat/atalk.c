@@ -1146,8 +1146,7 @@ name|y
 parameter_list|,
 name|z
 parameter_list|)
-define|\
-value|((x) ? printf("\t%lu %s%s%s\n",x,y,plural(x),z) : 0)
+value|if (x || sflag<= 1) \ 	printf("\t%lu %s%s%s\n",x,y,plural(x),z)
 end_define
 
 begin_comment
