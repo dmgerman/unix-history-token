@@ -470,6 +470,10 @@ name|flag
 operator|=
 name|M_NOWAIT
 expr_stmt|;
+name|flag
+operator||=
+name|M_ZERO
+expr_stmt|;
 name|so
 operator|=
 name|uma_zalloc
@@ -485,15 +489,6 @@ name|so
 condition|)
 block|{
 comment|/* XXX race condition for reentrant kernel */
-name|bzero
-argument_list|(
-name|so
-argument_list|,
-sizeof|sizeof
-expr|*
-name|so
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_gencnt
