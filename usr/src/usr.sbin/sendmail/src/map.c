@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.40 (Berkeley) %G%"
+literal|"@(#)map.c	8.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1762,9 +1762,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|MAYBENEXTRELEASE
 if|if
 condition|(
 name|aliaswait
@@ -1779,8 +1776,6 @@ condition|)
 return|return
 name|TRUE
 return|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -4552,9 +4547,32 @@ name|yperr
 operator|==
 name|YPERR_BUSY
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MF_ALIAS
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+operator|||
+name|aliaswait
+argument_list|(
+name|map
+argument_list|,
+name|NULL
+argument_list|,
+name|TRUE
+argument_list|)
+condition|)
 return|return
 name|TRUE
 return|;
+block|}
 if|if
 condition|(
 operator|!
