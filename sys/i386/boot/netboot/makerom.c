@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/************************************************************************  Program to put ROM checksum in ROM image.  This program strips off the FreeBSD a.out header!  ************************************************************************/
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -113,6 +117,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|lseek
+argument_list|(
+name|fd
+argument_list|,
+operator|(
+name|off_t
+operator|)
+literal|32
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"lseek error"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|read
 argument_list|(
 name|fd
@@ -215,7 +247,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_SET
 argument_list|)

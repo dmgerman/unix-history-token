@@ -52,49 +52,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INCLUDE_3COM
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_3COM_USE_AUI
-end_ifdef
-
-begin_decl_stmt
-name|short
-name|aui
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|short
-name|aui
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 function_decl|(
@@ -142,6 +99,14 @@ begin_decl_stmt
 name|unsigned
 name|long
 name|netmask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|eth_driver
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -768,8 +733,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Fill in nfsdiskless.myif */
-comment|/* 	sprintf(&nfsdiskless.myif.ifra_name,"ep0"); 	*/
-name|eth_fillname
+name|sprintf
 argument_list|(
 operator|&
 name|nfsdiskless
@@ -777,6 +741,8 @@ operator|.
 name|myif
 operator|.
 name|ifra_name
+argument_list|,
+name|eth_driver
 argument_list|)
 expr_stmt|;
 name|nfsdiskless

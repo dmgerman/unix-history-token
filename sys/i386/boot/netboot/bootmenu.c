@@ -32,6 +32,22 @@ name|netmask
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern eth_reset(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+specifier|extern
+name|short
+name|aui
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|int
 name|cmd_ip
@@ -83,108 +99,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INCLUDE_3COM
-end_ifdef
-
 begin_function_decl
 name|int
 name|cmd_aui
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMALL_ROM
-end_ifdef
-
-begin_struct
-struct|struct
-name|bootcmds_t
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|()
-function_decl|;
-block|}
-name|bootcmds
-index|[]
-init|=
-block|{
-block|{
-literal|"ip"
-block|,
-name|cmd_ip
-block|}
-block|,
-block|{
-literal|"server"
-block|,
-name|cmd_server
-block|}
-block|,
-block|{
-literal|"bootfile"
-block|,
-name|cmd_bootfile
-block|}
-block|,
-block|{
-literal|"diskboot"
-block|,
-name|exit
-block|}
-block|,
-block|{
-literal|"autoboot"
-block|,
-name|NULL
-block|}
-block|,
-ifdef|#
-directive|ifdef
-name|INCLUDE_3COM
-block|{
-literal|"trans"
-block|,
-name|cmd_aui
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-struct|;
-end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !SMALL ROM */
-end_comment
 
 begin_struct
 struct|struct
@@ -322,9 +242,6 @@ block|,
 literal|"          continue"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|INCLUDE_3COM
 block|{
 literal|"trans"
 block|,
@@ -333,8 +250,6 @@ block|,
 literal|"<on|off>     turn transceiver on|off"
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 name|NULL
 block|,
@@ -347,7 +262,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/************************************************************************** CMD_HELP - Display help screen  - NOT FOR SMALL ROMS **************************************************************************/
+comment|/************************************************************************** CMD_HELP - Display help screen **************************************************************************/
 end_comment
 
 begin_macro
@@ -395,15 +310,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMALL ROM */
-end_comment
 
 begin_comment
 comment|/************************************************************************** CMD_IP - Set my IP address **************************************************************************/
@@ -464,28 +370,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INCLUDE_3COM
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|short
-name|aui
-decl_stmt|;
-end_decl_stmt
-
-begin_extern
-extern|extern eth_reset(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/************************************************************************** CMD_AUI - Turn on-board transceiver on or off **************************************************************************/
@@ -570,11 +454,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/************************************************************************** CMD_SERVER - Set server's IP address **************************************************************************/
@@ -1897,23 +1776,11 @@ name|cmd
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SMALL_ROM
-name|printf
-argument_list|(
-literal|"invalid command\n\r"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|printf
 argument_list|(
 literal|"bad command - type 'help' for list\n\r"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
