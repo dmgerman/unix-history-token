@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -402,8 +402,11 @@ end_struct
 begin_else
 else|#
 directive|else
-else|LOCORE
 end_else
+
+begin_comment
+comment|/* LOCORE */
+end_comment
 
 begin_comment
 comment|/* 	 * offsets for asm boot files. 	 */
@@ -448,7 +451,7 @@ literal|276
 comment|/* size of disk label */
 endif|#
 directive|endif
-endif|LOCORE
+comment|/* LOCORE */
 comment|/* d_type values: */
 define|#
 directive|define
@@ -1071,8 +1074,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|LOCORE
 end_endif
+
+begin_comment
+comment|/* LOCORE */
+end_comment
 
 begin_if
 if|#
