@@ -100,11 +100,9 @@ init|=
 block|{
 literal|"#ifndef lint"
 block|,
-literal|"#include<sys/cdefs.h>"
-block|,
 literal|"static char const "
 block|,
-literal|"yyrcsid[] __unused = \"$FreeBSD$\";"
+literal|"yyrcsid[] = \"$FreeBSD$\";"
 block|,
 literal|"#endif"
 block|,
