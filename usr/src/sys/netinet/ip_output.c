@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1756,7 +1756,10 @@ return|return
 operator|(
 name|ip_pcbopts
 argument_list|(
+operator|&
 name|inp
+operator|->
+name|inp_options
 argument_list|,
 operator|*
 name|m
@@ -1894,13 +1897,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Set up IP options in inpcb for insertion in output packets.  * Store in mbuf, adding pseudo-option with destination address  * if source routed.  */
+comment|/*  * Set up IP options in pcb for insertion in output packets.  * Store in mbuf with pointer in pcbopt, adding pseudo-option  * with destination address if source routed.  */
 end_comment
 
 begin_macro
 name|ip_pcbopts
 argument_list|(
-argument|inp
+argument|pcbopt
 argument_list|,
 argument|m
 argument_list|)
@@ -1908,13 +1911,15 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|inpcb
+name|mbuf
 modifier|*
-name|inp
+modifier|*
+name|pcbopt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -1940,20 +1945,17 @@ decl_stmt|;
 comment|/* turn off any old options */
 if|if
 condition|(
-name|inp
-operator|->
-name|inp_options
+operator|*
+name|pcbopt
 condition|)
 name|m_free
 argument_list|(
-name|inp
-operator|->
-name|inp_options
+operator|*
+name|pcbopt
 argument_list|)
 expr_stmt|;
-name|inp
-operator|->
-name|inp_options
+operator|*
+name|pcbopt
 operator|=
 literal|0
 expr_stmt|;
@@ -2315,9 +2317,8 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|inp
-operator|->
-name|inp_options
+operator|*
+name|pcbopt
 operator|=
 name|m
 expr_stmt|;
