@@ -1944,14 +1944,9 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sprintf
 argument_list|(
 name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
 argument_list|,
 name|format
 argument_list|,
