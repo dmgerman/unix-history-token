@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* subsegs.h -> subsegs.c    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* subsegs.h -> subsegs.c     Copyright (C) 1987, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+end_comment
+
+begin_comment
+comment|/*  * $Id: subsegs.h,v 1.3 1993/10/02 20:57:55 pk Exp $  */
 end_comment
 
 begin_comment
@@ -91,11 +95,84 @@ begin_comment
 comment|/* frags. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MANY_SEGMENTS
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|frchainS
+modifier|*
+name|frchainP
+decl_stmt|;
+name|int
+name|hadone
+decl_stmt|;
+name|int
+name|user_stuff
+decl_stmt|;
+comment|/*  struct frag *frag_root;*/
+comment|/*  struct frag *last_frag;*/
+name|fixS
+modifier|*
+name|fix_root
+decl_stmt|;
+name|fixS
+modifier|*
+name|fix_tail
+decl_stmt|;
+name|struct
+name|internal_scnhdr
+name|scnhdr
+decl_stmt|;
+name|symbolS
+modifier|*
+name|dot
+decl_stmt|;
+name|struct
+name|lineno_list
+modifier|*
+name|lineno_list_head
+decl_stmt|;
+name|struct
+name|lineno_list
+modifier|*
+name|lineno_list_tail
+decl_stmt|;
+block|}
+name|segment_info_type
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|segment_info_type
+name|segment_info
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|extern
 name|frchainS
 modifier|*
 name|data0_frchainP
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|frchainS
+modifier|*
+name|bss0_frchainP
 decl_stmt|;
 end_decl_stmt
 
@@ -115,8 +192,13 @@ begin_comment
 comment|/* segment frchain.) */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* end: subsegs.h */
+comment|/* end of subsegs.h */
 end_comment
 
 end_unit

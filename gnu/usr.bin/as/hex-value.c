@@ -1,11 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hex_value.c - char=>radix-value -    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* hex_value.c - char=>radix-value -    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
 comment|/*  * Export: Hex_value[]. Converts digits to their radix-values.  *	As distributed assumes 8 bits per char (256 entries) and ASCII.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: hex-value.c,v 1.3 1993/10/02 20:57:36 pk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -25,11 +46,11 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
+operator|(
 name|__STDC__
-argument_list|)
+operator|!=
+literal|1
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -581,7 +602,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VMS
+name|HO_VMS
 end_ifdef
 
 begin_macro
@@ -599,7 +620,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* end:hex_value.c */
+comment|/* end of hex_value.c */
 end_comment
 
 end_unit

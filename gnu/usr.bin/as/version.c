@@ -2,10 +2,11 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
+operator|(
 name|__STDC__
-argument_list|)
+operator|==
+literal|1
+operator|)
 operator|||
 name|defined
 argument_list|(
@@ -17,25 +18,37 @@ begin_decl_stmt
 specifier|const
 endif|#
 directive|endif
+comment|/* DO NOT PUT COMMENTS ABOUT CHANGES IN THIS FILE.        This file exists only to define `version_string'.        Log changes in ChangeLog.  The easiest way to do this is with    the Emacs command `add-change-log-entry'.  If you don't use Emacs,    add entries of the form:        Thu Jan  1 00:00:00 1970  Dennis Ritchie  (dmr at alice)        universe.c (temporal_reality): Began Time.    */
+ifndef|#
+directive|ifndef
+name|lint
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: version.c,v 1.3 1993/10/02 20:57:59 pk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
 name|char
 name|version_string
 index|[]
 init|=
-literal|"GNU assembler version 1.38\n"
+literal|"GNU assembler version 1.92.3, NetBSD $Revision: 1.3 $\n"
 decl_stmt|;
 end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* DO NOT PUT COMMENTS ABOUT CHANGES IN THIS FILE.     This file exists only to define `version_string'.     Log changes in ChangeLog.  The easiest way to do this is with    the Emacs command `add-change-log-entry'.  If you don't use Emacs,    add entries of the form:  Thu Jan  1 00:00:00 1970  Dennis Ritchie  (dmr at alice)  	* universe.c (temporal_reality): Began Time. */
-end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VMS
+name|HO_VMS
 end_ifdef
 
 begin_macro
@@ -51,6 +64,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* end of version.c */
+end_comment
 
 end_unit
 

@@ -1,7 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obstack.c - subroutines used implicitly by object stack macros    Copyright (C) 1988 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* obstack.c - subroutines used implicitly by object stack macros    Copyright (C) 1988 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: obstack.c,v 1.3 1993/10/02 20:57:47 pk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -344,6 +365,13 @@ name|prev
 operator|=
 literal|0
 expr_stmt|;
+comment|/* The initial chunk now contains no empty object.  */
+name|h
+operator|->
+name|maybe_empty_object
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 
@@ -584,7 +612,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* If the object just copied was the only data in OLD_CHUNK,      free that chunk and remove it from the chain.  */
+comment|/* If the object just copied was the only data in OLD_CHUNK,      free that chunk and remove it from the chain.      But not if that chunk might contain an empty object.  */
 if|if
 condition|(
 name|h
@@ -594,6 +622,11 @@ operator|==
 name|old_chunk
 operator|->
 name|contents
+operator|&&
+operator|!
+name|h
+operator|->
+name|maybe_empty_object
 condition|)
 block|{
 name|new_chunk
@@ -632,6 +665,13 @@ operator|->
 name|object_base
 operator|+
 name|obj_size
+expr_stmt|;
+comment|/* The new chunk certainly contains no empty object yet.  */
+name|h
+operator|->
+name|maybe_empty_object
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -679,6 +719,7 @@ operator|)
 operator|->
 name|chunk
 expr_stmt|;
+comment|/* We use>= rather than> since the object cannot be exactly at      the beginning of the chunk but might be an empty object exactly      at the end of an adjacent chunk. */
 while|while
 condition|(
 name|lp
@@ -690,7 +731,7 @@ operator|(
 name|POINTER
 operator|)
 name|lp
-operator|>
+operator|>=
 name|obj
 operator|||
 call|(
@@ -725,31 +766,26 @@ return|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/* Free objects in obstack H, including OBJ and everything allocate    more recently than OBJ.  If OBJ is zero, free everything in H.  */
 end_comment
 
-begin_function
-name|void
-ifdef|#
-directive|ifdef
-name|__STDC__
+begin_undef
 undef|#
 directive|undef
 name|obstack_free
-name|obstack_free
-parameter_list|(
-name|struct
-name|obstack
-modifier|*
-name|h
-parameter_list|,
-name|POINTER
-name|obj
-parameter_list|)
-else|#
-directive|else
-function|_obstack_free
+end_undef
+
+begin_comment
+comment|/* This function has two names with identical definitions.    This is the first one, called from non-ANSI code.  */
+end_comment
+
+begin_function
+name|void
+name|_obstack_free
 parameter_list|(
 name|h
 parameter_list|,
@@ -763,8 +799,6 @@ decl_stmt|;
 name|POINTER
 name|obj
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|struct
@@ -782,9 +816,7 @@ decl_stmt|;
 comment|/* point to previous chunk if any */
 name|lp
 operator|=
-operator|(
 name|h
-operator|)
 operator|->
 name|chunk
 expr_stmt|;
@@ -836,21 +868,24 @@ name|lp
 operator|=
 name|plp
 expr_stmt|;
+comment|/* If we switch chunks, we can't tell whether the new current 	 chunk contains an empty object, so assume that it may.  */
+name|h
+operator|->
+name|maybe_empty_object
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
 name|lp
 condition|)
 block|{
-operator|(
 name|h
-operator|)
 operator|->
 name|object_base
 operator|=
-operator|(
 name|h
-operator|)
 operator|->
 name|next_free
 operator|=
@@ -862,9 +897,7 @@ operator|(
 name|obj
 operator|)
 expr_stmt|;
-operator|(
 name|h
-operator|)
 operator|->
 name|chunk_limit
 operator|=
@@ -872,9 +905,7 @@ name|lp
 operator|->
 name|limit
 expr_stmt|;
-operator|(
 name|h
-operator|)
 operator|->
 name|chunk
 operator|=
@@ -896,18 +927,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Let same .o link with output of gcc and other compilers.  */
+comment|/* This function is used from ANSI code.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
 
 begin_function
 name|void
-name|_obstack_free
+name|obstack_free
 parameter_list|(
 name|h
 parameter_list|,
@@ -922,20 +947,131 @@ name|POINTER
 name|obj
 decl_stmt|;
 block|{
-name|obstack_free
-argument_list|(
+specifier|register
+name|struct
+name|_obstack_chunk
+modifier|*
+name|lp
+decl_stmt|;
+comment|/* below addr of any objects in this chunk */
+specifier|register
+name|struct
+name|_obstack_chunk
+modifier|*
+name|plp
+decl_stmt|;
+comment|/* point to previous chunk if any */
+name|lp
+operator|=
 name|h
-argument_list|,
+operator|->
+name|chunk
+expr_stmt|;
+comment|/* We use>= because there cannot be an object at the beginning of a chunk.      But there can be an empty object at that address      at the end of another chunk.  */
+while|while
+condition|(
+name|lp
+operator|!=
+literal|0
+operator|&&
+operator|(
+operator|(
+name|POINTER
+operator|)
+name|lp
+operator|>=
 name|obj
+operator|||
+call|(
+name|POINTER
+call|)
+argument_list|(
+name|lp
 argument_list|)
+operator|->
+name|limit
+operator|<
+name|obj
+operator|)
+condition|)
+block|{
+name|plp
+operator|=
+name|lp
+operator|->
+name|prev
+expr_stmt|;
+call|(
+modifier|*
+name|h
+operator|->
+name|freefun
+call|)
+argument_list|(
+name|lp
+argument_list|)
+expr_stmt|;
+name|lp
+operator|=
+name|plp
+expr_stmt|;
+comment|/* If we switch chunks, we can't tell whether the new current 	 chunk contains an empty object, so assume that it may.  */
+name|h
+operator|->
+name|maybe_empty_object
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|lp
+condition|)
+block|{
+name|h
+operator|->
+name|object_base
+operator|=
+name|h
+operator|->
+name|next_free
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|obj
+operator|)
+expr_stmt|;
+name|h
+operator|->
+name|chunk_limit
+operator|=
+name|lp
+operator|->
+name|limit
+expr_stmt|;
+name|h
+operator|->
+name|chunk
+operator|=
+name|lp
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|obj
+operator|!=
+literal|0
+condition|)
+comment|/* obj is not in any of the chunks! */
+name|abort
+argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_escape
 end_escape

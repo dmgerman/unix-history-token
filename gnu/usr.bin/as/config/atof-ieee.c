@@ -1,50 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atof_ieee.c - turn a Flonum into an IEEE floating point number    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* atof_ieee.c - turn a Flonum into an IEEE floating point number    Copyright (C) 1987, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"flonum.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|bzero
-parameter_list|(
-name|s
-parameter_list|,
-name|n
-parameter_list|)
-value|memset(s,0,n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|bcopy
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|,
-name|n
-parameter_list|)
-value|memcpy((to),(from),(n))
-end_define
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: atof-ieee.c,v 1.3 1993/10/02 20:58:25 pk Exp $"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"as.h"
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -57,12 +41,23 @@ begin_comment
 comment|/* Flonums returned here. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NULL
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NULL
 value|(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -126,7 +121,6 @@ begin_decl_stmt
 specifier|static
 name|unsigned
 name|long
-name|int
 name|mask
 index|[]
 init|=
@@ -196,7 +190,7 @@ block|,
 literal|0x7fffffff
 block|,
 literal|0xffffffff
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -245,7 +239,9 @@ operator|!
 name|littlenums_left
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -284,8 +280,8 @@ name|LITTLENUM_NUMBER_OF_BITS
 operator|-
 name|number_of_bits
 expr_stmt|;
-name|littlenum_pointer
 operator|--
+name|littlenum_pointer
 expr_stmt|;
 name|return_value
 operator||=
@@ -338,11 +334,14 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|unget_bits
 parameter_list|(
 name|num
 parameter_list|)
+name|int
+name|num
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -408,7 +407,7 @@ modifier|*
 name|words
 decl_stmt|;
 block|{
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"cannot create floating-point number"
 argument_list|)
@@ -476,7 +475,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\ *	Warning: this returns 16-bit LITTLENUMs. It is up to the caller	* *	to figure out any alignment problems and to conspire for the	* *	bytes/word to be emitted in the right order. Bigendians beware!	* *									* \***********************************************************************/
+comment|/***********************************************************************\  *	Warning: this returns 16-bit LITTLENUMs. It is up to the caller	*  *	to figure out any alignment problems and to conspire for the	*  *	bytes/word to be emitted in the right order. Bigendians beware!	*  *									*  \***********************************************************************/
 end_comment
 
 begin_comment
@@ -533,9 +532,16 @@ name|precision
 decl_stmt|;
 comment|/* Number of 16-bit words in the format. */
 name|long
-name|int
 name|exponent_bits
 decl_stmt|;
+name|FLONUM_TYPE
+name|save_gen_flonum
+decl_stmt|;
+comment|/* We have to save the generic_floating_point_number because it 	   contains storage allocation about the array of LITTLENUMs 	   where the value is actually stored.  We will allocate our 	   own array of littlenums below, but have to restore the global 	   one on exit.  */
+name|save_gen_flonum
+operator|=
+name|generic_floating_point_number
+expr_stmt|;
 name|return_value
 operator|=
 name|str
@@ -575,9 +581,11 @@ expr_stmt|;
 comment|/* Use more LittleNums than seems */
 comment|/* necessary: the highest flonum may have */
 comment|/* 15 leading 0 bits, so could be useless. */
-name|bzero
+name|memset
 argument_list|(
 name|bits
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -678,7 +686,9 @@ name|words
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|generic_floating_point_number
@@ -711,14 +721,16 @@ name|generic_floating_point_number
 argument_list|)
 condition|)
 block|{
-comment|/* as_warn("Error converting floating point number (Exponent overflow?)"); */
+comment|/* as_bad("Error converting floating point number (Exponent overflow?)"); */
 name|make_invalid_floating_point_number
 argument_list|(
 name|words
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|gen_to_words
@@ -730,8 +742,15 @@ argument_list|,
 name|exponent_bits
 argument_list|)
 expr_stmt|;
+comment|/* Restore the generic_floating_point_number's storage alloc 	   (and everything else).  */
+name|generic_floating_point_number
+operator|=
+name|save_gen_flonum
+expr_stmt|;
 return|return
+operator|(
 name|return_value
+operator|)
 return|;
 block|}
 end_function
@@ -740,38 +759,26 @@ begin_comment
 comment|/* Turn generic_floating_point_number into a real float/double/extended */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|gen_to_words
-argument_list|(
-argument|words
-argument_list|,
-argument|precision
-argument_list|,
-argument|exponent_bits
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|words
+parameter_list|,
+name|precision
+parameter_list|,
+name|exponent_bits
+parameter_list|)
 name|LITTLENUM_TYPE
 modifier|*
 name|words
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|int
-name|exponent_bits
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|precision
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|long
+name|exponent_bits
+decl_stmt|;
 block|{
 name|int
 name|return_value
@@ -779,19 +786,15 @@ init|=
 literal|0
 decl_stmt|;
 name|long
-name|int
 name|exponent_1
 decl_stmt|;
 name|long
-name|int
 name|exponent_2
 decl_stmt|;
 name|long
-name|int
 name|exponent_3
 decl_stmt|;
 name|long
-name|int
 name|exponent_4
 decl_stmt|;
 name|int
@@ -839,13 +842,15 @@ index|]
 operator|=
 literal|0x8000
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|words
 index|[
 literal|1
 index|]
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -860,7 +865,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|return_value
+operator|)
 return|;
 block|}
 comment|/* NaN:  Do the right thing */
@@ -995,7 +1002,9 @@ literal|0
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|return_value
+operator|)
 return|;
 block|}
 elseif|else
@@ -1063,10 +1072,12 @@ literal|0x0
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|return_value
+operator|)
 return|;
 block|}
-comment|/* 		 * The floating point formats we support have: 		 * Bit 15 is sign bit. 		 * Bits 14:n are excess-whatever exponent. 		 * Bits n-1:0 (if any) are most significant bits of fraction. 		 * Bits 15:0 of the next word(s) are the next most significant bits. 		 * 		 * So we need: number of bits of exponent, number of bits of 		 * mantissa. 		 */
+comment|/* 	 * The floating point formats we support have: 	 * Bit 15 is sign bit. 	 * Bits 14:n are excess-whatever exponent. 	 * Bits n-1:0 (if any) are most significant bits of fraction. 	 * Bits 15:0 of the next word(s) are the next most significant bits. 	 * 	 * So we need: number of bits of exponent, number of bits of 	 * mantissa. 	 */
 name|bits_left_in_littlenum
 operator|=
 name|LITTLENUM_NUMBER_OF_BITS
@@ -1102,9 +1113,10 @@ argument_list|(
 literal|1
 argument_list|)
 condition|;
-name|exponent_skippage
 operator|++
+name|exponent_skippage
 control|)
+empty_stmt|;
 empty_stmt|;
 name|exponent_1
 operator|=
@@ -1288,7 +1300,9 @@ name|words
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|return_value
+operator|)
 return|;
 block|}
 if|if
@@ -1575,7 +1589,6 @@ condition|)
 block|{
 name|unsigned
 name|long
-name|int
 name|carry
 decl_stmt|;
 for|for
@@ -1653,8 +1666,8 @@ name|exponent_bits
 index|]
 condition|)
 block|{
-comment|/* 			 * Exponent overflow. Lose immediately. 			 */
-comment|/* 			 * We leave return_value alone: admit we read the 			 * number, but return a floating exception 			 * because we can't encode the number. 			 */
+comment|/* 		 * Exponent overflow. Lose immediately. 		 */
+comment|/* 		 * We leave return_value alone: admit we read the 		 * number, but return a floating exception 		 * because we can't encode the number. 		 */
 name|make_invalid_floating_point_number
 argument_list|(
 name|words
@@ -1764,11 +1777,10 @@ condition|)
 block|{
 name|unsigned
 name|long
-name|int
 name|carry
 decl_stmt|;
-comment|/* 			 * Since the NEXT bit is a 1, round UP the mantissa. 			 * The cunning design of these hidden-1 floats permits 			 * us to let the mantissa overflow into the exponent, and 			 * it 'does the right thing'. However, we lose if the 			 * highest-order bit of the lowest-order word flips. 			 * Is that clear? 			 */
-comment|/* #if (sizeof(carry))< ((sizeof(bits[0]) * BITS_PER_CHAR) + 2) 	Please allow at least 1 more bit in carry than is in a LITTLENUM. 	We need that extra bit to hold a carry during a LITTLENUM carry 	propagation. Another extra bit (kept 0) will assure us that we 	don't get a sticky sign bit after shifting right, and that 	permits us to propagate the carry without any masking of bits. #endif */
+comment|/* 		 * Since the NEXT bit is a 1, round UP the mantissa. 		 * The cunning design of these hidden-1 floats permits 		 * us to let the mantissa overflow into the exponent, and 		 * it 'does the right thing'. However, we lose if the 		 * highest-order bit of the lowest-order word flips. 		 * Is that clear? 		 */
+comment|/* #if (sizeof(carry))< ((sizeof(bits[0]) * BITS_PER_CHAR) + 2) 		   Please allow at least 1 more bit in carry than is in a LITTLENUM. 		   We need that extra bit to hold a carry during a LITTLENUM carry 		   propagation. Another extra bit (kept 0) will assure us that we 		   don't get a sticky sign bit after shifting right, and that 		   permits us to propagate the carry without any masking of bits. 		   #endif */
 for|for
 control|(
 name|carry
@@ -1852,10 +1864,10 @@ name|return_value
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* This routine is a real kludge.  Someone really should do it better, but    I'm too lazy, and I don't understand this stuff all too well anyway    (JF)  */
+comment|/* This routine is a real kludge.  Someone really should do it better, but    I'm too lazy, and I don't understand this stuff all too well anyway    (JF)    */
 end_comment
 
 begin_function
@@ -1910,7 +1922,7 @@ operator|&
 name|generic_floating_point_number
 argument_list|)
 condition|)
-name|as_warn
+name|as_bad
 argument_list|(
 literal|"Error converting number to floating point (Exponent overflow?)"
 argument_list|)
@@ -1986,16 +1998,16 @@ argument_list|,
 literal|11
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+operator|&
+name|dv
+argument_list|,
 operator|&
 name|arr
 index|[
 literal|0
 index|]
-argument_list|,
-operator|&
-name|dv
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2045,16 +2057,16 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+operator|&
+name|fv
+argument_list|,
 operator|&
 name|arr
 index|[
 literal|0
 index|]
-argument_list|,
-operator|&
-name|fv
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2090,12 +2102,16 @@ if|if
 condition|(
 name|gen
 condition|)
+block|{
 name|generic_floating_point_number
 operator|=
 name|f
 expr_stmt|;
+block|}
 return|return
+operator|(
 name|sbuf
+operator|)
 return|;
 block|}
 end_function
@@ -2104,6 +2120,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* end of atof-ieee.c */
+end_comment
 
 end_unit
 

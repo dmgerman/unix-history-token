@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obstack.h - object stack macros    Copyright (C) 1988 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* obstack.h - object stack macros    Copyright (C) 1988 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+end_comment
+
+begin_comment
+comment|/*  * $Id: obstack.h,v 1.3 1993/10/02 20:57:48 pk Exp $  */
 end_comment
 
 begin_comment
@@ -155,6 +159,10 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* User's function to free a chunk.  */
+comment|/* Nonzero means there is a possibility the current chunk contains      a zero-length object.  This prevents freeing the chunk      if we allocate a bigger chunk to replace it.  */
+name|char
+name|maybe_empty_object
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -685,7 +693,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|_obstack_begin ((h), 0, 0, \ 		  (void *(*) ()) obstack_chunk_alloc, obstack_chunk_free)
+value|_obstack_begin ((h), 0, 0, \ 		  (void *(*) ()) obstack_chunk_alloc, (void (*) ())obstack_chunk_free)
 end_define
 
 begin_define
@@ -698,7 +706,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|_obstack_begin ((h), (size), 0, \ 		  (void *(*) ()) obstack_chunk_alloc, obstack_chunk_free)
+value|_obstack_begin ((h), (size), 0, \ 		  (void *(*) ()) obstack_chunk_alloc, (void (*) ())obstack_chunk_free)
 end_define
 
 begin_define
@@ -742,6 +750,25 @@ name|__STDC__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|<
+literal|2
+end_if
+
+begin_define
+define|#
+directive|define
+name|__extension__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* For GNU C, if not -traditional,    we can define these macros to compute all args only once    without using a global variable.    Also, we can avoid using the `temp' slot, to make faster code.  */
 end_comment
@@ -754,7 +781,7 @@ parameter_list|(
 name|OBSTACK
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\      (unsigned) (__o->next_free - __o->object_base); })
+value|__extension__								\   ({ struct obstack *__o = (OBSTACK);					\      (unsigned) (__o->next_free - __o->object_base); })
 end_define
 
 begin_define
@@ -765,7 +792,7 @@ parameter_list|(
 name|OBSTACK
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\      (unsigned) (__o->chunk_limit - __o->next_free); })
+value|__extension__								\   ({ struct obstack *__o = (OBSTACK);					\      (unsigned) (__o->chunk_limit - __o->next_free); })
 end_define
 
 begin_comment
@@ -784,7 +811,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->next_free + __len> __o->chunk_limit)				\     ? (_obstack_newchunk (__o, __len), 0) : 0);				\    bcopy (where, __o->next_free, __len);				\    __o->next_free += __len;						\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->next_free + __len> __o->chunk_limit)				\     ? (_obstack_newchunk (__o, __len), 0) : 0);				\    memcpy (__o->next_free, where, __len);				\    __o->next_free += __len;						\    (void) 0; })
 end_define
 
 begin_define
@@ -799,7 +826,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->next_free + __len + 1> __o->chunk_limit)			\     ? (_obstack_newchunk (__o, __len + 1), 0) : 0),			\    bcopy (where, __o->next_free, __len),				\    __o->next_free += __len,						\    *(__o->next_free)++ = 0;						\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->next_free + __len + 1> __o->chunk_limit)			\     ? (_obstack_newchunk (__o, __len + 1), 0) : 0),			\    memcpy (__o->next_free, where, __len),				\    __o->next_free += __len,						\    *(__o->next_free)++ = 0;						\    (void) 0; })
 end_define
 
 begin_define
@@ -812,7 +839,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + 1> __o->chunk_limit)				\     ? (_obstack_newchunk (__o, 1), 0) : 0),				\    *(__o->next_free)++ = (datum);					\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + 1> __o->chunk_limit)				\     ? (_obstack_newchunk (__o, 1), 0) : 0),				\    *(__o->next_free)++ = (datum);					\    (void) 0; })
 end_define
 
 begin_comment
@@ -829,7 +856,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + sizeof (void *)> __o->chunk_limit)		\     ? (_obstack_newchunk (__o, sizeof (void *)), 0) : 0),		\    *((void **)__o->next_free)++ = ((void *)datum);			\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + sizeof (void *)> __o->chunk_limit)		\     ? (_obstack_newchunk (__o, sizeof (void *)), 0) : 0),		\    *(*(void ***)&__o->next_free)++ = ((void *)datum);			\    (void) 0; })
 end_define
 
 begin_define
@@ -842,7 +869,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + sizeof (int)> __o->chunk_limit)			\     ? (_obstack_newchunk (__o, sizeof (int)), 0) : 0),			\    *((int *)__o->next_free)++ = ((int)datum);				\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + sizeof (int)> __o->chunk_limit)			\     ? (_obstack_newchunk (__o, sizeof (int)), 0) : 0),			\    *(*(int **)&__o->next_free)++ = ((int)datum);			\    (void) 0; })
 end_define
 
 begin_define
@@ -854,7 +881,7 @@ name|h
 parameter_list|,
 name|aptr
 parameter_list|)
-value|(*((void **)(h)->next_free)++ = (void *)aptr)
+value|(*(*(void ***)&(h)->next_free)++ = (void *)aptr)
 end_define
 
 begin_define
@@ -866,7 +893,7 @@ name|h
 parameter_list|,
 name|aint
 parameter_list|)
-value|(*((int *)(h)->next_free)++ = (int)aint)
+value|(*(*(int **)&(h)->next_free)++ = (int)aint)
 end_define
 
 begin_define
@@ -879,7 +906,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->chunk_limit - __o->next_free< __len)				\     ? (_obstack_newchunk (__o, __len), 0) : 0);				\    __o->next_free += __len;						\    (void) 0; })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->chunk_limit - __o->next_free< __len)				\     ? (_obstack_newchunk (__o, __len), 0) : 0);				\    __o->next_free += __len;						\    (void) 0; })
 end_define
 
 begin_define
@@ -892,7 +919,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|({ struct obstack *__h = (OBSTACK);					\    obstack_blank (__h, (length));					\    obstack_finish (__h); })
+value|__extension__								\ ({ struct obstack *__h = (OBSTACK);					\    obstack_blank (__h, (length));					\    obstack_finish (__h); })
 end_define
 
 begin_define
@@ -907,7 +934,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|({ struct obstack *__h = (OBSTACK);					\    obstack_grow (__h, (where), (length));				\    obstack_finish (__h); })
+value|__extension__								\ ({ struct obstack *__h = (OBSTACK);					\    obstack_grow (__h, (where), (length));				\    obstack_finish (__h); })
 end_define
 
 begin_define
@@ -922,8 +949,12 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|({ struct obstack *__h = (OBSTACK);					\    obstack_grow0 (__h, (where), (length));				\    obstack_finish (__h); })
+value|__extension__								\ ({ struct obstack *__h = (OBSTACK);					\    obstack_grow0 (__h, (where), (length));				\    obstack_finish (__h); })
 end_define
+
+begin_comment
+comment|/* The local variable is named __o1 to avoid a name conflict    when obstack_blank is called.  */
+end_comment
 
 begin_define
 define|#
@@ -933,7 +964,7 @@ parameter_list|(
 name|OBSTACK
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\    void *value = (void *) __o->object_base;				\    __o->next_free							\      = __INT_TO_PTR ((__PTR_TO_INT (__o->next_free)+__o->alignment_mask)\& ~ (__o->alignment_mask));			\    ((__o->next_free - (char *)__o->chunk				\> __o->chunk_limit - (char *)__o->chunk)				\     ? (__o->next_free = __o->chunk_limit) : 0);				\    __o->object_base = __o->next_free;					\    value; })
+value|__extension__								\ ({ struct obstack *__o1 = (OBSTACK);					\    void *value = (void *) __o1->object_base;				\    if (__o1->next_free == value)					\      __o1->maybe_empty_object = 1;					\    __o1->next_free							\      = __INT_TO_PTR ((__PTR_TO_INT (__o1->next_free)+__o1->alignment_mask)\& ~ (__o1->alignment_mask));			\    ((__o1->next_free - (char *)__o1->chunk				\> __o1->chunk_limit - (char *)__o1->chunk)				\     ? (__o1->next_free = __o1->chunk_limit) : 0);			\    __o1->object_base = __o1->next_free;					\    value; })
 end_define
 
 begin_define
@@ -946,7 +977,7 @@ parameter_list|,
 name|OBJ
 parameter_list|)
 define|\
-value|({ struct obstack *__o = (OBSTACK);					\    void *__obj = (OBJ);							\    if (__obj> (void *)__o->chunk&& __obj< (void *)__o->chunk_limit)  \      __o->next_free = __o->object_base = __obj;				\    else (obstack_free) (__o, __obj); })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    void *__obj = (OBJ);							\    if (__obj> (void *)__o->chunk&& __obj< (void *)__o->chunk_limit)  \      __o->next_free = __o->object_base = __obj;				\    else (obstack_free) (__o, __obj); })
 end_define
 
 begin_escape
@@ -995,7 +1026,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   bcopy (where, (h)->next_free, (h)->temp),				\   (h)->next_free += (h)->temp)
+value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   memcpy ((h)->next_free, where, (h)->temp),				\   (h)->next_free += (h)->temp)
 end_define
 
 begin_define
@@ -1010,7 +1041,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp + 1> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp + 1), 0) : 0),			\   bcopy (where, (h)->next_free, (h)->temp),				\   (h)->next_free += (h)->temp,						\   *((h)->next_free)++ = 0)
+value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp + 1> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp + 1), 0) : 0),			\   memcpy ((h)->next_free, where, (h)->temp),				\   (h)->next_free += (h)->temp,						\   *((h)->next_free)++ = 0)
 end_define
 
 begin_define
@@ -1036,7 +1067,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|( (((h)->next_free + sizeof (char *)> (h)->chunk_limit)		\    ? (_obstack_newchunk ((h), sizeof (char *)), 0) : 0),		\   *((char **)(((h)->next_free+=sizeof(char *))-sizeof(char *))) = ((char *)datum))
+value|( (((h)->next_free + sizeof (char *)> (h)->chunk_limit)		\    ? (_obstack_newchunk ((h), sizeof (char *)), 0) : 0),		\   *(*(char ***)&(h)->next_free)++ = ((char *)datum))
 end_define
 
 begin_define
@@ -1049,7 +1080,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|( (((h)->next_free + sizeof (int)> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), sizeof (int)), 0) : 0),			\   *((int *)(((h)->next_free+=sizeof(int))-sizeof(int))) = ((int)datum))
+value|( (((h)->next_free + sizeof (int)> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), sizeof (int)), 0) : 0),			\   *(*(int **)&(h)->next_free)++ = ((int)datum))
 end_define
 
 begin_define
@@ -1061,7 +1092,7 @@ name|h
 parameter_list|,
 name|aptr
 parameter_list|)
-value|(*((char **)(h)->next_free)++ = (char *)aptr)
+value|(*(*(char ***)&(h)->next_free)++ = (char *)aptr)
 end_define
 
 begin_define
@@ -1073,7 +1104,7 @@ name|h
 parameter_list|,
 name|aint
 parameter_list|)
-value|(*((int *)(h)->next_free)++ = (int)aint)
+value|(*(*(int **)&(h)->next_free)++ = (int)aint)
 end_define
 
 begin_define
@@ -1140,7 +1171,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|( (h)->temp = __PTR_TO_INT ((h)->object_base),				\   (h)->next_free							\     = __INT_TO_PTR ((__PTR_TO_INT ((h)->next_free)+(h)->alignment_mask)	\& ~ ((h)->alignment_mask)),				\   (((h)->next_free - (char *)(h)->chunk					\> (h)->chunk_limit - (char *)(h)->chunk)				\    ? ((h)->next_free = (h)->chunk_limit) : 0),				\   (h)->object_base = (h)->next_free,					\   __INT_TO_PTR ((h)->temp))
+value|( ((h)->next_free == (h)->object_base					\    ? (((h)->maybe_empty_object = 1), 0)					\    : 0),								\   (h)->temp = __PTR_TO_INT ((h)->object_base),				\   (h)->next_free							\     = __INT_TO_PTR ((__PTR_TO_INT ((h)->next_free)+(h)->alignment_mask)	\& ~ ((h)->alignment_mask)),				\   (((h)->next_free - (char *)(h)->chunk					\> (h)->chunk_limit - (char *)(h)->chunk)				\    ? ((h)->next_free = (h)->chunk_limit) : 0),				\   (h)->object_base = (h)->next_free,					\   __INT_TO_PTR ((h)->temp))
 end_define
 
 begin_ifdef
@@ -1159,7 +1190,7 @@ parameter_list|,
 name|obj
 parameter_list|)
 define|\
-value|( (h)->temp = (char *)(obj) - (char *) (h)->chunk,			\   (((h)->temp>= 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (((obstack_free) ((h), (h)->temp + (char *) (h)->chunk), 0), 0)))
+value|( (h)->temp = (char *)(obj) - (char *) (h)->chunk,			\   (((h)->temp> 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (((obstack_free) ((h), (h)->temp + (char *) (h)->chunk), 0), 0)))
 end_define
 
 begin_else
@@ -1177,7 +1208,7 @@ parameter_list|,
 name|obj
 parameter_list|)
 define|\
-value|( (h)->temp = (char *)(obj) - (char *) (h)->chunk,			\   (((h)->temp>= 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (_obstack_free ((h), (h)->temp + (char *) (h)->chunk), 0)))
+value|( (h)->temp = (char *)(obj) - (char *) (h)->chunk,			\   (((h)->temp> 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (_obstack_free ((h), (h)->temp + (char *) (h)->chunk), 0)))
 end_define
 
 begin_endif

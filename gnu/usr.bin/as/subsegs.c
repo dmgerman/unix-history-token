@@ -1,11 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* subsegs.c - subsegments -    Copyright (C) 1987 Free Software Foundation, Inc.  This file is part of GAS, the GNU Assembler.  GAS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GAS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GAS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* subsegs.c - subsegments -    Copyright (C) 1987, 1990, 1991, 1992 Free Software Foundation, Inc.        This file is part of GAS, the GNU Assembler.        GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.        GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
 comment|/*  * Segments& sub-segments.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: subsegs.c,v 1.3 1993/10/02 20:57:54 pk Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -25,23 +46,35 @@ directive|include
 file|"obstack.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"frags.h"
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MANY_SEGMENTS
+end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"struc-symbol.h"
-end_include
+begin_decl_stmt
+name|segment_info_type
+name|segment_info
+index|[
+name|SEG_MAXIMUM_ORDINAL
+index|]
+decl_stmt|;
+end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"write.h"
-end_include
+begin_decl_stmt
+name|frchainS
+modifier|*
+name|frchain_root
+decl_stmt|,
+modifier|*
+name|frchain_now
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|frchainS
@@ -57,36 +90,10 @@ name|data0_frchainP
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|int
-comment|/* in: segT   out: N_TYPE bits */
-name|seg_N_TYPE
-index|[]
-init|=
-block|{
-name|N_ABS
-block|,
-name|N_TEXT
-block|,
-name|N_DATA
-block|,
-name|N_BSS
-block|,
-name|N_UNDF
-block|,
-name|N_UNDF
-block|,
-name|N_UNDF
-block|,
-name|N_UNDF
-block|,
-name|N_UNDF
-block|,
-name|N_UNDF
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -99,12 +106,39 @@ init|=
 block|{
 literal|"absolute"
 block|,
+ifdef|#
+directive|ifdef
+name|MANY_SEGMENTS
+literal|"e0"
+block|,
+literal|"e1"
+block|,
+literal|"e2"
+block|,
+literal|"e3"
+block|,
+literal|"e4"
+block|,
+literal|"e5"
+block|,
+literal|"e6"
+block|,
+literal|"e7"
+block|,
+literal|"e8"
+block|,
+literal|"e9"
+block|,
+else|#
+directive|else
 literal|"text"
 block|,
 literal|"data"
 block|,
 literal|"bss"
 block|,
+endif|#
+directive|endif
 literal|"unknown"
 block|,
 literal|"absent"
@@ -117,98 +151,22 @@ literal|"bignum/flonum"
 block|,
 literal|"difference"
 block|,
+literal|"debug"
+block|,
+literal|"transfert vector preload"
+block|,
+literal|"transfert vector postload"
+block|,
+literal|"register"
+block|,
 literal|""
-block|}
+block|,     }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* Used by error reporters, dumpers etc. */
 end_comment
-
-begin_decl_stmt
-specifier|const
-name|segT
-name|N_TYPE_seg
-index|[
-name|N_TYPE
-operator|+
-literal|2
-index|]
-init|=
-comment|/* N_TYPE == 0x1E = 32-2 */
-block|{
-name|SEG_UNKNOWN
-block|,
-comment|/* N_UNDF == 0 */
-name|SEG_GOOF
-block|,
-name|SEG_ABSOLUTE
-block|,
-comment|/* N_ABS == 2 */
-name|SEG_GOOF
-block|,
-name|SEG_TEXT
-block|,
-comment|/* N_TEXT == 4 */
-name|SEG_GOOF
-block|,
-name|SEG_DATA
-block|,
-comment|/* N_DATA == 6 */
-name|SEG_GOOF
-block|,
-name|SEG_BSS
-block|,
-comment|/* N_BSS == 8 */
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|,
-name|SEG_GOOF
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_escape
 end_escape
@@ -219,6 +177,11 @@ name|subsegs_begin
 parameter_list|()
 block|{
 comment|/* Check table(s) seg_name[], seg_N_TYPE[] is in correct order */
+ifdef|#
+directive|ifdef
+name|MANY_SEGMENTS
+else|#
+directive|else
 name|know
 argument_list|(
 name|SEG_ABSOLUTE
@@ -256,7 +219,7 @@ argument_list|)
 expr_stmt|;
 name|know
 argument_list|(
-name|SEG_NONE
+name|SEG_ABSENT
 operator|==
 literal|5
 argument_list|)
@@ -291,29 +254,42 @@ argument_list|)
 expr_stmt|;
 name|know
 argument_list|(
-name|SEG_MAXIMUM_ORDINAL
+name|SEG_DEBUG
 operator|==
-name|SEG_DIFFERENCE
+literal|10
 argument_list|)
 expr_stmt|;
 name|know
 argument_list|(
-name|seg_name
-index|[
-operator|(
-name|int
-operator|)
-name|SEG_MAXIMUM_ORDINAL
-operator|+
-literal|1
-index|]
-index|[
-literal|0
-index|]
+name|SEG_NTV
 operator|==
-literal|0
+literal|11
 argument_list|)
 expr_stmt|;
+name|know
+argument_list|(
+name|SEG_PTV
+operator|==
+literal|12
+argument_list|)
+expr_stmt|;
+name|know
+argument_list|(
+name|SEG_REGISTER
+operator|==
+literal|13
+argument_list|)
+expr_stmt|;
+name|know
+argument_list|(
+name|SEG_MAXIMUM_ORDINAL
+operator|==
+name|SEG_REGISTER
+argument_list|)
+expr_stmt|;
+comment|/*  know(segment_name(SEG_MAXIMUM_ORDINAL + 1)[0] == 0);*/
+endif|#
+directive|endif
 name|obstack_begin
 argument_list|(
 operator|&
@@ -348,7 +324,15 @@ argument_list|,
 name|SIZEOF_STRUCT_FRAG
 argument_list|)
 expr_stmt|;
-comment|/* obstack_1blank(&frags, SIZEOF_STRUCT_FRAG,& frag_now ); */
+name|memset
+argument_list|(
+name|frag_now
+argument_list|,
+name|SIZEOF_STRUCT_FRAG
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* This 1st frag will not be in any frchain. */
 comment|/* We simply give subseg_new somewhere to scribble. */
 name|now_subseg
@@ -356,6 +340,47 @@ operator|=
 literal|42
 expr_stmt|;
 comment|/* Lie for 1st call to subseg_new. */
+ifdef|#
+directive|ifdef
+name|MANY_SEGMENTS
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|SEG_E0
+init|;
+name|i
+operator|<
+name|SEG_UNKNOWN
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|subseg_new
+argument_list|(
+name|i
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|segment_info
+index|[
+name|i
+index|]
+operator|.
+name|frchainP
+operator|=
+name|frchain_now
+expr_stmt|;
+block|}
+block|}
+else|#
+directive|else
 name|subseg_new
 argument_list|(
 name|SEG_DATA
@@ -368,6 +393,8 @@ name|data0_frchainP
 operator|=
 name|frchain_now
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -403,6 +430,31 @@ name|now_subseg
 operator|=
 name|subseg
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MANY_SEGMENTS
+name|seg_fix_rootP
+operator|=
+operator|&
+name|segment_info
+index|[
+name|seg
+index|]
+operator|.
+name|fix_root
+expr_stmt|;
+name|seg_fix_tailP
+operator|=
+operator|&
+name|segment_info
+index|[
+name|seg
+index|]
+operator|.
+name|fix_tail
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|seg
@@ -414,6 +466,11 @@ name|seg_fix_rootP
 operator|=
 operator|&
 name|data_fix_root
+expr_stmt|;
+name|seg_fix_tailP
+operator|=
+operator|&
+name|data_fix_tail
 expr_stmt|;
 block|}
 else|else
@@ -430,7 +487,14 @@ operator|=
 operator|&
 name|text_fix_root
 expr_stmt|;
+name|seg_fix_tailP
+operator|=
+operator|&
+name|text_fix_tail
+expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -438,7 +502,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			subseg_new()  *  * If you attempt to change to the current subsegment, nothing happens.  *  * In:	segT, subsegT code for new subsegment.  *	frag_now -> incomplete frag for current subsegment.  *	If frag_now==NULL, then there is no old, incomplete frag, so  *	the old frag is not closed off.  *  * Out:	now_subseg, now_seg updated.  *	Frchain_now points to the (possibly new) struct frchain for this  *	sub-segment.  *	Frchain_root updated if needed.  */
+comment|/*  *			subseg_new()  *  * If you attempt to change to the current subsegment, nothing happens.  *  * In:	segT, subsegT code for new subsegment.  *	frag_now -> incomplete frag for current subsegment.  *	If frag_now == NULL, then there is no old, incomplete frag, so  *	the old frag is not closed off.  *  * Out:	now_subseg, now_seg updated.  *	Frchain_now points to the (possibly new) struct frchain for this  *	sub-segment.  *	Frchain_root updated if needed.  */
 end_comment
 
 begin_function
@@ -464,6 +528,9 @@ name|long
 name|tmp
 decl_stmt|;
 comment|/* JF for obstack alignment hacking */
+ifndef|#
+directive|ifndef
+name|MANY_SEGMENTS
 name|know
 argument_list|(
 name|seg
@@ -475,6 +542,8 @@ operator|==
 name|SEG_TEXT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|seg
@@ -542,7 +611,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Close off any frag in old subseg. */
 block|}
-comment|/*  * It would be nice to keep an obstack for each subsegment, if we swap  * subsegments a lot. Hence we would have much fewer frag_wanes().  */
+comment|/* 		     * It would be nice to keep an obstack for each subsegment, if we swap 		     * subsegments a lot. Hence we would have much fewer frag_wanes(). 		     */
 block|{
 name|obstack_finish
 argument_list|(
@@ -550,7 +619,7 @@ operator|&
 name|frags
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we don't do the above, the next object we put on obstack frags 	 * will appear to start at the fr_literal of the current frag. 	 * Also, above ensures that the next object will begin on a 	 * address that is aligned correctly for the engine that runs 	 * this program. 	 */
+comment|/* 			     * If we don't do the above, the next object we put on obstack frags 			     * will appear to start at the fr_literal of the current frag. 			     * Also, above ensures that the next object will begin on a 			     * address that is aligned correctly for the engine that runs 			     * this program. 			     */
 block|}
 name|subseg_change
 argument_list|(
@@ -562,7 +631,7 @@ operator|)
 name|subseg
 argument_list|)
 expr_stmt|;
-comment|/*        * Attempt to find or make a frchain for that sub seg.        * Crawl along chain of frchainSs, begins @ frchain_root.        * If we need to make a frchainS, link it into correct        * position of chain rooted in frchain_root.        */
+comment|/* 		     * Attempt to find or make a frchain for that sub seg. 		     * Crawl along chain of frchainSs, begins @ frchain_root. 		     * If we need to make a frchainS, link it into correct 		     * position of chain rooted in frchain_root. 		     */
 for|for
 control|(
 name|frcP
@@ -630,7 +699,7 @@ block|{
 break|break;
 block|}
 block|}
-comment|/*        * frcP:		Address of the 1st frchainS in correct segment with        *		frch_subseg>= subseg.        *		We want to either use this frchainS, or we want        *		to insert a new frchainS just before it.        *        *		If frcP==NULL, then we are at the end of the chain        *		of frchainS-s. A NULL frcP means we fell off the end        *		of the chain looking for a        *		frch_subseg>= subseg, so we        *		must make a new frchainS.        *        *		If we ever maintain a pointer to        *		the last frchainS in the chain, we change that pointer        *		ONLY when frcP==NULL.        *        * lastPP:	Address of the pointer with value frcP;        *		Never NULL.        *		May point to frchain_root.        *        */
+comment|/* 		     * frcP:		Address of the 1st frchainS in correct segment with 		     *		frch_subseg>= subseg. 		     *		We want to either use this frchainS, or we want 		     *		to insert a new frchainS just before it. 		     * 		     *		If frcP == NULL, then we are at the end of the chain 		     *		of frchainS-s. A NULL frcP means we fell off the end 		     *		of the chain looking for a 		     *		frch_subseg>= subseg, so we 		     *		must make a new frchainS. 		     * 		     *		If we ever maintain a pointer to 		     *		the last frchainS in the chain, we change that pointer 		     *		ONLY when frcP == NULL. 		     * 		     * lastPP:	Address of the pointer with value frcP; 		     *		Never NULL. 		     *		May point to frchain_root. 		     * 		     */
 if|if
 condition|(
 operator|!
@@ -660,7 +729,7 @@ operator|)
 condition|)
 comment|/* Kinky logic only works with 2 segments. */
 block|{
-comment|/* 	   * This should be the only code that creates a frchainS. 	   */
+comment|/* 				 * This should be the only code that creates a frchainS. 				 */
 name|newP
 operator|=
 operator|(
@@ -678,7 +747,18 @@ name|frchainS
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* obstack_1blank(&frags, sizeof(frchainS),&newP); */
+name|memset
+argument_list|(
+name|newP
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|frchainS
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* This begines on a good boundary */
 comment|/* because a obstack_done() preceeded  it. */
 comment|/* It implies an obstack_done(), so we */
@@ -719,12 +799,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*        * Here with frcP ->ing to the frchainS for subseg.        */
+comment|/* 		     * Here with frcP->ing to the frchainS for subseg. 		     */
 name|frchain_now
 operator|=
 name|frcP
 expr_stmt|;
-comment|/*        * Make a fresh frag for the subsegment.        */
+comment|/* 		     * Make a fresh frag for the subsegment. 		     */
 comment|/* We expect this to happen on a correct */
 comment|/* boundary since it was proceeded by a */
 comment|/* obstack_done(). */
@@ -767,7 +847,7 @@ argument_list|)
 operator|=
 name|tmp
 expr_stmt|;
-comment|/* know( frags . obstack_c_next_free == frag_now -> fr_literal ); */
+comment|/* know(frags.obstack_c_next_free == frag_now->fr_literal); */
 comment|/* But we want any more chars to come */
 comment|/* immediately after the structure we just made. */
 name|new_fragP
@@ -780,7 +860,7 @@ name|fr_next
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*        * Append new frag to current frchain.        */
+comment|/* 		     * Append new frag to current frchain. 		     */
 name|former_last_fragP
 operator|=
 name|frcP
@@ -840,7 +920,11 @@ comment|/* subseg_new() */
 end_comment
 
 begin_comment
-comment|/* end: subsegs.c */
+comment|/*  * Local Variables:  * comment-column: 0  * fill-column: 131  * End:  */
+end_comment
+
+begin_comment
+comment|/* end of subsegs.c */
 end_comment
 
 end_unit
