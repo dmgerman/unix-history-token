@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: subr.c,v 1.6.2.5 1997/12/15 07:10:53 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,7 +208,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|msg
