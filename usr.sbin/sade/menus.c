@@ -5083,20 +5083,45 @@ literal|" XFree86"
 block|,
 literal|"The XFree86 3.3.6 distribution"
 block|,
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|Dists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_XF86
+block|}
+block|,
+else|#
+directive|else
 name|x11FlagCheck
 block|,
 name|distSetXF86
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}
 block|}
-block|, }
-decl_stmt|;
+decl_stmt|,
 end_decl_stmt
 
 begin_decl_stmt
+unit|};
 name|DMenu
 name|MenuDESDistributions
 init|=
@@ -8096,6 +8121,20 @@ literal|"=YES"
 block|}
 block|,
 block|{
+literal|" SVR4"
+block|,
+literal|"This host wants to be able to run SVR4 binaries."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"svr4_enable=YES"
+block|}
+block|,
+block|{
 literal|" SCO"
 block|,
 literal|"This host wants to be able to run IBCS2 binaries."
@@ -8107,6 +8146,23 @@ block|,
 name|NULL
 block|,
 literal|"ibcs2_enable=YES"
+block|}
+block|,
+elif|#
+directive|elif
+name|__alpha__
+block|{
+literal|" OSF/1"
+block|,
+literal|"This host wants to be able to run DEC OSF/1 binaries."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"osf1_enable=YES"
 block|}
 block|,
 endif|#

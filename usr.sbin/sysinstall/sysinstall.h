@@ -4108,6 +4108,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|installX11package
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|Boolean
 name|copySelf
 parameter_list|(
