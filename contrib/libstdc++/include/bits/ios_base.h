@@ -4,7 +4,7 @@ comment|// Iostreams base classes -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
 end_comment
 
 begin_comment
@@ -139,6 +139,18 @@ begin_include
 include|#
 directive|include
 file|<bits/atomicity.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bits/localefwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bits/locale_classes.h>
 end_include
 
 begin_decl_stmt
@@ -822,6 +834,10 @@ begin_comment
 comment|// 27.4.2  Class ios_base
 end_comment
 
+begin_comment
+comment|/**    *  @brief  The very top of the I/O class hierarchy.    *    *  This class defines everything that can be defined about I/O that does    *  not depend on the type of characters being input or output.  Most    *  people will only see @c ios_base when they need to specify the full    *  name of the various I/O flags (e.g., the openmodes).   */
+end_comment
+
 begin_decl_stmt
 name|class
 name|ios_base
@@ -829,6 +845,7 @@ block|{
 name|public
 label|:
 comment|// 27.4.2.1.1  Class ios_base::failure
+comment|/// These are thrown to indicate problems.  Doc me.
 name|class
 name|failure
 range|:
@@ -888,11 +905,12 @@ directive|endif
 block|}
 decl_stmt|;
 comment|// 27.4.2.1.2  Type ios_base::fmtflags
+comment|/**      *  @brief This is a bitmask type.      *      *  @c "_Ios_Fmtflags" is implementation-defined, but it is valid to      *  perform bitwise operations on these values and expect the Right      *  Thing to happen.  Defined objects of type fmtflags are:      *  - boolalpha      *  - dec      *  - fixed      *  - hex      *  - internal      *  - left      *  - oct      *  - right      *  - scientific      *  - showbase      *  - showpoint      *  - showpos      *  - skipws      *  - unitbuf      *  - uppercase      *  - adjustfield      *  - basefield      *  - floatfield     */
 typedef|typedef
 name|_Ios_Fmtflags
 name|fmtflags
 typedef|;
-comment|// 27.4.2.1.2  Type fmtflags
+comment|/// Insert/extract @c bool in alphabetic rather than numeric format.
 specifier|static
 specifier|const
 name|fmtflags
@@ -905,6 +923,7 @@ operator|::
 name|_S_boolalpha
 argument_list|)
 decl_stmt|;
+comment|/// Converts integer input or generates integer output in decimal base.
 specifier|static
 specifier|const
 name|fmtflags
@@ -917,6 +936,7 @@ operator|::
 name|_S_dec
 argument_list|)
 decl_stmt|;
+comment|/// Generate floating-point output in fixed-point notation.
 specifier|static
 specifier|const
 name|fmtflags
@@ -929,6 +949,7 @@ operator|::
 name|_S_fixed
 argument_list|)
 decl_stmt|;
+comment|/// Converts integer input or generates integer output in hexadecimal base.
 specifier|static
 specifier|const
 name|fmtflags
@@ -941,6 +962,9 @@ operator|::
 name|_S_hex
 argument_list|)
 decl_stmt|;
+comment|/// Adds fill characters at a designated internal point in certain
+comment|/// generated output, or identical to @c right if no such point is
+comment|/// designated.
 specifier|static
 specifier|const
 name|fmtflags
@@ -953,6 +977,8 @@ operator|::
 name|_S_internal
 argument_list|)
 decl_stmt|;
+comment|/// Adds fill characters on the right (final positions) of certain
+comment|/// generated output.  (I.e., the thing you print is flush left.)
 specifier|static
 specifier|const
 name|fmtflags
@@ -965,6 +991,7 @@ operator|::
 name|_S_left
 argument_list|)
 decl_stmt|;
+comment|/// Converts integer input or generates integer output in octal base.
 specifier|static
 specifier|const
 name|fmtflags
@@ -977,6 +1004,8 @@ operator|::
 name|_S_oct
 argument_list|)
 decl_stmt|;
+comment|/// Adds fill characters on the left (initial positions) of certain
+comment|/// generated output.  (I.e., the thing you print is flush right.)
 specifier|static
 specifier|const
 name|fmtflags
@@ -989,6 +1018,7 @@ operator|::
 name|_S_right
 argument_list|)
 decl_stmt|;
+comment|/// Generates floating-point output in scientific notation.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1001,6 +1031,8 @@ operator|::
 name|_S_scientific
 argument_list|)
 decl_stmt|;
+comment|/// Generates a prefix indicating the numeric base of generated integer
+comment|/// output.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1013,6 +1045,8 @@ operator|::
 name|_S_showbase
 argument_list|)
 decl_stmt|;
+comment|/// Generates a decimal-point character unconditionally in generated
+comment|/// floating-point output.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1025,6 +1059,7 @@ operator|::
 name|_S_showpoint
 argument_list|)
 decl_stmt|;
+comment|/// Generates a + sign in non-negative generated numeric output.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1037,6 +1072,7 @@ operator|::
 name|_S_showpos
 argument_list|)
 decl_stmt|;
+comment|/// Skips leading white space before certain input operations.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1049,6 +1085,7 @@ operator|::
 name|_S_skipws
 argument_list|)
 decl_stmt|;
+comment|/// Flushes output after each output operation.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1061,6 +1098,8 @@ operator|::
 name|_S_unitbuf
 argument_list|)
 decl_stmt|;
+comment|/// Replaces certain lowercase letters with their uppercase equivalents
+comment|/// in generated output.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1073,6 +1112,7 @@ operator|::
 name|_S_uppercase
 argument_list|)
 decl_stmt|;
+comment|/// A mask of left|right|internal.  Useful for the 2-arg form of @c setf.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1085,6 +1125,7 @@ operator|::
 name|_S_adjustfield
 argument_list|)
 decl_stmt|;
+comment|/// A mask of dec|oct|hex.  Useful for the 2-arg form of @c setf.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1097,6 +1138,7 @@ operator|::
 name|_S_basefield
 argument_list|)
 decl_stmt|;
+comment|/// A mask of scientific|fixed.  Useful for the 2-arg form of @c setf.
 specifier|static
 specifier|const
 name|fmtflags
@@ -1110,10 +1152,13 @@ name|_S_floatfield
 argument_list|)
 decl_stmt|;
 comment|// 27.4.2.1.3  Type ios_base::iostate
+comment|/**      *  @brief This is a bitmask type.      *      *  @c "_Ios_Iostate" is implementation-defined, but it is valid to      *  perform bitwise operations on these values and expect the Right      *  Thing to happen.  Defined objects of type iostate are:      *  - badbit      *  - eofbit      *  - failbit      *  - goodbit     */
 typedef|typedef
 name|_Ios_Iostate
 name|iostate
 typedef|;
+comment|/// Indicates a loss of integrity in an input or output sequence (such
+comment|/// as an irrecoverable read error from a file).
 specifier|static
 specifier|const
 name|iostate
@@ -1126,6 +1171,7 @@ operator|::
 name|_S_badbit
 argument_list|)
 decl_stmt|;
+comment|/// Indicates that an input operation reached the end of an input sequence.
 specifier|static
 specifier|const
 name|iostate
@@ -1138,6 +1184,9 @@ operator|::
 name|_S_eofbit
 argument_list|)
 decl_stmt|;
+comment|/// Indicates that an input operation failed to read the expected
+comment|/// characters, or that an output operation failed to generate the
+comment|/// desired characters.
 specifier|static
 specifier|const
 name|iostate
@@ -1150,6 +1199,7 @@ operator|::
 name|_S_failbit
 argument_list|)
 decl_stmt|;
+comment|/// Indicates all is well.
 specifier|static
 specifier|const
 name|iostate
@@ -1160,11 +1210,13 @@ argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
-comment|// 27.4.2.1.4  Type openmode
+comment|// 27.4.2.1.4  Type ios_base::openmode
+comment|/**      *  @brief This is a bitmask type.      *      *  @c "_Ios_Openmode" is implementation-defined, but it is valid to      *  perform bitwise operations on these values and expect the Right      *  Thing to happen.  Defined objects of type openmode are:      *  - app      *  - ate      *  - binary      *  - in      *  - out      *  - trunc     */
 typedef|typedef
 name|_Ios_Openmode
 name|openmode
 typedef|;
+comment|/// Seek to end before each write.
 specifier|static
 specifier|const
 name|openmode
@@ -1177,6 +1229,7 @@ operator|::
 name|_S_app
 argument_list|)
 decl_stmt|;
+comment|/// Open and seek to end immediately after opening.
 specifier|static
 specifier|const
 name|openmode
@@ -1189,6 +1242,10 @@ operator|::
 name|_S_ate
 argument_list|)
 decl_stmt|;
+comment|/// Perform input and output in binary mode (as opposed to text mode).
+comment|/// This is probably not what you think it is; see
+comment|/// http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#3 and
+comment|/// http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#7 for more.
 specifier|static
 specifier|const
 name|openmode
@@ -1201,6 +1258,7 @@ operator|::
 name|_S_bin
 argument_list|)
 decl_stmt|;
+comment|/// Open for input.  Default for @c ifstream and fstream.
 specifier|static
 specifier|const
 name|openmode
@@ -1213,6 +1271,7 @@ operator|::
 name|_S_in
 argument_list|)
 decl_stmt|;
+comment|/// Open for output.  Default for @c ofstream and fstream.
 specifier|static
 specifier|const
 name|openmode
@@ -1225,6 +1284,7 @@ operator|::
 name|_S_out
 argument_list|)
 decl_stmt|;
+comment|/// Open for input.  Default for @c ofstream.
 specifier|static
 specifier|const
 name|openmode
@@ -1237,11 +1297,13 @@ operator|::
 name|_S_trunc
 argument_list|)
 decl_stmt|;
-comment|// 27.4.2.1.5  Type seekdir
+comment|// 27.4.2.1.5  Type ios_base::seekdir
+comment|/**      *  @brief This is an enumerated type.      *      *  @c "_Ios_Seekdir" is implementation-defined.  Defined values      *  of type seekdir are:      *  - beg      *  - cur, equivalent to @c SEEK_CUR in the C standard library.      *  - end, equivalent to @c SEEK_END in the C standard library.     */
 typedef|typedef
 name|_Ios_Seekdir
 name|seekdir
 typedef|;
+comment|/// Request a seek relative to the beginning of the stream.
 specifier|static
 specifier|const
 name|seekdir
@@ -1252,6 +1314,7 @@ argument_list|(
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// Request a seek relative to the current position within the sequence.
 specifier|static
 specifier|const
 name|seekdir
@@ -1262,6 +1325,7 @@ argument_list|(
 name|SEEK_CUR
 argument_list|)
 decl_stmt|;
+comment|/// Request a seek relative to the current end of the sequence.
 specifier|static
 specifier|const
 name|seekdir
@@ -1275,6 +1339,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|_GLIBCPP_DEPRECATED
+comment|// Annex D.6
 typedef|typedef
 name|int
 name|io_state
@@ -1302,6 +1367,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|// Callbacks;
+comment|/**      *  @doctodo     */
 enum|enum
 name|event
 block|{
@@ -1312,6 +1378,7 @@ block|,
 name|copyfmt_event
 block|}
 enum|;
+comment|/**      *  @doctodo     */
 typedef|typedef
 name|void
 function_decl|(
@@ -1327,6 +1394,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/**      *  @doctodo     */
 name|void
 name|register_callback
 parameter_list|(
@@ -1339,7 +1407,8 @@ parameter_list|)
 function_decl|;
 name|protected
 label|:
-comment|// Data Members
+comment|//@{
+comment|/**      *  @if maint      *  ios_base data members (doc me)      *  @endif     */
 name|streamsize
 name|_M_precision
 decl_stmt|;
@@ -1355,6 +1424,7 @@ decl_stmt|;
 name|iostate
 name|_M_streambuf_state
 decl_stmt|;
+comment|//@}
 comment|// 27.4.2.6  Members for callbacks
 comment|// 27.4.2.6  ios_base callbacks
 struct|struct
@@ -1486,6 +1556,7 @@ name|_Words
 name|_M_word_zero
 decl_stmt|;
 comment|// Guaranteed storage.
+comment|// The first 5 iword and pword slots are reserved for internal use.
 specifier|static
 specifier|const
 name|int
@@ -1558,6 +1629,18 @@ name|void
 name|_S_ios_destroy
 parameter_list|()
 function_decl|;
+comment|// NB: Allows debugger applications use of the standard streams
+comment|// from operator new. _S_ios_base_init must be incremented in
+comment|// _S_ios_create _after_ initialization is completed.
+specifier|static
+name|bool
+name|_S_initialized
+parameter_list|()
+block|{
+return|return
+name|_S_ios_base_init
+return|;
+block|}
 name|private
 label|:
 specifier|static
@@ -1570,7 +1653,8 @@ name|_S_synced_with_stdio
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|// Fmtflags state:
+comment|// [27.4.2.2] fmtflags state functions
+comment|/**      *  @brief  Access to format flags.      *  @return  The format control flags for both input and output.     */
 specifier|inline
 name|fmtflags
 name|flags
@@ -1581,6 +1665,7 @@ return|return
 name|_M_flags
 return|;
 block|}
+comment|/**      *  @brief  Setting new format flags all at once.      *  @param  fmtfl  The new flags to set.      *  @return  The previous format control flags.      *      *  This function overwrites all the format flags with @a fmtfl.     */
 specifier|inline
 name|fmtflags
 name|flags
@@ -1602,6 +1687,7 @@ return|return
 name|__old
 return|;
 block|}
+comment|/**      *  @brief  Setting new format flags.      *  @param  fmtfl  Additional flags to set.      *  @return  The previous format control flags.      *      *  This function sets additional flags in format control.  Flags that      *  were previously set remain set.     */
 specifier|inline
 name|fmtflags
 name|setf
@@ -1623,6 +1709,7 @@ return|return
 name|__old
 return|;
 block|}
+comment|/**      *  @brief  Setting new format flags.      *  @param  fmtfl  Additional flags to set.      *  @param  mask  The flags mask for @a fmtfl.      *  @return  The previous format control flags.      *      *  This function clears @a mask in the format flags, then sets      *  @a fmtfl @c& @a mask.  An example mask is @c ios_base::adjustfield.     */
 specifier|inline
 name|fmtflags
 name|setf
@@ -1656,6 +1743,7 @@ return|return
 name|__old
 return|;
 block|}
+comment|/**      *  @brief  Clearing format flags.      *  @param  mask  The flags to unset.      *      *  This function clears @a mask in the format flags.     */
 specifier|inline
 name|void
 name|unsetf
@@ -1670,6 +1758,7 @@ operator|~
 name|__mask
 expr_stmt|;
 block|}
+comment|/**      *  @brief  Flags access.      *  @return  The precision to generate on certain output operations.      *      *  @if maint      *  Be careful if you try to give a definition of "precision" here; see      *  DR 189.      *  @endif     */
 specifier|inline
 name|streamsize
 name|precision
@@ -1680,6 +1769,7 @@ return|return
 name|_M_precision
 return|;
 block|}
+comment|/**      *  @brief  Changing flags.      *  @param  prec  The new precision value.      *  @return  The previous value of precision().     */
 specifier|inline
 name|streamsize
 name|precision
@@ -1701,6 +1791,7 @@ return|return
 name|__old
 return|;
 block|}
+comment|/**      *  @brief  Flags access.      *  @return  The minimum field width to generate on output operations.      *      *  "Minimum field width" refers to the number of characters.     */
 specifier|inline
 name|streamsize
 name|width
@@ -1711,6 +1802,7 @@ return|return
 name|_M_width
 return|;
 block|}
+comment|/**      *  @brief  Changing flags.      *  @param  wide  The new width value.      *  @return  The previous value of width().     */
 specifier|inline
 name|streamsize
 name|width
@@ -1732,6 +1824,8 @@ return|return
 name|__old
 return|;
 block|}
+comment|// [27.4.2.4] ios_base static members
+comment|/**      *  @brief  Interaction with the standard C I/O objects.      *  @param  sync  Whether to synchronize or not.      *  @return  True if the standard streams were previously synchronized.      *      *  The synchronization referred to is @e only that between the standard      *  C facilities (e.g., stdout) and the standard C++ objects (e.g.,      *  cout).  User-declared streams are unaffected.  See      *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#8 for more.     */
 specifier|static
 name|bool
 name|sync_with_stdio
@@ -1742,7 +1836,8 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-comment|// Locales:
+comment|// [27.4.2.3] ios_base locale functions
+comment|/**      *  @brief  Setting a new locale.      *  @param  loc  The new locale.      *  @return  The previous locale.      *      *  Sets the new locale for this stream, and      *  [XXX does something with callbacks].     */
 name|locale
 name|imbue
 parameter_list|(
@@ -1752,6 +1847,7 @@ modifier|&
 name|__loc
 parameter_list|)
 function_decl|;
+comment|/**      *  @brief  Locale access      *  @return  A copy of the current locale.      *      *  If @c imbue(loc) has previously been called, then this function      *  returns @c loc.  Otherwise, it returns a copy of @c std::locale(),      *  the global C++ locale.     */
 specifier|inline
 name|locale
 name|getloc
@@ -1762,7 +1858,21 @@ return|return
 name|_M_ios_locale
 return|;
 block|}
-comment|// Storage:
+comment|/**      *  @brief  Locale access      *  @return  A reference to the current locale.      *      *  Like getloc above, but returns a reference instead of      *  generating a copy.     */
+specifier|inline
+specifier|const
+name|locale
+operator|&
+name|_M_getloc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_ios_locale
+return|;
+block|}
+comment|// [27.4.2.5] ios_base storage functions
+comment|/**      *  @doctodo     */
 specifier|static
 name|int
 name|xalloc
@@ -1770,6 +1880,7 @@ parameter_list|()
 function_decl|throw
 parameter_list|()
 function_decl|;
+comment|/**      *  @doctodo     */
 specifier|inline
 name|long
 modifier|&
@@ -1805,6 +1916,7 @@ operator|.
 name|_M_iword
 return|;
 block|}
+comment|/**      *  @doctodo     */
 specifier|inline
 name|void
 modifier|*
@@ -1842,6 +1954,7 @@ name|_M_pword
 return|;
 block|}
 comment|// Destructor
+comment|/**      *  Destroys local storage and      *  [XXX does something with callbacks].     */
 operator|~
 name|ios_base
 argument_list|()
@@ -1884,7 +1997,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// 27.4.5.1 fmtflags manipulators:
+comment|// [27.4.5.1] fmtflags manipulators
+end_comment
+
+begin_comment
+comment|/// Calls base.setf(ios_base::boolalpha).
 end_comment
 
 begin_function
@@ -1913,6 +2030,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.unsetf(ios_base::boolalpha).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -1939,6 +2060,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.setf(ios_base::showbase).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -1964,6 +2089,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.unsetf(ios_base::showbase).
+end_comment
 
 begin_function
 specifier|inline
@@ -1991,6 +2120,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.setf(ios_base::showpoint).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -2016,6 +2149,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.unsetf(ios_base::showpoint).
+end_comment
 
 begin_function
 specifier|inline
@@ -2043,6 +2180,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.setf(ios_base::showpos).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -2068,6 +2209,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.unsetf(ios_base::showpos).
+end_comment
 
 begin_function
 specifier|inline
@@ -2095,6 +2240,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.setf(ios_base::skipws).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -2120,6 +2269,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.unsetf(ios_base::skipws).
+end_comment
 
 begin_function
 specifier|inline
@@ -2147,6 +2300,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.setf(ios_base::uppercase).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -2172,6 +2329,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.unsetf(ios_base::uppercase).
+end_comment
 
 begin_function
 specifier|inline
@@ -2199,6 +2360,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.setf(ios_base::unitbuf).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -2224,6 +2389,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.unsetf(ios_base::unitbuf).
+end_comment
 
 begin_function
 specifier|inline
@@ -2252,7 +2421,11 @@ block|}
 end_function
 
 begin_comment
-comment|// 27.4.5.2 adjustfield anipulators:
+comment|// [27.4.5.2] adjustfield anipulators
+end_comment
+
+begin_comment
+comment|/// Calls base.setf(ios_base::internal, ios_base::adjustfield).
 end_comment
 
 begin_function
@@ -2285,6 +2458,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.setf(ios_base::left, ios_base::adjustfield).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -2314,6 +2491,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.setf(ios_base::right, ios_base::adjustfield).
+end_comment
 
 begin_function
 specifier|inline
@@ -2346,7 +2527,11 @@ block|}
 end_function
 
 begin_comment
-comment|// 27.4.5.3 basefield anipulators:
+comment|// [27.4.5.3] basefield anipulators
+end_comment
+
+begin_comment
+comment|/// Calls base.setf(ios_base::dec, ios_base::basefield).
 end_comment
 
 begin_function
@@ -2379,6 +2564,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/// Calls base.setf(ios_base::hex, ios_base::basefield).
+end_comment
+
 begin_function
 specifier|inline
 name|ios_base
@@ -2408,6 +2597,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.setf(ios_base::oct, ios_base::basefield).
+end_comment
 
 begin_function
 specifier|inline
@@ -2440,7 +2633,11 @@ block|}
 end_function
 
 begin_comment
-comment|// 27.4.5.4 floatfield anipulators:
+comment|// [27.4.5.4] floatfield anipulators
+end_comment
+
+begin_comment
+comment|/// Calls base.setf(ios_base::fixed, ios_base::floatfield).
 end_comment
 
 begin_function
@@ -2472,6 +2669,10 @@ name|__base
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/// Calls base.setf(ios_base::scientific, ios_base::floatfield).
+end_comment
 
 begin_function
 specifier|inline

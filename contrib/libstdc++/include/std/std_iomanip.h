@@ -4,7 +4,11 @@ comment|// Standard stream manipulators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -153,6 +157,8 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|// [27.6.3] standard manipulators
+comment|// Also see DR 183.
 struct|struct
 name|_Resetiosflags
 block|{
@@ -163,6 +169,7 @@ name|_M_mask
 expr_stmt|;
 block|}
 struct|;
+comment|/**    *  @brief  Manipulator for @c setf.    *  @param  mask  A format flags mask.    *    *  Sent to a stream object, this manipulator resets the specified flags,    *  via @e stream.setf(0,mask).   */
 specifier|inline
 name|_Resetiosflags
 name|resetiosflags
@@ -300,6 +307,7 @@ name|_M_mask
 expr_stmt|;
 block|}
 struct|;
+comment|/**    *  @brief  Manipulator for @c setf.    *  @param  mask  A format flags mask.    *    *  Sent to a stream object, this manipulator sets the format flags    *  to @a mask.   */
 specifier|inline
 name|_Setiosflags
 name|setiosflags
@@ -421,6 +429,7 @@ name|_M_base
 decl_stmt|;
 block|}
 struct|;
+comment|/**    *  @brief  Manipulator for @c setf.    *  @param  base  A numeric base.    *    *  Sent to a stream object, this manipulator changes the    *  @c ios_base::basefield flags to @c oct, @c dec, or @c hex when @a base    *  is 8, 10, or 16, accordingly, and to 0 if @a base is any other value.   */
 specifier|inline
 name|_Setbase
 name|setbase
@@ -618,6 +627,7 @@ name|_CharT
 name|_M_c
 block|; }
 expr_stmt|;
+comment|/**    *  @brief  Manipulator for @c fill.    *  @param  c  The new fill character.    *    *  Sent to a stream object, this manipulator calls @c fill(c) for that    *  object.   */
 name|template
 operator|<
 name|typename
@@ -753,6 +763,7 @@ name|_M_n
 decl_stmt|;
 block|}
 struct|;
+comment|/**    *  @brief  Manipulator for @c precision.    *  @param  n  The new precision.    *    *  Sent to a stream object, this manipulator calls @c precision(n) for    *  that object.   */
 specifier|inline
 name|_Setprecision
 name|setprecision
@@ -872,6 +883,7 @@ name|_M_n
 decl_stmt|;
 block|}
 struct|;
+comment|/**    *  @brief  Manipulator for @c width.    *  @param  n  The new width.    *    *  Sent to a stream object, this manipulator calls @c width(n) for    *  that object.   */
 specifier|inline
 name|_Setw
 name|setw
@@ -986,6 +998,9 @@ block|}
 comment|// Inhibit implicit instantiations for required instantiations,
 comment|// which are defined via explicit instantiations elsewhere.
 comment|// NB:  This syntax is a GNU extension.
+if|#
+directive|if
+name|_GLIBCPP_EXTERN_TEMPLATE
 extern|extern template ostream& operator<<(ostream&
 operator|,
 extern|_Setfill<char>
@@ -1251,6 +1266,11 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

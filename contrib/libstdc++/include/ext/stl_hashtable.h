@@ -126,19 +126,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bits/stl_algobase.h>
+file|<vector>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<bits/stl_alloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<bits/stl_construct.h>
+file|<iterator>
 end_include
 
 begin_include
@@ -150,19 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bits/stl_uninitialized.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<bits/stl_function.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<bits/stl_vector.h>
 end_include
 
 begin_include

@@ -244,11 +244,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//#define glibcpp_function_requires(C)      \
-end_comment
-
-begin_comment
-comment|//            boost::function_requires< boost::C>()
+comment|//#define glibcpp_function_requires(C) boost::function_requires< boost::C>()
 end_comment
 
 begin_comment

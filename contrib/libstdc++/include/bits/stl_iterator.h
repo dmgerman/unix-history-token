@@ -216,8 +216,13 @@ name|pointer
 expr_stmt|;
 name|public
 label|:
-comment|/**        *  The default constructor gives an undefined state to this %iterator.       */
+comment|/**        *  The default constructor default-initializes member @p current.        *  If it is a pointer, that means it is zero-initialized.       */
+comment|// _GLIBCPP_RESOLVE_LIB_DEFECTS
+comment|// 235 No specification of default ctor for reverse_iterator
 name|reverse_iterator
+argument_list|()
+operator|:
+name|current
 argument_list|()
 block|{ }
 comment|/**        *  This %iterator will move in the opposite direction that @p x does.       */
@@ -226,7 +231,7 @@ name|reverse_iterator
 argument_list|(
 argument|iterator_type __x
 argument_list|)
-block|:
+operator|:
 name|current
 argument_list|(
 argument|__x
@@ -893,7 +898,7 @@ comment|// 24.4.2.2.1 back_insert_iterator
 end_comment
 
 begin_comment
-comment|/**    *  These are output iterators, constructed from a container-of-T.    *  Assigning a T to the iterator appends it to the container using    *  push_back.    *    *  Tip:  Using the back_inserter function to create these iterators can    *  save typing.   */
+comment|/**    *  @brief  Turns assignment into insertion.    *    *  These are output iterators, constructed from a container-of-T.    *  Assigning a T to the iterator appends it to the container using    *  push_back.    *    *  Tip:  Using the back_inserter function to create these iterators can    *  save typing.   */
 end_comment
 
 begin_expr_stmt
@@ -1063,7 +1068,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  These are output iterators, constructed from a container-of-T.    *  Assigning a T to the iterator prepends it to the container using    *  push_front.    *    *  Tip:  Using the front_inserter function to create these iterators can    *  save typing.   */
+comment|/**    *  @brief  Turns assignment into insertion.    *    *  These are output iterators, constructed from a container-of-T.    *  Assigning a T to the iterator prepends it to the container using    *  push_front.    *    *  Tip:  Using the front_inserter function to create these iterators can    *  save typing.   */
 end_comment
 
 begin_expr_stmt
@@ -1233,7 +1238,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  These are output iterators, constructed from a container-of-T.    *  Assigning a T to the iterator inserts it in the container at the    *  %iterator's position, rather than overwriting the value at that    *  position.    *    *  (Sequences will actually insert a @e copy of the value before the    *  %iterator's position.)    *    *  Tip:  Using the inserter function to create these iterators can    *  save typing.   */
+comment|/**    *  @brief  Turns assignment into insertion.    *    *  These are output iterators, constructed from a container-of-T.    *  Assigning a T to the iterator inserts it in the container at the    *  %iterator's position, rather than overwriting the value at that    *  position.    *    *  (Sequences will actually insert a @e copy of the value before the    *  %iterator's position.)    *    *  Tip:  Using the inserter function to create these iterators can    *  save typing.   */
 end_comment
 
 begin_expr_stmt

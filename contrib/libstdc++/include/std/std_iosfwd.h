@@ -4,7 +4,11 @@ comment|// Forwarding declarations -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -136,6 +140,22 @@ include|#
 directive|include
 file|<bits/c++config.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<bits/c++locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cctype>
+end_include
+
+begin_comment
+comment|// For isspace, etc.
+end_comment
 
 begin_include
 include|#
@@ -444,6 +464,7 @@ name|ios_base
 decl_stmt|;
 endif|#
 directive|endif
+comment|/**     *  @defgroup s27_2_iosfwd I/O Forward Declarations    *    *  Nearly all of the I/O classes are parameterized on the type of    *  characters they read and write.  (The major exception is ios_base at    *  the top of the hierarchy.)  This is a change from pre-Standard    *  streams, which were not templates.    *    *  For ease of use and compatibility, all of the basic_* I/O-related    *  classes are given typedef names for both of the builtin character    *  widths (wide and narrow).  The typedefs are the same as the    *  pre-Standard names, for example:    *    *  @code    *     typedef basic_ifstream<char>  ifstream;    *  @endcode    *    *  Because properly forward-declaring these classes can be difficult, you    *  should not do it yourself.  Instead, include the&lt;iosfwd&gt;    *  header, which contains only declarations of all the I/O classes as    *  well as the typedefs.  Trying to forward-declare the typedefs    *  themselves (e.g., "class ostream;") is not valid ISO C++.    *    *  For more specific declarations, see    *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#10    *    *  @{   */
 typedef|typedef
 name|basic_ios
 operator|<
@@ -451,6 +472,7 @@ name|char
 operator|>
 name|ios
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_streambuf
 operator|<
@@ -458,6 +480,7 @@ name|char
 operator|>
 name|streambuf
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_istream
 operator|<
@@ -465,6 +488,7 @@ name|char
 operator|>
 name|istream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_ostream
 operator|<
@@ -472,6 +496,7 @@ name|char
 operator|>
 name|ostream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_iostream
 operator|<
@@ -479,6 +504,7 @@ name|char
 operator|>
 name|iostream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_stringbuf
 operator|<
@@ -486,6 +512,7 @@ name|char
 operator|>
 name|stringbuf
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_istringstream
 operator|<
@@ -493,6 +520,7 @@ name|char
 operator|>
 name|istringstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_ostringstream
 operator|<
@@ -500,6 +528,7 @@ name|char
 operator|>
 name|ostringstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_stringstream
 operator|<
@@ -507,6 +536,7 @@ name|char
 operator|>
 name|stringstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_filebuf
 operator|<
@@ -514,6 +544,7 @@ name|char
 operator|>
 name|filebuf
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_ifstream
 operator|<
@@ -521,6 +552,7 @@ name|char
 operator|>
 name|ifstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_ofstream
 operator|<
@@ -528,6 +560,7 @@ name|char
 operator|>
 name|ofstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_fstream
 operator|<
@@ -535,6 +568,7 @@ name|char
 operator|>
 name|fstream
 expr_stmt|;
+comment|///< @isiosfwd
 ifdef|#
 directive|ifdef
 name|_GLIBCPP_USE_WCHAR_T
@@ -545,6 +579,7 @@ name|wchar_t
 operator|>
 name|wios
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_streambuf
 operator|<
@@ -552,6 +587,7 @@ name|wchar_t
 operator|>
 name|wstreambuf
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_istream
 operator|<
@@ -559,6 +595,7 @@ name|wchar_t
 operator|>
 name|wistream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_ostream
 operator|<
@@ -566,6 +603,7 @@ name|wchar_t
 operator|>
 name|wostream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_iostream
 operator|<
@@ -573,6 +611,7 @@ name|wchar_t
 operator|>
 name|wiostream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_stringbuf
 operator|<
@@ -580,6 +619,7 @@ name|wchar_t
 operator|>
 name|wstringbuf
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_istringstream
 operator|<
@@ -587,6 +627,7 @@ name|wchar_t
 operator|>
 name|wistringstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_ostringstream
 operator|<
@@ -594,6 +635,7 @@ name|wchar_t
 operator|>
 name|wostringstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_stringstream
 operator|<
@@ -601,6 +643,7 @@ name|wchar_t
 operator|>
 name|wstringstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_filebuf
 operator|<
@@ -608,6 +651,7 @@ name|wchar_t
 operator|>
 name|wfilebuf
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_ifstream
 operator|<
@@ -615,6 +659,7 @@ name|wchar_t
 operator|>
 name|wifstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_ofstream
 operator|<
@@ -622,6 +667,7 @@ name|wchar_t
 operator|>
 name|wofstream
 expr_stmt|;
+comment|///< @isiosfwd
 typedef|typedef
 name|basic_fstream
 operator|<
@@ -629,8 +675,10 @@ name|wchar_t
 operator|>
 name|wfstream
 expr_stmt|;
+comment|///< @isiosfwd
 endif|#
 directive|endif
+comment|/** @}  */
 block|}
 end_decl_stmt
 

@@ -2087,12 +2087,6 @@ operator|==
 name|_M_black
 condition|)
 block|{
-if|if
-condition|(
-name|__w
-operator|->
-name|_M_left
-condition|)
 name|__w
 operator|->
 name|_M_left
@@ -2276,12 +2270,6 @@ operator|==
 name|_M_black
 condition|)
 block|{
-if|if
-condition|(
-name|__w
-operator|->
-name|_M_right
-condition|)
 name|__w
 operator|->
 name|_M_right
@@ -3476,6 +3464,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|std
+operator|::
 name|reverse_iterator
 operator|<
 name|const_iterator
@@ -3486,6 +3476,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|std
+operator|::
 name|reverse_iterator
 operator|<
 name|iterator

@@ -4,7 +4,7 @@ comment|// Streambuf iterators
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
 end_comment
 
 begin_comment
@@ -100,10 +100,6 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|// XXX Should specialize copy, find algorithms for streambuf iterators.
-end_comment
-
-begin_comment
 comment|/** @file streambuf_iterator.h  *  This is an internal header file, included by other library headers.  *  You should not attempt to use it directly.  */
 end_comment
 
@@ -126,6 +122,16 @@ directive|pragma
 name|GCC
 name|system_header
 end_pragma
+
+begin_include
+include|#
+directive|include
+file|<streambuf>
+end_include
+
+begin_comment
+comment|// NB: Should specialize copy, find algorithms for streambuf iterators.
+end_comment
 
 begin_decl_stmt
 name|namespace
@@ -748,12 +754,14 @@ name|public
 label|:
 end_label
 
-begin_expr_stmt
-specifier|inline
+begin_macro
 name|ostreambuf_iterator
 argument_list|(
 argument|ostream_type& __s
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|throw
 argument_list|()
 operator|:
@@ -795,24 +803,58 @@ operator|(
 name|_CharT
 name|__c
 operator|)
+block|{
+if|if
+condition|(
+operator|!
+name|_M_failed
+operator|&&
+name|_Traits
+operator|::
+name|eq_int_type
+argument_list|(
+name|_M_sbuf
+operator|->
+name|sputc
+argument_list|(
+name|__c
+argument_list|)
+argument_list|,
+name|_Traits
+operator|::
+name|eof
+argument_list|()
+argument_list|)
+condition|)
+name|_M_failed
+operator|=
+name|true
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-name|ostreambuf_iterator
-modifier|&
+begin_return
+return|return
+operator|*
+name|this
+return|;
+end_return
+
+begin_expr_stmt
+unit|}        ostreambuf_iterator
+operator|&
 name|operator
-modifier|*
-parameter_list|()
-function|throw
-parameter_list|()
+operator|*
+operator|(
+operator|)
+name|throw
+argument_list|()
 block|{
 return|return
 operator|*
 name|this
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_expr_stmt
 name|ostreambuf_iterator
@@ -863,75 +905,61 @@ return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-unit|};
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|,
-name|typename
-name|_Traits
-operator|>
-specifier|inline
+begin_function
 name|ostreambuf_iterator
-operator|<
+modifier|&
+name|_M_put
+parameter_list|(
+specifier|const
 name|_CharT
-operator|,
-name|_Traits
-operator|>
-operator|&
-name|ostreambuf_iterator
-operator|<
-name|_CharT
-operator|,
-name|_Traits
-operator|>
-operator|::
-name|operator
-operator|=
-operator|(
-name|_CharT
-name|__c
-operator|)
+modifier|*
+name|__ws
+parameter_list|,
+name|streamsize
+name|__len
+parameter_list|)
 block|{
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
 operator|!
 name|_M_failed
+argument_list|,
+name|true
+argument_list|)
 operator|&&
-name|_Traits
-operator|::
-name|eq_int_type
+name|__builtin_expect
 argument_list|(
+name|this
+operator|->
 name|_M_sbuf
 operator|->
-name|sputc
+name|sputn
 argument_list|(
-name|__c
-argument_list|)
+name|__ws
 argument_list|,
-name|_Traits
-operator|::
-name|eof
-argument_list|()
+name|__len
+argument_list|)
+operator|!=
+name|__len
+argument_list|,
+name|false
 argument_list|)
 condition|)
 name|_M_failed
 operator|=
 name|true
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|*
 name|this
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|} }
+unit|}; }
 comment|// namespace std
 end_comment
 

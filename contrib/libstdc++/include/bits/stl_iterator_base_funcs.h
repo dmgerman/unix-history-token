@@ -128,18 +128,6 @@ directive|include
 file|<bits/concept_check.h>
 end_include
 
-begin_comment
-comment|// Since this entire file is within namespace std, there's no reason to
-end_comment
-
-begin_comment
-comment|// waste two spaces along the left column.  Thus the leading indentation is
-end_comment
-
-begin_comment
-comment|// slightly violated from here on.
-end_comment
-
 begin_decl_stmt
 name|namespace
 name|std
@@ -233,7 +221,7 @@ operator|-
 name|__first
 return|;
 block|}
-comment|/**  *  @brief A generalization of pointer arithmetic.  *  @param  first  An input iterator.  *  @param  last  An input iterator.  *  @return  The distance between them.  *  *  Returns @c n such that first + n == last.  This requires that @p last  *  must be reachable from @p first.  Note that @c n may be negative.  *  *  For random access iterators, this uses their @c + and @c - operations  *  and are constant time.  For other %iterator classes they are linear time. */
+comment|/**    *  @brief A generalization of pointer arithmetic.    *  @param  first  An input iterator.    *  @param  last  An input iterator.    *  @return  The distance between them.    *    *  Returns @c n such that first + n == last.  This requires that @p last    *  must be reachable from @p first.  Note that @c n may be negative.    *    *  For random access iterators, this uses their @c + and @c - operations    *  and are constant time.  For other %iterator classes they are linear time.   */
 name|template
 operator|<
 name|typename
@@ -377,8 +365,8 @@ argument_list|)
 name|__i
 operator|+=
 name|__n
-block|;   }
-comment|/**  *  @brief A generalization of pointer arithmetic.  *  @param  i  An input iterator.  *  @param  n  The "delta" by which to change @p i.  *  @return  Nothing.  *  *  This increments @p i by @p n.  For bidirectional and random access  *  iterators, @p n may be negative, in which case @p i is decremented.  *  *  For random access iterators, this uses their @c + and @c - operations  *  and are constant time.  For other %iterator classes they are linear time. */
+block|;     }
+comment|/**    *  @brief A generalization of pointer arithmetic.    *  @param  i  An input iterator.    *  @param  n  The "delta" by which to change @p i.    *  @return  Nothing.    *    *  This increments @p i by @p n.  For bidirectional and random access    *  iterators, @p n may be negative, in which case @p i is decremented.    *    *  For random access iterators, this uses their @c + and @c - operations    *  and are constant time.  For other %iterator classes they are linear time.   */
 name|template
 operator|<
 name|typename
@@ -408,7 +396,7 @@ argument_list|(
 name|__i
 argument_list|)
 argument_list|)
-block|;   }
+block|;     }
 block|}
 end_decl_stmt
 
@@ -423,18 +411,6 @@ end_endif
 
 begin_comment
 comment|/* __GLIBCPP_INTERNAL_ITERATOR_BASE_FUNCS_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
 end_comment
 
 end_unit

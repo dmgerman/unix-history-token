@@ -4,7 +4,7 @@ comment|// String based streams -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -147,6 +147,8 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|// [27.7.1] template class basic_stringbuf
+comment|/**    *  @brief  The actual work of input and output (for std::string).    *    *  This class associates either or both of its input and output sequences    *  with a sequence of characters, which can be initialized from, or made    *  available as, a @c std::basic_string.  (Paraphrased from [27.7.1]/1.)    *    *  For this class, open modes (of type @c ios_base::openmode) have    *  @c in set if the input sequence can be read, and @c out set if the    *  output sequence can be written.   */
 name|template
 operator|<
 name|typename
@@ -211,7 +213,8 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
-comment|// Non-standard Types:
+comment|//@{
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 typedef|typedef
 name|basic_streambuf
 operator|<
@@ -239,15 +242,18 @@ operator|::
 name|size_type
 name|__size_type
 expr_stmt|;
+comment|//@}
 name|protected
 label|:
 comment|// Data Members:
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|__string_type
 name|_M_string
 decl_stmt|;
 name|public
 label|:
 comment|// Constructors:
+comment|/**        *  @brief  Starts with an empty string buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  The default constructor initializes the parent class using its        *  own default ctor.       */
 name|explicit
 name|basic_stringbuf
 argument_list|(
@@ -277,6 +283,7 @@ name|__mode
 argument_list|)
 expr_stmt|;
 block|}
+comment|/**        *  @brief  Starts with an existing string buffer.        *  @param  str  A string to copy as a starting buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  This constructor initializes the parent class using its        *  own default ctor.       */
 name|explicit
 name|basic_stringbuf
 argument_list|(
@@ -322,6 +329,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|// Get and set:
+comment|/**        *  @brief  Copying out the string buffer.        *  @return  A copy of one of the underlying sequences.        *        *  "If the buffer is only created in input mode, the underlying        *  character sequence is equal to the input sequence; otherwise, it        *  is equal to the output sequence." [27.7.1.2]/1       */
 name|__string_type
 name|str
 argument_list|()
@@ -350,7 +358,7 @@ argument_list|()
 decl_stmt|;
 if|if
 condition|(
-name|_M_out_cur
+name|_M_out_end
 operator|>
 name|_M_out_beg
 condition|)
@@ -384,6 +392,7 @@ return|return
 name|_M_string
 return|;
 block|}
+comment|/**        *  @brief  Setting a new buffer.        *  @param  s  The string to use as a new sequence.        *        *  Deallocates any previous stored sequence, then copies @a s to        *  use as a new one.       */
 name|void
 name|str
 parameter_list|(
@@ -418,6 +427,7 @@ block|}
 name|protected
 label|:
 comment|// Common initialization code for both ctors goes here.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|void
 name|_M_stringbuf_init
 argument_list|(
@@ -482,6 +492,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|// Overridden virtual functions:
+comment|// [documentation is inherited]
 name|virtual
 name|int_type
 name|underflow
@@ -513,6 +524,7 @@ name|eof
 argument_list|()
 return|;
 block|}
+comment|// [documentation is inherited]
 name|virtual
 name|int_type
 name|pbackfail
@@ -526,6 +538,7 @@ name|eof
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|// [documentation is inherited]
 name|virtual
 name|int_type
 name|overflow
@@ -539,6 +552,7 @@ name|eof
 argument_list|()
 parameter_list|)
 function_decl|;
+comment|/**        *  @brief  Manipulates the buffer.        *  @param  s  Pointer to a buffer area.        *  @param  n  Size of @a s.        *  @return  @c this        *        *  If no buffer has already been created, and both @a s and @a n are        *  non-zero, then @c s is used as a buffer; see        *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#2        *  for more.       */
 name|virtual
 name|__streambuf_type
 modifier|*
@@ -580,6 +594,7 @@ return|return
 name|this
 return|;
 block|}
+comment|// [documentation is inherited]
 name|virtual
 name|pos_type
 name|seekoff
@@ -606,6 +621,7 @@ operator|::
 name|out
 argument_list|)
 decl_stmt|;
+comment|// [documentation is inherited]
 name|virtual
 name|pos_type
 name|seekpos
@@ -633,6 +649,7 @@ comment|// re-sizing of an existing _M_string.
 comment|// Assumes: contents of _M_string and internal buffer match exactly.
 comment|// __i == _M_in_cur - _M_in_beg
 comment|// __o == _M_out_cur - _M_out_beg
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|virtual
 name|int
 name|_M_really_sync
@@ -742,7 +759,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// 27.7.2  Template class basic_istringstream
+comment|// [27.7.2] Template class basic_istringstream
+end_comment
+
+begin_comment
+comment|/**    *  @brief  Controlling input for std::string.    *    *  This class supports reading from objects of type std::basic_string,    *  using the inherited functions from std::basic_istream.  To control    *  the associated sequence, an instance of std::basic_stringbuf is used,    *  which this page refers to as @c sb.   */
 end_comment
 
 begin_expr_stmt
@@ -884,6 +905,10 @@ begin_label
 name|private
 label|:
 end_label
+
+begin_comment
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
 
 begin_decl_stmt
 name|__stringbuf_type
@@ -900,6 +925,10 @@ begin_comment
 comment|// Constructors:
 end_comment
 
+begin_comment
+comment|/**        *  @brief  Default constructor starts with an empty string buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  @c ios_base::in is automatically included in @a mode.        *        *  Initializes @c sb using @c mode|in, and passes @c&sb to the base        *  class initializer.  Does not allocate any buffer.        *        *  @if maint        *  That's a lie.  We initialize the base class with NULL, because the        *  string class does its own memory management.        *  @endif       */
+end_comment
+
 begin_decl_stmt
 name|explicit
 name|basic_istringstream
@@ -938,6 +967,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|/**        *  @brief  Starts with an existing string buffer.        *  @param  str  A string to copy as a starting buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  @c ios_base::in is automatically included in @a mode.        *        *  Initializes @c sb using @a str and @c mode|in, and passes @c&sb        *  to the base class initializer.        *        *  @if maint        *  That's a lie.  We initialize the base class with NULL, because the        *  string class does its own memory management.        *  @endif       */
+end_comment
 
 begin_decl_stmt
 name|explicit
@@ -985,12 +1018,17 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/**        *  @brief  The destructor does nothing.        *        *  The buffer is deallocated by the stringbuf object, not the        *  formatting stream.       */
+end_comment
+
 begin_expr_stmt
 operator|~
 name|basic_istringstream
 argument_list|()
 block|{ }
 comment|// Members:
+comment|/**        *  @brief  Accessing the underlying buffer.        *  @return  The current basic_stringbuf buffer.        *        *  This hides both signatures of std::basic_ios::rdbuf().       */
 name|__stringbuf_type
 operator|*
 name|rdbuf
@@ -1011,6 +1049,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/**        *  @brief  Copying out the string buffer.        *  @return  @c rdbuf()->str()       */
+end_comment
+
 begin_expr_stmt
 name|__string_type
 name|str
@@ -1025,6 +1067,10 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/**        *  @brief  Setting a new buffer.        *  @param  s  The string to use as a new sequence.        *        *  Calls @c rdbuf()->str(s).       */
+end_comment
 
 begin_function
 name|void
@@ -1048,7 +1094,11 @@ end_function
 
 begin_comment
 unit|};
-comment|// 27.7.3  Template class basic_ostringstream
+comment|// [27.7.3] Template class basic_ostringstream
+end_comment
+
+begin_comment
+comment|/**    *  @brief  Controlling output for std::string.    *    *  This class supports writing to objects of type std::basic_string,    *  using the inherited functions from std::basic_ostream.  To control    *  the associated sequence, an instance of std::basic_stringbuf is used,    *  which this page refers to as @c sb.   */
 end_comment
 
 begin_expr_stmt
@@ -1191,6 +1241,10 @@ name|private
 label|:
 end_label
 
+begin_comment
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
 begin_decl_stmt
 name|__stringbuf_type
 name|_M_stringbuf
@@ -1204,6 +1258,10 @@ end_label
 
 begin_comment
 comment|// Constructors/destructor:
+end_comment
+
+begin_comment
+comment|/**        *  @brief  Default constructor starts with an empty string buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  @c ios_base::out is automatically included in @a mode.        *        *  Initializes @c sb using @c mode|out, and passes @c&sb to the base        *  class initializer.  Does not allocate any buffer.        *        *  @if maint        *  That's a lie.  We initialize the base class with NULL, because the        *  string class does its own memory management.        *  @endif       */
 end_comment
 
 begin_decl_stmt
@@ -1245,6 +1303,10 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/**        *  @brief  Starts with an existing string buffer.        *  @param  str  A string to copy as a starting buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  @c ios_base::out is automatically included in @a mode.        *        *  Initializes @c sb using @a str and @c mode|out, and passes @c&sb        *  to the base class initializer.        *        *  @if maint        *  That's a lie.  We initialize the base class with NULL, because the        *  string class does its own memory management.        *  @endif       */
+end_comment
+
 begin_decl_stmt
 name|explicit
 name|basic_ostringstream
@@ -1291,12 +1353,17 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/**        *  @brief  The destructor does nothing.        *        *  The buffer is deallocated by the stringbuf object, not the        *  formatting stream.       */
+end_comment
+
 begin_expr_stmt
 operator|~
 name|basic_ostringstream
 argument_list|()
 block|{ }
 comment|// Members:
+comment|/**        *  @brief  Accessing the underlying buffer.        *  @return  The current basic_stringbuf buffer.        *        *  This hides both signatures of std::basic_ios::rdbuf().       */
 name|__stringbuf_type
 operator|*
 name|rdbuf
@@ -1317,6 +1384,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/**        *  @brief  Copying out the string buffer.        *  @return  @c rdbuf()->str()       */
+end_comment
+
 begin_expr_stmt
 name|__string_type
 name|str
@@ -1331,6 +1402,10 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/**        *  @brief  Setting a new buffer.        *  @param  s  The string to use as a new sequence.        *        *  Calls @c rdbuf()->str(s).       */
+end_comment
 
 begin_function
 name|void
@@ -1354,7 +1429,11 @@ end_function
 
 begin_comment
 unit|};
-comment|// 27.7.4  Template class basic_stringstream
+comment|// [27.7.4] Template class basic_stringstream
+end_comment
+
+begin_comment
+comment|/**    *  @brief  Controlling input and output for std::string.    *    *  This class supports reading from and writing to objects of type    *  std::basic_string, using the inherited functions from    *  std::basic_iostream.  To control the associated sequence, an instance    *  of std::basic_stringbuf is used, which this page refers to as @c sb.   */
 end_comment
 
 begin_expr_stmt
@@ -1497,6 +1576,10 @@ name|private
 label|:
 end_label
 
+begin_comment
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
 begin_decl_stmt
 name|__stringbuf_type
 name|_M_stringbuf
@@ -1510,6 +1593,10 @@ end_label
 
 begin_comment
 comment|// Constructors/destructors
+end_comment
+
+begin_comment
+comment|/**        *  @brief  Default constructor starts with an empty string buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  Initializes @c sb using @c mode, and passes @c&sb to the base        *  class initializer.  Does not allocate any buffer.        *        *  @if maint        *  That's a lie.  We initialize the base class with NULL, because the        *  string class does its own memory management.        *  @endif       */
 end_comment
 
 begin_decl_stmt
@@ -1551,6 +1638,10 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/**        *  @brief  Starts with an existing string buffer.        *  @param  str  A string to copy as a starting buffer.        *  @param  mode  Whether the buffer can read, or write, or both.        *        *  Initializes @c sb using @a str and @c mode, and passes @c&sb        *  to the base class initializer.        *        *  @if maint        *  That's a lie.  We initialize the base class with NULL, because the        *  string class does its own memory management.        *  @endif       */
+end_comment
+
 begin_decl_stmt
 name|explicit
 name|basic_stringstream
@@ -1597,12 +1688,17 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/**        *  @brief  The destructor does nothing.        *        *  The buffer is deallocated by the stringbuf object, not the        *  formatting stream.       */
+end_comment
+
 begin_expr_stmt
 operator|~
 name|basic_stringstream
 argument_list|()
 block|{ }
 comment|// Members:
+comment|/**        *  @brief  Accessing the underlying buffer.        *  @return  The current basic_stringbuf buffer.        *        *  This hides both signatures of std::basic_ios::rdbuf().       */
 name|__stringbuf_type
 operator|*
 name|rdbuf
@@ -1623,6 +1719,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/**        *  @brief  Copying out the string buffer.        *  @return  @c rdbuf()->str()       */
+end_comment
+
 begin_expr_stmt
 name|__string_type
 name|str
@@ -1637,6 +1737,10 @@ argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/**        *  @brief  Setting a new buffer.        *  @param  s  The string to use as a new sequence.        *        *  Calls @c rdbuf()->str(s).       */
+end_comment
 
 begin_function
 name|void

@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<bits/locale_classes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<bits/locale_facets.h>
 end_include
 
@@ -153,18 +159,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:c++
-end_comment
-
-begin_comment
-comment|// End:
-end_comment
 
 end_unit
 
