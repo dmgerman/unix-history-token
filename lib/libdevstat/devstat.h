@@ -134,6 +134,8 @@ name|DSM_MS_PER_TRANSACTION_READ
 block|,
 name|DSM_MS_PER_TRANSACTION_WRITE
 block|,
+name|DSM_SKIP
+block|,
 name|DSM_MAX
 block|}
 name|devstat_metric
