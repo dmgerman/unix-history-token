@@ -1369,7 +1369,7 @@ name|int
 name|keycode
 parameter_list|,
 name|int
-name|down
+name|up
 parameter_list|,
 name|int
 modifier|*
