@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.2 (Berkeley) %G%"
+literal|"@(#)cp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,7 +680,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: \"%s\" and \"%s\" are identical (not copied).\n"
+literal|"cp: %s and %s are identical (not copied).\n"
 argument_list|,
 name|to
 operator|.
@@ -809,7 +809,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: \"%s\": not a directory.\n"
+literal|"cp: %s: not a directory.\n"
 argument_list|,
 name|to
 operator|.
@@ -955,11 +955,6 @@ decl_stmt|,
 name|rcount
 decl_stmt|,
 name|wcount
-decl_stmt|,
-name|r
-decl_stmt|;
-name|char
-name|c
 decl_stmt|;
 name|from_fd
 operator|=
@@ -1043,6 +1038,11 @@ operator|&&
 name|interactive_flag
 condition|)
 block|{
+name|int
+name|checkch
+decl_stmt|,
+name|ch
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1050,30 +1050,38 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"overwrite \"%s\"? "
+literal|"overwrite %s? "
 argument_list|,
 name|to
 operator|.
 name|p_path
 argument_list|)
 expr_stmt|;
-name|r
+name|checkch
 operator|=
-name|scanf
-argument_list|(
-literal|"%1s"
-argument_list|,
-operator|&
-name|c
-argument_list|)
+name|ch
+operator|=
+name|getchar
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|ch
+operator|!=
+literal|'\n'
+operator|&&
+name|ch
+operator|!=
+name|EOF
+condition|)
+name|ch
+operator|=
+name|getchar
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-literal|1
-operator|||
-name|c
+name|checkch
 operator|!=
 literal|'y'
 condition|)
@@ -1082,7 +1090,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Try again. */
+comment|/* try again. */
 name|to_fd
 operator|=
 name|open
@@ -1268,7 +1276,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: Can't read directory \"%s\".\n"
+literal|"cp: can't read directory %s.\n"
 argument_list|,
 name|from
 operator|.
@@ -1796,7 +1804,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: \"%s\": Name too long.\n"
+literal|"cp: %s: name too long.\n"
 argument_list|,
 name|string
 argument_list|)
@@ -1954,7 +1962,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cp: \"%s/%s\": Name too long.\n"
+literal|"cp: %s/%s: name too long.\n"
 argument_list|,
 name|p
 operator|->
