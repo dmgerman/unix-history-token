@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: connect.c,v 1.86 2002/08/12 13:29:48 joda Exp $"
+literal|"$Id: connect.c,v 1.86.4.1 2002/10/21 16:05:17 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2495,6 +2495,22 @@ operator|*
 name|p
 operator|==
 literal|'%'
+operator|&&
+name|isxdigit
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+operator|&&
+name|isxdigit
+argument_list|(
+name|p
+index|[
+literal|2
+index|]
+argument_list|)
 condition|)
 block|{
 name|unsigned

@@ -29,7 +29,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_conn.c,v 1.13 2001/05/16 22:06:44 assar Exp $"
+literal|"$Id: kadm_conn.c,v 1.13.6.1 2002/10/21 14:53:39 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -145,6 +145,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|do_kerberos4
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -166,6 +173,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KRB4
+if|if
+condition|(
+name|do_kerberos4
+condition|)
 name|add_kadm_port
 argument_list|(
 name|context

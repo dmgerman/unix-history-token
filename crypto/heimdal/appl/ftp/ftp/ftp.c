@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftp.c,v 1.74 2002/09/04 22:00:12 joda Exp $"
+literal|"$Id: ftp.c,v 1.74.4.1 2002/10/21 14:26:31 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2053,6 +2053,24 @@ argument_list|(
 name|pasv
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|strrchr
+argument_list|(
+name|pasv
+argument_list|,
+literal|')'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 block|}

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id"
+literal|"$Id: make_crypto.c,v 1.2.2.1 2002/10/21 14:30:04 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

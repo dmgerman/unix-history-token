@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: server.c,v 1.36 2002/09/10 19:23:28 joda Exp $"
+literal|"$Id: server.c,v 1.36.2.1 2002/10/21 14:53:39 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2754,6 +2754,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|do_kerberos4
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|krb5_error_code
 name|kadmind_loop
@@ -2865,6 +2872,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KRB4
+if|if
+condition|(
+name|do_kerberos4
+condition|)
 name|handle_v4
 argument_list|(
 name|context
@@ -2874,6 +2885,16 @@ argument_list|,
 name|len
 argument_list|,
 name|fd
+argument_list|)
+expr_stmt|;
+else|else
+name|krb5_errx
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+literal|"version 4 kadmin is disabled"
 argument_list|)
 expr_stmt|;
 else|#

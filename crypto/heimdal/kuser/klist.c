@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: klist.c,v 1.67 2002/08/20 09:05:18 joda Exp $"
+literal|"$Id: klist.c,v 1.67.2.1 2002/10/21 14:31:27 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2456,7 +2456,7 @@ condition|(
 name|parms
 operator|.
 name|out_size
-operator|>=
+operator|>
 sizeof|sizeof
 argument_list|(
 name|t
