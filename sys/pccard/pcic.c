@@ -3044,29 +3044,23 @@ condition|)
 comment|/* legal IRQ? */
 if|if
 condition|(
-operator|(
 name|desired_irq
 operator|>=
 literal|1
-operator|)
 operator|&&
-operator|(
 name|desired_irq
 operator|<=
 name|ICU_LEN
-operator|)
 operator|&&
-operator|(
 operator|(
 literal|1ul
 operator|<<
 name|desired_irq
 operator|)
 operator|&
-name|soft_imask
-operator|)
+name|free_irqs
 condition|)
-name|pcic_imask
+name|free_irqs
 operator|=
 literal|1ul
 operator|<<
@@ -3074,7 +3068,7 @@ name|desired_irq
 expr_stmt|;
 else|else
 comment|/* illeagal, disable use of IRQ */
-name|pcic_imask
+name|free_irqs
 operator|=
 literal|0
 expr_stmt|;
