@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.6 1994/05/25 06:28:14 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -539,6 +539,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-t temp    use temp as template for mktemp()\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-e pkg     returns 0 if pkg is installed, 1 otherwise\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
