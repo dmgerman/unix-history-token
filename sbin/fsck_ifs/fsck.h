@@ -995,7 +995,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ino_t
 name|allocdir
 name|__P
 argument_list|(
