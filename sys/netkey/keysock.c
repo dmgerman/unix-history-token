@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/raw_cb.h>
 end_include
 
