@@ -374,6 +374,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -933,6 +934,7 @@ name|char
 modifier|*
 name|host
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|port
@@ -955,6 +957,7 @@ name|struct
 name|sockaddr_storage
 name|ss
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cause
