@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999-2000 Taku YAMAMOTO<taku@cent.saitama-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: maestro_reg.h,v 1.10 2000/08/29 17:27:29 taku Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2000 Taku YAMAMOTO<taku@cent.saitama-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	maestro_reg.h,v 1.13 2001/11/11 18:29:46 taku Exp  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -51,6 +51,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAESTRO_PMC
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAESTRO_SPDIF
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAESTRO_HWVOL
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAESTRO_CHIBUS
 value|0x00100000
 end_define
@@ -73,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|MAESTRO_SWAP_LR
-value|0x00000010
+value|0x00000020
 end_define
 
 begin_comment
@@ -669,6 +690,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PORT_HWVOL_CTRL
+value|0x1b
+end_define
+
+begin_comment
+comment|/* BYTE RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HWVOL_CTRL_SPLIT_SHADOW
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|PORT_HWVOL_VOICE_SHADOW
 value|0x1c
 end_define
@@ -721,7 +760,7 @@ begin_define
 define|#
 directive|define
 name|HWVOL_MUTE
-value|0x99
+value|0x11
 end_define
 
 begin_define
@@ -863,20 +902,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RINGBUS_CTRL_IODMA_PLAYBACK_ENABLED
-value|0x04000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|RINGBUS_CTRL_IODMA_RECORD_ENABLED
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|RINGBUS_SRC_MIC
 value|20
 end_define
@@ -970,6 +995,63 @@ define|#
 directive|define
 name|RINGBUS_DEST_ASSP_IN
 value|5
+end_define
+
+begin_comment
+comment|/* Ring bus control B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PORT_RINGBUS_CTRL_B
+value|0x38
+end_define
+
+begin_comment
+comment|/* BYTE RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RINGBUS_CTRL_SSPE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|RINGBUS_CTRL_2ndCODEC
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|RINGBUS_CTRL_SPDIF
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|RINGBUS_CTRL_ITB_DISABLE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|RINGBUS_CTRL_CODEC_ID_MASK
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|RINGBUS_CTRL_CODEC_ID_AC98
+value|2
 end_define
 
 begin_comment
@@ -1627,40 +1709,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|APU_STEREO
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|APU_USE_SYSMEM
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|APU_PCMBAR_MASK
-value|0x6000
-end_define
-
-begin_define
-define|#
-directive|define
 name|APU_64KPAGE_MASK
 value|0xff00
-end_define
-
-begin_comment
-comment|/* PCM Base Address Register selection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|APU_PCMBAR_SHIFT
-value|13
 end_define
 
 begin_comment
@@ -1672,6 +1722,76 @@ define|#
 directive|define
 name|APU_64KPAGE_SHIFT
 value|8
+end_define
+
+begin_comment
+comment|/* Wave Processor Wavespace Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPWA_MAX
+value|((1<< 22) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPWA_STEREO
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPWA_USE_SYSMEM
+value|(1<< 22)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPWA_WTBAR_SHIFT
+parameter_list|(
+name|wtsz
+parameter_list|)
+value|WPWA_WTBAR_SHIFT_##wtsz
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPWA_WTBAR_SHIFT_1
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPWA_WTBAR_SHIFT_2
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPWA_WTBAR_SHIFT_4
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPWA_WTBAR_SHIFT_8
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPWA_PCMBAR_SHIFT
+value|20
 end_define
 
 begin_comment
@@ -1697,6 +1817,28 @@ define|#
 directive|define
 name|APUREG_LOOPLEN
 value|7
+end_define
+
+begin_comment
+comment|/* APU register 8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APUREG_EFFECT_GAIN
+value|8
+end_define
+
+begin_comment
+comment|/* Effect gain? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APUREG_EFFECT_GAIN_MASK
+value|0x00ff
 end_define
 
 begin_comment
@@ -1825,15 +1967,61 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* -----------------------------  * Limits.  */
+comment|/* Source routing. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|WPWA_MAX
-value|((1<< 22) - 1)
+name|APUREG_ROUTING
+value|11
 end_define
+
+begin_define
+define|#
+directive|define
+name|APU_INVERT_POLARITY_B
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_DATASRC_B_MASK
+value|0x7f00
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_INVERT_POLARITY_A
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_DATASRC_A_MASK
+value|0x007f
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_DATASRC_A_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APU_DATASRC_B_SHIFT
+value|8
+end_define
+
+begin_comment
+comment|/* -----------------------------  * Limits.  */
+end_comment
 
 begin_define
 define|#
