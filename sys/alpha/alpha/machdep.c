@@ -718,11 +718,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|val
 decl_stmt|;
 name|val
@@ -732,8 +728,8 @@ argument_list|(
 name|physmem
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|sysctl_handle_long
 argument_list|(
 name|oidp
@@ -745,10 +741,6 @@ literal|0
 argument_list|,
 name|req
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -788,11 +780,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|val
 decl_stmt|;
 name|val
@@ -806,8 +794,8 @@ operator|.
 name|v_wire_count
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|sysctl_handle_long
 argument_list|(
 name|oidp
@@ -819,10 +807,6 @@ literal|0
 argument_list|,
 name|req
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -855,7 +839,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_hw
 argument_list|,

@@ -607,11 +607,7 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|val
 decl_stmt|;
 name|val
@@ -621,9 +617,9 @@ argument_list|(
 name|physmem
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|sysctl_handle_int
+return|return
+operator|(
+name|sysctl_handle_long
 argument_list|(
 name|oidp
 argument_list|,
@@ -634,10 +630,6 @@ literal|0
 argument_list|,
 name|req
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
