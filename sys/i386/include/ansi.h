@@ -233,6 +233,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|long
@@ -240,6 +244,10 @@ name|long
 name|__int64_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* LONGLONG */
+end_comment
 
 begin_typedef
 typedef|typedef
