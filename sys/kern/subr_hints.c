@@ -617,6 +617,8 @@ operator|++
 name|i
 index|]
 expr_stmt|;
+else|else
+block|{
 while|while
 condition|(
 operator|*
@@ -630,6 +632,7 @@ expr_stmt|;
 name|cp
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
