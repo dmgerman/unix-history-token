@@ -1937,6 +1937,16 @@ asm|__asm ("mtsprg 0, %0" :: "r"(globalp));
 end_asm
 
 begin_comment
+comment|/* Init basic tunables, hz etc */
+end_comment
+
+begin_expr_stmt
+name|init_param
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* setup curproc so the mutexes work */
 end_comment
 
