@@ -1463,6 +1463,7 @@ literal|"bus_dmamem_free: Invalid map freed\n"
 argument_list|)
 expr_stmt|;
 comment|/* XXX There is no "contigfree" and "free" doesn't work */
+comment|/* There is too a contigfree, and we need to use it here. */
 if|if
 condition|(
 operator|(
@@ -1485,6 +1486,18 @@ condition|)
 name|free
 argument_list|(
 name|vaddr
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+else|else
+name|contigfree
+argument_list|(
+name|vaddr
+argument_list|,
+name|dmat
+operator|->
+name|maxsize
 argument_list|,
 name|M_DEVBUF
 argument_list|)

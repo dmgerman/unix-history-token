@@ -1606,6 +1606,26 @@ argument_list|(
 literal|"bus_dmamem_free: Invalid map freed\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dmat
+operator|->
+name|maxsize
+operator|<=
+name|PAGE_SIZE
+operator|)
+operator|&&
+name|dmat
+operator|->
+name|lowaddr
+operator|>=
+name|ptoa
+argument_list|(
+name|Maxmem
+argument_list|)
+condition|)
+block|{
 name|free
 argument_list|(
 name|vaddr
@@ -1613,21 +1633,24 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+else|else
+name|contigfree
+argument_list|(
+name|vaddr
+argument_list|,
+name|dmat
+operator|->
+name|maxsize
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 block|}
-end_function
-
-begin_define
 define|#
 directive|define
 name|BUS_DMAMAP_NSEGS
 value|((BUS_SPACE_MAXSIZE / PAGE_SIZE) + 1)
-end_define
-
-begin_comment
 comment|/*  * Map the buffer buf into bus space using the dmamap map.  */
-end_comment
-
-begin_decl_stmt
 name|vm_offset_t
 name|alpha_XXX_dmamap_or
 init|=
@@ -1637,13 +1660,7 @@ literal|1024UL
 operator|*
 literal|1024UL
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*XXX */
-end_comment
-
-begin_function
 name|int
 name|bus_dmamap_load
 parameter_list|(
@@ -2215,13 +2232,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Release the mapping held by map.  */
-end_comment
-
-begin_function
 name|void
 name|_bus_dmamap_unload
 parameter_list|(
@@ -2307,9 +2318,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|_bus_dmamap_sync
 parameter_list|(
@@ -2450,9 +2458,6 @@ break|break;
 block|}
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|alloc_bounce_pages
@@ -2646,9 +2651,6 @@ name|count
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|reserve_bounce_pages
@@ -2708,9 +2710,6 @@ name|pages
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|vm_offset_t
 name|add_bounce_page
@@ -2848,9 +2847,6 @@ name|busaddr
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|free_bounce_page
@@ -2970,9 +2966,6 @@ name|bounce_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|busdma_swi
 parameter_list|(
