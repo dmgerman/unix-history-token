@@ -529,12 +529,12 @@ comment|/* 171 = shmsys */
 literal|"#172"
 block|,
 comment|/* 172 = nosys */
-literal|"#173"
+literal|"pread"
 block|,
-comment|/* 173 = nosys */
-literal|"#174"
+comment|/* 173 = pread */
+literal|"pwrite"
 block|,
-comment|/* 174 = nosys */
+comment|/* 174 = pwrite */
 literal|"#175"
 block|,
 comment|/* 175 = nosys */

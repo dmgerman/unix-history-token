@@ -1950,27 +1950,27 @@ block|}
 block|,
 comment|/* 172 = nosys */
 block|{
-literal|0
+literal|5
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|pread
 block|}
 block|,
-comment|/* 173 = nosys */
+comment|/* 173 = pread */
 block|{
-literal|0
+literal|5
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|pwrite
 block|}
 block|,
-comment|/* 174 = nosys */
+comment|/* 174 = pwrite */
 block|{
 literal|0
 block|,

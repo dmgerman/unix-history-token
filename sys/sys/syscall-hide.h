@@ -1075,6 +1075,20 @@ argument_list|)
 end_macro
 
 begin_macro
+name|HIDE_POSIX
+argument_list|(
+argument|pread
+argument_list|)
+end_macro
+
+begin_macro
+name|HIDE_POSIX
+argument_list|(
+argument|pwrite
+argument_list|)
+end_macro
+
+begin_macro
 name|HIDE_BSD
 argument_list|(
 argument|ntp_adjtime
