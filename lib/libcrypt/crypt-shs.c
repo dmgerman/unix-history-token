@@ -347,9 +347,19 @@ name|libmd
 operator|==
 name|NULL
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"libcrypt-md5: dlopen(libmd.so): %s\n"
+argument_list|,
+name|dlerror
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 name|dl_SHA_Init
 operator|=
 name|dlsym
