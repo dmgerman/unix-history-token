@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University  * and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)turbochannel.h	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University  * and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)turbochannel.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,6 +10,24 @@ end_comment
 begin_comment
 comment|/*  * 	Created, from the DEC specs:  * 	"TURBOchannel Hardware Specification"  * 	EK-369AA-OD-005, Version 005, July 1990  *  *	File: tc.h  * 	Author: Alessandro Forin, Carnegie Mellon University  *	Date:	9/90  *  *	Definitions for the TURBOchannel BUS.  */
 end_comment
+
+begin_comment
+comment|/*  * Max conceivable number of slots on the TC  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_MAX_SLOTS
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_MAX_LOGICAL_SLOTS
+value|12
+end_define
 
 begin_comment
 comment|/*  * Address map specifications for any TC option  * These are offset from the option's base address  */
@@ -150,6 +168,10 @@ name|u_char
 name|rom_width
 decl_stmt|;
 comment|/* bytewide or.. */
+name|u_char
+name|unit
+decl_stmt|;
+comment|/* Device unit number */
 name|char
 name|module_name
 index|[
@@ -170,10 +192,23 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* vendor and rev */
-name|caddr_t
-name|module_address
+name|u_long
+name|k1seg_address
 decl_stmt|;
 comment|/* TC starting address */
+name|char
+modifier|*
+name|driver_name
+decl_stmt|;
+comment|/* software name */
+name|void
+function_decl|(
+modifier|*
+name|intr
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* interrupt routine */
 block|}
 name|tc_option_t
 typedef|;

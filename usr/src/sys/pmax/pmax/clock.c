@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -30,6 +30,15 @@ end_include
 begin_comment
 comment|/*  * Machine-dependent clock routines.  *  * Startrtclock restarts the real-time clock, which provides  * hardclock interrupts to kern_clock.c.  *  * Inittodr initializes the time of day hardware which provides  * date functions.  Its primary function is to use some file  * system information in case the hardare clock lost state.  *  * Resettodr restores the time of day hardware after a time change.  */
 end_comment
+
+begin_decl_stmt
+specifier|volatile
+name|struct
+name|chiptime
+modifier|*
+name|Mach_clock_addr
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Start the real-time and statistics clocks. Leave stathz 0 since there  * are no other timers available.  */
@@ -77,13 +86,7 @@ operator|)
 expr_stmt|;
 name|c
 operator|=
-operator|(
-specifier|volatile
-expr|struct
-name|chiptime
-operator|*
-operator|)
-name|MACH_CLOCK_ADDR
+name|Mach_clock_addr
 expr_stmt|;
 name|c
 operator|->
@@ -251,13 +254,7 @@ literal|0
 expr_stmt|;
 name|c
 operator|=
-operator|(
-specifier|volatile
-expr|struct
-name|chiptime
-operator|*
-operator|)
-name|MACH_CLOCK_ADDR
+name|Mach_clock_addr
 expr_stmt|;
 comment|/* don't read clock registers while they are being updated */
 name|s
@@ -699,13 +696,7 @@ literal|60
 expr_stmt|;
 name|c
 operator|=
-operator|(
-specifier|volatile
-expr|struct
-name|chiptime
-operator|*
-operator|)
-name|MACH_CLOCK_ADDR
+name|Mach_clock_addr
 expr_stmt|;
 name|s
 operator|=

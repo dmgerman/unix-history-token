@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -491,6 +491,22 @@ parameter_list|)
 value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), dev_init(c,n,stop), \ 	(dev_type_reset((*))) nullop, dev_tty_init(c,n), ttselect, \ 	(dev_type_map((*))) enodev, 0 }
 end_define
 
+begin_comment
+comment|/* open, close, read, write, ioctl, select -- XXX should be a tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cdev_cn_init
+parameter_list|(
+name|c
+parameter_list|,
+name|n
+parameter_list|)
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, dev_init(c,n,select), \ 	(dev_type_map((*))) enodev, 0 }
+end_define
+
 begin_define
 define|#
 directive|define
@@ -514,26 +530,14 @@ end_comment
 begin_expr_stmt
 name|cdev_decl
 argument_list|(
-name|dc
+name|cn
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* open, close, read, write, ioctl, select -- XXX should be a tty */
+comment|/* console interface */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|cdev_dc_init
-parameter_list|(
-name|c
-parameter_list|,
-name|n
-parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) nullop, \ 	(dev_type_reset((*))) nullop, 0, ttselect, \ 	(dev_type_map((*))) enodev, 0 }
-end_define
 
 begin_expr_stmt
 name|cdev_decl
@@ -829,6 +833,62 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"xcfb.h"
+end_include
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|xcfb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"dtop.h"
+end_include
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|dtop
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"scc.h"
+end_include
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|scc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"dc.h"
+end_include
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|dc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|cdevsw
@@ -836,11 +896,11 @@ name|cdevsw
 index|[]
 init|=
 block|{
-name|cdev_dc_init
+name|cdev_cn_init
 argument_list|(
 literal|1
 argument_list|,
-name|dc
+name|cn
 argument_list|)
 block|,
 comment|/* 0: virtual console */
@@ -948,6 +1008,38 @@ name|cfb
 argument_list|)
 block|,
 comment|/* 13: color frame buffer */
+name|cdev_pm_init
+argument_list|(
+name|NXCFB
+argument_list|,
+name|xcfb
+argument_list|)
+block|,
+comment|/* 14: maxine color frame buffer */
+name|cdev_tty_init
+argument_list|(
+name|NDTOP
+argument_list|,
+name|dtop
+argument_list|)
+block|,
+comment|/* 15: desktop bus interface */
+name|cdev_tty_init
+argument_list|(
+name|NDC
+argument_list|,
+name|dc
+argument_list|)
+block|,
+comment|/* 16: dc7085 serial interface */
+name|cdev_tty_init
+argument_list|(
+name|NSCC
+argument_list|,
+name|scc
+argument_list|)
+block|,
+comment|/* 17: scc 82530 serial interface */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -67,6 +67,18 @@ directive|include
 file|<pmax/dev/device.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<pmax/pmax/pmaxtype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pmax/pmax/turbochannel.h>
+end_include
+
 begin_comment
 comment|/*  * The following several variables are related to  * the configuration process, and are used in initializing  * the machine.  */
 end_comment
@@ -105,6 +117,23 @@ begin_comment
 comment|/* approx # instr per usec. */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|pmax_boardtype
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tc_option_t
+name|tc_slot_info
+index|[
+name|TC_MAX_LOGICAL_SLOTS
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Determine mass storage and memory configuration for a machine.  * Get cpu type, and then switch out to machine specific procedures  * which will probe adaptors to see what is out there.  */
 end_comment
@@ -134,16 +163,36 @@ name|driver
 modifier|*
 name|drp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DS5000
 specifier|register
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* print what type of CPU and FPU we have */
+comment|/* 	 * for some reason the Pmax has an R2000 cpu with an implementation 	 * level of 2 and DEC's R3000s are level 2 as well? 	 */
+if|if
+condition|(
+name|pmax_boardtype
+operator|==
+name|DS_PMAX
+condition|)
+block|{
+name|cpu
+operator|.
+name|cpu
+operator|.
+name|cp_imp
+operator|=
+name|MIPS_R2000
+expr_stmt|;
+name|fpu
+operator|.
+name|cpu
+operator|.
+name|cp_imp
+operator|=
+name|MIPS_R2010
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|cpu
@@ -368,9 +417,27 @@ name|cp
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|DS3100
+switch|switch
+condition|(
+name|pmax_boardtype
+condition|)
+block|{
+case|case
+name|DS_PMAX
+case|:
+if|if
+condition|(
+name|cp
+operator|->
+name|pmax_addr
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+name|QUES
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -385,12 +452,20 @@ name|cp
 argument_list|)
 condition|)
 continue|continue;
-endif|#
-directive|endif
+break|break;
 ifdef|#
 directive|ifdef
 name|DS5000
-comment|/* 		 * If the device is still in an unknown slot, 		 * then it was not found by tc_find_all_options(). 		 */
+case|case
+name|DS_3MAX
+case|:
+case|case
+name|DS_3MIN
+case|:
+case|case
+name|DS_MAXINE
+case|:
+comment|/* 			 * If the device is still in an unknown slot, 			 * then it was not found by tc_find_all_options(). 			 */
 if|if
 condition|(
 name|cp
@@ -437,12 +512,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|intr_tab
+name|tc_slot_info
 index|[
 name|i
 index|]
 operator|.
-name|func
+name|intr
 condition|)
 name|printf
 argument_list|(
@@ -455,18 +530,18 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|intr_tab
+name|tc_slot_info
 index|[
 name|i
 index|]
 operator|.
-name|func
+name|intr
 operator|=
 name|drp
 operator|->
 name|d_intr
 expr_stmt|;
-name|intr_tab
+name|tc_slot_info
 index|[
 name|i
 index|]
@@ -477,16 +552,13 @@ name|cp
 operator|->
 name|pmax_unit
 expr_stmt|;
-name|tc_enable_interrupt
-argument_list|(
-name|i
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
+break|break;
 endif|#
 directive|endif
+comment|/* DS5000 */
+block|}
+empty_stmt|;
 name|cp
 operator|->
 name|pmax_alive
