@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.1 (Berkeley) %G%"
+literal|"@(#)startup.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -670,6 +670,25 @@ literal|0
 condition|)
 name|externalinterfaces
 operator|++
+expr_stmt|;
+comment|/* 		 * If we have a point-to-point link, we want to act 		 * as a supplier even if it's our only interface, 		 * as that's the only way our peer on the other end 		 * can tell that the link is up. 		 */
+if|if
+condition|(
+operator|(
+name|ifs
+operator|.
+name|int_flags
+operator|&
+name|IFF_POINTOPOINT
+operator|)
+operator|&&
+name|supplier
+operator|<
+literal|0
+condition|)
+name|supplier
+operator|=
+literal|1
 expr_stmt|;
 name|ifp
 operator|->
