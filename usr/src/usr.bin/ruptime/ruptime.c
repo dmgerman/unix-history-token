@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.8 83/04/21"
+literal|"@(#)ruptime.c	4.9 83/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"rwhod.h"
+file|<rwhod.h>
 end_include
 
 begin_decl_stmt
