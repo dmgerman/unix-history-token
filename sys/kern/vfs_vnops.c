@@ -252,6 +252,8 @@ parameter_list|,
 name|flagp
 parameter_list|,
 name|cmode
+parameter_list|,
+name|fdidx
 parameter_list|)
 specifier|register
 name|struct
@@ -264,6 +266,8 @@ modifier|*
 name|flagp
 decl_stmt|,
 name|cmode
+decl_stmt|,
+name|fdidx
 decl_stmt|;
 block|{
 name|struct
@@ -290,6 +294,8 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|fdidx
 argument_list|)
 operator|)
 return|;
@@ -311,6 +317,8 @@ parameter_list|,
 name|cmode
 parameter_list|,
 name|cred
+parameter_list|,
+name|fdidx
 parameter_list|)
 specifier|register
 name|struct
@@ -328,6 +336,9 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+name|int
+name|fdidx
 decl_stmt|;
 block|{
 name|struct

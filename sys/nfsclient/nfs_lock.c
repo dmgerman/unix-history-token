@@ -614,6 +614,9 @@ argument_list|,
 name|thread0
 operator|.
 name|td_ucred
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 switch|switch

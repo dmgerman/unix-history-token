@@ -11643,6 +11643,9 @@ argument_list|,
 name|S_IRUSR
 operator||
 name|S_IWUSR
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|free

@@ -3413,6 +3413,9 @@ name|flagp
 parameter_list|,
 name|int
 name|cmode
+parameter_list|,
+name|int
+name|fdidx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3437,6 +3440,9 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+parameter_list|,
+name|int
+name|fdidx
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3340,6 +3340,9 @@ operator|&
 name|flags
 argument_list|,
 name|cmode
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
