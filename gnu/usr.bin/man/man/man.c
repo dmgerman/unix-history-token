@@ -1819,6 +1819,13 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|&&
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|==
+literal|1
 operator|)
 condition|)
 return|return

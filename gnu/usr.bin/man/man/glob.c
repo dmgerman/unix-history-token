@@ -880,6 +880,12 @@ decl_stmt|;
 name|int
 name|invert
 decl_stmt|;
+name|char
+modifier|*
+name|cp1
+init|=
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|c1
@@ -950,10 +956,26 @@ name|cstart
 operator|==
 literal|'\0'
 condition|)
+block|{
+comment|/* Missing ']'. */
+if|if
+condition|(
+name|c1
+operator|!=
+literal|'['
+condition|)
 return|return
 literal|0
 return|;
-comment|/* Missing ']'. */
+comment|/* matched a single bracket */
+name|p
+operator|=
+name|cp1
+expr_stmt|;
+goto|goto
+name|breakbracket
+goto|;
+block|}
 name|c
 operator|=
 operator|*
@@ -1082,6 +1104,8 @@ condition|)
 return|return
 literal|0
 return|;
+name|breakbracket
+label|:
 break|break;
 block|}
 default|default:
