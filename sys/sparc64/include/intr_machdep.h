@@ -89,6 +89,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PIL_RENDEZVOUS
+value|3
+end_define
+
+begin_comment
+comment|/* smp rendezvous ipi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIL_AST
+value|4
+end_define
+
+begin_comment
+comment|/* ast ipi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIL_STOP
+value|5
+end_define
+
+begin_comment
+comment|/* stop cpu ipi */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PIL_FAST
 value|13
 end_define
