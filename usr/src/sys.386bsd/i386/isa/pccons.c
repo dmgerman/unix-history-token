@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         4       00078  * --------------------         -----   ----------------------  *  * 15 Aug 92	Pace Willisson		Patches for X server  * 21 Aug 92    Frank Maclachlan        Fixed back-scroll system crash  * 28 Nov 1992	Terry Lee		Fixed LED's in X mode  * 09 Feb 1993	Rich Murphey		Added 'BELL' mode in X  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         5       00083  * --------------------         -----   ----------------------  *  * 15 Aug 92	Pace Willisson		Patches for X server  * 21 Aug 92	Frank Maclachlan	Fixed back-scroll system crash  * 28 Nov 92	Terry Lee		Fixed LED's in X mode  * 09 Feb 93	Rich Murphey		Added 'BELL' mode in X  * 14 Mar 93	Bruce Evans		Added keyboard timeout in pcprobe  * 					Fixed color/mono test and mono  *					kernel color.  Added check for  *					minor.   * 14 Mar 93	Chris G. Demetriou	Moved pg() to i386/cons.c, code  *					cleanup, removed ctl-alt-del.  */
 end_comment
 
 begin_decl_stmt
@@ -516,16 +516,28 @@ value|{ \ 	if (pclast) { \ 		(timo) = 10000; \ 		do \ 			uncache((char *)&pclast
 end_define
 
 begin_comment
-comment|/*  * Pass command to keyboard itself  */
+comment|/*  * Pass command to keyboard controller (8042)  */
 end_comment
 
 begin_function
-name|unsigned
-name|kbd_cmd
+specifier|static
+name|int
+name|kbc_8042cmd
 parameter_list|(
 name|val
 parameter_list|)
+name|int
+name|val
+decl_stmt|;
 block|{
+name|unsigned
+name|timeo
+decl_stmt|;
+name|timeo
+operator|=
+literal|100000
+expr_stmt|;
+comment|/*> 100 msec */
 while|while
 condition|(
 name|inb
@@ -535,11 +547,78 @@ argument_list|)
 operator|&
 name|KBS_IBF
 condition|)
-empty_stmt|;
 if|if
 condition|(
-name|val
+operator|--
+name|timeo
+operator|==
+literal|0
 condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|outb
+argument_list|(
+name|KBCMDP
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Pass command to keyboard itself  */
+end_comment
+
+begin_function
+name|int
+name|kbd_cmd
+parameter_list|(
+name|val
+parameter_list|)
+name|int
+name|val
+decl_stmt|;
+block|{
+name|unsigned
+name|timeo
+decl_stmt|;
+name|timeo
+operator|=
+literal|100000
+expr_stmt|;
+comment|/*> 100 msec */
+while|while
+condition|(
+name|inb
+argument_list|(
+name|KBSTATP
+argument_list|)
+operator|&
+name|KBS_IBF
+condition|)
+if|if
+condition|(
+operator|--
+name|timeo
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|outb
 argument_list|(
 name|KBOUTP
@@ -547,18 +626,61 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Read response from keyboard  */
+end_comment
+
+begin_function
+name|int
+name|kbd_response
+parameter_list|()
+block|{
+name|unsigned
+name|timeo
+decl_stmt|;
+name|timeo
+operator|=
+literal|500000
+expr_stmt|;
+comment|/*> 500 msec (KBR_RSTDONE requires 87) */
 while|while
 condition|(
+operator|!
+operator|(
 name|inb
 argument_list|(
 name|KBSTATP
 argument_list|)
 operator|&
-name|KBS_IBF
+name|KBS_DIB
+operator|)
 condition|)
-empty_stmt|;
+if|if
+condition|(
+operator|--
+name|timeo
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+operator|(
+name|u_char
+operator|)
 name|inb
 argument_list|(
 name|KBDATAP
@@ -589,42 +711,79 @@ end_decl_stmt
 
 begin_block
 block|{
-name|u_char
-name|c
-decl_stmt|;
 name|int
 name|again
 init|=
 literal|0
 decl_stmt|;
-comment|/* Enable interrupts and keyboard controller */
+name|int
+name|response
+decl_stmt|;
+comment|/* Enable interrupts and keyboard, etc. */
+if|if
+condition|(
 name|kbc_8042cmd
 argument_list|(
 name|K_LDCMDBYTE
 argument_list|)
-expr_stmt|;
-name|outb
+operator|!=
+literal|0
+condition|)
+name|printf
 argument_list|(
-name|KBOUTP
-argument_list|,
-name|CMDBYTE
+literal|"Timeout specifying load of keyboard command byte\n"
 argument_list|)
 expr_stmt|;
-comment|/* Start keyboard stuff RESET */
+if|if
+condition|(
+name|kbd_cmd
+argument_list|(
+name|CMDBYTE
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Timeout writing keyboard command byte\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Discard any stale keyboard activity.  The 0.1 boot code isn't 	 * very careful and sometimes leaves a KBR_RESEND. 	 */
+while|while
+condition|(
+name|inb
+argument_list|(
+name|KBSTATP
+argument_list|)
+operator|&
+name|KBS_DIB
+condition|)
+name|kbd_response
+argument_list|()
+expr_stmt|;
+comment|/* Start keyboard reset */
+if|if
+condition|(
 name|kbd_cmd
 argument_list|(
 name|KBC_RESET
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Timeout for keyboard reset command\n"
+argument_list|)
 expr_stmt|;
+comment|/* Wait for the first response to reset and handle retries */
 while|while
 condition|(
 operator|(
-name|c
+name|response
 operator|=
-name|inb
-argument_list|(
-name|KBDATAP
-argument_list|)
+name|kbd_response
+argument_list|()
 operator|)
 operator|!=
 name|KBR_ACK
@@ -632,17 +791,26 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|c
+name|response
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Timeout for keyboard reset ack byte #1\n"
+argument_list|)
+expr_stmt|;
+name|response
+operator|=
+name|KBR_RESEND
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|response
 operator|==
 name|KBR_RESEND
-operator|)
-operator|||
-operator|(
-name|c
-operator|==
-name|KBR_OVERRUN
-operator|)
 condition|)
 block|{
 if|if
@@ -650,14 +818,10 @@ condition|(
 operator|!
 name|again
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"KEYBOARD disconnected: RECONNECT \n"
-argument_list|)
-expr_stmt|;
-name|kbd_cmd
-argument_list|(
-name|KBC_RESET
+literal|"KEYBOARD disconnected: RECONNECT\n"
 argument_list|)
 expr_stmt|;
 name|again
@@ -665,24 +829,56 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|kbd_cmd
+argument_list|(
+name|KBC_RESET
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Timeout for keyboard reset command\n"
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* pick up keyboard reset return code */
+comment|/* 		 * Other responses are harmless.  They may occur for new 		 * keystrokes. 		 */
+block|}
+comment|/* Wait for the second response to reset */
 while|while
 condition|(
 operator|(
-name|c
+name|response
 operator|=
-name|inb
-argument_list|(
-name|KBDATAP
-argument_list|)
+name|kbd_response
+argument_list|()
 operator|)
 operator|!=
 name|KBR_RSTDONE
 condition|)
-empty_stmt|;
+block|{
+if|if
+condition|(
+name|response
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Timeout for keyboard reset ack byte #2\n"
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If KBR_RSTDONE never arrives, the loop will 			 * finish here unless the keyboard babbles or 			 * KBS_DIB gets stuck. 			 */
+break|break;
+block|}
+block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_block
@@ -824,6 +1020,20 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
+if|if
+condition|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|tp
 operator|=
 operator|&
@@ -2549,6 +2759,7 @@ literal|0
 condition|)
 block|{
 name|u_short
+specifier|volatile
 modifier|*
 name|cp
 init|=
@@ -2561,7 +2772,8 @@ name|MONO_BUF
 operator|)
 operator|/
 name|CHR
-decl_stmt|,
+decl_stmt|;
+name|u_short
 name|was
 decl_stmt|;
 name|unsigned
@@ -2708,7 +2920,7 @@ name|vs
 operator|.
 name|kern_fg_at
 operator|=
-name|FG_INTENSE
+name|FG_UNDERLINE
 expr_stmt|;
 name|vs
 operator|.
@@ -4409,7 +4621,7 @@ condition|(
 name|scroll
 condition|)
 do|;
-name|bcopyb
+name|bcopy
 argument_list|(
 name|Crtat
 operator|+
@@ -4494,741 +4706,725 @@ begin_comment
 comment|/*0xffe */
 end_comment
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_decl_stmt
 specifier|static
 name|char
 name|scantokey
 index|[]
+init|=
 block|{
 literal|0
-operator|,
+block|,
 literal|120
-operator|,
+block|,
 comment|/* F9 */
 literal|0
-operator|,
+block|,
 literal|116
-operator|,
+block|,
 comment|/* F5 */
 literal|114
-operator|,
+block|,
 comment|/* F3 */
 literal|112
-operator|,
+block|,
 comment|/* F1 */
 literal|113
-operator|,
+block|,
 comment|/* F2 */
 literal|123
-operator|,
+block|,
 comment|/* F12 */
 literal|0
-operator|,
+block|,
 literal|121
-operator|,
+block|,
 comment|/* F10 */
 literal|119
-operator|,
+block|,
 comment|/* F8 */
 literal|117
-operator|,
+block|,
 comment|/* F6 */
 literal|115
-operator|,
+block|,
 comment|/* F4 */
 literal|16
-operator|,
+block|,
 comment|/* TAB */
 literal|1
-operator|,
+block|,
 comment|/* ` */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|60
-operator|,
+block|,
 comment|/* ALT (left) */
 literal|44
-operator|,
+block|,
 comment|/* SHIFT (left) */
 literal|0
-operator|,
+block|,
 literal|58
-operator|,
+block|,
 comment|/* CTRL (left) */
 literal|17
-operator|,
+block|,
 comment|/* Q */
 literal|2
-operator|,
+block|,
 comment|/* 1 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|46
-operator|,
+block|,
 comment|/* Z */
 literal|32
-operator|,
+block|,
 comment|/* S */
 literal|31
-operator|,
+block|,
 comment|/* A */
 literal|18
-operator|,
+block|,
 comment|/* W */
 literal|3
-operator|,
+block|,
 comment|/* 2 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|48
-operator|,
+block|,
 comment|/* C */
 literal|47
-operator|,
+block|,
 comment|/* X */
 literal|33
-operator|,
+block|,
 comment|/* D */
 literal|19
-operator|,
+block|,
 comment|/* E */
 literal|5
-operator|,
+block|,
 comment|/* 4 */
 literal|4
-operator|,
+block|,
 comment|/* 3 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|61
-operator|,
+block|,
 comment|/* SPACE */
 literal|49
-operator|,
+block|,
 comment|/* V */
 literal|34
-operator|,
+block|,
 comment|/* F */
 literal|21
-operator|,
+block|,
 comment|/* T */
 literal|20
-operator|,
+block|,
 comment|/* R */
 literal|6
-operator|,
+block|,
 comment|/* 5 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|51
-operator|,
+block|,
 comment|/* N */
 literal|50
-operator|,
+block|,
 comment|/* B */
 literal|36
-operator|,
+block|,
 comment|/* H */
 literal|35
-operator|,
+block|,
 comment|/* G */
 literal|22
-operator|,
+block|,
 comment|/* Y */
 literal|7
-operator|,
+block|,
 comment|/* 6 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|52
-operator|,
+block|,
 comment|/* M */
 literal|37
-operator|,
+block|,
 comment|/* J */
 literal|23
-operator|,
+block|,
 comment|/* U */
 literal|8
-operator|,
+block|,
 comment|/* 7 */
 literal|9
-operator|,
+block|,
 comment|/* 8 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|53
-operator|,
+block|,
 comment|/* , */
 literal|38
-operator|,
+block|,
 comment|/* K */
 literal|24
-operator|,
+block|,
 comment|/* I */
 literal|25
-operator|,
+block|,
 comment|/* O */
 literal|11
-operator|,
+block|,
 comment|/* 0 */
 literal|10
-operator|,
+block|,
 comment|/* 9 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|54
-operator|,
+block|,
 comment|/* . */
 literal|55
-operator|,
+block|,
 comment|/* / */
 literal|39
-operator|,
+block|,
 comment|/* L */
 literal|40
-operator|,
+block|,
 comment|/* ; */
 literal|26
-operator|,
+block|,
 comment|/* P */
 literal|12
-operator|,
+block|,
 comment|/* - */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|41
-operator|,
+block|,
 comment|/* " */
 literal|0
-operator|,
+block|,
 literal|27
-operator|,
+block|,
 comment|/* [ */
 literal|13
-operator|,
+block|,
 comment|/* + */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|57
-operator|,
+block|,
 comment|/* SHIFT (right) */
 literal|43
-operator|,
+block|,
 comment|/* ENTER */
 literal|28
-operator|,
+block|,
 comment|/* ] */
 literal|0
-operator|,
+block|,
 literal|29
-operator|,
+block|,
 comment|/* \ */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|45
-operator|,
-operator|?
-operator|*
-name|na
-operator|*
-operator|/
+block|,
+comment|/* na*/
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|15
-operator|,
+block|,
 comment|/* backspace */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 comment|/* keypad */
 literal|93
-operator|,
+block|,
 comment|/* 1 */
 literal|0
-operator|,
+block|,
 literal|92
-operator|,
+block|,
 comment|/* 4 */
 literal|91
-operator|,
+block|,
 comment|/* 7 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|99
-operator|,
+block|,
 comment|/* 0 */
 literal|104
-operator|,
+block|,
 comment|/* . */
 literal|98
-operator|,
+block|,
 comment|/* 2 */
 literal|97
-operator|,
+block|,
 comment|/* 5 */
 literal|102
-operator|,
+block|,
 comment|/* 6 */
 literal|96
-operator|,
+block|,
 comment|/* 8 */
 literal|110
-operator|,
+block|,
 comment|/* ESC */
 literal|90
-operator|,
+block|,
 comment|/* Num Lock */
 literal|122
-operator|,
+block|,
 comment|/* F11 */
 literal|106
-operator|,
+block|,
 comment|/* + */
 literal|103
-operator|,
+block|,
 comment|/* 3 */
 literal|105
-operator|,
+block|,
 comment|/* - */
 literal|100
-operator|,
+block|,
 comment|/* * */
 literal|101
-operator|,
+block|,
 comment|/* 9 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|118
-operator|,
+block|,
 comment|/* F7 */
 block|}
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_decl_stmt
 specifier|static
 name|char
 name|extscantokey
 index|[]
+init|=
 block|{
 literal|0
-operator|,
+block|,
 literal|120
-operator|,
+block|,
 comment|/* F9 */
 literal|0
-operator|,
+block|,
 literal|116
-operator|,
+block|,
 comment|/* F5 */
 literal|114
-operator|,
+block|,
 comment|/* F3 */
 literal|112
-operator|,
+block|,
 comment|/* F1 */
 literal|113
-operator|,
+block|,
 comment|/* F2 */
 literal|123
-operator|,
+block|,
 comment|/* F12 */
 literal|0
-operator|,
+block|,
 literal|121
-operator|,
+block|,
 comment|/* F10 */
 literal|119
-operator|,
+block|,
 comment|/* F8 */
 literal|117
-operator|,
+block|,
 comment|/* F6 */
 literal|115
-operator|,
+block|,
 comment|/* F4 */
 literal|16
-operator|,
+block|,
 comment|/* TAB */
 literal|1
-operator|,
+block|,
 comment|/* ` */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|62
-operator|,
+block|,
 comment|/* ALT (right) */
 literal|124
-operator|,
+block|,
 comment|/* Print Screen */
 literal|0
-operator|,
+block|,
 literal|64
-operator|,
+block|,
 comment|/* CTRL (right) */
 literal|17
-operator|,
+block|,
 comment|/* Q */
 literal|2
-operator|,
+block|,
 comment|/* 1 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|46
-operator|,
+block|,
 comment|/* Z */
 literal|32
-operator|,
+block|,
 comment|/* S */
 literal|31
-operator|,
+block|,
 comment|/* A */
 literal|18
-operator|,
+block|,
 comment|/* W */
 literal|3
-operator|,
+block|,
 comment|/* 2 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|48
-operator|,
+block|,
 comment|/* C */
 literal|47
-operator|,
+block|,
 comment|/* X */
 literal|33
-operator|,
+block|,
 comment|/* D */
 literal|19
-operator|,
+block|,
 comment|/* E */
 literal|5
-operator|,
+block|,
 comment|/* 4 */
 literal|4
-operator|,
+block|,
 comment|/* 3 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|61
-operator|,
+block|,
 comment|/* SPACE */
 literal|49
-operator|,
+block|,
 comment|/* V */
 literal|34
-operator|,
+block|,
 comment|/* F */
 literal|21
-operator|,
+block|,
 comment|/* T */
 literal|20
-operator|,
+block|,
 comment|/* R */
 literal|6
-operator|,
+block|,
 comment|/* 5 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|51
-operator|,
+block|,
 comment|/* N */
 literal|50
-operator|,
+block|,
 comment|/* B */
 literal|36
-operator|,
+block|,
 comment|/* H */
 literal|35
-operator|,
+block|,
 comment|/* G */
 literal|22
-operator|,
+block|,
 comment|/* Y */
 literal|7
-operator|,
+block|,
 comment|/* 6 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|52
-operator|,
+block|,
 comment|/* M */
 literal|37
-operator|,
+block|,
 comment|/* J */
 literal|23
-operator|,
+block|,
 comment|/* U */
 literal|8
-operator|,
+block|,
 comment|/* 7 */
 literal|9
-operator|,
+block|,
 comment|/* 8 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|53
-operator|,
+block|,
 comment|/* , */
 literal|38
-operator|,
+block|,
 comment|/* K */
 literal|24
-operator|,
+block|,
 comment|/* I */
 literal|25
-operator|,
+block|,
 comment|/* O */
 literal|11
-operator|,
+block|,
 comment|/* 0 */
 literal|10
-operator|,
+block|,
 comment|/* 9 */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|54
-operator|,
+block|,
 comment|/* . */
 literal|95
-operator|,
+block|,
 comment|/* / */
 literal|39
-operator|,
+block|,
 comment|/* L */
 literal|40
-operator|,
+block|,
 comment|/* ; */
 literal|26
-operator|,
+block|,
 comment|/* P */
 literal|12
-operator|,
+block|,
 comment|/* - */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|41
-operator|,
+block|,
 comment|/* " */
 literal|0
-operator|,
+block|,
 literal|27
-operator|,
+block|,
 comment|/* [ */
 literal|13
-operator|,
+block|,
 comment|/* + */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|57
-operator|,
+block|,
 comment|/* SHIFT (right) */
 literal|108
-operator|,
+block|,
 comment|/* ENTER */
 literal|28
-operator|,
+block|,
 comment|/* ] */
 literal|0
-operator|,
+block|,
 literal|29
-operator|,
+block|,
 comment|/* \ */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|45
-operator|,
-operator|?
-operator|*
-name|na
-operator|*
-operator|/
+block|,
+comment|/* na*/
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|15
-operator|,
+block|,
 comment|/* backspace */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 comment|/* keypad */
 literal|81
-operator|,
+block|,
 comment|/* end */
 literal|0
-operator|,
+block|,
 literal|79
-operator|,
+block|,
 comment|/* left arrow */
 literal|80
-operator|,
+block|,
 comment|/* home */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|75
-operator|,
+block|,
 comment|/* ins */
 literal|76
-operator|,
+block|,
 comment|/* del */
 literal|84
-operator|,
+block|,
 comment|/* down arrow */
 literal|97
-operator|,
+block|,
 comment|/* 5 */
 literal|89
-operator|,
+block|,
 comment|/* right arrow */
 literal|83
-operator|,
+block|,
 comment|/* up arrow */
 literal|110
-operator|,
+block|,
 comment|/* ESC */
 literal|90
-operator|,
+block|,
 comment|/* Num Lock */
 literal|122
-operator|,
+block|,
 comment|/* F11 */
 literal|106
-operator|,
+block|,
 comment|/* + */
 literal|86
-operator|,
+block|,
 comment|/* page down */
 literal|105
-operator|,
+block|,
 comment|/* - */
 literal|124
-operator|,
+block|,
 comment|/* print screen */
 literal|85
-operator|,
+block|,
 comment|/* page up */
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|118
-operator|,
+block|,
 comment|/* F7 */
 block|}
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_define
 define|#
@@ -6551,28 +6747,59 @@ end_macro
 
 begin_block
 block|{
+name|int
+name|response
+decl_stmt|;
+if|if
+condition|(
 name|kbd_cmd
 argument_list|(
 name|KBC_STSIND
 argument_list|)
-expr_stmt|;
-comment|/* LED Command */
-name|outb
+operator|!=
+literal|0
+condition|)
+name|printf
 argument_list|(
-name|KBOUTP
-argument_list|,
-name|scroll
-operator||
-literal|2
-operator|*
-name|num
-operator||
-literal|4
-operator|*
-name|caps
+literal|"Timeout for keyboard LED command\n"
 argument_list|)
 expr_stmt|;
-comment|/*kbd_cmd(scroll | 2*num | 4*caps);*/
+elseif|else
+if|if
+condition|(
+name|kbd_cmd
+argument_list|(
+name|scroll
+operator||
+operator|(
+name|num
+operator|<<
+literal|1
+operator|)
+operator||
+operator|(
+name|caps
+operator|<<
+literal|2
+operator|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Timeout for keyboard LED data\n"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|else if ((response = kbd_response())< 0) 		printf("Timeout for keyboard LED ack\n"); 	else if (response != KBR_ACK) 		printf("Unexpected keyboard LED ack %d\n", response);
+else|#
+directive|else
+comment|/* 	 * Skip waiting for and checking the response.  The waiting 	 * would be too long (about 3 msec) and the checking might eat 	 * fresh keystrokes.  The waiting should be done using timeout() 	 * and the checking should be done in the interrupt handler. 	 */
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -6788,22 +7015,6 @@ endif|#
 directive|endif
 comment|/* !XSERVER*/
 block|}
-comment|/* 	 *   Check for cntl-alt-del 	 */
-if|if
-condition|(
-operator|(
-name|dt
-operator|==
-literal|83
-operator|)
-operator|&&
-name|ctrl_down
-operator|&&
-name|alt_down
-condition|)
-name|cpu_reset
-argument_list|()
-expr_stmt|;
 include|#
 directive|include
 file|"ddb.h"
@@ -6825,9 +7036,16 @@ name|ctrl_down
 operator|&&
 name|alt_down
 condition|)
+block|{
 name|Debugger
 argument_list|()
 expr_stmt|;
+name|dt
+operator||=
+literal|0x80
+expr_stmt|;
+comment|/* discard esc (ddb discarded ctrl-alt) */
+block|}
 endif|#
 directive|endif
 comment|/* 	 *   Check for make/break 	 */
@@ -7279,81 +7497,6 @@ directive|endif
 comment|/* !XSERVER*/
 block|}
 end_function
-
-begin_macro
-name|pg
-argument_list|(
-argument|p
-argument_list|,
-argument|q
-argument_list|,
-argument|r
-argument_list|,
-argument|s
-argument_list|,
-argument|t
-argument_list|,
-argument|u
-argument_list|,
-argument|v
-argument_list|,
-argument|w
-argument_list|,
-argument|x
-argument_list|,
-argument|y
-argument_list|,
-argument|z
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|printf
-argument_list|(
-name|p
-argument_list|,
-name|q
-argument_list|,
-name|r
-argument_list|,
-name|s
-argument_list|,
-name|t
-argument_list|,
-name|u
-argument_list|,
-name|v
-argument_list|,
-name|w
-argument_list|,
-name|x
-argument_list|,
-name|y
-argument_list|,
-name|z
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|getchar
-argument_list|()
-operator|)
-return|;
-block|}
-end_block
 
 begin_comment
 comment|/* special characters */
