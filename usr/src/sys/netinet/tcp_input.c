@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.90	83/03/27	*/
+comment|/*	tcp_input.c	1.91	83/03/27	*/
 end_comment
 
 begin_include
@@ -2912,6 +2912,7 @@ if|if
 condition|(
 name|om
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -2920,6 +2921,11 @@ argument_list|(
 name|om
 argument_list|)
 expr_stmt|;
+name|om
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * Generate a RST, dropping incoming segment. 	 * Make ACK acceptable to originator of segment. 	 */
 if|if
 condition|(
