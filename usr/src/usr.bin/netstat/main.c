@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.10 84/03/12"
+literal|"@(#)main.c	4.11 (Berkeley) 84/06/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,10 +195,38 @@ block|{
 literal|"_rtstat"
 block|}
 block|,
+define|#
+directive|define
+name|N_NFILE
+value|15
+block|{
+literal|"_nfile"
+block|}
+block|,
+define|#
+directive|define
+name|N_FILE
+value|16
+block|{
+literal|"_file"
+block|}
+block|,
+define|#
+directive|define
+name|N_UNIXSW
+value|17
+block|{
+literal|"_unixsw"
+block|}
+block|,
 literal|""
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* internet protocols */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -438,6 +466,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|uflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|interval
 decl_stmt|;
 end_decl_stmt
@@ -447,7 +481,7 @@ name|char
 name|usage
 index|[]
 init|=
-literal|"[ -Aaihmnrst ] [ interval ] [ system ] [ core ]"
+literal|"[ -Aaihmnrstu ] [ interval ] [ system ] [ core ]"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,6 +628,13 @@ case|case
 literal|'t'
 case|:
 name|tflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|uflag
 operator|++
 expr_stmt|;
 break|break;
@@ -869,6 +910,41 @@ argument_list|(
 name|nl
 index|[
 name|N_MBSTAT
+index|]
+operator|.
+name|n_value
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|uflag
+condition|)
+block|{
+name|unixpr
+argument_list|(
+name|nl
+index|[
+name|N_NFILE
+index|]
+operator|.
+name|n_value
+argument_list|,
+name|nl
+index|[
+name|N_FILE
+index|]
+operator|.
+name|n_value
+argument_list|,
+name|nl
+index|[
+name|N_UNIXSW
 index|]
 operator|.
 name|n_value
