@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|TTYDEF_LFLAG
-value|(ECHO | ICANON | ISIG | IEXTEN | ECHOE|ECHOKE|ECHOCTL)
+value|(ICANON | ISIG | IEXTEN)
 end_define
 
 begin_define
