@@ -381,16 +381,11 @@ name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KTRACE
 name|struct
 name|vnode
 modifier|*
 name|vtmp
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|exitlist
 modifier|*
@@ -968,6 +963,32 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Release reference to text vnode 	 */
+if|if
+condition|(
+operator|(
+name|vtmp
+operator|=
+name|p
+operator|->
+name|p_textvp
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|p
+operator|->
+name|p_textvp
+operator|=
+name|NULL
+expr_stmt|;
+name|vrele
+argument_list|(
+name|vtmp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Remove proc from allproc queue and pidhash chain. 	 * Place onto zombproc.  Unlink from parent's child list. 	 */
 name|sx_xlock
 argument_list|(
@@ -2103,20 +2124,6 @@ operator|-
 literal|1
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 			 * Release reference to text vnode 			 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_textvp
-condition|)
-name|vrele
-argument_list|(
-name|p
-operator|->
-name|p_textvp
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Finally finished with old proc entry. 			 * Unlink it from its process group and free it. 			 */
