@@ -253,6 +253,11 @@ name|defined
 argument_list|(
 name|__SVR4
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ELF__
+argument_list|)
 end_if
 
 begin_define
@@ -1321,9 +1326,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|strcmp
+argument_list|(
+name|member
+argument_list|,
+name|RANLIBMAG
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 name|member
 operator|=
