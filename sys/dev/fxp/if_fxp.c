@@ -7686,6 +7686,12 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
+comment|/* 			 * Drop locks before calling if_input() since it 			 * may re-enter fxp_start() in the netisr case. 			 * This would result in a lock reversal.  Better 			 * performance might be obtained by chaining all 			 * packets received, dropping the lock, and then 			 * calling if_input() on each one. 			 */
+name|FXP_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -7696,6 +7702,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|FXP_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
