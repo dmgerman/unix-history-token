@@ -6812,9 +6812,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|schedsofttty
-argument_list|()
+if|#
+directive|if
+literal|0
+block|schedsofttty();
+else|#
+directive|else
+name|panic
+argument_list|(
+literal|"Fix the i386/isa/cy.c files call to schedsofttty()"
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
