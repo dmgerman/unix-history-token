@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.35 1998/03/09 07:00:38 jb Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.36 1998/04/04 11:01:52 jb Exp $  *  */
 end_comment
 
 begin_comment
@@ -101,40 +101,37 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_THREAD_SAFE
-argument_list|)
-end_if
+begin_comment
+comment|/*      * Make malloc/free/realloc thread-safe in libc for use with      * kernel threads.      */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|"libc_private.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pthread_private.h"
+file|"spinlock.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|THREAD_STATUS
-value|int thread_lock_status;
-end_define
+begin_decl_stmt
+specifier|static
+name|long
+name|thread_lock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|THREAD_LOCK
 parameter_list|()
-value|_thread_kern_sig_block(&thread_lock_status);
+value|if (__isthreaded) _spinlock(&thread_lock);
 end_define
 
 begin_define
@@ -142,33 +139,8 @@ define|#
 directive|define
 name|THREAD_UNLOCK
 parameter_list|()
-value|_thread_kern_sig_unblock(thread_lock_status);
+value|if (__isthreaded) _atomic_unlock(&thread_lock);
 end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|pthread_mutex
-name|_malloc_lock
-init|=
-name|PTHREAD_MUTEX_STATIC_INITIALIZER
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|pthread_mutex_t
-name|malloc_lock
-init|=
-operator|&
-name|_malloc_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -617,23 +589,6 @@ name|foo
 parameter_list|)
 value|(((u_long)(foo)>> malloc_pageshift)-malloc_origo)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|THREAD_STATUS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|THREAD_STATUS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -4416,11 +4371,10 @@ name|void
 modifier|*
 name|r
 decl_stmt|;
-name|THREAD_STATUS
 name|malloc_func
-init|=
+operator|=
 literal|" in malloc():"
-decl_stmt|;
+expr_stmt|;
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
@@ -4515,11 +4469,10 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-name|THREAD_STATUS
 name|malloc_func
-init|=
+operator|=
 literal|" in free():"
-decl_stmt|;
+expr_stmt|;
 name|THREAD_LOCK
 argument_list|()
 expr_stmt|;
@@ -4576,7 +4529,6 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|THREAD_STATUS
 specifier|register
 name|void
 modifier|*
