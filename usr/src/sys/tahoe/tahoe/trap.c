@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	1.3	86/01/07	*/
+comment|/*	trap.c	1.4	86/01/09	*/
 end_comment
 
 begin_include
@@ -629,9 +629,7 @@ literal|"pid %d: ksp not valid\n"
 argument_list|,
 name|u
 operator|.
-name|u
-operator|.
-name|_procp
+name|u_procp
 operator|->
 name|p_pid
 argument_list|)
