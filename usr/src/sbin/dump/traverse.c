@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.13 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,6 +281,9 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|long
+name|filesize
+decl_stmt|;
 if|if
 condition|(
 name|BIT
@@ -298,6 +301,12 @@ expr_stmt|;
 name|dadded
 operator|=
 literal|0
+expr_stmt|;
+name|filesize
+operator|=
+name|ip
+operator|->
+name|di_size
 expr_stmt|;
 for|for
 control|(
@@ -341,7 +350,15 @@ name|ip
 argument_list|,
 name|i
 argument_list|)
+argument_list|,
+name|filesize
 argument_list|)
+expr_stmt|;
+name|filesize
+operator|-=
+name|sblock
+operator|->
+name|fs_bsize
 expr_stmt|;
 block|}
 for|for
@@ -379,6 +396,9 @@ name|i
 index|]
 argument_list|,
 name|i
+argument_list|,
+operator|&
+name|filesize
 argument_list|)
 expr_stmt|;
 block|}
@@ -447,6 +467,8 @@ argument_list|(
 argument|d
 argument_list|,
 argument|n
+argument_list|,
+argument|filesize
 argument_list|)
 end_macro
 
@@ -459,6 +481,9 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|n
+decl_stmt|,
+modifier|*
+name|filesize
 decl_stmt|;
 end_decl_stmt
 
@@ -537,7 +562,17 @@ argument_list|,
 name|sblock
 operator|->
 name|fs_bsize
+argument_list|,
+operator|*
+name|filesize
 argument_list|)
+expr_stmt|;
+operator|*
+name|filesize
+operator|-=
+name|sblock
+operator|->
+name|fs_bsize
 expr_stmt|;
 block|}
 block|}
@@ -581,6 +616,8 @@ argument_list|(
 name|d
 argument_list|,
 name|n
+argument_list|,
+name|filesize
 argument_list|)
 expr_stmt|;
 block|}
@@ -1441,6 +1478,8 @@ argument_list|(
 argument|d
 argument_list|,
 argument|size
+argument_list|,
+argument|filesize
 argument_list|)
 end_macro
 
@@ -1453,6 +1492,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|size
+decl_stmt|,
+name|filesize
 decl_stmt|;
 end_decl_stmt
 
@@ -1492,6 +1533,16 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|filesize
+operator|>
+name|size
+condition|)
+name|filesize
+operator|=
+name|size
+expr_stmt|;
 for|for
 control|(
 name|loc
@@ -1500,7 +1551,7 @@ literal|0
 init|;
 name|loc
 operator|<
-name|size
+name|filesize
 condition|;
 control|)
 block|{
@@ -1525,7 +1576,16 @@ name|d_reclen
 operator|==
 literal|0
 condition|)
+block|{
+name|msg
+argument_list|(
+literal|"corrupted directory, inumber %d\n"
+argument_list|,
+name|ino
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|loc
 operator|+=
 name|dp
