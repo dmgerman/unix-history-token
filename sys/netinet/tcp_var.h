@@ -20,6 +20,99 @@ comment|/*  * Kernel variables for tcp.  */
 end_comment
 
 begin_comment
+comment|/* TCP segment queue entry */
+end_comment
+
+begin_struct
+struct|struct
+name|tseg_qent
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|tseg_qent
+argument_list|)
+name|tqe_q
+expr_stmt|;
+name|int
+name|tqe_len
+decl_stmt|;
+comment|/* TCP segment data length */
+name|struct
+name|tcphdr
+modifier|*
+name|tqe_th
+decl_stmt|;
+comment|/* a pointer to tcp header */
+name|struct
+name|mbuf
+modifier|*
+name|tqe_m
+decl_stmt|;
+comment|/* mbuf contains packet */
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|tsegqe_head
+argument_list|,
+name|tseg_qent
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_DECLARE
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_TSEGQ
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|tcptemp
+block|{
+name|u_char
+name|tt_ipgen
+index|[
+literal|40
+index|]
+decl_stmt|;
+comment|/* the size must be of max ip header, now IPv6 */
+name|struct
+name|tcphdr
+name|tt_t
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|tcp6cb
+value|tcpcb
+end_define
+
+begin_comment
+comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_comment
 comment|/*  * Tcp control block, one per tcp; fields:  * Organized for 16 byte cacheline efficiency.  */
 end_comment
 
@@ -28,8 +121,7 @@ struct|struct
 name|tcpcb
 block|{
 name|struct
-name|mbuf
-modifier|*
+name|tsegqe_head
 name|t_segq
 decl_stmt|;
 name|int
@@ -37,7 +129,7 @@ name|t_dupacks
 decl_stmt|;
 comment|/* consecutive dup acks recd */
 name|struct
-name|tcpiphdr
+name|tcptemp
 modifier|*
 name|t_template
 decl_stmt|;
@@ -1371,8 +1463,11 @@ expr|struct
 name|tcpcb
 operator|*
 operator|,
+name|void
+operator|*
+operator|,
 expr|struct
-name|tcpiphdr
+name|tcphdr
 operator|*
 operator|,
 expr|struct
@@ -1433,7 +1528,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|tcpiphdr
+name|tcptemp
 modifier|*
 name|tcp_template
 name|__P
@@ -1479,8 +1574,11 @@ expr|struct
 name|tcpcb
 operator|*
 operator|,
+name|void
+operator|*
+operator|,
 expr|struct
-name|tcpiphdr
+name|tcphdr
 operator|*
 operator|,
 name|int

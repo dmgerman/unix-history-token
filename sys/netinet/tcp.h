@@ -33,6 +33,28 @@ begin_comment
 comment|/* connection count per rfc1644 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|tcp6_seq
+value|tcp_seq
+end_define
+
+begin_comment
+comment|/* for KAME src sync over BSD*'s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tcp6hdr
+value|tcphdr
+end_define
+
+begin_comment
+comment|/* for KAME src sync over BSD*'s */
+end_comment
+
 begin_comment
 comment|/*  * TCP header.  * Per RFC 793, September, 1981.  */
 end_comment

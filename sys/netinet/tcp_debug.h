@@ -31,9 +31,16 @@ decl_stmt|;
 name|caddr_t
 name|td_tcb
 decl_stmt|;
+name|u_char
+name|td_ipgen
+index|[
+literal|40
+index|]
+decl_stmt|;
+comment|/* the size must be of max ip header, now IPv6 */
 name|struct
-name|tcpiphdr
-name|td_ti
+name|tcphdr
+name|td_th
 decl_stmt|;
 name|short
 name|td_req

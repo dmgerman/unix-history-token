@@ -5760,7 +5760,11 @@ name|RPC_REPLYSIZ
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|max_hdr
+operator|+
 name|siz
+operator|)
 operator|>=
 name|MINCLSIZE
 condition|)
