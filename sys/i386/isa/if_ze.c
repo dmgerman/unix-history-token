@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.13 1995/03/28 07:55:35 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.14 1995/05/02 04:03:07 phk Exp $  */
 end_comment
 
 begin_include
@@ -2495,7 +2495,9 @@ condition|)
 empty_stmt|;
 name|pcic_power_off
 argument_list|(
-literal|0
+name|sc
+operator|->
+name|slot
 argument_list|)
 expr_stmt|;
 block|}
