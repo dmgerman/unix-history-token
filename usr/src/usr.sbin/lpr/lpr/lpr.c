@@ -23,6 +23,7 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
 name|char
 name|copyright
 index|[]
@@ -52,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	5.13 (Berkeley) %G%"
+literal|"@(#)lpr.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
