@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.h	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.h,v 1.2 1994/08/02 07:55:31 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.h	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.h,v 1.3 1994/11/06 05:07:52 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -58,15 +58,26 @@ comment|/* see below */
 name|u_short
 name|paging_in_progress
 decl_stmt|;
-comment|/* Paging (in or out) so 						    don't collapse or destroy */
-name|simple_lock_data_t
-name|Lock
-decl_stmt|;
-comment|/* Synchronization */
+comment|/* Paging (in or out) so don't collapse or destroy */
 name|int
 name|ref_count
 decl_stmt|;
 comment|/* How many refs?? */
+struct|struct
+block|{
+name|int
+name|recursion
+decl_stmt|;
+comment|/* object locking */
+name|struct
+name|proc
+modifier|*
+name|proc
+decl_stmt|;
+comment|/* process owned */
+block|}
+name|lock
+struct|;
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -80,7 +91,7 @@ name|vm_object
 modifier|*
 name|copy
 decl_stmt|;
-comment|/* Object that holds copies of 						   my changed pages */
+comment|/* Object that holds copies of my changed pages */
 name|vm_pager_t
 name|pager
 decl_stmt|;
@@ -161,6 +172,39 @@ end_define
 
 begin_comment
 comment|/* used to mark active objects */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_DEAD
+value|0x0008
+end_define
+
+begin_comment
+comment|/* used to mark dead objects during rundown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_ILOCKED
+value|0x0010
+end_define
+
+begin_comment
+comment|/* lock from modification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJ_ILOCKWT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* wait for lock from modification */
 end_comment
 
 begin_expr_stmt
@@ -323,6 +367,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|vm_object_sleep
+parameter_list|(
+name|event
+parameter_list|,
+name|object
+parameter_list|,
+name|interruptible
+parameter_list|)
+define|\
+value|thread_sleep((event),&(object)->Lock, (interruptible))
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
 name|vm_object_lock_init
 parameter_list|(
 name|object
@@ -360,20 +425,153 @@ parameter_list|)
 value|simple_lock_try(&(object)->Lock)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
-name|vm_object_sleep
+name|vm_object_lock_init
 parameter_list|(
-name|event
-parameter_list|,
 name|object
-parameter_list|,
-name|interruptible
 parameter_list|)
-define|\
-value|thread_sleep((event),&(object)->Lock, (interruptible))
+value|(object->flags&= ~OBJ_ILOCKED, object->lock.recursion = 0, object->lock.proc = 0)
 end_define
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_object_lock
+parameter_list|(
+name|vm_object_t
+name|obj
+parameter_list|)
+block|{
+if|if
+condition|(
+name|obj
+operator|->
+name|flags
+operator|&
+name|OBJ_ILOCKED
+condition|)
+block|{
+operator|++
+name|obj
+operator|->
+name|lock
+operator|.
+name|recursion
+expr_stmt|;
+return|return;
+block|}
+name|obj
+operator|->
+name|flags
+operator||=
+name|OBJ_ILOCKED
+expr_stmt|;
+name|obj
+operator|->
+name|lock
+operator|.
+name|recursion
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|vm_object_unlock
+parameter_list|(
+name|vm_object_t
+name|obj
+parameter_list|)
+block|{
+operator|--
+name|obj
+operator|->
+name|lock
+operator|.
+name|recursion
+expr_stmt|;
+if|if
+condition|(
+name|obj
+operator|->
+name|lock
+operator|.
+name|recursion
+operator|!=
+literal|0
+condition|)
+return|return;
+name|obj
+operator|->
+name|flags
+operator|&=
+operator|~
+name|OBJ_ILOCKED
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|vm_object_lock_try
+parameter_list|(
+name|vm_object_t
+name|obj
+parameter_list|)
+block|{
+if|if
+condition|(
+name|obj
+operator|->
+name|flags
+operator|&
+name|OBJ_ILOCKED
+condition|)
+block|{
+operator|++
+name|obj
+operator|->
+name|lock
+operator|.
+name|recursion
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+name|obj
+operator|->
+name|flags
+operator||=
+name|OBJ_ILOCKED
+expr_stmt|;
+name|obj
+operator|->
+name|lock
+operator|.
+name|recursion
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
 
 begin_ifdef
 ifdef|#

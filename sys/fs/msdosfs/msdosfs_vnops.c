@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.10 1994/12/12 12:35:50 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.11 1994/12/27 12:37:36 bde Exp $ */
 end_comment
 
 begin_comment
@@ -3016,15 +3016,6 @@ argument_list|)
 expr_stmt|;
 comment|/* why? */
 block|}
-operator|(
-name|void
-operator|)
-name|vnode_pager_uncache
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-comment|/* why not? */
 comment|/* 		 * Should these vnode_pager_* functions be done on dir 		 * files? 		 */
 comment|/* 		 * Copy the data from user space into the buf header. 		 */
 name|error
@@ -3069,12 +3060,6 @@ operator|->
 name|pm_bpcluster
 condition|)
 block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_AGE
-expr_stmt|;
 name|bawrite
 argument_list|(
 name|bp

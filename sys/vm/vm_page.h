@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	8.2 (Berkeley) 12/13/93  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_page.h,v 1.9 1994/10/21 01:19:28 wollman Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.h	8.2 (Berkeley) 12/13/93  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_page.h,v 1.10 1994/11/14 08:19:08 bde Exp $  */
 end_comment
 
 begin_comment
@@ -43,29 +43,33 @@ argument|vm_page
 argument_list|)
 name|pageq
 expr_stmt|;
-comment|/* queue info for FIFO 						 * queue or free list (P) */
+comment|/* queue info for FIFO queue or free list (P) */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
 argument_list|)
 name|hashq
 expr_stmt|;
-comment|/* hash table links (O)*/
+comment|/* hash table links (O) */
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_page
 argument_list|)
 name|listq
 expr_stmt|;
-comment|/* pages in same object (O)*/
+comment|/* pages in same object (O) */
 name|vm_object_t
 name|object
 decl_stmt|;
-comment|/* which object am I in (O,P)*/
+comment|/* which object am I in (O,P) */
 name|vm_offset_t
 name|offset
 decl_stmt|;
 comment|/* offset into object (O,P) */
+name|vm_offset_t
+name|phys_addr
+decl_stmt|;
+comment|/* physical address of page */
 name|u_short
 name|wire_count
 decl_stmt|;
@@ -83,13 +87,21 @@ name|act_count
 decl_stmt|;
 comment|/* page usage count */
 name|u_short
+name|bmapped
+decl_stmt|;
+comment|/* number of buffers mapped */
+name|u_short
 name|busy
 decl_stmt|;
 comment|/* page busy count */
-name|vm_offset_t
-name|phys_addr
+name|u_short
+name|valid
 decl_stmt|;
-comment|/* physical address of page */
+comment|/* map of valid DEV_BSIZE chunks */
+name|u_short
+name|dirty
+decl_stmt|;
+comment|/* map of dirty DEV_BSIZE chunks */
 block|}
 struct|;
 end_struct
@@ -128,7 +140,7 @@ value|0x0004
 end_define
 
 begin_comment
-comment|/* page is being cleaned now (P)*/
+comment|/* page is being cleaned now (P) */
 end_comment
 
 begin_define
@@ -255,12 +267,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_PAGEROWNED
+name|PG_CACHE
 value|0x4000
 end_define
 
 begin_comment
-comment|/* DEBUG: async paging op in progress */
+comment|/* On VMIO cache */
 end_comment
 
 begin_define
@@ -324,7 +336,7 @@ name|KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  *	Each pageable resident page falls into one of three lists:  *  *	free	  *		Available for allocation now.  *	inactive  *		Not referenced in any map, but still has an  *		object/offset-page mapping, and may be dirty.  *		This is the list of pages that should be  *		paged out next.  *	active  *		A list of pages which have been placed in  *		at least one physical map.  This list is  *		ordered, in LRU-like fashion.  */
+comment|/*  *	Each pageable resident page falls into one of three lists:  *  *	free  *		Available for allocation now.  *	inactive  *		Not referenced in any map, but still has an  *		object/offset-page mapping, and may be dirty.  *		This is the list of pages that should be  *		paged out next.  *	active  *		A list of pages which have been placed in  *		at least one physical map.  This list is  *		ordered, in LRU-like fashion.  */
 end_comment
 
 begin_decl_stmt
@@ -361,6 +373,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* inactive memory queue */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pglist
+name|vm_page_queue_cache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cache memory queue */
 end_comment
 
 begin_decl_stmt
@@ -470,16 +494,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lock on active and inactive 						   page queues */
+comment|/* lock on active and inactive page queues */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-comment|/* lock on free page queue */
 name|simple_lock_data_t
 name|vm_page_queue_free_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* lock on free page queue */
+end_comment
 
 begin_comment
 comment|/*  *	Functions implemented as macros  */
@@ -544,8 +571,48 @@ name|object
 parameter_list|,
 name|offset
 parameter_list|)
-value|{ \ 	(mem)->flags = PG_BUSY | PG_CLEAN | PG_FAKE; \ 	vm_page_insert((mem), (object), (offset)); \ 	(mem)->wire_count = 0; \ 	(mem)->hold_count = 0; \ 	(mem)->act_count = 0; \ }
+value|{ \ 	(mem)->flags = PG_BUSY | PG_CLEAN | PG_FAKE; \ 	vm_page_insert((mem), (object), (offset)); \ 	(mem)->wire_count = 0; \ 	(mem)->hold_count = 0; \ 	(mem)->act_count = 0; \ 	(mem)->busy = 0; \ 	(mem)->valid = 0; \ 	(mem)->dirty = 0; \ 	(mem)->bmapped = 0; \ }
 end_define
+
+begin_if
+if|#
+directive|if
+name|PAGE_SIZE
+operator|==
+literal|4096
+end_if
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_BITS_ALL
+value|0xff
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|PAGE_SIZE
+operator|==
+literal|8192
+end_if
+
+begin_define
+define|#
+directive|define
+name|VM_PAGE_BITS_ALL
+value|0xffff
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void
@@ -568,6 +635,8 @@ operator|(
 name|vm_object_t
 operator|,
 name|vm_offset_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -712,6 +781,114 @@ end_decl_stmt
 begin_decl_stmt
 name|boolean_t
 name|vm_page_zero_fill
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_set_dirty
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_set_clean
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vm_page_is_clean
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_set_valid
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_set_invalid
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vm_page_is_valid
+name|__P
+argument_list|(
+operator|(
+name|vm_page_t
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_test_dirty
 name|__P
 argument_list|(
 operator|(

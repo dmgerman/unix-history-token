@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_kern.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_kern.c,v 1.6 1994/08/07 14:53:26 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_kern.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_kern.c,v 1.7 1994/08/18 22:36:02 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -100,6 +100,18 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_map_t
 name|phys_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_map_t
+name|exec_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_map_t
+name|u_map
 decl_stmt|;
 end_decl_stmt
 
@@ -230,8 +242,8 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Use the kernel object for wired-down kernel pages. 	 *	Assume that no region of the kernel object is 	 *	referenced more than once. 	 */
-comment|/* 	 * Locate sufficient space in the map.  This will give us the 	 * final virtual address for the new memory, and thus will tell 	 * us the offset within the kernel map. 	 */
+comment|/* 	 * Use the kernel object for wired-down kernel pages. Assume that no 	 * region of the kernel object is referenced more than once. 	 */
+comment|/* 	 * Locate sufficient space in the map.  This will give us the final 	 * virtual address for the new memory, and thus will tell us the 	 * offset within the kernel map. 	 */
 name|vm_map_lock
 argument_list|(
 name|map
@@ -294,7 +306,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Guarantee that there are pages already in this object 	 *	before calling vm_map_pageable.  This is to prevent the 	 *	following scenario: 	 * 	 *		1) Threads have swapped out, so that there is a 	 *		   pager for the kernel_object. 	 *		2) The kmsg zone is empty, and so we are kmem_allocing 	 *		   a new page for it. 	 *		3) vm_map_pageable calls vm_fault; there is no page, 	 *		   but there is a pager, so we call 	 *		   pager_data_request.  But the kmsg zone is empty, 	 *		   so we must kmem_alloc. 	 *		4) goto 1 	 *		5) Even if the kmsg zone is not empty: when we get 	 *		   the data back from the pager, it will be (very 	 *		   stale) non-zero data.  kmem_alloc is defined to 	 *		   return zero-filled memory. 	 * 	 *	We're intentionally not activating the pages we allocate 	 *	to prevent a race with page-out.  vm_map_pageable will wire 	 *	the pages. 	 */
+comment|/* 	 * Guarantee that there are pages already in this object before 	 * calling vm_map_pageable.  This is to prevent the following 	 * scenario: 	 *  	 * 1) Threads have swapped out, so that there is a pager for the 	 * kernel_object. 2) The kmsg zone is empty, and so we are 	 * kmem_allocing a new page for it. 3) vm_map_pageable calls vm_fault; 	 * there is no page, but there is a pager, so we call 	 * pager_data_request.  But the kmsg zone is empty, so we must 	 * kmem_alloc. 4) goto 1 5) Even if the kmsg zone is not empty: when 	 * we get the data back from the pager, it will be (very stale) 	 * non-zero data.  kmem_alloc is defined to return zero-filled memory. 	 *  	 * We're intentionally not activating the pages we allocate to prevent a 	 * race with page-out.  vm_map_pageable will wire the pages. 	 */
 name|vm_object_lock
 argument_list|(
 name|kernel_object
@@ -330,6 +342,8 @@ argument_list|,
 name|offset
 operator|+
 name|i
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -361,13 +375,19 @@ operator|&=
 operator|~
 name|PG_BUSY
 expr_stmt|;
+name|mem
+operator|->
+name|valid
+operator||=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
 block|}
 name|vm_object_unlock
 argument_list|(
 name|kernel_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	And finally, mark the data as non-pageable. 	 */
+comment|/* 	 * And finally, mark the data as non-pageable. 	 */
 operator|(
 name|void
 operator|)
@@ -387,7 +407,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Try to coalesce the map 	 */
+comment|/* 	 * Try to coalesce the map 	 */
 name|vm_map_simplify
 argument_list|(
 name|map
@@ -711,7 +731,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Locate sufficient space in the map.  This will give us the 	 * final virtual address for the new memory, and thus will tell 	 * us the offset within the kernel map. 	 */
+comment|/* 	 * Locate sufficient space in the map.  This will give us the final 	 * virtual address for the new memory, and thus will tell us the 	 * offset within the kernel map. 	 */
 name|vm_map_lock
 argument_list|(
 name|map
@@ -789,7 +809,7 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we can wait, just mark the range as wired 	 * (will fault pages as necessary). 	 */
+comment|/* 	 * If we can wait, just mark the range as wired (will fault pages as 	 * necessary). 	 */
 if|if
 condition|(
 name|canwait
@@ -862,9 +882,11 @@ argument_list|,
 name|offset
 operator|+
 name|i
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Ran out of space, free everything up and return. 		 * Don't need to lock page queues here as we know 		 * that the pages we got aren't on any queues. 		 */
+comment|/* 		 * Ran out of space, free everything up and return. Don't need 		 * to lock page queues here as we know that the pages we got 		 * aren't on any queues. 		 */
 if|if
 condition|(
 name|m
@@ -940,13 +962,19 @@ operator|&=
 operator|~
 name|PG_BUSY
 expr_stmt|;
+name|m
+operator|->
+name|valid
+operator||=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
 block|}
 name|vm_object_unlock
 argument_list|(
 name|kmem_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Mark map entry as non-pageable. 	 * Assert: vm_map_insert() will never be able to extend the previous 	 * entry so there will be a new entry exactly corresponding to this 	 * address range and it will have wired_count == 0. 	 */
+comment|/* 	 * Mark map entry as non-pageable. Assert: vm_map_insert() will never 	 * be able to extend the previous entry so there will be a new entry 	 * exactly corresponding to this address range and it will have 	 * wired_count == 0. 	 */
 if|if
 condition|(
 operator|!
@@ -988,7 +1016,7 @@ operator|->
 name|wired_count
 operator|++
 expr_stmt|;
-comment|/* 	 * Loop thru pages, entering them in the pmap. 	 * (We cannot add them to the wired count without 	 * wrapping the vm_page_queue_lock in splimp...) 	 */
+comment|/* 	 * Loop thru pages, entering them in the pmap. (We cannot add them to 	 * the wired count without wrapping the vm_page_queue_lock in 	 * splimp...) 	 */
 for|for
 control|(
 name|i
@@ -1093,7 +1121,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * To make this work for more than one map, 		 * use the map's lock to lock out sleepers/wakers. 		 */
+comment|/* 		 * To make this work for more than one map, use the map's lock 		 * to lock out sleepers/wakers. 		 */
 name|vm_map_lock
 argument_list|(
 name|map

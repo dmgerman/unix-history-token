@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_fault.c	8.4 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_fault.c,v 1.12 1994/11/06 09:55:29 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_fault.c	8.4 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_fault.c,v 1.13 1994/11/13 22:48:53 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -261,7 +261,7 @@ value|{			\ 	UNLOCK_THINGS;					\ 	vm_object_deallocate(first_object);		\ }
 name|RetryFault
 label|:
 empty_stmt|;
-comment|/* 	 *	Find the backing store object and offset into 	 *	it to begin the search. 	 */
+comment|/* 	 * Find the backing store object and offset into it to begin the 	 * search. 	 */
 if|if
 condition|(
 operator|(
@@ -321,7 +321,7 @@ name|first_m
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 *	Make a reference to this object to 	 *	prevent its disposal while we are messing with 	 *	it.  Once we have the reference, the map is free 	 *	to be diddled.  Since objects reference their 	 *	shadows (and copies), they will stay around as well. 	 */
+comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 */
 name|vm_object_lock
 argument_list|(
 name|first_object
@@ -337,8 +337,8 @@ operator|->
 name|paging_in_progress
 operator|++
 expr_stmt|;
-comment|/* 	 *	INVARIANTS (through entire routine): 	 * 	 *	1)	At all times, we must either have the object 	 *		lock or a busy page in some object to prevent 	 *		some other thread from trying to bring in 	 *		the same page. 	 * 	 *		Note that we cannot hold any locks during the 	 *		pager access or when waiting for memory, so 	 *		we use a busy page then. 	 * 	 *		Note also that we aren't as concerned about 	 *		more than one thead attempting to pager_data_unlock 	 *		the same page at once, so we don't hold the page 	 *		as busy then, but do record the highest unlock 	 *		value so far.  [Unlock requests may also be delivered 	 *		out of order.] 	 * 	 *	2)	Once we have a busy page, we must remove it from 	 *		the pageout queues, so that the pageout daemon 	 *		will not grab it away. 	 * 	 *	3)	To prevent another thread from racing us down the 	 *		shadow chain and entering a new page in the top 	 *		object before we do, we must keep a busy page in 	 *		the top object while following the shadow chain. 	 * 	 *	4)	We must increment paging_in_progress on any object 	 *		for which we have a busy page, to prevent 	 *		vm_object_collapse from removing the busy page 	 *		without our noticing. 	 */
-comment|/* 	 *	Search for the page at object/offset. 	 */
+comment|/* 	 * INVARIANTS (through entire routine): 	 *  	 * 1)	At all times, we must either have the object lock or a busy 	 * page in some object to prevent some other thread from trying to 	 * bring in the same page. 	 *  	 * Note that we cannot hold any locks during the pager access or when 	 * waiting for memory, so we use a busy page then. 	 *  	 * Note also that we aren't as concerned about more than one thead 	 * attempting to pager_data_unlock the same page at once, so we don't 	 * hold the page as busy then, but do record the highest unlock value 	 * so far.  [Unlock requests may also be delivered out of order.] 	 *  	 * 2)	Once we have a busy page, we must remove it from the pageout 	 * queues, so that the pageout daemon will not grab it away. 	 *  	 * 3)	To prevent another thread from racing us down the shadow chain 	 * and entering a new page in the top object before we do, we must 	 * keep a busy page in the top object while following the shadow 	 * chain. 	 *  	 * 4)	We must increment paging_in_progress on any object for which 	 * we have a busy page, to prevent vm_object_collapse from removing 	 * the busy page without our noticing. 	 */
+comment|/* 	 * Search for the page at object/offset. 	 */
 name|object
 operator|=
 name|first_object
@@ -347,7 +347,7 @@ name|offset
 operator|=
 name|first_offset
 expr_stmt|;
-comment|/* 	 *	See whether this page is resident 	 */
+comment|/* 	 * See whether this page is resident 	 */
 while|while
 condition|(
 name|TRUE
@@ -369,18 +369,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 *	If the page is being brought in, 			 *	wait for it and then retry. 			 */
+comment|/* 			 * If the page is being brought in, wait for it and 			 * then retry. 			 */
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
-operator|(
 name|PG_BUSY
-operator||
-name|PG_VMIO
 operator|)
+operator|||
+name|m
+operator|->
+name|busy
 condition|)
 block|{
 name|int
@@ -395,15 +397,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
-operator|(
 name|PG_BUSY
-operator||
-name|PG_VMIO
 operator|)
+operator|||
+name|m
+operator|->
+name|busy
 condition|)
 block|{
 name|m
@@ -411,6 +415,8 @@ operator|->
 name|flags
 operator||=
 name|PG_WANTED
+operator||
+name|PG_REFERENCED
 expr_stmt|;
 name|cnt
 operator|.
@@ -446,99 +452,103 @@ goto|goto
 name|RetryFault
 goto|;
 block|}
-comment|/* 			 *	Remove the page from the pageout daemon's 			 *	reach while we play with it. 			 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_CACHE
+operator|)
+operator|&&
+operator|(
+name|cnt
+operator|.
+name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
+operator|)
+operator|<
+name|cnt
+operator|.
+name|v_free_reserved
+condition|)
+block|{
+name|UNLOCK_AND_DEALLOCATE
+expr_stmt|;
+name|VM_WAIT
+expr_stmt|;
+goto|goto
+name|RetryFault
+goto|;
+block|}
+comment|/* 			 * Remove the page from the pageout daemon's reach 			 * while we play with it. 			 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|spl
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_INACTIVE
-condition|)
-block|{
-name|TAILQ_REMOVE
+name|vm_page_unqueue
 argument_list|(
-operator|&
-name|vm_page_queue_inactive
-argument_list|,
 name|m
-argument_list|,
-name|pageq
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_INACTIVE
-expr_stmt|;
-name|cnt
-operator|.
-name|v_inactive_count
-operator|--
-expr_stmt|;
-name|cnt
-operator|.
-name|v_reactivated
-operator|++
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_ACTIVE
-condition|)
-block|{
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|vm_page_queue_active
-argument_list|,
-name|m
-argument_list|,
-name|pageq
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_ACTIVE
-expr_stmt|;
-name|cnt
-operator|.
-name|v_active_count
-operator|--
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|spl
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-comment|/* 			 *	Mark page busy for other threads. 			 */
+comment|/* 			 * Mark page busy for other threads. 			 */
 name|m
 operator|->
 name|flags
 operator||=
 name|PG_BUSY
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|object
+operator|!=
+name|kernel_object
+operator|&&
+name|m
+operator|->
+name|object
+operator|!=
+name|kmem_object
+operator|&&
+name|m
+operator|->
+name|valid
+operator|&&
+operator|(
+operator|(
+name|m
+operator|->
+name|valid
+operator|&
+name|vm_page_bits
+argument_list|(
+literal|0
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+operator|)
+operator|!=
+name|vm_page_bits
+argument_list|(
+literal|0
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+operator|)
+condition|)
+block|{
+goto|goto
+name|readrest
+goto|;
+block|}
 break|break;
 block|}
 if|if
@@ -567,12 +577,6 @@ name|first_object
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|if (curproc&& (vaddr< VM_MAXUSER_ADDRESS)&& 				(curproc->p_rlimit[RLIMIT_RSS].rlim_max< 			    curproc->p_vmspace->vm_pmap.pm_stats.resident_count * NBPG)) { 				UNLOCK_AND_DEALLOCATE; 				vm_fault_free_pages(curproc); 				goto RetryFault; 			}
-endif|#
-directive|endif
 if|if
 condition|(
 name|swap_pager_full
@@ -632,8 +636,8 @@ name|p_pid
 operator|>=
 literal|48
 condition|)
-comment|/* XXX */
 block|{
+comment|/* XXX */
 name|printf
 argument_list|(
 literal|"Process %lu killed by vm_fault -- out of swap\n"
@@ -672,7 +676,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 			 *	Allocate a new page for this object/offset 			 *	pair. 			 */
+comment|/* 			 * Allocate a new page for this object/offset pair. 			 */
 name|m
 operator|=
 name|vm_page_alloc
@@ -680,6 +684,8 @@ argument_list|(
 name|object
 argument_list|,
 name|offset
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -698,6 +704,8 @@ name|RetryFault
 goto|;
 block|}
 block|}
+name|readrest
+label|:
 if|if
 condition|(
 name|object
@@ -723,13 +731,13 @@ decl_stmt|;
 name|int
 name|reqpage
 decl_stmt|;
-comment|/* 			 *	Now that we have a busy page, we can 			 *	release the object lock. 			 */
+comment|/* 			 * Now that we have a busy page, we can release the 			 * object lock. 			 */
 name|vm_object_unlock
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 			 * now we find out if any other pages should 			 * be paged in at this time 			 * this routine checks to see if the pages surrounding this fault 			 * reside in the same object as the page for this fault.  If 			 * they do, then they are faulted in also into the 			 * object.  The array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the vm_page_t passed to 			 * the routine.  The reqpage return value is the index into the 			 * marray for the vm_page_t passed to the routine. 			 */
+comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 */
 name|faultcount
 operator|=
 name|vm_fault_additional_pages
@@ -750,7 +758,7 @@ operator|&
 name|reqpage
 argument_list|)
 expr_stmt|;
-comment|/* 			 *	Call the pager to retrieve the data, if any, 			 *	after releasing the lock on the map. 			 */
+comment|/* 			 * Call the pager to retrieve the data, if any, after 			 * releasing the lock on the map. 			 */
 name|UNLOCK_MAP
 expr_stmt|;
 name|rv
@@ -781,13 +789,13 @@ operator|==
 name|VM_PAGER_OK
 condition|)
 block|{
-comment|/* 				 *	Found the page. 				 *	Leave it busy while we play with it. 				 */
+comment|/* 				 * Found the page. Leave it busy while we play 				 * with it. 				 */
 name|vm_object_lock
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 				 *	Relookup in case pager changed page. 				 *	Pager is responsible for disposition 				 *	of old page if moved. 				 */
+comment|/* 				 * Relookup in case pager changed page. Pager 				 * is responsible for disposition of old page 				 * if moved. 				 */
 name|m
 operator|=
 name|vm_page_lookup
@@ -797,12 +805,29 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|m
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vm_fault: error fetching offset: %lx (fc: %d, rq: %d)\n"
+argument_list|,
+name|offset
+argument_list|,
+name|faultcount
+argument_list|,
+name|reqpage
+argument_list|)
+expr_stmt|;
+block|}
 name|m
 operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_FAKE
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
@@ -817,7 +842,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 *	Remove the bogus page (which does not 			 *	exist at this object/offset); before 			 *	doing so, we must get back our object 			 *	lock to preserve our invariant. 			 * 			 *	Also wake up any other thread that may want 			 *	to bring in this page. 			 * 			 *	If this is the top-level object, we must 			 *	leave the busy page to prevent another 			 *	thread from rushing past us, and inserting 			 *	the page in that object at the same time 			 *	that we are. 			 */
+comment|/* 			 * Remove the bogus page (which does not exist at this 			 * object/offset); before doing so, we must get back 			 * our object lock to preserve our invariant. 			 *  			 * Also wake up any other thread that may want to bring 			 * in this page. 			 *  			 * If this is the top-level object, we must leave the 			 * busy page to prevent another thread from rushing 			 * past us, and inserting the page in that object at 			 * the same time that we are. 			 */
 if|if
 condition|(
 name|rv
@@ -839,7 +864,7 @@ name|object
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Data outside the range of the pager or an I/O error 			 */
-comment|/* 			 * XXX - the check for kernel_map is a kludge to work around 			 * having the machine panic on a kernel space fault w/ I/O error. 			 */
+comment|/* 			 * XXX - the check for kernel_map is a kludge to work 			 * around having the machine panic on a kernel space 			 * fault w/ I/O error. 			 */
 if|if
 condition|(
 operator|(
@@ -899,7 +924,7 @@ expr_stmt|;
 comment|/* 				 * XXX - we cannot just fall out at this 				 * point, m has been freed and is invalid! 				 */
 block|}
 block|}
-comment|/* 		 * We get here if the object has no pager (or unwiring) 		 * or the pager doesn't have the page. 		 */
+comment|/* 		 * We get here if the object has no pager (or unwiring) or the 		 * pager doesn't have the page. 		 */
 if|if
 condition|(
 name|object
@@ -910,7 +935,7 @@ name|first_m
 operator|=
 name|m
 expr_stmt|;
-comment|/* 		 *	Move on to the next object.  Lock the next 		 *	object before unlocking the current one. 		 */
+comment|/* 		 * Move on to the next object.  Lock the next object before 		 * unlocking the current one. 		 */
 name|offset
 operator|+=
 name|object
@@ -930,7 +955,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 *	If there's no object left, fill the page 			 *	in the top object with zeros. 			 */
+comment|/* 			 * If there's no object left, fill the page in the top 			 * object with zeros. 			 */
 if|if
 condition|(
 name|object
@@ -991,17 +1016,16 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
 name|cnt
 operator|.
 name|v_zfod
 operator|++
-expr_stmt|;
-name|m
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_FAKE
 expr_stmt|;
 break|break;
 block|}
@@ -1068,6 +1092,8 @@ operator|(
 name|PG_ACTIVE
 operator||
 name|PG_INACTIVE
+operator||
+name|PG_CACHE
 operator|)
 operator|!=
 literal|0
@@ -1088,13 +1114,13 @@ argument_list|(
 literal|"vm_fault: absent or active or inactive or not busy after main loop"
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	PAGE HAS BEEN FOUND. 	 *	[Loop invariant still holds -- the object lock 	 *	is held.] 	 */
+comment|/* 	 * PAGE HAS BEEN FOUND. [Loop invariant still holds -- the object lock 	 * is held.] 	 */
 name|old_m
 operator|=
 name|m
 expr_stmt|;
 comment|/* save page that would be copied */
-comment|/* 	 *	If the page is being written, but isn't 	 *	already owned by the top-level object, 	 *	we have to copy it into a new page owned 	 *	by the top-level object. 	 */
+comment|/* 	 * If the page is being written, but isn't already owned by the 	 * top-level object, we have to copy it into a new page owned by the 	 * top-level object. 	 */
 if|if
 condition|(
 name|object
@@ -1102,7 +1128,7 @@ operator|!=
 name|first_object
 condition|)
 block|{
-comment|/* 		 *	We only really need to copy if we 		 *	want to write it. 		 */
+comment|/* 		 * We only really need to copy if we want to write it. 		 */
 if|if
 condition|(
 name|fault_type
@@ -1110,8 +1136,8 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-comment|/* 			 *	If we try to collapse first_object at this 			 *	point, we may deadlock when we try to get 			 *	the lock on an intermediate object (since we 			 *	have the bottom object locked).  We can't 			 *	unlock the bottom object, because the page 			 *	we found may move (by collapse) if we do. 			 * 			 *	Instead, we first copy the page.  Then, when 			 *	we have no more use for the bottom object, 			 *	we unlock it and try to collapse. 			 * 			 *	Note that we copy the page even if we didn't 			 *	need to... that's the breaks. 			 */
-comment|/* 			 *	We already have an empty page in 			 *	first_object - use it. 			 */
+comment|/* 			 * If we try to collapse first_object at this point, 			 * we may deadlock when we try to get the lock on an 			 * intermediate object (since we have the bottom 			 * object locked).  We can't unlock the bottom object, 			 * because the page we found may move (by collapse) if 			 * we do. 			 *  			 * Instead, we first copy the page.  Then, when we have 			 * no more use for the bottom object, we unlock it and 			 * try to collapse. 			 *  			 * Note that we copy the page even if we didn't need 			 * to... that's the breaks. 			 */
+comment|/* 			 * We already have an empty page in first_object - use 			 * it. 			 */
 name|vm_page_copy
 argument_list|(
 name|m
@@ -1121,12 +1147,11 @@ argument_list|)
 expr_stmt|;
 name|first_m
 operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_FAKE
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
-comment|/* 			 *	If another map is truly sharing this 			 *	page with us, we have to flush all 			 *	uses of the original page, since we 			 *	can't distinguish those which want the 			 *	original from those which need the 			 *	new copy. 			 * 			 *	XXX If we know that only one map has 			 *	access to this page, then we could 			 *	avoid the pmap_page_protect() call. 			 */
+comment|/* 			 * If another map is truly sharing this page with us, 			 * we have to flush all uses of the original page, 			 * since we can't distinguish those which want the 			 * original from those which need the new copy. 			 *  			 * XXX If we know that only one map has access to this 			 * page, then we could avoid the pmap_page_protect() 			 * call. 			 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -1145,28 +1170,10 @@ argument_list|,
 name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|flags
-operator|&
-name|PG_CLEAN
-operator|)
-operator|==
-literal|0
-condition|)
-name|m
-operator|->
-name|flags
-operator||=
-name|PG_LAUNDRY
-expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-comment|/* 			 *	We no longer need the old page or object. 			 */
+comment|/* 			 * We no longer need the old page or object. 			 */
 name|PAGE_WAKEUP
 argument_list|(
 name|m
@@ -1198,7 +1205,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 			 *	Only use the new page below... 			 */
+comment|/* 			 * Only use the new page below... 			 */
 name|cnt
 operator|.
 name|v_cow_faults
@@ -1216,13 +1223,13 @@ name|offset
 operator|=
 name|first_offset
 expr_stmt|;
-comment|/* 			 *	Now that we've gotten the copy out of the 			 *	way, let's try to collapse the top object. 			 */
+comment|/* 			 * Now that we've gotten the copy out of the way, 			 * let's try to collapse the top object. 			 */
 name|vm_object_lock
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 			 *	But we have to play ugly games with 			 *	paging_in_progress to do that... 			 */
+comment|/* 			 * But we have to play ugly games with 			 * paging_in_progress to do that... 			 */
 name|object
 operator|->
 name|paging_in_progress
@@ -1280,6 +1287,8 @@ operator|(
 name|PG_ACTIVE
 operator||
 name|PG_INACTIVE
+operator||
+name|PG_CACHE
 operator|)
 condition|)
 name|panic
@@ -1287,7 +1296,7 @@ argument_list|(
 literal|"vm_fault: active or inactive before copy object handling"
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	If the page is being written, but hasn't been 	 *	copied to the copy-object, we have to copy it there. 	 */
+comment|/* 	 * If the page is being written, but hasn't been copied to the 	 * copy-object, we have to copy it there. 	 */
 name|RetryCopy
 label|:
 if|if
@@ -1312,7 +1321,7 @@ decl_stmt|;
 name|vm_page_t
 name|copy_m
 decl_stmt|;
-comment|/* 		 *	We only need to copy if we want to write it. 		 */
+comment|/* 		 * We only need to copy if we want to write it. 		 */
 if|if
 condition|(
 operator|(
@@ -1338,7 +1347,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 *	Try to get the lock on the copy_object. 			 */
+comment|/* 			 * Try to get the lock on the copy_object. 			 */
 if|if
 condition|(
 operator|!
@@ -1363,13 +1372,13 @@ goto|goto
 name|RetryCopy
 goto|;
 block|}
-comment|/* 			 *	Make another reference to the copy-object, 			 *	to keep it from disappearing during the 			 *	copy. 			 */
+comment|/* 			 * Make another reference to the copy-object, to keep 			 * it from disappearing during the copy. 			 */
 name|copy_object
 operator|->
 name|ref_count
 operator|++
 expr_stmt|;
-comment|/* 			 *	Does the page exist in the copy? 			 */
+comment|/* 			 * Does the page exist in the copy? 			 */
 name|copy_offset
 operator|=
 name|first_offset
@@ -1402,18 +1411,20 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|copy_m
 operator|->
 name|flags
 operator|&
-operator|(
 name|PG_BUSY
-operator||
-name|PG_VMIO
 operator|)
+operator|||
+name|copy_m
+operator|->
+name|busy
 condition|)
 block|{
-comment|/* 					 *	If the page is being brought 					 *	in, wait for it and then retry. 					 */
+comment|/* 					 * If the page is being brought in, 					 * wait for it and then retry. 					 */
 name|RELEASE_PAGE
 argument_list|(
 name|m
@@ -1438,15 +1449,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|copy_m
 operator|->
 name|flags
 operator|&
-operator|(
 name|PG_BUSY
-operator||
-name|PG_VMIO
 operator|)
+operator|||
+name|copy_m
+operator|->
+name|busy
 condition|)
 block|{
 name|copy_m
@@ -1454,6 +1467,8 @@ operator|->
 name|flags
 operator||=
 name|PG_WANTED
+operator||
+name|PG_REFERENCED
 expr_stmt|;
 name|tsleep
 argument_list|(
@@ -1485,14 +1500,14 @@ name|RetryFault
 goto|;
 block|}
 block|}
-comment|/* 			 *	If the page is not in memory (in the object) 			 *	and the object has a pager, we have to check 			 *	if the pager has the data in secondary 			 *	storage. 			 */
+comment|/* 			 * If the page is not in memory (in the object) and 			 * the object has a pager, we have to check if the 			 * pager has the data in secondary storage. 			 */
 if|if
 condition|(
 operator|!
 name|page_exists
 condition|)
 block|{
-comment|/* 				 *	If we don't allocate a (blank) page 				 *	here... another thread could try 				 *	to page it in, allocate a page, and 				 *	then block on the busy page in its 				 *	shadow (first_object).  Then we'd 				 *	trip over the busy page after we 				 *	found that the copy_object's pager 				 *	doesn't have the page... 				 */
+comment|/* 				 * If we don't allocate a (blank) page here... 				 * another thread could try to page it in, 				 * allocate a page, and then block on the busy 				 * page in its shadow (first_object).  Then 				 * we'd trip over the busy page after we found 				 * that the copy_object's pager doesn't have 				 * the page... 				 */
 name|copy_m
 operator|=
 name|vm_page_alloc
@@ -1500,6 +1515,8 @@ argument_list|(
 name|copy_object
 argument_list|,
 name|copy_offset
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1509,7 +1526,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 					 *	Wait for a page, then retry. 					 */
+comment|/* 					 * Wait for a page, then retry. 					 */
 name|RELEASE_PAGE
 argument_list|(
 name|m
@@ -1592,7 +1609,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 						 *	Gaah... start over! 						 */
+comment|/* 						 * Gaah... start over! 						 */
 name|FREE_PAGE
 argument_list|(
 name|copy_m
@@ -1628,7 +1645,7 @@ condition|(
 name|page_exists
 condition|)
 block|{
-comment|/* 						 *	We didn't need the page 						 */
+comment|/* 						 * We didn't need the page 						 */
 name|FREE_PAGE
 argument_list|(
 name|copy_m
@@ -1643,7 +1660,7 @@ operator|!
 name|page_exists
 condition|)
 block|{
-comment|/* 				 *	Must copy page into copy-object. 				 */
+comment|/* 				 * Must copy page into copy-object. 				 */
 name|vm_page_copy
 argument_list|(
 name|m
@@ -1653,12 +1670,11 @@ argument_list|)
 expr_stmt|;
 name|copy_m
 operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_FAKE
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
-comment|/* 				 * Things to remember: 				 * 1. The copied page must be marked 'dirty' 				 *    so it will be paged out to the copy 				 *    object. 				 * 2. If the old page was in use by any users 				 *    of the copy-object, it must be removed 				 *    from all pmaps.  (We can't know which 				 *    pmaps use it.) 				 */
+comment|/* 				 * Things to remember: 1. The copied page must 				 * be marked 'dirty' so it will be paged out 				 * to the copy object. 2. If the old page was 				 * in use by any users of the copy-object, it 				 * must be removed from all pmaps.  (We can't 				 * know which pmaps use it.) 				 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -1677,30 +1693,11 @@ argument_list|,
 name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|old_m
-operator|->
-name|flags
-operator|&
-name|PG_CLEAN
-operator|)
-operator|==
-literal|0
-condition|)
-name|old_m
-operator|->
-name|flags
-operator||=
-name|PG_LAUNDRY
-expr_stmt|;
 name|copy_m
 operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_CLEAN
+name|dirty
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
 name|vm_page_activate
 argument_list|(
@@ -1716,7 +1713,7 @@ name|copy_m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 *	The reference count on copy_object must be 			 *	at least 2: one for our extra reference, 			 *	and at least one from the outside world 			 *	(we checked that when we last locked 			 *	copy_object). 			 */
+comment|/* 			 * The reference count on copy_object must be at least 			 * 2: one for our extra reference, and at least one 			 * from the outside world (we checked that when we 			 * last locked copy_object). 			 */
 name|copy_object
 operator|->
 name|ref_count
@@ -1746,6 +1743,8 @@ operator|(
 name|PG_ACTIVE
 operator||
 name|PG_INACTIVE
+operator||
+name|PG_CACHE
 operator|)
 condition|)
 name|panic
@@ -1753,7 +1752,7 @@ argument_list|(
 literal|"vm_fault: active or inactive before retrying lookup"
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	We must verify that the maps have not changed 	 *	since our last lookup. 	 */
+comment|/* 	 * We must verify that the maps have not changed since our last 	 * lookup. 	 */
 if|if
 condition|(
 operator|!
@@ -1769,13 +1768,13 @@ decl_stmt|;
 name|vm_prot_t
 name|retry_prot
 decl_stmt|;
-comment|/* 		 *	Since map entries may be pageable, make sure we can 		 *	take a page fault on them. 		 */
+comment|/* 		 * Since map entries may be pageable, make sure we can take a 		 * page fault on them. 		 */
 name|vm_object_unlock
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	To avoid trying to write_lock the map while another 		 *	thread has it read_locked (in vm_map_pageable), we 		 *	do not try for write permission.  If the page is 		 *	still writable, we will get write permission.  If it 		 *	is not, or has been marked needs_copy, we enter the 		 *	mapping without write permission, and will merely 		 *	take another fault. 		 */
+comment|/* 		 * To avoid trying to write_lock the map while another thread 		 * has it read_locked (in vm_map_pageable), we do not try for 		 * write permission.  If the page is still writable, we will 		 * get write permission.  If it is not, or has been marked 		 * needs_copy, we enter the mapping without write permission, 		 * and will merely take another fault. 		 */
 name|result
 operator|=
 name|vm_map_lookup
@@ -1814,7 +1813,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	If we don't need the page any longer, put it on the 		 *	active list (the easiest thing to do here).  If no 		 *	one needs it, pageout will grab it eventually. 		 */
+comment|/* 		 * If we don't need the page any longer, put it on the active 		 * list (the easiest thing to do here).  If no one needs it, 		 * pageout will grab it eventually. 		 */
 if|if
 condition|(
 name|result
@@ -1865,7 +1864,7 @@ goto|goto
 name|RetryFault
 goto|;
 block|}
-comment|/* 		 *	Check whether the protection has changed or the object 		 *	has been copied while we left the map unlocked. 		 *	Changing from read to write permission is OK - we leave 		 *	the page write-protected, and catch the write fault. 		 *	Changing from write to read permission means that we 		 *	can't mark the page write-enabled after all. 		 */
+comment|/* 		 * Check whether the protection has changed or the object has 		 * been copied while we left the map unlocked. Changing from 		 * read to write permission is OK - we leave the page 		 * write-protected, and catch the write fault. Changing from 		 * write to read permission means that we can't mark the page 		 * write-enabled after all. 		 */
 name|prot
 operator|&=
 name|retry_prot
@@ -1884,7 +1883,7 @@ operator|~
 name|VM_PROT_WRITE
 expr_stmt|;
 block|}
-comment|/* 	 * (the various bits we're fiddling with here are locked by 	 * the object's lock) 	 */
+comment|/* 	 * (the various bits we're fiddling with here are locked by the 	 * object's lock) 	 */
 comment|/* XXX This distorts the meaning of the copy_on_write bit */
 if|if
 condition|(
@@ -1899,7 +1898,7 @@ operator|&=
 operator|~
 name|PG_COPYONWRITE
 expr_stmt|;
-comment|/* 	 *	It's critically important that a wired-down page be faulted 	 *	only once in each map for which it is wired. 	 */
+comment|/* 	 * It's critically important that a wired-down page be faulted only 	 * once in each map for which it is wired. 	 */
 if|if
 condition|(
 name|m
@@ -1910,6 +1909,8 @@ operator|(
 name|PG_ACTIVE
 operator||
 name|PG_INACTIVE
+operator||
+name|PG_CACHE
 operator|)
 condition|)
 name|panic
@@ -1922,7 +1923,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Put this page into the physical map. 	 *	We had to do the unlock above because pmap_enter 	 *	may cause other faults.   We don't put the 	 *	page back on the active queue until later so 	 *	that the page-out daemon won't find us (yet). 	 */
+comment|/* 	 * Put this page into the physical map. We had to do the unlock above 	 * because pmap_enter may cause other faults.   We don't put the page 	 * back on the active queue until later so that the page-out daemon 	 * won't find us (yet). 	 */
 name|pmap_enter
 argument_list|(
 name|map
@@ -1941,7 +1942,7 @@ argument_list|,
 name|wired
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	If the page is not wired down, then put it where the 	 *	pageout daemon can find it. 	 */
+comment|/* 	 * If the page is not wired down, then put it where the pageout daemon 	 * can find it. 	 */
 name|vm_object_lock
 argument_list|(
 name|object
@@ -2019,7 +2020,7 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-comment|/* 	 *	Unlock everything, and return 	 */
+comment|/* 	 * Unlock everything, and return 	 */
 name|PAGE_WAKEUP
 argument_list|(
 name|m
@@ -2076,7 +2077,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Inform the physical mapping system that the 	 *	range of addresses may not fault, so that 	 *	page tables and such can be locked down as well. 	 */
+comment|/* 	 * Inform the physical mapping system that the range of addresses may 	 * not fault, so that page tables and such can be locked down as well. 	 */
 name|pmap_pageable
 argument_list|(
 name|pmap
@@ -2088,7 +2089,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	We simulate a fault to get the page and enter it 	 *	in the physical map. 	 */
+comment|/* 	 * We simulate a fault to get the page and enter it in the physical 	 * map. 	 */
 for|for
 control|(
 name|va
@@ -2192,7 +2193,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Since the pages are wired down, we must be able to 	 *	get their mappings from the physical map system. 	 */
+comment|/* 	 * Since the pages are wired down, we must be able to get their 	 * mappings from the physical map system. 	 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -2257,7 +2258,7 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-comment|/* 	 *	Inform the physical mapping system that the range 	 *	of addresses may fault, so that page tables and 	 *	such may be unwired themselves. 	 */
+comment|/* 	 * Inform the physical mapping system that the range of addresses may 	 * fault, so that page tables and such may be unwired themselves. 	 */
 name|pmap_pageable
 argument_list|(
 name|pmap
@@ -2333,7 +2334,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-endif|lint
+comment|/* lint */
 name|src_object
 operator|=
 name|src_entry
@@ -2348,7 +2349,7 @@ name|src_entry
 operator|->
 name|offset
 expr_stmt|;
-comment|/* 	 *	Create the top-level object for the destination entry. 	 *	(Doesn't actually shadow anything - we copy the pages 	 *	directly.) 	 */
+comment|/* 	 * Create the top-level object for the destination entry. (Doesn't 	 * actually shadow anything - we copy the pages directly.) 	 */
 name|dst_object
 operator|=
 name|vm_object_allocate
@@ -2387,7 +2388,7 @@ name|dst_entry
 operator|->
 name|max_protection
 expr_stmt|;
-comment|/* 	 *	Loop through all of the pages in the entry's range, copying 	 *	each one from the source object (it should be there) to the 	 *	destination object. 	 */
+comment|/* 	 * Loop through all of the pages in the entry's range, copying each 	 * one from the source object (it should be there) to the destination 	 * object. 	 */
 for|for
 control|(
 name|vaddr
@@ -2415,7 +2416,7 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-comment|/* 		 *	Allocate a page in the destination object 		 */
+comment|/* 		 * Allocate a page in the destination object 		 */
 name|vm_object_lock
 argument_list|(
 name|dst_object
@@ -2430,6 +2431,8 @@ argument_list|(
 name|dst_object
 argument_list|,
 name|dst_offset
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2460,7 +2463,7 @@ operator|==
 name|NULL
 condition|)
 do|;
-comment|/* 		 *	Find the page in the source object, and copy it in. 		 *	(Because the source is wired down, the page will be 		 *	in memory.) 		 */
+comment|/* 		 * Find the page in the source object, and copy it in. 		 * (Because the source is wired down, the page will be in 		 * memory.) 		 */
 name|vm_object_lock
 argument_list|(
 name|src_object
@@ -2495,7 +2498,7 @@ argument_list|,
 name|dst_m
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	Enter it in the pmap... 		 */
+comment|/* 		 * Enter it in the pmap... 		 */
 name|vm_object_unlock
 argument_list|(
 name|src_object
@@ -2524,7 +2527,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	Mark it no longer busy, and put it on the active list. 		 */
+comment|/* 		 * Mark it no longer busy, and put it on the active list. 		 */
 name|vm_object_lock
 argument_list|(
 name|dst_object
@@ -2829,8 +2832,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	 * if there is no getmulti routine for this pager, then just allow 	 * one page to be read. 	 */
-comment|/* 	if (!object->pager->pg_ops->pgo_getpages) { 		*reqpage = 0; 		marray[0] = m; 		return 1; 	} */
 comment|/* 	 * try to do any readahead that we might have free pages for. 	 */
 name|rahead
 operator|=
@@ -2838,12 +2839,22 @@ name|raheada
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|rahead
+operator|+
+name|rbehind
+operator|)
 operator|>
+operator|(
 operator|(
 name|cnt
 operator|.
 name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
+operator|)
 operator|-
 name|cnt
 operator|.
@@ -2853,43 +2864,41 @@ condition|)
 block|{
 name|rahead
 operator|=
+operator|(
+operator|(
 name|cnt
 operator|.
 name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
+operator|)
 operator|-
 name|cnt
 operator|.
 name|v_free_reserved
+operator|)
+operator|/
+literal|2
 expr_stmt|;
 name|rbehind
 operator|=
-literal|0
+name|rahead
 expr_stmt|;
-block|}
 if|if
 condition|(
-name|cnt
-operator|.
-name|v_free_count
-operator|<
-name|cnt
-operator|.
-name|v_free_min
-condition|)
-block|{
-if|if
-condition|(
+operator|!
 name|rahead
-operator|>
-name|VM_FAULT_READ_AHEAD_MIN
 condition|)
-name|rahead
-operator|=
-name|VM_FAULT_READ_AHEAD_MIN
-expr_stmt|;
-name|rbehind
-operator|=
-literal|0
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|vm_pages_needed
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * if we don't have any free pages, then just read one page. 	 */
@@ -2916,7 +2925,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* 	 * scan backward for the read behind pages -- 	 * in memory or on disk not in same object 	 */
+comment|/* 	 * scan backward for the read behind pages -- in memory or on disk not 	 * in same object 	 */
 name|toffset
 operator|=
 name|offset
@@ -3017,7 +3026,7 @@ operator|=
 name|offset
 expr_stmt|;
 block|}
-comment|/* 	 * scan forward for the read ahead pages -- 	 * in memory or on disk not in same object 	 */
+comment|/* 	 * scan forward for the read ahead pages -- in memory or on disk not 	 * in same object 	 */
 name|toffset
 operator|=
 name|offset
@@ -3115,15 +3124,23 @@ expr_stmt|;
 comment|/* see if we have space (again) */
 if|if
 condition|(
+operator|(
 name|cnt
 operator|.
 name|v_free_count
-operator|>=
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
+operator|)
+operator|>
+operator|(
 name|cnt
 operator|.
 name|v_free_reserved
 operator|+
 name|size
+operator|)
 condition|)
 block|{
 name|bzero
@@ -3176,6 +3193,8 @@ operator|+
 name|i
 operator|*
 name|NBPG
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -3216,7 +3235,7 @@ literal|0
 condition|)
 break|break;
 block|}
-comment|/* 		 * if we could not get our block of pages, then 		 * free the readahead/readbehind pages. 		 */
+comment|/* 		 * if we could not get our block of pages, then free the 		 * readahead/readbehind pages. 		 */
 if|if
 condition|(
 name|i

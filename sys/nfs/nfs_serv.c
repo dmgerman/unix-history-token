@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_serv.c	8.3 (Berkeley) 1/12/94  * $Id: nfs_serv.c,v 1.6 1994/09/28 16:45:18 dfr Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_serv.c	8.3 (Berkeley) 1/12/94  * $Id: nfs_serv.c,v 1.7 1994/10/02 17:26:58 phk Exp $  */
 end_comment
 
 begin_comment
@@ -413,7 +413,7 @@ operator|->
 name|nd_procp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -629,7 +629,7 @@ operator|->
 name|nd_procp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -1237,7 +1237,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -1265,7 +1265,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -1613,7 +1613,7 @@ argument_list|,
 name|NQL_READ
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -1679,7 +1679,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -1734,7 +1734,7 @@ operator|->
 name|nd_procp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -2298,7 +2298,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -2781,7 +2781,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -3131,7 +3131,7 @@ argument_list|(
 name|mreq
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -3150,7 +3150,7 @@ name|uio_resid
 operator|=
 literal|0
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -3627,7 +3627,7 @@ name|EISDIR
 else|:
 name|EACCES
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -3667,7 +3667,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -3882,7 +3882,7 @@ name|error
 operator|=
 name|EBADRPC
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -3917,7 +3917,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -3950,7 +3950,7 @@ operator|->
 name|nd_procp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -4389,7 +4389,7 @@ operator|==
 name|VSOCK
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -4528,7 +4528,7 @@ operator|.
 name|ni_cnd
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -4585,7 +4585,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -4693,14 +4693,14 @@ operator|&
 name|ISSYMLINK
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -4744,7 +4744,7 @@ operator|.
 name|ni_cnd
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -4768,7 +4768,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -4800,7 +4800,7 @@ name|ni_dvp
 operator|==
 name|vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -4808,7 +4808,7 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -4926,7 +4926,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -4964,7 +4964,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -5019,7 +5019,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -5045,7 +5045,7 @@ operator|->
 name|nd_procp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -5110,7 +5110,7 @@ name|ni_cnd
 operator|.
 name|cn_flags
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -5139,7 +5139,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -5147,7 +5147,7 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -5160,7 +5160,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -5174,7 +5174,7 @@ operator|)
 return|;
 name|out
 label|:
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -5527,7 +5527,7 @@ name|ni_dvp
 operator|==
 name|vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -5535,14 +5535,14 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -5906,14 +5906,14 @@ operator|.
 name|ni_cnd
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|fromnd
 operator|.
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|fvp
 argument_list|)
@@ -6199,13 +6199,13 @@ name|tdvp
 operator|==
 name|tvp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|tdvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|tdvp
 argument_list|)
@@ -6214,7 +6214,7 @@ if|if
 condition|(
 name|tvp
 condition|)
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|tvp
 argument_list|)
@@ -6231,20 +6231,20 @@ operator|.
 name|ni_cnd
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|fromnd
 operator|.
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|fvp
 argument_list|)
 expr_stmt|;
 block|}
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|tond
 operator|.
@@ -6264,7 +6264,7 @@ argument_list|)
 expr_stmt|;
 name|out1
 label|:
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|fromnd
 operator|.
@@ -6309,7 +6309,7 @@ operator|.
 name|cn_flags
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|tond
 operator|.
@@ -6343,7 +6343,7 @@ operator|.
 name|cn_flags
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|fromnd
 operator|.
@@ -6373,14 +6373,14 @@ operator|.
 name|ni_cnd
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|fromnd
 operator|.
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|fvp
 argument_list|)
@@ -6773,7 +6773,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -6781,7 +6781,7 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -6794,7 +6794,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -6804,7 +6804,7 @@ expr_stmt|;
 block|}
 name|out1
 label|:
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -7194,7 +7194,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -7202,14 +7202,14 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -7321,7 +7321,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -7329,7 +7329,7 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -7342,7 +7342,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -7656,7 +7656,7 @@ name|ni_dvp
 operator|==
 name|vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -7664,14 +7664,14 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -7773,7 +7773,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -7799,7 +7799,7 @@ operator|->
 name|nd_procp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -7872,7 +7872,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -7880,7 +7880,7 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
@@ -7893,7 +7893,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -8228,7 +8228,7 @@ name|nd
 operator|.
 name|ni_vp
 condition|)
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|nd
 operator|.
@@ -8236,14 +8236,14 @@ name|ni_dvp
 argument_list|)
 expr_stmt|;
 else|else
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nd
 operator|.
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -8631,7 +8631,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -8768,7 +8768,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -8797,7 +8797,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * If the filesystem doen't support cookies, return eof. 		 */
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -8869,7 +8869,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -9279,7 +9279,7 @@ name|cookiep
 operator|++
 expr_stmt|;
 block|}
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -9745,7 +9745,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)
@@ -9882,7 +9882,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -9911,7 +9911,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * If the filesystem doen't support cookies, return eof. 		 */
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -9983,7 +9983,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -10270,7 +10270,7 @@ name|fh_fid
 argument_list|)
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nvp
 argument_list|)
@@ -10361,7 +10361,7 @@ name|nd_procp
 argument_list|)
 condition|)
 block|{
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nvp
 argument_list|)
@@ -10370,7 +10370,7 @@ goto|goto
 name|invalid
 goto|;
 block|}
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|nvp
 argument_list|)
@@ -10662,7 +10662,7 @@ name|cookiep
 operator|++
 expr_stmt|;
 block|}
-name|vrele
+name|nfsrv_vrele
 argument_list|(
 name|vp
 argument_list|)
@@ -10964,7 +10964,7 @@ operator|->
 name|nd_procp
 argument_list|)
 expr_stmt|;
-name|vput
+name|nfsrv_vput
 argument_list|(
 name|vp
 argument_list|)

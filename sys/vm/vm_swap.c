@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_swap.c	8.5 (Berkeley) 2/17/94  * $Id: vm_swap.c,v 1.11 1994/10/22 17:53:35 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_swap.c	8.5 (Berkeley) 2/17/94  * $Id: vm_swap.c,v 1.12 1994/11/22 08:47:20 davidg Exp $  */
 end_comment
 
 begin_include
@@ -165,7 +165,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of the space will not be countable until later (dynamically 	 * configurable devices) and some of the counted space will not be 	 * available until a swapon() system call is issued, both usually 	 * happen when the system goes multi-user. 	 * 	 * If using NFS for swap, swdevt[0] will already be bdevvp'd.	XXX 	 */
+comment|/* 	 * Count swap devices, and adjust total swap space available. Some of 	 * the space will not be countable until later (dynamically 	 * configurable devices) and some of the counted space will not be 	 * available until a swapon() system call is issued, both usually 	 * happen when the system goes multi-user. 	 *  	 * If using NFS for swap, swdevt[0] will already be bdevvp'd.	XXX 	 */
 ifdef|#
 directive|ifdef
 name|SEQSWAP
@@ -491,7 +491,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * If there is no swap configured, tell the user. We don't automatically 	 * activate any swapspaces in the kernel; the user must explicitly use 	 * swapon to enable swaping on a device. 	 */
+comment|/* 	 * If there is no swap configured, tell the user. We don't 	 * automatically activate any swapspaces in the kernel; the user must 	 * explicitly use swapon to enable swaping on a device. 	 */
 if|if
 condition|(
 name|nswap
@@ -602,7 +602,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|GENERIC
-comment|/* 	 * A mini-root gets copied into the front of the swap 	 * and we run over top of the swap area just long 	 * enough for us to do a mkfs and restor of the real 	 * root (sure beats rewriting standalone restor). 	 */
+comment|/* 	 * A mini-root gets copied into the front of the swap and we run over 	 * top of the swap area just long enough for us to do a mkfs and 	 * restor of the real root (sure beats rewriting standalone restor). 	 */
 define|#
 directive|define
 name|MINIROOTSIZE
@@ -1085,7 +1085,7 @@ name|b_vp
 operator|!=
 name|NULL
 condition|)
-name|brelvp
+name|pbrelvp
 argument_list|(
 name|bp
 argument_list|)
@@ -1378,7 +1378,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|SEQSWAP
-comment|/* 		 * If we have reached a non-freed sequential device without 		 * finding what we are looking for, it is an error. 		 * That is because all interleaved devices must come first 		 * and sequential devices must be freed in order. 		 */
+comment|/* 		 * If we have reached a non-freed sequential device without 		 * finding what we are looking for, it is an error. That is 		 * because all interleaved devices must come first and 		 * sequential devices must be freed in order. 		 */
 if|if
 condition|(
 operator|(
@@ -1515,7 +1515,7 @@ name|sp
 operator|->
 name|sw_nblks
 expr_stmt|;
-comment|/* 	 * Some devices may not exist til after boot time. 	 * If so, their nblk count will be 0. 	 */
+comment|/* 	 * Some devices may not exist til after boot time. If so, their nblk 	 * count will be 0. 	 */
 if|if
 condition|(
 name|nblks

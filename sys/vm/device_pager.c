@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)device_pager.c	8.1 (Berkeley) 6/11/93  * $Id: device_pager.c,v 1.3 1994/08/02 07:55:06 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)device_pager.c	8.1 (Berkeley) 6/11/93  * $Id: device_pager.c,v 1.4 1994/10/02 17:48:58 phk Exp $  */
 end_comment
 
 begin_comment
@@ -468,7 +468,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Check that the specified range of the device allows the 	 * desired protection. 	 * 	 * XXX assumes VM_PROT_* == PROT_* 	 */
+comment|/* 	 * Check that the specified range of the device allows the desired 	 * protection. 	 *  	 * XXX assumes VM_PROT_* == PROT_* 	 */
 name|npages
 operator|=
 name|atop
@@ -632,12 +632,6 @@ name|caddr_t
 operator|)
 name|devp
 expr_stmt|;
-name|pager
-operator|->
-name|pg_flags
-operator|=
-literal|0
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -679,7 +673,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Finally, put it on the managed list so other can find it. 		 * First we re-lookup in case someone else beat us to this 		 * point (due to blocking in the various mallocs).  If so, 		 * we free everything and start over. 		 */
+comment|/* 		 * Finally, put it on the managed list so other can find it. 		 * First we re-lookup in case someone else beat us to this 		 * point (due to blocking in the various mallocs).  If so, we 		 * free everything and start over. 		 */
 if|if
 condition|(
 name|vm_pager_lookup
@@ -759,7 +753,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 		 * vm_object_lookup() gains a reference and also 		 * removes the object from the cache. 		 */
+comment|/* 		 * vm_object_lookup() gains a reference and also removes the 		 * object from the cache. 		 */
 name|object
 operator|=
 name|vm_object_lookup
@@ -851,7 +845,7 @@ argument_list|,
 name|pg_list
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get the object. 	 * Note: cannot use vm_object_lookup since object has already 	 * been removed from the hash chain. 	 */
+comment|/* 	 * Get the object. Note: cannot use vm_object_lookup since object has 	 * already been removed from the hash chain. 	 */
 name|devp
 operator|=
 operator|(
@@ -1116,7 +1110,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Replace the passed in page with our own fake page and free 	 * up the original. 	 */
+comment|/* 	 * Replace the passed in page with our own fake page and free up the 	 * original. 	 */
 name|page
 operator|=
 name|dev_pager_getfake
@@ -1151,6 +1145,11 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+name|PAGE_WAKEUP
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
@@ -1176,11 +1175,6 @@ expr_stmt|;
 name|splx
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-name|PAGE_WAKEUP
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 if|if
@@ -1351,6 +1345,8 @@ operator|)
 name|malloc
 argument_list|(
 name|PAGE_SIZE
+operator|*
+literal|2
 argument_list|,
 name|M_VMPGDATA
 argument_list|,
@@ -1361,7 +1357,11 @@ for|for
 control|(
 name|i
 operator|=
+operator|(
 name|PAGE_SIZE
+operator|*
+literal|2
+operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
@@ -1414,11 +1414,31 @@ name|flags
 operator|=
 name|PG_BUSY
 operator||
-name|PG_CLEAN
-operator||
-name|PG_FAKE
-operator||
 name|PG_FICTITIOUS
+expr_stmt|;
+name|m
+operator|->
+name|dirty
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|m
+operator|->
+name|busy
+operator|=
+literal|0
+expr_stmt|;
+name|m
+operator|->
+name|bmapped
+operator|=
+literal|0
 expr_stmt|;
 name|m
 operator|->

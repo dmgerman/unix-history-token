@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)buf.h	8.7 (Berkeley) 1/21/94  * $Id: buf.h,v 1.9 1994/10/10 00:58:31 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)buf.h	8.7 (Berkeley) 1/21/94  * $Id: buf.h,v 1.10 1994/10/18 06:55:57 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -206,7 +206,7 @@ modifier|*
 name|b_pages
 index|[
 operator|(
-name|MAXBSIZE
+name|MAXPHYS
 operator|+
 name|PAGE_SIZE
 operator|-
@@ -218,11 +218,13 @@ index|]
 decl_stmt|;
 else|#
 directive|else
-name|vm_page_t
+name|struct
+name|vm_page
+modifier|*
 name|b_pages
 index|[
 operator|(
-name|MAXBSIZE
+name|MAXPHYS
 operator|+
 name|PAGE_SIZE
 operator|-
@@ -483,18 +485,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_PAGET
+name|B_MALLOC
 value|0x00010000
 end_define
 
 begin_comment
-comment|/* Page in/out of page table space. */
+comment|/* malloced b_data */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|B_PGIN
+name|B_CLUSTEROK
 value|0x00020000
 end_define
 
@@ -549,12 +551,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_UAREA
+name|B_PDWANTED
 value|0x00400000
 end_define
 
 begin_comment
-comment|/* Buffer describes Uarea I/O. */
+comment|/* Pageout daemon wants this buffer. */
 end_comment
 
 begin_define
@@ -706,7 +708,7 @@ begin_define
 define|#
 directive|define
 name|BUFFER_QUEUES
-value|5
+value|6
 end_define
 
 begin_comment
@@ -785,19 +787,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|QUEUE_AGE
+name|QUEUE_VMIO
 value|3
 end_define
 
 begin_comment
-comment|/* less useful buffers */
+comment|/* VMIO buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUEUE_AGE
+value|4
+end_define
+
+begin_comment
+comment|/* not-useful buffers */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|QUEUE_EMPTY
-value|4
+value|5
 end_define
 
 begin_comment
@@ -1091,6 +1104,8 @@ name|slpflag
 operator|,
 name|int
 name|slptimeo
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1167,7 +1182,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|allocbuf
 name|__P
 argument_list|(
@@ -1175,6 +1190,8 @@ operator|(
 expr|struct
 name|buf
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)

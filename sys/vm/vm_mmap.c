@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.4 (Berkeley) 1/12/94  * $Id: vm_mmap.c,v 1.6 1994/09/02 15:06:51 davidg Exp $  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	8.4 (Berkeley) 1/12/94  * $Id: vm_mmap.c,v 1.7 1994/10/09 01:52:11 phk Exp $  */
 end_comment
 
 begin_comment
@@ -458,7 +458,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Address (if FIXED) must be page aligned. 	 * Size is implicitly rounded to a page boundary. 	 */
+comment|/* 	 * Address (if FIXED) must be page aligned. Size is implicitly rounded 	 * to a page boundary. 	 */
 name|addr
 operator|=
 operator|(
@@ -525,7 +525,7 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for illegal addresses.  Watch out for address wrap... 	 * Note that VM_*_ADDRESS are not constants due to casts (argh). 	 */
+comment|/* 	 * Check for illegal addresses.  Watch out for address wrap... Note 	 * that VM_*_ADDRESS are not constants due to casts (argh). 	 */
 if|if
 condition|(
 name|flags
@@ -584,7 +584,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 	 * XXX if no hint provided for a non-fixed mapping place it after 	 * the end of the largest possible heap. 	 * 	 * There should really be a pmap call to determine a reasonable 	 * location. 	 */
+comment|/* 	 * XXX if no hint provided for a non-fixed mapping place it after the 	 * end of the largest possible heap. 	 *  	 * There should really be a pmap call to determine a reasonable location. 	 */
 if|if
 condition|(
 name|addr
@@ -631,7 +631,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Mapping file, get fp for validation. 		 * Obtain vnode and make sure it is of appropriate type. 		 */
+comment|/* 		 * Mapping file, get fp for validation. Obtain vnode and make 		 * sure it is of appropriate type. 		 */
 if|if
 condition|(
 operator|(
@@ -710,7 +710,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 		 * XXX hack to handle use of /dev/zero to map anon 		 * memory (ala SunOS). 		 */
+comment|/* 		 * XXX hack to handle use of /dev/zero to map anon memory (ala 		 * SunOS). 		 */
 if|if
 condition|(
 name|vp
@@ -742,7 +742,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Ensure that file and memory protections are 			 * compatible.  Note that we only worry about 			 * writability if mapping is shared; in this case, 			 * current and max prot are dictated by the open file. 			 * XXX use the vnode instead?  Problem is: what 			 * credentials do we use for determination? 			 * What if proc does a setuid? 			 */
+comment|/* 			 * Ensure that file and memory protections are 			 * compatible.  Note that we only worry about 			 * writability if mapping is shared; in this case, 			 * current and max prot are dictated by the open file. 			 * XXX use the vnode instead?  Problem is: what 			 * credentials do we use for determination? What if 			 * proc does a setuid? 			 */
 name|maxprot
 operator|=
 name|VM_PROT_EXECUTE
@@ -1288,7 +1288,7 @@ name|uap
 operator|->
 name|len
 expr_stmt|;
-comment|/* 	 * XXX Gak!  If size is zero we are supposed to sync "all modified 	 * pages with the region containing addr".  Unfortunately, we 	 * don't really keep track of individual mmaps so we approximate 	 * by flushing the range of the map entry containing addr. 	 * This can be incorrect if the region splits or is coalesced 	 * with a neighbor. 	 */
+comment|/* 	 * XXX Gak!  If size is zero we are supposed to sync "all modified 	 * pages with the region containing addr".  Unfortunately, we don't 	 * really keep track of individual mmaps so we approximate by flushing 	 * the range of the map entry containing addr. This can be incorrect 	 * if the region splits or is coalesced with a neighbor. 	 */
 if|if
 condition|(
 name|size
@@ -1369,12 +1369,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Could pass this in as a third flag argument to implement 	 * Sun's MS_ASYNC. 	 */
+comment|/* 	 * Could pass this in as a third flag argument to implement Sun's 	 * MS_ASYNC. 	 */
 name|syncio
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	 * XXX bummer, gotta flush all cached pages to ensure 	 * consistency with the file system cache.  Otherwise, we could 	 * pass this in to implement Sun's MS_INVALIDATE. 	 */
+comment|/* 	 * XXX bummer, gotta flush all cached pages to ensure consistency with 	 * the file system cache.  Otherwise, we could pass this in to 	 * implement Sun's MS_INVALIDATE. 	 */
 name|invalidate
 operator|=
 name|TRUE
@@ -1567,7 +1567,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Check for illegal addresses.  Watch out for address wrap... 	 * Note that VM_*_ADDRESS are not constants due to casts (argh). 	 */
+comment|/* 	 * Check for illegal addresses.  Watch out for address wrap... Note 	 * that VM_*_ADDRESS are not constants due to casts (argh). 	 */
 if|if
 condition|(
 name|VM_MAXUSER_ADDRESS
@@ -2576,7 +2576,7 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Lookup/allocate pager.  All except an unnamed anonymous lookup 	 * gain a reference to ensure continued existance of the object. 	 * (XXX the exception is to appease the pageout daemon) 	 */
+comment|/* 	 * Lookup/allocate pager.  All except an unnamed anonymous lookup gain 	 * a reference to ensure continued existance of the object. (XXX the 	 * exception is to appease the pageout daemon) 	 */
 if|if
 condition|(
 name|flags
@@ -2667,6 +2667,21 @@ argument_list|(
 name|pager
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|handle
+operator|&&
+name|object
+operator|==
+name|NULL
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"vm_mmap: vm_object_lookup failed"
+argument_list|)
+expr_stmt|;
+block|}
 name|vm_object_deallocate
 argument_list|(
 name|object
@@ -2727,7 +2742,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * Don't cache anonymous objects. 		 * Loses the reference gained by vm_pager_allocate. 		 * Note that object will be NULL when handle == NULL, 		 * this is ok since vm_allocate_with_pager has made 		 * sure that these objects are uncached. 		 */
+comment|/* 		 * Don't cache anonymous objects. Loses the reference gained 		 * by vm_pager_allocate. Note that object will be NULL when 		 * handle == NULL, this is ok since vm_allocate_with_pager has 		 * made sure that these objects are uncached. 		 */
 operator|(
 name|void
 operator|)
@@ -2766,7 +2781,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Must be a mapped file. 	 * Distinguish between character special and regular files. 	 */
+comment|/* 	 * Must be a mapped file. Distinguish between character special and 	 * regular files. 	 */
 elseif|else
 if|if
 condition|(
@@ -2796,7 +2811,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Uncache the object and lose the reference gained 		 * by vm_pager_allocate().  If the call to 		 * vm_allocate_with_pager() was sucessful, then we 		 * gained an additional reference ensuring the object 		 * will continue to exist.  If the call failed then 		 * the deallocate call below will terminate the 		 * object which is fine. 		 */
+comment|/* 		 * Uncache the object and lose the reference gained by 		 * vm_pager_allocate().  If the call to 		 * vm_allocate_with_pager() was sucessful, then we gained an 		 * additional reference ensuring the object will continue to 		 * exist.  If the call failed then the deallocate call below 		 * will terminate the object which is fine. 		 */
 operator|(
 name|void
 operator|)
@@ -2840,7 +2855,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 * Map it directly. 		 * Allows modifications to go out to the vnode. 		 */
+comment|/* 		 * Map it directly. Allows modifications to go out to the 		 * vnode. 		 */
 if|if
 condition|(
 name|flags
@@ -2883,7 +2898,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 			 * Don't cache the object.  This is the easiest way 			 * of ensuring that data gets back to the filesystem 			 * because vnode_pager_deallocate() will fsync the 			 * vnode.  pager_cache() will lose the extra ref. 			 */
+comment|/* 			 * Don't cache the object.  This is the easiest way of 			 * ensuring that data gets back to the filesystem 			 * because vnode_pager_deallocate() will fsync the 			 * vnode.  pager_cache() will lose the extra ref. 			 */
 if|if
 condition|(
 name|prot
@@ -2926,7 +2941,7 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Copy-on-write of file.  Two flavors. 		 * MAP_COPY is true COW, you essentially get a snapshot of 		 * the region at the time of mapping.  MAP_PRIVATE means only 		 * that your changes are not reflected back to the object. 		 * Changes made by others will be seen. 		 */
+comment|/* 		 * Copy-on-write of file.  Two flavors. MAP_COPY is true COW, 		 * you essentially get a snapshot of the region at the time of 		 * mapping.  MAP_PRIVATE means only that your changes are not 		 * reflected back to the object. Changes made by others will 		 * be seen. 		 */
 else|else
 block|{
 name|vm_map_t
@@ -3035,7 +3050,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 			 * (XXX) 			 * MAP_PRIVATE implies that we see changes made by 			 * others.  To ensure that we need to guarentee that 			 * no copy object is created (otherwise original 			 * pages would be pushed to the copy object and we 			 * would never see changes made by others).  We 			 * totally sleeze it right now by marking the object 			 * internal temporarily. 			 */
+comment|/* 			 * (XXX) MAP_PRIVATE implies that we see changes made 			 * by others.  To ensure that we need to guarentee 			 * that no copy object is created (otherwise original 			 * pages would be pushed to the copy object and we 			 * would never see changes made by others).  We 			 * totally sleeze it right now by marking the object 			 * internal temporarily. 			 */
 if|if
 condition|(
 operator|(
@@ -3079,7 +3094,7 @@ operator|&=
 operator|~
 name|OBJ_INTERNAL
 expr_stmt|;
-comment|/* 			 * (XXX) 			 * My oh my, this only gets worse... 			 * Force creation of a shadow object so that 			 * vm_map_fork will do the right thing. 			 */
+comment|/* 			 * (XXX) My oh my, this only gets worse... Force 			 * creation of a shadow object so that vm_map_fork 			 * will do the right thing. 			 */
 if|if
 condition|(
 operator|(
@@ -3152,7 +3167,7 @@ name|tentry
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * (XXX) 			 * Map copy code cannot detect sharing unless a 			 * sharing map is involved.  So we cheat and write 			 * protect everything ourselves. 			 */
+comment|/* 			 * (XXX) Map copy code cannot detect sharing unless a 			 * sharing map is involved.  So we cheat and write 			 * protect everything ourselves. 			 */
 name|vm_object_pmap_copy
 argument_list|(
 name|object
@@ -3234,7 +3249,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Correct protection (default is VM_PROT_ALL). 	 * If maxprot is different than prot, we must set both explicitly. 	 */
+comment|/* 	 * Correct protection (default is VM_PROT_ALL). If maxprot is 	 * different than prot, we must set both explicitly. 	 */
 name|rv
 operator|=
 name|KERN_SUCCESS

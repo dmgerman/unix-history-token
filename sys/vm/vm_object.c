@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.13 1994/12/23 05:00:19 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.14 1995/01/05 04:30:40 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -44,6 +44,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -62,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/swap_pager.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vnode_pager.h>
 end_include
 
 begin_function_decl
@@ -108,9 +132,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
-name|vm_cache_max
+name|vm_object_cache_max
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|VM_OBJECT_HASH_COUNT
-value|157
+value|509
 end_define
 
 begin_decl_stmt
@@ -231,7 +254,7 @@ name|copy
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 *	Object starts out read-write, with no pager. 	 */
+comment|/* 	 * Object starts out read-write, with no pager. 	 */
 name|object
 operator|->
 name|pager
@@ -339,6 +362,18 @@ argument_list|(
 operator|&
 name|vm_object_list_lock
 argument_list|)
+expr_stmt|;
+name|vm_object_cache_max
+operator|=
+operator|(
+name|cnt
+operator|.
+name|v_page_count
+operator|-
+literal|500
+operator|)
+operator|/
+literal|8
 expr_stmt|;
 for|for
 control|(
@@ -510,11 +545,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 *	The cache holds a reference (uncounted) to 		 *	the object; we must lock it before removing 		 *	the object. 		 */
+comment|/* 		 * The cache holds a reference (uncounted) to the object; we 		 * must lock it before removing the object. 		 */
 name|vm_object_cache_lock
 argument_list|()
 expr_stmt|;
-comment|/* 		 *	Lose the reference 		 */
+comment|/* 		 * Lose the reference 		 */
 name|vm_object_lock
 argument_list|(
 name|object
@@ -559,6 +594,18 @@ name|tqh_first
 operator|->
 name|ref_count
 expr_stmt|;
+if|if
+condition|(
+name|vm_object_lock_try
+argument_list|(
+name|object
+operator|->
+name|reverse_shadow_head
+operator|.
+name|tqh_first
+argument_list|)
+condition|)
+block|{
 name|vm_object_rcollapse
 argument_list|(
 name|object
@@ -570,6 +617,16 @@ argument_list|,
 name|object
 argument_list|)
 expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|object
+operator|->
+name|reverse_shadow_head
+operator|.
+name|tqh_first
+argument_list|)
+expr_stmt|;
+block|}
 name|vm_object_deallocate
 argument_list|(
 name|object
@@ -586,13 +643,13 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 			 *	If there are still references, then 			 *	we are done. 			 */
+comment|/* 			 * If there are still references, then we are done. 			 */
 name|vm_object_cache_unlock
 argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 *	See if this object can persist.  If so, enter 		 *	it in the cache, then deactivate all of its 		 *	pages. 		 */
+comment|/* 		 * See if this object can persist.  If so, enter it in the 		 * cache, then deactivate all of its pages. 		 */
 if|if
 condition|(
 name|object
@@ -618,7 +675,6 @@ expr_stmt|;
 name|vm_object_cache_unlock
 argument_list|()
 expr_stmt|;
-comment|/*  * this code segment was removed because it kills performance with  * large -- repetively used binaries.  The functionality now resides  * in the pageout daemon  *			vm_object_deactivate_pages(object);   */
 name|vm_object_unlock
 argument_list|(
 name|object
@@ -629,7 +685,13 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 *	Make sure no one can look us up now. 		 */
+comment|/* 		 * Make sure no one can look us up now. 		 */
+name|object
+operator|->
+name|flags
+operator||=
+name|OBJ_DEAD
+expr_stmt|;
 name|vm_object_remove
 argument_list|(
 name|object
@@ -694,6 +756,8 @@ block|{
 specifier|register
 name|vm_page_t
 name|p
+decl_stmt|,
+name|next
 decl_stmt|;
 name|vm_object_t
 name|shadow_object
@@ -701,7 +765,14 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* 	 *	Detach the object from its shadow if we are the shadow's 	 *	copy. 	 */
+name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|NULL
+decl_stmt|;
+comment|/* 	 * Detach the object from its shadow if we are the shadow's copy. 	 */
 if|if
 condition|(
 operator|(
@@ -741,7 +812,71 @@ name|shadow_object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *	Wait until the pageout daemon is through 	 *	with the object. 	 */
+if|if
+condition|(
+name|object
+operator|->
+name|pager
+operator|&&
+operator|(
+name|object
+operator|->
+name|pager
+operator|->
+name|pg_type
+operator|==
+name|PG_VNODE
+operator|)
+condition|)
+block|{
+name|vn_pager_t
+name|vnp
+init|=
+name|object
+operator|->
+name|pager
+operator|->
+name|pg_data
+decl_stmt|;
+name|vp
+operator|=
+name|vnp
+operator|->
+name|vnp_vp
+expr_stmt|;
+name|VOP_FSYNC
+argument_list|(
+name|vp
+argument_list|,
+name|NOCRED
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|vinvalbuf
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|NOCRED
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Wait until the pageout daemon is through with the object. 	 */
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|object
@@ -749,16 +884,23 @@ operator|->
 name|paging_in_progress
 condition|)
 block|{
-name|vm_object_sleep
+name|vm_object_unlock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+name|tsleep
 argument_list|(
 operator|(
-name|int
+name|caddr_t
 operator|)
 name|object
 argument_list|,
-name|object
+name|PVM
 argument_list|,
-name|FALSE
+literal|"objtrm"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vm_object_lock
@@ -767,7 +909,12 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *	While the paging system is locked, 	 *	pull the object's pages off the active 	 *	and inactive queues.  This keeps the 	 *	pageout daemon from playing with them 	 *	during vm_pager_deallocate. 	 * 	 *	We can't free the pages yet, because the 	 *	object's pager may have to write them out 	 *	before deallocating the paging space. 	 */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* 	 * While the paging system is locked, pull the object's pages off the 	 * active and inactive queues.  This keeps the pageout daemon from 	 * playing with them during vm_pager_deallocate. 	 *  	 * We can't free the pages yet, because the object's pager may have to 	 * write them out before deallocating the paging space. 	 */
 for|for
 control|(
 name|p
@@ -782,11 +929,7 @@ name|p
 condition|;
 name|p
 operator|=
-name|p
-operator|->
-name|listq
-operator|.
-name|tqe_next
+name|next
 control|)
 block|{
 name|VM_PAGE_CHECK
@@ -794,92 +937,44 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|next
+operator|=
+name|p
+operator|->
+name|listq
+operator|.
+name|tqe_next
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|p
 operator|->
 name|flags
 operator|&
-name|PG_ACTIVE
+name|PG_CACHE
 condition|)
-block|{
-name|TAILQ_REMOVE
+name|vm_page_free
 argument_list|(
-operator|&
-name|vm_page_queue_active
-argument_list|,
 name|p
-argument_list|,
-name|pageq
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_ACTIVE
-expr_stmt|;
-name|cnt
-operator|.
-name|v_active_count
-operator|--
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|p
-operator|->
-name|flags
-operator|&
-name|PG_INACTIVE
-condition|)
-block|{
-name|TAILQ_REMOVE
+else|else
+name|vm_page_unqueue
 argument_list|(
-operator|&
-name|vm_page_queue_inactive
-argument_list|,
 name|p
-argument_list|,
-name|pageq
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_INACTIVE
-expr_stmt|;
-name|cnt
-operator|.
-name|v_inactive_count
-operator|--
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-block|}
-name|vm_object_unlock
-argument_list|(
-name|object
-argument_list|)
+name|p
+operator|=
+name|next
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|object
@@ -893,7 +988,7 @@ argument_list|(
 literal|"vm_object_deallocate: pageout in progress"
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Clean and free the pages, as appropriate. 	 *	All references to the object are gone, 	 *	so we don't need to lock it. 	 */
+comment|/* 	 * Clean and free the pages, as appropriate. All references to the 	 * object are gone, so we don't need to lock it. 	 */
 if|if
 condition|(
 operator|(
@@ -907,11 +1002,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_object_lock
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -928,13 +1018,42 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * one last time -- get rid of buffers that might have been created 	 * for the vm_object_page_clean 	 */
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|vm_object_unlock
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|vinvalbuf
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|NOCRED
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|vm_object_lock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* 	 * Now free the pages. 	 * For internal objects, this also removes them from paging queues. 	 */
+comment|/* 	 * Now free the pages. For internal objects, this also removes them 	 * from paging queues. 	 */
 while|while
 condition|(
 operator|(
@@ -958,6 +1077,11 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+name|PAGE_WAKEUP
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|p
@@ -972,7 +1096,12 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 *	Let the pager know object is dead. 	 */
+name|vm_object_unlock
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Let the pager know object is dead. 	 */
 if|if
 condition|(
 name|object
@@ -1013,7 +1142,7 @@ operator|&
 name|vm_object_list_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Free the space for the object. 	 */
+comment|/* 	 * Free the space for the object. 	 */
 name|free
 argument_list|(
 operator|(
@@ -1128,16 +1257,15 @@ operator|->
 name|paging_in_progress
 condition|)
 block|{
-name|vm_object_sleep
+name|tsleep
 argument_list|(
-operator|(
-name|int
-operator|)
 name|object
 argument_list|,
-name|object
+name|PVM
 argument_list|,
-name|FALSE
+literal|"objpcw"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1203,52 +1331,72 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|p
 operator|->
 name|flags
 operator|&
 name|PG_BUSY
+operator|)
+operator|||
+name|p
+operator|->
+name|busy
 condition|)
-continue|continue;
+block|{
+name|int
+name|s
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
+name|p
+operator|->
+name|flags
+operator||=
+name|PG_WANTED
+expr_stmt|;
+name|tsleep
+argument_list|(
+name|p
+argument_list|,
+name|PVM
+argument_list|,
+literal|"objpcn"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 name|size
 operator|-=
 name|PAGE_SIZE
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|flags
-operator|&
-name|PG_CLEAN
-operator|)
-operator|&&
-name|pmap_is_modified
-argument_list|(
-name|VM_PAGE_TO_PHYS
+name|vm_page_test_dirty
 argument_list|(
 name|p
 argument_list|)
-argument_list|)
-condition|)
-name|p
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_CLEAN
 expr_stmt|;
 if|if
 condition|(
 operator|(
 name|p
 operator|->
-name|flags
+name|dirty
 operator|&
-name|PG_CLEAN
+name|p
+operator|->
+name|valid
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
@@ -1295,37 +1443,37 @@ literal|0
 end_if
 
 begin_comment
-unit|boolean_t vm_object_page_clean(object, start, end, syncio, de_queue) 	register vm_object_t	object; 	register vm_offset_t	start; 	register vm_offset_t	end; 	boolean_t		syncio; 	boolean_t		de_queue; { 	register vm_page_t	p; 	int onqueue; 	boolean_t noerror = TRUE;  	if (object == NULL) 		return (TRUE);
-comment|/* 	 * If it is an internal object and there is no pager, attempt to 	 * allocate one.  Note that vm_object_collapse may relocate one 	 * from a collapsed object so we must recheck afterward. 	 */
+unit|boolean_t vm_object_page_clean(object, start, end, syncio, de_queue) 	register vm_object_t object; 	register vm_offset_t start; 	register vm_offset_t end; 	boolean_t syncio; 	boolean_t de_queue; { 	register vm_page_t p; 	int onqueue; 	boolean_t noerror = TRUE;  	if (object == NULL) 		return (TRUE);
+comment|/* 	 * If it is an internal object and there is no pager, attempt to 	 * allocate one.  Note that vm_object_collapse may relocate one from a 	 * collapsed object so we must recheck afterward. 	 */
 end_comment
 
 begin_comment
-unit|if ((object->flags& OBJ_INTERNAL)&& object->pager == NULL) { 		vm_object_collapse(object); 		if (object->pager == NULL) { 			vm_pager_t pager;  			vm_object_unlock(object); 			pager = vm_pager_allocate(PG_DFLT, (caddr_t)0, 						  object->size, VM_PROT_ALL, 						  (vm_offset_t)0); 			if (pager) 				vm_object_setpager(object, pager, 0, FALSE); 			vm_object_lock(object); 		} 	} 	if (object->pager == NULL) 		return (FALSE);  again:
+unit|if ((object->flags& OBJ_INTERNAL)&& object->pager == NULL) { 		vm_object_collapse(object); 		if (object->pager == NULL) { 			vm_pager_t pager;  			vm_object_unlock(object); 			pager = vm_pager_allocate(PG_DFLT, (caddr_t) 0, 			    object->size, VM_PROT_ALL, 			    (vm_offset_t) 0); 			if (pager) 				vm_object_setpager(object, pager, 0, FALSE); 			vm_object_lock(object); 		} 	} 	if (object->pager == NULL) 		return (FALSE);  again:
 comment|/* 	 * Wait until the pageout daemon is through with the object. 	 */
 end_comment
 
 begin_comment
-unit|while (object->paging_in_progress) { 		vm_object_sleep((int)object, object, FALSE); 		vm_object_lock(object); 	}
+unit|while (object->paging_in_progress) { 		vm_object_sleep((int) object, object, FALSE); 		vm_object_lock(object); 	}
 comment|/* 	 * Loop through the object page list cleaning as necessary. 	 */
 end_comment
 
 begin_comment
-unit|for (p = object->memq.tqh_first; p != NULL; p = p->listq.tqe_next) { 		onqueue = 0; 		if ((start == end || p->offset>= start&& p->offset< end)&& 		    !(p->flags& PG_FICTITIOUS)) { 			if ((p->flags& PG_CLEAN)&& 			    pmap_is_modified(VM_PAGE_TO_PHYS(p))) 				p->flags&= ~PG_CLEAN;
-comment|/* 			 * Remove the page from any paging queue. 			 * This needs to be done if either we have been 			 * explicitly asked to do so or it is about to 			 * be cleaned (see comment below). 			 */
+unit|for (p = object->memq.tqh_first; p != NULL; p = p->listq.tqe_next) { 		onqueue = 0; 		if ((start == end || p->offset>= start&& p->offset< end)&& 		    !(p->flags& PG_FICTITIOUS)) { 			vm_page_test_dirty(p);
+comment|/* 			 * Remove the page from any paging queue. This needs 			 * to be done if either we have been explicitly asked 			 * to do so or it is about to be cleaned (see comment 			 * below). 			 */
 end_comment
 
 begin_comment
-unit|if (de_queue || !(p->flags& PG_CLEAN)) { 				vm_page_lock_queues(); 				if (p->flags& PG_ACTIVE) { 					TAILQ_REMOVE(&vm_page_queue_active, 						     p, pageq); 					p->flags&= ~PG_ACTIVE; 					cnt.v_active_count--; 					onqueue = 1; 				} else if (p->flags& PG_INACTIVE) { 					TAILQ_REMOVE(&vm_page_queue_inactive, 						     p, pageq); 					p->flags&= ~PG_INACTIVE; 					cnt.v_inactive_count--; 					onqueue = -1; 				} else 					onqueue = 0; 				vm_page_unlock_queues(); 			}
-comment|/* 			 * To ensure the state of the page doesn't change 			 * during the clean operation we do two things. 			 * First we set the busy bit and write-protect all 			 * mappings to ensure that write accesses to the 			 * page block (in vm_fault).  Second, we remove 			 * the page from any paging queue to foil the 			 * pageout daemon (vm_pageout_scan). 			 */
+unit|if (de_queue || (p->dirty& p->valid)) { 				vm_page_lock_queues(); 				if (p->flags& PG_ACTIVE) { 					TAILQ_REMOVE(&vm_page_queue_active, 					    p, pageq); 					p->flags&= ~PG_ACTIVE; 					cnt.v_active_count--; 					onqueue = 1; 				} else if (p->flags& PG_INACTIVE) { 					TAILQ_REMOVE(&vm_page_queue_inactive, 					    p, pageq); 					p->flags&= ~PG_INACTIVE; 					cnt.v_inactive_count--; 					onqueue = -1; 				} else 					onqueue = 0; 				vm_page_unlock_queues(); 			}
+comment|/* 			 * To ensure the state of the page doesn't change 			 * during the clean operation we do two things. First 			 * we set the busy bit and write-protect all mappings 			 * to ensure that write accesses to the page block (in 			 * vm_fault).  Second, we remove the page from any 			 * paging queue to foil the pageout daemon 			 * (vm_pageout_scan). 			 */
 end_comment
 
 begin_comment
-unit|pmap_page_protect(VM_PAGE_TO_PHYS(p), VM_PROT_READ); 			if (!(p->flags& PG_CLEAN)) { 				p->flags |= PG_BUSY; 				object->paging_in_progress++; 				vm_object_unlock(object);
-comment|/* 				 * XXX if put fails we mark the page as 				 * clean to avoid an infinite loop. 				 * Will loose changes to the page. 				 */
+unit|pmap_page_protect(VM_PAGE_TO_PHYS(p), VM_PROT_READ); 			if (p->dirty& p->valid) { 				p->flags |= PG_BUSY; 				object->paging_in_progress++; 				vm_object_unlock(object);
+comment|/* 				 * XXX if put fails we mark the page as clean 				 * to avoid an infinite loop. Will loose 				 * changes to the page. 				 */
 end_comment
 
 begin_endif
-unit|if (vm_pager_put(object->pager, p, syncio)) { 					printf("%s: pager_put error\n", 					       "vm_object_page_clean"); 					p->flags |= PG_CLEAN; 					noerror = FALSE; 				} 				vm_object_lock(object); 				object->paging_in_progress--; 				if (!de_queue&& onqueue) { 					vm_page_lock_queues(); 					if (onqueue> 0) 						vm_page_activate(p); 					else 						vm_page_deactivate(p); 					vm_page_unlock_queues(); 				} 				PAGE_WAKEUP(p); 				goto again; 			} 		} 	} 	return (noerror); }
+unit|if (vm_pager_put(object->pager, p, syncio)) { 					printf("%s: pager_put error\n", 					    "vm_object_page_clean"); 					p->dirty = 0; 					noerror = FALSE; 				} 				vm_object_lock(object); 				object->paging_in_progress--; 				if (!de_queue&& onqueue) { 					vm_page_lock_queues(); 					if (onqueue> 0) 						vm_page_activate(p); 					else 						vm_page_deactivate(p); 					vm_page_unlock_queues(); 				} 				PAGE_WAKEUP(p); 				goto again; 			} 		} 	} 	return (noerror); }
 endif|#
 directive|endif
 end_endif
@@ -1413,7 +1561,7 @@ while|while
 condition|(
 name|vm_object_cached
 operator|>
-name|vm_cache_max
+name|vm_object_cache_max
 condition|)
 block|{
 name|object
@@ -1671,11 +1819,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|->
 name|flags
 operator|&
 name|PG_BUSY
+operator|)
+operator|||
+name|p
+operator|->
+name|busy
 condition|)
 block|{
 name|p
@@ -1721,24 +1875,6 @@ argument_list|)
 argument_list|,
 name|VM_PROT_NONE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|flags
-operator|&
-name|PG_CLEAN
-operator|)
-operator|==
-literal|0
-condition|)
-name|p
-operator|->
-name|flags
-operator||=
-name|PG_LAUNDRY
 expr_stmt|;
 block|}
 block|}
@@ -1841,7 +1977,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 *	Nothing to copy 		 */
+comment|/* 		 * Nothing to copy 		 */
 operator|*
 name|dst_object
 operator|=
@@ -1859,13 +1995,13 @@ name|FALSE
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 *	If the object's pager is null_pager or the 	 *	default pager, we don't have to make a copy 	 *	of it.  Instead, we set the needs copy flag and 	 *	make a shadow later. 	 */
+comment|/* 	 * If the object's pager is null_pager or the default pager, we don't 	 * have to make a copy of it.  Instead, we set the needs copy flag and 	 * make a shadow later. 	 */
 name|vm_object_lock
 argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Try to collapse the object before copying it. 	 */
+comment|/* 	 * Try to collapse the object before copying it. 	 */
 name|vm_object_collapse
 argument_list|(
 name|src_object
@@ -1896,13 +2032,13 @@ name|OBJ_INTERNAL
 operator|)
 condition|)
 block|{
-comment|/* 		 *	Make another reference to the object 		 */
+comment|/* 		 * Make another reference to the object 		 */
 name|src_object
 operator|->
 name|ref_count
 operator|++
 expr_stmt|;
-comment|/* 		 *	Mark all of the pages copy-on-write. 		 */
+comment|/* 		 * Mark all of the pages copy-on-write. 		 */
 for|for
 control|(
 name|p
@@ -1960,7 +2096,7 @@ name|dst_offset
 operator|=
 name|src_offset
 expr_stmt|;
-comment|/* 		 *	Must make a shadow when write is desired 		 */
+comment|/* 		 * Must make a shadow when write is desired 		 */
 operator|*
 name|src_needs_copy
 operator|=
@@ -1968,7 +2104,7 @@ name|TRUE
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 *	If the object has a pager, the pager wants to 	 *	see all of the changes.  We need a copy-object 	 *	for the changed pages. 	 * 	 *	If there is a copy-object, and it is empty, 	 *	no changes have been made to the object since the 	 *	copy-object was made.  We can use the same copy- 	 *	object. 	 */
+comment|/* 	 * If the object has a pager, the pager wants to see all of the 	 * changes.  We need a copy-object for the changed pages. 	 *  	 * If there is a copy-object, and it is empty, no changes have been made 	 * to the object since the copy-object was made.  We can use the same 	 * copy- object. 	 */
 name|Retry1
 label|:
 name|old_copy
@@ -1984,7 +2120,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 *	Try to get the locks (out of order) 		 */
+comment|/* 		 * Try to get the locks (out of order) 		 */
 if|if
 condition|(
 operator|!
@@ -2000,6 +2136,20 @@ name|src_object
 argument_list|)
 expr_stmt|;
 comment|/* should spin a bit here... */
+name|tsleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|old_copy
+argument_list|,
+name|PVM
+argument_list|,
+literal|"cpylck"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|vm_object_lock
 argument_list|(
 name|src_object
@@ -2024,7 +2174,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 *	Return another reference to 			 *	the existing copy-object. 			 */
+comment|/* 			 * Return another reference to the existing 			 * copy-object. 			 */
 name|old_copy
 operator|->
 name|ref_count
@@ -2068,7 +2218,7 @@ argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	If the object has a pager, the pager wants 	 *	to see all of the changes.  We must make 	 *	a copy-object and put the changed pages there. 	 * 	 *	The copy-object is always made large enough to 	 *	completely shadow the original object, since 	 *	it may have several users who want to shadow 	 *	the original object at different points. 	 */
+comment|/* 	 * If the object has a pager, the pager wants to see all of the 	 * changes.  We must make a copy-object and put the changed pages 	 * there. 	 *  	 * The copy-object is always made large enough to completely shadow the 	 * original object, since it may have several users who want to shadow 	 * the original object at different points. 	 */
 name|new_copy
 operator|=
 name|vm_object_allocate
@@ -2085,7 +2235,7 @@ argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Copy object may have changed while we were unlocked 	 */
+comment|/* 	 * Copy object may have changed while we were unlocked 	 */
 name|old_copy
 operator|=
 name|src_object
@@ -2099,7 +2249,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 *	Try to get the locks (out of order) 		 */
+comment|/* 		 * Try to get the locks (out of order) 		 */
 if|if
 condition|(
 operator|!
@@ -2114,11 +2264,25 @@ argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
+name|tsleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|old_copy
+argument_list|,
+name|PVM
+argument_list|,
+literal|"cpylck"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 goto|goto
 name|Retry2
 goto|;
 block|}
-comment|/* 		 *	Consistency check 		 */
+comment|/* 		 * Consistency check 		 */
 if|if
 condition|(
 name|old_copy
@@ -2141,7 +2305,7 @@ argument_list|(
 literal|"vm_object_copy: copy/shadow inconsistency"
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	Make the old copy-object shadow the new one. 		 *	It will receive no more pages from the original 		 *	object. 		 */
+comment|/* 		 * Make the old copy-object shadow the new one. It will 		 * receive no more pages from the original object. 		 */
 name|src_object
 operator|->
 name|ref_count
@@ -2193,7 +2357,7 @@ operator|->
 name|ref_count
 operator|++
 expr_stmt|;
-comment|/* locking not needed - we 						   have the only pointer */
+comment|/* locking not needed - we have the 					 * only pointer */
 name|vm_object_unlock
 argument_list|(
 name|old_copy
@@ -2219,7 +2383,7 @@ operator|->
 name|size
 expr_stmt|;
 comment|/* for the whole object */
-comment|/* 	 *	Point the new copy at the existing object. 	 */
+comment|/* 	 * Point the new copy at the existing object. 	 */
 name|new_copy
 operator|->
 name|shadow
@@ -2257,7 +2421,7 @@ name|copy
 operator|=
 name|new_copy
 expr_stmt|;
-comment|/* 	 *	Mark all the affected pages of the existing object 	 *	copy-on-write. 	 */
+comment|/* 	 * Mark all the affected pages of the existing object copy-on-write. 	 */
 for|for
 control|(
 name|p
@@ -2370,7 +2534,7 @@ operator|=
 operator|*
 name|object
 expr_stmt|;
-comment|/* 	 *	Allocate a new object with the given length 	 */
+comment|/* 	 * Allocate a new object with the given length 	 */
 if|if
 condition|(
 operator|(
@@ -2389,7 +2553,7 @@ argument_list|(
 literal|"vm_object_shadow: no object for shadowing"
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	The new object shadows the source object, adding 	 *	a reference to it.  Our caller changes his reference 	 *	to point to the new object, removing a reference to 	 *	the source object.  Net result: no change of reference 	 *	count. 	 */
+comment|/* 	 * The new object shadows the source object, adding a reference to it. 	 * Our caller changes his reference to point to the new object, 	 * removing a reference to the source object.  Net result: no change 	 * of reference count. 	 */
 name|result
 operator|->
 name|shadow
@@ -2414,7 +2578,7 @@ argument_list|,
 name|reverse_shadow_list
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Store the offset into the source object, 	 *	and fix up the offset into the new object. 	 */
+comment|/* 	 * Store the offset into the source object, and fix up the offset into 	 * the new object. 	 */
 name|result
 operator|->
 name|shadow_offset
@@ -2422,7 +2586,7 @@ operator|=
 operator|*
 name|offset
 expr_stmt|;
-comment|/* 	 *	Return the new things 	 */
+comment|/* 	 * Return the new things 	 */
 operator|*
 name|offset
 operator|=
@@ -2465,16 +2629,6 @@ name|boolean_t
 name|read_only
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|read_only
-operator|++
-expr_stmt|;
-comment|/* No longer used */
-endif|#
-directive|endif
-endif|lint
 name|vm_object_lock
 argument_list|(
 name|object
@@ -2699,7 +2853,7 @@ specifier|register
 name|vm_object_hash_entry_t
 name|entry
 decl_stmt|;
-comment|/* 	 *	We don't cache null objects, and we can't cache 	 *	objects with the null pager. 	 */
+comment|/* 	 * We don't cache null objects, and we can't cache objects with the 	 * null pager. 	 */
 if|if
 condition|(
 name|object
@@ -3055,6 +3209,16 @@ name|listq
 operator|.
 name|tqe_next
 expr_stmt|;
+name|pmap_page_protect
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
+name|VM_PROT_NONE
+argument_list|)
+expr_stmt|;
 name|new_offset
 operator|=
 operator|(
@@ -3078,9 +3242,6 @@ operator|>=
 name|size
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|backing_object
@@ -3104,15 +3265,8 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|pmap_page_protect
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
-name|VM_PROT_NONE
-argument_list|)
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_free
 argument_list|(
@@ -3160,9 +3314,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|backing_object
@@ -3186,15 +3337,8 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|pmap_page_protect
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
-name|VM_PROT_NONE
-argument_list|)
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_free
 argument_list|(
@@ -3394,11 +3538,16 @@ operator|&
 operator|(
 name|PG_BUSY
 operator||
-name|PG_FAKE
-operator||
 name|PG_FICTITIOUS
+operator||
+name|PG_CACHE
 operator|)
 operator|)
+operator|||
+operator|!
+name|p
+operator|->
+name|valid
 operator|||
 name|p
 operator|->
@@ -3407,6 +3556,14 @@ operator|||
 name|p
 operator|->
 name|wire_count
+operator|||
+name|p
+operator|->
+name|busy
+operator|||
+name|p
+operator|->
+name|bmapped
 condition|)
 block|{
 name|p
@@ -3415,6 +3572,16 @@ name|next
 expr_stmt|;
 continue|continue;
 block|}
+name|pmap_page_protect
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|p
+argument_list|)
+argument_list|,
+name|VM_PROT_NONE
+argument_list|)
+expr_stmt|;
 name|new_offset
 operator|=
 operator|(
@@ -3438,9 +3605,6 @@ operator|>=
 name|size
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|backing_object
@@ -3464,15 +3628,8 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|pmap_page_protect
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
-name|VM_PROT_NONE
-argument_list|)
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_free
 argument_list|(
@@ -3520,9 +3677,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|backing_object
@@ -3546,15 +3700,8 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|pmap_page_protect
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
-name|VM_PROT_NONE
-argument_list|)
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 name|vm_page_free
 argument_list|(
@@ -3671,7 +3818,7 @@ condition|(
 name|TRUE
 condition|)
 block|{
-comment|/* 		 *	Verify that the conditions are right for collapse: 		 * 		 *	The object exists and no pages in it are currently 		 *	being paged out. 		 */
+comment|/* 		 * Verify that the conditions are right for collapse: 		 *  		 * The object exists and no pages in it are currently being paged 		 * out. 		 */
 if|if
 condition|(
 name|object
@@ -3701,7 +3848,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 *		There is a backing object, and 		 */
+comment|/* 		 * There is a backing object, and 		 */
 if|if
 condition|(
 operator|(
@@ -3720,7 +3867,7 @@ argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	... 		 *		The backing object is not read_only, 		 *		and no pages in the backing object are 		 *		currently being paged out. 		 *		The backing object is internal. 		 */
+comment|/* 		 * ... The backing object is not read_only, and no pages in 		 * the backing object are currently being paged out. The 		 * backing object is internal. 		 */
 if|if
 condition|(
 operator|(
@@ -3752,7 +3899,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 *	The backing object can't be a copy-object: 		 *	the shadow_offset for the copy-object must stay 		 *	as 0.  Furthermore (for the 'we have all the 		 *	pages' case), if we bypass backing_object and 		 *	just shadow the next object in the chain, old 		 *	pages from that object would then have to be copied 		 *	BOTH into the (former) backing_object and into the 		 *	parent object. 		 */
+comment|/* 		 * The backing object can't be a copy-object: the 		 * shadow_offset for the copy-object must stay as 0. 		 * Furthermore (for the 'we have all the pages' case), if we 		 * bypass backing_object and just shadow the next object in 		 * the chain, old pages from that object would then have to be 		 * copied BOTH into the (former) backing_object and into the 		 * parent object. 		 */
 if|if
 condition|(
 name|backing_object
@@ -3816,7 +3963,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 *	We know that we can either collapse the backing 		 *	object (if the parent is the only reference to 		 *	it) or (perhaps) remove the parent's reference 		 *	to it. 		 */
+comment|/* 		 * We know that we can either collapse the backing object (if 		 * the parent is the only reference to it) or (perhaps) remove 		 * the parent's reference to it. 		 */
 name|backing_offset
 operator|=
 name|object
@@ -3829,7 +3976,7 @@ name|object
 operator|->
 name|size
 expr_stmt|;
-comment|/* 		 *	If there is exactly one reference to the backing 		 *	object, we can collapse it into the parent. 		 */
+comment|/* 		 * If there is exactly one reference to the backing object, we 		 * can collapse it into the parent. 		 */
 if|if
 condition|(
 name|backing_object
@@ -3839,7 +3986,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 			 *	We can collapse the backing object. 			 * 			 *	Move all in-memory pages from backing_object 			 *	to the parent.  Pages that have been paged out 			 *	will be overwritten by any of the parent's 			 *	pages that shadow them. 			 */
+comment|/* 			 * We can collapse the backing object. 			 *  			 * Move all in-memory pages from backing_object to the 			 * parent.  Pages that have been paged out will be 			 * overwritten by any of the parent's pages that 			 * shadow them. 			 */
 while|while
 condition|(
 operator|(
@@ -3865,7 +4012,7 @@ operator|-
 name|backing_offset
 operator|)
 expr_stmt|;
-comment|/* 				 *	If the parent has a page here, or if 				 *	this page falls outside the parent, 				 *	dispose of it. 				 * 				 *	Otherwise, move it as planned. 				 */
+comment|/* 				 * If the parent has a page here, or if this 				 * page falls outside the parent, dispose of 				 * it. 				 *  				 * Otherwise, move it as planned. 				 */
 if|if
 condition|(
 name|p
@@ -3890,6 +4037,11 @@ name|p
 argument_list|)
 argument_list|,
 name|VM_PROT_NONE
+argument_list|)
+expr_stmt|;
+name|PAGE_WAKEUP
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -3951,6 +4103,11 @@ argument_list|,
 name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
+name|PAGE_WAKEUP
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|p
@@ -3974,7 +4131,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 			 *	Move the pager from backing_object to object. 			 */
+comment|/* 			 * Move the pager from backing_object to object. 			 */
 if|if
 condition|(
 name|backing_object
@@ -4002,7 +4159,7 @@ operator|->
 name|paging_in_progress
 operator|++
 expr_stmt|;
-comment|/* 					 * copy shadow object pages into ours 					 * and destroy unneeded pages in shadow object. 					 */
+comment|/* 					 * copy shadow object pages into ours 					 * and destroy unneeded pages in 					 * shadow object. 					 */
 name|bopager
 operator|=
 name|backing_object
@@ -4162,7 +4319,7 @@ name|backing_object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 *	Object now shadows whatever backing_object did. 			 *	Note that the reference to backing_object->shadow 			 *	moves from within backing_object to within object. 			 */
+comment|/* 			 * Object now shadows whatever backing_object did. 			 * Note that the reference to backing_object->shadow 			 * moves from within backing_object to within object. 			 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -4256,7 +4413,7 @@ literal|"vm_object_collapse: we collapsed a copy-object!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 *	Discard backing_object. 			 * 			 *	Since the backing object has no pages, no 			 *	pager left, and no object references within it, 			 *	all that is necessary is to dispose of it. 			 */
+comment|/* 			 * Discard backing_object. 			 *  			 * Since the backing object has no pages, no pager left, 			 * and no object references within it, all that is 			 * necessary is to dispose of it. 			 */
 name|vm_object_unlock
 argument_list|(
 name|backing_object
@@ -4303,7 +4460,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 *	If all of the pages in the backing object are 			 *	shadowed by the parent object, the parent 			 *	object no longer has to shadow the backing 			 *	object; it can shadow the next one in the 			 *	chain. 			 * 			 *	The backing object must not be paged out - we'd 			 *	have to check all of the paged-out pages, as 			 *	well. 			 */
+comment|/* 			 * If all of the pages in the backing object are 			 * shadowed by the parent object, the parent object no 			 * longer has to shadow the backing object; it can 			 * shadow the next one in the chain. 			 *  			 * The backing object must not be paged out - we'd have 			 * to check all of the paged-out pages, as well. 			 */
 if|if
 condition|(
 name|backing_object
@@ -4320,7 +4477,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 			 *	Should have a check for a 'small' number 			 *	of pages here. 			 */
+comment|/* 			 * Should have a check for a 'small' number of pages 			 * here. 			 */
 for|for
 control|(
 name|p
@@ -4352,7 +4509,7 @@ operator|-
 name|backing_offset
 operator|)
 expr_stmt|;
-comment|/* 				 *	If the parent has a page here, or if 				 *	this page falls outside the parent, 				 *	keep going. 				 * 				 *	Otherwise, the backing_object must be 				 *	left in the chain. 				 */
+comment|/* 				 * If the parent has a page here, or if this 				 * page falls outside the parent, keep going. 				 *  				 * Otherwise, the backing_object must be left in 				 * the chain. 				 */
 if|if
 condition|(
 name|p
@@ -4379,13 +4536,10 @@ operator|)
 operator|==
 name|NULL
 operator|||
-operator|(
+operator|!
 name|pp
 operator|->
-name|flags
-operator|&
-name|PG_FAKE
-operator|)
+name|valid
 operator|)
 operator|&&
 operator|(
@@ -4410,7 +4564,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 					 *	Page still needed. 					 *	Can't go any further. 					 */
+comment|/* 					 * Page still needed. Can't go any 					 * further. 					 */
 name|vm_object_unlock
 argument_list|(
 name|backing_object
@@ -4419,7 +4573,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 			 *	Make the parent shadow the next object 			 *	in the chain.  Deallocating backing_object 			 *	will not remove it, since its reference 			 *	count is at least 2. 			 */
+comment|/* 			 * Make the parent shadow the next object in the 			 * chain.  Deallocating backing_object will not remove 			 * it, since its reference count is at least 2. 			 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -4473,7 +4627,7 @@ name|backing_object
 operator|->
 name|shadow_offset
 expr_stmt|;
-comment|/* 			 *      Backing object might have had a copy pointer 			 *      to us.  If it did, clear it. 			 */
+comment|/* 			 * Backing object might have had a copy pointer to us. 			 * If it did, clear it. 			 */
 if|if
 condition|(
 name|backing_object
@@ -4490,7 +4644,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*	Drop the reference count on backing_object. 			 *	Since its ref_count was at least 2, it 			 *	will not vanish; so we don't need to call 			 *	vm_object_deallocate. 			 */
+comment|/* 			 * Drop the reference count on backing_object. Since 			 * its ref_count was at least 2, it will not vanish; 			 * so we don't need to call vm_object_deallocate. 			 */
 if|if
 condition|(
 name|backing_object
@@ -4518,7 +4672,7 @@ name|object_bypasses
 operator|++
 expr_stmt|;
 block|}
-comment|/* 		 *	Try again with this object's new backing object. 		 */
+comment|/* 		 * Try again with this object's new backing object. 		 */
 block|}
 block|}
 end_function
@@ -4623,15 +4777,9 @@ name|memq
 operator|.
 name|tqh_first
 init|;
-operator|(
 name|p
 operator|!=
 name|NULL
-operator|&&
-name|size
-operator|>
-literal|0
-operator|)
 condition|;
 name|p
 operator|=
@@ -4674,9 +4822,29 @@ if|if
 condition|(
 name|p
 operator|->
+name|bmapped
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|(
+name|p
+operator|->
 name|flags
 operator|&
 name|PG_BUSY
+operator|)
+operator|||
+name|p
+operator|->
+name|busy
 condition|)
 block|{
 name|p
@@ -4726,6 +4894,11 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+name|PAGE_WAKEUP
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|p
@@ -4733,10 +4906,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|size
-operator|-=
-name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
@@ -4775,9 +4944,29 @@ if|if
 condition|(
 name|p
 operator|->
+name|bmapped
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+operator|(
+name|p
+operator|->
 name|flags
 operator|&
 name|PG_BUSY
+operator|)
+operator|||
+name|p
+operator|->
+name|busy
 condition|)
 block|{
 name|p
@@ -4826,6 +5015,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
+expr_stmt|;
+name|PAGE_WAKEUP
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|vm_page_free
 argument_list|(
@@ -4911,14 +5105,6 @@ block|{
 name|vm_size_t
 name|newsize
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|next_offset
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|next_object
@@ -4950,13 +5136,13 @@ argument_list|(
 name|prev_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Try to collapse the object first 	 */
+comment|/* 	 * Try to collapse the object first 	 */
 name|vm_object_collapse
 argument_list|(
 name|prev_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Can't coalesce if: 	 *	. more than one reference 	 *	. paged out 	 *	. shadows another object 	 *	. has a copy elsewhere 	 *	(any of which mean that the pages not mapped to 	 *	prev_entry may be in use anyway) 	 */
+comment|/* 	 * Can't coalesce if: . more than one reference . paged out . shadows 	 * another object . has a copy elsewhere (any of which mean that the 	 * pages not mapped to prev_entry may be in use anyway) 	 */
 if|if
 condition|(
 name|prev_object
@@ -4995,7 +5181,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* 	 *	Remove any pages that may still be in the object from 	 *	a previous deallocation. 	 */
+comment|/* 	 * Remove any pages that may still be in the object from a previous 	 * deallocation. 	 */
 name|vm_object_page_remove
 argument_list|(
 name|prev_object
@@ -5011,7 +5197,7 @@ operator|+
 name|next_size
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Extend the object if necessary. 	 */
+comment|/* 	 * Extend the object if necessary. 	 */
 name|newsize
 operator|=
 name|prev_offset

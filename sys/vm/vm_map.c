@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.8 1994/12/18 10:28:40 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.9 1994/12/18 13:58:41 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ name|next
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Form a free list of statically allocated kernel map entries 	 * with the rest. 	 */
+comment|/* 	 * Form a free list of statically allocated kernel map entries with 	 * the rest. 	 */
 name|kentry_free
 operator|=
 name|mep
@@ -482,7 +482,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Lock the map, to wait out all other references to it. 		 * Delete all of the mappings and pages they hold, 		 * then call the pmap module to reclaim anything left. 		 */
+comment|/* 		 * Lock the map, to wait out all other references to it. 		 * Delete all of the mappings and pages they hold, then call 		 * the pmap module to reclaim anything left. 		 */
 name|vm_map_lock
 argument_list|(
 operator|&
@@ -859,6 +859,8 @@ name|vm_map_min
 argument_list|(
 name|kmem_map
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1325,7 +1327,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* 	 *	Lock the map, to wait out all other references 	 *	to it. 	 */
+comment|/* 	 * Lock the map, to wait out all other references to it. 	 */
 name|vm_map_lock
 argument_list|(
 name|map
@@ -1409,7 +1411,7 @@ decl_stmt|;
 name|vm_map_entry_t
 name|temp_entry
 decl_stmt|;
-comment|/* 	 *	Check that the start and end points are not bogus. 	 */
+comment|/* 	 * Check that the start and end points are not bogus. 	 */
 if|if
 condition|(
 operator|(
@@ -1439,7 +1441,7 @@ operator|(
 name|KERN_INVALID_ADDRESS
 operator|)
 return|;
-comment|/* 	 *	Find the entry prior to the proposed 	 *	starting address; if it's part of an 	 *	existing entry, this range is bogus. 	 */
+comment|/* 	 * Find the entry prior to the proposed starting address; if it's part 	 * of an existing entry, this range is bogus. 	 */
 if|if
 condition|(
 name|vm_map_lookup_entry
@@ -1461,7 +1463,7 @@ name|prev_entry
 operator|=
 name|temp_entry
 expr_stmt|;
-comment|/* 	 *	Assert that the next entry doesn't overlap the 	 *	end point. 	 */
+comment|/* 	 * Assert that the next entry doesn't overlap the end point. 	 */
 if|if
 condition|(
 operator|(
@@ -1490,7 +1492,7 @@ operator|(
 name|KERN_NO_SPACE
 operator|)
 return|;
-comment|/* 	 *	See if we can avoid creating a new entry by 	 *	extending one of our neighbors. 	 */
+comment|/* 	 * See if we can avoid creating a new entry by extending one of our 	 * neighbors. 	 */
 if|if
 condition|(
 name|object
@@ -1619,7 +1621,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 				 *	Coalesced the two objects - can extend 				 *	the previous map entry to include the 				 *	new range. 				 */
+comment|/* 				 * Coalesced the two objects - can extend the 				 * previous map entry to include the new 				 * range. 				 */
 name|map
 operator|->
 name|size
@@ -1646,7 +1648,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* 	 *	Create a new entry 	 */
+comment|/* 	 * Create a new entry 	 */
 name|new_entry
 operator|=
 name|vm_map_entry_create
@@ -1736,7 +1738,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 *	Insert the new entry into the list 	 */
+comment|/* 	 * Insert the new entry into the list 	 */
 name|vm_map_entry_link
 argument_list|(
 name|map
@@ -1758,7 +1760,7 @@ name|new_entry
 operator|->
 name|start
 expr_stmt|;
-comment|/* 	 *	Update the free space hint 	 */
+comment|/* 	 * Update the free space hint 	 */
 if|if
 condition|(
 operator|(
@@ -1846,7 +1848,7 @@ specifier|register
 name|vm_map_entry_t
 name|last
 decl_stmt|;
-comment|/* 	 *	Start looking either from the head of the 	 *	list, or from the hint. 	 */
+comment|/* 	 * Start looking either from the head of the list, or from the hint. 	 */
 name|simple_lock
 argument_list|(
 operator|&
@@ -1893,7 +1895,7 @@ operator|->
 name|start
 condition|)
 block|{
-comment|/* 		 *	Go from hint to end of list. 		 * 		 *	But first, make a quick check to see if 		 *	we are already looking at the entry we 		 *	want (which is usually the case). 		 *	Note also that we don't need to save the hint 		 *	here... it is the same hint (unless we are 		 *	at the header, in which case the hint didn't 		 *	buy us anything anyway). 		 */
+comment|/* 		 * Go from hint to end of list. 		 *  		 * But first, make a quick check to see if we are already looking 		 * at the entry we want (which is usually the case). Note also 		 * that we don't need to save the hint here... it is the same 		 * hint (unless we are at the header, in which case the hint 		 * didn't buy us anything anyway). 		 */
 name|last
 operator|=
 operator|&
@@ -1932,7 +1934,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 *	Go from start to hint, *inclusively* 		 */
+comment|/* 		 * Go from start to hint, *inclusively* 		 */
 name|last
 operator|=
 name|cur
@@ -1948,7 +1950,7 @@ operator|.
 name|next
 expr_stmt|;
 block|}
-comment|/* 	 *	Search linearly 	 */
+comment|/* 	 * Search linearly 	 */
 while|while
 condition|(
 name|cur
@@ -1974,7 +1976,7 @@ operator|->
 name|start
 condition|)
 block|{
-comment|/* 				 *	Save this lookup for future 				 *	hints, and return 				 */
+comment|/* 				 * Save this lookup for future hints, and 				 * return 				 */
 operator|*
 name|entry
 operator|=
@@ -2094,7 +2096,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * Look for the first possible address; if there's already 	 * something at this address, we have to start after it. 	 */
+comment|/* 	 * Look for the first possible address; if there's already something 	 * at this address, we have to start after it. 	 */
 if|if
 condition|(
 name|start
@@ -2154,7 +2156,7 @@ operator|=
 name|tmp
 expr_stmt|;
 block|}
-comment|/* 	 * Look through the rest of the map, trying to fit a new region in 	 * the gap between existing regions, or after the very last region. 	 */
+comment|/* 	 * Look through the rest of the map, trying to fit a new region in the 	 * gap between existing regions, or after the very last region. 	 */
 for|for
 control|(
 init|;
@@ -2228,6 +2230,31 @@ operator|*
 name|addr
 operator|=
 name|start
+expr_stmt|;
+if|if
+condition|(
+name|map
+operator|==
+name|kernel_map
+operator|&&
+name|round_page
+argument_list|(
+name|start
+operator|+
+name|length
+argument_list|)
+operator|>
+name|kernel_vm_end
+condition|)
+name|pmap_growkernel
+argument_list|(
+name|round_page
+argument_list|(
+name|start
+operator|+
+name|length
+argument_list|)
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2425,7 +2452,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 *	If this entry corresponds to a sharing map, then 	 *	see if we can remove the level of indirection. 	 *	If it's not a sharing map, then it points to 	 *	a VM object, so see if we can merge with either 	 *	of our neighbors. 	 */
+comment|/* 	 * If this entry corresponds to a sharing map, then see if we can 	 * remove the level of indirection. If it's not a sharing map, then it 	 * points to a VM object, so see if we can merge with either of our 	 * neighbors. 	 */
 if|if
 condition|(
 name|entry
@@ -2443,15 +2470,15 @@ block|{
 if|#
 directive|if
 literal|0
-block|vm_map_t	my_share_map; 		int		count;  		my_share_map = entry->object.share_map;	 		simple_lock(&my_share_map->ref_lock); 		count = my_share_map->ref_count; 		simple_unlock(&my_share_map->ref_lock); 		 		if (count == 1) {
-comment|/* Can move the region from 			 * entry->start to entry->end (+ entry->offset) 			 * in my_share_map into place of entry. 			 * Later. 			 */
+block|vm_map_t my_share_map; 		int count;  		my_share_map = entry->object.share_map; 		simple_lock(&my_share_map->ref_lock); 		count = my_share_map->ref_count; 		simple_unlock(&my_share_map->ref_lock);  		if (count == 1) {
+comment|/* 			 * Can move the region from entry->start to entry->end 			 * (+ entry->offset) in my_share_map into place of 			 * entry. Later. 			 */
 block|}
 endif|#
 directive|endif
 block|}
 else|else
 block|{
-comment|/* 		 *	Try to merge with our neighbors. 		 * 		 *	Conditions for merge are: 		 * 		 *	1.  entries are adjacent. 		 *	2.  both entries point to objects 		 *	    with null pagers. 		 * 		 * 	If a merge is possible, we replace the two 		 *	entries with a single entry, then merge 		 *	the two objects into a single object. 		 * 		 *	Now, all that is left to do is write the 		 *	code! 		 */
+comment|/* 		 * Try to merge with our neighbors. 		 *  		 * Conditions for merge are: 		 *  		 * 1.  entries are adjacent. 2.  both entries point to objects 		 * with null pagers. 		 *  		 * If a merge is possible, we replace the two entries with a 		 * single entry, then merge the two objects into a single 		 * object. 		 *  		 * Now, all that is left to do is write the code! 		 */
 block|}
 block|}
 end_function
@@ -2507,9 +2534,9 @@ specifier|register
 name|vm_map_entry_t
 name|new_entry
 decl_stmt|;
-comment|/* 	 *	See if we can simplify this entry first 	 */
+comment|/* 	 * See if we can simplify this entry first 	 */
 comment|/* vm_map_simplify_entry(map, entry); */
-comment|/* 	 *	Split off the front portion -- 	 *	note that we must insert the new 	 *	entry BEFORE this one, so that 	 *	this entry has the specified starting 	 *	address. 	 */
+comment|/* 	 * Split off the front portion -- note that we must insert the new 	 * entry BEFORE this one, so that this entry has the specified 	 * starting address. 	 */
 name|new_entry
 operator|=
 name|vm_map_entry_create
@@ -2641,7 +2668,7 @@ specifier|register
 name|vm_map_entry_t
 name|new_entry
 decl_stmt|;
-comment|/* 	 *	Create a new entry and insert it 	 *	AFTER the specified entry 	 */
+comment|/* 	 * Create a new entry and insert it AFTER the specified entry 	 */
 name|new_entry
 operator|=
 name|vm_map_entry_create
@@ -3005,7 +3032,7 @@ name|entry
 operator|->
 name|next
 expr_stmt|;
-comment|/* 	 *	Make a first pass to check for protection 	 *	violations. 	 */
+comment|/* 	 * Make a first pass to check for protection violations. 	 */
 name|current
 operator|=
 name|entry
@@ -3072,7 +3099,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* 	 *	Go back and fix up protections. 	 *	[Note that clipping is not necessary the second time.] 	 */
+comment|/* 	 * Go back and fix up protections. [Note that clipping is not 	 * necessary the second time.] 	 */
 name|current
 operator|=
 name|entry
@@ -3140,7 +3167,7 @@ name|protection
 operator|=
 name|new_prot
 expr_stmt|;
-comment|/* 		 *	Update physical map if necessary. 		 *	Worry about copy-on-write here -- CHECK THIS XXX 		 */
+comment|/* 		 * Update physical map if necessary. Worry about copy-on-write 		 * here -- CHECK THIS XXX 		 */
 if|if
 condition|(
 name|current
@@ -3598,7 +3625,7 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Only one pageability change may take place at one 	 *	time, since vm_fault assumes it will be called 	 *	only once for each wiring/unwiring.  Therefore, we 	 *	have to make sure we're actually changing the pageability 	 *	for the entire region.  We do so before making any changes. 	 */
+comment|/* 	 * Only one pageability change may take place at one time, since 	 * vm_fault assumes it will be called only once for each 	 * wiring/unwiring.  Therefore, we have to make sure we're actually 	 * changing the pageability for the entire region.  We do so before 	 * making any changes. 	 */
 if|if
 condition|(
 name|vm_map_lookup_entry
@@ -3629,7 +3656,7 @@ name|entry
 operator|=
 name|start_entry
 expr_stmt|;
-comment|/* 	 *	Actions are rather different for wiring and unwiring, 	 *	so we have two separate cases. 	 */
+comment|/* 	 * Actions are rather different for wiring and unwiring, so we have 	 * two separate cases. 	 */
 if|if
 condition|(
 name|new_pageable
@@ -3644,7 +3671,7 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	Unwiring.  First ensure that the range to be 		 *	unwired is really wired down and that there 		 *	are no holes. 		 */
+comment|/* 		 * Unwiring.  First ensure that the range to be unwired is 		 * really wired down and that there are no holes. 		 */
 while|while
 condition|(
 operator|(
@@ -3721,7 +3748,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* 		 *	Now decrement the wiring count for each region. 		 *	If a region becomes completely unwired, 		 *	unwire its physical pages and mappings. 		 */
+comment|/* 		 * Now decrement the wiring count for each region. If a region 		 * becomes completely unwired, unwire its physical pages and 		 * mappings. 		 */
 name|lock_set_recursive
 argument_list|(
 operator|&
@@ -3807,8 +3834,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 *	Wiring.  We must do this in two passes: 		 * 		 *	1.  Holding the write lock, we create any shadow 		 *	    or zero-fill objects that need to be created. 		 *	    Then we clip each map entry to the region to be 		 *	    wired and increment its wiring count.  We 		 *	    create objects before clipping the map entries 		 *	    to avoid object proliferation. 		 * 		 *	2.  We downgrade to a read lock, and call 		 *	    vm_fault_wire to fault in the pages for any 		 *	    newly wired area (wired_count is 1). 		 * 		 *	Downgrading to a read lock for vm_fault_wire avoids 		 *	a possible deadlock with another thread that may have 		 *	faulted on one of the pages to be wired (it would mark 		 *	the page busy, blocking us, then in turn block on the 		 *	map lock that we hold).  Because of problems in the 		 *	recursive lock package, we cannot upgrade to a write 		 *	lock in vm_map_lookup.  Thus, any actions that require 		 *	the write lock must be done beforehand.  Because we 		 *	keep the read lock on the map, the copy-on-write status 		 *	of the entries we modify here cannot change. 		 */
-comment|/* 		 *	Pass 1. 		 */
+comment|/* 		 * Wiring.  We must do this in two passes: 		 *  		 * 1.  Holding the write lock, we create any shadow or zero-fill 		 * objects that need to be created. Then we clip each map 		 * entry to the region to be wired and increment its wiring 		 * count.  We create objects before clipping the map entries 		 * to avoid object proliferation. 		 *  		 * 2.  We downgrade to a read lock, and call vm_fault_wire to 		 * fault in the pages for any newly wired area (wired_count is 		 * 1). 		 *  		 * Downgrading to a read lock for vm_fault_wire avoids a possible 		 * deadlock with another thread that may have faulted on one 		 * of the pages to be wired (it would mark the page busy, 		 * blocking us, then in turn block on the map lock that we 		 * hold).  Because of problems in the recursive lock package, 		 * we cannot upgrade to a write lock in vm_map_lookup.  Thus, 		 * any actions that require the write lock must be done 		 * beforehand.  Because we keep the read lock on the map, the 		 * copy-on-write status of the entries we modify here cannot 		 * change. 		 */
+comment|/* 		 * Pass 1. 		 */
 while|while
 condition|(
 operator|(
@@ -3838,7 +3865,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 *	Perform actions of vm_map_lookup that need 			 *	the write lock on the map: create a shadow 			 *	object for a copy-on-write region, or an 			 *	object for a zero-fill region. 			 * 			 *	We don't have to do this for entries that 			 *	point to sharing maps, because we won't hold 			 *	the lock on the sharing map. 			 */
+comment|/* 				 * Perform actions of vm_map_lookup that need 				 * the write lock on the map: create a shadow 				 * object for a copy-on-write region, or an 				 * object for a zero-fill region. 				 *  				 * We don't have to do this for entries that 				 * point to sharing maps, because we won't 				 * hold the lock on the sharing map. 				 */
 if|if
 condition|(
 operator|!
@@ -3970,7 +3997,7 @@ operator|->
 name|wired_count
 operator|++
 expr_stmt|;
-comment|/* 		     * Check for holes 		     */
+comment|/* 			 * Check for holes 			 */
 if|if
 condition|(
 name|entry
@@ -4001,7 +4028,7 @@ name|end
 operator|)
 condition|)
 block|{
-comment|/* 			 *	Found one.  Object creation actions 			 *	do not need to be undone, but the 			 *	wired counts need to be restored. 			 */
+comment|/* 				 * Found one.  Object creation actions do not 				 * need to be undone, but the wired counts 				 * need to be restored. 				 */
 while|while
 condition|(
 name|entry
@@ -4048,8 +4075,8 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* 		 *	Pass 2. 		 */
-comment|/* 		 * HACK HACK HACK HACK 		 * 		 * If we are wiring in the kernel map or a submap of it, 		 * unlock the map to avoid deadlocks.  We trust that the 		 * kernel threads are well-behaved, and therefore will 		 * not do anything destructive to this region of the map 		 * while we have it unlocked.  We cannot trust user threads 		 * to do the same. 		 * 		 * HACK HACK HACK HACK 		 */
+comment|/* 		 * Pass 2. 		 */
+comment|/* 		 * HACK HACK HACK HACK 		 *  		 * If we are wiring in the kernel map or a submap of it, unlock 		 * the map to avoid deadlocks.  We trust that the kernel 		 * threads are well-behaved, and therefore will not do 		 * anything destructive to this region of the map while we 		 * have it unlocked.  We cannot trust user threads to do the 		 * same. 		 *  		 * HACK HACK HACK HACK 		 */
 if|if
 condition|(
 name|vm_map_pmap
@@ -4110,7 +4137,7 @@ operator|<
 name|end
 condition|)
 block|{
-comment|/* 		     * If vm_fault_wire fails for any page we need to 		     * undo what has been done.  We decrement the wiring 		     * count for those pages which have not yet been 		     * wired (now) and unwire those that have (later). 		     * 		     * XXX this violates the locking protocol on the map, 		     * needs to be fixed. 		     */
+comment|/* 			 * If vm_fault_wire fails for any page we need to undo 			 * what has been done.  We decrement the wiring count 			 * for those pages which have not yet been wired (now) 			 * and unwire those that have (later). 			 *  			 * XXX this violates the locking protocol on the map, 			 * needs to be fixed. 			 */
 if|if
 condition|(
 name|rv
@@ -4572,7 +4599,7 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Flush pages if writing is allowed. 		 * XXX should we continue on an error? 		 */
+comment|/* 		 * Flush pages if writing is allowed. XXX should we continue 		 * on an error? 		 */
 if|if
 condition|(
 operator|(
@@ -4823,7 +4850,7 @@ decl_stmt|;
 name|vm_map_entry_t
 name|first_entry
 decl_stmt|;
-comment|/* 	 *	Find the start of the region, and clip it 	 */
+comment|/* 	 * Find the start of the region, and clip it 	 */
 if|if
 condition|(
 operator|!
@@ -4858,7 +4885,7 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	Fix the lookup hint now, rather than each 		 *	time though the loop. 		 */
+comment|/* 		 * Fix the lookup hint now, rather than each time though the 		 * loop. 		 */
 name|SAVE_HINT
 argument_list|(
 name|map
@@ -4869,7 +4896,7 @@ name|prev
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *	Save the free space hint 	 */
+comment|/* 	 * Save the free space hint 	 */
 if|if
 condition|(
 name|map
@@ -4888,7 +4915,7 @@ name|entry
 operator|->
 name|prev
 expr_stmt|;
-comment|/* 	 *	Step through all entries in this region 	 */
+comment|/* 	 * Step through all entries in this region 	 */
 while|while
 condition|(
 operator|(
@@ -4949,7 +4976,7 @@ name|entry
 operator|->
 name|end
 expr_stmt|;
-comment|/* 		 *	Unwire before removing addresses from the pmap; 		 *	otherwise, unwiring will put the entries back in 		 *	the pmap. 		 */
+comment|/* 		 * Unwire before removing addresses from the pmap; otherwise, 		 * unwiring will put the entries back in the pmap. 		 */
 name|object
 operator|=
 name|entry
@@ -4973,7 +5000,7 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	If this is a sharing map, we must remove 		 *	*all* references to this data, since we can't 		 *	find all of the physical maps which are sharing 		 *	it. 		 */
+comment|/* 		 * If this is a sharing map, we must remove *all* references 		 * to this data, since we can't find all of the physical maps 		 * which are sharing it. 		 */
 if|if
 condition|(
 name|object
@@ -5042,7 +5069,7 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	Delete the entry (which may delete the object) 		 *	only after removing all pmap entries pointing 		 *	to its pages.  (Otherwise, its page frames may 		 *	be reallocated, and any modify bits will be 		 *	set in the wrong object!) 		 */
+comment|/* 		 * Delete the entry (which may delete the object) only after 		 * removing all pmap entries pointing to its pages. 		 * (Otherwise, its page frames may be reallocated, and any 		 * modify bits will be set in the wrong object!) 		 */
 name|vm_map_entry_delete
 argument_list|(
 name|map
@@ -5245,7 +5272,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-comment|/* 		 *	No holes allowed! 		 */
+comment|/* 		 * No holes allowed! 		 */
 if|if
 condition|(
 name|start
@@ -5374,7 +5401,7 @@ argument_list|(
 literal|"vm_map_copy_entry: copying over permanent data!\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	If our destination map was wired down, 	 *	unwire it now. 	 */
+comment|/* 	 * If our destination map was wired down, unwire it now. 	 */
 if|if
 condition|(
 name|dst_entry
@@ -5390,7 +5417,7 @@ argument_list|,
 name|dst_entry
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	If we're dealing with a sharing map, we 	 *	must remove the destination pages from 	 *	all maps (since we cannot know which maps 	 *	this sharing map belongs in). 	 */
+comment|/* 	 * If we're dealing with a sharing map, we must remove the destination 	 * pages from all maps (since we cannot know which maps this sharing 	 * map belongs in). 	 */
 if|if
 condition|(
 name|dst_map
@@ -5452,7 +5479,7 @@ block|{
 name|boolean_t
 name|src_needs_copy
 decl_stmt|;
-comment|/* 		 *	If the source entry is marked needs_copy, 		 *	it is already write-protected. 		 */
+comment|/* 		 * If the source entry is marked needs_copy, it is already 		 * write-protected. 		 */
 if|if
 condition|(
 operator|!
@@ -5464,7 +5491,7 @@ block|{
 name|boolean_t
 name|su
 decl_stmt|;
-comment|/* 			 *	If the source entry has only one mapping, 			 *	we can just protect the virtual address 			 *	range. 			 */
+comment|/* 			 * If the source entry has only one mapping, we can 			 * just protect the virtual address range. 			 */
 if|if
 condition|(
 operator|!
@@ -5563,7 +5590,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 *	Make a copy of the object. 		 */
+comment|/* 		 * Make a copy of the object. 		 */
 name|temp_object
 operator|=
 name|dst_entry
@@ -5613,7 +5640,7 @@ operator|&
 name|src_needs_copy
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	If we didn't get a copy-object now, mark the 		 *	source map entry so that a shadow will be created 		 *	to hold its changed pages. 		 */
+comment|/* 		 * If we didn't get a copy-object now, mark the source map 		 * entry so that a shadow will be created to hold its changed 		 * pages. 		 */
 if|if
 condition|(
 name|src_needs_copy
@@ -5624,14 +5651,14 @@ name|needs_copy
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 		 *	The destination always needs to have a shadow 		 *	created. 		 */
+comment|/* 		 * The destination always needs to have a shadow created. 		 */
 name|dst_entry
 operator|->
 name|needs_copy
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 		 *	Mark the entries copy-on-write, so that write-enabling 		 *	the entry won't make copy-on-write pages writable. 		 */
+comment|/* 		 * Mark the entries copy-on-write, so that write-enabling the 		 * entry won't make copy-on-write pages writable. 		 */
 name|src_entry
 operator|->
 name|copy_on_write
@@ -5644,7 +5671,7 @@ name|copy_on_write
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 		 *	Get rid of the old object. 		 */
+comment|/* 		 * Get rid of the old object. 		 */
 name|vm_object_deallocate
 argument_list|(
 name|temp_object
@@ -5680,7 +5707,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 *	Of course, wired down pages can't be set copy-on-write. 		 *	Cause wired pages to be copied into the new 		 *	map by simulating faults (the new pages are 		 *	pageable) 		 */
+comment|/* 		 * Of course, wired down pages can't be set copy-on-write. 		 * Cause wired pages to be copied into the new map by 		 * simulating faults (the new pages are pageable) 		 */
 name|vm_fault_copy_entry
 argument_list|(
 name|dst_map
@@ -5775,7 +5802,7 @@ decl_stmt|;
 name|boolean_t
 name|old_src_destroy
 decl_stmt|;
-comment|/* 	 *	XXX While we figure out why src_destroy screws up, 	 *	we'll do it by explicitly vm_map_delete'ing at the end. 	 */
+comment|/* 	 * XXX While we figure out why src_destroy screws up, we'll do it by 	 * explicitly vm_map_delete'ing at the end. 	 */
 name|old_src_destroy
 operator|=
 name|src_destroy
@@ -5784,7 +5811,7 @@ name|src_destroy
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 	 *	Compute start and end of region in both maps 	 */
+comment|/* 	 * Compute start and end of region in both maps 	 */
 name|src_start
 operator|=
 name|src_addr
@@ -5805,7 +5832,7 @@ name|dst_start
 operator|+
 name|len
 expr_stmt|;
-comment|/* 	 *	Check that the region can exist in both source 	 *	and destination. 	 */
+comment|/* 	 * Check that the region can exist in both source and destination. 	 */
 if|if
 condition|(
 operator|(
@@ -5825,7 +5852,7 @@ operator|(
 name|KERN_NO_SPACE
 operator|)
 return|;
-comment|/* 	 *	Lock the maps in question -- we avoid deadlock 	 *	by ordering lock acquisition by map value 	 */
+comment|/* 	 * Lock the maps in question -- we avoid deadlock by ordering lock 	 * acquisition by map value 	 */
 if|if
 condition|(
 name|src_map
@@ -5881,7 +5908,7 @@ name|result
 operator|=
 name|KERN_SUCCESS
 expr_stmt|;
-comment|/* 	 *	Check protections... source must be completely readable and 	 *	destination must be completely writable.  [Note that if we're 	 *	allocating the destination region, we don't have to worry 	 *	about protection, but instead about whether the region 	 *	exists.] 	 */
+comment|/* 	 * Check protections... source must be completely readable and 	 * destination must be completely writable.  [Note that if we're 	 * allocating the destination region, we don't have to worry about 	 * protection, but instead about whether the region exists.] 	 */
 if|if
 condition|(
 name|src_map
@@ -5975,7 +6002,7 @@ name|Return
 goto|;
 block|}
 block|}
-comment|/* 	 *	Find the start entries and clip. 	 * 	 *	Note that checking protection asserts that the 	 *	lookup cannot fail. 	 * 	 *	Also note that we wait to do the second lookup 	 *	until we have done the first clip, as the clip 	 *	may affect which entry we get! 	 */
+comment|/* 	 * Find the start entries and clip. 	 *  	 * Note that checking protection asserts that the lookup cannot fail. 	 *  	 * Also note that we wait to do the second lookup until we have done the 	 * first clip, as the clip may affect which entry we get! 	 */
 operator|(
 name|void
 operator|)
@@ -6028,7 +6055,7 @@ argument_list|,
 name|dst_start
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	If both source and destination entries are the same, 	 *	retry the first lookup, as it may have changed. 	 */
+comment|/* 	 * If both source and destination entries are the same, retry the 	 * first lookup, as it may have changed. 	 */
 if|if
 condition|(
 name|src_entry
@@ -6054,7 +6081,7 @@ operator|=
 name|tmp_entry
 expr_stmt|;
 block|}
-comment|/* 	 *	If source and destination entries are still the same, 	 *	a null copy is being performed. 	 */
+comment|/* 	 * If source and destination entries are still the same, a null copy 	 * is being performed. 	 */
 if|if
 condition|(
 name|src_entry
@@ -6064,7 +6091,7 @@ condition|)
 goto|goto
 name|Return
 goto|;
-comment|/* 	 *	Go through entries until we get to the end of the 	 *	region. 	 */
+comment|/* 	 * Go through entries until we get to the end of the region. 	 */
 while|while
 condition|(
 name|src_start
@@ -6072,7 +6099,7 @@ operator|<
 name|src_end
 condition|)
 block|{
-comment|/* 		 *	Clip the entries to the endpoint of the entire region. 		 */
+comment|/* 		 * Clip the entries to the endpoint of the entire region. 		 */
 name|vm_map_clip_end
 argument_list|(
 name|src_map
@@ -6091,7 +6118,7 @@ argument_list|,
 name|dst_end
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	Clip each entry to the endpoint of the other entry. 		 */
+comment|/* 		 * Clip each entry to the endpoint of the other entry. 		 */
 name|src_clip
 operator|=
 name|src_entry
@@ -6142,7 +6169,7 @@ argument_list|,
 name|dst_clip
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	Both entries now match in size and relative endpoints. 		 * 		 *	If both entries refer to a VM object, we can 		 *	deal with them now. 		 */
+comment|/* 		 * Both entries now match in size and relative endpoints. 		 *  		 * If both entries refer to a VM object, we can deal with them 		 * now. 		 */
 if|if
 condition|(
 operator|!
@@ -6186,7 +6213,7 @@ decl_stmt|;
 name|vm_offset_t
 name|new_src_start
 decl_stmt|;
-comment|/* 			 *	We have to follow at least one sharing map. 			 */
+comment|/* 			 * We have to follow at least one sharing map. 			 */
 name|new_size
 operator|=
 operator|(
@@ -6266,7 +6293,7 @@ name|dst_entry
 operator|->
 name|offset
 expr_stmt|;
-comment|/* 				 *	Since the destination sharing entries 				 *	will be merely deallocated, we can 				 *	do that now, and replace the region 				 *	with a null object.  [This prevents 				 *	splitting the source map to match 				 *	the form of the destination map.] 				 *	Note that we can only do so if the 				 *	source and destination do not overlap. 				 */
+comment|/* 				 * Since the destination sharing entries will 				 * be merely deallocated, we can do that now, 				 * and replace the region with a null object. 				 * [This prevents splitting the source map to 				 * match the form of the destination map.] 				 * Note that we can only do so if the source 				 * and destination do not overlap. 				 */
 name|new_dst_end
 operator|=
 name|new_dst_start
@@ -6344,7 +6371,7 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 *	Recursively copy the sharing map. 			 */
+comment|/* 			 * Recursively copy the sharing map. 			 */
 operator|(
 name|void
 operator|)
@@ -6394,7 +6421,7 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 *	Update variables for next pass through the loop. 		 */
+comment|/* 		 * Update variables for next pass through the loop. 		 */
 name|src_start
 operator|=
 name|src_entry
@@ -6419,7 +6446,7 @@ name|dst_entry
 operator|->
 name|next
 expr_stmt|;
-comment|/* 		 *	If the source is to be destroyed, here is the 		 *	place to do it. 		 */
+comment|/* 		 * If the source is to be destroyed, here is the place to do 		 * it. 		 */
 if|if
 condition|(
 name|src_destroy
@@ -6442,7 +6469,7 @@ name|prev
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *	Update the physical maps as appropriate 	 */
+comment|/* 	 * Update the physical maps as appropriate 	 */
 if|if
 condition|(
 name|src_map
@@ -6472,7 +6499,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *	Unlock the maps 	 */
+comment|/* 	 * Unlock the maps 	 */
 name|Return
 label|:
 empty_stmt|;
@@ -6671,7 +6698,7 @@ break|break;
 case|case
 name|VM_INHERIT_SHARE
 case|:
-comment|/* 			 *	If we don't already have a sharing map: 			 */
+comment|/* 			 * If we don't already have a sharing map: 			 */
 if|if
 condition|(
 operator|!
@@ -6686,7 +6713,7 @@ decl_stmt|;
 name|vm_map_entry_t
 name|new_share_entry
 decl_stmt|;
-comment|/* 				 *	Create a new sharing map 				 */
+comment|/* 				 * Create a new sharing map 				 */
 name|new_share_map
 operator|=
 name|vm_map_create
@@ -6710,7 +6737,7 @@ name|is_main_map
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 				 *	Create the only sharing entry from the 				 *	old task map entry. 				 */
+comment|/* 				 * Create the only sharing entry from the old 				 * task map entry. 				 */
 name|new_share_entry
 operator|=
 name|vm_map_entry_create
@@ -6730,7 +6757,7 @@ name|wired_count
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 				 *	Insert the entry into the new sharing 				 *	map 				 */
+comment|/* 				 * Insert the entry into the new sharing map 				 */
 name|vm_map_entry_link
 argument_list|(
 name|new_share_map
@@ -6744,7 +6771,7 @@ argument_list|,
 name|new_share_entry
 argument_list|)
 expr_stmt|;
-comment|/* 				 *	Fix up the task map entry to refer 				 *	to the sharing map now. 				 */
+comment|/* 				 * Fix up the task map entry to refer to the 				 * sharing map now. 				 */
 name|old_entry
 operator|->
 name|is_a_map
@@ -6768,7 +6795,7 @@ operator|->
 name|start
 expr_stmt|;
 block|}
-comment|/* 			 *	Clone the entry, referencing the sharing map. 			 */
+comment|/* 			 * Clone the entry, referencing the sharing map. 			 */
 name|new_entry
 operator|=
 name|vm_map_entry_create
@@ -6797,7 +6824,7 @@ operator|.
 name|share_map
 argument_list|)
 expr_stmt|;
-comment|/* 			 *	Insert the entry into the new map -- we 			 *	know we're inserting at the end of the new 			 *	map. 			 */
+comment|/* 			 * Insert the entry into the new map -- we know we're 			 * inserting at the end of the new map. 			 */
 name|vm_map_entry_link
 argument_list|(
 name|new_map
@@ -6811,7 +6838,7 @@ argument_list|,
 name|new_entry
 argument_list|)
 expr_stmt|;
-comment|/* 			 *	Update the physical map 			 */
+comment|/* 			 * Update the physical map 			 */
 name|pmap_copy
 argument_list|(
 name|new_map
@@ -6845,7 +6872,7 @@ break|break;
 case|case
 name|VM_INHERIT_COPY
 case|:
-comment|/* 			 *	Clone the entry and link into the map. 			 */
+comment|/* 			 * Clone the entry and link into the map. 			 */
 name|new_entry
 operator|=
 name|vm_map_entry_create
@@ -7094,7 +7121,7 @@ decl_stmt|;
 name|RetryLookup
 label|:
 empty_stmt|;
-comment|/* 	 *	Lookup the faulting address. 	 */
+comment|/* 	 * Lookup the faulting address. 	 */
 name|vm_map_lock_read
 argument_list|(
 name|map
@@ -7108,7 +7135,7 @@ name|why
 parameter_list|)
 define|\
 value|{ \ 		vm_map_unlock_read(map); \ 		return(why); \ 		}
-comment|/* 	 *	If the map has an interesting hint, try it before calling 	 *	full blown lookup routine. 	 */
+comment|/* 	 * If the map has an interesting hint, try it before calling full 	 * blown lookup routine. 	 */
 name|simple_lock
 argument_list|(
 operator|&
@@ -7167,7 +7194,7 @@ block|{
 name|vm_map_entry_t
 name|tmp_entry
 decl_stmt|;
-comment|/* 		 *	Entry was either not a valid hint, or the vaddr 		 *	was not contained in the entry, so do a full lookup. 		 */
+comment|/* 		 * Entry was either not a valid hint, or the vaddr was not 		 * contained in the entry, so do a full lookup. 		 */
 if|if
 condition|(
 operator|!
@@ -7196,7 +7223,7 @@ operator|=
 name|entry
 expr_stmt|;
 block|}
-comment|/* 	 *	Handle submaps. 	 */
+comment|/* 	 * Handle submaps. 	 */
 if|if
 condition|(
 name|entry
@@ -7229,7 +7256,7 @@ goto|goto
 name|RetryLookup
 goto|;
 block|}
-comment|/* 	 *	Check whether this task is allowed to have 	 *	this page. 	 */
+comment|/* 	 * Check whether this task is allowed to have this page. 	 */
 name|prot
 operator|=
 name|entry
@@ -7253,7 +7280,7 @@ argument_list|(
 name|KERN_PROTECTION_FAILURE
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	If this page is not pageable, we have to get 	 *	it for all possible accesses. 	 */
+comment|/* 	 * If this page is not pageable, we have to get it for all possible 	 * accesses. 	 */
 operator|*
 name|wired
 operator|=
@@ -7278,7 +7305,7 @@ name|entry
 operator|->
 name|protection
 expr_stmt|;
-comment|/* 	 *	If we don't already have a VM object, track 	 *	it down. 	 */
+comment|/* 	 * If we don't already have a VM object, track it down. 	 */
 name|su
 operator|=
 operator|!
@@ -7305,7 +7332,7 @@ block|{
 name|vm_map_entry_t
 name|share_entry
 decl_stmt|;
-comment|/* 		 *	Compute the sharing map, and offset into it. 		 */
+comment|/* 		 * Compute the sharing map, and offset into it. 		 */
 name|share_map
 operator|=
 name|entry
@@ -7328,7 +7355,7 @@ name|entry
 operator|->
 name|offset
 expr_stmt|;
-comment|/* 		 *	Look for the backing store object and offset 		 */
+comment|/* 		 * Look for the backing store object and offset 		 */
 name|vm_map_lock_read
 argument_list|(
 name|share_map
@@ -7364,7 +7391,7 @@ operator|=
 name|share_entry
 expr_stmt|;
 block|}
-comment|/* 	 *	If the entry was copy-on-write, we either ... 	 */
+comment|/* 	 * If the entry was copy-on-write, we either ... 	 */
 if|if
 condition|(
 name|entry
@@ -7372,7 +7399,7 @@ operator|->
 name|needs_copy
 condition|)
 block|{
-comment|/* 		 *	If we want to write the page, we may as well 		 *	handle that now since we've got the sharing 		 *	map locked. 		 * 		 *	If we don't need to write the page, we just 		 *	demote the permissions allowed. 		 */
+comment|/* 		 * If we want to write the page, we may as well handle that 		 * now since we've got the sharing map locked. 		 *  		 * If we don't need to write the page, we just demote the 		 * permissions allowed. 		 */
 if|if
 condition|(
 name|fault_type
@@ -7380,7 +7407,7 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-comment|/* 			 *	Make a new object, and place it in the 			 *	object chain.  Note that no new references 			 *	have appeared -- one just moved from the 			 *	share map to the new object. 			 */
+comment|/* 			 * Make a new object, and place it in the object 			 * chain.  Note that no new references have appeared 			 * -- one just moved from the share map to the new 			 * object. 			 */
 if|if
 condition|(
 name|lock_read_to_write
@@ -7452,7 +7479,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 *	We're attempting to read a copy-on-write 			 *	page -- don't allow writes. 			 */
+comment|/* 			 * We're attempting to read a copy-on-write page -- 			 * don't allow writes. 			 */
 name|prot
 operator|&=
 operator|(
@@ -7462,7 +7489,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 *	Create an object if necessary. 	 */
+comment|/* 	 * Create an object if necessary. 	 */
 if|if
 condition|(
 name|entry
@@ -7537,7 +7564,7 @@ name|lock
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *	Return the object/offset from this entry.  If the entry 	 *	was copy-on-write or empty, it has been fixed up. 	 */
+comment|/* 	 * Return the object/offset from this entry.  If the entry was 	 * copy-on-write or empty, it has been fixed up. 	 */
 operator|*
 name|offset
 operator|=
@@ -7562,7 +7589,7 @@ name|object
 operator|.
 name|vm_object
 expr_stmt|;
-comment|/* 	 *	Return whether this is the only map sharing this data. 	 */
+comment|/* 	 * Return whether this is the only map sharing this data. 	 */
 if|if
 condition|(
 operator|!
@@ -7637,7 +7664,7 @@ name|vm_map_entry_t
 name|entry
 decl_stmt|;
 block|{
-comment|/* 	 *	If this entry references a map, unlock it first. 	 */
+comment|/* 	 * If this entry references a map, unlock it first. 	 */
 if|if
 condition|(
 name|entry
@@ -7653,7 +7680,7 @@ operator|.
 name|share_map
 argument_list|)
 expr_stmt|;
-comment|/* 	 *	Unlock the main-level map 	 */
+comment|/* 	 * Unlock the main-level map 	 */
 name|vm_map_unlock_read
 argument_list|(
 name|map

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.9 (Berkeley) 3/21/94  * $Id: swap_pager.c,v 1.20 1994/12/22 05:18:12 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.9 (Berkeley) 3/21/94  * $Id: swap_pager.c,v 1.21 1994/12/23 04:56:50 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|NPENDINGIO
-value|16
+value|10
 end_define
 
 begin_endif
@@ -210,6 +210,13 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nswaplist
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_pio_needed
 decl_stmt|;
 end_decl_stmt
 
@@ -660,7 +667,13 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* 		 * kva's are allocated here so that we dont need to keep 		 * doing kmem_alloc pageables at runtime 		 */
+if|#
+directive|if
+literal|0
+block|int desiredpendingio;  		desiredpendingio = cnt.v_page_count / 200 + 2; 		if (desiredpendingio< npendingio) 			npendingio = desiredpendingio;
+endif|#
+directive|endif
+comment|/* 		 * kva's are allocated here so that we dont need to keep doing 		 * kmem_alloc pageables at runtime 		 */
 for|for
 control|(
 name|i
@@ -776,7 +789,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * If this is a "named" anonymous region, look it up and 	 * return the appropriate pager if it exists. 	 */
+comment|/* 	 * If this is a "named" anonymous region, look it up and return the 	 * appropriate pager if it exists. 	 */
 if|if
 condition|(
 name|handle
@@ -799,7 +812,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Use vm_object_lookup to gain a reference 			 * to the object and also to remove from the 			 * object cache. 			 */
+comment|/* 			 * Use vm_object_lookup to gain a reference to the 			 * object and also to remove from the object cache. 			 */
 if|if
 condition|(
 name|vm_object_lookup
@@ -821,7 +834,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Pager doesn't exist, allocate swap management resources 	 * and initialize. 	 */
+comment|/* 	 * Pager doesn't exist, allocate swap management resources and 	 * initialize. 	 */
 name|waitok
 operator|=
 name|handle
@@ -1093,7 +1106,7 @@ argument_list|,
 name|pg_list
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Consistant with other pagers: return with object 		 * referenced.  Can't do this with handle == NULL 		 * since it might be the pageout daemon calling. 		 */
+comment|/* 		 * Consistant with other pagers: return with object 		 * referenced.  Can't do this with handle == NULL since it 		 * might be the pageout daemon calling. 		 */
 name|object
 operator|=
 name|vm_object_allocate
@@ -1723,7 +1736,7 @@ specifier|static
 name|int
 name|in_reclaim
 decl_stmt|;
-comment|/*  * allow only one process to be in the swap_pager_reclaim subroutine  */
+comment|/* 	 * allow only one process to be in the swap_pager_reclaim subroutine 	 */
 name|s
 operator|=
 name|splbio
@@ -1930,7 +1943,7 @@ block|}
 block|}
 name|rfinished
 label|:
-comment|/*  * free the blocks that have been added to the reclaim list  */
+comment|/* 	 * free the blocks that have been added to the reclaim list 	 */
 for|for
 control|(
 name|i
@@ -2072,7 +2085,7 @@ name|dstpager
 operator|->
 name|pg_data
 expr_stmt|;
-comment|/*  * remove the source pager from the swap_pager internal queue  */
+comment|/* 	 * remove the source pager from the swap_pager internal queue 	 */
 name|s
 operator|=
 name|splbio
@@ -2145,7 +2158,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*  * clean all of the pages that are currently active and finished  */
+comment|/* 	 * clean all of the pages that are currently active and finished 	 */
 operator|(
 name|void
 operator|)
@@ -2157,7 +2170,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/*  * clear source block before destination object  * (release allocated space)  */
+comment|/* 	 * clear source block before destination object 	 * (release allocated space) 	 */
 for|for
 control|(
 name|i
@@ -2225,7 +2238,7 @@ name|SWB_EMPTY
 expr_stmt|;
 block|}
 block|}
-comment|/*  * transfer source to destination  */
+comment|/* 	 * transfer source to destination 	 */
 for|for
 control|(
 name|i
@@ -2270,7 +2283,7 @@ name|int
 modifier|*
 name|dstaddrp
 decl_stmt|;
-comment|/* 	 * see if the source has space allocated 	 */
+comment|/* 		 * see if the source has space allocated 		 */
 if|if
 condition|(
 name|srcaddrp
@@ -2281,7 +2294,7 @@ operator|!=
 name|SWB_EMPTY
 condition|)
 block|{
-comment|/* 		 * if the source is valid and the dest has no space, then 		 * copy the allocation from the srouce to the dest. 		 */
+comment|/* 			 * if the source is valid and the dest has no space, 			 * then copy the allocation from the srouce to the 			 * dest. 			 */
 if|if
 condition|(
 name|srcvalid
@@ -2301,7 +2314,7 @@ operator|&
 name|dstvalid
 argument_list|)
 expr_stmt|;
-comment|/* 				 * if the dest already has a valid block, deallocate the 				 * source block without copying. 				 */
+comment|/* 				 * if the dest already has a valid block, 				 * deallocate the source block without 				 * copying. 				 */
 if|if
 condition|(
 operator|!
@@ -2371,7 +2384,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * if the source is not empty at this point, then deallocate the space. 		 */
+comment|/* 			 * if the source is not empty at this point, then 			 * deallocate the space. 			 */
 if|if
 condition|(
 operator|*
@@ -2404,7 +2417,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*  * deallocate the rest of the source object  */
+comment|/* 	 * deallocate the rest of the source object 	 */
 for|for
 control|(
 name|i
@@ -2558,7 +2571,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* 	 * Remove from list right away so lookups will fail if we 	 * block for pageout completion. 	 */
+comment|/* 	 * Remove from list right away so lookups will fail if we block for 	 * pageout completion. 	 */
 name|s
 operator|=
 name|splbio
@@ -2613,7 +2626,7 @@ name|pg_list
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Wait for all pageouts to finish and remove 	 * all entries from cleaning list. 	 */
+comment|/* 	 * Wait for all pageouts to finish and remove all entries from 	 * cleaning list. 	 */
 while|while
 condition|(
 name|swp
@@ -3179,7 +3192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _swap_pager_haspage returns TRUE if the pager has data that has  * been written out.    */
+comment|/*  * _swap_pager_haspage returns TRUE if the pager has data that has  * been written out.  */
 end_comment
 
 begin_function
@@ -3564,7 +3577,7 @@ name|object
 operator|->
 name|paging_offset
 expr_stmt|;
-comment|/* 	 * First determine if the page exists in the pager if this is 	 * a sync read.  This quickly handles cases where we are 	 * following shadow chains looking for the top level object 	 * with the page. 	 */
+comment|/* 	 * First determine if the page exists in the pager if this is a sync 	 * read.  This quickly handles cases where we are following shadow 	 * chains looking for the top level object with the page. 	 */
 if|if
 condition|(
 name|swp
@@ -4110,7 +4123,7 @@ index|]
 operator|->
 name|swb_locked
 expr_stmt|;
-comment|/* 	 * at this point: 	 * "m" is a pointer to the array of vm_page_t for paging I/O 	 * "count" is the number of vm_page_t entries represented by "m" 	 * "object" is the vm_object_t for I/O 	 * "reqpage" is the index into "m" for the page actually faulted 	 */
+comment|/* 	 * at this point: "m" is a pointer to the array of vm_page_t for 	 * paging I/O "count" is the number of vm_page_t entries represented 	 * by "m" "object" is the vm_object_t for I/O "reqpage" is the index 	 * into "m" for the page actually faulted 	 */
 name|spc
 operator|=
 name|NULL
@@ -4123,7 +4136,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 		 * if a kva has not been allocated, we can only do a one page transfer, 		 * so we free the other pages that might have been allocated by 		 * vm_fault. 		 */
+comment|/* 		 * if a kva has not been allocated, we can only do a one page 		 * transfer, so we free the other pages that might have been 		 * allocated by vm_fault. 		 */
 name|swap_pager_ridpages
 argument_list|(
 name|m
@@ -4161,7 +4174,7 @@ name|reqpage
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * get a swap pager clean data structure, block until we get it 	 */
+comment|/* 		 * get a swap pager clean data structure, block until we get 		 * it 		 */
 if|if
 condition|(
 name|swap_pager_free
@@ -4309,7 +4322,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * Get a swap buffer header to perform the IO 	 */
+comment|/* 		 * Get a swap buffer header to perform the IO 		 */
 name|bp
 operator|=
 name|getpbuf
@@ -4423,7 +4436,7 @@ name|PAGE_SIZE
 operator|*
 name|count
 expr_stmt|;
-name|bgetvp
+name|pbgetvp
 argument_list|(
 name|swapdev_vp
 argument_list|,
@@ -4545,14 +4558,14 @@ operator|)
 name|swp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * relpbuf does this, but we maintain our own buffer 	 * list also... 	 */
+comment|/* 	 * relpbuf does this, but we maintain our own buffer list also... 	 */
 if|if
 condition|(
 name|bp
 operator|->
 name|b_vp
 condition|)
-name|brelvp
+name|pbrelvp
 argument_list|(
 name|bp
 argument_list|)
@@ -4583,6 +4596,22 @@ condition|(
 name|spc
 condition|)
 block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_WANTED
+condition|)
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|bp
+argument_list|)
+expr_stmt|;
 comment|/* 		 * if we have used an spc, we need to free it. 		 */
 if|if
 condition|(
@@ -4693,19 +4722,9 @@ index|[
 name|i
 index|]
 operator|->
-name|flags
-operator||=
-name|PG_CLEAN
-expr_stmt|;
-name|m
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_LAUNDRY
+name|dirty
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4714,7 +4733,34 @@ operator|!=
 name|reqpage
 condition|)
 block|{
-comment|/* 					 * whether or not to leave the page activated 					 * is up in the air, but we should put the page 					 * on a page queue somewhere. (it already is in 					 * the object). 					 * After some emperical results, it is best 					 * to deactivate the readahead pages. 					 */
+comment|/* 					 * whether or not to leave the page 					 * activated is up in the air, but we 					 * should put the page on a page queue 					 * somewhere. (it already is in the 					 * object). After some emperical 					 * results, it is best to deactivate 					 * the readahead pages. 					 */
+if|if
+condition|(
+operator|(
+name|i
+operator|==
+name|reqpage
+operator|-
+literal|1
+operator|)
+operator|||
+operator|(
+name|i
+operator|==
+name|reqpage
+operator|+
+literal|1
+operator|)
+condition|)
+name|vm_page_activate
+argument_list|(
+name|m
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|vm_page_deactivate
 argument_list|(
 name|m
@@ -4723,16 +4769,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 					 * just in case someone was asking for this 					 * page we now tell them that it is ok to use 					 */
+comment|/* 					 * just in case someone was asking for 					 * this page we now tell them that it 					 * is ok to use 					 */
 name|m
 index|[
 name|i
 index|]
 operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_FAKE
+name|valid
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
 name|PAGE_WAKEUP
 argument_list|(
@@ -4769,10 +4814,9 @@ index|[
 name|i
 index|]
 operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_CLEAN
+name|dirty
+operator|=
+name|VM_PAGE_BITS_ALL
 expr_stmt|;
 block|}
 name|_swap_pager_freespace
@@ -4900,7 +4944,6 @@ decl_stmt|;
 name|int
 name|failed
 decl_stmt|;
-comment|/* 	if( count> 1) 		printf("off: 0x%x, count: %d\n", m[0]->offset, count); */
 if|if
 condition|(
 name|vm_swap_size
@@ -5127,7 +5170,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* 			 * if any other pages have been allocated in this block, we 			 * only try to get one page. 			 */
+comment|/* 			 * if any other pages have been allocated in this 			 * block, we only try to get one page. 			 */
 for|for
 control|(
 name|i
@@ -5170,7 +5213,7 @@ name|SWB_NPAGES
 else|:
 literal|1
 expr_stmt|;
-comment|/* 			 * this code is alittle conservative, but works 			 * (the intent of this code is to allocate small chunks 			 *  for small objects) 			 */
+comment|/* 			 * this code is alittle conservative, but works (the 			 * intent of this code is to allocate small chunks for 			 * small objects) 			 */
 if|if
 condition|(
 operator|(
@@ -5320,7 +5363,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * if the allocation has failed, we try to reclaim space and 				 * retry. 				 */
+comment|/* 				 * if the allocation has failed, we try to 				 * reclaim space and retry. 				 */
 if|if
 condition|(
 operator|++
@@ -5591,8 +5634,8 @@ literal|"I/O to empty block????\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 */
-comment|/* 	 * For synchronous writes, we clean up 	 * all completed async pageouts. 	 */
+comment|/* 	 * */
+comment|/* 	 * For synchronous writes, we clean up all completed async pageouts. 	 */
 if|if
 condition|(
 operator|(
@@ -5612,14 +5655,38 @@ name|kva
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * we allocate a new kva for transfers> 1 page 	 * but for transfers == 1 page, the swap_pager_free list contains 	 * entries that have pre-allocated kva's (for efficiency). 	 * NOTE -- we do not use the physical buffer pool or the 	 * preallocated associated kva's because of the potential for 	 * deadlock.  This is very subtile -- but deadlocks or resource 	 * contention must be avoided on pageouts -- or your system will 	 * sleep (forever) !!! 	 */
-comment|/* 	if ( count> 1) { 		kva = kmem_alloc_pageable(pager_map, count*PAGE_SIZE); 		if( !kva) { 			for (i = 0; i< count; i++) { 				if( swb[i]) 					--swb[i]->swb_locked; 				rtvals[i] = VM_PAGER_AGAIN; 			} 			return VM_PAGER_AGAIN; 		} 	}  */
+comment|/* 	 * we allocate a new kva for transfers> 1 page but for transfers == 1 	 * page, the swap_pager_free list contains entries that have 	 * pre-allocated kva's (for efficiency). NOTE -- we do not use the 	 * physical buffer pool or the preallocated associated kva's because 	 * of the potential for deadlock.  This is very subtile -- but 	 * deadlocks or resource contention must be avoided on pageouts -- or 	 * your system will sleep (forever) !!! 	 */
+comment|/* 	if ( count> 1) { 		kva = kmem_alloc_pageable(pager_map, count*PAGE_SIZE); 		if( !kva) { 			for (i = 0; i< count; i++) { 				if( swb[i]) 					--swb[i]->swb_locked; 				rtvals[i] = VM_PAGER_AGAIN; 			} 			return VM_PAGER_AGAIN; 		} 	} */
 comment|/* 	 * get a swap pager clean data structure, block until we get it 	 */
 if|if
 condition|(
 name|swap_pager_free
 operator|.
 name|tqh_first
+operator|==
+name|NULL
+operator|||
+name|swap_pager_free
+operator|.
+name|tqh_first
+operator|->
+name|spc_list
+operator|.
+name|tqe_next
+operator|==
+name|NULL
+operator|||
+name|swap_pager_free
+operator|.
+name|tqh_first
+operator|->
+name|spc_list
+operator|.
+name|tqe_next
+operator|->
+name|spc_list
+operator|.
+name|tqe_next
 operator|==
 name|NULL
 condition|)
@@ -5635,12 +5702,15 @@ name|curproc
 operator|==
 name|pageproc
 condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|swap_pager_clean
 argument_list|()
 expr_stmt|;
+comment|/* 			splx(s); 			return VM_PAGER_AGAIN; */
+block|}
 else|else
 name|wakeup
 argument_list|(
@@ -5658,8 +5728,63 @@ operator|.
 name|tqh_first
 operator|==
 name|NULL
+operator|||
+name|swap_pager_free
+operator|.
+name|tqh_first
+operator|->
+name|spc_list
+operator|.
+name|tqe_next
+operator|==
+name|NULL
+operator|||
+name|swap_pager_free
+operator|.
+name|tqh_first
+operator|->
+name|spc_list
+operator|.
+name|tqe_next
+operator|->
+name|spc_list
+operator|.
+name|tqe_next
+operator|==
+name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|curproc
+operator|==
+name|pageproc
+operator|&&
+operator|(
+name|cnt
+operator|.
+name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
+operator|)
+operator|>=
+name|cnt
+operator|.
+name|v_free_min
+condition|)
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|cnt
+operator|.
+name|v_free_count
+argument_list|)
+expr_stmt|;
 name|swap_pager_needflags
 operator||=
 name|SWAP_FREE_NEEDED
@@ -5905,7 +6030,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|bgetvp
+name|pbgetvp
 argument_list|(
 name|swapdev_vp
 argument_list|,
@@ -5933,7 +6058,7 @@ operator|->
 name|v_numoutput
 operator|++
 expr_stmt|;
-comment|/* 	 * If this is an async write we set up additional buffer fields 	 * and place a "cleaning" entry on the inuse queue. 	 */
+comment|/* 	 * If this is an async write we set up additional buffer fields and 	 * place a "cleaning" entry on the inuse queue. 	 */
 name|s
 operator|=
 name|splbio
@@ -6226,8 +6351,24 @@ name|bp
 operator|->
 name|b_vp
 condition|)
-name|brelvp
+name|pbrelvp
 argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_WANTED
+condition|)
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|bp
 argument_list|)
 expr_stmt|;
@@ -6244,7 +6385,7 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if we have written the page, then indicate that the page 	 * is clean. 	 */
+comment|/* 	 * if we have written the page, then indicate that the page is clean. 	 */
 if|if
 condition|(
 name|rv
@@ -6276,25 +6417,6 @@ operator|==
 name|VM_PAGER_OK
 condition|)
 block|{
-name|m
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator||=
-name|PG_CLEAN
-expr_stmt|;
-name|m
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PG_LAUNDRY
-expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -6306,7 +6428,16 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 				 * optimization, if a page has been read during the 				 * pageout process, we activate it. 				 */
+name|m
+index|[
+name|i
+index|]
+operator|->
+name|dirty
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 				 * optimization, if a page has been read 				 * during the pageout process, we activate it. 				 */
 if|if
 condition|(
 operator|(
@@ -6322,6 +6453,18 @@ operator|)
 operator|==
 literal|0
 operator|&&
+operator|(
+operator|(
+name|m
+index|[
+name|i
+index|]
+operator|->
+name|flags
+operator|&
+name|PG_WANTED
+operator|)
+operator|||
 name|pmap_is_referenced
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -6332,6 +6475,7 @@ name|i
 index|]
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 name|vm_page_activate
 argument_list|(
@@ -6366,15 +6510,6 @@ name|i
 index|]
 operator|=
 name|rv
-expr_stmt|;
-name|m
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator||=
-name|PG_LAUNDRY
 expr_stmt|;
 block|}
 block|}
@@ -6489,7 +6624,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Look up and removal from done list must be done 		 * at splbio() to avoid conflicts with swap_pager_iodone. 		 */
+comment|/* 		 * Look up and removal from done list must be done at splbio() 		 * to avoid conflicts with swap_pager_iodone. 		 */
 while|while
 condition|(
 operator|(
@@ -6540,7 +6675,7 @@ name|s
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 		 * The desired page was found to be busy earlier in 		 * the scan but has since completed. 		 */
+comment|/* 		 * The desired page was found to be busy earlier in the scan 		 * but has since completed. 		 */
 name|doclean
 label|:
 if|if
@@ -6664,7 +6799,7 @@ operator|)
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If no error mark as clean and inform the pmap system. 	 * If error, mark as dirty so we will try again. 	 * (XXX could get stuck doing this, should give up after awhile) 	 */
+comment|/* 	 * If no error mark as clean and inform the pmap system. If error, 	 * mark as dirty so we will try again. (XXX could get stuck doing 	 * this, should give up after awhile) 	 */
 if|if
 condition|(
 name|spc
@@ -6708,17 +6843,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|spc
-operator|->
-name|spc_m
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator||=
-name|PG_LAUNDRY
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -6759,9 +6883,64 @@ index|[
 name|i
 index|]
 operator|->
+name|dirty
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|spc
+operator|->
+name|spc_m
+index|[
+name|i
+index|]
+operator|->
 name|flags
-operator||=
-name|PG_CLEAN
+operator|&
+name|PG_ACTIVE
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+operator|(
+name|spc
+operator|->
+name|spc_m
+index|[
+name|i
+index|]
+operator|->
+name|flags
+operator|&
+name|PG_WANTED
+operator|)
+operator|||
+name|pmap_is_referenced
+argument_list|(
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|spc
+operator|->
+name|spc_m
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|)
+operator|)
+condition|)
+name|vm_page_activate
+argument_list|(
+name|spc
+operator|->
+name|spc_m
+index|[
+name|i
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -6781,7 +6960,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * we wakeup any processes that are waiting on 		 * these pages. 		 */
+comment|/* 		 * we wakeup any processes that are waiting on these pages. 		 */
 name|PAGE_WAKEUP
 argument_list|(
 name|spc
@@ -6916,13 +7095,27 @@ name|bp
 operator|->
 name|b_vp
 condition|)
-block|{
-name|brelvp
+name|pbrelvp
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_WANTED
+condition|)
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -7047,9 +7240,15 @@ name|NULL
 operator|)
 operator|||
 operator|(
+operator|(
 name|cnt
 operator|.
 name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
+operator|)
 operator|<
 name|cnt
 operator|.
@@ -7060,6 +7259,10 @@ operator|+
 name|cnt
 operator|.
 name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
 operator|>=
 name|cnt
 operator|.

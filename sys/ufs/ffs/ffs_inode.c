@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_inode.c	8.5 (Berkeley) 12/30/93  * $Id: ffs_inode.c,v 1.9 1994/10/22 02:27:32 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_inode.c	8.5 (Berkeley) 12/30/93  * $Id: ffs_inode.c,v 1.10 1994/12/27 14:44:42 bde Exp $  */
 end_comment
 
 begin_include
@@ -850,16 +850,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-name|vnode_pager_setsize
-argument_list|(
-name|ovp
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|length
-argument_list|)
-expr_stmt|;
 name|osize
 operator|=
 name|oip
@@ -964,6 +954,16 @@ else|else
 name|bawrite
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|ovp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|length
 argument_list|)
 expr_stmt|;
 name|oip
@@ -1115,6 +1115,8 @@ argument_list|(
 name|bp
 argument_list|,
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1900,6 +1902,16 @@ name|i_flag
 operator||=
 name|IN_CHANGE
 expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|ovp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|length
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -2107,17 +2119,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* if (bp->b_flags& (B_DONE | B_DELWRI)) { */
 if|if
 condition|(
 name|bp
 operator|->
 name|b_flags
 operator|&
-operator|(
-name|B_DONE
-operator||
-name|B_DELWRI
-operator|)
+name|B_CACHE
 condition|)
 block|{
 comment|/* Braces must be here in case trace evaluates to nothing. */
@@ -2192,6 +2201,13 @@ operator|->
 name|b_blkno
 operator|=
 name|dbn
+expr_stmt|;
+name|vfs_busy_pages
+argument_list|(
+name|bp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(

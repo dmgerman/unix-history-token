@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_pager.h	8.4 (Berkeley) 1/12/94  * $Id: vm_pager.h,v 1.3 1994/08/02 07:55:36 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vm_pager.h	8.4 (Berkeley) 1/12/94  * $Id: vm_pager.h,v 1.4 1994/10/09 01:52:17 phk Exp $  */
 end_comment
 
 begin_comment
@@ -48,10 +48,6 @@ name|int
 name|pg_type
 decl_stmt|;
 comment|/* type of pager */
-name|int
-name|pg_flags
-decl_stmt|;
-comment|/* flags */
 name|struct
 name|pagerops
 modifier|*
@@ -125,7 +121,6 @@ name|void
 argument_list|(
 argument|*pgo_init
 argument_list|)
-comment|/* Initialize pager. */
 name|__P
 argument_list|(
 operator|(
@@ -133,11 +128,11 @@ name|void
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Initialize pager. */
 name|vm_pager_t
 argument_list|(
 argument|*pgo_alloc
 argument_list|)
-comment|/* Allocate pager. */
 name|__P
 argument_list|(
 operator|(
@@ -151,11 +146,11 @@ name|vm_offset_t
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Allocate pager. */
 name|void
 argument_list|(
 argument|*pgo_dealloc
 argument_list|)
-comment|/* Disassociate. */
 name|__P
 argument_list|(
 operator|(
@@ -163,6 +158,7 @@ name|vm_pager_t
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Disassociate. */
 name|int
 argument_list|(
 argument|*pgo_getpage
@@ -182,7 +178,6 @@ name|int
 argument_list|(
 argument|*pgo_getpages
 argument_list|)
-comment|/* Get (read) page. */
 name|__P
 argument_list|(
 operator|(
@@ -199,6 +194,7 @@ name|boolean_t
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Get (read) page. */
 name|int
 argument_list|(
 argument|*pgo_putpage
@@ -218,7 +214,6 @@ name|int
 argument_list|(
 argument|*pgo_putpages
 argument_list|)
-comment|/* Put (write) page. */
 name|__P
 argument_list|(
 operator|(
@@ -236,11 +231,11 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Put (write) page. */
 name|boolean_t
 argument_list|(
 argument|*pgo_haspage
 argument_list|)
-comment|/* Does pager have page? */
 name|__P
 argument_list|(
 operator|(
@@ -250,6 +245,7 @@ name|vm_offset_t
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Does pager have page? */
 block|}
 struct|;
 end_struct
@@ -612,18 +608,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|vm_pager_cancluster
-parameter_list|(
-name|p
-parameter_list|,
-name|b
-parameter_list|)
-value|((p)->pg_flags& (b))
-end_define
 
 begin_comment
 comment|/*  * XXX compat with old interface  */

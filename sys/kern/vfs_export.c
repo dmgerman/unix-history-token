@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.13 (Berkeley) 4/18/94  * $Id: vfs_subr.c,v 1.12 1994/10/06 21:06:37 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.13 (Berkeley) 4/18/94  * $Id: vfs_subr.c,v 1.13 1994/12/23 04:52:55 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -255,6 +255,12 @@ begin_comment
 comment|/* mounted filesystem list */
 end_comment
 
+begin_decl_stmt
+name|int
+name|desiredvnodes
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Initialize the vnode management data structures.  */
 end_comment
@@ -264,6 +270,16 @@ name|void
 name|vntblinit
 parameter_list|()
 block|{
+specifier|extern
+name|int
+name|vm_object_cache_max
+decl_stmt|;
+name|desiredvnodes
+operator|=
+name|maxproc
+operator|+
+name|vm_object_cache_max
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1319,19 +1335,11 @@ name|vp
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|vnode_free_list
 operator|.
 name|tqh_first
 operator|==
 name|NULL
-operator|&&
-name|numvnodes
-operator|<
-literal|2
-operator|*
-name|desiredvnodes
-operator|)
 operator|||
 name|numvnodes
 operator|<
@@ -1752,34 +1760,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|vp
 operator|->
 name|v_flag
 operator|&
 name|VBWAIT
-operator|)
-operator|&&
-name|vp
-operator|->
-name|v_numoutput
-operator|<=
-literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|vp
-operator|->
-name|v_numoutput
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"vwakeup: neg numoutput"
-argument_list|)
-expr_stmt|;
 name|vp
 operator|->
 name|v_flag
@@ -2115,7 +2102,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX Since there are no node locks for NFS, I believe 			 * there is a slight chance that a delayed write will 			 * occur while sleeping just above, so check for it. 			 */
+comment|/* 			 * XXX Since there are no node locks for NFS, I 			 * believe there is a slight chance that a delayed 			 * write will occur while sleeping just above, so 			 * check for it. 			 */
 if|if
 condition|(
 operator|(
@@ -2156,6 +2143,46 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|vp
+operator|->
+name|v_numoutput
+operator|>
+literal|0
+condition|)
+block|{
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VBWAIT
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_numoutput
+argument_list|,
+name|PVM
+argument_list|,
+literal|"vnvlbv"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|pager
 operator|=
 name|NULL
@@ -2481,6 +2508,150 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Associate a p-buffer with a vnode.  */
+end_comment
+
+begin_function
+name|void
+name|pbgetvp
+parameter_list|(
+name|vp
+parameter_list|,
+name|bp
+parameter_list|)
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+condition|)
+name|panic
+argument_list|(
+literal|"pbgetvp: not free"
+argument_list|)
+expr_stmt|;
+name|VHOLD
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_vp
+operator|=
+name|vp
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VBLK
+operator|||
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+condition|)
+name|bp
+operator|->
+name|b_dev
+operator|=
+name|vp
+operator|->
+name|v_rdev
+expr_stmt|;
+else|else
+name|bp
+operator|->
+name|b_dev
+operator|=
+name|NODEV
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Disassociate a p-buffer from a vnode.  */
+end_comment
+
+begin_function
+name|void
+name|pbrelvp
+parameter_list|(
+name|bp
+parameter_list|)
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+operator|==
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"brelvp: NULL"
+argument_list|)
+expr_stmt|;
+name|vp
+operator|=
+name|bp
+operator|->
+name|b_vp
+expr_stmt|;
+name|bp
+operator|->
+name|b_vp
+operator|=
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+name|HOLDRELE
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Reassign a buffer from one vnode to another.  * Used to assign file specific control information  * (indirect blocks) to the vnode to which they belong.  */
 end_comment
 
@@ -2541,7 +2712,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If dirty, put on list of dirty buffers; 	 * otherwise insert onto list of clean buffers. 	 */
+comment|/* 	 * If dirty, put on list of dirty buffers; otherwise insert onto list 	 * of clean buffers. 	 */
 if|if
 condition|(
 name|bp
@@ -2550,14 +2721,94 @@ name|b_flags
 operator|&
 name|B_DELWRI
 condition|)
-name|listheadp
+block|{
+name|struct
+name|buf
+modifier|*
+name|tbp
+decl_stmt|;
+name|tbp
 operator|=
+name|newvp
+operator|->
+name|v_dirtyblkhd
+operator|.
+name|lh_first
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tbp
+operator|||
+operator|(
+name|tbp
+operator|->
+name|b_lblkno
+operator|>
+name|bp
+operator|->
+name|b_lblkno
+operator|)
+condition|)
+block|{
+name|bufinsvn
+argument_list|(
+name|bp
+argument_list|,
 operator|&
 name|newvp
 operator|->
 name|v_dirtyblkhd
+argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+while|while
+condition|(
+name|tbp
+operator|->
+name|b_vnbufs
+operator|.
+name|le_next
+operator|&&
+operator|(
+name|tbp
+operator|->
+name|b_vnbufs
+operator|.
+name|le_next
+operator|->
+name|b_lblkno
+operator|<
+name|bp
+operator|->
+name|b_lblkno
+operator|)
+condition|)
+block|{
+name|tbp
+operator|=
+name|tbp
+operator|->
+name|b_vnbufs
+operator|.
+name|le_next
+expr_stmt|;
+block|}
+name|LIST_INSERT_AFTER
+argument_list|(
+name|tbp
+argument_list|,
+name|bp
+argument_list|,
+name|b_vnbufs
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|listheadp
 operator|=
 operator|&
@@ -2572,6 +2823,7 @@ argument_list|,
 name|listheadp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3018,7 +3270,7 @@ name|int
 name|lockflag
 decl_stmt|;
 block|{
-comment|/* 	 * If the vnode is in the process of being cleaned out for 	 * another use, we wait for the cleaning to finish and then 	 * return failure. Cleaning is determined either by checking 	 * that the VXLOCK flag is set, or that the use count is 	 * zero with the back pointer set to show that it has been 	 * removed from the free list by getnewvnode. The VXLOCK 	 * flag may not have been set yet because vclean is blocked in 	 * the VOP_LOCK call waiting for the VOP_INACTIVE to complete. 	 */
+comment|/* 	 * If the vnode is in the process of being cleaned out for another 	 * use, we wait for the cleaning to finish and then return failure. 	 * Cleaning is determined either by checking that the VXLOCK flag is 	 * set, or that the use count is zero with the back pointer set to 	 * show that it has been removed from the free list by getnewvnode. 	 * The VXLOCK flag may not have been set yet because vclean is blocked 	 * in the VOP_LOCK call waiting for the VOP_INACTIVE to complete. 	 */
 if|if
 condition|(
 operator|(
@@ -3505,7 +3757,7 @@ name|VSYSTEM
 operator|)
 condition|)
 continue|continue;
-comment|/* 		 * If WRITECLOSE is set, only flush out regular file 		 * vnodes open for writing. 		 */
+comment|/* 		 * If WRITECLOSE is set, only flush out regular file vnodes 		 * open for writing. 		 */
 if|if
 condition|(
 operator|(
@@ -3529,7 +3781,7 @@ name|VREG
 operator|)
 condition|)
 continue|continue;
-comment|/* 		 * With v_usecount == 0, all we need to do is clear 		 * out the vnode data structures and we are done. 		 */
+comment|/* 		 * With v_usecount == 0, all we need to do is clear out the 		 * vnode data structures and we are done. 		 */
 if|if
 condition|(
 name|vp
@@ -3546,7 +3798,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If FORCECLOSE is set, forcibly close the vnode. 		 * For block or character devices, revert to an 		 * anonymous device. For all other files, just kill them. 		 */
+comment|/* 		 * If FORCECLOSE is set, forcibly close the vnode. For block 		 * or character devices, revert to an anonymous device. For 		 * all other files, just kill them. 		 */
 if|if
 condition|(
 name|flags
@@ -3667,7 +3919,7 @@ block|{
 name|int
 name|active
 decl_stmt|;
-comment|/* 	 * Check to see if the vnode is in use. 	 * If so we have to reference it before we clean it out 	 * so that its count cannot fall to zero and generate a 	 * race against ourselves to recycle it. 	 */
+comment|/* 	 * Check to see if the vnode is in use. If so we have to reference it 	 * before we clean it out so that its count cannot fall to zero and 	 * generate a race against ourselves to recycle it. 	 */
 if|if
 condition|(
 operator|(
@@ -3683,13 +3935,13 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Even if the count is zero, the VOP_INACTIVE routine may still 	 * have the object locked while it cleans it out. The VOP_LOCK 	 * ensures that the VOP_INACTIVE routine is done with its work. 	 * For active vnodes, it ensures that no other activity can 	 * occur while the underlying object is being cleaned out. 	 */
+comment|/* 	 * Even if the count is zero, the VOP_INACTIVE routine may still have 	 * the object locked while it cleans it out. The VOP_LOCK ensures that 	 * the VOP_INACTIVE routine is done with its work. For active vnodes, 	 * it ensures that no other activity can occur while the underlying 	 * object is being cleaned out. 	 */
 name|VOP_LOCK
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Prevent the vnode from being recycled or 	 * brought into use while we clean it out. 	 */
+comment|/* 	 * Prevent the vnode from being recycled or brought into use while we 	 * clean it out. 	 */
 if|if
 condition|(
 name|vp
@@ -3731,13 +3983,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Any other processes trying to obtain this lock must first 	 * wait for VXLOCK to clear, then call the new lock operation. 	 */
+comment|/* 	 * Any other processes trying to obtain this lock must first wait for 	 * VXLOCK to clear, then call the new lock operation. 	 */
 name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If purging an active vnode, it must be closed and 	 * deactivated before being reclaimed. 	 */
+comment|/* 	 * If purging an active vnode, it must be closed and deactivated 	 * before being reclaimed. 	 */
 if|if
 condition|(
 name|active
@@ -3868,7 +4120,7 @@ operator|&
 name|VALIASED
 condition|)
 block|{
-comment|/* 		 * If a vgone (or vclean) is already in progress, 		 * wait until it is done and return. 		 */
+comment|/* 		 * If a vgone (or vclean) is already in progress, wait until 		 * it is done and return. 		 */
 if|if
 condition|(
 name|vp
@@ -3903,7 +4155,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * Ensure that vp will not be vgone'd while we 		 * are eliminating its aliases. 		 */
+comment|/* 		 * Ensure that vp will not be vgone'd while we are eliminating 		 * its aliases. 		 */
 name|vp
 operator|->
 name|v_flag
@@ -3968,7 +4220,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 		 * Remove the lock so that vgone below will 		 * really eliminate the vnode after which time 		 * vgone will awaken any sleepers. 		 */
+comment|/* 		 * Remove the lock so that vgone below will really eliminate 		 * the vnode after which time vgone will awaken any sleepers. 		 */
 name|vp
 operator|->
 name|v_flag
@@ -4013,7 +4265,7 @@ name|vnode
 modifier|*
 name|vx
 decl_stmt|;
-comment|/* 	 * If a vgone (or vclean) is already in progress, 	 * wait until it is done and return. 	 */
+comment|/* 	 * If a vgone (or vclean) is already in progress, wait until it is 	 * done and return. 	 */
 if|if
 condition|(
 name|vp
@@ -4275,7 +4527,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * If it is on the freelist and not already at the head, 	 * move it to the head of the list. The test of the back 	 * pointer and the reference count of zero is because 	 * it will be removed from the free list by getnewvnode, 	 * but will not have its reference count incremented until 	 * after calling vgone. If the reference count were 	 * incremented first, vgone would (incorrectly) try to 	 * close the previous instance of the underlying object. 	 * So, the back pointer is explicitly set to `0xdeadb' in 	 * getnewvnode after removing it from the freelist to ensure 	 * that we do not try to move it here. 	 */
+comment|/* 	 * If it is on the freelist and not already at the head, move it to 	 * the head of the list. The test of the back pointer and the 	 * reference count of zero is because it will be removed from the free 	 * list by getnewvnode, but will not have its reference count 	 * incremented until after calling vgone. If the reference count were 	 * incremented first, vgone would (incorrectly) try to close the 	 * previous instance of the underlying object. So, the back pointer is 	 * explicitly set to `0xdeadb' in getnewvnode after removing it from 	 * the freelist to ensure that we do not try to move it here. 	 */
 if|if
 condition|(
 name|vp
@@ -5099,7 +5351,7 @@ operator|.
 name|le_next
 control|)
 block|{
-comment|/* 			 * Check that the vp is still associated with 			 * this filesystem.  RACE: could have been 			 * recycled onto the same filesystem. 			 */
+comment|/* 			 * Check that the vp is still associated with this 			 * filesystem.  RACE: could have been recycled onto 			 * the same filesystem. 			 */
 if|if
 condition|(
 name|vp
@@ -5649,7 +5901,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Seems silly to initialize every AF when most are not 		 * used, do so on demand here 		 */
+comment|/* 		 * Seems silly to initialize every AF when most are not used, 		 * do so on demand here 		 */
 for|for
 control|(
 name|dom
