@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -393,6 +393,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|ADDRESS
+name|fromaddr
+decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -415,16 +418,6 @@ operator|->
 name|hi_flags
 operator|)
 return|;
-comment|/* different contents -- add a Sender: field */
-name|addheader
-argument_list|(
-literal|"sender"
-argument_list|,
-literal|"$q"
-argument_list|,
-name|CurEnv
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* delete default value for this header */
 for|for
