@@ -577,7 +577,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * A system initialization call instance  *  * At the moment there is one instance of sysinit.  We probably do not  * want two which is why this code is if'd out, but we definitely want  * to discern SYSINIT's which take non-constant data pointers and  * SYSINIT's which take constant data pointers,  *  * The C_* macros take functions expecting const void * arguments   * while the non-C_* macros take functions expecting just void * arguments.  *  * With -Wcast-qual on, the compiler issues warnings:  *	- if we pass non-const data or functions taking non-const data  *	  to a C_* macro.  *  *	- if we pass const data to the normal macros  *  * However, no warning is issued if we pass a function taking const data  * through a normal non-const macro.  This is ok because the function is  * saying it won't modify the data so we don't care whether the data is  * modifiable or not.  */
+comment|/*  * A system initialization call instance  *  * At the moment there is one instance of sysinit.  We probably do not  * want two which is why this code is if'd out, but we definitely want  * to discern SYSINIT's which take non-constant data pointers and  * SYSINIT's which take constant data pointers,  *  * The C_* macros take functions expecting const void * arguments  * while the non-C_* macros take functions expecting just void * arguments.  *  * With -Wcast-qual on, the compiler issues warnings:  *	- if we pass non-const data or functions taking non-const data  *	  to a C_* macro.  *  *	- if we pass const data to the normal macros  *  * However, no warning is issued if we pass a function taking const data  * through a normal non-const macro.  This is ok because the function is  * saying it won't modify the data so we don't care whether the data is  * modifiable or not.  */
 end_comment
 
 begin_typedef
@@ -744,6 +744,10 @@ begin_comment
 comment|/*  * Infrastructure for tunable 'constants'.  Value may be specified at compile  * time or kernel load time.  Rules relating tunables together can be placed  * in a SYSINIT function at SI_SUB_TUNABLES with SI_ORDER_LAST.  *  * WARNING: developers should never use the reserved suffixes specified in  * loader.conf(5) for any tunables or conflicts will result.  */
 end_comment
 
+begin_comment
+comment|/*  * int  * please avoid using for new tunables!  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
@@ -826,6 +830,185 @@ name|var
 parameter_list|)
 value|getenv_int((path), (var))
 end_define
+
+begin_comment
+comment|/*  * long  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|tunable_long_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|tunable_long
+block|{
+specifier|const
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|long
+modifier|*
+name|var
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_LONG
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|)
+define|\
+value|_TUNABLE_LONG((path), (var), __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TUNABLE_LONG
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|__TUNABLE_LONG((path), (var), line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__TUNABLE_LONG
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|static struct tunable_long __tunable_long_ ## line = {	\ 		path,						\ 		var,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	     tunable_long_init,&__tunable_long_ ## line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_LONG_FETCH
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|)
+value|getenv_long((path), (var))
+end_define
+
+begin_comment
+comment|/*  * unsigned long  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|tunable_ulong_init
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct
+struct|struct
+name|tunable_ulong
+block|{
+specifier|const
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|unsigned
+name|long
+modifier|*
+name|var
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_ULONG
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|)
+define|\
+value|_TUNABLE_ULONG((path), (var), __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TUNABLE_ULONG
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|__TUNABLE_ULONG((path), (var), line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__TUNABLE_ULONG
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|static struct tunable_ulong __tunable_ulong_ ## line = {\ 		path,						\ 		var,						\ 	};							\ 	SYSINIT(__Tunable_init_ ## line, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, \ 	     tunable_ulong_init,&__tunable_ulong_ ## line)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_ULONG_FETCH
+parameter_list|(
+name|path
+parameter_list|,
+name|var
+parameter_list|)
+value|getenv_ulong((path), (var))
+end_define
+
+begin_comment
+comment|/*  * Quad (64-bit)  * please avoid using for new tunables!  */
+end_comment
 
 begin_function_decl
 specifier|extern

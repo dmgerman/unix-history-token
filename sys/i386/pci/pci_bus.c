@@ -1628,19 +1628,16 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|unsigned
+name|long
 name|legacy_host_mem_start
 init|=
 literal|0x80000000
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* No TUNABLE_ULONG :-( */
-end_comment
-
 begin_expr_stmt
-name|TUNABLE_INT
+name|TUNABLE_ULONG
 argument_list|(
 literal|"hw.pci.host_mem_start"
 argument_list|,
@@ -1651,7 +1648,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_hw_pci
 argument_list|,

@@ -1919,6 +1919,40 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|long
+name|getenv_long
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|long
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|unsigned
+name|long
+name|getenv_ulong
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|getenv_string
 parameter_list|(
@@ -2472,7 +2506,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Common `proc' functions are declared here so that proc.h can be included  * less often.  */
+comment|/*  * Common `proc' functions are declared here so that proc.h can be included  * less often.  */
 end_comment
 
 begin_function_decl
