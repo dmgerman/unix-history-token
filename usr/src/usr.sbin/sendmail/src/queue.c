@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.84 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.85 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.84 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.85 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,35 +155,27 @@ begin_comment
 comment|/* **  QUEUEUP -- queue a message up for future transmission. ** **	Parameters: **		e -- the envelope to queue up. **		queueall -- if TRUE, queue all addresses, rather than **			just those with the QQUEUEUP flag set. **		announce -- if TRUE, tell when you are queueing up. ** **	Returns: **		none. ** **	Side Effects: **		The current request are saved in a control file. **		The queue file is left locked. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|queueup
-argument_list|(
+parameter_list|(
 name|e
-argument_list|,
+parameter_list|,
 name|queueall
-argument_list|,
+parameter_list|,
 name|announce
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|bool
 name|queueall
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|announce
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -234,6 +226,20 @@ name|tf
 index|[
 name|MAXLINE
 index|]
+decl_stmt|;
+specifier|extern
+name|void
+name|printctladdr
+name|__P
+argument_list|(
+operator|(
+name|ADDRESS
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 comment|/* 	**  Create control file. 	*/
 name|newid
@@ -672,9 +678,6 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-extern|extern putbody(
-block|)
-empty_stmt|;
 name|strcpy
 argument_list|(
 name|dfname
@@ -832,17 +835,8 @@ operator|=
 name|putbody
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/* 	**  Output future work requests. 	**	Priority and creation time should be first, since 	**	they are required by orderq. 	*/
-end_comment
-
-begin_comment
 comment|/* output queue version number (must be first!) */
-end_comment
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -852,13 +846,7 @@ argument_list|,
 name|QF_VERSION
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* output message priority */
-end_comment
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -870,13 +858,7 @@ operator|->
 name|e_msgpriority
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* output creation time */
-end_comment
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -888,13 +870,7 @@ operator|->
 name|e_ctime
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* output last delivery time */
-end_comment
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -906,13 +882,7 @@ operator|->
 name|e_dtime
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* output number of delivery attempts */
-end_comment
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -924,17 +894,8 @@ operator|->
 name|e_ntries
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* output inode number of data file */
-end_comment
-
-begin_comment
 comment|/* XXX should probably include device major/minor too */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|e
@@ -969,13 +930,7 @@ operator|->
 name|e_dfino
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* output body type */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|e
@@ -995,13 +950,7 @@ operator|->
 name|e_bodytype
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* message from envelope, if it exists */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|e
@@ -1028,20 +977,11 @@ name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* send various flag bits through */
-end_comment
-
-begin_expr_stmt
 name|p
 operator|=
 name|buf
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|bitset
@@ -1059,9 +999,6 @@ operator|++
 operator|=
 literal|'w'
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|bitset
@@ -1079,9 +1016,6 @@ operator|++
 operator|=
 literal|'r'
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|bitset
@@ -1099,18 +1033,12 @@ operator|++
 operator|=
 literal|'8'
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 operator|*
 name|p
 operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|buf
@@ -1129,13 +1057,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* $r and $s and $_ macro values */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1167,9 +1089,6 @@ name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1201,9 +1120,6 @@ name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1235,13 +1151,7 @@ name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* output name of sender */
-end_comment
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|tfp
@@ -1258,13 +1168,7 @@ name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* output ESMTP-supplied "original" information */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|e
@@ -1281,9 +1185,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_for
 for|for
 control|(
 name|q
@@ -1440,13 +1341,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_for
-
-begin_comment
 comment|/* 	**  Output headers for this message. 	**	Expand macros completely here.  Queue run will deal with 	**	everything as absolute headers. 	**		All headers that must be relative to the recipient 	**		can be cracked later. 	**	We set up a "null mailer" -- i.e., a mailer that will have 	**	no effect on the addresses as they are output. 	*/
-end_comment
-
-begin_expr_stmt
 name|bzero
 argument_list|(
 operator|(
@@ -1460,9 +1355,6 @@ sizeof|sizeof
 name|nullmailer
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|nullmailer
 operator|.
 name|m_re_rwset
@@ -1482,18 +1374,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|nullmailer
 operator|.
 name|m_eol
 operator|=
 literal|"\n"
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bzero
 argument_list|(
 operator|&
@@ -1503,9 +1389,6 @@ sizeof|sizeof
 name|mcibuf
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|mcibuf
 operator|.
 name|mci_mailer
@@ -1513,18 +1396,12 @@ operator|=
 operator|&
 name|nullmailer
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|mcibuf
 operator|.
 name|mci_out
 operator|=
 name|tfp
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|define
 argument_list|(
 literal|'g'
@@ -1534,9 +1411,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|h
@@ -1850,13 +1724,7 @@ name|h_value
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|/* 	**  Clean up. 	*/
-end_comment
-
-begin_if
 if|if
 condition|(
 name|fflush
@@ -1902,9 +1770,6 @@ name|tf
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1981,35 +1846,20 @@ name|qf
 operator|=
 name|tf
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|errno
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|e
 operator|->
 name|e_flags
 operator||=
 name|EF_INQUEUE
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|LOG
-end_ifdef
-
-begin_comment
 comment|/* save log info */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|LogLevel
@@ -2029,18 +1879,9 @@ argument_list|,
 name|qf
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* LOG */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|tTd
@@ -2059,34 +1900,27 @@ operator|->
 name|e_id
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_return
 return|return;
-end_return
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  printctladdr
-operator|(
+begin_function
+name|void
+name|printctladdr
+parameter_list|(
 name|a
-operator|,
+parameter_list|,
 name|tfp
-operator|)
+parameter_list|)
 specifier|register
 name|ADDRESS
-operator|*
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|FILE
 modifier|*
 name|tfp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2273,7 +2107,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2814,27 +2648,19 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
+begin_expr_stmt
+name|int
 ifndef|#
 directive|ifndef
 name|DIR
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|DIR
 value|FILE
-end_define
-
-begin_define
 define|#
 directive|define
 name|direct
 value|dir
-end_define
-
-begin_define
 define|#
 directive|define
 name|opendir
@@ -2842,9 +2668,6 @@ parameter_list|(
 name|d
 parameter_list|)
 value|fopen(d, "r")
-end_define
-
-begin_define
 define|#
 directive|define
 name|readdir
@@ -2852,15 +2675,12 @@ parameter_list|(
 name|f
 parameter_list|)
 value|((fread(&dbuf, sizeof dbuf, 1, f)> 0) ?&dbuf : 0)
-end_define
-
-begin_decl_stmt
 specifier|static
-name|struct
+expr|struct
 name|dir
 name|dbuf
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -3399,6 +3219,16 @@ operator|>=
 name|WorkListSize
 condition|)
 block|{
+specifier|extern
+name|void
+name|grow_wlist
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
 name|grow_wlist
 argument_list|()
 expr_stmt|;
@@ -4209,10 +4039,13 @@ begin_comment
 comment|/* **  GROW_WLIST -- make the work list larger ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Adds another QUEUESEGSIZE entries to WorkList if possible. **		It can fail if there isn't enough memory, so WorkListSize **		should be checked again upon return. */
 end_comment
 
-begin_expr_stmt
-unit|grow_wlist
-operator|(
-operator|)
+begin_macro
+unit|void
+name|grow_wlist
+argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -4230,9 +4063,6 @@ argument_list|,
 name|WorkListSize
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|WorkList
@@ -4366,9 +4196,6 @@ endif|#
 directive|endif
 block|}
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|tTd
@@ -4385,39 +4212,34 @@ argument_list|,
 name|WorkListSize
 argument_list|)
 expr_stmt|;
-end_if
+block|}
+end_block
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
 comment|/* **  WORKCMPF0 -- simple priority-only compare function. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		-1 if a< b **		 0 if a == b **		+1 if a> b ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
-unit|workcmpf0
-operator|(
+begin_function
+name|int
+name|workcmpf0
+parameter_list|(
 name|a
-operator|,
+parameter_list|,
 name|b
-operator|)
+parameter_list|)
 specifier|register
 name|WORK
-operator|*
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|WORK
 modifier|*
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|long
 name|pa
@@ -4458,7 +4280,7 @@ operator|-
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -4467,29 +4289,24 @@ begin_comment
 comment|/* **  WORKCMPF1 -- first compare function for ordering work based on host name. ** **	Sorts on host name, lock status, and priority in that order. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **<0 if a< b **		 0 if a == b **>0 if a> b ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|workcmpf1
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|b
-argument_list|)
+parameter_list|)
 specifier|register
 name|WORK
-operator|*
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|WORK
 modifier|*
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -4594,7 +4411,7 @@ operator|->
 name|w_pri
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -4603,29 +4420,24 @@ begin_comment
 comment|/* **  WORKCMPF2 -- second compare function for ordering work based on host name. ** **	Sorts on lock status, host name, and priority in that order. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **<0 if a< b **		 0 if a == b **>0 if a> b ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|workcmpf2
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|b
-argument_list|)
+parameter_list|)
 specifier|register
 name|WORK
-operator|*
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|WORK
 modifier|*
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -4730,7 +4542,7 @@ operator|->
 name|w_pri
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -6215,12 +6027,10 @@ begin_comment
 comment|/* **  PRINTQUEUE -- print out a representation of the mail queue ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Prints a listing of the mail queue on the standard output. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printqueue
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|WORK
@@ -7042,7 +6852,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -7523,21 +7333,16 @@ begin_comment
 comment|/* **  UNLOCKQUEUE -- unlock the queue entry for a specified envelope ** **	Parameters: **		e -- the envelope to unlock. ** **	Returns: **		none ** **	Side Effects: **		unlocks the queue for `e'. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|unlockqueue
-argument_list|(
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|e
+parameter_list|)
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -7640,7 +7445,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.69 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.70 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -839,36 +839,28 @@ begin_comment
 comment|/* **  ALLOCADDR -- do local allocations of address on demand. ** **	Also lowercases the host name if requested. ** **	Parameters: **		a -- the address to reallocate. **		flags -- the copy flag (see RF_ definitions in sendmail.h **			for a description). **		paddr -- the printname of the address. ** **	Returns: **		none. ** **	Side Effects: **		Copies portions of a into local buffers as requested. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|allocaddr
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|flags
-argument_list|,
+parameter_list|,
 name|paddr
-argument_list|)
+parameter_list|)
 specifier|register
 name|ADDRESS
-operator|*
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|paddr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -982,7 +974,7 @@ operator|->
 name|q_user
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1347,7 +1339,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
+name|u_char
 name|TokTypeTab
 index|[
 literal|256
@@ -1890,7 +1882,7 @@ comment|/* token type table for MIME parsing */
 end_comment
 
 begin_decl_stmt
-name|char
+name|u_char
 name|MimeTokenTab
 index|[
 literal|256
@@ -2473,7 +2465,7 @@ modifier|*
 modifier|*
 name|delimptr
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|toktab
 decl_stmt|;
@@ -6760,10 +6752,6 @@ name|p
 decl_stmt|;
 name|char
 modifier|*
-name|bp
-decl_stmt|;
-name|char
-modifier|*
 name|mname
 decl_stmt|;
 name|char
@@ -7720,6 +7708,7 @@ return|;
 block|}
 comment|/* **  CATADDR -- concatenate pieces of addresses (putting in<LWSP> subs) ** **	Parameters: **		pvp -- parameter vector to rebuild. **		evp -- last parameter to include.  Can be NULL to **			use entire pvp. **		buf -- buffer to build the string into. **		sz -- size of buf. **		spacesub -- the space separator character; if null, **			use SpaceSub. ** **	Returns: **		none. ** **	Side Effects: **		Destroys buf. */
 name|void
+name|void
 name|cataddr
 parameter_list|(
 name|pvp
@@ -7750,7 +7739,7 @@ specifier|register
 name|int
 name|sz
 decl_stmt|;
-name|char
+name|int
 name|spacesub
 decl_stmt|;
 block|{
@@ -9154,21 +9143,22 @@ expr_stmt|;
 block|}
 block|}
 comment|/* **  MAPLOCALUSER -- run local username through ruleset 5 for final redirection ** **	Parameters: **		a -- the address to map (but just the user name part). **		sendq -- the sendq in which to install any replacement **			addresses. **		aliaslevel -- the alias nesting depth. **		e -- the envelope. ** **	Returns: **		none. */
+name|void
 name|maplocaluser
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|sendq
-argument_list|,
+parameter_list|,
 name|aliaslevel
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ADDRESS
-operator|*
+modifier|*
 name|a
-expr_stmt|;
+decl_stmt|;
 name|ADDRESS
 modifier|*
 modifier|*

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.90 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.91 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2993,14 +2993,6 @@ decl_stmt|;
 name|gid_t
 name|egid
 decl_stmt|;
-name|int
-name|bits
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|char
 modifier|*
 name|uname
@@ -3114,6 +3106,10 @@ name|FileMailer
 operator|->
 name|m_gid
 expr_stmt|;
+name|uname
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3122,6 +3118,10 @@ operator|=
 name|egid
 operator|=
 literal|0
+expr_stmt|;
+name|uname
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -4584,30 +4584,25 @@ begin_comment
 comment|/* **  SENDTOARGV -- send to an argument vector. ** **	Parameters: **		argv -- argument vector to send to. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		puts all addresses on the argument vector onto the **			send queue. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sendtoargv
-argument_list|(
+parameter_list|(
 name|argv
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|argv
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -4644,7 +4639,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

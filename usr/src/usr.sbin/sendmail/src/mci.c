@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.16 (Berkeley) %G%"
+literal|"@(#)mci.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,23 @@ begin_comment
 comment|/* the open connection cache */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|mci_uncache
+name|__P
+argument_list|(
+operator|(
+name|MCI
+operator|*
+operator|*
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -57,19 +74,17 @@ begin_comment
 comment|/* **  MCI_CACHE -- enter a connection structure into the open connection cache ** **	This may cause something else to be flushed. ** **	Parameters: **		mci -- the connection to cache. ** **	Returns: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|mci_cache
-argument_list|(
+parameter_list|(
 name|mci
-argument_list|)
+parameter_list|)
 specifier|register
 name|MCI
-operator|*
+modifier|*
 name|mci
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|MCI
@@ -207,7 +222,7 @@ operator||=
 name|MCIF_CACHED
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -441,28 +456,23 @@ begin_comment
 comment|/* **  MCI_UNCACHE -- remove a connection from a slot. ** **	May close a connection. ** **	Parameters: **		mcislot -- the slot to empty. **		doquit -- if TRUE, send QUIT protocol on this connection. **			  if FALSE, we are assumed to be in a forked child; **				all we want to do is close the file(s). ** **	Returns: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|mci_uncache
-argument_list|(
+parameter_list|(
 name|mcislot
-argument_list|,
+parameter_list|,
 name|doquit
-argument_list|)
+parameter_list|)
 specifier|register
 name|MCI
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|mcislot
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|bool
 name|doquit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|MCI
@@ -690,7 +700,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -699,29 +709,21 @@ begin_comment
 comment|/* **  MCI_FLUSH -- flush the entire cache ** **	Parameters: **		doquit -- if TRUE, send QUIT protocol. **			  if FALSE, just close the connection. **		allbut -- but leave this one open. ** **	Returns: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mci_flush
-argument_list|(
-argument|doquit
-argument_list|,
-argument|allbut
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|doquit
+parameter_list|,
+name|allbut
+parameter_list|)
 name|bool
 name|doquit
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|MCI
 modifier|*
 name|allbut
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -768,7 +770,7 @@ name|doquit
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1050,27 +1052,22 @@ begin_comment
 comment|/* **  MCI_DUMP -- dump the contents of an MCI structure. ** **	Parameters: **		mci -- the MCI structure to dump. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|mci_dump
-argument_list|(
+parameter_list|(
 name|mci
-argument_list|,
+parameter_list|,
 name|logit
-argument_list|)
+parameter_list|)
 specifier|register
 name|MCI
-operator|*
+modifier|*
 name|mci
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|bool
 name|logit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1281,7 +1278,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1290,20 +1287,15 @@ begin_comment
 comment|/* **  MCI_DUMP_ALL -- print the entire MCI cache ** **	Parameters: **		logit -- if set, log the result instead of printing **			to stdout. ** **	Returns: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mci_dump_all
-argument_list|(
-argument|logit
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|logit
+parameter_list|)
 name|bool
 name|logit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1340,7 +1332,7 @@ name|logit
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

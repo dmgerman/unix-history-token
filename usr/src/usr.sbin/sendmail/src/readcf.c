@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.94 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.95 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,35 +61,24 @@ begin_comment
 comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn arg=val...	Define mailer.  n is the internal name. **				Args specify mailer parameters. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. **		Vversioncode[/vendorcode] **				Version level/vendor name of **				configuration syntax. **		Kmapname mapclass arguments.... **				Define keyed lookup of a given class. **				Arguments are class dependent. **		Eenvar=value	Set the environment value to the given value. ** **	Parameters: **		cfname -- control file name. **		safe -- TRUE if this is the system config file; **			FALSE otherwise. **		e -- the main envelope. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|readcf
-argument_list|(
-argument|cfname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cfname
+parameter_list|)
 name|char
 modifier|*
 name|cfname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|safe
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -190,13 +179,50 @@ specifier|extern
 name|char
 modifier|*
 name|munchstring
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 specifier|extern
 name|void
-name|makemapentry
-parameter_list|()
-function_decl|;
+name|fileclass
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|bool
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|void
+name|toomany
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 name|FileName
 operator|=
 name|cfname
@@ -2522,7 +2548,7 @@ endif|#
 directive|endif
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2531,28 +2557,20 @@ begin_comment
 comment|/* **  TOOMANY -- signal too many of some option ** **	Parameters: **		id -- the id of the error line **		maxcnt -- the maximum possible values ** **	Returns: **		none. ** **	Side Effects: **		gives a syserr. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|toomany
-argument_list|(
-argument|id
-argument_list|,
-argument|maxcnt
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
+parameter_list|(
+name|id
+parameter_list|,
+name|maxcnt
+parameter_list|)
+name|int
 name|id
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|maxcnt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|syserr
 argument_list|(
@@ -2564,7 +2582,7 @@ name|maxcnt
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2573,54 +2591,37 @@ begin_comment
 comment|/* **  FILECLASS -- read members of a class from a file ** **	Parameters: **		class -- class to define. **		filename -- name of file to read. **		fmt -- scanf string to use for match. **		safe -- if set, this is a safe read. **		optional -- if set, it is not an error for the file to **			not exist. ** **	Returns: **		none ** **	Side Effects: ** **		puts all lines in filename that match a scanf into **			the named class. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fileclass
-argument_list|(
-argument|class
-argument_list|,
-argument|filename
-argument_list|,
-argument|fmt
-argument_list|,
-argument|safe
-argument_list|,
-argument|optional
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|class
+parameter_list|,
+name|filename
+parameter_list|,
+name|fmt
+parameter_list|,
+name|safe
+parameter_list|,
+name|optional
+parameter_list|)
 name|int
 name|class
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|safe
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|optional
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -2846,11 +2847,6 @@ name|NULL
 condition|)
 block|{
 specifier|register
-name|STAB
-modifier|*
-name|s
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -3010,7 +3006,7 @@ name|pid
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3019,21 +3015,16 @@ begin_comment
 comment|/* **  MAKEMAILER -- define a new mailer. ** **	Parameters: **		line -- description of mailer.  This is in labeled **			fields.  The fields are: **			   A -- the argv for this mailer **			   C -- the character set for MIME conversions **			   D -- the directory to run in **			   E -- the eol string **			   F -- the flags associated with the mailer **			   L -- the maximum line length **			   M -- the maximum message size **			   N -- the niceness at which to run **			   P -- the path to the mailer **			   R -- the recipient rewriting set **			   S -- the sender rewriting set **			   T -- the mailer type (for DSNs) **			   U -- the uid to run as **			The first word is the canonical name of the mailer. ** **	Returns: **		none. ** **	Side Effects: **		enters the mailer into the mailer table. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|makemailer
-argument_list|(
-argument|line
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|)
 name|char
 modifier|*
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -4235,7 +4226,7 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -4623,12 +4614,10 @@ begin_comment
 comment|/* **  PRINTRULES -- print rewrite rules (for debugging) ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		prints rewrite rules. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printrules
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -4718,7 +4707,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -4727,19 +4716,17 @@ begin_comment
 comment|/* **  PRINTMAILER -- print mailer structure (for debugging) ** **	Parameters: **		m -- the mailer to print ** **	Returns: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|printmailer
-argument_list|(
+parameter_list|(
 name|m
-argument_list|)
+parameter_list|)
 specifier|register
 name|MAILER
-operator|*
+modifier|*
 name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|j
@@ -4954,7 +4941,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -4973,6 +4960,23 @@ end_decl_stmt
 begin_comment
 comment|/* set if option is stuck */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|settimeout
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -5502,45 +5506,31 @@ block|, }
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|void
 name|setoption
-argument_list|(
-argument|opt
-argument_list|,
-argument|val
-argument_list|,
-argument|sticky
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|u_char
+parameter_list|(
+name|opt
+parameter_list|,
+name|val
+parameter_list|,
+name|sticky
+parameter_list|)
+name|int
 name|opt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|val
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|sticky
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -7849,7 +7839,7 @@ name|MaxMessageSize
 operator|=
 name|atol
 argument_list|(
-name|p
+name|val
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7861,7 +7851,7 @@ name|ColonOkInAddr
 operator|=
 name|atobool
 argument_list|(
-name|p
+name|val
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7873,7 +7863,7 @@ name|MaxQueueRun
 operator|=
 name|atol
 argument_list|(
-name|p
+name|val
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7929,9 +7919,8 @@ argument_list|,
 name|StickyOpt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -8231,29 +8220,21 @@ begin_comment
 comment|/* **  SETCLASS -- set a string into a class ** **	Parameters: **		class -- the class to put the string in. **		str -- the string to enter ** **	Returns: **		none. ** **	Side Effects: **		puts the word into the symbol table. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setclass
-argument_list|(
-argument|class
-argument_list|,
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|class
+parameter_list|,
+name|str
+parameter_list|)
 name|int
 name|class
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|STAB
@@ -8299,7 +8280,7 @@ name|s_class
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -8745,19 +8726,17 @@ name|HOUR
 value|* 3600
 end_define
 
-begin_expr_stmt
+begin_function
+name|void
 name|inittimeouts
-argument_list|(
+parameter_list|(
 name|val
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|val
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -9114,7 +9093,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -9123,30 +9102,22 @@ begin_comment
 comment|/* **  SETTIMEOUT -- set an individual timeout ** **	Parameters: **		name -- the name of the timeout. **		val -- the value of the timeout. ** **	Returns: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|settimeout
-argument_list|(
-argument|name
-argument_list|,
-argument|val
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|val
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -9709,7 +9680,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

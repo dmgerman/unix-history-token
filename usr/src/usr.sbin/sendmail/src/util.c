@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.71 (Berkeley) %G%"
+literal|"@(#)util.c	8.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,21 +53,16 @@ begin_comment
 comment|/* **  STRIPQUOTES -- Strip quotes& quote bits from a string. ** **	Runs through a string and strips off unquoted quote **	characters and quote bits.  This is done in place. ** **	Parameters: **		s -- the string to strip. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Called By: **		deliver */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|stripquotes
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -139,7 +134,7 @@ literal|'\0'
 condition|)
 do|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -473,20 +468,18 @@ begin_comment
 comment|/* **  PRINTAV -- print argument vector. ** **	Parameters: **		av -- argument vector. ** **	Returns: **		none. ** **	Side Effects: **		prints av. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|printav
-argument_list|(
+parameter_list|(
 name|av
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|av
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -539,7 +532,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -591,19 +584,18 @@ begin_comment
 comment|/* **  XPUTS -- put string doing control escapes. ** **	Parameters: **		s -- string to put. ** **	Returns: **		none. ** **	Side Effects: **		output to stdout */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|xputs
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
+specifier|const
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -868,7 +860,7 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -945,32 +937,21 @@ begin_comment
 comment|/* **  FULLNAME -- extract full name from a passwd file entry. ** **	Parameters: **		pw -- password entry to start from. **		buf -- buffer to store result in. ** **	Returns: **		TRUE -- if the resulting message should be a MIME format. **		FALSE -- if MIME is not necessary. ** **	Side Effects: **		none. */
 end_comment
 
-begin_comment
+begin_decl_stmt
+name|void
 comment|/* values for should_quote */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|NO_QUOTE
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|SHOULD_QUOTE
 value|1
-end_define
-
-begin_define
 define|#
 directive|define
 name|SHOULD_MIME
 value|2
-end_define
-
-begin_decl_stmt
 name|int
 specifier|register
 name|unsigned
@@ -2917,29 +2898,21 @@ begin_comment
 comment|/* **  FIXCRLF -- fix<CR><LF> in line. ** **	Looks for the<CR><LF> combination and turns it into the **	UNIX canonical<NL> character.  It only takes one line, **	i.e., it is assumed that the first<NL> found is the end **	of the line. ** **	Parameters: **		line -- the line to fix. **		stripnl -- if true, strip the newline also. ** **	Returns: **		none. ** **	Side Effects: **		line is changed in place. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fixcrlf
-argument_list|(
-argument|line
-argument_list|,
-argument|stripnl
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|,
+name|stripnl
+parameter_list|)
 name|char
 modifier|*
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|stripnl
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -2996,7 +2969,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3308,35 +3281,25 @@ begin_comment
 comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		mci -- the mailer connection information. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|putline
-argument_list|(
+parameter_list|(
 name|l
-argument_list|,
+parameter_list|,
 name|mci
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|l
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|MCI
 modifier|*
 name|mci
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|extern
-name|void
-name|putxline
-parameter_list|()
-function_decl|;
 name|putxline
 argument_list|(
 name|l
@@ -3347,7 +3310,7 @@ name|PXLF_MAPFROM
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3896,21 +3859,16 @@ begin_comment
 comment|/* **  XUNLINK -- unlink a file, doing logging as appropriate. ** **	Parameters: **		f -- name of file to unlink. ** **	Returns: **		none. ** **	Side Effects: **		f is unlinked. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|xunlink
-argument_list|(
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|f
+parameter_list|)
 name|char
 modifier|*
 name|f
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -3976,7 +3934,7 @@ endif|#
 directive|endif
 comment|/* LOG */
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3985,33 +3943,28 @@ begin_comment
 comment|/* **  XFCLOSE -- close a file, doing logging as appropriate. ** **	Parameters: **		fp -- file pointer for the file to close **		a, b -- miscellaneous crud to print for debugging ** **	Returns: **		none. ** **	Side Effects: **		fp is closed. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|xfclose
-argument_list|(
-argument|fp
-argument_list|,
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|a
 decl_stmt|,
-modifier|*
+decl|*
 name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -4852,19 +4805,17 @@ begin_comment
 comment|/* **  ATOOCT -- convert a string representation to octal. ** **	Parameters: **		s -- string to convert. ** **	Returns: **		An integer representing the string interpreted as an **		octal number. ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|atooct
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -4906,7 +4857,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -5276,21 +5227,16 @@ begin_comment
 comment|/* **  CHECKFD012 -- check low numbered file descriptors ** **	File descriptors 0, 1, and 2 should be open at all times. **	This routine verifies that, and fixes it if not true. ** **	Parameters: **		where -- a tag printed if the assertion failed ** **	Returns: **		none */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|checkfd012
-argument_list|(
-argument|where
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|where
+parameter_list|)
 name|char
 modifier|*
 name|where
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -5396,7 +5342,7 @@ endif|#
 directive|endif
 comment|/* XDEBUG */
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -5411,20 +5357,15 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
-begin_macro
+begin_function
+name|void
 name|printopenfds
-argument_list|(
-argument|logit
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|logit
+parameter_list|)
 name|bool
 name|logit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -5457,7 +5398,7 @@ name|logit
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -5466,36 +5407,25 @@ begin_comment
 comment|/* **  DUMPFD -- dump a file descriptor ** **	Parameters: **		fd -- the file descriptor to dump. **		printclosed -- if set, print a notification even if **			it is closed; otherwise print nothing. **		logit -- if set, send output to syslog instead of stdout. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dumpfd
-argument_list|(
-argument|fd
-argument_list|,
-argument|printclosed
-argument_list|,
-argument|logit
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|,
+name|printclosed
+parameter_list|,
+name|logit
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|printclosed
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|logit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -6092,7 +6022,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -6129,6 +6059,7 @@ parameter_list|,
 name|m
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|s
@@ -6163,6 +6094,10 @@ operator|<
 name|m
 condition|)
 return|return
+operator|(
+name|char
+operator|*
+operator|)
 name|s
 return|;
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	8.3 (Berkeley) %G%"
+literal|"@(#)trace.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,38 +59,27 @@ name|DefFlags
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|tTsetup
-argument_list|(
-argument|vect
-argument_list|,
-argument|size
-argument_list|,
-argument|defflags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vect
+parameter_list|,
+name|size
+parameter_list|,
+name|defflags
+parameter_list|)
 name|u_char
 modifier|*
 name|vect
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|defflags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|tTvect
 operator|=
@@ -105,7 +94,7 @@ operator|=
 name|defflags
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -114,19 +103,17 @@ begin_comment
 comment|/* **  TtFLAG -- process an external trace flag description. ** **	Parameters: **		s -- the trace flag. ** **	Returns: **		none. ** **	Side Effects: **		sets/clears trace flags. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|tTflag
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|unsigned
 name|int
@@ -319,7 +306,7 @@ condition|)
 return|return;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

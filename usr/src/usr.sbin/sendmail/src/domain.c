@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.40 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.41 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.40 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.41 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,48 +250,34 @@ begin_comment
 comment|/* **  GETMXRR -- get MX resource records for a domain ** **	Parameters: **		host -- the name of the host to MX. **		mxhosts -- a pointer to a return buffer of MX records. **		droplocalhost -- If TRUE, all MX records less preferred **			than the local host (as determined by $=w) will **			be discarded. **		rcode -- a pointer to an EX_ status code. ** **	Returns: **		The number of MX records found. **		-1 if there is an internal failure. **		If no MX records are found, mxhosts[0] is set to host **			and 1 is returned. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getmxrr
-argument_list|(
-argument|host
-argument_list|,
-argument|mxhosts
-argument_list|,
-argument|droplocalhost
-argument_list|,
-argument|rcode
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|host
+parameter_list|,
+name|mxhosts
+parameter_list|,
+name|droplocalhost
+parameter_list|,
+name|rcode
+parameter_list|)
 name|char
 modifier|*
 name|host
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|mxhosts
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|droplocalhost
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|rcode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -1463,7 +1449,7 @@ name|nmx
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1472,19 +1458,17 @@ begin_comment
 comment|/* **  MXRAND -- create a randomizer for equal MX preferences ** **	If two MX hosts have equal preferences we want to randomize **	the selection.  But in order for signatures to be the same, **	we need to randomize the same way each time.  This function **	computes a pseudo-random hash function from the host name. ** **	Parameters: **		host -- the name of the host. ** **	Returns: **		A random but repeatable value based on the host name. ** **	Side Effects: **		none. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|mxrand
-argument_list|(
+parameter_list|(
 name|host
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|host
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|hfunc
@@ -1614,7 +1598,7 @@ return|return
 name|hfunc
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

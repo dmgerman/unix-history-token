@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.68 (Berkeley) %G%"
+literal|"@(#)map.c	8.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1248,30 +1248,22 @@ begin_comment
 comment|/* **  INITMAPS -- initialize for aliasing ** **	Parameters: **		rebuild -- if TRUE, this rebuilds the cached versions. **		e -- current envelope. ** **	Returns: **		none. ** **	Side Effects: **		initializes aliases: **		if NDBM:  opens the database. **		if ~NDBM: reads the aliases into the symbol table. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|initmaps
-argument_list|(
-argument|rebuild
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rebuild
+parameter_list|,
+name|e
+parameter_list|)
 name|bool
 name|rebuild
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|void
@@ -1333,7 +1325,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -4737,10 +4729,6 @@ specifier|auto
 name|int
 name|vsize
 decl_stmt|;
-name|char
-modifier|*
-name|master
-decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -5408,9 +5396,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|domain
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 name|char
 name|host_record
@@ -8880,9 +8865,6 @@ name|statp
 decl_stmt|;
 block|{
 name|int
-name|buflen
-decl_stmt|;
-name|int
 name|key_idx
 decl_stmt|;
 name|char
@@ -8891,10 +8873,6 @@ name|cname
 decl_stmt|;
 name|bool
 name|found
-decl_stmt|;
-name|char
-modifier|*
-name|domain
 decl_stmt|;
 name|FILE
 modifier|*
@@ -11577,21 +11555,16 @@ begin_comment
 comment|/* **  SEQ_MAP_CLOSE -- close all underlying maps */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|seq_map_close
-argument_list|(
-argument|map
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|map
+parameter_list|)
 name|MAP
 modifier|*
 name|map
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|mapno
@@ -11678,7 +11651,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* **  SEQ_MAP_LOOKUP -- sequenced map lookup */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stats.c	8.4 (Berkeley) %G%"
+literal|"@(#)stats.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,29 +87,24 @@ begin_comment
 comment|/* **  MARKSTATS -- mark statistics */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|markstats
-argument_list|(
+parameter_list|(
 name|e
-argument_list|,
+parameter_list|,
 name|to
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|ADDRESS
 modifier|*
 name|to
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -203,7 +198,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -212,21 +207,16 @@ begin_comment
 comment|/* **  POSTSTATS -- post statistics in the statistics file ** **	Parameters: **		sfile -- the name of the statistics file. ** **	Returns: **		none. ** **	Side Effects: **		merges the Stat structure with the sfile file. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|poststats
-argument_list|(
-argument|sfile
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sfile
+parameter_list|)
 name|char
 modifier|*
 name|sfile
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -488,7 +478,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

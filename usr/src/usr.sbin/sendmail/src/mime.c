@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.23 (Berkeley) %G%"
+literal|"@(#)mime.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,7 +442,7 @@ name|MAXLINE
 index|]
 decl_stmt|;
 specifier|extern
-name|char
+name|u_char
 name|MimeTokenTab
 index|[
 literal|256
@@ -1527,11 +1527,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
-name|char
-modifier|*
-name|q
-decl_stmt|;
 specifier|auto
 name|HDR
 modifier|*

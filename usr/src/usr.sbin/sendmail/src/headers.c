@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.66 (Berkeley) %G%"
+literal|"@(#)headers.c	8.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,49 +44,35 @@ begin_comment
 comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect and by readcf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		def -- if set, this is a default value. **		hdrp -- a pointer to the place to save the header. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|chompheader
-argument_list|(
-argument|line
-argument_list|,
-argument|def
-argument_list|,
-argument|hdrp
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|,
+name|def
+parameter_list|,
+name|hdrp
+parameter_list|,
+name|e
+parameter_list|)
 name|char
 modifier|*
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|def
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|HDR
 modifier|*
 modifier|*
 name|hdrp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1123,7 +1109,7 @@ name|h_flags
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1132,40 +1118,29 @@ begin_comment
 comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field. **		hp -- an indirect pointer to the header structure list. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|addheader
-argument_list|(
-argument|field
-argument_list|,
-argument|value
-argument_list|,
-argument|hdrlist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|field
+parameter_list|,
+name|value
+parameter_list|,
+name|hdrlist
+parameter_list|)
 name|char
 modifier|*
 name|field
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|value
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|HDR
 modifier|*
 modifier|*
 name|hdrlist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|HDR
@@ -1313,7 +1288,7 @@ operator|=
 name|h
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1510,27 +1485,22 @@ begin_comment
 comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. **		full -- if set, do full processing (e.g., compute **			message priority).  This should not be set **			when reading a queue file because some info **			needed to compute the priority is wrong. ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. **		Aborts the message if the hop count is exceeded. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|eatheader
-argument_list|(
+parameter_list|(
 name|e
-argument_list|,
+parameter_list|,
 name|full
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|bool
 name|full
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|HDR
@@ -2409,7 +2379,7 @@ operator|~
 name|EF_LOGSENDER
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -2418,28 +2388,23 @@ begin_comment
 comment|/* **  LOGSENDER -- log sender information ** **	Parameters: **		e -- the envelope to log **		msgid -- the message id ** **	Returns: **		none */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|logsender
-argument_list|(
+parameter_list|(
 name|e
-argument_list|,
+parameter_list|,
 name|msgid
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|msgid
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -3008,7 +2973,7 @@ directive|endif
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3017,21 +2982,16 @@ begin_comment
 comment|/* **  PRIENCODE -- encode external priority names into internal values. ** **	Parameters: **		p -- priority in ascii. ** **	Returns: **		priority as a numeric level. ** **	Side Effects: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|priencode
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|)
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -3084,7 +3044,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3791,13 +3751,6 @@ operator|!
 name|ColonOkInAddr
 condition|)
 block|{
-specifier|register
-name|char
-modifier|*
-name|q
-init|=
-name|p
-decl_stmt|;
 if|if
 condition|(
 name|bp
@@ -4236,39 +4189,31 @@ endif|#
 directive|endif
 end_endif
 
-begin_expr_stmt
+begin_function
+name|void
 name|putheader
-argument_list|(
+parameter_list|(
 name|mci
-argument_list|,
+parameter_list|,
 name|h
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|MCI
-operator|*
+modifier|*
 name|mci
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|HDR
 modifier|*
 name|h
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|buf
@@ -4927,7 +4872,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

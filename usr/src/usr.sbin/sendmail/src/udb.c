@@ -28,7 +28,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.22 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.23 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.22 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.23 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,11 +417,6 @@ decl_stmt|;
 block|{
 name|int
 name|i
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|DBT
 name|key
@@ -3061,20 +3056,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 specifier|register
 name|struct
 name|udbent
 modifier|*
 name|up
-decl_stmt|;
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -3117,31 +3103,15 @@ name|char
 modifier|*
 name|spec
 decl_stmt|;
-specifier|auto
-name|int
-name|rcode
-decl_stmt|;
 name|int
 name|nopts
 decl_stmt|;
-name|int
-name|nmx
-decl_stmt|;
-specifier|register
-name|struct
-name|hostent
-modifier|*
-name|h
-decl_stmt|;
-name|char
-modifier|*
-name|mxhosts
-index|[
-name|MAXMXHOSTS
-operator|+
-literal|1
-index|]
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|auto int rcode; 		int nmx; 		int i; 		register struct hostent *h; 		char *mxhosts[MAXMXHOSTS + 1];
+endif|#
+directive|endif
 name|struct
 name|option
 name|opts

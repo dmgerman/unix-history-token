@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.74 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.75 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.74 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.75 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,19 +446,17 @@ begin_comment
 comment|/* maximum number of bad commands */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|smtp
-argument_list|(
+parameter_list|(
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -1664,6 +1662,23 @@ name|vp
 init|=
 name|NULL
 decl_stmt|;
+specifier|extern
+name|void
+name|mail_esmtp_args
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* locate the beginning of the keyword */
 while|while
 condition|(
@@ -2836,7 +2851,7 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3036,39 +3051,28 @@ begin_comment
 comment|/* **  MAIL_ESMTP_ARGS -- process ESMTP arguments from MAIL line ** **	Parameters: **		kp -- the parameter key. **		vp -- the value of that parameter. **		e -- the envelope. ** **	Returns: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mail_esmtp_args
-argument_list|(
-argument|kp
-argument_list|,
-argument|vp
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|kp
+parameter_list|,
+name|vp
+parameter_list|,
+name|e
+parameter_list|)
 name|char
 modifier|*
 name|kp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -3411,7 +3415,7 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3420,48 +3424,34 @@ begin_comment
 comment|/* **  RCPT_ESMTP_ARGS -- process ESMTP arguments from RCPT line ** **	Parameters: **		a -- the address corresponding to the To: parameter. **		kp -- the parameter key. **		vp -- the value of that parameter. **		e -- the envelope. ** **	Returns: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rcpt_esmtp_args
-argument_list|(
-argument|a
-argument_list|,
-argument|kp
-argument_list|,
-argument|vp
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|kp
+parameter_list|,
+name|vp
+parameter_list|,
+name|e
+parameter_list|)
 name|ADDRESS
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|kp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -3707,7 +3697,7 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3716,27 +3706,22 @@ begin_comment
 comment|/* **  PRINTVRFYADDR -- print an entry in the verify queue ** **	Parameters: **		a -- the address to print **		last -- set if this is the last one. ** **	Returns: **		none. ** **	Side Effects: **		Prints the appropriate 250 codes. */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|printvrfyaddr
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|last
-argument_list|)
+parameter_list|)
 specifier|register
 name|ADDRESS
-operator|*
+modifier|*
 name|a
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|bool
 name|last
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|fmtbuf
@@ -3874,7 +3859,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -3883,21 +3868,16 @@ begin_comment
 comment|/* **  HELP -- implement the HELP command. ** **	Parameters: **		topic -- the topic we want help for. ** **	Returns: **		none. ** **	Side Effects: **		outputs the help file to message output. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|help
-argument_list|(
-argument|topic
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|topic
+parameter_list|)
 name|char
 modifier|*
 name|topic
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -4103,7 +4083,7 @@ name|hf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -4112,31 +4092,23 @@ begin_comment
 comment|/* **  RUNINCHILD -- return twice -- once in the child, then in the parent again ** **	Parameters: **		label -- a string used in error messages ** **	Returns: **		zero in the child **		one in the parent ** **	Side Effects: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|runinchild
-argument_list|(
-argument|label
-argument_list|,
-argument|e
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|label
+parameter_list|,
+name|e
+parameter_list|)
 name|char
 modifier|*
 name|label
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|childpid
@@ -4294,7 +4266,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape

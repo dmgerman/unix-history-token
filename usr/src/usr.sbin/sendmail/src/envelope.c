@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.65 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,22 +58,6 @@ modifier|*
 name|parent
 decl_stmt|;
 block|{
-extern|extern putheader(
-block|)
-operator|,
-function|putbody
-parameter_list|()
-function|;
-end_function
-
-begin_decl_stmt
-specifier|extern
-name|ENVELOPE
-name|BlankEnvelope
-decl_stmt|;
-end_decl_stmt
-
-begin_if
 if|if
 condition|(
 name|e
@@ -92,9 +76,6 @@ name|e
 operator|->
 name|e_parent
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|clearenvelope
 argument_list|(
 name|e
@@ -102,9 +83,6 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|e
@@ -162,18 +140,12 @@ operator|->
 name|e_from
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|e
 operator|->
 name|e_parent
 operator|=
 name|parent
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|e
 operator|->
 name|e_ctime
@@ -181,9 +153,6 @@ operator|=
 name|curtime
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|parent
@@ -198,27 +167,18 @@ name|parent
 operator|->
 name|e_msgsize
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|e
 operator|->
 name|e_puthdr
 operator|=
 name|putheader
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|e
 operator|->
 name|e_putbody
 operator|=
 name|putbody
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|CurEnv
@@ -237,38 +197,32 @@ operator|->
 name|e_xfp
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_return
 return|return
 operator|(
 name|e
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
 comment|/* **  DROPENVELOPE -- deallocate an envelope. ** **	Parameters: **		e -- the envelope to deallocate. ** **	Returns: **		none. ** **	Side Effects: **		housekeeping necessary to dispose of an envelope. **		Unlocks this queue file. */
 end_comment
 
-begin_expr_stmt
-unit|void
+begin_function
+name|void
 name|dropenvelope
-argument_list|(
+parameter_list|(
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|ENVELOPE
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|bool
 name|queueit
@@ -1568,7 +1522,7 @@ operator|~
 name|EF_HAS_DF
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1831,11 +1785,6 @@ name|void
 name|settime
 parameter_list|()
 function_decl|;
-specifier|extern
-name|char
-name|Version
-index|[]
-decl_stmt|;
 comment|/* 	**  Give this envelope a reality. 	**	I.e., an id, a transcript, and a creation time. 	*/
 name|openxscript
 argument_list|(

@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.46 (Berkeley) %G%"
+literal|"@(#)alias.c	8.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -617,10 +617,6 @@ name|dbno
 operator|++
 control|)
 block|{
-specifier|auto
-name|int
-name|stat
-decl_stmt|;
 name|map
 operator|=
 name|AliasDB

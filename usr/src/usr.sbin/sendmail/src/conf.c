@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.178 (Berkeley) %G%"
+literal|"@(#)conf.c	8.179 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5839,6 +5839,11 @@ name|pst
 decl_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+name|SPT_TYPE
+operator|==
+name|SPT_REUSEARGV
 specifier|extern
 name|char
 modifier|*
@@ -5850,6 +5855,8 @@ name|char
 modifier|*
 name|LastArgv
 decl_stmt|;
+endif|#
+directive|endif
 name|VA_START
 argument_list|(
 name|fmt
@@ -10327,6 +10334,9 @@ modifier|*
 name|getcfname
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|TRY_VERSIONED_CF_NAME
 name|int
 name|i
 decl_stmt|;
@@ -10337,6 +10347,8 @@ index|[
 literal|200
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ConfFile
@@ -11309,9 +11321,6 @@ name|h
 decl_stmt|;
 name|int
 name|nmaps
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|char
 modifier|*
@@ -12683,62 +12692,42 @@ directive|undef
 name|syslog
 end_undef
 
-begin_ifdef
+begin_function
+name|void
 ifdef|#
 directive|ifdef
 name|__STDC__
-end_ifdef
-
-begin_macro
 name|hard_syslog
-argument_list|(
-argument|int pri
-argument_list|,
-argument|char *msg
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_else
+parameter_list|(
+name|int
+name|pri
+parameter_list|,
+name|char
+modifier|*
+name|msg
+parameter_list|,
+modifier|...
+parameter_list|)
 else|#
 directive|else
-end_else
-
-begin_macro
-name|hard_syslog
-argument_list|(
-argument|pri
-argument_list|,
-argument|msg
-argument_list|,
-argument|va_alist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+function|hard_syslog
+parameter_list|(
+name|pri
+parameter_list|,
+name|msg
+parameter_list|,
+name|va_alist
+parameter_list|)
 name|int
 name|pri
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|va_dcl
-end_macro
-
-begin_endif
+function|va_dcl
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|int
 name|i
@@ -12794,7 +12783,7 @@ condition|;
 control|)
 continue|continue;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

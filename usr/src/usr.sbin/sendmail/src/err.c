@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.33 (Berkeley) %G%"
+literal|"@(#)err.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,13 +73,67 @@ begin_comment
 comment|/* for held messages */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+name|void
+name|putoutmsg
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|bool
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|puterrmsg
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|fmtmsg
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|va_list
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -852,37 +906,26 @@ begin_comment
 comment|/* **  PUTOUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. **		heldmsg -- if TRUE, this is a previously held message; **			don't log it to the transcript file. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|putoutmsg
-argument_list|(
-argument|msg
-argument_list|,
-argument|holdmsg
-argument_list|,
-argument|heldmsg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|,
+name|holdmsg
+parameter_list|,
+name|heldmsg
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|holdmsg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|heldmsg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* display for debugging */
 if|if
@@ -1183,7 +1226,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1192,21 +1235,16 @@ begin_comment
 comment|/* **  PUTERRMSG -- like putoutmsg, but does special processing for error messages ** **	Parameters: **		msg -- the message to output. ** **	Returns: **		none. ** **	Side Effects: **		Sets the fatal error bit in the envelope as appropriate. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|puterrmsg
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|msgcode
@@ -1277,7 +1315,7 @@ name|EF_FATALERRS
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1308,10 +1346,12 @@ name|char
 modifier|*
 name|eb
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|to
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|num
@@ -1319,6 +1359,7 @@ decl_stmt|;
 name|int
 name|eno
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
