@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	4.3 %G%"
+literal|"@(#)io.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1146,6 +1146,12 @@ name|noeqn
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|0
+case|:
+goto|goto
+name|endargs
+goto|;
 default|default:
 name|dbg
 operator|=
@@ -1159,6 +1165,8 @@ name|svargv
 operator|++
 expr_stmt|;
 block|}
+name|endargs
+label|:
 name|ifile
 operator|=
 literal|1
@@ -1186,37 +1194,11 @@ operator|=
 name|nullstr
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|curfile
-operator|=
-name|fopen
-argument_list|(
-name|svargv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"r"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|error
-argument_list|(
-name|FATAL
-argument_list|,
-literal|"can't open file %s"
-argument_list|,
-name|svargv
-index|[
-literal|1
-index|]
-argument_list|)
+else|else
+name|openinfile
+argument_list|()
 expr_stmt|;
+comment|/* opens up the first input file */
 block|}
 end_block
 
