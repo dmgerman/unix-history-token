@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.51	83/05/21	*/
+comment|/*	init_main.c	4.52	83/05/30	*/
 end_comment
 
 begin_include
@@ -492,9 +492,14 @@ directive|endif
 name|startrtclock
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KGCLOCK
+include|#
+directive|include
+file|"kg.h"
+if|#
+directive|if
+name|NKG
+operator|>
+literal|0
 name|startkgclock
 argument_list|()
 expr_stmt|;

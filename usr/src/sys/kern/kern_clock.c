@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.54	83/05/27	*/
+comment|/*	kern_clock.c	4.55	83/05/30	*/
 end_comment
 
 begin_include
@@ -103,24 +103,6 @@ include|#
 directive|include
 file|"../h/gprof.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KGCLOCK
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|phz
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -682,19 +664,6 @@ name|p_usrpri
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If this is the only timer then we have to use it to 	 * gather statistics. 	 */
-ifndef|#
-directive|ifndef
-name|KGCLOCK
-name|gatherstats
-argument_list|(
-name|pc
-argument_list|,
-name|ps
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* 	 * If the alternate clock has not made itself known then 	 * we must gather the statistics. 	 */
 if|if
 condition|(
@@ -709,8 +678,6 @@ argument_list|,
 name|ps
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Increment the time-of-day, and schedule 	 * processing of the callouts at a very low cpu priority, 	 * so we don't keep the relatively high clock interrupt 	 * priority any longer than necessary. 	 */
 name|bumptime
 argument_list|(
