@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.101 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.102 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.101		%G%"
+literal|"@(#)sendmail.h	8.102		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -999,6 +999,17 @@ end_define
 
 begin_comment
 comment|/* SMTP to another sendmail site */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_UDBRECIPIENT
+value|'j'
+end_define
+
+begin_comment
+comment|/* do udbsender rewriting on recipient lines */
 end_comment
 
 begin_define
