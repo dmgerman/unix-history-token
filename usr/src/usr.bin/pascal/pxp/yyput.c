@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)yyput.c	1.2 (Berkeley) %G%"
+literal|"@(#)yyput.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,6 +20,12 @@ end_empty
 begin_comment
 comment|/*  * pi - Pascal interpreter code translator  *  * Charles Haley, Bill Joy UCB  * Version 1.2 January 1979  *  *  * pxp - Pascal execution profiler  *  * Bill Joy UCB  * Version 1.2 January 1979  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"whoami.h"
+end_include
 
 begin_include
 include|#
