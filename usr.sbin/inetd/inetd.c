@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.3 1993/10/11 21:47:50 jkh Exp $"
+literal|"$Id: inetd.c,v 1.4 1993/10/18 23:03:20 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3391,6 +3391,12 @@ name|int
 name|i
 decl_stmt|,
 name|len
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
