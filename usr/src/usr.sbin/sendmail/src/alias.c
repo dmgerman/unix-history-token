@@ -48,13 +48,13 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NEWDB
+name|LOCKF
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<fcntl.h>
 end_include
 
 begin_endif
@@ -65,13 +65,13 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LOCKF
+name|NEWDB
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<db.h>
 end_include
 
 begin_endif
@@ -97,7 +97,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.30 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.31 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.30 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.31 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.30 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.31 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1195,36 +1195,6 @@ begin_comment
 comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		aliasfile -- the pathname of the alias file master. **		init -- if set, initialize the DBM stuff. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOCKF
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RDLK_MODE
-value|"r+"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RDLK_MODE
-value|"r"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 specifier|static
 name|readaliases
@@ -1300,6 +1270,15 @@ name|dbp
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|LOCKF
+name|struct
+name|flock
+name|fld
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|line
 index|[
@@ -1315,7 +1294,7 @@ name|fopen
 argument_list|(
 name|aliasfile
 argument_list|,
-name|RDLK_MODE
+literal|"r+"
 argument_list|)
 operator|)
 operator|==
@@ -1362,18 +1341,39 @@ comment|/* see if someone else is rebuilding the alias file already */
 ifdef|#
 directive|ifdef
 name|LOCKF
+name|fld
+operator|.
+name|l_type
+operator|=
+name|F_WRLCK
+expr_stmt|;
+name|fld
+operator|.
+name|l_whence
+operator|=
+name|fld
+operator|.
+name|l_start
+operator|=
+name|fld
+operator|.
+name|l_len
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|lockf
+name|fcntl
 argument_list|(
 name|fileno
 argument_list|(
 name|af
 argument_list|)
 argument_list|,
-name|F_TLOCK
+name|F_SETLK
 argument_list|,
-literal|0
+operator|&
+name|fld
 argument_list|)
 operator|<
 literal|0
@@ -1425,16 +1425,17 @@ name|LOCKF
 operator|(
 name|void
 operator|)
-name|lockf
+name|fcntl
 argument_list|(
 name|fileno
 argument_list|(
 name|af
 argument_list|)
 argument_list|,
-name|F_LOCK
+name|F_SETLKW
 argument_list|,
-literal|0
+operator|&
+name|fld
 argument_list|)
 expr_stmt|;
 else|#

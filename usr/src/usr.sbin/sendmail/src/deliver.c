@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.49 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,23 +86,6 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOCKF
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_endif
@@ -5035,6 +5018,15 @@ decl_stmt|;
 name|int
 name|nsent
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCKF
+name|struct
+name|flock
+name|lfd
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* determine actual delivery mode */
 if|if
 condition|(
@@ -5272,7 +5264,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOCKF
-comment|/* 		**  Since lockf has the interesting semantic that the 		**  lock is lost when we close the file in the parent, 		**  we'll risk losing the lock here by closing before 		**  the fork, and then trying to get it back in the 		**  child. 		*/
+comment|/* 		**  Since lockf has the interesting semantic that the 		**  lock is lost when we fork, we have to risk losing 		**  the lock here by closing before the fork, and then 		**  trying to get it back in the child. 		*/
 if|if
 condition|(
 name|e
@@ -5385,6 +5377,26 @@ ifdef|#
 directive|ifdef
 name|LOCKF
 comment|/* 		**  Now try to get our lock back. 		*/
+name|lfd
+operator|.
+name|l_type
+operator|=
+name|F_WRLCK
+expr_stmt|;
+name|lfd
+operator|.
+name|l_whence
+operator|=
+name|lfd
+operator|.
+name|l_start
+operator|=
+name|lfd
+operator|.
+name|l_len
+operator|=
+literal|0
+expr_stmt|;
 name|e
 operator|->
 name|e_lockfp
@@ -5409,7 +5421,7 @@ name|e_lockfp
 operator|==
 name|NULL
 operator|||
-name|lockf
+name|fcntl
 argument_list|(
 name|fileno
 argument_list|(
@@ -5418,9 +5430,10 @@ operator|->
 name|e_lockfp
 argument_list|)
 argument_list|,
-name|F_TLOCK
+name|F_SETLK
 argument_list|,
-literal|0
+operator|&
+name|lfd
 argument_list|)
 operator|<
 literal|0
