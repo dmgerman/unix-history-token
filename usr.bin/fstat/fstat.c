@@ -1637,7 +1637,7 @@ name|vtrans
 argument_list|(
 name|file
 operator|.
-name|f_data
+name|f_vnode
 argument_list|,
 name|i
 argument_list|,
@@ -1730,7 +1730,7 @@ name|vtrans
 argument_list|(
 name|file
 operator|.
-name|f_data
+name|f_vnode
 argument_list|,
 name|i
 argument_list|,
