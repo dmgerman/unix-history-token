@@ -115,12 +115,11 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|dialog_notify("No packages installed or no info available");
-endif|#
-directive|endif
+name|dialog_notify
+argument_list|(
+literal|"No packages installed or no info available"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|use_helpfile
