@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.12  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.13  */
 end_comment
 
 begin_include
@@ -517,17 +517,6 @@ name|LINES
 operator|=
 literal|24
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|LINES
-operator|>
-literal|48
-condition|)
-name|LINES
-operator|=
-literal|48
-expr_stmt|;
 if|if
 condition|(
 name|COLS
@@ -550,17 +539,6 @@ condition|)
 name|COLS
 operator|=
 literal|80
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|COLS
-operator|>
-literal|1000
-condition|)
-name|COLS
-operator|=
-literal|1000
 expr_stmt|;
 ifdef|#
 directive|ifdef
