@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -291,7 +291,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Maximum number of groups passed through to NFS server.  * According to RFC1057 it should be 16.  * For release 3.X systems, the maximum value is 8.  * For release 4.X systems, the maximum value is 10.  */
+comment|/*  * Maximum number of groups passed through to NFS server.  * According to RFC1057 it should be 16.  * For release 3.X systems, the maximum value is 8.  * For some other servers, the maximum value is 10.  */
 end_comment
 
 begin_decl_stmt
@@ -398,18 +398,26 @@ operator|=
 operator|(
 operator|(
 operator|(
+operator|(
 name|cred
 operator|->
 name|cr_ngroups
+operator|-
+literal|1
+operator|)
 operator|>
 name|numgrps
 operator|)
 condition|?
 name|numgrps
 else|:
+operator|(
 name|cred
 operator|->
 name|cr_ngroups
+operator|-
+literal|1
+operator|)
 operator|)
 operator|<<
 literal|2
@@ -2786,7 +2794,7 @@ name|hostnamelen
 argument_list|)
 operator|+
 operator|(
-literal|19
+literal|25
 operator|*
 name|NFSX_UNSIGNED
 operator|)
@@ -2795,7 +2803,7 @@ else|#
 directive|else
 name|i
 operator|=
-literal|19
+literal|25
 operator|*
 name|NFSX_UNSIGNED
 expr_stmt|;
@@ -2933,18 +2941,26 @@ expr_stmt|;
 name|ngr
 operator|=
 operator|(
+operator|(
 name|cr
 operator|->
 name|cr_ngroups
+operator|-
+literal|1
+operator|)
 operator|>
 name|numgrps
 operator|)
 condition|?
 name|numgrps
 else|:
+operator|(
 name|cr
 operator|->
 name|cr_ngroups
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 operator|*
 name|p
@@ -2959,10 +2975,10 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
-operator|<
+operator|<=
 name|ngr
 condition|;
 name|i
