@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.33 1996/11/21 07:18:57 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.34 1997/02/12 16:19:04 mpp Exp $  */
 end_comment
 
 begin_include
@@ -24,35 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_comment
-comment|/* define FWRITE ... */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -70,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -78,16 +62,6 @@ include|#
 directive|include
 file|<sys/malloc.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
-end_include
-
-begin_comment
-comment|/* defines dirent structure		*/
-end_comment
 
 begin_include
 include|#
