@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 147 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 148 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1255,6 +1255,28 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Storing %s (%p) directly into node (%p), no implicit conversion\n"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|,
+name|SourceDesc
+operator|,
+name|Node
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* No conversions for all other types.  Just attach the source object */
 name|Status
 operator|=
@@ -1269,33 +1291,6 @@ operator|->
 name|Common
 operator|.
 name|Type
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Store %s into %s via Attach only\n"
-operator|,
-name|AcpiUtGetTypeName
-argument_list|(
-name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
-argument_list|)
-operator|,
-name|AcpiUtGetTypeName
-argument_list|(
-name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
-argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;

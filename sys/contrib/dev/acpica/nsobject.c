@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 63 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 65 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -250,7 +250,7 @@ operator|=
 name|ACPI_TYPE_ANY
 expr_stmt|;
 block|}
-comment|/*      * If the object is an Node with an attached object,      * we will use that (attached) object      */
+comment|/*      * If the source object is a namespace Node with an attached object,      * we will use that (attached) object      */
 elseif|else
 if|if
 condition|(
@@ -389,7 +389,7 @@ block|{
 comment|/*                      * OpPrefix is unrecognized unless part                      * of RevisionOp                      */
 break|break;
 block|}
-comment|/* Otherwise, fall through and set the type to Integer */
+comment|/* case AML_REVISION_OP: fall through and set the type to Integer */
 case|case
 name|AML_ZERO_OP
 case|:

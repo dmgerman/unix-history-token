@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 14 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 15 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -75,26 +75,6 @@ argument_list|(
 literal|"AcpiGetIrqRoutingTable "
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * Must have a valid handle and buffer, So we have to have a handle      * and a return buffer structure, and if there is a non-zero buffer length      * we also need a valid pointer in the buffer. If it's a zero buffer length,      * we'll be returning the needed buffer size, so keep going.      */
 if|if
 condition|(
@@ -171,26 +151,6 @@ argument_list|(
 literal|"AcpiGetCurrentResources"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * Must have a valid handle and buffer, So we have to have a handle      * and a return buffer structure, and if there is a non-zero buffer length      * we also need a valid pointer in the buffer. If it's a zero buffer length,      * we'll be returning the needed buffer size, so keep going.      */
 if|if
 condition|(
@@ -267,26 +227,6 @@ argument_list|(
 literal|"AcpiGetPossibleResources"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * Must have a valid handle and buffer, So we have to have a handle      * and a return buffer structure, and if there is a non-zero buffer length      * we also need a valid pointer in the buffer. If it's a zero buffer length,      * we'll be returning the needed buffer size, so keep going.      */
 if|if
 condition|(
@@ -363,26 +303,6 @@ argument_list|(
 literal|"AcpiSetCurrentResources"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * Must have a valid handle and buffer      */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 39 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -235,13 +235,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Object not a package, type %X\n"
+literal|"Object not a Package, type %s\n"
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|ValDesc
 operator|->
 name|Common
 operator|.
 name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -281,13 +284,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Object not a buffer, type %X\n"
+literal|"Object not a Buffer, type %s\n"
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|ValDesc
 operator|->
 name|Common
 operator|.
 name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -327,13 +333,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Object not a string, type %X\n"
+literal|"Object not a String, type %s\n"
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|ValDesc
 operator|->
 name|Common
 operator|.
 name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -373,13 +382,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Object not a Number, type %X\n"
+literal|"Object not a Integer, type %s\n"
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|ValDesc
 operator|->
 name|Common
 operator|.
 name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -528,6 +540,14 @@ case|:
 name|TempVal
 operator|=
 name|ACPI_INTEGER_MAX
+expr_stmt|;
+break|break;
+case|case
+name|AML_REVISION_OP
+case|:
+name|TempVal
+operator|=
+name|ACPI_CA_VERSION
 expr_stmt|;
 break|break;
 default|default:

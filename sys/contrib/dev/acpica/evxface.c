@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 112 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 114 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -90,26 +90,6 @@ argument_list|(
 literal|"AcpiInstallFixedEventHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -176,6 +156,8 @@ argument_list|(
 name|Event
 argument_list|,
 name|ACPI_EVENT_FIXED
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -272,26 +254,6 @@ argument_list|(
 literal|"AcpiRemoveFixedEventHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -319,6 +281,8 @@ argument_list|(
 name|Event
 argument_list|,
 name|ACPI_EVENT_FIXED
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Always Remove the handler */
@@ -430,26 +394,6 @@ argument_list|(
 literal|"AcpiInstallNotifyHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -879,26 +823,6 @@ argument_list|(
 literal|"AcpiRemoveNotifyHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -1253,26 +1177,6 @@ argument_list|(
 literal|"AcpiInstallGpeHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -1415,26 +1319,6 @@ argument_list|(
 literal|"AcpiRemoveGpeHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -1556,26 +1440,6 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 name|Status
 operator|=
 name|AcpiExEnterInterpreter
@@ -1623,29 +1487,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 name|AcpiEvReleaseGlobalLock
 argument_list|()
 expr_stmt|;

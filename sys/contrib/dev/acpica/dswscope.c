@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 48 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -211,6 +211,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Init new scope object */
+name|ScopeInfo
+operator|->
+name|Common
+operator|.
+name|DataType
+operator|=
+name|ACPI_DESC_TYPE_STATE_WSCOPE
+expr_stmt|;
 name|ScopeInfo
 operator|->
 name|Scope

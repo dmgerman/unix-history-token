@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 84 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -380,7 +380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDigitsNeeded  *  * PARAMETERS:  val             - Value to be represented  *              base            - Base of representation  *  * RETURN:      the number of digits needed to represent val in base  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDigitsNeeded  *  * PARAMETERS:  Value           - Value to be represented  *              Base            - Base of representation  *  * RETURN:      the number of digits needed to represent Value in Base  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -388,10 +388,10 @@ name|UINT32
 name|AcpiExDigitsNeeded
 parameter_list|(
 name|ACPI_INTEGER
-name|val
+name|Value
 parameter_list|,
 name|UINT32
-name|base
+name|Base
 parameter_list|)
 block|{
 name|UINT32
@@ -406,7 +406,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|base
+name|Base
 operator|<
 literal|1
 condition|)
@@ -421,7 +421,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * ACPI_INTEGER is unsigned, which is why we don't worry about the '-'          */
+comment|/*          * ACPI_INTEGER is unsigned, which is why we don't worry about a '-'          */
 for|for
 control|(
 name|NumDigits
@@ -429,13 +429,17 @@ operator|=
 literal|1
 init|;
 operator|(
-name|val
-operator|=
-name|ACPI_DIVIDE
+name|AcpiUtShortDivide
 argument_list|(
-name|val
+operator|&
+name|Value
 argument_list|,
-name|base
+name|Base
+argument_list|,
+operator|&
+name|Value
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 condition|;
@@ -751,6 +755,9 @@ decl_stmt|;
 name|UINT32
 name|DigitsNeeded
 decl_stmt|;
+name|UINT32
+name|Remainder
+decl_stmt|;
 name|FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
@@ -768,7 +775,7 @@ index|[
 name|DigitsNeeded
 index|]
 operator|=
-literal|'\0'
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -784,6 +791,20 @@ name|Count
 operator|--
 control|)
 block|{
+name|AcpiUtShortDivide
+argument_list|(
+operator|&
+name|Value
+argument_list|,
+literal|10
+argument_list|,
+operator|&
+name|Value
+argument_list|,
+operator|&
+name|Remainder
+argument_list|)
+expr_stmt|;
 name|OutString
 index|[
 name|Count
@@ -797,23 +818,7 @@ call|)
 argument_list|(
 literal|'0'
 operator|+
-operator|(
-name|ACPI_MODULO
-argument_list|(
-name|Value
-argument_list|,
-literal|10
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|Value
-operator|=
-name|ACPI_DIVIDE
-argument_list|(
-name|Value
-argument_list|,
-literal|10
+name|Remainder
 argument_list|)
 expr_stmt|;
 block|}

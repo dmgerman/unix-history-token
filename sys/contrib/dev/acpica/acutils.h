@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 112 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 115 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -584,7 +584,8 @@ name|UserObj
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|Obj
+modifier|*
+name|ReturnObj
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -598,6 +599,7 @@ modifier|*
 name|Obj
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
+modifier|*
 modifier|*
 name|InternalObj
 parameter_list|)
@@ -1477,8 +1479,53 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Ututils  */
+comment|/*  * utmisc  */
 end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtDivide
+parameter_list|(
+name|ACPI_INTEGER
+modifier|*
+name|InDividend
+parameter_list|,
+name|ACPI_INTEGER
+modifier|*
+name|InDivisor
+parameter_list|,
+name|ACPI_INTEGER
+modifier|*
+name|OutQuotient
+parameter_list|,
+name|ACPI_INTEGER
+modifier|*
+name|OutRemainder
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiUtShortDivide
+parameter_list|(
+name|ACPI_INTEGER
+modifier|*
+name|InDividend
+parameter_list|,
+name|UINT32
+name|Divisor
+parameter_list|,
+name|ACPI_INTEGER
+modifier|*
+name|OutQuotient
+parameter_list|,
+name|UINT32
+modifier|*
+name|OutRemainder
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|BOOLEAN
@@ -1654,17 +1701,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|AcpiUtInitStaticObject
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1682,7 +1718,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiUtDumpCurrentAllocations
+name|AcpiUtDumpAllocations
 parameter_list|(
 name|UINT32
 name|Component

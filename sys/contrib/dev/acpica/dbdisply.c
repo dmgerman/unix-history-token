@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 50 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 52 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1140,11 +1140,6 @@ name|ACPI_DESC_TYPE_INTERNAL
 argument_list|)
 condition|)
 block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"<Obj> "
-argument_list|)
-expr_stmt|;
 name|Type
 operator|=
 name|ObjDesc
@@ -1196,7 +1191,7 @@ name|AML_ZERO_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     Zero (0) [Null Target]"
+literal|"[Const]           Zero (0) [Null Target]"
 argument_list|,
 literal|0
 argument_list|)
@@ -1207,7 +1202,7 @@ name|AML_ONES_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     Ones (0xFFFFFFFFFFFFFFFF) [No Limit]"
+literal|"[Const]           Ones (0xFFFFFFFFFFFFFFFF) [No Limit]"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1216,7 +1211,18 @@ name|AML_ONE_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     One (1)"
+literal|"[Const]           One (1)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_REVISION_OP
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"[Const]           Revision (%X)"
+argument_list|,
+name|ACPI_CA_VERSION
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1225,7 +1231,7 @@ name|AML_LOCAL_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Local%d]   "
+literal|"[Local%d]"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1254,6 +1260,13 @@ index|]
 operator|.
 name|Object
 expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|" %p"
+argument_list|,
+name|ObjDesc
+argument_list|)
+expr_stmt|;
 name|AcpiDbDecodeInternalObject
 argument_list|(
 name|ObjDesc
@@ -1266,7 +1279,7 @@ name|AML_ARG_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Arg%d]     "
+literal|"[Arg%d]  "
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1294,6 +1307,13 @@ name|Offset
 index|]
 operator|.
 name|Object
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|" %p"
+argument_list|,
+name|ObjDesc
+argument_list|)
 expr_stmt|;
 name|AcpiDbDecodeInternalObject
 argument_list|(
@@ -1334,6 +1354,11 @@ break|break;
 block|}
 break|break;
 default|default:
+name|AcpiOsPrintf
+argument_list|(
+literal|"<Obj> "
+argument_list|)
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"           "

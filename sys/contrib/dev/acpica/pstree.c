@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -214,6 +214,17 @@ name|ACPI_OP_TYPE_OPCODE
 condition|)
 block|{
 comment|/* Invalid opcode */
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"PsAppendArg: Invalid AML Opcode: 0x%2.2X\n"
+operator|,
+name|Op
+operator|->
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* Check if this opcode requires argument sub-objects */

@@ -598,6 +598,9 @@ name|AcpiEvent
 parameter_list|,
 name|UINT32
 name|Type
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -611,6 +614,9 @@ name|AcpiEvent
 parameter_list|,
 name|UINT32
 name|Type
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl

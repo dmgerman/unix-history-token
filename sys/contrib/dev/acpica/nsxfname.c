@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -106,26 +106,6 @@ decl_stmt|;
 name|FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 comment|/* Parameter Validation */
 if|if
 condition|(
@@ -279,26 +259,6 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 comment|/* Buffer pointer must be valid always */
 if|if
 condition|(
@@ -514,26 +474,6 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -635,16 +635,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExReconfiguration  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Reconfiguration opcodes such as LOAD and UNLOAD  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExReconfiguration  *  * PARAMETERS:  WalkState           - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Reconfiguration opcodes such as LOAD and UNLOAD  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExReconfiguration
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
@@ -681,6 +678,8 @@ name|RegionDesc
 value|Operand[1]
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
@@ -717,6 +716,8 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"bad opcode=%X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|)
 argument_list|)

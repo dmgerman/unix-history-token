@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -195,26 +195,6 @@ argument_list|(
 literal|"AcpiDisable"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Restore original mode  */
 name|Status
 operator|=
@@ -262,7 +242,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnableEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be enabled  *              Type            - The type of event  *  * RETURN:      Status  *  * DESCRIPTION: Enable an ACPI event (fixed and general purpose)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnableEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be enabled  *              Type            - The type of event  *              Flags           - Just enable, or also wake enable?  *  * RETURN:      Status  *  * DESCRIPTION: Enable an ACPI event (fixed and general purpose)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -274,6 +254,9 @@ name|Event
 parameter_list|,
 name|UINT32
 name|Type
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -289,26 +272,6 @@ argument_list|(
 literal|"AcpiEnableEvent"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* The Type must be either Fixed AcpiEvent or GPE */
 switch|switch
 condition|(
@@ -443,11 +406,32 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Enable the requested GPE number */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EVENT_ENABLE
+condition|)
+block|{
 name|AcpiHwEnableGpe
 argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EVENT_WAKE_ENABLE
+condition|)
+block|{
+name|AcpiHwEnableGpeForWakeup
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|Status
@@ -464,7 +448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDisableEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be enabled  *              Type            - The type of event  *  * RETURN:      Status  *  * DESCRIPTION: Disable an ACPI event (fixed and general purpose)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDisableEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be enabled  *              Type            - The type of event, fixed or general purpose  *              Flags           - Wake disable vs. non-wake disable  *  * RETURN:      Status  *  * DESCRIPTION: Disable an ACPI event (fixed and general purpose)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -476,6 +460,9 @@ name|Event
 parameter_list|,
 name|UINT32
 name|Type
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -491,26 +478,6 @@ argument_list|(
 literal|"AcpiDisableEvent"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* The Type must be either Fixed AcpiEvent or GPE */
 switch|switch
 condition|(
@@ -645,11 +612,32 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Disable the requested GPE number */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EVENT_DISABLE
+condition|)
+block|{
 name|AcpiHwDisableGpe
 argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EVENT_WAKE_DISABLE
+condition|)
+block|{
+name|AcpiHwDisableGpeForWakeup
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|Status
@@ -693,26 +681,6 @@ argument_list|(
 literal|"AcpiClearEvent"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* The Type must be either Fixed AcpiEvent or GPE */
 switch|switch
 condition|(
@@ -869,26 +837,6 @@ argument_list|(
 literal|"AcpiGetEventStatus"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 87 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 89 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -135,19 +135,6 @@ name|AcpiGbl_DeepestNesting
 operator|=
 name|AcpiGbl_NestingLevel
 expr_stmt|;
-if|if
-condition|(
-name|AcpiGbl_DeepestNesting
-operator|==
-literal|34
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"hit deepest nesting\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ begin_decl_stmt
 specifier|extern
 name|UINT8
 modifier|*
-name|AmlPtr
+name|AmlStart
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +206,14 @@ begin_decl_stmt
 specifier|extern
 name|UINT32
 name|AcpiGbl_DbConsoleDebugLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_TABLE_HEADER
+modifier|*
+name|AcpiGbl_DbTablePtr
 decl_stmt|;
 end_decl_stmt
 
@@ -410,6 +418,15 @@ end_comment
 begin_function_decl
 name|int
 name|AcpiDbInitialize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDbTerminate
 parameter_list|(
 name|void
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -118,26 +118,6 @@ argument_list|(
 literal|"AcpiInstallAddressSpaceHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -291,6 +271,30 @@ expr_stmt|;
 name|Setup
 operator|=
 name|AcpiEvPciConfigRegionSetup
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_ADR_SPACE_CMOS
+case|:
+name|Handler
+operator|=
+name|AcpiExCmosSpaceHandler
+expr_stmt|;
+name|Setup
+operator|=
+name|AcpiEvCmosRegionSetup
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_ADR_SPACE_PCI_BAR_TARGET
+case|:
+name|Handler
+operator|=
+name|AcpiExPciBarSpaceHandler
+expr_stmt|;
+name|Setup
+operator|=
+name|AcpiEvPciBarRegionSetup
 expr_stmt|;
 break|break;
 default|default:
@@ -709,26 +713,6 @@ argument_list|(
 literal|"AcpiRemoveAddressSpaceHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(

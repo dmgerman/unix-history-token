@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -308,6 +308,14 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
+name|NotifyInfo
+operator|->
+name|Common
+operator|.
+name|DataType
+operator|=
+name|ACPI_DESC_TYPE_STATE_NOTIFY
+expr_stmt|;
 name|NotifyInfo
 operator|->
 name|Notify

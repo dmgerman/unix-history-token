@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -57,14 +57,14 @@ begin_define
 define|#
 directive|define
 name|PARSEOP_DEFERRED
-value|0x03
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|PARSEOP_BYTELIST
-value|0x04
+value|0x08
 end_define
 
 begin_define

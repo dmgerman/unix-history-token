@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 55 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 57 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -55,7 +55,7 @@ modifier|*
 name|AcpiNsCreateNode
 parameter_list|(
 name|UINT32
-name|AcpiName
+name|Name
 parameter_list|)
 block|{
 name|ACPI_NAMESPACE_NODE
@@ -110,7 +110,7 @@ name|Node
 operator|->
 name|Name
 operator|=
-name|AcpiName
+name|Name
 expr_stmt|;
 name|Node
 operator|->
@@ -712,16 +712,20 @@ modifier|*
 name|ParentNode
 parameter_list|)
 block|{
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|ChildNode
-decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ChildNode
+init|=
+name|NULL
+decl_stmt|;
 name|UINT32
 name|Level
+init|=
+literal|1
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -740,14 +744,6 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-name|ChildNode
-operator|=
-literal|0
-expr_stmt|;
-name|Level
-operator|=
-literal|1
-expr_stmt|;
 comment|/*      * Traverse the tree of objects until we bubble back up      * to where we started.      */
 while|while
 condition|(
@@ -773,7 +769,7 @@ condition|(
 name|ChildNode
 condition|)
 block|{
-comment|/*              * Found an object - delete the object within              * the Value field              */
+comment|/*              * Found an object - detach and delete any attached              * object.              */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject

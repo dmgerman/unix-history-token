@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 29 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -162,6 +162,11 @@ argument_list|(
 name|Scope
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|Op
+condition|)
+block|{
 name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -171,11 +176,6 @@ operator|->
 name|Opcode
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|Op
-condition|)
-block|{
 if|if
 condition|(
 name|OpInfo

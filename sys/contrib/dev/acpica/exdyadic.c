@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdyadic - ACPI AML execution for dyadic (2-operand) operators  *              $Revision: 88 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdyadic - ACPI AML execution for dyadic (2-operand) operators  *              $Revision: 91 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -598,16 +598,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic1  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 dyadic operator with numeric operands:  *              NotifyOp  *  * ALLOCATION:  Deletes both operands  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic1  *  * PARAMETERS:  WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 dyadic operator with numeric operands:  *              NotifyOp  *  * ALLOCATION:  Deletes both operands  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExDyadic1
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
@@ -645,14 +642,16 @@ expr_stmt|;
 comment|/* Examine the opcode */
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
-comment|/* DefNotify   :=  NotifyOp    (0)NotifyObject    (1)NotifyValue */
 case|case
 name|AML_NOTIFY_OP
 case|:
-comment|/* The ObjDesc is actually an Node */
+comment|/* Notify (NotifyObject, NotifyValue) */
+comment|/* The first operand is a namespace node */
 name|Node
 operator|=
 operator|(
@@ -671,7 +670,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Object must be a device or thermal zone */
+comment|/* The node must refer to a device or thermal zone */
 if|if
 condition|(
 name|Node
@@ -724,13 +723,8 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Unexpected notify object type %X\n"
 operator|,
-name|Operand
-index|[
-literal|0
-index|]
+name|Node
 operator|->
-name|Common
-operator|.
 name|Type
 operator|)
 argument_list|)
@@ -749,6 +743,8 @@ argument_list|(
 operator|(
 literal|"AcpiExDyadic1: Unknown dyadic opcode %X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|)
 argument_list|)
@@ -784,24 +780,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2R  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *              ReturnDesc          - Where to store the return object  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              one or two result operands.  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2R  *  * PARAMETERS:  WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              one or two result operands.  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExDyadic2R
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnDesc
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -838,12 +826,16 @@ name|FUNCTION_TRACE_U32
 argument_list|(
 literal|"ExDyadic2R"
 argument_list|,
+name|WalkState
+operator|->
 name|Opcode
 argument_list|)
 expr_stmt|;
 comment|/* Create an internal return object if necessary */
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
@@ -909,13 +901,15 @@ block|}
 comment|/*      * Execute the opcode      */
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
-comment|/* DefAdd  :=  AddOp   Operand1    Operand2    Result  */
 case|case
 name|AML_ADD_OP
 case|:
+comment|/* Add (Operand1, Operand2, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -941,10 +935,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/* DefAnd  :=  AndOp   Operand1    Operand2    Result  */
 case|case
 name|AML_BIT_AND_OP
 case|:
+comment|/* And (Operand1, Operand2, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -970,10 +964,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/* DefNAnd :=  NAndOp  Operand1    Operand2    Result  */
 case|case
 name|AML_BIT_NAND_OP
 case|:
+comment|/* NAnd (Operand1, Operand2, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -1002,10 +996,10 @@ name|Value
 operator|)
 expr_stmt|;
 break|break;
-comment|/* DefOr   :=  OrOp    Operand1    Operand2    Result  */
 case|case
 name|AML_BIT_OR_OP
 case|:
+comment|/* Or (Operand1, Operand2, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -1031,10 +1025,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/* DefNOr  :=  NOrOp   Operand1    Operand2    Result  */
 case|case
 name|AML_BIT_NOR_OP
 case|:
+comment|/* NOr (Operand1, Operand2, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -1063,10 +1057,10 @@ name|Value
 operator|)
 expr_stmt|;
 break|break;
-comment|/* DefXOr  :=  XOrOp   Operand1    Operand2    Result  */
 case|case
 name|AML_BIT_XOR_OP
 case|:
+comment|/* XOr (Operand1, Operand2, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -1092,10 +1086,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/* DefDivide   :=  DivideOp Dividend Divisor Remainder Quotient  */
 case|case
 name|AML_DIVIDE_OP
 case|:
+comment|/* Divide (Dividend, Divisor, RemainderResult QuotientRsult) */
 if|if
 condition|(
 operator|!
@@ -1145,15 +1139,12 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Remainder (modulo) */
-name|RetDesc
-operator|->
-name|Integer
-operator|.
-name|Value
+comment|/*           * RetDesc2 will contain the quotient,           * RetDesc  will contain the remainder          */
+name|Status
 operator|=
-name|ACPI_MODULO
+name|AcpiUtDivide
 argument_list|(
+operator|&
 name|Operand
 index|[
 literal|0
@@ -1163,6 +1154,7 @@ name|Integer
 operator|.
 name|Value
 argument_list|,
+operator|&
 name|Operand
 index|[
 literal|1
@@ -1171,30 +1163,16 @@ operator|->
 name|Integer
 operator|.
 name|Value
-argument_list|)
-expr_stmt|;
-comment|/* Result (what we used to call the quotient) */
+argument_list|,
+operator|&
 name|RetDesc2
 operator|->
 name|Integer
 operator|.
 name|Value
-operator|=
-name|ACPI_DIVIDE
-argument_list|(
-name|Operand
-index|[
-literal|0
-index|]
-operator|->
-name|Integer
-operator|.
-name|Value
 argument_list|,
-name|Operand
-index|[
-literal|1
-index|]
+operator|&
+name|RetDesc
 operator|->
 name|Integer
 operator|.
@@ -1202,11 +1180,10 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefMod   :=  ModOp Dividend Divisor Remainder  */
 case|case
 name|AML_MOD_OP
 case|:
-comment|/* ACPI 2.0 */
+comment|/* Mod (Dividend, Divisor, RemainderResult (ACPI 2.0) */
 if|if
 condition|(
 operator|!
@@ -1235,15 +1212,12 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Remainder (modulo) */
-name|RetDesc
-operator|->
-name|Integer
-operator|.
-name|Value
+comment|/* RetDesc will contain the remainder */
+name|Status
 operator|=
-name|ACPI_MODULO
+name|AcpiUtDivide
 argument_list|(
+operator|&
 name|Operand
 index|[
 literal|0
@@ -1253,6 +1227,7 @@ name|Integer
 operator|.
 name|Value
 argument_list|,
+operator|&
 name|Operand
 index|[
 literal|1
@@ -1261,13 +1236,22 @@ operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|RetDesc
+operator|->
+name|Integer
+operator|.
+name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefMultiply :=  MultiplyOp  Operand1    Operand2    Result  */
 case|case
 name|AML_MULTIPLY_OP
 case|:
+comment|/* Multiply (Operand1, Operand2, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -1293,10 +1277,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/* DefShiftLeft    :=  ShiftLeftOp Operand ShiftCount  Result  */
 case|case
 name|AML_SHIFT_LEFT_OP
 case|:
+comment|/* ShiftLeft (Operand, ShiftCount, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -1322,10 +1306,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/* DefShiftRight   :=  ShiftRightOp    Operand ShiftCount  Result  */
 case|case
 name|AML_SHIFT_RIGHT_OP
 case|:
+comment|/* ShiftRight (Operand, ShiftCount, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -1351,10 +1335,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/* DefSubtract :=  SubtractOp  Operand1    Operand2    Result  */
 case|case
 name|AML_SUBTRACT_OP
 case|:
+comment|/* Subtract (Operand1, Operand2, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -1380,10 +1364,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/* DefConcat   :=  ConcatOp    Data1   Data2   Result  */
 case|case
 name|AML_CONCAT_OP
 case|:
+comment|/* Concatenate (Data1, Data2, Result) */
 comment|/*          * Convert the second operand if necessary.  The first operand          * determines the type of the second operand, (See the Data Types          * section of the ACPI specification.)  Both object types are          * guaranteed to be either Integer/String/Buffer by the operand          * resolution mechanism above.          */
 switch|switch
 condition|(
@@ -1519,11 +1503,10 @@ name|Cleanup
 goto|;
 block|}
 break|break;
-comment|/* DefToString  := Buffer, Length, Result */
 case|case
 name|AML_TO_STRING_OP
 case|:
-comment|/* ACPI 2.0 */
+comment|/* ToString (Buffer, Length, Result) (ACPI 2.0) */
 name|Status
 operator|=
 name|AcpiExConvertToString
@@ -1554,11 +1537,10 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefConcatRes := Buffer, Buffer, Result */
 case|case
 name|AML_CONCAT_RES_OP
 case|:
-comment|/* ACPI 2.0 */
+comment|/* ConcatenateResTemplate (Buffer, Buffer, Result) (ACPI 2.0) */
 name|Status
 operator|=
 name|AE_NOT_IMPLEMENTED
@@ -1573,6 +1555,8 @@ argument_list|(
 operator|(
 literal|"AcpiExDyadic2R: Unknown dyadic opcode %X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|)
 argument_list|)
@@ -1616,6 +1600,8 @@ if|if
 condition|(
 name|AML_DIVIDE_OP
 operator|==
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
@@ -1639,16 +1625,18 @@ argument_list|(
 name|RetDesc
 argument_list|)
 expr_stmt|;
-operator|*
-name|ReturnDesc
+name|WalkState
+operator|->
+name|ResultObj
 operator|=
 name|RetDesc2
 expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
-name|ReturnDesc
+name|WalkState
+operator|->
+name|ResultObj
 operator|=
 name|RetDesc
 expr_stmt|;
@@ -1725,24 +1713,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2S  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *              ReturnDesc          - Where to store the return object  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic synchronization operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2S  *  * PARAMETERS:  WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic synchronization operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExDyadic2S
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnDesc
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -1808,13 +1788,15 @@ expr_stmt|;
 comment|/* Examine the opcode */
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
-comment|/* DefAcquire  :=  AcquireOp   MutexObject Timeout */
 case|case
 name|AML_ACQUIRE_OP
 case|:
+comment|/* Acquire (MutexObject, Timeout) */
 name|Status
 operator|=
 name|AcpiExAcquireMutex
@@ -1833,10 +1815,10 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefWait :=  WaitOp  AcpiEventObject Timeout */
 case|case
 name|AML_WAIT_OP
 case|:
+comment|/* Wait (EventObject, Timeout) */
 name|Status
 operator|=
 name|AcpiExSystemWaitEvent
@@ -1859,6 +1841,8 @@ argument_list|(
 operator|(
 literal|"AcpiExDyadic2S: Unknown dyadic synchronization opcode %X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|)
 argument_list|)
@@ -1936,8 +1920,9 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Set the return object and exit */
-operator|*
-name|ReturnDesc
+name|WalkState
+operator|->
+name|ResultObj
 operator|=
 name|RetDesc
 expr_stmt|;
@@ -1950,24 +1935,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *              ReturnDesc          - Where to store the return object  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              no result operands  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *              containing result value  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2  *  * PARAMETERS:  WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              no result operands  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *              containing result value  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExDyadic2
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnDesc
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -2026,20 +2003,22 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Execute the Opcode      */
+comment|/*      * Execute the WalkState->Opcode      */
 name|Lboolean
 operator|=
 name|FALSE
 expr_stmt|;
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
-comment|/* DefLAnd :=  LAndOp  Operand1    Operand2    */
 case|case
 name|AML_LAND_OP
 case|:
+comment|/* LAnd (Operand1, Operand2) */
 name|Lboolean
 operator|=
 call|(
@@ -2066,10 +2045,10 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefLEqual   :=  LEqualOp    Operand1    Operand2    */
 case|case
 name|AML_LEQUAL_OP
 case|:
+comment|/* LEqual (Operand1, Operand2) */
 name|Lboolean
 operator|=
 call|(
@@ -2096,10 +2075,10 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefLGreater :=  LGreaterOp  Operand1    Operand2    */
 case|case
 name|AML_LGREATER_OP
 case|:
+comment|/* LGreater (Operand1, Operand2) */
 name|Lboolean
 operator|=
 call|(
@@ -2126,10 +2105,10 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefLLess    :=  LLessOp Operand1    Operand2    */
 case|case
 name|AML_LLESS_OP
 case|:
+comment|/* LLess (Operand1, Operand2) */
 name|Lboolean
 operator|=
 call|(
@@ -2156,10 +2135,10 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefLOr  :=  LOrOp   Operand1    Operand2    */
 case|case
 name|AML_LOR_OP
 case|:
+comment|/* LOr (Operand1, Operand2) */
 name|Lboolean
 operator|=
 call|(
@@ -2186,11 +2165,10 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* DefCopy  := Source, Destination */
 case|case
 name|AML_COPY_OP
 case|:
-comment|/* ACPI 2.0 */
+comment|/* Copy (Source, Target) (ACPI 2.0) */
 name|Status
 operator|=
 name|AE_NOT_IMPLEMENTED
@@ -2205,6 +2183,8 @@ argument_list|(
 operator|(
 literal|"AcpiExDyadic2: Unknown dyadic opcode %X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|)
 argument_list|)
@@ -2287,8 +2267,9 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Set the return object and exit */
-operator|*
-name|ReturnDesc
+name|WalkState
+operator|->
+name|ResultObj
 operator|=
 name|RetDesc
 expr_stmt|;

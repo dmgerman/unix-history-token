@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 50 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 52 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1372,6 +1372,14 @@ block|}
 comment|/* Init fields specific to the update struct */
 name|State
 operator|->
+name|Common
+operator|.
+name|DataType
+operator|=
+name|ACPI_DESC_TYPE_STATE_UPDATE
+expr_stmt|;
+name|State
+operator|->
 name|Update
 operator|.
 name|Object
@@ -1395,7 +1403,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreatePkgState  *  * PARAMETERS:  Object              - Initial Object to be installed in the  *                                    state  *              Action              - Update action to be performed  *  * RETURN:      Status  *  * DESCRIPTION: Create an "Update State" - a flavor of the generic state used  *              to update reference counts and delete complex objects such  *              as packages.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreatePkgState  *  * PARAMETERS:  Object              - Initial Object to be installed in the  *                                    state  *              Action              - Update action to be performed  *  * RETURN:      Status  *  * DESCRIPTION: Create a "Package State"  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1445,6 +1453,14 @@ operator|)
 return|;
 block|}
 comment|/* Init fields specific to the update struct */
+name|State
+operator|->
+name|Common
+operator|.
+name|DataType
+operator|=
+name|ACPI_DESC_TYPE_STATE_PACKAGE
+expr_stmt|;
 name|State
 operator|->
 name|Pkg
@@ -1529,6 +1545,14 @@ operator|)
 return|;
 block|}
 comment|/* Init fields specific to the control struct */
+name|State
+operator|->
+name|Common
+operator|.
+name|DataType
+operator|=
+name|ACPI_DESC_TYPE_STATE_CONTROL
+expr_stmt|;
 name|State
 operator|->
 name|Common

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 9 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 13 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -83,13 +83,6 @@ directive|define
 name|enable
 parameter_list|()
 value|__sti()
-end_define
-
-begin_define
-define|#
-directive|define
-name|wbinvd
-parameter_list|()
 end_define
 
 begin_comment
@@ -217,14 +210,6 @@ parameter_list|()
 value|__asm__ __volatile__ ("sti; hlt":::"memory")
 end_define
 
-begin_define
-define|#
-directive|define
-name|wbinvd
-parameter_list|()
-value|__asm__ __volatile__ ("wbinvd":::"memory")
-end_define
-
 begin_comment
 comment|/*! [Begin] no source code translation  *  * A brief explanation as GNU inline assembly is a bit hairy  *  %0 is the output parameter in EAX ("=a")  *  %1 and %2 are the input parameters in ECX ("c")  *  and an immediate value ("i") respectively  *  All actual register references are preceded with "%%" as in "%%edx"  *  Immediate values in the assembly are preceded by "$" as in "$0x1"  *  The final asm parameter are the operation altered non-output registers.  */
 end_comment
@@ -253,6 +238,42 @@ name|Acq
 parameter_list|)
 define|\
 value|do { \         int dummy; \         asm("1:     movl (%1),%%eax;" \             "movl   %%eax,%%edx;" \             "andl   %2,%%edx;" \             "lock;  cmpxchgl %%edx,(%1);" \             "jnz    1b;" \             "andl   $0x1,%%eax" \             :"=a"(Acq),"=c"(dummy):"c"(GLptr),"i"(~3L):"dx"); \     } while(0)
+end_define
+
+begin_comment
+comment|/*  * Math helper asm macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DIV_64_BY_32
+parameter_list|(
+name|n_hi
+parameter_list|,
+name|n_lo
+parameter_list|,
+name|d32
+parameter_list|,
+name|q32
+parameter_list|,
+name|r32
+parameter_list|)
+define|\
+value|asm("divl %2;"        \ 		:"=a"(q32), "=d"(r32) \ 		:"r"(d32),            \ 		"0"(n_lo), "1"(n_hi))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SHIFT_RIGHT_64
+parameter_list|(
+name|n_hi
+parameter_list|,
+name|n_lo
+parameter_list|)
+define|\
+value|asm("shrl   $1,%2;"             \ 	    "rcrl   $1,%3;"             \ 	    :"=r"(n_hi), "=r"(n_lo)     \ 	    :"0"(n_hi), "1"(n_lo))
 end_define
 
 begin_comment

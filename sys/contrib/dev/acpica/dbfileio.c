@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 47 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 52 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -63,6 +63,10 @@ literal|"dbfileio"
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*  * NOTE: this is here for lack of a better place.  It is used in all  * flavors of the debugger, need LCD file  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -89,9 +93,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * NOTE: this is here for lack of a better place.  It is used in all  *  flavors of the debugger, need LCD file  */
-end_comment
+begin_decl_stmt
+name|ACPI_TABLE_HEADER
+modifier|*
+name|AcpiGbl_DbTablePtr
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbMatchArgument  *  * PARAMETERS:  UserArgument            - User command line  *              Arguments               - Array of commands to match against  *  * RETURN:      Index into command array or ACPI_TYPE_NOT_FOUND if not found  *  * DESCRIPTION: Search command array for a command match  *  ******************************************************************************/
@@ -335,7 +344,7 @@ name|TableHeader
 decl_stmt|;
 name|UINT8
 modifier|*
-name|AmlPtr
+name|AmlStart
 decl_stmt|;
 name|UINT32
 name|AmlLength
@@ -502,7 +511,7 @@ expr_stmt|;
 operator|*
 name|TablePtr
 operator|=
-name|ACPI_MEM_ALLOCATE
+name|AcpiOsAllocate
 argument_list|(
 operator|(
 name|size_t
@@ -537,7 +546,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-name|AmlPtr
+name|AmlStart
 operator|=
 operator|(
 name|UINT8
@@ -581,7 +590,7 @@ name|Actual
 operator|=
 name|fread
 argument_list|(
-name|AmlPtr
+name|AmlStart
 argument_list|,
 literal|1
 argument_list|,
@@ -633,7 +642,7 @@ argument_list|(
 literal|"Error - could not read the table file\n"
 argument_list|)
 expr_stmt|;
-name|ACPI_MEM_FREE
+name|AcpiOsFree
 argument_list|(
 operator|*
 name|TablePtr
@@ -759,11 +768,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* Uninstall table and free the buffer */
-name|AcpiTbUninstallTable
+name|AcpiTbDeleteAcpiTable
 argument_list|(
-name|TableInfo
-operator|.
-name|InstalledDesc
+name|ACPI_TABLE_DSDT
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -804,10 +811,6 @@ name|fp
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
-decl_stmt|;
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TablePtr
 decl_stmt|;
 name|UINT32
 name|TableLength
@@ -856,7 +859,7 @@ argument_list|(
 name|fp
 argument_list|,
 operator|&
-name|TablePtr
+name|AcpiGbl_DbTablePtr
 argument_list|,
 operator|&
 name|TableLength
@@ -891,7 +894,7 @@ name|Status
 operator|=
 name|AeLocalLoadTable
 argument_list|(
-name|TablePtr
+name|AcpiGbl_DbTablePtr
 argument_list|)
 expr_stmt|;
 if|if
@@ -914,7 +917,7 @@ argument_list|(
 literal|"Table %4.4s is already installed\n"
 argument_list|,
 operator|&
-name|TablePtr
+name|AcpiGbl_DbTablePtr
 operator|->
 name|Signature
 argument_list|)
@@ -935,7 +938,7 @@ expr_stmt|;
 block|}
 name|ACPI_MEM_FREE
 argument_list|(
-name|TablePtr
+name|AcpiGbl_DbTablePtr
 argument_list|)
 expr_stmt|;
 return|return
@@ -949,11 +952,11 @@ argument_list|(
 literal|"%4.4s at %p successfully installed and loaded\n"
 argument_list|,
 operator|&
-name|TablePtr
+name|AcpiGbl_DbTablePtr
 operator|->
 name|Signature
 argument_list|,
-name|TablePtr
+name|AcpiGbl_DbTablePtr
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_AcpiHardwarePresent

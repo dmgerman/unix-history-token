@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 75 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 78 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -586,29 +586,12 @@ name|InternalObj
 operator|++
 control|)
 block|{
-comment|/*          * Check for a package          * Simple objects are simply stored in the array and do not          * need to be deleted separately.          */
-if|if
-condition|(
-name|IS_THIS_OBJECT_TYPE
-argument_list|(
-operator|(
-operator|*
-name|InternalObj
-operator|)
-argument_list|,
-name|ACPI_TYPE_PACKAGE
-argument_list|)
-condition|)
-block|{
-comment|/* Delete the package */
-comment|/*              * TBD: [Investigate] This might not be the right thing to do,              * depending on how the internal package object was allocated!!!              */
-name|AcpiUtDeleteInternalObj
+name|AcpiUtRemoveReference
 argument_list|(
 operator|*
 name|InternalObj
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Free the combined parameter pointer list and object array */
 name|ACPI_MEM_FREE
@@ -859,9 +842,9 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|ACPI_DB_WARN
 operator|,
-literal|"**** AE_ERROR **** Invalid Reference Count (%X) in object %p\n\n"
+literal|"**** Warning **** Large Reference Count (%X) in object %p\n\n"
 operator|,
 name|Count
 operator|,
@@ -975,7 +958,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"**** Object %p is Pcode Ptr\n"
+literal|"**** Object %p points into an ACPI table\n"
 operator|,
 name|Object
 operator|)

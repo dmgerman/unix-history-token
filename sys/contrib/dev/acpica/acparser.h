@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -290,13 +290,6 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiPsFindObject
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
@@ -335,39 +328,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiPsParseAml
 parameter_list|(
-name|ACPI_PARSE_OBJECT
+name|ACPI_WALK_STATE
 modifier|*
-name|StartScope
-parameter_list|,
-name|UINT8
-modifier|*
-name|Aml
-parameter_list|,
-name|UINT32
-name|AmlSize
-parameter_list|,
-name|UINT32
-name|ParseFlags
-parameter_list|,
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|MethodNode
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Params
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|CallerReturnDesc
-parameter_list|,
-name|ACPI_PARSE_DOWNWARDS
-name|DescendingCallback
-parameter_list|,
-name|ACPI_PARSE_UPWARDS
-name|AscendingCallback
+name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -657,21 +620,6 @@ end_function_decl
 begin_comment
 comment|/* psutils - parser utilities */
 end_comment
-
-begin_function_decl
-name|ACPI_PARSE_STATE
-modifier|*
-name|AcpiPsCreateState
-parameter_list|(
-name|UINT8
-modifier|*
-name|Aml
-parameter_list|,
-name|UINT32
-name|AmlSize
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 21 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 22 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -505,9 +505,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-name|ParamObj
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -611,21 +608,33 @@ name|Cleanup
 goto|;
 block|}
 comment|/*      * Init the param object      */
-name|AcpiUtInitStaticObject
-argument_list|(
-operator|&
-name|ParamObj
-argument_list|)
-expr_stmt|;
-comment|/*      * Method requires one parameter.  Set it up      */
 name|Params
 index|[
 literal|0
 index|]
 operator|=
-operator|&
-name|ParamObj
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_BUFFER
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Params
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|Status
+operator|=
+name|AE_NO_MEMORY
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 name|Params
 index|[
 literal|1
@@ -634,24 +643,22 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/*      *  Set up the parameter object      */
-name|ParamObj
-operator|.
-name|Common
-operator|.
-name|Type
-operator|=
-name|ACPI_TYPE_BUFFER
-expr_stmt|;
-name|ParamObj
-operator|.
+name|Params
+index|[
+literal|0
+index|]
+operator|->
 name|Buffer
 operator|.
 name|Length
 operator|=
 name|BufferSizeNeeded
 expr_stmt|;
-name|ParamObj
-operator|.
+name|Params
+index|[
+literal|0
+index|]
+operator|->
 name|Buffer
 operator|.
 name|Pointer
@@ -670,6 +677,14 @@ argument_list|,
 name|Params
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|Params
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 comment|/*      * Clean up and return the status from AcpiNsEvaluateRelative      */
