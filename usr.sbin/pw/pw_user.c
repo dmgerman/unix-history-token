@@ -3247,8 +3247,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|edited
-operator|=
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|pwd
@@ -3259,8 +3259,10 @@ name|arg
 operator|->
 name|val
 argument_list|)
-operator|!=
-literal|0
+condition|)
+name|edited
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
