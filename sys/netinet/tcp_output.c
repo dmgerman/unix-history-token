@@ -3359,6 +3359,28 @@ name|so_options
 operator|&
 name|SO_DEBUG
 condition|)
+block|{
+name|u_short
+name|save
+init|=
+name|ipov
+operator|->
+name|ih_len
+decl_stmt|;
+name|ipov
+operator|->
+name|ih_len
+operator|=
+name|htons
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+comment|/* - hdrlen + (th->th_off<< 2) */
+argument_list|)
+expr_stmt|;
 name|tcp_trace
 argument_list|(
 name|TA_OUTPUT
@@ -3382,6 +3404,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ipov
+operator|->
+name|ih_len
+operator|=
+name|save
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Fill in IP length and desired time to live and 	 * send to IP level.  There should be a better way 	 * to handle ttl and tos; we could keep them in 	 * the template, but need a way to checksum without them. 	 */
