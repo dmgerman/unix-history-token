@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd5.c	3.7 83/09/15"
+literal|"@(#)cmd5.c	3.8 83/11/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,11 +190,6 @@ condition|)
 name|bread
 argument_list|()
 expr_stmt|;
-name|wwunbox
-argument_list|(
-name|boxwin
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|getpos
@@ -216,34 +211,36 @@ argument_list|)
 condition|)
 block|{
 case|case
-operator|-
-literal|1
+literal|3
 case|:
+name|wwunbox
+argument_list|(
+name|boxwin
+argument_list|)
+expr_stmt|;
 name|wwdelete
 argument_list|(
 name|boxwin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|terse
-condition|)
-operator|(
-name|void
-operator|)
-name|wwputs
+return|return;
+case|case
+literal|2
+case|:
+name|wwunbox
 argument_list|(
-literal|"\r\nCancelled.  "
-argument_list|,
-name|cmdwin
+name|boxwin
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 case|case
 literal|1
 case|:
-break|break;
+name|wwunbox
+argument_list|(
+name|boxwin
+argument_list|)
+expr_stmt|;
 case|case
 literal|0
 case|:
