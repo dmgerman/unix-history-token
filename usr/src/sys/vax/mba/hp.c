@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.28	81/03/09	*/
+comment|/*	hp.c	4.29	81/03/09	*/
 end_comment
 
 begin_include
@@ -1484,10 +1484,28 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+name|hprecal
+index|[
+name|mi
+operator|->
+name|mi_unit
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
+name|hptypes
+index|[
+name|mi
+operator|->
+name|mi_type
+index|]
+operator|==
+name|MBDT_RM80
+operator|&&
 name|hpaddr
 operator|->
 name|hper2
