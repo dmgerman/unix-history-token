@@ -480,8 +480,7 @@ argument_list|,
 name|FIONREAD
 argument_list|,
 operator|(
-expr|struct
-name|sgttyb
+name|void
 operator|*
 operator|)
 operator|&
