@@ -587,6 +587,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|ficlRealloc
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ficlFree
 parameter_list|(
 name|void

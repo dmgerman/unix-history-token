@@ -24,11 +24,11 @@ name|__FICL_H__
 end_define
 
 begin_comment
-comment|/* ** Ficl (Forth-inspired command language) is an ANS Forth ** interpreter written in C. Unlike traditional Forths, this ** interpreter is designed to be embedded into other systems ** as a command/macro/development prototype language.  ** ** Where Forths usually view themselves as the center of the system ** and expect the rest of the system to be coded in Forth, Ficl ** acts as a component of the system. It is easy to export  ** code written in C or ASM to Ficl in the style of TCL, or to invoke ** Ficl code from a compiled module. This allows you to do incremental ** development in a way that combines the best features of threaded  ** languages (rapid development, quick code/test/debug cycle, ** reasonably fast) with the best features of C (everyone knows it, ** easier to support large blocks of code, efficient, type checking). ** ** Ficl provides facilities for interoperating ** with programs written in C: C functions can be exported to Ficl, ** and Ficl commands can be executed via a C calling interface. The ** interpreter is re-entrant, so it can be used in multiple instances ** in a multitasking system. Unlike Forth, Ficl's outer interpreter ** expects a text block as input, and returns to the caller after each ** text block, so the "data pump" is somewhere in external code. This ** is more like TCL than Forth, which usually expcets to be at the center ** of the system, requesting input at its convenience. Each Ficl virtual  ** machine can be bound to a different I/O channel, and is independent ** of all others in in the same address space except that all virtual ** machines share a common dictionary (a sort or open symbol table that ** defines all of the elements of the language). ** ** Code is written in ANSI C for portability.  ** ** Summary of Ficl features and constraints: ** - Standard: Implements the ANSI Forth CORE word set and part  **   of the CORE EXT word-set, SEARCH and SEARCH EXT, TOOLS and **   TOOLS EXT, LOCAL and LOCAL ext and various extras. ** - Extensible: you can export code written in Forth, C,  **   or asm in a straightforward way. Ficl provides open **   facilities for extending the language in an application **   specific way. You can even add new control structures! ** - Ficl and C can interact in two ways: Ficl can encapsulate **   C code, or C code can invoke Ficl code. ** - Thread-safe, re-entrant: The shared system dictionary  **   uses a locking mechanism that you can either supply **   or stub out to provide exclusive access. Each Ficl **   virtual machine has an otherwise complete state, and **   each can be bound to a separate I/O channel (or none at all). ** - Simple encapsulation into existing systems: a basic implementation **   requires three function calls (see the example program in testmain.c). ** - ROMable: Ficl is designed to work in RAM-based and ROM code / RAM data **   environments. It does require somewhat more memory than a pure **   ROM implementation because it builds its system dictionary in  **   RAM at startup time. ** - Written an ANSI C to be as simple as I can make it to understand, **   support, debug, and port. Compiles without complaint at /Az /W4  **   (require ANSI C, max warnings) under Microsoft VC++ 5. ** - Does full 32 bit math (but you need to implement **   two mixed precision math primitives (see sysdep.c)) ** - Indirect threaded interpreter is not the fastest kind of **   Forth there is (see pForth 68K for a really fast subroutine **   threaded interpreter), but it's the cleanest match to a **   pure C implementation. ** ** P O R T I N G   F i c l ** ** To install Ficl on your target system, you need an ANSI C compiler ** and its runtime library. Inspect the system dependent macros and ** functions in sysdep.h and sysdep.c and edit them to suit your ** system. For example, INT16 is a short on some compilers and an ** int on others. Check the default CELL alignment controlled by ** FICL_ALIGN. If necessary, add new definitions of ficlMalloc, ficlFree, ** ficlLockDictionary, and ficlTextOut to work with your operating system. ** Finally, use testmain.c as a guide to installing the Ficl system and  ** one or more virtual machines into your code. You do not need to include ** testmain.c in your build. ** ** T o   D o   L i s t ** ** 1. Unimplemented system dependent CORE word: key ** 2. Kludged CORE word: ACCEPT  ** 3. Dictionary locking is full of holes - only one vm at a time **    can alter the dict.  ** 4. Ficl uses the pad in CORE words - this violates the standard, **    but it's cleaner for a multithreaded system. I'll have to make a **    second pad for reference by the word PAD to fix this. ** ** F o r   M o r e   I n f o r m a t i o n ** ** Web home of ficl **   http://www.taygeta.com/forth/compilers ** Check this website for Forth literature (including the ANSI standard) **   http://www.taygeta.com/forthlit.html ** and here for software and more links **   http://www.taygeta.com/forth.html ** ** Obvious Performance enhancement opportunities ** Compile speed ** - work on interpret speed ** - turn off locals (FICL_WANT_LOCALS) ** Interpret speed  ** - Change inner interpreter (and everything else) **   so that a definition is a list of pointers to functions **   and inline data rather than pointers to words. This gets **   rid of vm->runningWord and a level of indirection in the **   inner loop. I'll look at it for ficl 3.0 ** - Make the main hash table a bigger prime (HASHSIZE) ** - FORGET about twiddling the hash function - my experience is **   that that is a waste of time. ** - eliminate the need to pass the pVM parameter on the stack **   by dedicating a register to it. Most words need access to the **   vm, but the parameter passing overhead can be reduced. One way **   requires that the host OS have a task switch callout. Create **   a global variable for the running VM and refer to it in words **   that need VM access. Alternative: use thread local storage.  **   For single threaded implementations, you can just use a global. **   The first two solutions create portability problems, so I **   haven't considered doing them. Another possibility is to **   declare the pVm parameter to be "register", and hope the compiler **   pays attention. ** */
+comment|/* ** Ficl (Forth-inspired command language) is an ANS Forth ** interpreter written in C. Unlike traditional Forths, this ** interpreter is designed to be embedded into other systems ** as a command/macro/development prototype language.  ** ** Where Forths usually view themselves as the center of the system ** and expect the rest of the system to be coded in Forth, Ficl ** acts as a component of the system. It is easy to export  ** code written in C or ASM to Ficl in the style of TCL, or to invoke ** Ficl code from a compiled module. This allows you to do incremental ** development in a way that combines the best features of threaded  ** languages (rapid development, quick code/test/debug cycle, ** reasonably fast) with the best features of C (everyone knows it, ** easier to support large blocks of code, efficient, type checking). ** ** Ficl provides facilities for interoperating ** with programs written in C: C functions can be exported to Ficl, ** and Ficl commands can be executed via a C calling interface. The ** interpreter is re-entrant, so it can be used in multiple instances ** in a multitasking system. Unlike Forth, Ficl's outer interpreter ** expects a text block as input, and returns to the caller after each ** text block, so the "data pump" is somewhere in external code. This ** is more like TCL than Forth, which usually expcets to be at the center ** of the system, requesting input at its convenience. Each Ficl virtual  ** machine can be bound to a different I/O channel, and is independent ** of all others in in the same address space except that all virtual ** machines share a common dictionary (a sort or open symbol table that ** defines all of the elements of the language). ** ** Code is written in ANSI C for portability.  ** ** Summary of Ficl features and constraints: ** - Standard: Implements the ANSI Forth CORE word set and part  **   of the CORE EXT word-set, SEARCH and SEARCH EXT, TOOLS and **   TOOLS EXT, LOCAL and LOCAL ext and various extras. ** - Extensible: you can export code written in Forth, C,  **   or asm in a straightforward way. Ficl provides open **   facilities for extending the language in an application **   specific way. You can even add new control structures! ** - Ficl and C can interact in two ways: Ficl can encapsulate **   C code, or C code can invoke Ficl code. ** - Thread-safe, re-entrant: The shared system dictionary  **   uses a locking mechanism that you can either supply **   or stub out to provide exclusive access. Each Ficl **   virtual machine has an otherwise complete state, and **   each can be bound to a separate I/O channel (or none at all). ** - Simple encapsulation into existing systems: a basic implementation **   requires three function calls (see the example program in testmain.c). ** - ROMable: Ficl is designed to work in RAM-based and ROM code / RAM data **   environments. It does require somewhat more memory than a pure **   ROM implementation because it builds its system dictionary in  **   RAM at startup time. ** - Written an ANSI C to be as simple as I can make it to understand, **   support, debug, and port. Compiles without complaint at /Az /W4  **   (require ANSI C, max warnings) under Microsoft VC++ 5. ** - Does full 32 bit math (but you need to implement **   two mixed precision math primitives (see sysdep.c)) ** - Indirect threaded interpreter is not the fastest kind of **   Forth there is (see pForth 68K for a really fast subroutine **   threaded interpreter), but it's the cleanest match to a **   pure C implementation. ** ** P O R T I N G   F i c l ** ** To install Ficl on your target system, you need an ANSI C compiler ** and its runtime library. Inspect the system dependent macros and ** functions in sysdep.h and sysdep.c and edit them to suit your ** system. For example, INT16 is a short on some compilers and an ** int on others. Check the default CELL alignment controlled by ** FICL_ALIGN. If necessary, add new definitions of ficlMalloc, ficlFree, ** ficlLockDictionary, and ficlTextOut to work with your operating system. ** Finally, use testmain.c as a guide to installing the Ficl system and  ** one or more virtual machines into your code. You do not need to include ** testmain.c in your build. ** ** T o   D o   L i s t ** ** 1. Unimplemented system dependent CORE word: key ** 2. Kludged CORE word: ACCEPT  ** 3. Dictionary locking is full of holes - only one vm at a time **    can alter the dict.  ** 4. Ficl uses the pad in CORE words - this violates the standard, **    but it's cleaner for a multithreaded system. I'll have to make a **    second pad for reference by the word PAD to fix this. ** 5. The whole inner interpreter is screwed up. It ought to be detached **    from ficlExec. Also, it should fall in line with exception **    handling by saving state. (sobral) ** 6. EXCEPTION should be cleaned. Right now, it doubles ficlExec's **    inner interpreter. (sobral) ** 7. colonParen must get the inner interpreter working on it's "case" **    *before* returning, so that it becomes possible to execute them **    inside other definitions without recreating the inner interpreter **    or other such hacks. (sobral) ** 8. We now have EXCEPTION word set. Let's: **    8.1. Use the appropriate exceptions throughout the code. **    8.2. Print the error messages at ficlExec, so someone can catch **         them first. (sobral) ** ** F o r   M o r e   I n f o r m a t i o n ** ** Web home of ficl **   http://www.taygeta.com/forth/compilers ** Check this website for Forth literature (including the ANSI standard) **   http://www.taygeta.com/forthlit.html ** and here for software and more links **   http://www.taygeta.com/forth.html ** ** Obvious Performance enhancement opportunities ** Compile speed ** - work on interpret speed ** - turn off locals (FICL_WANT_LOCALS) ** Interpret speed  ** - Change inner interpreter (and everything else) **   so that a definition is a list of pointers to functions **   and inline data rather than pointers to words. This gets **   rid of vm->runningWord and a level of indirection in the **   inner loop. I'll look at it for ficl 3.0 ** - Make the main hash table a bigger prime (HASHSIZE) ** - FORGET about twiddling the hash function - my experience is **   that that is a waste of time. ** - eliminate the need to pass the pVM parameter on the stack **   by dedicating a register to it. Most words need access to the **   vm, but the parameter passing overhead can be reduced. One way **   requires that the host OS have a task switch callout. Create **   a global variable for the running VM and refer to it in words **   that need VM access. Alternative: use thread local storage.  **   For single threaded implementations, you can just use a global. **   The first two solutions create portability problems, so I **   haven't considered doing them. Another possibility is to **   declare the pVm parameter to be "register", and hope the compiler **   pays attention. ** */
 end_comment
 
 begin_comment
-comment|/* ** Revision History: ** 27 Aug 1998 (sadler) testing and corrections for LOCALS, LOCALS EXT, **  SEARCH / SEARCH EXT, TOOLS / TOOLS EXT.  **  Added .X to display in hex, PARSE and PARSE-WORD to supplement WORD, **  EMPTY to clear stack. ** ** 29 jun 1998 (sadler) added variable sized hash table support **  and ANS Forth optional SEARCH& SEARCH EXT word set. ** 26 May 1998 (sadler)  **  FICL_PROMPT macro ** 14 April 1998 (sadler) V1.04 **  Ficlwin: Windows version, Skip Carter's Linux port ** 5 March 1998 (sadler) V1.03 **  Bug fixes -- passes John Ryan's ANS test suite "core.fr" ** ** 24 February 1998 (sadler) V1.02 ** -Fixed bugs in<# # #> ** -Changed FICL_WORD so that storage for the name characters **  can be allocated from the dictionary as needed rather than  **  reserving 32 bytes in each word whether needed or not -  **  this saved 50% of the dictionary storage requirement. ** -Added words in testmain for Win32 functions system,chdir,cwd, **  also added a word that loads and evaluates a file. ** ** December 1997 (sadler) ** -Added VM_RESTART exception handling in ficlExec -- this lets words **  that require additional text to succeed (like :, create, variable...) **  recover gracefully from an empty input buffer rather than emitting **  an error message. Definitions can span multiple input blocks with **  no restrictions. ** -Changed #include order so that<assert.h> is included in sysdep.h, **  and sysdep is included in all other files. This lets you define **  NDEBUG in sysdep.h to disable assertions if you want to. ** -Make PC specific system dependent code conditional on _M_IX86 **  defined so that ports can coexist in sysdep.h/sysdep.c */
+comment|/* ** Revision History: ** ** 12 Jan 1999 (sobral) Corrected EVALUATE behavior. Now TIB has an ** "end" field, and all words respect this. ficlExec is passed a "size" ** of TIB, as well as vmPushTib. This size is used to calculate the "end" ** of the string, ie, base+size. If the size is not known, pass -1. ** ** 10 Jan 1999 (sobral) EXCEPTION word set has been added, and existing ** words has been modified to conform to EXCEPTION EXT word set.  ** ** 27 Aug 1998 (sadler) testing and corrections for LOCALS, LOCALS EXT, **  SEARCH / SEARCH EXT, TOOLS / TOOLS EXT.  **  Added .X to display in hex, PARSE and PARSE-WORD to supplement WORD, **  EMPTY to clear stack. ** ** 29 jun 1998 (sadler) added variable sized hash table support **  and ANS Forth optional SEARCH& SEARCH EXT word set. ** 26 May 1998 (sadler)  **  FICL_PROMPT macro ** 14 April 1998 (sadler) V1.04 **  Ficlwin: Windows version, Skip Carter's Linux port ** 5 March 1998 (sadler) V1.03 **  Bug fixes -- passes John Ryan's ANS test suite "core.fr" ** ** 24 February 1998 (sadler) V1.02 ** -Fixed bugs in<# # #> ** -Changed FICL_WORD so that storage for the name characters **  can be allocated from the dictionary as needed rather than  **  reserving 32 bytes in each word whether needed or not -  **  this saved 50% of the dictionary storage requirement. ** -Added words in testmain for Win32 functions system,chdir,cwd, **  also added a word that loads and evaluates a file. ** ** December 1997 (sadler) ** -Added VM_RESTART exception handling in ficlExec -- this lets words **  that require additional text to succeed (like :, create, variable...) **  recover gracefully from an empty input buffer rather than emitting **  an error message. Definitions can span multiple input blocks with **  no restrictions. ** -Changed #include order so that<assert.h> is included in sysdep.h, **  and sysdep is included in all other files. This lets you define **  NDEBUG in sysdep.h to disable assertions if you want to. ** -Make PC specific system dependent code conditional on _M_IX86 **  defined so that ports can coexist in sysdep.h/sysdep.c */
 end_comment
 
 begin_ifdef
@@ -218,12 +218,16 @@ name|pfs
 parameter_list|)
 define|\
 value|{si.cp = pfs->text; si.count = pfs->count;}
-comment|/* ** Ficl uses a this little structure to hold the address of  ** the block of text it's working on and an index to the next ** unconsumed character in the string. Traditionally, this is ** done by a Text Input Buffer, so I've called this struct TIB. */
+comment|/* ** Ficl uses a this little structure to hold the address of  ** the block of text it's working on and an index to the next ** unconsumed character in the string. Traditionally, this is ** done by a Text Input Buffer, so I've called this struct TIB. ** ** Since this structure also holds the size of the input buffer, ** and since evaluate requires that, let's put the size here. ** The size is stored as an end-pointer because that is what the ** null-terminated string aware functions find most easy to deal ** with. ** Notice, though, that nobody really uses this except evaluate, ** so it might just be moved to FICL_VM instead. (sobral) */
 typedef|typedef
 struct|struct
 block|{
 name|INT32
 name|index
+decl_stmt|;
+name|char
+modifier|*
+name|end
 decl_stmt|;
 name|char
 modifier|*
@@ -727,27 +731,37 @@ comment|/* ** Exit codes for vmThrow */
 define|#
 directive|define
 name|VM_OUTOFTEXT
-value|1
+value|-256
 comment|/* hungry - normal exit */
 define|#
 directive|define
 name|VM_RESTART
-value|2
+value|-257
 comment|/* word needs more text to suxcceed - re-run it */
 define|#
 directive|define
 name|VM_USEREXIT
-value|3
+value|-258
 comment|/* user wants to quit */
 define|#
 directive|define
 name|VM_ERREXIT
-value|4
+value|-259
 comment|/* interp found an error */
 define|#
 directive|define
+name|VM_ABORT
+value|-1
+comment|/* like errexit -- abort */
+define|#
+directive|define
+name|VM_ABORTQ
+value|-2
+comment|/* like errexit -- abort" */
+define|#
+directive|define
 name|VM_QUIT
-value|5
+value|-56
 comment|/* like errexit, but leave pStack& base alone */
 name|void
 name|vmBranchRelative
@@ -959,6 +973,9 @@ name|char
 modifier|*
 name|text
 parameter_list|,
+name|INT32
+name|size
+parameter_list|,
 name|TIB
 modifier|*
 name|pSaveTib
@@ -1075,6 +1092,10 @@ parameter_list|(
 name|char
 modifier|*
 name|cp
+parameter_list|,
+name|char
+modifier|*
+name|end
 parameter_list|)
 function_decl|;
 name|char
@@ -1555,7 +1576,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* ** f i c l E x e c ** Evaluates a block of input text in the context of the ** specified interpreter. Emits any requested output to the ** interpreter's output function ** Execution returns when the text block has been executed, ** or an error occurs. ** Returns one of the VM_XXXX codes defined in ficl.h: ** VM_OUTOFTEXT is the normal exit condition ** VM_ERREXIT means that the interp encountered a syntax error **      and the vm has been reset to recover (some or all **      of the text block got ignored ** VM_USEREXIT means that the user executed the "bye" command **      to shut down the interpreter. This would be a good **      time to delete the vm, etc -- or you can ignore this **      signal. ** Preconditions: successful execution of ficlInitSystem, **      Successful creation and init of the VM by ficlNewVM (or equiv) */
+comment|/* ** f i c l E x e c ** Evaluates a block of input text in the context of the ** specified interpreter. Emits any requested output to the ** interpreter's output function. If the size of the input ** is not known, pass -1. ** Execution returns when the text block has been executed, ** or an error occurs. ** Returns one of the VM_XXXX codes defined in ficl.h: ** VM_OUTOFTEXT is the normal exit condition ** VM_ERREXIT means that the interp encountered a syntax error **      and the vm has been reset to recover (some or all **      of the text block got ignored ** VM_USEREXIT means that the user executed the "bye" command **      to shut down the interpreter. This would be a good **      time to delete the vm, etc -- or you can ignore this **      signal. ** VM_ABORT and VM_ABORTQ are generated by 'abort' and 'abort"' **      commands. ** Preconditions: successful execution of ficlInitSystem, **      Successful creation and init of the VM by ficlNewVM (or equiv) */
 name|int
 name|ficlExec
 parameter_list|(
@@ -1566,6 +1587,9 @@ parameter_list|,
 name|char
 modifier|*
 name|pText
+parameter_list|,
+name|INT32
+name|size
 parameter_list|)
 function_decl|;
 comment|/* ** ficlExecFD(FICL_VM *pVM, int fd);  * Evaluates text from file passed in via fd.  * Execution returns when all of file has been executed or an  * error occurs.  */

@@ -524,22 +524,6 @@ operator|<=
 literal|0
 condition|)
 continue|continue;
-if|if
-condition|(
-name|cp
-index|[
-name|len
-index|]
-operator|==
-literal|'\n'
-condition|)
-name|cp
-index|[
-name|len
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|result
 operator|=
 name|ficlExec
@@ -547,13 +531,23 @@ argument_list|(
 name|pVM
 argument_list|,
 name|cp
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|result
-operator|>=
-name|VM_ERREXIT
+operator|!=
+name|VM_QUIT
+operator|&&
+name|result
+operator|!=
+name|VM_USEREXIT
+operator|&&
+name|result
+operator|!=
+name|VM_OUTOFTEXT
 condition|)
 block|{
 name|pVM
@@ -598,6 +592,8 @@ argument_list|(
 name|pVM
 argument_list|,
 literal|""
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pVM
@@ -932,6 +928,9 @@ argument_list|,
 literal|".ver .( "
 name|__DATE__
 literal|" ) cr quit"
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*     ** load file from cmd line...     */
@@ -964,6 +963,9 @@ argument_list|(
 name|pVM
 argument_list|,
 name|in
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1002,6 +1004,9 @@ argument_list|(
 name|pVM
 argument_list|,
 name|in
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

@@ -254,6 +254,30 @@ end_function
 
 begin_function
 name|void
+modifier|*
+name|ficlRealloc
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+return|return
+name|realloc
+argument_list|(
+name|p
+argument_list|,
+name|size
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
 name|ficlFree
 parameter_list|(
 name|void
@@ -268,6 +292,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TESTMAIN
+end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -371,6 +401,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

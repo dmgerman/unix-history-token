@@ -351,6 +351,9 @@ parameter_list|,
 name|char
 modifier|*
 name|pText
+parameter_list|,
+name|INT32
+name|size
 parameter_list|)
 block|{
 name|int
@@ -380,6 +383,8 @@ argument_list|(
 name|pVM
 argument_list|,
 name|pText
+argument_list|,
+name|size
 argument_list|,
 operator|&
 name|saveTib
@@ -549,6 +554,12 @@ expr_stmt|;
 break|break;
 case|case
 name|VM_ERREXIT
+case|:
+case|case
+name|VM_ABORT
+case|:
+case|case
+name|VM_ABORTQ
 case|:
 default|default:
 comment|/* user defined exit code?? */
@@ -740,13 +751,6 @@ condition|)
 break|break;
 continue|continue;
 block|}
-name|cp
-index|[
-name|i
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -757,6 +761,8 @@ argument_list|(
 name|pVM
 argument_list|,
 name|cp
+argument_list|,
+name|i
 argument_list|)
 operator|)
 operator|>=
@@ -796,6 +802,8 @@ argument_list|(
 name|pVM
 argument_list|,
 literal|""
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|pVM
