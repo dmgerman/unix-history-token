@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_execve.c,v 1.11 1993/12/19 00:51:23 wollman Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman  * 4. The name of the developer may be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_execve.c,v 1.12 1993/12/20 19:31:17 wollman Exp $  */
 end_comment
 
 begin_include
@@ -144,7 +144,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|caddr_t
+name|int
+modifier|*
 name|exec_copyout_strings
 name|__P
 argument_list|(
@@ -238,7 +239,8 @@ name|stringbase
 decl_stmt|,
 modifier|*
 name|stringp
-decl_stmt|,
+decl_stmt|;
+name|int
 modifier|*
 name|stack_base
 decl_stmt|;
@@ -732,17 +734,9 @@ name|p_vmspace
 operator|->
 name|vm_minsaddr
 operator|=
-name|stack_base
-expr_stmt|;
-name|p
-operator|->
-name|p_regs
-index|[
-name|SP
-index|]
-operator|=
 operator|(
-name|int
+name|char
+operator|*
 operator|)
 name|stack_base
 expr_stmt|;
@@ -759,6 +753,10 @@ name|caddr_t
 operator|)
 name|USRSTACK
 operator|-
+operator|(
+name|char
+operator|*
+operator|)
 name|stack_base
 operator|)
 operator|>>
@@ -768,30 +766,10 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* 	 * Stuff argument count as first item on stack 	 */
-name|p
-operator|->
-name|p_regs
-index|[
-name|SP
-index|]
-operator|-=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
 operator|*
 operator|(
-name|int
-operator|*
-operator|)
-operator|(
-name|p
-operator|->
-name|p_regs
-index|[
-name|SP
-index|]
+operator|--
+name|stack_base
 operator|)
 operator|=
 name|iparams
@@ -1026,6 +1004,8 @@ argument_list|,
 name|iparams
 operator|->
 name|entry_addr
+argument_list|,
+name|stack_base
 argument_list|)
 expr_stmt|;
 comment|/* 	 * free various allocated resources 	 */
@@ -1562,7 +1542,8 @@ comment|/*  * Copy strings out to the new process address space, constructing  *
 end_comment
 
 begin_function
-name|caddr_t
+name|int
+modifier|*
 name|exec_copyout_strings
 parameter_list|(
 name|iparams
@@ -1585,13 +1566,14 @@ name|vectp
 decl_stmt|;
 name|char
 modifier|*
-name|stack_base
-decl_stmt|,
-modifier|*
 name|stringp
 decl_stmt|,
 modifier|*
 name|destp
+decl_stmt|;
+name|int
+modifier|*
+name|stack_base
 decl_stmt|;
 name|int
 name|vect_table_size
@@ -1662,7 +1644,8 @@ comment|/* 	 * vectp also becomes our initial stack base 	 */
 name|stack_base
 operator|=
 operator|(
-name|caddr_t
+name|int
+operator|*
 operator|)
 name|vectp
 expr_stmt|;
