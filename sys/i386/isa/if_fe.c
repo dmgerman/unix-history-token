@@ -3066,7 +3066,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"fe%d: strange I/O config?n"
+literal|"fe%d: strange I/O config?\n"
 argument_list|,
 name|sc
 operator|->
@@ -3394,7 +3394,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"fe%d: check IRQ in config; it may be incorrect"
+literal|"fe%d: check IRQ in config; it may be incorrect\n"
 argument_list|,
 name|sc
 operator|->
@@ -7997,7 +7997,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"fe%d: emptying receive buffer"
+literal|"fe%d: emptying receive buffer\n"
 argument_list|,
 name|sc
 operator|->
