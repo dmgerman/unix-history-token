@@ -69,15 +69,19 @@ directive|include
 file|<sys/rlist.h>
 end_include
 
-begin_comment
-comment|/* swapmap defined here... */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<nlist.h>
 end_include
+
+begin_decl_stmt
+name|struct
+name|rlist
+modifier|*
+name|swapmap
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
