@@ -900,12 +900,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Tell kern_execve.c about it, with a little help from the linker.  * Since `const' objects end up in the text segment, TEXT_SET is the  * correct directive to use.  */
+comment|/*  * Tell kern_execve.c about it, with a little help from the linker.  */
 end_comment
 
 begin_decl_stmt
 specifier|const
-name|struct
 name|execsw
 name|svr4_execsw
 init|=
