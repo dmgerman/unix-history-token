@@ -175,11 +175,16 @@ literal|0
 init|;
 name|cnt
 operator|<
+name|MIN
+argument_list|(
+name|size
+argument_list|,
 name|disk
 operator|->
 name|d_fs
 operator|.
 name|fs_bsize
+argument_list|)
 condition|;
 name|cnt
 operator|++
