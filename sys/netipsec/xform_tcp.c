@@ -201,10 +201,6 @@ operator|(
 literal|"%s: SPI must be TCP_SIG_SPI (0x1000)\n"
 operator|,
 name|__func__
-operator|,
-name|sav
-operator|->
-name|alg_auth
 operator|)
 argument_list|)
 expr_stmt|;
