@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.33 (Berkeley) %G%"
+literal|"@(#)main.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1776,6 +1776,25 @@ name|nodename
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|22
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"uname failed (%s)\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|makelower
 argument_list|(
 name|jbuf
