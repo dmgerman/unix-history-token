@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002, 2003 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: ah.h,v 1.35 2003/07/21 02:36:53 sam Exp $  */
+comment|/*-  * Copyright (c) 2002, 2003 Sam Leffler, Errno Consulting, Atheros  * Communications, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the following conditions are met:  * 1. The materials contained herein are unmodified and are used  *    unmodified.  * 2. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following NO  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without  *    modification.  * 3. Redistributions in binary form must reproduce at minimum a  *    disclaimer similar to the Disclaimer below and any redistribution  *    must be conditioned upon including a substantially similar  *    Disclaimer requirement for further binary redistribution.  * 4. Neither the names of the above-listed copyright holders nor the  *    names of any contributors may be used to endorse or promote  *    product derived from this software without specific prior written  *    permission.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGES.  *  * $Id: ah.h,v 1.41 2003/11/01 01:05:45 sam Exp $  */
 end_comment
 
 begin_ifndef
@@ -39,48 +39,78 @@ literal|0
 block|,
 comment|/* No error */
 name|HAL_ENXIO
+init|=
+literal|1
 block|,
 comment|/* No hardware present */
 name|HAL_ENOMEM
+init|=
+literal|2
 block|,
 comment|/* Memory allocation failed */
 name|HAL_EIO
+init|=
+literal|3
 block|,
 comment|/* Hardware didn't respond as expected */
 name|HAL_EEMAGIC
+init|=
+literal|4
 block|,
 comment|/* EEPROM magic number invalid */
 name|HAL_EEVERSION
+init|=
+literal|5
 block|,
 comment|/* EEPROM version invalid */
 name|HAL_EELOCKED
+init|=
+literal|6
 block|,
 comment|/* EEPROM unreadable */
 name|HAL_EEBADSUM
+init|=
+literal|7
 block|,
 comment|/* EEPROM checksum invalid */
 name|HAL_EEREAD
+init|=
+literal|8
 block|,
 comment|/* EEPROM read problem */
 name|HAL_EEBADMAC
+init|=
+literal|9
 block|,
 comment|/* EEPROM mac address invalid */
 name|HAL_EESIZE
+init|=
+literal|10
 block|,
 comment|/* EEPROM size not supported */
 name|HAL_EEWRITE
+init|=
+literal|11
 block|,
 comment|/* Attempt to change write-locked EEPROM */
 name|HAL_EINVAL
+init|=
+literal|12
 block|,
 comment|/* Invalid parameter to function */
 name|HAL_ENOTSUPP
+init|=
+literal|13
 block|,
 comment|/* Hardware revision not supported */
 name|HAL_ESELFTEST
+init|=
+literal|14
 block|,
 comment|/* Hardware self-test failed */
 name|HAL_EINPROGRESS
+init|=
+literal|15
 block|,
 comment|/* Operation incomplete */
 block|}
@@ -151,15 +181,23 @@ literal|0
 block|,
 comment|/* queue is inactive/unused */
 name|HAL_TX_QUEUE_DATA
+init|=
+literal|1
 block|,
 comment|/* data xmit q's */
 name|HAL_TX_QUEUE_BEACON
+init|=
+literal|2
 block|,
 comment|/* beacon xmit q */
 name|HAL_TX_QUEUE_CAB
+init|=
+literal|3
 block|,
 comment|/* "crap after beacon" xmit q */
 name|HAL_TX_QUEUE_PSPOLL
+init|=
+literal|4
 block|,
 comment|/* power-save poll xmit q */
 block|}
@@ -418,10 +456,16 @@ typedef|typedef
 enum|enum
 block|{
 name|HAL_RFGAIN_INACTIVE
+init|=
+literal|0
 block|,
 name|HAL_RFGAIN_READ_REQUESTED
+init|=
+literal|1
 block|,
 name|HAL_RFGAIN_NEED_CHANGE
+init|=
+literal|2
 block|}
 name|HAL_RFGAIN
 typedef|;
@@ -814,12 +858,18 @@ typedef|typedef
 enum|enum
 block|{
 name|HAL_ANT_VARIABLE
+init|=
+literal|0
 block|,
 comment|/* variable by programming */
 name|HAL_ANT_FIXED_A
+init|=
+literal|1
 block|,
 comment|/* fixed to 11a frequencies */
 name|HAL_ANT_FIXED_B
+init|=
+literal|2
 block|,
 comment|/* fixed to 11b frequencies */
 block|}
@@ -879,14 +929,34 @@ typedef|typedef
 enum|enum
 block|{
 name|HAL_CIPHER_WEP
+init|=
+literal|0
 block|,
 name|HAL_CIPHER_AES_CCM
+init|=
+literal|1
 block|,
 name|HAL_CIPHER_CKIP
+init|=
+literal|2
 block|}
 name|HAL_CIPHER
 typedef|;
 end_typedef
+
+begin_enum
+enum|enum
+block|{
+name|HAL_SLOT_TIME_9
+init|=
+literal|9
+block|,
+name|HAL_SLOT_TIME_20
+init|=
+literal|20
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Per-station beacon timer state.  */
@@ -946,7 +1016,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  */
+comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
 
 begin_struct
@@ -957,6 +1027,15 @@ name|u_int32_t
 name|ah_magic
 decl_stmt|;
 comment|/* consistency check magic number */
+name|u_int32_t
+name|ah_abi
+decl_stmt|;
+comment|/* HAL ABI version */
+define|#
+directive|define
+name|HAL_ABI_VERSION
+value|0x03103100
+comment|/* YYMMDDnn */
 name|u_int16_t
 name|ah_devid
 decl_stmt|;
@@ -979,6 +1058,26 @@ decl_stmt|;
 name|HAL_CTRY_CODE
 name|ah_countryCode
 decl_stmt|;
+name|u_int32_t
+name|ah_macVersion
+decl_stmt|;
+comment|/* MAC version id */
+name|u_int16_t
+name|ah_macRev
+decl_stmt|;
+comment|/* MAC revision */
+name|u_int16_t
+name|ah_phyRev
+decl_stmt|;
+comment|/* PHY revision */
+name|u_int16_t
+name|ah_analog5GhzRev
+decl_stmt|;
+comment|/* 2GHz radio revision */
+name|u_int16_t
+name|ah_analog2GhzRev
+decl_stmt|;
+comment|/* 5GHz radio revision */
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
@@ -1765,6 +1864,19 @@ literal|0
 block|u_int32_t	(*ah_getCurRssi)(struct ath_hal*); 	u_int32_t	(*ah_getDefAntenna)(struct ath_hal*); 	void		(*ah_setDefAntenna)(struct ath_hal*, u_int32_t antenna);
 endif|#
 directive|endif
+name|HAL_BOOL
+function_decl|(
+modifier|*
+name|ah_setSlotTime
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
 comment|/* Key Cache Functions */
 name|u_int32_t
 function_decl|(
@@ -2227,6 +2339,18 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Return a version string for the HAL release.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ath_hal_version
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
