@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.4 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2909,6 +2909,9 @@ else|else
 name|cp
 operator|++
 expr_stmt|;
+name|shell_uid
+argument_list|()
+expr_stmt|;
 name|execl
 argument_list|(
 name|value
@@ -3127,20 +3130,6 @@ argument_list|,
 name|SIGTERM
 argument_list|)
 expr_stmt|;
-name|setreuid
-argument_list|(
-name|euid
-argument_list|,
-name|euid
-argument_list|)
-expr_stmt|;
-name|setregid
-argument_list|(
-name|egid
-argument_list|,
-name|egid
-argument_list|)
-expr_stmt|;
 name|disconnect
 argument_list|(
 name|msg
@@ -3163,6 +3152,9 @@ name|printf
 argument_list|(
 literal|"\r\n[EOT]\r\n"
 argument_list|)
+expr_stmt|;
+name|daemon_uid
+argument_list|()
 expr_stmt|;
 name|delock
 argument_list|(
@@ -3304,6 +3296,9 @@ expr_stmt|;
 else|else
 name|cp
 operator|++
+expr_stmt|;
+name|user_uid
+argument_list|()
 expr_stmt|;
 name|execl
 argument_list|(
@@ -4206,6 +4201,9 @@ name|close
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|shell_uid
+argument_list|()
 expr_stmt|;
 name|execl
 argument_list|(

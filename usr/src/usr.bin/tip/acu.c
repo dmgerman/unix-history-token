@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	5.3 (Berkeley) %G%"
+literal|"@(#)acu.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,16 +230,11 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
-name|delock
-argument_list|(
-name|uucplock
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|"interrupt"
+operator|)
+return|;
 block|}
 if|if
 condition|(
