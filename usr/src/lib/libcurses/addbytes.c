@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.18 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,6 +324,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+break|break;
 block|}
 name|stand
 operator|=
