@@ -1667,6 +1667,25 @@ block|,
 name|SC_ONE_LU
 block|}
 block|,
+block|{
+comment|/* Here's another Philips drive... */
+name|T_READONLY
+block|,
+name|T_WORM
+block|,
+name|T_REMOV
+block|,
+literal|"PHILIPS"
+block|,
+literal|"CDD2*"
+block|,
+literal|"*"
+block|,
+literal|"worm"
+block|,
+name|SC_ONE_LU
+block|}
+block|,
 comment|/* 	 * The Plasmon's are dual-faced: they appear as T_WORM if the 	 * drive is empty, or a CD-R medium is in the drive, and they 	 * announce theirselves as T_READONLY if a CD-ROM (or fixated 	 * CD-R) is there.  This record catches the latter case, while 	 * the former one falls under the terms of the generic T_WORM 	 * below. 	 */
 block|{
 name|T_READONLY
