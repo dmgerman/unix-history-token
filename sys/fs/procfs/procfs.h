@@ -158,7 +158,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Visbility */
+comment|/* Visibility */
 end_comment
 
 begin_function_decl
