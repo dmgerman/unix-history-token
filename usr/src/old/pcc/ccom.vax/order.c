@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.8 (Berkeley) %G%"
+literal|"@(#)order.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,19 +38,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_macro
 name|stoasg
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|o
+argument|o
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|NODE
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -437,6 +443,10 @@ block|}
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|notoff
