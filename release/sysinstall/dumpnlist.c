@@ -172,7 +172,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"struct nlist kern_nl[] = {\n"
+literal|"struct nlist nl[] = {\n"
 argument_list|)
 expr_stmt|;
 for|for
