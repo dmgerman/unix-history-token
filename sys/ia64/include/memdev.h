@@ -40,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|memioctl
-value|(d_ioctl_t *)NULL;
+value|(d_ioctl_t *)NULL
 end_define
 
 begin_decl_stmt
