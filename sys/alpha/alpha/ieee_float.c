@@ -991,6 +991,17 @@ name|frachi
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|frac
+operator|==
+literal|0
+condition|)
+operator|*
+name|status
+operator||=
+name|FPCR_UNF
+expr_stmt|;
 comment|/* 		 * Rounding up may take us to TWO if 		 * fraclo == (TWO - epsilon).  Also If fraclo has been 		 * denormalised to (ONE - epsilon) then there is a 		 * possibility that we will round to ONE exactly. 		 */
 if|if
 condition|(
