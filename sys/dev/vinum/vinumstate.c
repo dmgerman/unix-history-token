@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 2.13 1999/10/12 04:38:48 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 2.15 2000/01/04 04:39:25 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -718,7 +718,7 @@ comment|/* out of date info, need reviving */
 case|case
 name|sd_obsolete
 case|:
-comment|/*  		 *  1.  If the subdisk is not part of a 		 *      plex, bring it up, don't revive. 		 * 		 *  2.  If the subdisk is part of a 		 *     one-plex volume or an unattached 		 *     plex, and it's not RAID-5, we 		 *     *can't revive*.  The subdisk 		 *     doesn't change its state. 		 * 		 * 3.  If the subdisk is part of a 		 *     one-plex volume or an unattached 		 *     plex, and it's RAID-5, but more 		 *     than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't 		 *     change its state. 		 * 		 * 4.  If the subdisk is part of a 		 *     multi-plex volume, we'll change to 		 *     reviving and let the revive 		 *     routines find out whether it will 		 *     work or not.  If they don't, the 		 *     revive stops with an error message, 		 *     but the state doesn't change 		 *     (FWIW). 		 */
+comment|/*  		 * 1.  If the subdisk is not part of a 		 *     plex, bring it up, don't revive. 		 * 		 * 2.  If the subdisk is part of a 		 *     one-plex volume or an unattached 		 *     plex, and it's not RAID-5, we 		 *     *can't revive*.  The subdisk 		 *     doesn't change its state. 		 * 		 * 3.  If the subdisk is part of a 		 *     one-plex volume or an unattached 		 *     plex, and it's RAID-5, but more 		 *     than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't 		 *     change its state. 		 * 		 * 4.  If the subdisk is part of a 		 *     multi-plex volume, we'll change to 		 *     reviving and let the revive 		 *     routines find out whether it will 		 *     work or not.  If they don't, the 		 *     revive stops with an error message, 		 *     but the state doesn't change 		 *     (FWIW). 		 */
 if|if
 condition|(
 name|sd
@@ -1101,7 +1101,7 @@ condition|(
 name|state
 condition|)
 block|{
-comment|/* 	 * We can't bring the plex up, even by force, 	 * unless it's ready.  update_plex_state 	 * checks that 	 */
+comment|/* 	 * We can't bring the plex up, even by force, 	 * unless it's ready.  update_plex_state 	 * checks that. 	 */
 case|case
 name|plex_up
 case|:
@@ -1772,6 +1772,7 @@ operator|=
 name|plex_initializing
 expr_stmt|;
 comment|/* yup, that makes the plex the same */
+elseif|else
 if|if
 condition|(
 operator|(
@@ -1951,14 +1952,14 @@ index|]
 operator|.
 name|state
 operator|=
-name|sd_reviving
+name|sd_stale
 expr_stmt|;
 name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
 comment|/* tell them about it */
-literal|"vinum: %s is reviving\n"
+literal|"vinum: %s must be revived\n"
 argument_list|,
 name|SD
 index|[
@@ -2680,7 +2681,7 @@ name|sd_obsolete
 case|:
 name|statemap
 operator||=
-name|sd_obsolete
+name|sd_obsoletestate
 expr_stmt|;
 operator|(
 name|plex
@@ -3217,6 +3218,7 @@ name|sd_object
 case|:
 if|if
 condition|(
+operator|(
 name|SD
 index|[
 name|objindex
@@ -3225,9 +3227,32 @@ operator|.
 name|state
 operator|==
 name|sd_reviving
+operator|)
+comment|/* reviving, */
+operator|||
+operator|(
+name|SD
+index|[
+name|objindex
+index|]
+operator|.
+name|state
+operator|==
+name|sd_stale
+operator|)
 condition|)
 block|{
-comment|/* reviving, */
+comment|/* or stale, will revive */
+name|SD
+index|[
+name|objindex
+index|]
+operator|.
+name|state
+operator|=
+name|sd_reviving
+expr_stmt|;
+comment|/* make sure we're reviving */
 if|if
 condition|(
 name|data
