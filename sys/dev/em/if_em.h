@@ -64,7 +64,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sockio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -88,19 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
+file|<net/if_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sockio.h>
+file|<net/if_vlan_var.h>
 end_include
 
 begin_include
@@ -196,13 +208,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/em/if_em_fxhw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/em/if_em_phy.h>
+file|<dev/em/if_em_hw.h>
 end_include
 
 begin_comment
@@ -374,6 +380,13 @@ define|#
 directive|define
 name|ETHER_ALIGN
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|QTAG_TYPE
+value|0x8100
 end_define
 
 begin_comment
@@ -692,8 +705,8 @@ modifier|*
 name|prev
 decl_stmt|;
 name|struct
-name|em_shared_adapter
-name|shared
+name|em_hw
+name|hw
 decl_stmt|;
 comment|/* FreeBSD operating-system-specific structures */
 name|struct
@@ -906,7 +919,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|struct
-name|em_shared_stats
+name|em_hw_stats
 name|stats
 decl_stmt|;
 block|}

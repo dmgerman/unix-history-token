@@ -48,7 +48,7 @@ name|char
 name|em_driver_version
 index|[]
 init|=
-literal|"1.2.7"
+literal|"1.3.8"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +152,54 @@ block|{
 literal|0x8086
 block|,
 literal|0x100E
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x100F
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x1010
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x1011
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x1012
 block|,
 name|PCI_ANY_ID
 block|,
@@ -392,21 +440,6 @@ name|em_hardware_init
 parameter_list|(
 name|struct
 name|adapter
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|em_read_mac_address
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-parameter_list|,
-name|u_int8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -709,6 +742,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|em_enable_vlans
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*********************************************************************  *  FreeBSD Device Interface Entry Points                      *********************************************************************/
 end_comment
@@ -957,13 +1003,6 @@ operator|)
 operator|)
 condition|)
 block|{
-name|INIT_DEBUGOUT1
-argument_list|(
-literal|"em_probe: Found PRO/1000  (pci_device_id=0x%x)"
-argument_list|,
-name|pci_device_id
-argument_list|)
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|adapter_name
@@ -1168,7 +1207,7 @@ name|RIDV
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg
 operator|=
@@ -1176,7 +1215,7 @@ name|DO_AUTO_NEG
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|wait_autoneg_complete
 operator|=
@@ -1184,7 +1223,7 @@ name|WAIT_FOR_AUTO_NEG_DEFAULT
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg_advertised
 operator|=
@@ -1192,7 +1231,7 @@ name|AUTONEG_ADV_DEFAULT
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|tbi_compatibility_en
 operator|=
@@ -1212,7 +1251,7 @@ name|EM_ENABLE_RXCSUM_OFFLOAD
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|fc_high_water
 operator|=
@@ -1220,7 +1259,7 @@ name|FC_DEFAULT_HI_THRESH
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|fc_low_water
 operator|=
@@ -1228,7 +1267,7 @@ name|FC_DEFAULT_LO_THRESH
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|fc_pause_time
 operator|=
@@ -1236,7 +1275,7 @@ name|FC_DEFAULT_TX_TIMER
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|fc_send_xon
 operator|=
@@ -1244,7 +1283,7 @@ name|TRUE
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|fc
 operator|=
@@ -1253,7 +1292,7 @@ expr_stmt|;
 comment|/* Set the max frame size assuming standard ethernet sized frames */
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|max_frame_size
 operator|=
@@ -1265,7 +1304,7 @@ name|ETHER_CRC_LEN
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|min_frame_size
 operator|=
@@ -1291,7 +1330,7 @@ condition|)
 block|{
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|report_tx_early
 operator|=
@@ -1304,7 +1343,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|<
@@ -1313,7 +1352,7 @@ condition|)
 block|{
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|report_tx_early
 operator|=
@@ -1324,7 +1363,7 @@ else|else
 block|{
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|report_tx_early
 operator|=
@@ -1598,7 +1637,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 name|em_update_stats_counters
@@ -1608,7 +1647,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|get_link_status
 operator|=
@@ -1619,7 +1658,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 comment|/* Print the link status */
@@ -1637,7 +1676,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 operator|&
 name|adapter
@@ -1763,7 +1802,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 name|ether_ifdetach
@@ -1967,13 +2006,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-comment|/* Issue a global reset */
-name|em_adapter_stop
+name|em_stop
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|shared
 argument_list|)
 expr_stmt|;
 return|return
@@ -2064,6 +2099,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|struct
+name|ifvlan
+modifier|*
+name|ifv
+init|=
+name|NULL
+decl_stmt|;
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -2147,7 +2189,7 @@ operator|->
 name|no_tx_buffer_avail1
 operator|++
 expr_stmt|;
-comment|/*            * OK so we should not get here but I've seen it so lets try to            * clean up and then try to get a SwPacket again and only break            * if we still don't get one            */
+comment|/*  			 * OK so we should not get here but I've seen it so let  			 * us try to clean up and then try to get a tx_buffer  			 * again and only break if we still don't get one. 			 */
 name|em_clean_transmit_interrupts
 argument_list|(
 name|adapter
@@ -2251,6 +2293,55 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Find out if we are in vlan mode */
+if|if
+condition|(
+operator|(
+name|m_head
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_PROTO1
+operator||
+name|M_PKTHDR
+operator|)
+operator|)
+operator|==
+operator|(
+name|M_PROTO1
+operator||
+name|M_PKTHDR
+operator|)
+operator|&&
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|!=
+name|NULL
+operator|&&
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_type
+operator|==
+name|IFT_L2VLAN
+condition|)
+name|ifv
+operator|=
+name|m_head
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|->
+name|if_softc
+expr_stmt|;
 for|for
 control|(
 name|mp
@@ -2371,7 +2462,37 @@ argument_list|,
 name|em_tx_entry
 argument_list|)
 expr_stmt|;
-comment|/*         * Last Descriptor of Packet needs End Of Packet (EOP), Report Status        * (RS) and append Ethernet CRC (IFCS) bits set.        */
+if|if
+condition|(
+name|ifv
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Tell hardware to add tag */
+name|current_tx_desc
+operator|->
+name|lower
+operator|.
+name|data
+operator||=
+name|E1000_TXD_CMD_VLE
+expr_stmt|;
+comment|/* Set the vlan id */
+name|current_tx_desc
+operator|->
+name|upper
+operator|.
+name|fields
+operator|.
+name|special
+operator|=
+name|ifv
+operator|->
+name|ifv_tag
+expr_stmt|;
+block|}
+comment|/*  		 * Last Descriptor of Packet needs End Of Packet (EOP), Report Status 		 * (RS) and append Ethernet CRC (IFCS) bits set. 		 */
 name|current_tx_desc
 operator|->
 name|lower
@@ -2400,13 +2521,13 @@ argument_list|,
 name|m_head
 argument_list|)
 expr_stmt|;
-comment|/*         * Advance the Transmit Descriptor Tail (Tdt), this tells the E1000        * that this frame is available to transmit.        */
+comment|/*  		 * Advance the Transmit Descriptor Tail (Tdt), this tells the E1000 		 * that this frame is available to transmit. 		 */
 name|E1000_WRITE_REG
 argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TDT
 argument_list|,
@@ -2567,7 +2688,7 @@ name|ifr_mtu
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|max_frame_size
 operator|=
@@ -2709,7 +2830,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|==
@@ -2879,7 +3000,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|)
@@ -2906,7 +3027,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|,
@@ -2938,7 +3059,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|,
@@ -2971,7 +3092,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|)
@@ -2995,7 +3116,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|,
@@ -3068,7 +3189,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|==
@@ -3082,7 +3203,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|)
@@ -3091,7 +3212,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 operator|&
@@ -3102,7 +3223,7 @@ name|pci_cmd_word
 operator|=
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 operator|&
@@ -3132,7 +3253,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|,
@@ -3226,7 +3347,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|)
@@ -3240,7 +3361,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|,
@@ -3254,7 +3375,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|mta
 argument_list|,
@@ -3267,7 +3388,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|==
@@ -3281,7 +3402,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|)
@@ -3296,7 +3417,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|,
@@ -3312,7 +3433,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 operator|&
@@ -3329,7 +3450,7 @@ name|PCIR_COMMAND
 argument_list|,
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 argument_list|,
@@ -3362,7 +3483,7 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
-comment|/* If we are in this routine because of pause frames, then     * don't reset the hardware.     */
+comment|/* If we are in this routine because of pause frames, then 	 * don't reset the hardware. 	 */
 if|if
 condition|(
 name|E1000_READ_REG
@@ -3370,7 +3491,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|STATUS
 argument_list|)
@@ -3463,7 +3584,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 name|em_print_link_status
@@ -3532,7 +3653,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|STATUS
 argument_list|)
@@ -3554,7 +3675,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 operator|&
 name|adapter
@@ -3709,13 +3830,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|em_enable_vlans
+argument_list|(
 name|adapter
-operator|->
-name|shared
-operator|.
-name|adapter_stopped
-operator|=
-name|FALSE
+argument_list|)
 expr_stmt|;
 comment|/* Prepare transmit descriptors and buffers */
 if|if
@@ -3819,7 +3937,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|>=
@@ -3839,6 +3957,13 @@ operator|->
 name|if_hwassist
 operator|=
 name|EM_CHECKSUM_FEATURES
+expr_stmt|;
+else|else
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|adapter
@@ -3861,7 +3986,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 name|em_enable_intr
@@ -3917,12 +4042,12 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|em_adapter_stop
+name|em_reset_hw
 argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 name|untimeout
@@ -4018,7 +4143,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|ICR
 argument_list|)
@@ -4052,7 +4177,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|get_link_status
 operator|=
@@ -4063,7 +4188,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 name|em_print_link_status
@@ -4174,7 +4299,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 if|if
@@ -4184,7 +4309,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|STATUS
 argument_list|)
@@ -4206,7 +4331,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 operator|&
 name|adapter
@@ -4288,7 +4413,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|media_type
 operator|==
@@ -4432,22 +4557,9 @@ block|{
 case|case
 name|IFM_AUTO
 case|:
-if|if
-condition|(
 name|adapter
 operator|->
-name|shared
-operator|.
-name|autoneg
-condition|)
-return|return
-literal|0
-return|;
-else|else
-block|{
-name|adapter
-operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg
 operator|=
@@ -4455,13 +4567,12 @@ name|DO_AUTO_NEG
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg_advertised
 operator|=
 name|AUTONEG_ADV_DEFAULT
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|IFM_1000_SX
@@ -4471,7 +4582,7 @@ name|IFM_1000_T
 case|:
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg
 operator|=
@@ -4479,7 +4590,7 @@ name|DO_AUTO_NEG
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg_advertised
 operator|=
@@ -4491,7 +4602,7 @@ name|IFM_100_TX
 case|:
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg
 operator|=
@@ -4499,7 +4610,7 @@ name|FALSE
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg_advertised
 operator|=
@@ -4519,7 +4630,7 @@ name|IFM_FDX
 condition|)
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|forced_speed_duplex
 operator|=
@@ -4528,7 +4639,7 @@ expr_stmt|;
 else|else
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|forced_speed_duplex
 operator|=
@@ -4540,7 +4651,7 @@ name|IFM_10_T
 case|:
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg
 operator|=
@@ -4548,7 +4659,7 @@ name|FALSE
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|autoneg_advertised
 operator|=
@@ -4568,7 +4679,7 @@ name|IFM_FDX
 condition|)
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|forced_speed_duplex
 operator|=
@@ -4577,7 +4688,7 @@ expr_stmt|;
 else|else
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|forced_speed_duplex
 operator|=
@@ -4628,7 +4739,7 @@ decl_stmt|;
 comment|/* Make sure our PCI config space has the necessary stuff set */
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 operator|=
@@ -4648,7 +4759,7 @@ operator|(
 operator|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 operator|&
@@ -4658,7 +4769,7 @@ operator|&&
 operator|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 operator|&
@@ -4678,7 +4789,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 operator||=
@@ -4696,7 +4807,7 @@ name|PCIR_COMMAND
 argument_list|,
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|pci_cmd_word
 argument_list|,
@@ -4707,7 +4818,7 @@ block|}
 comment|/* Save off the information about this board */
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|vendor_id
 operator|=
@@ -4718,7 +4829,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|device_id
 operator|=
@@ -4729,7 +4840,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|revision_id
 operator|=
@@ -4744,7 +4855,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|subsystem_vendor_id
 operator|=
@@ -4759,7 +4870,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|subsystem_id
 operator|=
@@ -4777,7 +4888,7 @@ switch|switch
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|device_id
 condition|)
@@ -4787,14 +4898,14 @@ name|E1000_DEV_ID_82542
 case|:
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|=
 operator|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|revision_id
 operator|==
@@ -4814,7 +4925,7 @@ name|E1000_DEV_ID_82543GC_COPPER
 case|:
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|=
@@ -4835,7 +4946,7 @@ name|E1000_DEV_ID_82544GC_LOM
 case|:
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|=
@@ -4847,12 +4958,43 @@ name|E1000_DEV_ID_82540EM
 case|:
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|=
 name|em_82540
 expr_stmt|;
+break|break;
+case|case
+name|E1000_DEV_ID_82545EM_FIBER
+case|:
+case|case
+name|E1000_DEV_ID_82545EM_COPPER
+case|:
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|=
+name|em_82545
+expr_stmt|;
+break|break;
+case|case
+name|E1000_DEV_ID_82546EB_FIBER
+case|:
+case|case
+name|E1000_DEV_ID_82546EB_COPPER
+case|:
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_type
+operator|=
+name|em_82546
+expr_stmt|;
+break|break;
 default|default:
 name|INIT_DEBUGOUT1
 argument_list|(
@@ -4860,7 +5002,7 @@ literal|"Unknown device id 0x%x"
 argument_list|,
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|device_id
 argument_list|)
@@ -4966,7 +5108,7 @@ argument_list|)
 expr_stmt|;
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|hw_addr
 operator|=
@@ -4974,6 +5116,7 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
+operator|&
 name|adapter
 operator|->
 name|osdep
@@ -5084,7 +5227,7 @@ return|;
 block|}
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|back
 operator|=
@@ -5189,41 +5332,26 @@ name|adapter
 parameter_list|)
 block|{
 comment|/* Issue a global reset */
-name|adapter
-operator|->
-name|shared
-operator|.
-name|adapter_stopped
-operator|=
-name|FALSE
-expr_stmt|;
-name|em_adapter_stop
+name|em_reset_hw
 argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
-expr_stmt|;
-name|adapter
-operator|->
-name|shared
-operator|.
-name|adapter_stopped
-operator|=
-name|FALSE
 expr_stmt|;
 comment|/* Make sure we have a good EEPROM before we read from it */
 if|if
 condition|(
-operator|!
 name|em_validate_eeprom_checksum
 argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
@@ -5236,44 +5364,65 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 comment|/* Copy the permanent MAC address and part number out of the EEPROM */
-name|em_read_mac_address
+if|if
+condition|(
+name|em_read_mac_addr
 argument_list|(
+operator|&
 name|adapter
+operator|->
+name|hw
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"em%d: EEPROM read error while reading mac address\n"
 argument_list|,
 name|adapter
 operator|->
-name|interface_data
-operator|.
-name|ac_enaddr
+name|unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 name|memcpy
 argument_list|(
 name|adapter
 operator|->
-name|shared
-operator|.
-name|mac_addr
-argument_list|,
-name|adapter
-operator|->
 name|interface_data
 operator|.
 name|ac_enaddr
 argument_list|,
+name|adapter
+operator|->
+name|hw
+operator|.
+name|mac_addr
+argument_list|,
 name|ETH_LENGTH_OF_ADDRESS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|em_read_part_num
 argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 operator|&
 operator|(
@@ -5282,17 +5431,36 @@ operator|->
 name|part_num
 operator|)
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"em%d: EEPROM read error while reading part number\n"
+argument_list|,
+name|adapter
+operator|->
+name|unit
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 if|if
 condition|(
-operator|!
 name|em_init_hw
 argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
@@ -5305,7 +5473,9 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EIO
+operator|)
 return|;
 block|}
 name|em_check_for_link
@@ -5313,7 +5483,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|)
 expr_stmt|;
 if|if
@@ -5323,7 +5493,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|STATUS
 argument_list|)
@@ -5355,7 +5525,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 operator|&
 name|adapter
@@ -5385,94 +5555,10 @@ literal|0
 expr_stmt|;
 block|}
 return|return
-literal|0
-return|;
-block|}
-specifier|static
-name|void
-name|em_read_mac_address
-parameter_list|(
-name|struct
-name|adapter
-modifier|*
-name|adapter
-parameter_list|,
-name|u_int8_t
-modifier|*
-name|NodeAddress
-parameter_list|)
-block|{
-name|u_int16_t
-name|EepromWordValue
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NODE_ADDRESS_SIZE
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
-block|{
-name|EepromWordValue
-operator|=
-name|em_read_eeprom
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|shared
-argument_list|,
-name|EEPROM_NODE_ADDRESS_BYTE_0
-operator|+
 operator|(
-name|i
-operator|/
-literal|2
+literal|0
 operator|)
-argument_list|)
-expr_stmt|;
-name|NodeAddress
-index|[
-name|i
-index|]
-operator|=
-call|(
-name|uint8_t
-call|)
-argument_list|(
-name|EepromWordValue
-operator|&
-literal|0x00FF
-argument_list|)
-expr_stmt|;
-name|NodeAddress
-index|[
-name|i
-operator|+
-literal|1
-index|]
-operator|=
-call|(
-name|uint8_t
-call|)
-argument_list|(
-name|EepromWordValue
-operator|>>
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
-return|return;
+return|;
 block|}
 comment|/*********************************************************************  *  *  Setup networking device structure and register an interface.  *  **********************************************************************/
 specifier|static
@@ -5602,7 +5688,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|>=
@@ -5624,7 +5710,7 @@ operator|->
 name|if_capabilities
 expr_stmt|;
 block|}
-comment|/*      * Specify the media types supported by this adapter and register     * callbacks to update media and link information     */
+comment|/*  	 * Specify the media types supported by this adapter and register 	 * callbacks to update media and link information 	 */
 name|ifmedia_init
 argument_list|(
 operator|&
@@ -5643,7 +5729,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|media_type
 operator|==
@@ -6105,7 +6191,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TDBAL
 argument_list|,
@@ -6125,7 +6211,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TDBAH
 argument_list|,
@@ -6137,7 +6223,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TDLEN
 argument_list|,
@@ -6158,7 +6244,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TDH
 argument_list|,
@@ -6170,7 +6256,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TDT
 argument_list|,
@@ -6186,7 +6272,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TDBAL
 argument_list|)
@@ -6196,7 +6282,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TDLEN
 argument_list|)
@@ -6207,7 +6293,7 @@ switch|switch
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 condition|)
@@ -6221,11 +6307,17 @@ case|:
 case|case
 name|em_82540
 case|:
+case|case
+name|em_82545
+case|:
+case|case
+name|em_82546
+case|:
 if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|media_type
 operator|==
@@ -6292,7 +6384,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TIPG
 argument_list|,
@@ -6304,7 +6396,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TIDV
 argument_list|,
@@ -6356,7 +6448,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TCTL
 argument_list|,
@@ -6388,7 +6480,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|report_tx_early
 operator|==
@@ -6679,7 +6771,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* If we reach this point, the checksum offload context     * needs to be reset.     */
+comment|/* If we reach this point, the checksum offload context 	 * needs to be reset. 	 */
 name|current_tx_desc
 operator|=
 name|adapter
@@ -7453,7 +7545,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|,
@@ -7466,7 +7558,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RDTR
 argument_list|,
@@ -7483,7 +7575,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RDBAL
 argument_list|,
@@ -7503,7 +7595,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RDBAH
 argument_list|,
@@ -7515,7 +7607,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RDLEN
 argument_list|,
@@ -7536,7 +7628,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RDH
 argument_list|,
@@ -7548,7 +7640,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RDT
 argument_list|,
@@ -7587,7 +7679,7 @@ operator||
 operator|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mc_filter_type
 operator|<<
@@ -7598,7 +7690,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|tbi_compatibility_on
 operator|==
@@ -7673,7 +7765,7 @@ condition|(
 operator|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|>=
@@ -7696,7 +7788,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RXCSUM
 argument_list|)
@@ -7714,7 +7806,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RXCSUM
 argument_list|,
@@ -7728,7 +7820,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RCTL
 argument_list|,
@@ -8095,7 +8187,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|current_desc
 operator|->
@@ -8111,14 +8203,12 @@ name|last_byte
 argument_list|)
 condition|)
 block|{
-name|pkt_len
-operator|=
 name|em_tbi_adjust_stats
 argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 operator|&
 name|adapter
@@ -8129,7 +8219,7 @@ name|pkt_len
 argument_list|,
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_addr
 argument_list|)
@@ -8338,6 +8428,28 @@ operator|->
 name|fmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|current_desc
+operator|->
+name|status
+operator|&
+name|E1000_RXD_STAT_VP
+condition|)
+name|VLAN_INPUT_TAG
+argument_list|(
+name|eh
+argument_list|,
+name|adapter
+operator|->
+name|fmp
+argument_list|,
+name|current_desc
+operator|->
+name|special
+argument_list|)
+expr_stmt|;
+else|else
 name|ether_input
 argument_list|(
 name|ifp
@@ -8469,7 +8581,7 @@ name|adapter
 operator|->
 name|next_rx_desc_to_check
 expr_stmt|;
-comment|/*         * Put the buffer that we just indicated back at the end of our list        */
+comment|/*  		 * Put the buffer that we just indicated back at the end of our list 		 */
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -8498,19 +8610,19 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RDT
 argument_list|,
 operator|(
 operator|(
 operator|(
-name|u_int32_t
+name|u_long
 operator|)
 name|last_desc_processed
 operator|-
 operator|(
-name|u_int32_t
+name|u_long
 operator|)
 name|adapter
 operator|->
@@ -8551,7 +8663,7 @@ condition|(
 operator|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|<
@@ -8681,6 +8793,61 @@ return|return;
 block|}
 specifier|static
 name|void
+name|em_enable_vlans
+parameter_list|(
+name|struct
+name|adapter
+modifier|*
+name|adapter
+parameter_list|)
+block|{
+name|uint32_t
+name|ctrl
+decl_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|VET
+argument_list|,
+name|QTAG_TYPE
+argument_list|)
+expr_stmt|;
+name|ctrl
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|CTRL
+argument_list|)
+expr_stmt|;
+name|ctrl
+operator||=
+name|E1000_CTRL_VME
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|CTRL
+argument_list|,
+name|ctrl
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+specifier|static
+name|void
 name|em_enable_intr
 parameter_list|(
 name|struct
@@ -8694,7 +8861,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|IMS
 argument_list|,
@@ -8720,7 +8887,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|IMC
 argument_list|,
@@ -8738,7 +8905,7 @@ name|void
 name|em_write_pci_cfg
 parameter_list|(
 name|struct
-name|em_shared_adapter
+name|em_hw
 modifier|*
 name|adapter
 parameter_list|,
@@ -8801,7 +8968,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|CRCERRS
 argument_list|)
@@ -8817,7 +8984,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|SYMERRS
 argument_list|)
@@ -8833,7 +9000,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|MPC
 argument_list|)
@@ -8849,7 +9016,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|SCC
 argument_list|)
@@ -8865,7 +9032,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|ECOL
 argument_list|)
@@ -8881,7 +9048,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|MCC
 argument_list|)
@@ -8897,7 +9064,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|LATECOL
 argument_list|)
@@ -8913,7 +9080,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|COLC
 argument_list|)
@@ -8929,7 +9096,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|DC
 argument_list|)
@@ -8945,7 +9112,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|SEC
 argument_list|)
@@ -8961,7 +9128,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RLEC
 argument_list|)
@@ -8977,7 +9144,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|XONRXC
 argument_list|)
@@ -8993,7 +9160,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|XONTXC
 argument_list|)
@@ -9009,7 +9176,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|XOFFRXC
 argument_list|)
@@ -9025,7 +9192,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|XOFFTXC
 argument_list|)
@@ -9041,7 +9208,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|FCRUC
 argument_list|)
@@ -9057,7 +9224,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PRC64
 argument_list|)
@@ -9073,7 +9240,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PRC127
 argument_list|)
@@ -9089,7 +9256,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PRC255
 argument_list|)
@@ -9105,7 +9272,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PRC511
 argument_list|)
@@ -9121,7 +9288,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PRC1023
 argument_list|)
@@ -9137,7 +9304,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PRC1522
 argument_list|)
@@ -9153,7 +9320,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|GPRC
 argument_list|)
@@ -9169,7 +9336,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|BPRC
 argument_list|)
@@ -9185,7 +9352,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|MPRC
 argument_list|)
@@ -9201,7 +9368,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|GPTC
 argument_list|)
@@ -9219,7 +9386,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|GORCL
 argument_list|)
@@ -9235,7 +9402,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|GORCH
 argument_list|)
@@ -9251,7 +9418,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|GOTCL
 argument_list|)
@@ -9267,7 +9434,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|GOTCH
 argument_list|)
@@ -9283,7 +9450,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RNBC
 argument_list|)
@@ -9299,7 +9466,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RUC
 argument_list|)
@@ -9315,7 +9482,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RFC
 argument_list|)
@@ -9331,7 +9498,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|ROC
 argument_list|)
@@ -9347,7 +9514,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RJC
 argument_list|)
@@ -9363,7 +9530,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TORL
 argument_list|)
@@ -9379,7 +9546,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TORH
 argument_list|)
@@ -9395,7 +9562,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TOTL
 argument_list|)
@@ -9411,7 +9578,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TOTH
 argument_list|)
@@ -9427,7 +9594,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TPR
 argument_list|)
@@ -9443,7 +9610,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TPT
 argument_list|)
@@ -9459,7 +9626,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PTC64
 argument_list|)
@@ -9475,7 +9642,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PTC127
 argument_list|)
@@ -9491,7 +9658,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PTC255
 argument_list|)
@@ -9507,7 +9674,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PTC511
 argument_list|)
@@ -9523,7 +9690,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PTC1023
 argument_list|)
@@ -9539,7 +9706,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|PTC1522
 argument_list|)
@@ -9555,7 +9722,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|MPTC
 argument_list|)
@@ -9571,7 +9738,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|BPTC
 argument_list|)
@@ -9580,7 +9747,7 @@ if|if
 condition|(
 name|adapter
 operator|->
-name|shared
+name|hw
 operator|.
 name|mac_type
 operator|>=
@@ -9598,7 +9765,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|ALGNERRC
 argument_list|)
@@ -9614,7 +9781,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|RXERRC
 argument_list|)
@@ -9630,7 +9797,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TNCRS
 argument_list|)
@@ -9646,7 +9813,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|CEXTERR
 argument_list|)
@@ -9662,7 +9829,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TSCTC
 argument_list|)
@@ -9678,7 +9845,7 @@ argument_list|(
 operator|&
 name|adapter
 operator|->
-name|shared
+name|hw
 argument_list|,
 name|TSCTFC
 argument_list|)
@@ -9857,7 +10024,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"em%d: clean_tx_interrupts = %ld\n"
+literal|"em%d: CleanTxInterrupts = %ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -9925,21 +10092,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"em%d: Xmit Pullup = %ld\n"
-argument_list|,
-name|unit
-argument_list|,
-name|adapter
-operator|->
-name|xmit_pullup
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"em%d: Symbol errors = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -9953,6 +10113,10 @@ literal|"em%d: Sequence errors = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -9966,6 +10130,10 @@ literal|"em%d: Defer count = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -9979,6 +10147,10 @@ literal|"em%d: Missed Packets = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -9992,6 +10164,10 @@ literal|"em%d: Receive No Buffers = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10005,6 +10181,10 @@ literal|"em%d: Receive length errors = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10018,6 +10198,10 @@ literal|"em%d: Receive errors = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10031,6 +10215,10 @@ literal|"em%d: Crc errors = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10044,6 +10232,10 @@ literal|"em%d: Alignment errors = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10057,6 +10249,10 @@ literal|"em%d: Carrier extension errors = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10081,6 +10277,10 @@ literal|"em%d: XON Rcvd = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10094,6 +10294,10 @@ literal|"em%d: XON Xmtd = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10107,6 +10311,10 @@ literal|"em%d: XOFF Rcvd = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10120,6 +10328,10 @@ literal|"em%d: XOFF Xmtd = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10133,6 +10345,10 @@ literal|"em%d: Good Packets Rcvd = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10146,6 +10362,10 @@ literal|"em%d: Good Packets Xmtd = %lld\n"
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|adapter
 operator|->
 name|stats
@@ -10153,6 +10373,7 @@ operator|.
 name|gptc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/**********************************************************************  *  *  Examine each tx_buffer in the used queue. If the hardware is done  *  processing the packet then free associated resources. The  *  tx_buffer is put back on the free queue.   *  **********************************************************************/
 specifier|static
@@ -10223,7 +10444,7 @@ name|used_tx_buffer_list
 argument_list|)
 control|)
 block|{
-comment|/*         * Get hold of the next descriptor that the em will report status        * back to (this will be the last descriptor of a given tx_buffer). We        * only want to free the tx_buffer (and it resources) if the driver is        * done with ALL of the descriptors.  If the driver is done with the        * last one then it is done with all of them.        */
+comment|/*  		 * Get hold of the next descriptor that the em will report status 		 * back to (this will be the last descriptor of a given tx_buffer). We 		 * only want to free the tx_buffer (and it resources) if the driver is 		 * done with ALL of the descriptors.  If the driver is done with the 		 * last one then it is done with all of them. 		 */
 name|tx_desc
 operator|=
 name|adapter
@@ -10253,7 +10474,7 @@ name|adapter
 operator|->
 name|num_tx_desc
 expr_stmt|;
-comment|/*         * If the descriptor done bit is set free tx_buffer and associated        * resources        */
+comment|/*  		 * If the descriptor done bit is set free tx_buffer and associated 		 * resources 		 */
 if|if
 condition|(
 name|tx_desc
@@ -10358,7 +10579,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*            * Found a tx_buffer that the em is not done with then there is           * no reason to check the rest of the queue.           */
+comment|/*  			 * Found a tx_buffer that the em is not done with then there is 			 * no reason to check the rest of the queue. 			 */
 break|break;
 block|}
 block|}
