@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -738,6 +738,16 @@ name|int
 name|vfc_flags
 decl_stmt|;
 comment|/* permanent flags */
+name|int
+function_decl|(
+modifier|*
+name|vfc_mountroot
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/* if != NULL, routine to mount root */
 name|struct
 name|vfsconf
 modifier|*
