@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs_msdos.c,v 1.5 1998/10/17 12:44:55 bde Exp $"
+literal|"$Id: newfs_msdos.c,v 1.6 1998/12/07 14:09:17 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2609,7 +2609,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"/usr/mdec/%s"
+literal|"/boot/%s"
 argument_list|,
 name|bname
 argument_list|)
