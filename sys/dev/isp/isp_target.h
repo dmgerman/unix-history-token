@@ -1043,10 +1043,12 @@ name|AT_MAKE_TAGID
 parameter_list|(
 name|tid
 parameter_list|,
+name|inst
+parameter_list|,
 name|aep
 parameter_list|)
 define|\
-value|tid = ((aep)->at_handle<< 16);					\ 	if ((aep)->at_flags& AT_TQAE)					\ 		(tid) |= ((aep)->at_tag_val + 1)
+value|tid = aep->at_handle;						\ 	if (aep->at_flags& AT_TQAE) {					\ 		tid |= (aep->at_tag_val<< 16);				\ 		tid |= (1<< 24);					\ 	}								\ 	tid |= (inst<< 25)
 end_define
 
 begin_define
@@ -1056,10 +1058,12 @@ name|CT_MAKE_TAGID
 parameter_list|(
 name|tid
 parameter_list|,
+name|inst
+parameter_list|,
 name|ct
 parameter_list|)
 define|\
-value|tid = ((ct)->ct_fwhandle<< 16);				\ 	if ((ct)->ct_flags& CT_TQAE)					\ 		(tid) |= ((ct)->ct_tag_val + 1)
+value|tid = ct->ct_fwhandle;						\ 	if (ct->ct_flags& CT_TQAE) {					\ 		tid |= (ct->ct_tag_val<< 16);				\ 		tid |= (1<< 24);					\ 	}								\ 	tid |= (inst<< 25)
 end_define
 
 begin_define
@@ -1069,7 +1073,7 @@ name|AT_HAS_TAG
 parameter_list|(
 name|val
 parameter_list|)
-value|((val)& 0xffff)
+value|((val)& (1<< 24))
 end_define
 
 begin_define
@@ -1079,7 +1083,17 @@ name|AT_GET_TAG
 parameter_list|(
 name|val
 parameter_list|)
-value|AT_HAS_TAG(val) - 1
+value|(((val)>> 16)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT_GET_INST
+parameter_list|(
+name|val
+parameter_list|)
+value|(((val)>> 25)& 0x7f)
 end_define
 
 begin_define
@@ -1089,7 +1103,35 @@ name|AT_GET_HANDLE
 parameter_list|(
 name|val
 parameter_list|)
-value|((val)>> 16)
+value|((val)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_MAKE_TAGID
+parameter_list|(
+name|tid
+parameter_list|,
+name|inst
+parameter_list|,
+name|inp
+parameter_list|)
+define|\
+value|tid = inp->in_seqid;						\ 	tid |= (inp->in_tag_val<< 16);					\ 	tid |= (1<< 24);						\ 	tid |= (inst<< 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TAG_INSERT_INST
+parameter_list|(
+name|tid
+parameter_list|,
+name|inst
+parameter_list|)
+define|\
+value|tid&= ~(0x1ffffff);						\ 	tid |= (inst<< 25)
 end_define
 
 begin_comment
@@ -1249,6 +1291,105 @@ define|#
 directive|define
 name|ATIO2_EX_READ
 value|0x2
+end_define
+
+begin_comment
+comment|/*  * Macros to create and fetch and test concatenated handle and tag value macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT2_MAKE_TAGID
+parameter_list|(
+name|tid
+parameter_list|,
+name|inst
+parameter_list|,
+name|aep
+parameter_list|)
+define|\
+value|tid = aep->at_rxid;						\ 	tid |= (inst<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CT2_MAKE_TAGID
+parameter_list|(
+name|tid
+parameter_list|,
+name|inst
+parameter_list|,
+name|ct
+parameter_list|)
+define|\
+value|tid = ct->ct_rxid;						\ 	tid |= (inst<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT2_HAS_TAG
+parameter_list|(
+name|val
+parameter_list|)
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT2_GET_TAG
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)& 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT2_GET_INST
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)>> 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT2_GET_HANDLE
+value|AT2_GET_TAG
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_FC_MAKE_TAGID
+parameter_list|(
+name|tid
+parameter_list|,
+name|inst
+parameter_list|,
+name|inp
+parameter_list|)
+define|\
+value|tid = inp->in_seqid;						\ 	tid |= (inst<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FC_TAG_INSERT_INST
+parameter_list|(
+name|tid
+parameter_list|,
+name|inst
+parameter_list|)
+define|\
+value|tid&= ~0xffff;							\ 	tid |= (inst<< 16)
 end_define
 
 begin_comment
@@ -2096,12 +2237,6 @@ define|\
 value|if (isp->isp_dblev& ISP_LOGTDEBUG2) isp_print_qentry(isp, msg, idx, arg)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_FUNCTIONS
-end_ifdef
-
 begin_comment
 comment|/*  * The functions below are for the publicly available  * target mode functions that are internal to the Qlogic driver.  */
 end_comment
@@ -2258,11 +2393,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
