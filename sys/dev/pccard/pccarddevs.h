@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.35 2002/10/11 05:40:13 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.36 2002/10/11 07:00:30 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.163 2002/03/04 16:41:50 martin Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.177 2002/09/15 17:43:48 bouyer Exp $ */
 end_comment
 
 begin_comment
@@ -37,7 +37,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_NETGEAR2
+name|PCMCIA_VENDOR_NETGEAR_2
 value|0x000b
 end_define
 
@@ -268,8 +268,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_OSITECH
+value|0x0140
+end_define
+
+begin_comment
+comment|/* Ositech */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_DLINK_2
 value|0x0143
+end_define
+
+begin_comment
+comment|/* D-Link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_DLINK_3
+value|0x0149
 end_define
 
 begin_comment
@@ -576,7 +598,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_PLANEX2
+name|PCMCIA_VENDOR_PLANEX_2
 value|0x14ea
 end_define
 
@@ -1033,28 +1055,28 @@ value|"3Com 3CRWE62092A Wireless LAN"
 end_define
 
 begin_comment
-comment|/* ACTIONTEC */
+comment|/* ACTIONTEC Products */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_ACTIONTEC_HWC01170
+name|PCMCIA_CIS_ACTIONTEC_PRISM
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_ACTIONTEC_HWC01170
+name|PCMCIA_PRODUCT_ACTIONTEC_PRISM
 value|0x0101
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_ACTIONTEC_HWC01170
-value|"ACTIONTEC Wireless LAN PC CARD"
+name|PCMCIA_STR_ACTIONTEC_PRISM
+value|"PRISM Wireless LAN PC Card"
 end_define
 
 begin_comment
@@ -1287,6 +1309,27 @@ name|PCMCIA_STR_BAY_STACK_660
 value|"BayStack 660 Wireless LAN"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BAY_EMOBILITY_11B
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BAY_EMOBILITY_11B
+value|0x080a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BAY_EMOBILITY_11B
+value|"e-Mobility 11Mb Wireless LAN"
+end_define
+
 begin_comment
 comment|/* Bondwell */
 end_comment
@@ -1360,6 +1403,27 @@ define|#
 directive|define
 name|PCMCIA_STR_BUFFALO_WLI_PCM_S11
 value|"BUFFALO AirStation 11Mbps WLAN"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BUFFALO_LPC3_CLT
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BUFFALO_LPC3_CLT
+value|0x030a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BUFFALO_LPC3_CLT
+value|"BUFFALO LPC3-CLT Ethernet Adapter"
 end_define
 
 begin_define
@@ -2461,22 +2525,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_LINKSYS2_IWN2
+name|PCMCIA_CIS_LINKSYS2_IWN3
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_LINKSYS2_IWN2
+name|PCMCIA_PRODUCT_LINKSYS2_IWN3
 value|0x1613
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_LINKSYS2_IWN2
-value|"Instant Wireless Network PC Card"
+name|PCMCIA_STR_LINKSYS2_IWN3
+value|"Instant Wireless Network PC Card, Versin 3"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_LINKSYS2_WCF11
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_LINKSYS2_WCF11
+value|0x3301
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_LINKSYS2_WCF11
+value|"Instant Wireless Network CF Card"
 end_define
 
 begin_comment
@@ -2930,6 +3015,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_NETGEAR_FA410TX
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_NETGEAR_FA410TX
+value|0x0230
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_NETGEAR_FA410TX
+value|"Netgear FA410TX"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_NETGEAR_FA410TXC
 value|{ NULL, NULL, NULL, NULL }
 end_define
@@ -2972,21 +3078,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_NETGEAR2_MA401RA
+name|PCMCIA_CIS_NETGEAR_2_MA401RA
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_NETGEAR2_MA401RA
+name|PCMCIA_PRODUCT_NETGEAR_2_MA401RA
 value|0x7300
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_NETGEAR2_MA401RA
+name|PCMCIA_STR_NETGEAR_2_MA401RA
 value|"Netgear MA401RA"
 end_define
 
@@ -3133,6 +3239,31 @@ value|"GoCard Token Ring 16/4"
 end_define
 
 begin_comment
+comment|/* Ositech Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_OSITECH_TRUMPCARD_SOD
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_OSITECH_TRUMPCARD_SOD
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_OSITECH_TRUMPCARD_SOD
+value|"Ositech Seven of Diamonds Ethernet Card"
+end_define
+
+begin_comment
 comment|/* Panasonic Products */
 end_comment
 
@@ -3227,21 +3358,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_PLANEX2_GWNS11H
+name|PCMCIA_CIS_PLANEX_2_GWNS11H
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_PLANEX2_GWNS11H
+name|PCMCIA_PRODUCT_PLANEX_2_GWNS11H
 value|0xb001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_PLANEX2_GWNS11H
+name|PCMCIA_STR_PLANEX_2_GWNS11H
 value|"Planex GW-NS11H"
 end_define
 
@@ -4284,6 +4415,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_DYNALINK
+value|-1
+end_define
+
+begin_comment
+comment|/* DynaLink */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_EIGERLABS
 value|-1
 end_define
@@ -4503,6 +4645,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCMCIA_CIS_ACCTON_EN2216
+value|{ "ACCTON", "EN2216-PCMCIA-ETHERNET", "EN2216R01", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ACCTON_EN2216
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ACCTON_EN2216
+value|"Accton EN2216"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_CIS_ADDTRON_AWP100
 value|{ "Addtron", "AWP-100 Wireless PCMCIA", "Version 01.02", NULL }
 end_define
@@ -4545,27 +4708,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_ARGOSY_SP320
-value|{ "PCMCIA", "RS-COM 2P", NULL, NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_ARGOSY_SP320
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_ARGOSY_SP320
-value|"} ARGOSY SP320 Dual port serial PCMCIA"
-end_define
-
-begin_define
-define|#
-directive|define
 name|PCMCIA_CIS_AMD_AM79C930
 value|{ "AMD", "Am79C930", NULL, NULL }
 end_define
@@ -4582,6 +4724,27 @@ define|#
 directive|define
 name|PCMCIA_STR_AMD_AM79C930
 value|"AMD Am79C930"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ARGOSY_SP320
+value|{ "PCMCIA", "RS-COM 2P", NULL, NULL
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ARGOSY_SP320
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ARGOSY_SP320
+value|"} ARGOSY SP320 Dual port serial PCMCIA"
 end_define
 
 begin_define
@@ -4687,6 +4850,27 @@ define|#
 directive|define
 name|PCMCIA_STR_COREGA_ETHER_II_PCC_T
 value|"Corega EtherII PCC-T"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_COREGA_ETHER_II_PCC_TD
+value|{ "corega K.K.", "corega EtherII PCC-TD", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_COREGA_ETHER_II_PCC_TD
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_COREGA_ETHER_II_PCC_TD
+value|"Corega EtherII PCC-TD"
 end_define
 
 begin_define
@@ -4897,6 +5081,48 @@ define|#
 directive|define
 name|PCMCIA_STR_DLINK_DE660PLUS
 value|"D-Link DE-660+"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_DLINK_DFE670TXD
+value|{ "D-Link", "DFE-670TXD", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_DLINK_DFE670TXD
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_DLINK_DFE670TXD
+value|"D-Link DFE-670TXD"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_DYNALINK_L10C
+value|{ "DYNALINK", "L10C", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_DYNALINK_L10C
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_DYNALINK_L10C
+value|"Dynalink L10C"
 end_define
 
 begin_comment
