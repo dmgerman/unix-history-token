@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.4	82/02/16	*/
+comment|/*	if_acc.c	4.5	82/02/21	*/
 end_comment
 
 begin_include
@@ -1040,16 +1040,6 @@ argument_list|)
 decl_stmt|,
 name|info
 decl_stmt|;
-name|struct
-name|uba_device
-modifier|*
-name|ui
-init|=
-name|accinfo
-index|[
-name|unit
-index|]
-decl_stmt|;
 specifier|register
 name|struct
 name|acc_softc
@@ -1072,11 +1062,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
-name|struct
-name|imp_leader
-modifier|*
-name|ip
 decl_stmt|;
 name|u_short
 name|cmd
@@ -1178,7 +1163,10 @@ expr|struct
 name|accdevice
 operator|*
 operator|)
-name|ui
+name|accinfo
+index|[
+name|unit
+index|]
 operator|->
 name|ui_addr
 expr_stmt|;
@@ -1277,17 +1265,6 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|uba_device
-modifier|*
-name|ui
-init|=
-name|accinfo
-index|[
-name|unit
-index|]
-decl_stmt|;
-specifier|register
-name|struct
 name|acc_softc
 modifier|*
 name|sc
@@ -1336,7 +1313,10 @@ expr|struct
 name|accdevice
 operator|*
 operator|)
-name|ui
+name|accinfo
+index|[
+name|unit
+index|]
 operator|->
 name|ui_addr
 expr_stmt|;
@@ -1696,10 +1676,10 @@ goto|goto
 name|setup
 goto|;
 block|}
-comment|/* adjust message length for padding. */
 ifdef|#
 directive|ifdef
 name|notdef
+comment|/* adjust message length for padding. */
 name|m
 operator|->
 name|m_len
