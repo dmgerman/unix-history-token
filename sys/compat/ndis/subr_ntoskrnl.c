@@ -310,27 +310,6 @@ begin_function_decl
 name|__stdcall
 specifier|static
 name|uint32_t
-name|ntoskrnl_waitforobj
-parameter_list|(
-name|nt_dispatch_header
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint8_t
-parameter_list|,
-name|int64_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|uint32_t
 name|ntoskrnl_waitforobjs
 parameter_list|(
 name|uint32_t
@@ -357,68 +336,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__stdcall
 specifier|static
 name|void
-name|ntoskrnl_init_event
+name|ntoskrnl_wakeup
 parameter_list|(
-name|nt_kevent
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint8_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
 name|void
-name|ntoskrnl_clear_event
-parameter_list|(
-name|nt_kevent
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|uint32_t
-name|ntoskrnl_read_event
-parameter_list|(
-name|nt_kevent
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|uint32_t
-name|ntoskrnl_set_event
-parameter_list|(
-name|nt_kevent
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|uint8_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|uint32_t
-name|ntoskrnl_reset_event
-parameter_list|(
-name|nt_kevent
 modifier|*
 parameter_list|)
 function_decl|;
@@ -430,110 +352,6 @@ name|void
 name|ntoskrnl_timercall
 parameter_list|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|void
-name|ntoskrnl_init_dpc
-parameter_list|(
-name|kdpc
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|void
-name|ntoskrnl_init_timer
-parameter_list|(
-name|ktimer
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|void
-name|ntoskrnl_init_timer_ex
-parameter_list|(
-name|ktimer
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|uint8_t
-name|ntoskrnl_set_timer
-parameter_list|(
-name|ktimer
-modifier|*
-parameter_list|,
-name|int64_t
-parameter_list|,
-name|kdpc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|uint8_t
-name|ntoskrnl_set_timer_ex
-parameter_list|(
-name|ktimer
-modifier|*
-parameter_list|,
-name|int64_t
-parameter_list|,
-name|uint32_t
-parameter_list|,
-name|kdpc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|uint8_t
-name|ntoskrnl_cancel_timer
-parameter_list|(
-name|ktimer
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|__stdcall
-specifier|static
-name|uint8_t
-name|ntoskrnl_read_timer
-parameter_list|(
-name|ktimer
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2127,6 +1945,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ntoskrnl_wakeup
 parameter_list|(
@@ -2309,7 +2128,6 @@ end_comment
 
 begin_function
 name|__stdcall
-specifier|static
 name|uint32_t
 name|ntoskrnl_waitforobj
 parameter_list|(
@@ -6611,7 +6429,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|void
 name|ntoskrnl_init_event
 parameter_list|(
@@ -6674,7 +6491,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|uint32_t
 name|ntoskrnl_reset_event
 parameter_list|(
@@ -6728,7 +6544,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|uint32_t
 name|ntoskrnl_set_event
 parameter_list|(
@@ -6778,7 +6593,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|void
 name|ntoskrnl_clear_event
 parameter_list|(
@@ -6803,7 +6617,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|uint32_t
 name|ntoskrnl_read_event
 parameter_list|(
@@ -7410,7 +7223,7 @@ name|timer
 operator|->
 name|k_dpc
 expr_stmt|;
-comment|/* 	 * If this is a periodic timer, re-arm it 	 * so it will fire again. 	 */
+comment|/* 	 * If this is a periodic timer, re-arm it 	 * so it will fire again. We do this before 	 * calling any deferred procedure calls because 	 * it's possible the DPC might cancel the timer, 	 * in which case it would be wrong for us to 	 * re-arm it again afterwards. 	 */
 if|if
 condition|(
 name|timer
@@ -7500,7 +7313,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|void
 name|ntoskrnl_init_timer
 parameter_list|(
@@ -7568,7 +7380,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|void
 name|ntoskrnl_init_timer_ex
 parameter_list|(
@@ -7641,7 +7452,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|void
 name|ntoskrnl_init_dpc
 parameter_list|(
@@ -7689,7 +7499,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|uint8_t
 name|ntoskrnl_set_timer_ex
 parameter_list|(
@@ -7935,7 +7744,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|uint8_t
 name|ntoskrnl_set_timer
 parameter_list|(
@@ -7976,7 +7784,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|uint8_t
 name|ntoskrnl_cancel_timer
 parameter_list|(
@@ -8050,7 +7857,6 @@ end_function
 
 begin_function
 name|__stdcall
-specifier|static
 name|uint8_t
 name|ntoskrnl_read_timer
 parameter_list|(

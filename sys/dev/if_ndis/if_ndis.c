@@ -7031,7 +7031,7 @@ endif|#
 directive|endif
 name|arg
 operator|=
-name|NDIS_80211_AUTHMODE_AUTO
+name|NDIS_80211_AUTHMODE_OPEN
 expr_stmt|;
 block|}
 else|else
