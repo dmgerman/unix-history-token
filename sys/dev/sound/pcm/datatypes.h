@@ -185,6 +185,10 @@ name|fl
 decl_stmt|;
 comment|/* lenght of ready and free areas. */
 specifier|volatile
+name|int
+name|hp
+decl_stmt|;
+specifier|volatile
 name|u_int32_t
 name|int_count
 decl_stmt|,
