@@ -207,13 +207,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcireg.h>
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
@@ -312,7 +312,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_my.c,v 1.50 2001/12/03 04:15:33<yen_cw@myson.com.tw> wpaul Exp $"
+literal|"$Id: if_my.c,v 1.16 2003/04/15 06:37:25 mdodd Exp $"
 decl_stmt|;
 end_decl_stmt
 
