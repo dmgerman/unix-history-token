@@ -10553,7 +10553,7 @@ name|kn
 argument_list|,
 name|knote
 argument_list|,
-name|kn_link
+name|kn_selnext
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
