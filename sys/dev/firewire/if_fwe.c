@@ -1185,6 +1185,12 @@ name|if_capabilities
 operator||=
 name|IFCAP_VLAN_MTU
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator||=
+name|IFCAP_VLAN_MTU
+expr_stmt|;
 endif|#
 directive|endif
 name|FWEDEBUG
