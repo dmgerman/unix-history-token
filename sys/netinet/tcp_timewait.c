@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_subr.c	8.2 (Berkeley) 5/24/95  *	$Id: tcp_subr.c,v 1.41 1998/01/25 04:23:32 eivind Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_subr.c	8.2 (Berkeley) 5/24/95  *	$Id: tcp_subr.c,v 1.42 1998/01/27 09:15:10 davidg Exp $  */
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
 end_include
 
 begin_include
@@ -350,6 +356,74 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * This is the actual shape of what we allocate using the zone  * allocator.  Doing it this way allows us to protect both structures  * using the same generation count, and also eliminates the overhead  * of allocating tcpcbs separately.  By hiding the structure here,  * we avoid changing most of the rest of the code (although it needs  * to be changed, eventually, for greater efficiency).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALIGNMENT
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALIGNM1
+value|(ALIGNMENT-1)
+end_define
+
+begin_struct
+struct|struct
+name|inp_tp
+block|{
+union|union
+block|{
+name|struct
+name|inpcb
+name|inp
+decl_stmt|;
+name|char
+name|align
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|inpcb
+argument_list|)
+operator|+
+name|ALIGNM1
+operator|)
+operator|&
+operator|~
+name|ALIGNM1
+index|]
+decl_stmt|;
+block|}
+name|inp_tp_u
+union|;
+name|struct
+name|tcpcb
+name|tcb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_undef
+undef|#
+directive|undef
+name|ALIGNMENT
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ALIGNM1
+end_undef
+
+begin_comment
 comment|/*  * Tcp initialization  */
 end_comment
 
@@ -414,6 +488,29 @@ operator|&
 name|tcbinfo
 operator|.
 name|porthashmask
+argument_list|)
+expr_stmt|;
+comment|/* For the moment, we just worry about putting inpcbs here. */
+comment|/* 	 * Rationale for a maximum of `nmbclusters': 	 * 	1) It's a convenient value, sized by config, based on 	 *	   parameters already known to be tweakable as needed 	 *	   for network-intensive systems. 	 *	2) Under the Old World Order, when pcbs were stored in 	 *	   mbufs, it was of course impossible to have more 	 *	   pcbs than mbufs. 	 *	3) The zone allocator doesn't allocate physical memory 	 *	   for this many pcbs; it just sizes the virtual 	 *	   address space appropriately.  Thus, even for very large 	 *	   values of nmbclusters, we don't actually take up much 	 *	   memory unless required. 	 */
+name|tcbinfo
+operator|.
+name|ipi_zone
+operator|=
+name|zinit
+argument_list|(
+literal|"tcpcb"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|inp_tp
+argument_list|)
+argument_list|,
+name|nmbclusters
+argument_list|,
+name|ZONE_INTERRUPT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1219,7 +1316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a new TCP control block, making an  * empty reassembly queue and hooking it to the argument  * protocol control block.  */
+comment|/*  * Create a new TCP control block, making an  * empty reassembly queue and hooking it to the argument  * protocol control block.  The `inp' parameter must have  * come from the zone allocator set up in tcp_init().  */
 end_comment
 
 begin_function
@@ -1236,43 +1333,33 @@ modifier|*
 name|inp
 decl_stmt|;
 block|{
+name|struct
+name|inp_tp
+modifier|*
+name|it
+decl_stmt|;
 specifier|register
 name|struct
 name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|tp
+name|it
 operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|tp
-argument_list|)
-argument_list|,
-name|M_PCB
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
 operator|(
 expr|struct
-name|tcpcb
+name|inp_tp
 operator|*
 operator|)
-literal|0
-operator|)
-return|;
+name|inp
+expr_stmt|;
+name|tp
+operator|=
+operator|&
+name|it
+operator|->
+name|tcb
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -1343,6 +1430,7 @@ name|t_inpcb
 operator|=
 name|inp
 expr_stmt|;
+comment|/* XXX */
 comment|/* 	 * Init srtt to TCPTV_SRTTBASE (0), so we can tell that we have no 	 * rtt estimate.  Set rttvar so that srtt + 4 * rttvar gives 	 * reasonable initial retransmit time. 	 */
 name|tp
 operator|->
@@ -1414,6 +1502,7 @@ operator|(
 name|tp
 operator|)
 return|;
+comment|/* XXX */
 block|}
 end_function
 
@@ -2037,13 +2126,6 @@ operator|->
 name|inp_ppcb
 operator|=
 name|NULL
-expr_stmt|;
-name|free
-argument_list|(
-name|tp
-argument_list|,
-name|M_PCB
-argument_list|)
 expr_stmt|;
 name|soisdisconnected
 argument_list|(
