@@ -12451,14 +12451,14 @@ name|next
 operator|=
 name|snext
 condition|?
+name|htole32
+argument_list|(
 name|snext
 operator|->
 name|physaddr
-else|:
-name|htole32
-argument_list|(
-name|EHCI_NULL
 argument_list|)
+else|:
+name|EHCI_NULL
 expr_stmt|;
 comment|/* 	 * Now loop through any qTDs before us and keep track of the pointer 	 * that points to us for the end. 	 */
 name|psqtd
@@ -12683,10 +12683,7 @@ name|qh_qtd
 operator|.
 name|qtd_altnext
 operator|=
-name|htole32
-argument_list|(
 name|EHCI_NULL
-argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
