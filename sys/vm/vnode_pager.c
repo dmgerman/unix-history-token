@@ -1827,6 +1827,9 @@ condition|(
 name|error
 condition|)
 break|break;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_set_validclean
 argument_list|(
 name|m
@@ -1842,9 +1845,15 @@ argument_list|,
 name|bsize
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_set_validclean
 argument_list|(
 name|m
@@ -1859,6 +1868,9 @@ name|PAGE_MASK
 argument_list|,
 name|bsize
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|bzero
 argument_list|(

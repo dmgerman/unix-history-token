@@ -11702,7 +11702,13 @@ name|soff
 decl_stmt|,
 name|eoff
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Start and end offsets in buffer.  eoff - soff may not cross a 	 * page boundry or cross the end of the buffer.  The end of the 	 * buffer, in this case, is our file EOF, not the allocation size 	 * of the buffer. 	 */
 name|soff
@@ -12108,6 +12114,9 @@ literal|"vfs_clean_pages: no buffer offset"
 operator|)
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -12193,6 +12202,9 @@ operator|=
 name|noff
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -12252,6 +12264,9 @@ name|base
 operator|&
 name|PAGE_MASK
 operator|)
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -12319,6 +12334,9 @@ operator|=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function
