@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.1 (Berkeley) %G%"
+literal|"@(#)login.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1368,6 +1368,10 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|EINVAL
 condition|)
 block|{
 if|if
