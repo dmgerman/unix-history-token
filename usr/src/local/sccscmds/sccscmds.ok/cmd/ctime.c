@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<sccs.h>
+file|"../hdr/macros.h"
 end_include
 
 begin_expr_stmt
@@ -15,7 +15,7 @@ operator|)
 name|ctime
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,7 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include
