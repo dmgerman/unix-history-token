@@ -1875,6 +1875,15 @@ name|len
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|state
+operator|->
+name|mode
+operator|==
+name|BAD
+condition|)
+break|break;
 comment|/* build code tables */
 name|state
 operator|->
