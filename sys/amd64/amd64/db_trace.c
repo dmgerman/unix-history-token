@@ -1539,7 +1539,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Figure out frame type. 	 */
+comment|/* 	 * Figure out frame type.  We look at the address just before 	 * the saved instruction pointer as the saved EIP is after the 	 * call function, and if the function being called is marked as 	 * dead (such as panic() at the end of dblfault_handler()), then 	 * the instruction at the saved EIP will be part of a different 	 * function (syscall() in this example) rather than the one that 	 * actually made the call. 	 */
 name|frame_type
 operator|=
 name|NORMAL
@@ -1549,6 +1549,8 @@ operator|=
 name|db_search_symbol
 argument_list|(
 name|rip
+operator|-
+literal|1
 argument_list|,
 name|DB_STGY_ANY
 argument_list|,
