@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	1.2 %G%"
+literal|"@(#)cmd2.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,19 +210,9 @@ condition|(
 operator|!
 name|sawcom
 condition|)
-block|{
-name|dot
-operator|=
-operator|&
-name|message
-index|[
-literal|0
-index|]
-expr_stmt|;
 goto|goto
 name|hitit
 goto|;
-block|}
 comment|/* 	 * Just find the next good message after dot, no 	 * wraparound. 	 */
 for|for
 control|(
