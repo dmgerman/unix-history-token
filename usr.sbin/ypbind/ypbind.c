@@ -581,6 +581,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|ppid
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Special restricted mode variables: when in restricted mode, only the  * specified restricted_domain will be bound, and only the servers listed  * in restricted_addrs will be used for binding.  */
 end_comment
@@ -1686,6 +1692,18 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|ppid
+operator|!=
+name|getpid
+argument_list|()
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ypdb
@@ -1772,7 +1790,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -2344,6 +2362,12 @@ argument_list|,
 name|terminate
 argument_list|)
 expr_stmt|;
+name|ppid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+comment|/* Remember who we are. */
 name|openlog
 argument_list|(
 name|argv
@@ -2487,6 +2511,12 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* NOTREACHED */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
