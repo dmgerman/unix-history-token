@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)get_names.c	5.8 (Berkeley) %G%"
+literal|"@(#)get_names.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"talk.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"talk.h"
 end_include
 
 begin_function_decl
@@ -263,12 +269,12 @@ operator|*
 name|cp
 operator|&&
 operator|!
-name|any
+name|index
 argument_list|(
+literal|"@:!."
+argument_list|,
 operator|*
 name|cp
-argument_list|,
-literal|"@:!."
 argument_list|)
 condition|;
 name|cp
@@ -472,51 +478,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
-specifier|static
-name|any
-argument_list|(
-name|c
-argument_list|,
-name|cp
-argument_list|)
-specifier|register
-name|char
-name|c
-operator|,
-operator|*
-name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-while|while
-condition|(
-operator|*
-name|cp
-condition|)
-if|if
-condition|(
-name|c
-operator|==
-operator|*
-name|cp
-operator|++
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 

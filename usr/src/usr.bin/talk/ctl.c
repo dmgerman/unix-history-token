@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctl.c	5.6 (Berkeley) %G%"
+literal|"@(#)ctl.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,36 @@ end_comment
 begin_comment
 comment|/*  * This file handles haggling with the various talk daemons to  * get a socket to talk to. sockt is opened and connected in  * the progress  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/talkd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"talk.h"
+end_include
 
 begin_include
 include|#
@@ -190,6 +220,11 @@ name|bind
 argument_list|(
 name|sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|my_addr
 argument_list|,
@@ -219,6 +254,11 @@ name|getsockname
 argument_list|(
 name|sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|my_addr
 argument_list|,
@@ -291,6 +331,11 @@ name|bind
 argument_list|(
 name|ctl_sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ctl_addr
 argument_list|,
@@ -298,8 +343,6 @@ sizeof|sizeof
 argument_list|(
 name|ctl_addr
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -322,6 +365,11 @@ name|getsockname
 argument_list|(
 name|ctl_sockt
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|ctl_addr
 argument_list|,

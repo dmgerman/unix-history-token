@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	5.5 (Berkeley) %G%"
+literal|"@(#)msgs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -42,12 +48,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -78,12 +78,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|disp_msg
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|message
 argument_list|(
@@ -91,7 +89,7 @@ name|current_state
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|start_msgs
@@ -153,7 +151,7 @@ name|itimer
 argument_list|,
 operator|(
 expr|struct
-name|timerval
+name|itimerval
 operator|*
 operator|)
 literal|0
@@ -198,7 +196,7 @@ name|itimer
 argument_list|,
 operator|(
 expr|struct
-name|timerval
+name|itimerval
 operator|*
 operator|)
 literal|0

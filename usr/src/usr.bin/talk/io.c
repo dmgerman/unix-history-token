@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.5 (Berkeley) %G%"
+literal|"@(#)io.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,7 +136,11 @@ name|sockt_mask
 operator||
 name|STDIN_MASK
 expr_stmt|;
-name|forever
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|read_set
 operator|=

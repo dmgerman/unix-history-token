@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctl_transact.c	5.7 (Berkeley) %G%"
+literal|"@(#)ctl_transact.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,43 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"talk_ctl.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/talkd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"talk_ctl.h"
 end_include
 
 begin_define
@@ -171,6 +201,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|daemon_addr
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)invite.c	5.7 (Berkeley) %G%"
+literal|"@(#)invite.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"talk_ctl.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -49,7 +55,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/talkd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"talk_ctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"talk.h"
 end_include
 
 begin_comment
@@ -572,6 +608,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|daemon_addr
 argument_list|,
@@ -622,6 +663,11 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|daemon_addr
 argument_list|,
