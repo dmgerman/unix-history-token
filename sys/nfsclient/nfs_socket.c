@@ -2901,6 +2901,7 @@ condition|(
 operator|!
 name|error
 condition|)
+block|{
 name|error
 operator|=
 name|nfs_reconnect
@@ -2922,6 +2923,7 @@ argument_list|(
 name|rep
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 else|else
