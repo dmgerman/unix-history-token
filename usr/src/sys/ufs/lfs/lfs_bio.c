@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,17 +109,21 @@ begin_comment
 comment|/* Set if already kicked off a writer 					   because of buffer space */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|WRITE_THRESHHOLD
-value|((nbuf>> 2) - 10)
-end_define
+begin_comment
+comment|/* #define WRITE_THRESHHOLD	((nbuf>> 2) - 10) #define WAIT_THRESHHOLD		((nbuf>> 1) - 10) */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|WAIT_THRESHHOLD
+value|(nbuf - (nbuf>> 2) - 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE_THRESHHOLD
 value|((nbuf>> 1) - 10)
 end_define
 
@@ -381,6 +385,16 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DOSTATS
+operator|++
+name|lfs_stats
+operator|.
+name|write_exceeded
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|lfs_writing
@@ -447,6 +461,16 @@ name|lfs_dirops
 condition|)
 block|{
 comment|/* 			 * We set the queue to 0 here because we are about to 			 * write all the dirty buffers we have.  If more come 			 * in while we're writing the segment, they may not 			 * get written, so we want the count to reflect these 			 * new writes after the segwrite completes. 			 */
+ifdef|#
+directive|ifdef
+name|DOSTATS
+operator|++
+name|lfs_stats
+operator|.
+name|flush_invoked
+expr_stmt|;
+endif|#
+directive|endif
 name|lfs_segwrite
 argument_list|(
 name|mp
@@ -534,6 +558,17 @@ name|locked_queue_count
 operator|>
 name|WAIT_THRESHHOLD
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DOSTATS
+operator|++
+name|lfs_stats
+operator|.
+name|wait_exceeded
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|tsleep
@@ -552,6 +587,7 @@ operator|*
 name|LFS_BUFWAIT
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
