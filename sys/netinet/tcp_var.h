@@ -626,6 +626,10 @@ name|MAX_SACK_BLKS
 index|]
 decl_stmt|;
 comment|/* seq nos. of sack blocks */
+name|tcp_seq
+name|sack_newdata
+decl_stmt|;
+comment|/* New data xmitted in this recovery 					   episode starts at this seq number */
 block|}
 struct|;
 end_struct
@@ -1824,6 +1828,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet_tcp_sack
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2734,6 +2746,10 @@ name|struct
 name|tcpcb
 modifier|*
 name|tp
+parameter_list|,
+name|int
+modifier|*
+name|sack_bytes_rexmt
 parameter_list|)
 function_decl|;
 end_function_decl
