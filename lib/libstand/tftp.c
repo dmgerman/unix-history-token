@@ -1131,6 +1131,17 @@ name|f_devdata
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|io
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|io
 operator|->
 name|destip
