@@ -21,6 +21,20 @@ directive|include
 file|"thr_private.h"
 end_include
 
+begin_comment
+comment|/*  * Static prototypes  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|testcancel
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
@@ -85,10 +99,15 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* NOTHING */
-block|}
-elseif|else
+comment|/* The thread is not on the list of active threads */
+goto|goto
+name|out
+goto|;
+name|_thread_critical_enter
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pthread
@@ -114,18 +133,21 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * The thread is in the process of (or has already) exited 		 * or is deadlocked. 		 */
+name|_thread_critical_exit
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 literal|0
 expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-else|else
-block|{
-name|GIANT_LOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
+comment|/* 	 * The thread is on the active thread list and is not in the process 	 * of exiting. 	 */
 if|if
 condition|(
 operator|(
@@ -175,7 +197,7 @@ name|PTHREAD_CANCELLING
 expr_stmt|;
 else|else
 block|{
-comment|/* 			 * Check if we need to kick it back into the 			 * run queue: 			 */
+comment|/* 		 * Check if we need to kick it back into the 		 * run queue: 		 */
 switch|switch
 condition|(
 name|pthread
@@ -217,7 +239,7 @@ break|break;
 case|case
 name|PS_JOIN
 case|:
-comment|/* 				 * Disconnect the thread from the joinee: 				 */
+comment|/* 			 * Disconnect the thread from the joinee: 			 */
 if|if
 condition|(
 name|pthread
@@ -268,7 +290,7 @@ case|:
 case|case
 name|PS_COND_WAIT
 case|:
-comment|/* 				 * Threads in these states may be in queues. 				 * In order to preserve queue integrity, the 				 * cancelled thread must remove itself from the 				 * queue.  When the thread resumes, it will 				 * remove itself from the queue and call the 				 * cancellation routine. 				 */
+comment|/* 			 * Threads in these states may be in queues. 			 * In order to preserve queue integrity, the 			 * cancelled thread must remove itself from the 			 * queue.  When the thread resumes, it will 			 * remove itself from the queue and call the 			 * cancellation routine. 			 */
 name|pthread
 operator|->
 name|cancelflags
@@ -297,16 +319,17 @@ break|break;
 block|}
 block|}
 comment|/* Unprotect the scheduling queues: */
-name|GIANT_UNLOCK
+name|_thread_critical_exit
 argument_list|(
-name|curthread
+name|pthread
 argument_list|)
 expr_stmt|;
 name|ret
 operator|=
 literal|0
 expr_stmt|;
-block|}
+name|out
+label|:
 return|return
 operator|(
 name|ret
@@ -329,8 +352,14 @@ parameter_list|)
 block|{
 name|int
 name|ostate
+decl_stmt|,
+name|ret
 decl_stmt|;
-name|GIANT_LOCK
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -382,12 +411,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|pthread_testcancel
+name|testcancel
 argument_list|()
 expr_stmt|;
 break|break;
@@ -411,27 +435,21 @@ name|cancelflags
 operator||=
 name|PTHREAD_CANCEL_DISABLE
 expr_stmt|;
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
-name|GIANT_UNLOCK
+name|ret
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+name|_thread_critical_exit
 argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
+name|ret
 operator|)
 return|;
 block|}
@@ -452,7 +470,7 @@ block|{
 name|int
 name|otype
 decl_stmt|;
-name|GIANT_LOCK
+name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -490,12 +508,7 @@ name|cancelflags
 operator||=
 name|PTHREAD_CANCEL_ASYNCHRONOUS
 expr_stmt|;
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
-name|pthread_testcancel
+name|testcancel
 argument_list|()
 expr_stmt|;
 break|break;
@@ -520,24 +533,19 @@ operator|&=
 operator|~
 name|PTHREAD_CANCEL_ASYNCHRONOUS
 expr_stmt|;
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
 block|}
+name|_thread_critical_exit
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -546,10 +554,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * XXXTHR Make an internal locked version.  */
-end_comment
-
 begin_function
 name|void
 name|_pthread_testcancel
@@ -557,11 +561,29 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|GIANT_LOCK
+name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+name|testcancel
+argument_list|()
+expr_stmt|;
+name|_thread_critical_exit
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|testcancel
+parameter_list|()
+block|{
+comment|/* 	 * This pthread should already be locked by the caller. 	 */
 if|if
 condition|(
 operator|(
@@ -609,7 +631,7 @@ operator|&=
 operator|~
 name|PTHREAD_CANCELLING
 expr_stmt|;
-name|GIANT_UNLOCK
+name|_thread_critical_exit
 argument_list|(
 name|curthread
 argument_list|)
@@ -628,11 +650,6 @@ literal|"cancel"
 argument_list|)
 expr_stmt|;
 block|}
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -643,13 +660,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|pthread_testcancel
-argument_list|()
-expr_stmt|;
-name|GIANT_LOCK
+name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
+expr_stmt|;
+name|testcancel
+argument_list|()
 expr_stmt|;
 name|curthread
 operator|->
@@ -657,7 +674,7 @@ name|cancelflags
 operator||=
 name|PTHREAD_AT_CANCEL_POINT
 expr_stmt|;
-name|GIANT_UNLOCK
+name|_thread_critical_exit
 argument_list|(
 name|curthread
 argument_list|)
@@ -672,7 +689,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|GIANT_LOCK
+name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -684,13 +701,13 @@ operator|&=
 operator|~
 name|PTHREAD_AT_CANCEL_POINT
 expr_stmt|;
-name|GIANT_UNLOCK
+name|testcancel
+argument_list|()
+expr_stmt|;
+name|_thread_critical_exit
 argument_list|(
 name|curthread
 argument_list|)
-expr_stmt|;
-name|pthread_testcancel
-argument_list|()
 expr_stmt|;
 block|}
 end_function
