@@ -200,20 +200,27 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
+begin_comment
+comment|/*   * Add a kernel wrapper to the shmid_ds struct so that private info (like the  * MAC label) can be added to it, without changing the user interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|shmid_kernel
+block|{
 name|struct
-name|shminfo
-name|shminfo
+name|shmid_ds
+name|u
 decl_stmt|;
-end_decl_stmt
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|shmid_ds
-modifier|*
-name|shmsegs
+name|shminfo
+name|shminfo
 decl_stmt|;
 end_decl_stmt
 
