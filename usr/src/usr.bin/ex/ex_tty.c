@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tty.c	7.4	%G%"
+literal|"@(#)ex_tty.c	7.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -879,6 +879,16 @@ name|EI
 operator|=
 literal|""
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|GT
+condition|)
+name|BT
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* If we can't tab, we can't backtab either */
 ifdef|#
 directive|ifdef
 name|TIOCLGET

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_re.c	7.1	%G%"
+literal|"@(#)ex_re.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,8 +608,6 @@ name|int
 name|gsubf
 decl_stmt|,
 name|hopcount
-init|=
-literal|0
 decl_stmt|;
 name|gsubf
 operator|=
@@ -652,6 +650,8 @@ operator|++
 control|)
 block|{
 name|scount
+operator|=
+name|hopcount
 operator|=
 literal|0
 expr_stmt|;
