@@ -740,8 +740,7 @@ argument_list|)
 operator|==
 name|AF_INET6
 operator|&&
-operator|!
-name|ip6_mapped_addr_on
+name|ip6_v6only
 condition|)
 name|inp
 operator|->

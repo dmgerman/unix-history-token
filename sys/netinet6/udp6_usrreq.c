@@ -2156,7 +2156,8 @@ name|INP_IPV6
 expr_stmt|;
 if|if
 condition|(
-name|ip6_mapped_addr_on
+operator|!
+name|ip6_v6only
 condition|)
 name|inp
 operator|->
@@ -2604,7 +2605,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip6_mapped_addr_on
+operator|!
+name|ip6_v6only
 condition|)
 block|{
 comment|/* should be non mapped addr */
@@ -2925,7 +2927,8 @@ block|}
 block|}
 if|if
 condition|(
-name|ip6_mapped_addr_on
+operator|!
+name|ip6_v6only
 condition|)
 block|{
 name|int
