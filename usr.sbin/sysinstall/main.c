@@ -361,6 +361,25 @@ comment|/* Probe for all relevant devices on the system */
 name|deviceGetAll
 argument_list|()
 expr_stmt|;
+comment|/* Prompt for the driver floppy if appropriate. */
+if|if
+condition|(
+operator|!
+name|pvariable_get
+argument_list|(
+literal|"driverFloppyCheck"
+argument_list|)
+condition|)
+block|{
+name|driverFloppyCheck
+argument_list|()
+expr_stmt|;
+name|pvariable_set
+argument_list|(
+literal|"driverFloppyCheck=1"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* First, see if we have any arguments to process (and argv[0] counts if it's not "sysinstall") */
 if|if
 condition|(
