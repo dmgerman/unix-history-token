@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.51 (Berkeley) %G%"
+literal|"@(#)mount.c	5.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1249,9 +1249,6 @@ condition|(
 name|mnttype
 condition|)
 block|{
-case|case
-name|MOUNT_LFS
-case|:
 case|case
 name|MOUNT_UFS
 case|:
