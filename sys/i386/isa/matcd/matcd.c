@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.26 1997/05/04 15:24:21 joerg Exp $ */
+comment|/* $Id: matcd.c,v 1.27 1997/05/10 12:13:17 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -89,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -11712,7 +11706,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"i386/isa/matcd/audio.c"
+file|<i386/isa/matcd/audio.c>
 end_include
 
 begin_comment
