@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -632,24 +632,19 @@ block|}
 comment|/* 	 * If there's shared text associated with 	 * the vnode, try to free it up once.  If 	 * we fail, we can't allow writing. 	 */
 if|if
 condition|(
+operator|(
 name|vp
 operator|->
 name|v_flag
 operator|&
 name|VTEXT
-condition|)
-name|xrele
+operator|)
+operator|&&
+operator|!
+name|vnode_pager_uncache
 argument_list|(
 name|vp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_flag
-operator|&
-name|VTEXT
 condition|)
 return|return
 operator|(

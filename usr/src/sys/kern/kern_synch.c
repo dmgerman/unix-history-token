@@ -1,25 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_synch.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_synch.c	7.13 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"machine/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/psl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/mtpr.h"
-end_include
 
 begin_include
 include|#
@@ -48,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"kernel.h"
 end_include
 
@@ -61,6 +37,18 @@ begin_include
 include|#
 directive|include
 file|"buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/psl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/mtpr.h"
 end_include
 
 begin_comment
@@ -2106,27 +2094,6 @@ name|pp
 operator|->
 name|p_nice
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|->
-name|p_rssize
-operator|>
-name|pp
-operator|->
-name|p_maxrss
-operator|&&
-name|freemem
-operator|<
-name|desfree
-condition|)
-name|p
-operator|+=
-literal|2
-operator|*
-literal|4
-expr_stmt|;
-comment|/* effectively, nice(4) */
 if|if
 condition|(
 name|p

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.60 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1079,12 +1079,12 @@ operator|(
 name|error
 operator|)
 return|;
-name|xumount
+name|vnode_pager_umount
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-comment|/* remove unused sticky files from text table */
+comment|/* release cached vnodes */
 name|cache_purgevfs
 argument_list|(
 name|mp
@@ -4272,20 +4272,14 @@ goto|goto
 name|out
 goto|;
 block|}
-if|if
-condition|(
-name|vp
-operator|->
-name|v_flag
-operator|&
-name|VTEXT
-condition|)
-name|xrele
+operator|(
+name|void
+operator|)
+name|vnode_pager_uncache
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* try once to free text */
 name|out
 label|:
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1116,12 +1116,8 @@ name|int
 name|n
 decl_stmt|,
 name|on
-decl_stmt|,
-name|i
 decl_stmt|;
 name|int
-name|count
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -1375,43 +1371,6 @@ argument_list|,
 name|uio
 operator|->
 name|uio_resid
-argument_list|)
-expr_stmt|;
-name|count
-operator|=
-name|howmany
-argument_list|(
-name|bsize
-argument_list|,
-name|CLBYTES
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|count
-condition|;
-name|i
-operator|++
-control|)
-name|munhash
-argument_list|(
-name|vp
-argument_list|,
-name|bn
-operator|+
-name|i
-operator|*
-operator|(
-name|CLBYTES
-operator|/
-name|DEV_BSIZE
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|"reboot.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm.h"
 end_include
 
 begin_include
@@ -1702,6 +1696,14 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|msgbuf
+modifier|*
+name|mbp
+init|=
+name|msgbufp
+decl_stmt|;
 specifier|extern
 name|int
 name|msgbufmapped
@@ -1824,8 +1826,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_magic
 operator|!=
 name|MSG_MAGIC
@@ -1835,18 +1837,18 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_magic
 operator|=
 name|MSG_MAGIC
 expr_stmt|;
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_bufx
 operator|=
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_bufr
 operator|=
 literal|0
@@ -1864,8 +1866,8 @@ condition|;
 name|i
 operator|++
 control|)
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_bufc
 index|[
 name|i
@@ -1874,12 +1876,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_bufc
 index|[
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_bufx
 operator|++
 index|]
@@ -1888,20 +1890,20 @@ name|c
 expr_stmt|;
 if|if
 condition|(
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_bufx
 operator|<
 literal|0
 operator|||
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_bufx
 operator|>=
 name|MSG_BSIZE
 condition|)
-name|msgbuf
-operator|.
+name|mbp
+operator|->
 name|msg_bufx
 operator|=
 literal|0
