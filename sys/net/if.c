@@ -2085,7 +2085,7 @@ name|ifasize
 argument_list|,
 name|M_IFADDR
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
