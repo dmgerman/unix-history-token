@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -42,13 +48,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/termio.h>
+file|<sys/termios.h>
 end_include
 
 begin_include
@@ -1525,7 +1537,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|termio
+name|termios
 name|old
 decl_stmt|,
 name|new
@@ -1533,16 +1545,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
-name|int
+specifier|static
+name|void
 name|usignal
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
+specifier|static
+name|void
 name|uhup
 parameter_list|()
 function_decl|;
@@ -1556,14 +1568,14 @@ block|{
 name|int
 name|signal
 decl_stmt|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|o_catcher
 function_decl|)
 parameter_list|()
 function_decl|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|n_catcher
@@ -1654,7 +1666,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|char
 name|xgetc
 parameter_list|()
@@ -1662,7 +1674,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|charlog
 parameter_list|()
@@ -1670,7 +1682,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|setup_tty
 parameter_list|()
@@ -1678,7 +1690,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|restore_tty
 parameter_list|()
@@ -1686,7 +1698,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|ttoslow
 parameter_list|()
@@ -1694,7 +1706,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|ttflui
 parameter_list|()
@@ -1702,7 +1714,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|tthang
 parameter_list|()
@@ -1710,7 +1722,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|ttbreak
 parameter_list|()
@@ -1718,7 +1730,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|tt7bit
 parameter_list|()
@@ -1726,7 +1738,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|ttpar
 parameter_list|()
@@ -1734,7 +1746,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|DEBUG
 parameter_list|()
@@ -1994,13 +2006,6 @@ name|sigs
 operator|->
 name|o_catcher
 operator|=
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|signal
 argument_list|(
 name|sigs
@@ -5172,7 +5177,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|usignal
 parameter_list|(
 name|isig
@@ -5207,7 +5212,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|uhup
 parameter_list|(
 name|isig
@@ -5257,15 +5262,21 @@ name|struct
 name|timeval
 name|s
 decl_stmt|;
-name|int
+name|fd_set
 name|f
-init|=
-literal|1
 decl_stmt|;
-comment|/* Select on stdin */
 name|int
 name|result
 decl_stmt|;
+name|FD_SET
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|f
+argument_list|)
+expr_stmt|;
+comment|/* Select on stdin */
 if|if
 condition|(
 name|read
@@ -5307,7 +5318,7 @@ operator|&
 name|f
 argument_list|,
 operator|(
-name|int
+name|fd_set
 operator|*
 operator|)
 name|NULL
@@ -5730,11 +5741,9 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|ioctl
+name|tcgetattr
 argument_list|(
 literal|0
-argument_list|,
-name|TCGETA
 argument_list|,
 operator|&
 name|old
@@ -5800,11 +5809,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* No special line discipline */
-name|ioctl
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TCSETA
+name|TCSANOW
 argument_list|,
 operator|&
 name|new
@@ -5828,11 +5837,11 @@ name|int
 name|sig
 decl_stmt|;
 block|{
-name|ioctl
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TCSETA
+name|TCSANOW
 argument_list|,
 operator|&
 name|old
@@ -5947,16 +5956,11 @@ argument_list|(
 literal|0
 argument_list|)
 condition|)
-operator|(
-name|void
-operator|)
-name|ioctl
+name|tcflush
 argument_list|(
 literal|0
 argument_list|,
-name|TCFLSH
-argument_list|,
-literal|0
+name|TCIFLUSH
 argument_list|)
 expr_stmt|;
 block|}
@@ -5992,12 +5996,14 @@ if|if
 condition|(
 operator|!
 name|isatty
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 condition|)
 return|return;
 ifdef|#
 directive|ifdef
-name|TCCLRDTR
+name|TIOCCDTR
 operator|(
 name|void
 operator|)
@@ -6005,7 +6011,7 @@ name|ioctl
 argument_list|(
 literal|1
 argument_list|,
-name|TCCLRDTR
+name|TIOCCDTR
 argument_list|,
 literal|0
 argument_list|)
@@ -6022,7 +6028,7 @@ name|ioctl
 argument_list|(
 literal|1
 argument_list|,
-name|TCSETDTR
+name|TIOCSDTR
 argument_list|,
 literal|0
 argument_list|)
@@ -6043,16 +6049,11 @@ name|void
 name|ttbreak
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
-name|ioctl
+name|tcsendbreak
 argument_list|(
 literal|1
 argument_list|,
-name|TCSBRK
-argument_list|,
-literal|0
+literal|5
 argument_list|)
 expr_stmt|;
 block|}
@@ -6107,11 +6108,11 @@ operator|&=
 operator|~
 name|ISTRIP
 expr_stmt|;
-name|ioctl
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TCSETA
+name|TCSANOW
 argument_list|,
 operator|&
 name|new
@@ -6245,11 +6246,11 @@ operator|)
 expr_stmt|;
 break|break;
 block|}
-name|ioctl
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TCSETA
+name|TCSANOW
 argument_list|,
 operator|&
 name|new
