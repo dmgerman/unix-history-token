@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)syslog.h	4.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)syslog.h	4.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -341,7 +341,7 @@ begin_define
 define|#
 directive|define
 name|LOG_PID
-value|01
+value|0x01
 end_define
 
 begin_comment
@@ -352,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|LOG_CONS
-value|02
+value|0x02
 end_define
 
 begin_comment
@@ -363,7 +363,7 @@ begin_define
 define|#
 directive|define
 name|LOG_ODELAY
-value|04
+value|0x04
 end_define
 
 begin_comment
@@ -374,11 +374,22 @@ begin_define
 define|#
 directive|define
 name|LOG_NDELAY
-value|010
+value|0x08
 end_define
 
 begin_comment
 comment|/* don't delay open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_NOWAIT
+value|0x10
+end_define
+
+begin_comment
+comment|/* if forking to log on console, don't wait() */
 end_comment
 
 end_unit
