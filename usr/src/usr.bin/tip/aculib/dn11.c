@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn11.c	4.7	81/07/23	*/
+comment|/*	dn11.c	4.8	81/08/24	*/
 end_comment
 
 begin_if
@@ -384,6 +384,11 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|dn
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lt
@@ -394,11 +399,6 @@ block|{
 name|close
 argument_list|(
 name|FD
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|dn
 argument_list|)
 expr_stmt|;
 return|return
