@@ -702,6 +702,8 @@ name|cylinders
 operator|=
 name|dinfo
 operator|.
+name|dp
+operator|.
 name|ncylinders
 expr_stmt|;
 name|drv
@@ -710,6 +712,8 @@ name|heads
 operator|=
 name|dinfo
 operator|.
+name|dp
+operator|.
 name|nheads
 expr_stmt|;
 name|drv
@@ -717,6 +721,8 @@ operator|->
 name|sectors
 operator|=
 name|dinfo
+operator|.
+name|dp
 operator|.
 name|nsectors
 expr_stmt|;
