@@ -4,7 +4,7 @@ name|char
 modifier|*
 name|version_string
 init|=
-literal|"2.95.3 [FreeBSD] 20010315 (release)"
+literal|"2.95.3 20010315 (release) [FreeBSD]"
 decl_stmt|;
 end_decl_stmt
 
