@@ -1093,7 +1093,7 @@ condition|(
 operator|(
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
 argument_list|,
@@ -1101,8 +1101,6 @@ operator|&
 name|pass
 argument_list|,
 name|NEED_PASSPHRASE
-argument_list|,
-name|options
 argument_list|)
 operator|)
 operator|!=
