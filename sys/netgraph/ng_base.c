@@ -7631,7 +7631,7 @@ specifier|const
 name|int
 name|ngqroom
 init|=
-literal|64
+literal|256
 decl_stmt|;
 end_decl_stmt
 
@@ -7669,7 +7669,7 @@ specifier|const
 name|int
 name|ngqfreemax
 init|=
-literal|16
+literal|256
 decl_stmt|;
 end_decl_stmt
 
