@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -325,12 +325,12 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* guarantee a getc() buffer */
-comment|/* separate buffer for fgetline() when line crosses buffer boundary */
+comment|/* separate buffer for fgetln() when line crosses buffer boundary */
 name|struct
 name|__sbuf
 name|_lb
 decl_stmt|;
-comment|/* buffer for fgetline() */
+comment|/* buffer for fgetln() */
 comment|/* Unix stdio files get aligned to block boundaries on fseek() */
 name|int
 name|_blksize
@@ -426,7 +426,7 @@ define|#
 directive|define
 name|__SMOD
 value|0x2000
-comment|/* true => fgetline modified _p text */
+comment|/* true => fgetln modified _p text */
 comment|/*  * The following three definitions are for ANSI C, which took them  * from System V, which brilliantly took internal interface macros and  * made them official arguments to setvbuf(), without renaming them.  * Hence, these ugly _IOxxx names are *supposed* to appear in user code.  *  * Although numbered as their counterparts above, the implementation  * does not rely on this.  */
 define|#
 directive|define
@@ -1305,7 +1305,7 @@ argument_list|)
 name|__BEGIN_DECLS
 name|char
 modifier|*
-name|fgetline
+name|fgetln
 name|__P
 argument_list|(
 operator|(
