@@ -2456,9 +2456,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2484,6 +2481,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
