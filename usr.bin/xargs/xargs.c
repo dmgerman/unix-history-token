@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1100,7 +1106,7 @@ decl_stmt|;
 block|{
 specifier|volatile
 name|int
-name|noinvoke
+name|childerr
 decl_stmt|;
 name|char
 modifier|*
@@ -1177,7 +1183,7 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-name|noinvoke
+name|childerr
 operator|=
 literal|0
 expr_stmt|;
@@ -1185,7 +1191,7 @@ switch|switch
 condition|(
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 condition|)
 block|{
@@ -1197,7 +1203,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"fork"
+literal|"vfork"
 argument_list|)
 expr_stmt|;
 case|case
@@ -1213,19 +1219,9 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|warn
-argument_list|(
-literal|"%s"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|noinvoke
+name|childerr
 operator|=
-literal|1
+name|errno
 expr_stmt|;
 name|_exit
 argument_list|(
@@ -1262,13 +1258,31 @@ expr_stmt|;
 comment|/* If we couldn't invoke the utility, exit 127. */
 if|if
 condition|(
-name|noinvoke
+name|childerr
+operator|!=
+literal|0
 condition|)
+block|{
+name|errno
+operator|=
+name|childerr
+expr_stmt|;
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|127
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* If utility signaled or exited with a value of 255, exit 1-125. */
 if|if
 condition|(
