@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.10	(Berkeley)	83/04/16"
+literal|"@(#)restore.c	3.11	(Berkeley)	83/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -1761,7 +1761,7 @@ argument_list|(
 name|first
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the next available file is not the one which we 		 * expect then we have missed one or more files. Since 		 * we do not request files that were not on the tape, 		 * the lost files must have been due to a tape read error. 		 */
+comment|/* 		 * If the next available file is not the one which we 		 * expect then we have missed one or more files. Since 		 * we do not request files that were not on the tape, 		 * the lost files must have been due to a tape read error, 		 * or a file that was removed while the dump was in progress. 		 */
 while|while
 condition|(
 name|first
@@ -1822,6 +1822,7 @@ name|first
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * If we find files on the tape that have no corresponding 		 * directory entries, then we must have found a file that 		 * was created while the dump was in progress. Since we have  		 * no name for it, we discard it knowing that it will be 		 * on the next incremental tape. 		 */
 if|if
 condition|(
 name|first
@@ -2351,6 +2352,19 @@ operator|->
 name|e_links
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|np
+operator|->
+name|e_flags
+operator|&
+name|NEW
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 operator|(
 name|void
 operator|)
