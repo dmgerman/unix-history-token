@@ -475,19 +475,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|u_int
-name|key_int_random
-init|=
-literal|60
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*interval to initialize randseed,1(m)*/
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|u_int
 name|key_larval_lifetime
 init|=
 literal|30
@@ -541,15 +528,6 @@ begin_decl_stmt
 specifier|static
 name|u_int32_t
 name|acq_seq
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|key_tick_init_random
 init|=
 literal|0
 decl_stmt|;
@@ -1168,31 +1146,6 @@ name|CTLFLAG_RW
 argument_list|, \
 operator|&
 name|key_spi_maxval
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* interval to initialize randseed */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_key
-argument_list|,
-name|KEYCTL_RANDOM_INT
-argument_list|,
-name|int_random
-argument_list|,
-name|CTLFLAG_RW
-argument_list|, \
-operator|&
-name|key_int_random
 argument_list|,
 literal|0
 argument_list|,
@@ -2351,16 +2304,6 @@ parameter_list|,
 name|caddr_t
 parameter_list|,
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|key_srandom
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -20171,23 +20114,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* initialize random seed */
-if|if
-condition|(
-name|key_tick_init_random
-operator|++
-operator|>
-name|key_int_random
-condition|)
-block|{
-name|key_tick_init_random
-operator|=
-literal|0
-expr_stmt|;
-name|key_srandom
-argument_list|()
-expr_stmt|;
-block|}
 comment|/* 	 * should set timeout based on the most closest timer expiration. 	 * we don't bother to do that yet. 	 */
 name|callout_reset
 argument_list|(
@@ -20210,20 +20136,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_comment
-comment|/*  * to initialize a seed for random()  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|key_srandom
-parameter_list|()
-block|{
 return|return;
 block|}
 end_function
