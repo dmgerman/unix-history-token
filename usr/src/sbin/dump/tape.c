@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.13 (Berkeley) %G%"
+literal|"@(#)tape.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,7 +207,7 @@ decl_stmt|,
 name|enslave
 argument_list|()
 decl_stmt|,
-name|flusht
+name|flushtape
 argument_list|()
 decl_stmt|,
 name|killall
@@ -216,7 +216,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Concurrent dump mods (Caltech) - disk block reading and tape writing  * are exported to several slave processes.  While one slave writes the  * tape, the others read disk blocks; they pass control of the tape in  * a ring via flock().	The parent process traverses the filesystem and  * sends spclrec()'s and lists of daddr's to the slaves via pipes.  */
+comment|/*  * Concurrent dump mods (Caltech) - disk block reading and tape writing  * are exported to several slave processes.  While one slave writes the  * tape, the others read disk blocks; they pass control of the tape in  * a ring via flock().	The parent process traverses the filesystem and  * sends writeheader()'s and lists of daddr's to the slaves via pipes.  */
 end_comment
 
 begin_struct
@@ -359,7 +359,7 @@ else|:
 literal|8
 operator|)
 expr_stmt|;
-comment|/* 	 * Allocate tape buffer contiguous with the array of instruction 	 * packets, so flusht() can write them together with one write(). 	 * Align tape buffer on page boundary to speed up tape write(). 	 */
+comment|/* 	 * Allocate tape buffer contiguous with the array of instruction 	 * packets, so flushtape() can write them together with one write(). 	 * Align tape buffer on page boundary to speed up tape write(). 	 */
 name|req
 operator|=
 operator|(
@@ -437,7 +437,7 @@ end_function
 
 begin_function
 name|void
-name|taprec
+name|writerec
 parameter_list|(
 name|dp
 parameter_list|)
@@ -508,7 +508,7 @@ name|trecno
 operator|>=
 name|ntrec
 condition|)
-name|flusht
+name|flushtape
 argument_list|()
 expr_stmt|;
 block|}
@@ -516,7 +516,7 @@ end_function
 
 begin_function
 name|void
-name|dmpblk
+name|dumpblock
 parameter_list|(
 name|blkno
 parameter_list|,
@@ -603,7 +603,7 @@ name|trecno
 operator|>=
 name|ntrec
 condition|)
-name|flusht
+name|flushtape
 argument_list|()
 expr_stmt|;
 name|dblkno
@@ -722,54 +722,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RDUMP
-end_ifdef
-
-begin_comment
-comment|/*  * compatibility routine  */
-end_comment
-
 begin_function
 name|void
-name|tflush
-parameter_list|(
-name|i
-parameter_list|)
-name|int
-name|i
-decl_stmt|;
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ntrec
-condition|;
-name|i
-operator|++
-control|)
-name|spclrec
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-endif|RDUMP
-end_endif
-
-begin_function
-name|void
-name|flusht
+name|flushtape
 parameter_list|()
 block|{
 name|int
@@ -880,7 +835,7 @@ block|{
 name|close_rewind
 argument_list|()
 expr_stmt|;
-name|otape
+name|startnewtape
 argument_list|()
 expr_stmt|;
 block|}
@@ -982,7 +937,7 @@ directive|endif
 endif|RDUMP
 name|close
 argument_list|(
-name|to
+name|tapefd
 argument_list|)
 expr_stmt|;
 while|while
@@ -1072,7 +1027,7 @@ end_comment
 
 begin_function
 name|void
-name|otape
+name|startnewtape
 parameter_list|()
 block|{
 name|int
@@ -1369,7 +1324,7 @@ name|RDUMP
 while|while
 condition|(
 operator|(
-name|to
+name|tapefd
 operator|=
 operator|(
 name|host
@@ -1385,9 +1340,13 @@ name|pipeout
 condition|?
 literal|1
 else|:
-name|creat
+name|open
 argument_list|(
 name|tape
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
 argument_list|,
 literal|0666
 argument_list|)
@@ -1402,15 +1361,19 @@ else|RDUMP
 while|while
 condition|(
 operator|(
-name|to
+name|tapefd
 operator|=
 name|pipeout
 condition|?
 literal|1
 else|:
-name|creat
+name|open
 argument_list|(
 name|tape
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
 argument_list|,
 literal|0666
 argument_list|)
@@ -1529,8 +1492,10 @@ name|c_flags
 operator||=
 name|DR_NEWHEADER
 expr_stmt|;
-name|spclrec
-argument_list|()
+name|writeheader
+argument_list|(
+name|curino
+argument_list|)
 expr_stmt|;
 name|spcl
 operator|.
@@ -1547,11 +1512,11 @@ literal|1
 condition|)
 name|msg
 argument_list|(
-literal|"Tape %d begins with blocks from ino %d\n"
+literal|"Tape %d begins with blocks from inode %d\n"
 argument_list|,
 name|tapeno
 argument_list|,
-name|ino
+name|curino
 argument_list|)
 expr_stmt|;
 block|}
@@ -2166,27 +2131,27 @@ name|toggle
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Need our own seek pointer. 	 */
 name|close
 argument_list|(
-name|fi
+name|diskfd
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|fi
+name|diskfd
 operator|=
 name|open
 argument_list|(
 name|disk
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
 literal|0
 condition|)
-comment|/* Need our own seek pointer */
 name|quit
 argument_list|(
 literal|"slave couldn't reopen disk: %s\n"
@@ -2339,7 +2304,7 @@ argument_list|)
 else|:
 name|write
 argument_list|(
-name|to
+name|tapefd
 argument_list|,
 name|tblock
 index|[
@@ -2360,7 +2325,7 @@ if|if
 condition|(
 name|write
 argument_list|(
-name|to
+name|tapefd
 argument_list|,
 name|tblock
 index|[
