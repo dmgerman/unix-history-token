@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.7	%H%	*/
+comment|/*	kern_proc.c	3.8	%H%	*/
 end_comment
 
 begin_include
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<wait.h>
+file|"/usr/include/wait.h"
 end_include
 
 begin_include
@@ -2741,29 +2741,43 @@ argument_list|,
 name|SIGCONT
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Protect this process from future 				 * tty signals, and clear TSTP if pending. 				 */
+block|}
+comment|/* 			 * Protect this process from future 			 * tty signals, and clear TSTP/TTIN/TTOU if pending. 			 */
 name|q
 operator|->
 name|p_pgrp
 operator|=
 literal|0
 expr_stmt|;
+define|#
+directive|define
+name|bit
+parameter_list|(
+name|a
+parameter_list|)
+value|(1<<(a-1))
 name|q
 operator|->
 name|p_sig
 operator|&=
 operator|~
 operator|(
-literal|1
-operator|<<
-operator|(
+name|bit
+argument_list|(
 name|SIGTSTP
-operator|-
-literal|1
-operator|)
+argument_list|)
+operator||
+name|bit
+argument_list|(
+name|SIGTTIN
+argument_list|)
+operator||
+name|bit
+argument_list|(
+name|SIGTTOU
+argument_list|)
 operator|)
 expr_stmt|;
-block|}
 block|}
 name|wakeup
 argument_list|(
