@@ -101,7 +101,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|sockaddr_in
-name|sin
+name|s_in
 decl_stmt|;
 end_decl_stmt
 
@@ -480,11 +480,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -589,7 +589,7 @@ goto|goto
 name|abort
 goto|;
 block|}
-name|sin
+name|s_in
 operator|.
 name|sin_port
 operator|=
@@ -1012,11 +1012,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 operator|!=
@@ -1117,7 +1117,7 @@ goto|goto
 name|abort
 goto|;
 block|}
-name|sin
+name|s_in
 operator|.
 name|sin_port
 operator|=
@@ -1347,11 +1347,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1753,11 +1753,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 operator|!=

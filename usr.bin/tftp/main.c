@@ -134,7 +134,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|sockaddr_in
-name|sin
+name|s_in
 decl_stmt|;
 end_decl_stmt
 
@@ -594,7 +594,7 @@ decl_stmt|;
 block|{
 name|struct
 name|sockaddr_in
-name|sin
+name|s_in
 decl_stmt|;
 name|int
 name|top
@@ -664,15 +664,15 @@ name|char
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_family
 operator|=
@@ -690,11 +690,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 operator|<
@@ -893,7 +893,7 @@ condition|(
 name|host
 condition|)
 block|{
-name|sin
+name|s_in
 operator|.
 name|sin_family
 operator|=
@@ -908,7 +908,7 @@ operator|->
 name|h_addr
 argument_list|,
 operator|&
-name|sin
+name|s_in
 operator|.
 name|sin_addr
 argument_list|,
@@ -929,13 +929,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sin
+name|s_in
 operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_addr
 operator|.
@@ -951,7 +951,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sin
+name|s_in
 operator|.
 name|sin_addr
 operator|.
@@ -1604,7 +1604,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|sin
+name|s_in
 operator|.
 name|sin_addr
 argument_list|,
@@ -1613,7 +1613,7 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_family
 operator|=
@@ -1718,7 +1718,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_port
 operator|=
@@ -1837,7 +1837,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_port
 operator|=
@@ -2135,7 +2135,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|sin
+name|s_in
 operator|.
 name|sin_addr
 argument_list|,
@@ -2144,7 +2144,7 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_family
 operator|=
@@ -2236,7 +2236,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_port
 operator|=
@@ -2308,7 +2308,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-name|sin
+name|s_in
 operator|.
 name|sin_port
 operator|=
