@@ -47,15 +47,16 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -86,6 +87,10 @@ name|argc
 operator|==
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+operator|(
 name|p
 operator|=
 name|getcwd
@@ -94,7 +99,18 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"getcwd()"
+argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
