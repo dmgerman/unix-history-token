@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.24 1996/05/11 20:48:36 phk Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.25 1996/12/22 17:09:14 jkh Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -3163,6 +3163,11 @@ index|[
 literal|200
 index|]
 decl_stmt|;
+name|int
+name|excode
+init|=
+literal|0
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|ScriptBuffer
@@ -3261,6 +3266,7 @@ operator|)
 operator|==
 name|MODE_INTER
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -3268,6 +3274,11 @@ argument_list|,
 literal|"login failed.\n"
 argument_list|)
 expr_stmt|;
+name|excode
+operator|=
+name|EX_NOLOGIN
+expr_stmt|;
+block|}
 block|}
 name|ModemTimeout
 argument_list|()
@@ -3290,6 +3301,7 @@ operator|)
 operator|==
 name|MODE_INTER
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -3297,12 +3309,38 @@ argument_list|,
 literal|"dial failed.\n"
 argument_list|)
 expr_stmt|;
+name|excode
+operator|=
+name|EX_NODIAL
+expr_stmt|;
+block|}
 block|}
 name|HangupModem
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+condition|)
+block|{
+specifier|extern
+name|void
+name|Cleanup
+parameter_list|()
+function_decl|;
+name|CloseModem
+argument_list|()
+expr_stmt|;
+name|Cleanup
+argument_list|(
+name|excode
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
