@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx SCSI host adapter firmware asssembler  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Aic7xxx SCSI host adapter firmware asssembler  *  * Copyright (c) 1997, 1998, 2000 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sequencer.h"
+file|"aicasm_insformat.h"
 end_include
 
 begin_typedef
@@ -136,9 +136,7 @@ specifier|static
 name|void
 name|output_code
 parameter_list|(
-name|FILE
-modifier|*
-name|ofile
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -148,10 +146,6 @@ specifier|static
 name|void
 name|output_listing
 parameter_list|(
-name|FILE
-modifier|*
-name|listfile
-parameter_list|,
 name|char
 modifier|*
 name|ifilename
@@ -972,9 +966,7 @@ operator|!=
 name|NULL
 condition|)
 name|output_code
-argument_list|(
-name|ofile
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -997,8 +989,6 @@ name|NULL
 condition|)
 name|output_listing
 argument_list|(
-name|listfile
-argument_list|,
 name|inputfilename
 argument_list|)
 expr_stmt|;
@@ -1180,13 +1170,7 @@ begin_function
 specifier|static
 name|void
 name|output_code
-parameter_list|(
-name|ofile
-parameter_list|)
-name|FILE
-modifier|*
-name|ofile
-decl_stmt|;
+parameter_list|()
 block|{
 name|struct
 name|instruction
@@ -1219,7 +1203,7 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"static u_int8_t seqprog[] = {\n"
+literal|"static uint8_t seqprog[] = {\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1249,6 +1233,11 @@ name|ofile
 argument_list|,
 literal|"\t0x%02x, 0x%02x, 0x%02x, 0x%02x,\n"
 argument_list|,
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
 name|cur_instr
 operator|->
 name|format
@@ -1286,10 +1275,54 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|cur_instr
+operator|->
+name|format
+operator|.
+name|bytes
+index|[
+literal|3
+index|]
+operator|,
+name|cur_instr
+operator|->
+name|format
+operator|.
+name|bytes
+index|[
+literal|2
+index|]
+operator|,
+name|cur_instr
+operator|->
+name|format
+operator|.
+name|bytes
+index|[
+literal|1
+index|]
+operator|,
+name|cur_instr
+operator|->
+name|format
+operator|.
+name|bytes
+index|[
+literal|0
+index|]
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 name|instrcount
 operator|++
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|ofile
@@ -1297,7 +1330,13 @@ argument_list|,
 literal|"};\n\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 *  Output patch information.  Patch functions first. 	 */
+end_comment
+
+begin_for
 for|for
 control|(
 name|cur_node
@@ -1356,13 +1395,19 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+end_for
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"typedef int patch_func_t __P((struct ahc_softc *)); struct patch { 	patch_func_t	*patch_func; 	u_int32_t	begin	   :10, 			skip_instr :10, 			skip_patch :12; } patches[] = {\n"
+literal|"typedef int patch_func_t __P((struct ahc_softc *)); struct patch { 	patch_func_t	*patch_func; 	uint32_t	begin	   :10, 			skip_instr :10, 			skip_patch :12; } patches[] = {\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|cur_patch
@@ -1411,6 +1456,9 @@ name|skip_patch
 argument_list|)
 expr_stmt|;
 block|}
+end_for
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|ofile
@@ -1418,6 +1466,9 @@ argument_list|,
 literal|"\n};\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -1429,11 +1480,10 @@ argument_list|,
 name|instrcount
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|dump_scope
 parameter_list|(
@@ -1653,10 +1703,6 @@ begin_function
 name|void
 name|output_listing
 parameter_list|(
-name|FILE
-modifier|*
-name|listfile
-parameter_list|,
 name|char
 modifier|*
 name|ifilename
@@ -2064,6 +2110,11 @@ literal|"%03x %02x%02x%02x%02x"
 argument_list|,
 name|instrptr
 argument_list|,
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
 name|cur_instr
 operator|->
 name|format
@@ -2101,6 +2152,47 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|cur_instr
+operator|->
+name|format
+operator|.
+name|bytes
+index|[
+literal|3
+index|]
+operator|,
+name|cur_instr
+operator|->
+name|format
+operator|.
+name|bytes
+index|[
+literal|2
+index|]
+operator|,
+name|cur_instr
+operator|->
+name|format
+operator|.
+name|bytes
+index|[
+literal|1
+index|]
+operator|,
+name|cur_instr
+operator|->
+name|format
+operator|.
+name|bytes
+index|[
+literal|0
+index|]
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 name|fgets
 argument_list|(
 name|buf
@@ -2129,7 +2221,13 @@ name|instrptr
 operator|++
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* Dump the remainder of the file */
+end_comment
+
+begin_while
 while|while
 condition|(
 name|fgets
@@ -2155,16 +2253,18 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+end_while
+
+begin_expr_stmt
 name|fclose
 argument_list|(
 name|ifile
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_function
-specifier|static
+unit|}  static
 name|int
 name|check_patch
 parameter_list|(

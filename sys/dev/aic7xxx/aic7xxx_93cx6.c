@@ -130,7 +130,7 @@ name|seeprom_descriptor
 modifier|*
 name|sd
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|buf
 decl_stmt|;
@@ -151,10 +151,10 @@ name|k
 init|=
 literal|0
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|v
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|temp
 decl_stmt|;
 comment|/* 	 * Read the requested registers of the seeprom.  The loop 	 * will range from 0 to count-1. 	 */
