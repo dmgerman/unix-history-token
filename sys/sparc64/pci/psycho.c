@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * Support for `psycho' and `psycho+' UPA to PCI bridge and  * UltraSPARC IIi and IIe `sabre' PCI controllers.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__RMAN_RESOURCE_VISIBLE
+end_define
+
 begin_include
 include|#
 directive|include

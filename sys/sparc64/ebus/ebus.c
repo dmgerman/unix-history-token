@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * UltraSPARC 5 and beyond ebus support.  *  * note that this driver is not complete:  *	- ebus2 dma code is completely unwritten  *	- interrupt establish is written and appears to work  *	- bus map code is written and appears to work  * XXX: This is PCI specific, however, there exist SBus-to-EBus bridges...  * XXX: The EBus was designed to allow easy adaption of ISA devices to it - a  * compatability layer for ISA devices might be nice, although probably not  * easily possible because of some cruft (like in[bwl]/out[bwl] and friends).  * Additionally, the existing ISA code is limited to one ISA bus, however,  * there are machines with both ISA and EBus.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__RMAN_RESOURCE_VISIBLE
+end_define
+
 begin_include
 include|#
 directive|include
