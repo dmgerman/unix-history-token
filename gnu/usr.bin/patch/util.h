@@ -569,28 +569,56 @@ begin_function_decl
 name|char
 modifier|*
 name|fetchname
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|_at
+parameter_list|,
+name|int
+name|_strip_leading
+parameter_list|,
+name|int
+name|_assume_exists
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
 name|move_file
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|_from
+parameter_list|,
+name|char
+modifier|*
+name|_to
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|copy_file
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|_from
+parameter_list|,
+name|char
+modifier|*
+name|_to
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|say
-parameter_list|()
+parameter_list|(
+comment|/*const char *pat, long _arg1, long _arg2, long _arg3*/
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -611,7 +639,9 @@ end_function_decl
 begin_function_decl
 name|int
 name|ask
-parameter_list|()
+parameter_list|(
+comment|/*const char *pat, long _arg1, long _arg2, long _arg3*/
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -619,28 +649,39 @@ begin_function_decl
 name|char
 modifier|*
 name|savestr
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|_s
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|set_signals
-parameter_list|()
+parameter_list|(
+name|int
+name|_reset
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|ignore_signals
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|makedirs
-parameter_list|()
+parameter_list|(
+comment|/*char *_filename, bool _striplast*/
+parameter_list|)
 function_decl|;
 end_function_decl
 

@@ -6,7 +6,9 @@ end_comment
 begin_function_decl
 name|void
 name|version
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 

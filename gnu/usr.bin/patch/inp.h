@@ -38,34 +38,55 @@ comment|/* irretractibly output */
 end_comment
 
 begin_function_decl
-name|bool
-name|rev_in_string
-parameter_list|()
+name|void
+name|re_input
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
 name|scan_input
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|_filename
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|bool
 name|plan_a
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|_filename
+parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* returns false if insufficient memory */
-end_comment
 
 begin_function_decl
 name|void
 name|plan_b
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+name|_filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|rev_in_string
+parameter_list|(
+name|char
+modifier|*
+name|_string
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -73,7 +94,13 @@ begin_function_decl
 name|char
 modifier|*
 name|ifetch
-parameter_list|()
+parameter_list|(
+name|LINENUM
+name|_line
+parameter_list|,
+name|int
+name|_whichbuf
+parameter_list|)
 function_decl|;
 end_function_decl
 
