@@ -1155,7 +1155,8 @@ argument_list|)
 operator|==
 literal|0
 operator|)
-expr|;
+operator|)
+expr_stmt|;
 elif|#
 directive|elif
 name|defined
@@ -1215,16 +1216,9 @@ argument_list|)
 operator|==
 literal|0
 operator|)
-block|)
-function|;
-end_function
-
-begin_endif
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -1236,9 +1230,6 @@ name|defined
 argument_list|(
 name|KRB5
 argument_list|)
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1254,9 +1245,6 @@ name|kerberos_or_local_passwd
 operator|=
 literal|1
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1272,14 +1260,8 @@ name|kerberos_ticket_cleanup
 operator|=
 literal|1
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -1291,9 +1273,6 @@ name|defined
 argument_list|(
 name|KRB5
 argument_list|)
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1309,20 +1288,11 @@ name|kerberos_tgt_passing
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|AFS
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1339,14 +1309,8 @@ operator|=
 name|k_hasafs
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1362,9 +1326,6 @@ name|password_authentication
 operator|=
 literal|1
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1380,9 +1341,6 @@ name|kbd_interactive_authentication
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1398,9 +1356,6 @@ name|challenge_response_authentication
 operator|=
 literal|1
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1416,9 +1371,6 @@ name|permit_empty_passwd
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1434,9 +1386,6 @@ name|use_login
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1452,9 +1401,6 @@ name|allow_tcp_forwarding
 operator|=
 literal|1
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1470,9 +1416,6 @@ name|gateway_ports
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1488,9 +1431,6 @@ name|max_startups
 operator|=
 literal|10
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1506,13 +1446,7 @@ name|max_startups_rate
 operator|=
 literal|100
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* 100% */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1530,9 +1464,6 @@ name|options
 operator|->
 name|max_startups
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1548,9 +1479,6 @@ name|verify_reverse_mapping
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1566,9 +1494,6 @@ name|client_alive_interval
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1584,9 +1509,6 @@ name|client_alive_count_max
 operator|=
 literal|3
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1621,9 +1543,6 @@ operator|=
 name|_PATH_SSH_USER_PERMITTED_KEYS2
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|options
@@ -1638,15 +1557,15 @@ name|authorized_keys_file
 operator|=
 name|_PATH_SSH_USER_PERMITTED_KEYS
 expr_stmt|;
-end_if
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/* Keyword tokens. */
 end_comment
 
-begin_enum
-unit|typedef
+begin_typedef
+typedef|typedef
 enum|enum
 block|{
 name|sBadOption
@@ -1796,8 +1715,8 @@ block|,
 name|sDeprecated
 block|}
 name|ServerOpCodes
-enum|;
-end_enum
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Textual representation of the tokens. */
