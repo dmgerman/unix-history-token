@@ -318,12 +318,6 @@ name|ccb
 modifier|*
 name|pccb
 decl_stmt|;
-name|bus_dma_tag_t
-name|parent_dmat
-decl_stmt|;
-name|bus_dma_tag_t
-name|sg_dmat
-decl_stmt|;
 name|bus_dmamap_t
 name|sg_dmamap
 decl_stmt|;
@@ -533,6 +527,9 @@ name|bus_dma_tag_t
 name|sense_dmat
 decl_stmt|;
 comment|/* dmat for sense buffer */
+name|bus_dma_tag_t
+name|sg_dmat
+decl_stmt|;
 name|bus_dmamap_t
 name|sense_dmamap
 decl_stmt|;
