@@ -23,5 +23,12 @@ name|_PATH_FTPLOGINMESG
 value|"/etc/ftpmotd"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_FTPDSTATFILE
+value|"/var/log/ftpd"
+end_define
+
 end_unit
 
