@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1006,23 +1006,6 @@ name|u_ar0
 operator|=
 name|locr0
 expr_stmt|;
-if|if
-condition|(
-name|code
-operator|==
-literal|139
-condition|)
-block|{
-comment|/* 4.2 COMPATIBILTY XXX */
-name|osigcleanup
-argument_list|()
-expr_stmt|;
-comment|/* 4.2 COMPATIBILTY XXX */
-goto|goto
-name|done
-goto|;
-comment|/* 4.2 COMPATIBILTY XXX */
-block|}
 name|params
 operator|=
 operator|(
