@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.59
+literal|3.60
 operator|%
 name|G
 operator|%
@@ -573,40 +573,6 @@ condition|)
 name|bp
 operator|++
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NOTUNIX
-comment|/* Hide UNIX-like From lines */
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|bp
-argument_list|,
-literal|"From "
-argument_list|,
-literal|5
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|">"
-argument_list|,
-name|tf
-argument_list|)
-expr_stmt|;
-name|CurEnv
-operator|->
-name|e_msgsize
-operator|++
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|NOTUNIX
 comment|/* 		**  Figure message length, output the line to the temp 		**  file, and insert a newline if missing. 		*/
 name|CurEnv
 operator|->
