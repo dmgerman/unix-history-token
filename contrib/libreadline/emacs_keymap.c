@@ -65,7 +65,7 @@ comment|/* Control-a */
 block|{
 name|ISFUNC
 block|,
-name|rl_backward
+name|rl_backward_char
 block|}
 block|,
 comment|/* Control-b */
@@ -97,7 +97,7 @@ comment|/* Control-e */
 block|{
 name|ISFUNC
 block|,
-name|rl_forward
+name|rl_forward_char
 block|}
 block|,
 comment|/* Control-f */

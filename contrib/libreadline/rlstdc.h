@@ -28,7 +28,7 @@ comment|/* Adapted from BSD /usr/include/sys/cdefs.h. */
 end_comment
 
 begin_comment
-comment|/* A function can be defined using prototypes and compile on both ANSI C    and traditional C compilers with something like this: 	extern char *func __P((char *, char *, int)); */
+comment|/* A function can be defined using prototypes and compile on both ANSI C    and traditional C compilers with something like this: 	extern char *func PARAMS((char *, char *, int)); */
 end_comment
 
 begin_if
@@ -37,7 +37,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|__P
+name|PARAMS
 argument_list|)
 end_if
 
@@ -63,7 +63,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__P
+name|PARAMS
 parameter_list|(
 name|protos
 parameter_list|)
@@ -78,7 +78,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|__P
+name|PARAMS
 parameter_list|(
 name|protos
 parameter_list|)
@@ -95,50 +95,39 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__attribute__
+end_ifndef
 
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__GNUC__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* gcc with -traditional */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-specifier|const
-argument_list|)
+operator|<
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|<
+literal|8
+operator|)
+operator|||
+name|__STRICT_ANSI__
 end_if
 
 begin_define
 define|#
 directive|define
-name|const
-value|__const
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
 end_define
 
 begin_endif
@@ -146,61 +135,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !const */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__GNUC__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-specifier|const
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !const */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__GNUC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__STDC__&& !__cplusplus */
-end_comment
 
 begin_endif
 endif|#

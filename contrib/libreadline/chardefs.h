@@ -43,16 +43,55 @@ name|HAVE_STRING_H
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|STDC_HEADERS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_MEMORY_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_STRING_H */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_STRINGS_H
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -66,7 +105,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_STRING_H */
+comment|/* HAVE_STRINGS_H */
 end_comment
 
 begin_else
@@ -120,6 +159,23 @@ begin_undef
 undef|#
 directive|undef
 name|CTRL
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNCTRL
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|UNCTRL
 end_undef
 
 begin_endif
@@ -257,9 +313,177 @@ parameter_list|)
 value|_rl_to_upper(((c)|control_character_bit))
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+name|STDC_HEADERS
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|isascii
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISASCII
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IN_CTYPE_DOMAIN
+parameter_list|(
+name|c
+parameter_list|)
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IN_CTYPE_DOMAIN
+parameter_list|(
+name|c
+parameter_list|)
+value|isascii(c)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|isxdigit
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_ISXDIGIT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|isxdigit
+parameter_list|(
+name|c
+parameter_list|)
+value|(isdigit((c)) || ((c)>= 'a'&& (c)<= 'f') || ((c)>= 'A'&& (c)<= 'F'))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NON_NEGATIVE
+parameter_list|(
+name|c
+parameter_list|)
+value|((unsigned char)(c) == (c))
+end_define
+
 begin_comment
-comment|/* Old versions #define _rl_lowercase_p(c) (((c)> ('a' - 1)&& (c)< ('z' + 1))) #define _rl_uppercase_p(c) (((c)> ('A' - 1)&& (c)< ('Z' + 1))) #define _rl_digit_p(c)  ((c)>= '0'&& (c)<= '9') */
+comment|/* Some systems define these; we want our definitions. */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ISPRINT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ISALNUM
+parameter_list|(
+name|c
+parameter_list|)
+value|(IN_CTYPE_DOMAIN (c)&& isalnum (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISALPHA
+parameter_list|(
+name|c
+parameter_list|)
+value|(IN_CTYPE_DOMAIN (c)&& isalpha (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISDIGIT
+parameter_list|(
+name|c
+parameter_list|)
+value|(IN_CTYPE_DOMAIN (c)&& isdigit (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISLOWER
+parameter_list|(
+name|c
+parameter_list|)
+value|(IN_CTYPE_DOMAIN (c)&& islower (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISPRINT
+parameter_list|(
+name|c
+parameter_list|)
+value|(IN_CTYPE_DOMAIN (c)&& isprint (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISUPPER
+parameter_list|(
+name|c
+parameter_list|)
+value|(IN_CTYPE_DOMAIN (c)&& isupper (c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISXDIGIT
+parameter_list|(
+name|c
+parameter_list|)
+value|(IN_CTYPE_DOMAIN (c)&& isxdigit (c))
+end_define
 
 begin_define
 define|#
@@ -268,7 +492,7 @@ name|_rl_lowercase_p
 parameter_list|(
 name|c
 parameter_list|)
-value|(islower(c))
+value|(NON_NEGATIVE(c)&& ISLOWER(c))
 end_define
 
 begin_define
@@ -278,7 +502,7 @@ name|_rl_uppercase_p
 parameter_list|(
 name|c
 parameter_list|)
-value|(isupper(c))
+value|(NON_NEGATIVE(c)&& ISUPPER(c))
 end_define
 
 begin_define
@@ -286,9 +510,9 @@ define|#
 directive|define
 name|_rl_digit_p
 parameter_list|(
-name|x
+name|c
 parameter_list|)
-value|(isdigit (x))
+value|((c)>= '0'&& (c)<= '9')
 end_define
 
 begin_define
@@ -298,7 +522,7 @@ name|_rl_pure_alphabetic
 parameter_list|(
 name|c
 parameter_list|)
-value|(_rl_lowercase_p(c) || _rl_uppercase_p(c))
+value|(NON_NEGATIVE(c)&& ISALPHA(c))
 end_define
 
 begin_define
@@ -308,12 +532,8 @@ name|ALPHABETIC
 parameter_list|(
 name|c
 parameter_list|)
-value|(_rl_lowercase_p(c) || _rl_uppercase_p(c) || _rl_digit_p(c))
+value|(NON_NEGATIVE(c)&& ISALNUM(c))
 end_define
-
-begin_comment
-comment|/* Old versions #  define _rl_to_upper(c) (_rl_lowercase_p(c) ? ((c) - 32) : (c)) #  define _rl_to_lower(c) (_rl_uppercase_p(c) ? ((c) + 32) : (c)) */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -328,7 +548,7 @@ name|_rl_to_upper
 parameter_list|(
 name|c
 parameter_list|)
-value|(islower(c) ? toupper(c) : (c))
+value|(_rl_lowercase_p(c) ? toupper((unsigned char)c) : (c))
 end_define
 
 begin_define
@@ -338,7 +558,7 @@ name|_rl_to_lower
 parameter_list|(
 name|c
 parameter_list|)
-value|(isupper(c) ? tolower(c) : (c))
+value|(_rl_uppercase_p(c) ? tolower((unsigned char)c) : (c))
 end_define
 
 begin_endif
@@ -366,6 +586,69 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_rl_isident
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_rl_isident
+parameter_list|(
+name|c
+parameter_list|)
+value|(ISALNUM(c) || (c) == '_')
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISOCTAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ISOCTAL
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)>= '0'&& (c)<= '7')
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|OCTVALUE
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) - '0')
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEXVALUE
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|(((c)>= 'a'&& (c)<= 'f') \   	? (c)-'a'+10 \   	: (c)>= 'A'&& (c)<= 'F' ? (c)-'A'+10 : (c)-'0')
+end_define
 
 begin_ifndef
 ifndef|#
@@ -537,69 +820,6 @@ define|#
 directive|define
 name|ESC
 value|CTRL('[')
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISOCTAL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ISOCTAL
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)>= '0'&& (c)<= '7')
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|OCTVALUE
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) - '0')
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|isxdigit
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|isxdigit
-parameter_list|(
-name|c
-parameter_list|)
-value|(isdigit((c)) || ((c)>= 'a'&& (c)<= 'f') || ((c)>= 'A'&& (c)<= 'F'))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|HEXVALUE
-parameter_list|(
-name|c
-parameter_list|)
-define|\
-value|(((c)>= 'a'&& (c)<= 'f') \   	? (c)-'a'+10 \   	: (c)>= 'A'&& (c)<= 'F' ? (c)-'A'+10 : (c)-'0')
 end_define
 
 begin_endif

@@ -55,7 +55,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|rl_free_undo_list
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -68,7 +68,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_maybe_save_line
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -81,7 +81,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_maybe_unsave_line
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -94,7 +94,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_maybe_replace_line
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -107,7 +107,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_crlf
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -120,7 +120,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_ding
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -133,7 +133,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|rl_alphabetic
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -148,7 +148,7 @@ name|char
 modifier|*
 modifier|*
 name|rl_completion_matches
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -167,7 +167,7 @@ specifier|extern
 name|char
 modifier|*
 name|rl_username_completion_function
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -185,7 +185,7 @@ specifier|extern
 name|char
 modifier|*
 name|rl_filename_completion_function
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const

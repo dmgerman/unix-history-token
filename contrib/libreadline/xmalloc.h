@@ -101,13 +101,12 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
+name|PTR_T
 name|xmalloc
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -115,16 +114,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
+name|PTR_T
 name|xrealloc
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -134,7 +132,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|xfree
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void

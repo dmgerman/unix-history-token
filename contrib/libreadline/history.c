@@ -115,41 +115,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_STRING_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HAVE_STRING_H */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -231,6 +196,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* The current number of slots allocated to the input_history. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|history_size
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* If HISTORY_STIFLED is non-zero, then this is the maximum number of    entries to remember. */
 end_comment
 
@@ -267,17 +243,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|history_length
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The current number of slots allocated to the input_history. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|history_size
 decl_stmt|;
 end_decl_stmt
 
@@ -1286,7 +1251,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Stop stifling the history.  This returns the previous amount the     history was stifled by.  The value is positive if the history was    stifled,  negative if it wasn't. */
+comment|/* Stop stifling the history.  This returns the previous maximum    number of history entries.  The value is positive if the history    was stifled,  negative if it wasn't. */
 end_comment
 
 begin_function
@@ -1305,13 +1270,14 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-operator|-
 name|history_max_entries
 operator|)
 return|;
 block|}
+else|else
 return|return
 operator|(
+operator|-
 name|history_max_entries
 operator|)
 return|;

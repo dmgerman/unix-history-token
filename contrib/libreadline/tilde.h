@@ -35,13 +35,13 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* A function can be defined using prototypes and compile on both ANSI C    and traditional C compilers with something like this: 	extern char *func __P((char *, char *, int)); */
+comment|/* A function can be defined using prototypes and compile on both ANSI C    and traditional C compilers with something like this: 	extern char *func PARAMS((char *, char *, int)); */
 if|#
 directive|if
 operator|!
 name|defined
 argument_list|(
-name|__P
+name|PARAMS
 argument_list|)
 if|#
 directive|if
@@ -61,7 +61,7 @@ name|__cplusplus
 argument_list|)
 define|#
 directive|define
-name|__P
+name|PARAMS
 parameter_list|(
 name|protos
 parameter_list|)
@@ -70,7 +70,7 @@ else|#
 directive|else
 define|#
 directive|define
-name|__P
+name|PARAMS
 parameter_list|(
 name|protos
 parameter_list|)
@@ -79,67 +79,11 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-comment|/* gcc with -traditional */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-specifier|const
-argument_list|)
-define|#
-directive|define
-name|const
-value|__const
-endif|#
-directive|endif
-comment|/* !const */
-else|#
-directive|else
-comment|/* !__GNUC__ */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-specifier|const
-argument_list|)
-define|#
-directive|define
-name|const
-endif|#
-directive|endif
-comment|/* !const */
-endif|#
-directive|endif
-comment|/* !__GNUC__ */
-endif|#
-directive|endif
-comment|/* !__STDC__&& !__cplusplus */
 typedef|typedef
 name|char
 modifier|*
 name|tilde_hook_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -175,7 +119,7 @@ specifier|extern
 name|char
 modifier|*
 name|tilde_expand
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -189,7 +133,7 @@ specifier|extern
 name|char
 modifier|*
 name|tilde_expand_word
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const

@@ -140,17 +140,11 @@ directive|include
 file|"rlprivate.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|SWAP
-parameter_list|(
-name|s
-parameter_list|,
-name|e
-parameter_list|)
-value|do { int t; t = s; s = e; e = t; } while (0)
-end_define
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
 
 begin_comment
 comment|/* Non-zero tells rl_delete_text and rl_insert_text to not add to    the undo list. */
