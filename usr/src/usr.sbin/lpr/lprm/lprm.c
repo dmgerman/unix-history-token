@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprm.c	5.5 (Berkeley) %G%"
+literal|"@(#)lprm.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,15 +138,6 @@ begin_comment
 comment|/* buffer for person */
 end_comment
 
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|main
 parameter_list|(
@@ -154,6 +145,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -443,22 +437,27 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"usage: lprm [-] [-Pprinter] [[job #] [user] ...]\n"
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|2
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

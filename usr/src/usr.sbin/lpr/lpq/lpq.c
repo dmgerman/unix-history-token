@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpq.c	5.6 (Berkeley) %G%"
+literal|"@(#)lpq.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,22 +347,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|puts
 argument_list|(
 literal|"usage: lpq [-l] [-Pprinter] [user ...] [job ...]"
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 

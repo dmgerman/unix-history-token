@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	5.10 (Berkeley) %G%"
+literal|"@(#)lpd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,19 +78,15 @@ begin_comment
 comment|/* log requests flag */
 end_comment
 
-begin_function_decl
-name|int
-name|reapchild
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
+begin_decl_stmt
+name|void
 name|mcleanup
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|reapchild
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -499,6 +495,11 @@ name|bind
 argument_list|(
 name|funix
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sun
 argument_list|,
@@ -651,6 +652,11 @@ name|bind
 argument_list|(
 name|finet
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sin
 argument_list|,
@@ -658,8 +664,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -778,6 +782,11 @@ name|accept
 argument_list|(
 name|funix
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|fromunix
 argument_list|,
@@ -815,6 +824,11 @@ name|accept
 argument_list|(
 name|finet
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|frominet
 argument_list|,
@@ -952,12 +966,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|reapchild
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|union
 name|wait
@@ -967,6 +979,10 @@ while|while
 condition|(
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -979,14 +995,12 @@ literal|0
 condition|)
 empty_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|mcleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1010,7 +1024,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Stuff for handling job specifications  */
@@ -1795,6 +1809,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|f
 operator|->

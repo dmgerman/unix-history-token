@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)common.c	5.6 (Berkeley) %G%"
+literal|"@(#)common.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,7 +725,9 @@ argument_list|(
 name|s
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|sin
@@ -974,16 +976,18 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-name|int
-name|arraysz
-decl_stmt|,
-name|compar
-argument_list|()
-decl_stmt|;
 name|DIR
 modifier|*
 name|dirp
 decl_stmt|;
+name|int
+name|arraysz
+decl_stmt|;
+specifier|static
+name|int
+name|compar
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|(

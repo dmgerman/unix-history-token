@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rvsort.c	5.4 (Berkeley) %G%"
+literal|"@(#)rvsort.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1055,22 +1055,6 @@ name|in
 argument_list|)
 operator|)
 return|;
-block|}
-end_block
-
-begin_macro
-name|ungetc
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|peekc
-operator|=
-name|c
-expr_stmt|;
 block|}
 end_block
 

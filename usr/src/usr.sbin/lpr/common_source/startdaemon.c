@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startdaemon.c	5.6 (Berkeley) %G%"
+literal|"@(#)startdaemon.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,11 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+specifier|static
+name|void
+name|perr
+parameter_list|()
+function_decl|;
 name|s
 operator|=
 name|socket
@@ -150,6 +155,11 @@ name|connect
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|sun
 argument_list|,
@@ -332,19 +342,17 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|perr
-argument_list|(
-argument|msg
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|msg
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|msg
+decl_stmt|;
 block|{
 specifier|extern
 name|int
@@ -378,7 +386,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

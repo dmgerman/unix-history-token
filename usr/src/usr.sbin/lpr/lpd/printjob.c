@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	5.12 (Berkeley) %G%"
+literal|"@(#)printjob.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,8 +434,7 @@ name|count
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|int
+name|void
 name|abortpr
 parameter_list|()
 function_decl|;
@@ -3031,6 +3030,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -3217,6 +3220,10 @@ name|pid
 operator|=
 name|wait
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|)
@@ -5505,12 +5512,10 @@ begin_comment
 comment|/*  * Kill child processes to abort current job.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|abortpr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -5544,7 +5549,7 @@ while|while
 condition|(
 name|wait
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
 operator|>
 literal|0
@@ -5556,7 +5561,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|init

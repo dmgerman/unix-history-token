@@ -52,7 +52,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	5.8 (Berkeley) %G%"
+literal|"@(#)lpr.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,7 +515,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|cleanup
 parameter_list|()
 function_decl|;
@@ -541,13 +541,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-parameter_list|()
-function_decl|;
 name|struct
 name|passwd
 modifier|*
@@ -2629,12 +2622,10 @@ begin_comment
 comment|/*  * Cleanup after interrupts and errors.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|i
@@ -2763,7 +2754,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Test to see if this is a printable file.  * Return -1 if it is not, 0 if its printable, and 1 if  * we should remove it after printing.  */
@@ -3425,7 +3416,7 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|mktemp
+name|lmktemp
 parameter_list|()
 function_decl|;
 operator|(
@@ -3581,7 +3572,7 @@ literal|8
 expr_stmt|;
 name|tfname
 operator|=
-name|mktemp
+name|lmktemp
 argument_list|(
 literal|"tf"
 argument_list|,
@@ -3592,7 +3583,7 @@ argument_list|)
 expr_stmt|;
 name|cfname
 operator|=
-name|mktemp
+name|lmktemp
 argument_list|(
 literal|"cf"
 argument_list|,
@@ -3603,7 +3594,7 @@ argument_list|)
 expr_stmt|;
 name|dfname
 operator|=
-name|mktemp
+name|lmktemp
 argument_list|(
 literal|"df"
 argument_list|,
@@ -3686,7 +3677,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|mktemp
+name|lmktemp
 parameter_list|(
 name|id
 parameter_list|,

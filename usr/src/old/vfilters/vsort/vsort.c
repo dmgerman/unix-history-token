@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vsort.c	5.3 (Berkeley) %G%"
+literal|"@(#)vsort.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1305,22 +1305,6 @@ block|}
 end_block
 
 begin_macro
-name|ungetc
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|peekc
-operator|=
-name|c
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
 name|error
 argument_list|(
 argument|s
@@ -1343,8 +1327,6 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|stderr
-argument_list|,
 name|stderr
 argument_list|,
 literal|"vsort: %s\n"

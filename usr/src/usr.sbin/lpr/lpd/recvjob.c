@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.11 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|rcleanup
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|recvjob
 argument_list|()
@@ -151,9 +158,6 @@ name|pbuf
 decl_stmt|;
 name|int
 name|status
-decl_stmt|,
-name|rcleanup
-argument_list|()
 decl_stmt|;
 comment|/* 	 * Perform lookup for printer name or abbreviation 	 */
 if|if
@@ -1497,12 +1501,10 @@ begin_comment
 comment|/*  * Remove all the files associated with the current job being transfered.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rcleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1575,7 +1577,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|frecverr
