@@ -6295,6 +6295,17 @@ name|clear
 operator|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|length
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|string
 operator|=
 name|malloc
