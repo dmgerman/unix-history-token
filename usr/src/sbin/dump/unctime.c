@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unctime.c	5.4 (Berkeley) %G%"
+literal|"@(#)unctime.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|dbuf
