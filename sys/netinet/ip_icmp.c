@@ -350,6 +350,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|int
+name|icmplim_output
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_icmp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|icmplim_output
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|icmplim_output
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * ICMP broadcast echo sysctl  */
 end_comment
@@ -3944,6 +3974,8 @@ name|which
 index|]
 operator|>
 name|icmplim
+operator|&&
+name|icmplim_output
 condition|)
 block|{
 name|printf
