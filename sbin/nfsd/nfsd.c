@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	8.7 (Berkeley) 2/22/94"
+literal|"@(#)nfsd.c	8.9 (Berkeley) 3/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +169,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<kerberosIV/des.h>
 end_include
 
 begin_include
@@ -629,20 +629,24 @@ directive|ifdef
 name|__FreeBSD__
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
 decl_stmt|;
-name|vfc
+name|int
+name|error
+decl_stmt|;
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"nfs"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -668,21 +672,21 @@ name|endvfsent
 argument_list|()
 expr_stmt|;
 comment|/* flush cache */
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"nfs"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
-comment|/* probably unnecessary */
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -690,7 +694,6 @@ argument_list|,
 literal|"NFS is not available in the running kernel"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 ifdef|#

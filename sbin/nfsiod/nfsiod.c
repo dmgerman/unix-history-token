@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsiod.c	8.3 (Berkeley) 2/22/94"
+literal|"@(#)nfsiod.c	8.4 (Berkeley) 5/3/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,20 +249,24 @@ name|num_servers
 decl_stmt|;
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
 decl_stmt|;
-name|vfc
+name|int
+name|error
+decl_stmt|;
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"nfs"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -288,20 +292,21 @@ name|endvfsent
 argument_list|()
 expr_stmt|;
 comment|/* flush cache */
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"nfs"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -309,7 +314,6 @@ argument_list|,
 literal|"NFS support is not available in the running kernel"
 argument_list|)
 expr_stmt|;
-block|}
 define|#
 directive|define
 name|MAXNFSDCNT
