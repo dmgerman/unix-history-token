@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.28 1997/07/22 07:39:43 charnier Exp $"
+literal|"$Id: login.c,v 1.29 1997/09/28 08:49:22 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2432,7 +2432,7 @@ expr_stmt|;
 define|#
 directive|define
 name|DEFAULT_WARN
-value|(2L * 7L& 86400L)
+value|(2L * 7L * 86400L)
 comment|/* Two weeks */
 ifdef|#
 directive|ifdef
