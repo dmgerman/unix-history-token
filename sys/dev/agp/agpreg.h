@@ -373,6 +373,13 @@ name|AGP3_VIA_ATTBASE
 value|0x98
 end_define
 
+begin_define
+define|#
+directive|define
+name|AGP_VIA_AGPSEL
+value|0xfd
+end_define
+
 begin_comment
 comment|/*  * Config offsets for SiS AGP chipsets.  */
 end_comment
