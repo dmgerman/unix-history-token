@@ -2324,7 +2324,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This bit has a different meaning depending if we are dealing 	 * with normal a normal BAR or an Option ROM BAR. 	 */
+comment|/* 	 * This bit has a different meaning depending if we are dealing 	 * with a normal BAR or an Option ROM BAR. 	 */
 if|if
 condition|(
 operator|(
@@ -2674,8 +2674,8 @@ argument_list|)
 operator|&
 literal|0x80
 operator|)
-operator|==
-literal|1
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
