@@ -48,12 +48,6 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<opt_drm_linux.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
