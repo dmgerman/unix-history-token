@@ -109,7 +109,7 @@ block|{
 name|long
 name|checksum
 decl_stmt|;
-name|long
+name|int
 name|arc_count
 decl_stmt|;
 name|u_long
