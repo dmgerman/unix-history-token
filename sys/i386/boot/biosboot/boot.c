@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.28 1994/12/18 19:14:13 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.29 1994/12/18 20:30:10 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -55,33 +55,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|names
-index|[]
 init|=
 block|{
 literal|"/kernel"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|NUMNAMES
-value|(sizeof(names)/sizeof(char *))
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMCONSOLE
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -93,10 +72,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|int
+name|probe_keyboard
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|int
+name|loadflags
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -121,26 +113,31 @@ end_decl_stmt
 begin_block
 block|{
 name|int
-name|loadflags
-decl_stmt|,
-name|currname
-init|=
-literal|0
-decl_stmt|,
 name|ret
 decl_stmt|;
 name|char
 modifier|*
 name|t
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|COMCONSOLE
+if|if
+condition|(
+name|probe_keyboard
+argument_list|()
+condition|)
+block|{
 name|init_serial
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
+name|loadflags
+operator||=
+name|RB_SERIAL
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nNo keyboard found.\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Pick up the story from the Bios on geometry of disks */
 for|for
 control|(
@@ -169,9 +166,10 @@ operator|+
 literal|0x80
 argument_list|)
 expr_stmt|;
+comment|/* This is nasty, but why use 4 printf()s when 1 will do. */
 name|printf
 argument_list|(
-literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n"
+literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\nUse hd(1,a)/kernel to boot sd0 when wd0 is also installed.\nUsage: [[[%s(%d,a)]%s][-s][-r][-a][-c][-d][-b][-v][-h]]\nUse ? for file list or simply press Return for defaults\n"
 argument_list|,
 name|ouraddr
 argument_list|,
@@ -184,16 +182,6 @@ name|memsize
 argument_list|(
 literal|1
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Use hd(1,a)/kernel to boot sd0 when wd0 is also installed.\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Usage: [[[%s(0,a)]%s][-s][-r][-a][-c][-d][-b][-v]]\n"
 argument_list|,
 name|devs
 index|[
@@ -208,15 +196,17 @@ else|:
 literal|2
 index|]
 argument_list|,
-name|names
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Use ? for file list or simply press Return for defaults\n"
+operator|(
+name|unit
+operator|=
+operator|(
+name|drive
+operator|&
+literal|0x7f
+operator|)
+operator|)
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 name|gateA20
@@ -226,8 +216,6 @@ name|loadstart
 label|:
 comment|/***************************************************************\ 	* As a default set it to the first partition of the first	* 	* floppy or hard drive						* 	\***************************************************************/
 name|part
-operator|=
-name|unit
 operator|=
 literal|0
 expr_stmt|;
@@ -244,28 +232,6 @@ literal|2
 operator|)
 expr_stmt|;
 comment|/* a good first bet */
-name|name
-operator|=
-name|names
-index|[
-name|currname
-operator|++
-index|]
-expr_stmt|;
-name|loadflags
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|currname
-operator|==
-name|NUMNAMES
-condition|)
-name|currname
-operator|=
-literal|0
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Boot: "
@@ -431,6 +397,10 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
+comment|/*  * With the current scheme of things, addr can never be less than ouraddr,  * so this next bit of code is largely irrelevant. Taking it out saves lots  * of space.  */
+ifdef|#
+directive|ifdef
+name|REDUNDANT
 if|if
 condition|(
 name|addr
@@ -491,6 +461,8 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"text=0x%x "
@@ -590,6 +562,10 @@ operator|.
 name|a_bss
 argument_list|)
 expr_stmt|;
+comment|/*  * This doesn't do us any good anymore either.  */
+ifdef|#
+directive|ifdef
+name|REDUNDANT
 if|if
 condition|(
 operator|(
@@ -642,6 +618,19 @@ name|head
 operator|.
 name|a_bss
 expr_stmt|;
+else|#
+directive|else
+name|pbzero
+argument_list|(
+name|addr
+argument_list|,
+name|head
+operator|.
+name|a_bss
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|LOADSYMS
@@ -1092,6 +1081,15 @@ operator|*
 name|howto
 operator||=
 name|RB_VERBOSE
+expr_stmt|;
+continue|continue;
+case|case
+literal|'h'
+case|:
+operator|*
+name|howto
+operator|^=
+name|RB_SERIAL
 expr_stmt|;
 continue|continue;
 block|}
