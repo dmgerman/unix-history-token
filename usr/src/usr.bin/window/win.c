@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)win.c	3.14 %G%"
+literal|"@(#)win.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1401,7 +1401,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"\033Y%c%c\033p%s\033q "
+literal|"\033Y%c%c\033sA%s\033rA "
 argument_list|,
 name|w
 operator|->
