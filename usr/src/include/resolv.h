@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)resolv.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)resolv.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,6 +16,39 @@ end_define
 
 begin_comment
 comment|/* max # name servers we'll track */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDNSRCH
+value|3
+end_define
+
+begin_comment
+comment|/* max # default domain levels to try */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCALDOMAINPARTS
+value|2
+end_define
+
+begin_comment
+comment|/* min levels in name that is "local" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_TIMEOUT
+value|4
+end_define
+
+begin_comment
+comment|/* seconds between retries */
 end_comment
 
 begin_struct
@@ -62,6 +95,16 @@ name|MAXDNAME
 index|]
 decl_stmt|;
 comment|/* default domain */
+name|char
+modifier|*
+name|dnsrch
+index|[
+name|MAXDNSRCH
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* components of domain to search */
 block|}
 struct|;
 end_struct
@@ -168,6 +211,24 @@ end_define
 begin_comment
 comment|/* Keep TCP socket open */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_DNSRCH
+value|0x0200
+end_define
+
+begin_comment
+comment|/* search up local domain tree */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_DEFAULT
+value|(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
+end_define
 
 begin_decl_stmt
 specifier|extern
