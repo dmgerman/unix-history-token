@@ -77,6 +77,12 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/* #define bp_address_u bp_address */
 end_comment
@@ -181,7 +187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|bool_t
 name|eachres_whoami
 parameter_list|(
 name|resultp
@@ -259,31 +265,23 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|bool_t
 name|eachres_getfile
-argument_list|(
-argument|resultp
-argument_list|,
-argument|raddr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|resultp
+parameter_list|,
+name|raddr
+parameter_list|)
 name|bp_getfile_res
 modifier|*
 name|resultp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr_in
 modifier|*
 name|raddr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|hostent
@@ -344,7 +342,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -469,7 +467,6 @@ argument_list|,
 literal|"udp"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|clnt
@@ -485,6 +482,7 @@ argument_list|,
 name|server
 argument_list|)
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|argc
@@ -617,6 +615,9 @@ operator|)
 operator|&
 name|whoami_arg
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_bp_whoami_res
 argument_list|,
 operator|(
@@ -717,6 +718,9 @@ name|BOOTPARAMVERS
 argument_list|,
 name|BOOTPARAMPROC_GETFILE
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_bp_getfile_arg
 argument_list|,
 operator|(
@@ -726,6 +730,9 @@ operator|)
 operator|&
 name|getfile_arg
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_bp_getfile_res
 argument_list|,
 operator|(
