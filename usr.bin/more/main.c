@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -256,7 +262,9 @@ decl_stmt|;
 name|char
 name|message
 index|[
-literal|100
+name|MAXPATHLEN
+operator|+
+literal|50
 index|]
 decl_stmt|,
 modifier|*
@@ -469,9 +477,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|message
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|message
+argument_list|)
 argument_list|,
 literal|"%s: %s"
 argument_list|,

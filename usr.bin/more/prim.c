@@ -1034,9 +1034,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|message
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|message
+argument_list|)
 argument_list|,
 literal|"File has only %d lines"
 argument_list|,

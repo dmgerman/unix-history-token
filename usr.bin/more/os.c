@@ -271,9 +271,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|cmdbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cmdbuf
+argument_list|)
 argument_list|,
 literal|"%s -c \"%s\""
 argument_list|,
@@ -578,39 +583,12 @@ literal|'\0'
 condition|)
 block|{
 comment|/* 		 * Read the output of<echo filename>. 		 */
-name|cmd
-operator|=
-name|malloc
-argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
-name|strlen
-argument_list|(
-name|filename
-argument_list|)
-operator|+
-literal|8
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|filename
-operator|)
-return|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|asprintf
 argument_list|(
+operator|&
 name|cmd
 argument_list|,
 literal|"echo \"%s\""
@@ -618,27 +596,6 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Read the output of<$SHELL -c "echo filename">. 		 */
-name|cmd
-operator|=
-name|malloc
-argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-operator|+
-literal|12
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -650,11 +607,16 @@ operator|(
 name|filename
 operator|)
 return|;
+block|}
+else|else
+block|{
+comment|/* 		 * Read the output of<$SHELL -c "echo filename">. 		 */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|asprintf
 argument_list|(
+operator|&
 name|cmd
 argument_list|,
 literal|"%s -c \"echo %s\""
@@ -664,6 +626,17 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|filename
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -819,9 +792,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|message
+argument_list|,
+name|len
 argument_list|,
 literal|"%s: %s"
 argument_list|,

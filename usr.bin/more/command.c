@@ -771,9 +771,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|" file %d/%d"
 argument_list|,
@@ -798,9 +803,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|" line %d"
 argument_list|,
@@ -833,9 +843,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|" byte %qd"
 argument_list|,
@@ -863,9 +878,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|"/%qd pct %qd%%"
 argument_list|,
@@ -966,9 +986,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pbuf
+argument_list|)
 argument_list|,
 literal|" (%qd%%)"
 argument_list|,
@@ -2410,9 +2435,14 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s +%d %s"
 argument_list|,
@@ -2427,9 +2457,14 @@ else|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s %s"
 argument_list|,

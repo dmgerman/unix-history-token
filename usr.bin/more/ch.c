@@ -1322,9 +1322,14 @@ comment|/* 		 * Cannot allocate enough buffers. 		 * If we don't have ANY, then 
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|message
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|message
+argument_list|)
 argument_list|,
 literal|"cannot allocate %d buffers"
 argument_list|,
