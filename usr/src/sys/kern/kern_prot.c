@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -777,6 +777,9 @@ return|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|enterpgrp
 argument_list|(
 name|p
@@ -1023,6 +1026,8 @@ operator|(
 name|EPERM
 operator|)
 return|;
+return|return
+operator|(
 name|enterpgrp
 argument_list|(
 name|targp
@@ -1033,10 +1038,6 @@ name|pgid
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
