@@ -10458,10 +10458,6 @@ argument_list|(
 name|newbrk
 argument_list|)
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 operator|-
 literal|1
 condition|)
