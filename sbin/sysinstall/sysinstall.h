@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|TITLE
-value|"FreeBSD 2.0-950127-SNAP Install"
+value|"FreeBSD 2.0-950128-SNAP Install"
 end_define
 
 begin_define
