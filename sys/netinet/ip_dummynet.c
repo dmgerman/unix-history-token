@@ -763,7 +763,7 @@ name|int
 name|dummynet_io
 parameter_list|(
 name|int
-name|pipe
+name|pipe_nr
 parameter_list|,
 name|int
 name|dir
@@ -1848,8 +1848,12 @@ operator|->
 name|dn_m
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
+comment|/* fallthrough */
+case|case
+name|DN_TO_ETH_DEMUX
+case|:
 block|{
 name|struct
 name|mbuf
@@ -1927,6 +1931,15 @@ name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* 		 * bdg_forward() wants a pointer to the pseudo-mbuf-header, but 		 * on return it will supply the pointer to the actual packet 		 * (originally pkt->dn_m, but could be something else now) if 		 * it has not consumed it. 		 */
+if|if
+condition|(
+name|pkt
+operator|->
+name|dn_dir
+operator|==
+name|DN_TO_BDG_FWD
+condition|)
+block|{
 name|m
 operator|=
 name|bdg_forward_ptr
@@ -1950,7 +1963,37 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|ether_demux
+argument_list|(
+name|NULL
+argument_list|,
+name|eh
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* which consumes the mbuf */
+block|}
 break|break ;
+case|case
+name|DN_TO_ETH_OUT
+case|:
+name|ether_output_frame
+argument_list|(
+name|pkt
+operator|->
+name|ifp
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+name|pkt
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -4733,7 +4776,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  */
+comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  *		real_dst in bdg_forward  * ro		route parameter (only used in ip_output, NULL otherwise)  * dst		destination address, only used by ip_output  * rule		matching rule, in case of multiple passes  * flags	flags from the caller, only used in ip_output  *   */
 end_comment
 
 begin_macro

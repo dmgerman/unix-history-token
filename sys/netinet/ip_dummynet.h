@@ -227,6 +227,14 @@ define|#
 directive|define
 name|DN_TO_BDG_FWD
 value|3
+define|#
+directive|define
+name|DN_TO_ETH_DEMUX
+value|4
+define|#
+directive|define
+name|DN_TO_ETH_OUT
+value|5
 name|dn_key
 name|output_time
 decl_stmt|;
