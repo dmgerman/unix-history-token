@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_umap.c	8.3 (Berkeley) %G%"
+literal|"@(#)mount_umap.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -751,7 +751,7 @@ condition|(
 operator|(
 name|fscanf
 argument_list|(
-name|fp
+name|gfp
 argument_list|,
 literal|"%d\n"
 argument_list|,
@@ -814,7 +814,7 @@ condition|(
 operator|(
 name|fscanf
 argument_list|(
-name|fp
+name|gfp
 argument_list|,
 literal|"%lu %lu\n"
 argument_list|,
@@ -849,7 +849,7 @@ if|if
 condition|(
 name|ferror
 argument_list|(
-name|fp
+name|gfp
 argument_list|)
 condition|)
 name|err
@@ -867,7 +867,7 @@ if|if
 condition|(
 name|feof
 argument_list|(
-name|fp
+name|gfp
 argument_list|)
 condition|)
 name|errx
