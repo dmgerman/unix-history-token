@@ -128,13 +128,6 @@ name|g_provider
 modifier|*
 name|sc_provider
 decl_stmt|;
-name|char
-name|sc_name
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* concat name */
 name|uint32_t
 name|sc_id
 decl_stmt|;
@@ -150,6 +143,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|sc_name
+value|sc_geom->name
+end_define
 
 begin_endif
 endif|#

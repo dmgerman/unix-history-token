@@ -454,9 +454,7 @@ name|name
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 name|disk
@@ -497,9 +495,7 @@ literal|"Device %s removed."
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1312,13 +1308,11 @@ name|sc
 operator|->
 name|sc_geom
 argument_list|,
-literal|"%s"
+literal|"concat/%s"
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 name|start
@@ -1468,9 +1462,7 @@ literal|"Device %s activated."
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1937,9 +1929,9 @@ name|pp
 operator|->
 name|name
 argument_list|,
-name|gp
+name|sc
 operator|->
-name|name
+name|sc_name
 argument_list|)
 expr_stmt|;
 name|g_concat_check_and_run
@@ -2057,7 +2049,7 @@ name|G_CONCAT_DEBUG
 argument_list|(
 literal|1
 argument_list|,
-literal|"Creating device %s.concat (id=%u)."
+literal|"Creating device %s (id=%u)."
 argument_list|,
 name|md
 operator|->
@@ -2142,7 +2134,7 @@ name|g_new_geomf
 argument_list|(
 name|mp
 argument_list|,
-literal|"%s.concat"
+literal|"%s"
 argument_list|,
 name|md
 operator|->
@@ -2202,24 +2194,6 @@ operator|->
 name|dumpconf
 operator|=
 name|g_concat_dumpconf
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|sc
-operator|->
-name|sc_name
-argument_list|,
-name|md
-operator|->
-name|md_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|sc_name
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -2316,9 +2290,9 @@ literal|0
 argument_list|,
 literal|"Device %s created (id=%u)."
 argument_list|,
-name|gp
+name|sc
 operator|->
-name|name
+name|sc_name
 argument_list|,
 name|sc
 operator|->
@@ -2998,7 +2972,7 @@ name|G_CONCAT_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Cannot create device %s.concat."
+literal|"Cannot create device %s."
 argument_list|,
 name|md
 operator|.
@@ -3429,7 +3403,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Can't configure %s.concat."
+literal|"Can't configure %s."
 argument_list|,
 name|md
 operator|.
@@ -3701,17 +3675,6 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|gp
-operator|->
-name|name
-argument_list|,
-name|name
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
 name|sc
 operator|->
 name|sc_name
@@ -3721,13 +3684,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|sc
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -3978,9 +3939,7 @@ literal|"Cannot destroy device %s (error=%d)."
 argument_list|,
 name|sc
 operator|->
-name|sc_geom
-operator|->
-name|name
+name|sc_name
 argument_list|,
 name|error
 argument_list|)
