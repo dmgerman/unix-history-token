@@ -593,6 +593,14 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'u'
+case|:
+name|family
+operator|=
+name|AF_UNIX
+expr_stmt|;
+break|break;
+case|case
 literal|'4'
 case|:
 name|family
