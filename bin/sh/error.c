@@ -170,11 +170,18 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
 name|va_list
 operator|)
+argument_list|)
+name|__printf0like
+argument_list|(
+literal|2
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -321,6 +328,7 @@ parameter_list|)
 name|int
 name|cond
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -425,6 +433,7 @@ begin_decl_stmt
 name|void
 name|error
 argument_list|(
+specifier|const
 name|char
 operator|*
 name|msg
@@ -445,6 +454,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|__STDC__
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -513,6 +523,7 @@ argument_list|(
 name|int
 name|cond
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|msg

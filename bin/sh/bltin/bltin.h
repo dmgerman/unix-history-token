@@ -227,13 +227,23 @@ begin_function_decl
 name|void
 name|error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printf0like
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_else
 else|#
