@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.44 1996/05/24 15:22:36 gibbs Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.45 1996/06/12 05:03:38 gpalmer Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -2221,8 +2221,6 @@ operator|->
 name|arpcom
 operator|.
 name|ac_enaddr
-argument_list|,
-literal|":"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -2773,6 +2771,7 @@ name|FIL_BRDCST
 argument_list|)
 expr_stmt|;
 comment|/* 	  * S.B. 	  * 	  * Now behavior was slightly changed: 	  * 	  * if any of flags link[0-2] is used and its connector is 	  * physically present the following connectors are used: 	  * 	  *   link0 - AUI * highest precedence 	  *   link1 - BNC 	  *   link2 - UTP * lowest precedence 	  * 	  * If none of them is specified then 	  * connector specified in the EEPROM is used 	  * (if present on card or AUI if not). 	  * 	  */
+comment|/* Set the xcvr. */
 if|if
 condition|(
 name|ifp
@@ -2788,7 +2787,10 @@ operator|&
 name|AUI
 condition|)
 block|{
-comment|/* nothing */
+name|i
+operator|=
+name|ACF_CONNECTOR_AUI
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2806,19 +2808,9 @@ operator|&
 name|BNC
 condition|)
 block|{
-name|outw
-argument_list|(
-name|BASE
-operator|+
-name|EP_COMMAND
-argument_list|,
-name|START_TRANSCEIVER
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
+name|i
+operator|=
+name|ACF_CONNECTOR_BNC
 expr_stmt|;
 block|}
 elseif|else
@@ -2837,38 +2829,54 @@ operator|&
 name|UTP
 condition|)
 block|{
+name|i
+operator|=
+name|ACF_CONNECTOR_UTP
+expr_stmt|;
+block|}
+else|else
+block|{
+name|i
+operator|=
+name|sc
+operator|->
+name|ep_connector
+expr_stmt|;
+block|}
 name|GO_WINDOW
 argument_list|(
-literal|4
+literal|0
 argument_list|)
+expr_stmt|;
+name|j
+operator|=
+name|inw
+argument_list|(
+name|BASE
+operator|+
+name|EP_W0_ADDRESS_CFG
+argument_list|)
+operator|&
+literal|0x3fff
 expr_stmt|;
 name|outw
 argument_list|(
 name|BASE
 operator|+
-name|EP_W4_MEDIA_TYPE
+name|EP_W0_ADDRESS_CFG
 argument_list|,
-name|ENABLE_UTP
-argument_list|)
-expr_stmt|;
-name|GO_WINDOW
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|GO_WINDOW
-argument_list|(
-literal|1
+name|j
+operator||
+operator|(
+name|i
+operator|<<
+name|ACF_CONNECTOR_BITS
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|sc
-operator|->
-name|ep_connector
+name|i
 condition|)
 block|{
 case|case
@@ -2895,11 +2903,6 @@ operator|+
 name|EP_W4_MEDIA_TYPE
 argument_list|,
 name|ENABLE_UTP
-argument_list|)
-expr_stmt|;
-name|GO_WINDOW
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2948,7 +2951,6 @@ name|unit
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 block|}
 name|outw
 argument_list|(
@@ -3118,6 +3120,11 @@ operator|)
 name|sc
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|GO_WINDOW
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|epstart
