@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -331,7 +331,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Open called to allow handler  * of special files to initialize and  * validate before actual IO.  */
+comment|/*  * Open a special file: Don't allow open if fs is mounted -nodev,  * and don't allow opens of block devices that are currently mounted.  * Otherwise, call device driver open function.  */
 end_comment
 
 begin_comment
@@ -2111,7 +2111,7 @@ name|v_rdev
 decl_stmt|;
 name|int
 argument_list|(
-argument|*cfunc
+argument|*devclose
 argument_list|)
 name|__P
 argument_list|(
@@ -2166,7 +2166,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|cfunc
+name|devclose
 operator|=
 name|cdevsw
 index|[
@@ -2233,7 +2233,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|cfunc
+name|devclose
 operator|=
 name|bdevsw
 index|[
@@ -2261,7 +2261,7 @@ return|return
 operator|(
 call|(
 modifier|*
-name|cfunc
+name|devclose
 call|)
 argument_list|(
 name|dev
