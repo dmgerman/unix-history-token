@@ -3097,6 +3097,16 @@ operator|*
 name|m0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"bdg_forward: No rules match, so dropping packet!\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|m0
 operator|=
