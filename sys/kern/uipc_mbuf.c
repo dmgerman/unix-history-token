@@ -452,7 +452,15 @@ name|to
 argument_list|,
 name|from
 argument_list|,
+operator|(
 name|how
+operator|&
+name|M_TRYWAIT
+operator|)
+condition|?
+name|M_WAITOK
+else|:
+name|M_NOWAIT
 argument_list|)
 operator|)
 return|;
