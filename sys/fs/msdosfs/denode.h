@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.7 1995/10/29 15:31:43 phk Exp $ */
+comment|/*	$Id: denode.h,v 1.8 1995/11/09 08:17:21 bde Exp $ */
 end_comment
 
 begin_comment
@@ -326,7 +326,7 @@ parameter_list|,
 name|dep
 parameter_list|)
 define|\
-value|(bcopy((dep)->de_Name, (dp)->deName, 11),	\ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 putushort((dp)->deTime, (dep)->de_Time),	\ 	 putushort((dp)->deDate, (dep)->de_Date),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize, (dep)->de_FileSize))
+value|(bcopy((dep)->de_Name, (dp)->deName, 11),	\ 	 bzero((dp)->deReserved, 10),                   \ 	 (dp)->deAttributes = (dep)->de_Attributes,	\ 	 putushort((dp)->deTime, (dep)->de_Time),	\ 	 putushort((dp)->deDate, (dep)->de_Date),	\ 	 putushort((dp)->deStartCluster, (dep)->de_StartCluster), \ 	 putulong((dp)->deFileSize, (dep)->de_FileSize))
 end_define
 
 begin_define
