@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uio.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uio.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -36,12 +36,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_enum
 enum|enum
 name|uio_rw
@@ -54,7 +48,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Segment flag values.  */
+comment|/* Segment flag values. */
 end_comment
 
 begin_enum
@@ -72,6 +66,12 @@ comment|/* from user I space */
 block|}
 enum|;
 end_enum
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_struct
 struct|struct
