@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gcore.c,v 1.11 1998/10/19 19:42:18 jdp Exp $"
+literal|"$Id: gcore.c,v 1.12 1998/10/22 04:02:37 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,7 +802,7 @@ literal|1
 argument_list|,
 literal|"The executable %s does not belong to"
 literal|" process %d!\n"
-literal|"Text segment size (in bytes): executable %d,"
+literal|"Text segment size (in bytes): executable %ld,"
 literal|" process %d"
 argument_list|,
 name|binfile
