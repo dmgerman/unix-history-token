@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.19 (Berkeley) %G%"
+literal|"@(#)main.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ define|#
 directive|define
 name|_DEFINE
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
 
 begin_include
 include|#
