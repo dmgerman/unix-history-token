@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look.c	4.5 (Berkeley) %G%"
+literal|"@(#)look.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,7 @@ name|char
 modifier|*
 name|filename
 init|=
-literal|"/usr/dict/words"
+literal|"/usr/share/dict/words"
 decl_stmt|;
 specifier|register
 name|off_t
