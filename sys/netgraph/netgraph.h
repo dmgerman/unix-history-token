@@ -5529,7 +5529,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ng_untimeout
+name|ng_uncallout
 parameter_list|(
 name|struct
 name|callout
@@ -5544,7 +5544,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ng_timeout
+name|ng_callout
 parameter_list|(
 name|struct
 name|callout
@@ -5587,6 +5587,52 @@ name|c
 parameter_list|)
 value|callout_init(c, 0)
 end_define
+
+begin_comment
+comment|/* Deprecated functions kept for compatibility */
+end_comment
+
+begin_function_decl
+name|int
+name|ng_untimeout
+parameter_list|(
+name|struct
+name|callout_handle
+name|handle
+parameter_list|,
+name|node_p
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|callout_handle
+name|ng_timeout
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+name|hook_p
+name|hook
+parameter_list|,
+name|int
+name|ticks
+parameter_list|,
+name|ng_item_fn
+modifier|*
+name|fn
+parameter_list|,
+name|void
+modifier|*
+name|arg1
+parameter_list|,
+name|int
+name|arg2
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * prototypes the user should DEFINITELY not use directly  */
