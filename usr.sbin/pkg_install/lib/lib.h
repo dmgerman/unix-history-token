@@ -671,6 +671,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|copy_string_adds_newline
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|Boolean
 name|suffix
 parameter_list|(
