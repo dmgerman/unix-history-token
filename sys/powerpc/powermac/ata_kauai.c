@@ -277,7 +277,7 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ata_kauai_locknoop
 parameter_list|(
 name|struct
@@ -290,6 +290,11 @@ name|type
 parameter_list|)
 block|{
 comment|/* XXX SMP ? */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
