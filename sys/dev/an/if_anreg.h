@@ -237,7 +237,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AN_AUXMEMSIZE
+name|AN_AUX_MEM_SIZE
 value|(256 * 1024)
 end_define
 
@@ -717,28 +717,32 @@ begin_define
 define|#
 directive|define
 name|AN_RID_BUFFER_SIZE
-value|2048
+value|AN_MAX_DATALEN
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_RX_BUFFER_SIZE
-value|1840
+value|AN_HOSTBUFSIZ
 end_define
 
 begin_define
 define|#
 directive|define
 name|AN_TX_BUFFER_SIZE
-value|1840
+value|AN_HOSTBUFSIZ
 end_define
+
+begin_comment
+comment|/*#define AN_HOST_DESC_OFFSET	0xC sort of works */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|AN_HOST_DESC_OFFSET
-value|0x8
+value|0x800
 end_define
 
 begin_define
@@ -974,7 +978,10 @@ begin_define
 define|#
 directive|define
 name|AN_TX_CMP_FID
-value|0x24
+parameter_list|(
+name|x
+parameter_list|)
+value|(x ? 0x1a : 0x24)
 end_define
 
 begin_comment
@@ -1140,6 +1147,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AN_EV_MIC
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Message Integrity Check*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AN_EV_AWAKE
 value|0x0100
 end_define
@@ -1184,6 +1202,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AN_EV_TX_CPY
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|AN_EV_TX_EXC
 value|0x0004
 end_define
@@ -1218,8 +1243,11 @@ begin_define
 define|#
 directive|define
 name|AN_INTRS
+parameter_list|(
+name|x
+parameter_list|)
 define|\
-value|(AN_EV_RX|AN_EV_TX|AN_EV_TX_EXC|AN_EV_ALLOC|AN_EV_LINKSTAT)
+value|( x ? (AN_EV_RX|AN_EV_TX|AN_EV_TX_EXC|AN_EV_TX_CPY|AN_EV_ALLOC \ 	       |AN_EV_LINKSTAT|AN_EV_MIC) \ 	  : \ 	      (AN_EV_RX|AN_EV_TX|AN_EV_TX_EXC|AN_EV_ALLOC \ 	       |AN_EV_LINKSTAT|AN_EV_MIC) \ 	      )
 end_define
 
 begin_comment
@@ -1931,7 +1959,7 @@ name|an_ltv_caps
 name|an_caps
 decl_stmt|;
 name|struct
-name|an_ltv_ssidlist
+name|an_ltv_ssidlist_new
 name|an_ssidlist
 decl_stmt|;
 name|struct
