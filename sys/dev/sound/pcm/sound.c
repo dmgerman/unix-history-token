@@ -1698,8 +1698,10 @@ name|d
 operator|->
 name|sysctl_tree
 argument_list|,
-operator|&
-name|sysctl__hw_snd_children
+name|SYSCTL_STATIC_CHILDREN
+argument_list|(
+name|_hw_snd
+argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1717,10 +1719,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|d
 operator|->
 name|sysctl_tree_top
+operator|==
+name|NULL
 condition|)
 block|{
 name|sysctl_ctx_free
