@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.36 1998/05/25 06:53:17 steve Exp $"
+literal|"$Id: ping.c,v 1.37 1998/05/25 20:16:05 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2784,18 +2784,30 @@ expr|*
 name|t
 operator|)
 condition|)
-name|t
-operator|=
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
+block|{
+comment|/* Copy to avoid alignment problems: */
+name|memcpy
+argument_list|(
+operator|&
+name|now
+argument_list|,
 name|CMSG_DATA
 argument_list|(
 name|cmsg
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|now
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|t
+operator|=
+operator|&
+name|now
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if

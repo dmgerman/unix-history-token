@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.4 1996/10/08 02:44:26 sef Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.5 1996/10/08 19:16:24 sef Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2986,12 +2986,23 @@ name|ttl
 operator|=
 name|ttl
 expr_stmt|;
+comment|/* Avoid alignment problems by copying bytewise: */
+name|memcpy
+argument_list|(
+operator|&
 name|outdata
 operator|->
 name|tv
-operator|=
-operator|*
+argument_list|,
 name|tp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|outdata
+operator|->
+name|tv
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|i
 operator|=
