@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.5 %G%"
+literal|"@(#)rval.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1576,7 +1576,7 @@ literal|2
 argument_list|,
 name|O_CTTOT
 argument_list|,
-literal|5
+literal|4
 operator|+
 name|csetd
 operator|.

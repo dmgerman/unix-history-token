@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cset.c 1.2 %G%"
+literal|"@(#)cset.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2211,7 +2211,7 @@ name|stkrval
 argument_list|(
 name|e
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 name|NIL
@@ -2223,7 +2223,7 @@ name|stkrval
 argument_list|(
 name|e
 index|[
-literal|1
+literal|2
 index|]
 argument_list|,
 name|NIL
