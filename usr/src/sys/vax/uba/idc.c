@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4072,12 +4072,6 @@ operator|->
 name|ui_mi
 decl_stmt|;
 specifier|register
-name|struct
-name|idcst
-modifier|*
-name|st
-decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -4108,13 +4102,6 @@ decl_stmt|,
 name|npf
 decl_stmt|,
 name|o
-decl_stmt|;
-name|int
-name|cn
-decl_stmt|,
-name|tn
-decl_stmt|,
-name|sn
 decl_stmt|;
 name|npf
 operator|=
@@ -4155,34 +4142,6 @@ operator|.
 name|b_addr
 operator|&
 name|PGOFSET
-expr_stmt|;
-name|st
-operator|=
-operator|&
-name|idcst
-index|[
-name|ui
-operator|->
-name|ui_type
-index|]
-expr_stmt|;
-name|cn
-operator|=
-name|idc_softc
-operator|.
-name|sc_cyl
-expr_stmt|;
-name|tn
-operator|=
-name|idc_softc
-operator|.
-name|sc_trk
-expr_stmt|;
-name|sn
-operator|=
-name|idc_softc
-operator|.
-name|sc_sect
 expr_stmt|;
 name|um
 operator|->
