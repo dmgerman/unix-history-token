@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sendmail.h"
 end_include
 
@@ -57,7 +63,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.89
+literal|3.90
 operator|%
 name|G
 operator|%
@@ -1562,6 +1568,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* put us in background */
 name|i
 operator|=
 name|fork
@@ -1589,10 +1596,53 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* get our pid right */
 name|MotherPid
 operator|=
 name|getpid
 argument_list|()
+expr_stmt|;
+comment|/* disconnect from our controlling tty */
+name|i
+operator|=
+name|open
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|i
+argument_list|,
+name|TIOCNOTTY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 block|}
 ifdef|#
