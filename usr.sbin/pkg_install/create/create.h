@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: create.h,v 1.8.4.1 1995/10/09 11:16:23 jkh Exp $ */
+comment|/* $Id: create.h,v 1.9 1995/10/25 15:37:58 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -86,8 +86,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|PlayPen
-index|[]
+modifier|*
+name|SrcDir
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,14 @@ specifier|extern
 name|char
 modifier|*
 name|Pkgdeps
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|PlayPen
+index|[]
 decl_stmt|;
 end_decl_stmt
 
