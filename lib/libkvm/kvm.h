@@ -151,13 +151,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|SWIF_DUMP_TREE
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
 name|SWIF_DEV_PREFIX
 value|0x0002
 end_define
