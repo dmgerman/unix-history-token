@@ -281,7 +281,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIPE_LOCK
+name|PIPE_LOCKFL
 value|0x100
 end_define
 
@@ -380,9 +380,57 @@ name|int
 name|pipe_busy
 decl_stmt|;
 comment|/* busy flag, mostly to handle rundown sanely */
+name|struct
+name|mtx
+modifier|*
+name|pipe_mtxp
+decl_stmt|;
+comment|/* shared mutex between both pipes */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|PIPE_MTX
+parameter_list|(
+name|pipe
+parameter_list|)
+value|(pipe)->pipe_mtxp
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPE_LOCK
+parameter_list|(
+name|pipe
+parameter_list|)
+value|mtx_lock(PIPE_MTX(pipe))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPE_UNLOCK
+parameter_list|(
+name|pipe
+parameter_list|)
+value|mtx_unlock(PIPE_MTX(pipe))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIPE_LOCK_ASSERT
+parameter_list|(
+name|pipe
+parameter_list|,
+name|type
+parameter_list|)
+value|mtx_assert(PIPE_MTX(pipe), (type))
+end_define
 
 begin_endif
 endif|#
