@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -3503,8 +3503,27 @@ name|p_pid
 operator|<=
 literal|1
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+comment|/* 				 * Are you sure you want to ignore SIGSEGV 				 * in init? XXX 				 */
+name|printf
+argument_list|(
+literal|"Process (pid %d) got signal %d\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 comment|/* == ignore */
+block|}
 comment|/* 			 * If there is a pending stop signal to process 			 * with default action, stop here, 			 * then clear the signal.  However, 			 * if process is member of an orphaned 			 * process group, ignore tty stop signals. 			 */
 if|if
 condition|(
