@@ -268,27 +268,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|vgonel
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|unsigned
 name|long
 name|numvnodes
@@ -7797,7 +7776,6 @@ comment|/*  * vgone, with the vp interlock held.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vgonel
 parameter_list|(

@@ -2337,6 +2337,26 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|vgonel
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|vhold
 name|__P
 argument_list|(
