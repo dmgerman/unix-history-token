@@ -618,7 +618,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_SLP_RUN_MAX
-value|((hz * 2)<< 10)
+value|((hz * 5)<< 10)
 end_define
 
 begin_define
@@ -646,7 +646,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_INTERACT_THRESH
-value|(20)
+value|(30)
 end_define
 
 begin_comment
@@ -2901,10 +2901,8 @@ modifier|*
 name|kg
 parameter_list|)
 block|{
-name|int
-name|ratio
-decl_stmt|;
-if|if
+comment|/* XXX Fixme, use a linear algorithm and not a while loop. */
+while|while
 condition|(
 operator|(
 name|kg
@@ -2919,51 +2917,33 @@ operator|>
 name|SCHED_SLP_RUN_MAX
 condition|)
 block|{
-name|ratio
+name|kg
+operator|->
+name|kg_runtime
 operator|=
-operator|(
-name|SCHED_SLP_RUN_MAX
-operator|/
 operator|(
 name|kg
 operator|->
 name|kg_runtime
-operator|+
-name|kg
-operator|->
-name|kg_slptime
-operator|)
+operator|/
+literal|5
 operator|)
 operator|*
 literal|4
 expr_stmt|;
 name|kg
 operator|->
-name|kg_runtime
-operator|=
-operator|(
-name|kg
-operator|->
-name|kg_runtime
-operator|*
-name|ratio
-operator|)
-operator|/
-literal|5
-expr_stmt|;
-name|kg
-operator|->
 name|kg_slptime
 operator|=
 operator|(
 name|kg
 operator|->
 name|kg_slptime
-operator|*
-name|ratio
-operator|)
 operator|/
 literal|5
+operator|)
+operator|*
+literal|4
 expr_stmt|;
 block|}
 block|}
