@@ -353,7 +353,9 @@ begin_decl_stmt
 name|char
 name|name
 index|[
-literal|16
+name|MAXLOGNAME
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2839,6 +2841,8 @@ name|name
 index|[
 sizeof|sizeof
 name|name
+operator|-
+literal|1
 index|]
 condition|)
 block|{
