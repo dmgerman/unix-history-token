@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.17 1998/06/29 17:54:29 bde Exp $"
+literal|"$Id: sysctl.c,v 1.18 1998/08/25 07:38:19 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1930,9 +1930,25 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|val
+operator|=
+literal|""
+expr_stmt|;
+while|while
+condition|(
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"%d"
+literal|"%s%d"
+argument_list|,
+name|val
 argument_list|,
 operator|*
 operator|(
@@ -1942,6 +1958,25 @@ operator|)
 name|p
 argument_list|)
 expr_stmt|;
+name|val
+operator|=
+literal|" "
+expr_stmt|;
+name|len
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+name|p
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
