@@ -89,6 +89,46 @@ name|tty
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|pps_state
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|cdevsw
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+name|t_open_t
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+parameter_list|,
+name|struct
+name|cdev
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|t_close_t
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_typedef
 typedef|typedef
 name|void
@@ -175,6 +215,37 @@ name|cmd
 parameter_list|,
 name|void
 modifier|*
+name|data
+parameter_list|,
+name|int
+name|fflag
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* XXX: same as d_ioctl_t in sys/conf.h to avoid #include polution */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|__d_ioctl_t
+parameter_list|(
+name|struct
+name|cdev
+modifier|*
+name|dev
+parameter_list|,
+name|u_long
+name|cmd
+parameter_list|,
+name|caddr_t
 name|data
 parameter_list|,
 name|int
@@ -357,6 +428,14 @@ argument_list|)
 name|t_list
 expr_stmt|;
 comment|/* Global chain of ttys for pstat(8) */
+name|int
+name|t_actout
+decl_stmt|;
+comment|/* Outbound device open */
+name|int
+name|t_wopeners
+decl_stmt|;
+comment|/* #threads waiting for DCD in open */
 name|struct
 name|mtx
 name|t_mtx
@@ -372,6 +451,21 @@ name|int
 name|t_dtr_wait
 decl_stmt|;
 comment|/* Inter-session DTR holddown [hz] */
+name|int
+name|t_do_timestamp
+decl_stmt|;
+comment|/* flag instead ? */
+name|struct
+name|timeval
+name|t_timestamp
+decl_stmt|;
+comment|/* char timestamp */
+name|struct
+name|pps_state
+modifier|*
+name|t_pps
+decl_stmt|;
+comment|/* PPS-API stuff */
 comment|/* Driver supplied methods */
 name|t_oproc_t
 modifier|*
@@ -403,6 +497,21 @@ modifier|*
 name|t_ioctl
 decl_stmt|;
 comment|/* Set ioctl handling (optional). */
+name|t_open_t
+modifier|*
+name|t_open
+decl_stmt|;
+comment|/* First open */
+name|t_close_t
+modifier|*
+name|t_close
+decl_stmt|;
+comment|/* Last close */
+name|__d_ioctl_t
+modifier|*
+name|t_cioctl
+decl_stmt|;
+comment|/* Ioctl on control devices */
 block|}
 struct|;
 end_struct
@@ -1290,6 +1399,61 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Minor number flag bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MINOR_CALLOUT
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINOR_INIT
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINOR_LOCK
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISCALLOUT
+parameter_list|(
+name|dev
+parameter_list|)
+value|(minor(dev)& MINOR_CALLOUT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISINIT
+parameter_list|(
+name|dev
+parameter_list|)
+value|(minor(dev)& MINOR_INIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISLOCK
+parameter_list|(
+name|dev
+parameter_list|)
+value|(minor(dev)& MINOR_LOCK)
+end_define
 
 begin_decl_stmt
 specifier|extern
