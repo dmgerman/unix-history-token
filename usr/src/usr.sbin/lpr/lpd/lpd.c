@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	5.11 (Berkeley) %G%"
+literal|"@(#)lpd.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* log requests flag */
+end_comment
+
+begin_decl_stmt
+name|int
+name|from_remote
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* from remote socket */
 end_comment
 
 begin_decl_stmt
@@ -939,11 +949,22 @@ name|domain
 operator|==
 name|AF_INET
 condition|)
+block|{
+name|from_remote
+operator|=
+literal|1
+expr_stmt|;
 name|chkhost
 argument_list|(
 operator|&
 name|frominet
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|from_remote
+operator|=
+literal|0
 expr_stmt|;
 name|doit
 argument_list|()
@@ -1308,6 +1329,28 @@ case|case
 literal|'\2'
 case|:
 comment|/* receive files to be queued */
+if|if
+condition|(
+operator|!
+name|from_remote
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"illegal request (%d)"
+argument_list|,
+operator|*
+name|cp
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|printer
 operator|=
 name|cp
@@ -1446,6 +1489,28 @@ case|case
 literal|'\5'
 case|:
 comment|/* remove a job from the queue */
+if|if
+condition|(
+operator|!
+name|from_remote
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"illegal request (%d)"
+argument_list|,
+operator|*
+name|cp
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|printer
 operator|=
 name|cp
