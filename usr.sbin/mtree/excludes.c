@@ -14,11 +14,26 @@ literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+literal|"$FreeBSD$"
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* XXX for mtree.h */
+end_comment
 
 begin_include
 include|#
@@ -54,6 +69,22 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mtree.h"
+end_include
+
+begin_comment
+comment|/* XXX for extern.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
