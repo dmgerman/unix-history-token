@@ -857,11 +857,6 @@ comment|/* kses that may be migrated. */
 name|int
 name|ksq_idled
 decl_stmt|;
-name|unsigned
-name|int
-name|ksq_rslices
-decl_stmt|;
-comment|/* Slices on run queue */
 name|int
 name|ksq_cpus
 decl_stmt|;
@@ -871,7 +866,7 @@ name|kse
 modifier|*
 name|ksq_assigned
 decl_stmt|;
-comment|/* KSEs assigned by another CPU. */
+comment|/* assigned by another CPU. */
 endif|#
 directive|endif
 block|}
@@ -1203,18 +1198,6 @@ ifdef|#
 directive|ifdef
 name|SMP
 end_ifdef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int sched_pickcpu(void);
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1608,19 +1591,6 @@ operator|->
 name|ksq_load_timeshare
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|kseq
-operator|->
-name|ksq_rslices
-operator|+=
-name|ke
-operator|->
-name|ke_slice
-expr_stmt|;
-endif|#
-directive|endif
 name|kseq
 operator|->
 name|ksq_load
@@ -1742,19 +1712,6 @@ operator|->
 name|ksq_load_timeshare
 operator|--
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|kseq
-operator|->
-name|ksq_rslices
-operator|-=
-name|ke
-operator|->
-name|ke_slice
-expr_stmt|;
-endif|#
-directive|endif
 name|kseq
 operator|->
 name|ksq_load
@@ -3015,12 +2972,6 @@ literal|0
 expr_stmt|;
 name|kseq
 operator|->
-name|ksq_rslices
-operator|=
-literal|0
-expr_stmt|;
-name|kseq
-operator|->
 name|ksq_idled
 operator|=
 literal|0
@@ -3849,13 +3800,6 @@ operator|-
 name|SCHED_CPU_TICKS
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* XXX Should be changed to kseq_load_lowest() */
-block|int sched_pickcpu(void) { 	struct kseq *kseq; 	int load; 	int cpu; 	int i;  	mtx_assert(&sched_lock, MA_OWNED); 	if (!smp_started) 		return (0);  	load = 0; 	cpu = 0;  	for (i = 0; i< mp_maxid; i++) { 		if (CPU_ABSENT(i) || (i& stopped_cpus) != 0) 			continue; 		kseq = KSEQ_CPU(i); 		if (kseq->ksq_load< load) { 			cpu = i; 			load = kseq->ksq_load; 		} 	}  	CTR1(KTR_ULE, "sched_pickcpu: %d", cpu); 	return (cpu); }
-endif|#
-directive|endif
 name|void
 name|sched_prio
 parameter_list|(
@@ -4590,7 +4534,6 @@ name|ke
 operator|->
 name|ke_cpu
 expr_stmt|;
-comment|/* sched_pickcpu(); */
 name|child
 operator|->
 name|ke_runq
@@ -5236,28 +5179,9 @@ name|kg
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We used up one time slice. 	 */
-name|ke
-operator|->
-name|ke_slice
-operator|--
-expr_stmt|;
-name|kseq
-operator|=
-name|KSEQ_SELF
-argument_list|()
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-name|kseq
-operator|->
-name|ksq_rslices
-operator|--
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
+operator|--
 name|ke
 operator|->
 name|ke_slice
@@ -5266,6 +5190,11 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * We're out of time, recompute priorities and requeue. 	 */
+name|kseq
+operator|=
+name|KSEQ_SELF
+argument_list|()
+expr_stmt|;
 name|kseq_load_rem
 argument_list|(
 name|kseq
