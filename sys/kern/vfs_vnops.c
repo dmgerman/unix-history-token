@@ -5225,6 +5225,27 @@ block|}
 comment|/* authorize attribute removal as kernel */
 name|error
 operator|=
+name|VOP_RMEXTATTR
+argument_list|(
+name|vp
+argument_list|,
+name|attrnamespace
+argument_list|,
+name|attrname
+argument_list|,
+name|NULL
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|EOPNOTSUPP
+condition|)
+name|error
+operator|=
 name|VOP_SETEXTATTR
 argument_list|(
 name|vp
