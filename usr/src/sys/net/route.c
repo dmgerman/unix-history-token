@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -641,9 +641,10 @@ name|a2
 parameter_list|)
 define|\
 value|(bcmp((caddr_t)(a1), (caddr_t)(a2), sizeof(struct sockaddr)) == 0)
-comment|/* 	 * If the redirect isn't from our current router for this dst, 	 * it's either old or wrong. 	 */
+comment|/* 	 * If the redirect isn't from our current router for this dst, 	 * it's either old or wrong.  If it redirects us to ourselves, 	 * we have a routing loop, perhaps as a result of an interface 	 * going down recently. 	 */
 if|if
 condition|(
+operator|(
 name|rt
 operator|&&
 operator|!
@@ -655,6 +656,12 @@ operator|&
 name|rt
 operator|->
 name|rt_gateway
+argument_list|)
+operator|)
+operator|||
+name|ifa_ifwithaddr
+argument_list|(
+name|gateway
 argument_list|)
 condition|)
 block|{
