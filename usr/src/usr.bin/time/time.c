@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)time.c	4.1 (Berkeley) %G%"
+literal|"@(#)time.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,13 +235,6 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 name|printt
 argument_list|(
 literal|"real"
@@ -279,6 +272,13 @@ operator|-
 name|obuffer
 operator|.
 name|tms_cstime
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -418,13 +418,6 @@ name|i
 index|]
 expr_stmt|;
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 name|nonzero
 operator|=
 literal|0
@@ -514,7 +507,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n"
+literal|" %s "
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 block|}
