@@ -582,10 +582,6 @@ name|short
 name|p_locks
 decl_stmt|;
 comment|/* (*) DEBUG: lockmgr count of held locks */
-name|short
-name|p_simple_locks
-decl_stmt|;
-comment|/* (*) DEBUG: count of held simple locks */
 name|u_int
 name|p_stops
 decl_stmt|;

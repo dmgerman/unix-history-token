@@ -3447,22 +3447,6 @@ operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIMPLELOCK_DEBUG
-if|if
-condition|(
-name|p
-operator|->
-name|p_simple_locks
-condition|)
-name|printf
-argument_list|(
-literal|"sleep: holding simple lock\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Compute the amount of time during which the current 	 * process was running, and add that to its total so far. 	 */
 name|microuptime
 argument_list|(

@@ -376,10 +376,12 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|simple_unlock
+name|mtx_exit
 argument_list|(
 operator|&
-name|hpfs_hphash_slock
+name|hpfs_hphash_mtx
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
