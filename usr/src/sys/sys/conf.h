@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -309,6 +309,11 @@ name|sw_freed
 decl_stmt|;
 name|int
 name|sw_nblks
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|sw_vp
 decl_stmt|;
 ifdef|#
 directive|ifdef

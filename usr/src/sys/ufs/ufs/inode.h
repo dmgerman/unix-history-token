@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)inode.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)inode.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -42,25 +42,24 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* must be first */
+name|struct
+name|vnode
+name|i_vnode
+decl_stmt|;
+comment|/* vnode associated with this inode */
+name|struct
+name|vnode
+modifier|*
+name|i_devvp
+decl_stmt|;
+comment|/* vnode for block I/O */
 name|u_short
 name|i_flag
 decl_stmt|;
-name|u_short
-name|i_count
-decl_stmt|;
-comment|/* reference count */
 name|dev_t
 name|i_dev
 decl_stmt|;
 comment|/* device where inode resides */
-name|u_short
-name|i_shlockc
-decl_stmt|;
-comment|/* count of shared locks on inode */
-name|u_short
-name|i_exlockc
-decl_stmt|;
-comment|/* count of exclusive locks on inode */
 name|ino_t
 name|i_number
 decl_stmt|;
@@ -69,6 +68,10 @@ name|long
 name|i_id
 decl_stmt|;
 comment|/* unique identifier */
+name|long
+name|i_diroff
+decl_stmt|;
+comment|/* offset in dir, where we found last entry */
 name|struct
 name|fs
 modifier|*
@@ -87,6 +90,16 @@ modifier|*
 name|i_text
 decl_stmt|;
 comment|/* text entry, if any (should be region) */
+name|struct
+name|inode
+modifier|*
+name|i_devlst
+decl_stmt|;
+comment|/* list of block device inodes */
+name|off_t
+name|i_endoff
+decl_stmt|;
+comment|/* end of useful stuff in directory */
 union|union
 block|{
 name|daddr_t
@@ -186,12 +199,16 @@ name|ic_blocks
 decl_stmt|;
 comment|/* 104: blocks actually held */
 name|long
+name|ic_gen
+decl_stmt|;
+comment|/* 108: generation number */
+name|long
 name|ic_spare
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
-comment|/* 108: reserved, currently unused */
+comment|/* 112: reserved, currently unused */
 block|}
 name|i_ic
 struct|;
@@ -327,6 +344,13 @@ define|#
 directive|define
 name|i_rdev
 value|i_ic.ic_db[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_gen
+value|i_ic.ic_gen
 end_define
 
 begin_define
@@ -481,26 +505,18 @@ name|di_blocks
 value|di_ic.ic_blocks
 end_define
 
+begin_define
+define|#
+directive|define
+name|di_gen
+value|di_ic.ic_gen
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_comment
-comment|/*  * Invalidate an inode. Used by the namei cache to detect stale  * information. At an absurd rate of 100 calls/second, the inode  * table invalidation should only occur once every 16 months.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cacheinval
-parameter_list|(
-name|ip
-parameter_list|)
-define|\
-value|(ip)->i_id = ++nextinodeid; \ 	if (nextinodeid == 0) \ 		cacheinvalall();
-end_define
 
 begin_decl_stmt
 name|struct
@@ -537,93 +553,31 @@ comment|/* number of slots in the table */
 end_comment
 
 begin_decl_stmt
-name|long
-name|nextinodeid
+specifier|extern
+name|struct
+name|vnodeops
+name|ufs_vnodeops
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* unique id generator */
+comment|/* vnode operations for ufs */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
-name|inode
-modifier|*
-name|rootdir
+name|vnodeops
+name|blk_vnodeops
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pointer to inode of root directory */
+comment|/* vnode operations for blk devices */
 end_comment
 
 begin_function_decl
-name|struct
-name|inode
-modifier|*
-name|ialloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|inode
-modifier|*
-name|iget
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_function_decl
-name|struct
-name|inode
-modifier|*
-name|ifind
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|struct
-name|inode
-modifier|*
-name|owner
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|inode
-modifier|*
-name|maknode
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|inode
-modifier|*
-name|namei
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|extern
 name|ino_t
 name|dirpref
 parameter_list|()
@@ -675,19 +629,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IMOUNT
-value|0x8
-end_define
-
-begin_comment
-comment|/* inode is mounted on */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IWANT
-value|0x10
+value|0x8
 end_define
 
 begin_comment
@@ -697,19 +640,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ITEXT
-value|0x20
-end_define
-
-begin_comment
-comment|/* inode is pure text prototype */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ICHG
-value|0x40
+value|0x10
 end_define
 
 begin_comment
@@ -720,7 +652,7 @@ begin_define
 define|#
 directive|define
 name|ISHLOCK
-value|0x80
+value|0x20
 end_define
 
 begin_comment
@@ -731,7 +663,7 @@ begin_define
 define|#
 directive|define
 name|IEXLOCK
-value|0x100
+value|0x40
 end_define
 
 begin_comment
@@ -742,7 +674,7 @@ begin_define
 define|#
 directive|define
 name|ILWAIT
-value|0x200
+value|0x80
 end_define
 
 begin_comment
@@ -753,7 +685,7 @@ begin_define
 define|#
 directive|define
 name|IMOD
-value|0x400
+value|0x100
 end_define
 
 begin_comment
@@ -764,7 +696,7 @@ begin_define
 define|#
 directive|define
 name|IRENAME
-value|0x800
+value|0x200
 end_define
 
 begin_comment
@@ -910,6 +842,93 @@ name|IEXEC
 value|0100
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Convert between inode pointers and vnode pointers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTOI
+parameter_list|(
+name|vp
+parameter_list|)
+value|((struct inode *)(vp)->v_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITOV
+parameter_list|(
+name|ip
+parameter_list|)
+value|((struct vnode *)&(ip)->i_vnode)
+end_define
+
+begin_comment
+comment|/*  * Convert between vnode types and inode formats  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|vtype
+name|iftovt_tab
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vttoif_tab
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IFTOVT
+parameter_list|(
+name|mode
+parameter_list|)
+value|(iftovt_tab[((mode)& IFMT)>> 13])
+end_define
+
+begin_define
+define|#
+directive|define
+name|VTTOIF
+parameter_list|(
+name|indx
+parameter_list|)
+value|(vttoif_tab[(int)(indx)])
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKEIMODE
+parameter_list|(
+name|indx
+parameter_list|,
+name|mode
+parameter_list|)
+value|(int)(VTTOIF(indx) | (mode))
+end_define
+
+begin_comment
+comment|/*  * Lock and unlock inodes.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -917,7 +936,7 @@ name|ILOCK
 parameter_list|(
 name|ip
 parameter_list|)
-value|{ \ 	while ((ip)->i_flag& ILOCKED) { \ 		(ip)->i_flag |= IWANT; \ 		sleep((caddr_t)(ip), PINOD); \ 	} \ 	(ip)->i_flag |= ILOCKED; \ }
+value|{ \ 	while ((ip)->i_flag& ILOCKED) { \ 		(ip)->i_flag |= IWANT; \ 		(void) sleep((caddr_t)(ip), PINOD); \ 	} \ 	(ip)->i_flag |= ILOCKED; \ }
 end_define
 
 begin_define
@@ -943,7 +962,7 @@ name|t2
 parameter_list|,
 name|waitfor
 parameter_list|)
-value|{ \ 	if (ip->i_flag&(IUPD|IACC|ICHG|IMOD)) \ 		iupdat(ip, t1, t2, waitfor); \ }
+value|{ \ 	if (ip->i_flag&(IUPD|IACC|ICHG|IMOD)) \ 		(void) iupdat(ip, t1, t2, waitfor); \ }
 end_define
 
 begin_define
@@ -959,6 +978,32 @@ name|t2
 parameter_list|)
 value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) \ 			(ip)->i_mtime = (t2)->tv_sec; \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
 end_define
+
+begin_comment
+comment|/*  * This overlays the fid sturcture (see mount.h)  */
+end_comment
+
+begin_struct
+struct|struct
+name|ufid
+block|{
+name|u_short
+name|ufid_len
+decl_stmt|;
+name|ino_t
+name|ufid_ino
+decl_stmt|;
+name|long
+name|ufid_gen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

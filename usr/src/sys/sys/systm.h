@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)systm.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -140,36 +140,6 @@ comment|/* size of swap space */
 end_comment
 
 begin_decl_stmt
-name|int
-name|updlock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* lock for sync */
-end_comment
-
-begin_decl_stmt
-name|daddr_t
-name|rablock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* block to be read ahead */
-end_comment
-
-begin_decl_stmt
-name|int
-name|rasize
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of block in rablock */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|intstack
@@ -189,6 +159,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* device of the root */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|rootvp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vnode of root filesystem */
 end_comment
 
 begin_decl_stmt
@@ -222,6 +204,18 @@ comment|/* swapping device */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|swapdev_vp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vnode equivalent to above */
+end_comment
+
+begin_decl_stmt
 name|dev_t
 name|argdev
 decl_stmt|;
@@ -229,6 +223,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* device for argument lists */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|argdev_vp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* vnode equivalent to above */
 end_comment
 
 begin_if
@@ -272,13 +278,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|daddr_t
-name|bmap
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)buf.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)buf.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -169,6 +169,12 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* function called by iodone */
+name|struct
+name|vnode
+modifier|*
+name|b_vp
+decl_stmt|;
+comment|/* Vnode for dev */
 name|int
 name|b_pfcent
 decl_stmt|;
@@ -314,12 +320,12 @@ define|#
 directive|define
 name|BUFHASH
 parameter_list|(
-name|dev
+name|dvp
 parameter_list|,
 name|dblkno
 parameter_list|)
 define|\
-value|((struct buf *)&bufhash[((int)(dev)+(((int)(dblkno))/RND))&(BUFHSZ-1)])
+value|((struct buf *)&bufhash[((int)(dvp)+(((int)(dblkno))/RND))&(BUFHSZ-1)])
 end_define
 
 begin_else
@@ -332,12 +338,12 @@ define|#
 directive|define
 name|BUFHASH
 parameter_list|(
-name|dev
+name|dvp
 parameter_list|,
 name|dblkno
 parameter_list|)
 define|\
-value|((struct buf *)&bufhash[((int)(dev)+(((int)(dblkno))/RND)) % BUFHSZ])
+value|((struct buf *)&bufhash[((int)(dvp)+(((int)(dblkno))/RND)) % BUFHSZ])
 end_define
 
 begin_endif
@@ -457,33 +463,6 @@ begin_function_decl
 name|struct
 name|buf
 modifier|*
-name|alloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|buf
-modifier|*
-name|realloccg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|buf
-modifier|*
-name|baddr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|buf
-modifier|*
 name|getblk
 parameter_list|()
 function_decl|;
@@ -503,24 +482,6 @@ name|struct
 name|buf
 modifier|*
 name|getnewbuf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|buf
-modifier|*
-name|bread
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|buf
-modifier|*
-name|breada
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -794,6 +755,17 @@ begin_comment
 comment|/* set by physio for raw transfers */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|B_NOCACHE
+value|0x800000
+end_define
+
+begin_comment
+comment|/* do not cache block after use */
+end_comment
+
 begin_comment
 comment|/*  * Insq/Remq for the buffer hash lists.  */
 end_comment
@@ -899,6 +871,17 @@ name|bp
 parameter_list|)
 value|{ \ 	blkclr((bp)->b_un.b_addr, (unsigned)(bp)->b_bcount); \ 	(bp)->b_resid = 0; \ }
 end_define
+
+begin_define
+define|#
+directive|define
+name|B_CLRBUF
+value|0x1
+end_define
+
+begin_comment
+comment|/* request allocated buffer be cleared */
+end_comment
 
 end_unit
 
