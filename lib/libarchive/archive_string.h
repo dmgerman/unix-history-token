@@ -143,6 +143,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|archive_strappend_int
+value|__archive_strappend_int
+end_define
+
 begin_comment
 comment|/* Basic append operation. */
 end_comment
