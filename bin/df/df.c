@@ -838,7 +838,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"only one -t option may be specified."
+literal|"only one -t option may be specified"
 argument_list|)
 expr_stmt|;
 name|fstype
