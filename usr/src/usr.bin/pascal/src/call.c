@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.23 %G%"
+literal|"@(#)call.c 1.24 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,6 +594,7 @@ case|case
 name|FPROC
 case|:
 comment|/* 			     *	... ( t -> entryaddr )( ... 			     */
+comment|/* 	the descriptor */
 name|putRV
 argument_list|(
 literal|0
@@ -616,6 +617,7 @@ operator||
 name|P2STRTY
 argument_list|)
 expr_stmt|;
+comment|/*	the entry address within the descriptor */
 if|if
 condition|(
 name|FENTRYOFFSET
@@ -662,13 +664,35 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			     *	indirect to fetch the formal entry address 			     *	with the result type of the routine. 			     */
+if|if
+condition|(
+name|p
+operator|->
+name|class
+operator|==
+name|FFUNC
+condition|)
+block|{
 name|putop
 argument_list|(
 argument|P2UNARY P2MUL
 argument_list|,
-argument|ADDTYPE( ADDTYPE( p2type( p ) , P2FTN ) , P2PTR )
+argument|ADDTYPE(ADDTYPE(p2type(p -> type), P2FTN), 					P2PTR)
 argument_list|)
 empty_stmt|;
+block|}
+else|else
+block|{
+comment|/* procedures are int returning functions */
+name|putop
+argument_list|(
+argument|P2UNARY P2MUL
+argument_list|,
+argument|ADDTYPE(ADDTYPE(P2INT, P2FTN), P2PTR)
+argument_list|)
+empty_stmt|;
+block|}
 break|break;
 default|default:
 name|panic
