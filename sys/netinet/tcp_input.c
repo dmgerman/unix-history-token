@@ -2130,7 +2130,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Undo the assignments above if we failed to put 				 * the PCB on the hash lists. 				 */
+comment|/* 				 * Undo the assignments above if we failed to 				 * put the PCB on the hash lists. 				 */
 name|inp
 operator|->
 name|inp_laddr
