@@ -4517,6 +4517,7 @@ specifier|static
 name|modlist_t
 name|modlist_newmodule
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|modname
@@ -4615,6 +4616,7 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|offset
@@ -4650,6 +4652,7 @@ name|mod_metadata
 modifier|*
 name|mp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -4725,6 +4728,7 @@ name|mod_metadata
 modifier|*
 name|mp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -4805,6 +4809,7 @@ modifier|*
 modifier|*
 name|mdp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|modname
@@ -4944,6 +4949,7 @@ block|{
 name|caddr_t
 name|modptr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|modname
@@ -6479,6 +6485,7 @@ decl_stmt|;
 name|modlist_t
 name|mod
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|modname
