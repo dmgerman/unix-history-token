@@ -8567,6 +8567,11 @@ name|wx_name
 operator|)
 argument_list|)
 expr_stmt|;
+name|WX_DISABLE_INT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -8598,16 +8603,6 @@ operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
-name|WRITE_CSR
-argument_list|(
-name|sc
-argument_list|,
-name|WXREG_IMASK
-argument_list|,
-operator|~
-literal|0
-argument_list|)
-expr_stmt|;
 name|icr
 operator|=
 name|READ_CSR
@@ -8632,11 +8627,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-name|WX_DISABLE_INT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
