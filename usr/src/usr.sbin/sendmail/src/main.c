@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.66
+literal|3.67
 operator|%
 name|G
 operator|%
@@ -1877,18 +1877,36 @@ if|if
 condition|(
 name|Debug
 operator|>
-literal|2
+literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\n====finis: stat %d\n"
+literal|"\n====finis: stat %d SendReceipt %d\n"
 argument_list|,
 name|ExitStat
+argument_list|,
+name|SendReceipt
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* send back return receipts as requested */
+if|if
+condition|(
+name|SendReceipt
+operator|&&
+name|ExitStat
+operator|==
+name|EX_OK
+condition|)
+name|returntosender
+argument_list|(
+literal|"Return receipt"
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 comment|/* mail back the transcript on errors */
 if|if
 condition|(

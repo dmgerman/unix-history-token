@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -319,6 +319,8 @@ condition|(
 name|returntosender
 argument_list|(
 literal|"Unable to deliver mail"
+argument_list|,
+name|TRUE
 argument_list|)
 operator|==
 literal|0
@@ -519,7 +521,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
+comment|/* **  RETURNTOSENDER -- return a message to the sender with an error. ** **	Parameters: **		msg -- the explanatory message. **		sendbody -- if TRUE, also send back the body of the **			message; otherwise just send the header. ** **	Returns: **		zero -- if everything went ok. **		else -- some error. ** **	Side Effects: **		Returns the current message to the sender via **		mail. */
 end_comment
 
 begin_decl_stmt
@@ -530,10 +532,19 @@ name|ErrorMessage
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|bool
+name|SendBody
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|returntosender
 argument_list|(
 argument|msg
+argument_list|,
+argument|sendbody
 argument_list|)
 end_macro
 
@@ -541,6 +552,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|sendbody
 decl_stmt|;
 end_decl_stmt
 
@@ -568,21 +585,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
-operator|(
-name|void
-operator|)
-name|freopen
-argument_list|(
-literal|"/dev/null"
-argument_list|,
-literal|"w"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|NoAlias
 operator|++
 expr_stmt|;
@@ -592,6 +594,13 @@ begin_expr_stmt
 name|ErrorMessage
 operator|=
 name|msg
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SendBody
+operator|=
+name|sendbody
 expr_stmt|;
 end_expr_stmt
 
@@ -689,6 +698,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|to_addr
+operator|.
+name|q_flags
+operator|&=
+operator|~
+name|QDONTSEND
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|i
 operator|=
 name|deliver
@@ -723,6 +742,37 @@ name|From
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* if From was queued up, put in on SendQueue */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QQUEUEUP
+argument_list|,
+name|From
+operator|.
+name|q_flags
+argument_list|)
+condition|)
+block|{
+name|From
+operator|.
+name|q_next
+operator|=
+name|SendQueue
+expr_stmt|;
+name|SendQueue
+operator|=
+operator|&
+name|From
+expr_stmt|;
+block|}
+end_if
 
 begin_if
 if|if
@@ -1112,6 +1162,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|SendBody
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -1139,6 +1194,35 @@ argument_list|,
 name|xdot
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n  ----- Message header follows -----\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|putheader
+argument_list|(
+name|fp
+argument_list|,
+name|Mailer
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 name|fprintf

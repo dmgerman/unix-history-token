@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.61		%G%"
+literal|"@(#)sendmail.h	3.62		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1556,6 +1556,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* don't connect to non-local mailers */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|RetReceipt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* give a return receipt if delivery occurs */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|SendReceipt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* actually send a receipt back */
 end_comment
 
 begin_decl_stmt
