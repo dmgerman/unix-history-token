@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.5 (Berkeley) %G%"
+literal|"@(#)table.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,7 +301,7 @@ name|RESC1
 operator||
 name|RESCC
 block|,
-literal|"ZU"
+literal|"	ZU\n"
 block|,
 name|SCONV
 block|,
@@ -329,7 +329,7 @@ name|RESC1
 operator||
 name|RESCC
 block|,
-literal|"ZV"
+literal|"	ZV\n"
 block|,
 name|INIT
 block|,
@@ -623,15 +623,33 @@ operator||
 name|AWD
 block|,
 name|TSHORT
-operator||
-name|TUSHORT
 block|,
 name|SAREG
 operator||
 name|AWD
 block|,
 name|TSHORT
+block|,
+literal|0
+block|,
+name|RESCC
+block|,
+literal|"	cmpw	AL,AR\nZP"
+block|,
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
 operator||
+name|AWD
+block|,
+name|TUSHORT
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
 name|TUSHORT
 block|,
 literal|0
@@ -689,15 +707,33 @@ operator||
 name|AWD
 block|,
 name|TCHAR
-operator||
-name|TUCHAR
 block|,
 name|SAREG
 operator||
 name|AWD
 block|,
 name|TCHAR
+block|,
+literal|0
+block|,
+name|RESCC
+block|,
+literal|"	cmpb	AL,AR\nZP"
+block|,
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
 operator||
+name|AWD
+block|,
+name|TUCHAR
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
 name|TUCHAR
 block|,
 literal|0
@@ -1468,7 +1504,7 @@ name|RRIGHT
 operator||
 name|RESCC
 block|,
-literal|"	ZA\n"
+literal|"	ZU\n"
 block|,
 name|ASSIGN
 block|,
@@ -1784,7 +1820,7 @@ name|NASR
 block|,
 name|RESC1
 block|,
-literal|"	ZA\n"
+literal|"	ZU\n"
 block|,
 name|OPLTYPE
 block|,
