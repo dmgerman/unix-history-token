@@ -678,6 +678,12 @@ name|q_dst_mapsize
 value|q_dst.mapsize
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|rndstate_test
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|ubsec_softc
@@ -813,6 +819,28 @@ name|struct
 name|ubsec_q2_rng
 name|sc_rng
 decl_stmt|;
+name|struct
+name|rndtest_state
+modifier|*
+name|sc_rndtest
+decl_stmt|;
+comment|/* RNG test state */
+name|void
+function_decl|(
+modifier|*
+name|sc_harvest
+function_decl|)
+parameter_list|(
+name|struct
+name|rndtest_state
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
 name|struct
 name|ubsec_dma
 name|sc_dmaa
