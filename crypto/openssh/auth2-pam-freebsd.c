@@ -252,7 +252,7 @@ operator|->
 name|msg
 argument_list|)
 expr_stmt|;
-name|msg_send
+name|ssh_msg_send
 argument_list|(
 name|ctxt
 operator|->
@@ -269,7 +269,7 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
-name|msg_recv
+name|ssh_msg_recv
 argument_list|(
 name|ctxt
 operator|->
@@ -324,7 +324,7 @@ operator|->
 name|msg
 argument_list|)
 expr_stmt|;
-name|msg_send
+name|ssh_msg_send
 argument_list|(
 name|ctxt
 operator|->
@@ -341,7 +341,7 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
-name|msg_recv
+name|ssh_msg_recv
 argument_list|(
 name|ctxt
 operator|->
@@ -396,7 +396,7 @@ operator|->
 name|msg
 argument_list|)
 expr_stmt|;
-name|msg_send
+name|ssh_msg_send
 argument_list|(
 name|ctxt
 operator|->
@@ -430,7 +430,7 @@ operator|->
 name|msg
 argument_list|)
 expr_stmt|;
-name|msg_send
+name|ssh_msg_send
 argument_list|(
 name|ctxt
 operator|->
@@ -632,7 +632,7 @@ argument_list|,
 literal|"OK"
 argument_list|)
 expr_stmt|;
-name|msg_send
+name|ssh_msg_send
 argument_list|(
 name|ctxt
 operator|->
@@ -677,7 +677,7 @@ name|pam_err
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|msg_send
+name|ssh_msg_send
 argument_list|(
 name|ctxt
 operator|->
@@ -1108,7 +1108,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|msg_recv
+name|ssh_msg_recv
 argument_list|(
 name|ctxt
 operator|->
@@ -1478,7 +1478,7 @@ operator|*
 name|resp
 argument_list|)
 expr_stmt|;
-name|msg_send
+name|ssh_msg_send
 argument_list|(
 name|ctxt
 operator|->

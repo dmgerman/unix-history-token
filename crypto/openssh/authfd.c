@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.56 2002/06/25 16:22:42 markus Exp $"
+literal|"$OpenBSD: authfd.c,v 1.57 2002/09/11 18:27:26 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -109,6 +109,15 @@ directive|include
 file|"atomicio.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|agent_present
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* helper */
 end_comment
@@ -137,6 +146,52 @@ parameter_list|)
 define|\
 value|((x == SSH_AGENT_FAILURE) || (x == SSH_COM_AGENT2_FAILURE) || \     (x == SSH2_AGENT_FAILURE))
 end_define
+
+begin_function
+name|int
+name|ssh_agent_present
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|authfd
+decl_stmt|;
+if|if
+condition|(
+name|agent_present
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+operator|(
+name|authfd
+operator|=
+name|ssh_get_authentication_socket
+argument_list|()
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+literal|0
+return|;
+else|else
+block|{
+name|ssh_close_authentication_socket
+argument_list|(
+name|authfd
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/* Returns the number of the authentication fd, or -1 if there is none. */
@@ -277,6 +332,10 @@ operator|-
 literal|1
 return|;
 block|}
+name|agent_present
+operator|=
+literal|1
+expr_stmt|;
 return|return
 name|sock
 return|;

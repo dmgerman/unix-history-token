@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: session.c,v 1.142 2002/06/26 13:49:26 deraadt Exp $"
+literal|"$OpenBSD: session.c,v 1.150 2002/09/16 19:55:33 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -953,40 +953,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|WITH_AIXAUTHENTICATE
-comment|/* We don't have a pty yet, so just label the line as "ssh" */
-if|if
-condition|(
-name|loginsuccess
-argument_list|(
-name|authctxt
-operator|->
-name|user
-argument_list|,
-name|get_canonical_hostname
-argument_list|(
-name|options
-operator|.
-name|verify_reverse_mapping
-argument_list|)
-argument_list|,
-literal|"ssh"
-argument_list|,
-operator|&
-name|aixloginmsg
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|aixloginmsg
-operator|=
-name|NULL
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* WITH_AIXAUTHENTICATE */
 comment|/* setup the channel layer */
 if|if
 condition|(
@@ -1967,6 +1933,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|fatal_remove_all_cleanups
+argument_list|()
+expr_stmt|;
 comment|/* Child.  Reinitialize the log since the pid has changed. */
 name|log_init
 argument_list|(
@@ -2195,6 +2164,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_PIPES */
+ifdef|#
+directive|ifdef
+name|_UNICOS
+name|cray_init_job
+argument_list|(
+name|s
+operator|->
+name|pw
+argument_list|)
+expr_stmt|;
+comment|/* set up cray jid and tmpdir */
+endif|#
+directive|endif
 comment|/* Do processing for the child (exec command etc). */
 name|do_child
 argument_list|(
@@ -2205,6 +2187,19 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+ifdef|#
+directive|ifdef
+name|_UNICOS
+name|signal
+argument_list|(
+name|WJSIGNAL
+argument_list|,
+name|cray_job_termination_handler
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _UNICOS */
 ifdef|#
 directive|ifdef
 name|HAVE_CYGWIN
@@ -2513,6 +2508,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|fatal_remove_all_cleanups
+argument_list|()
+expr_stmt|;
 comment|/* Child.  Reinitialize the log because the pid has changed. */
 name|log_init
 argument_list|(
@@ -2633,6 +2631,21 @@ operator|==
 name|NULL
 operator|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|_UNICOS
+name|cray_init_job
+argument_list|(
+name|s
+operator|->
+name|pw
+argument_list|)
+expr_stmt|;
+comment|/* set up cray jid and tmpdir */
+endif|#
+directive|endif
+comment|/* _UNICOS */
 name|do_login
 argument_list|(
 name|s
@@ -2640,6 +2653,7 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|LOGIN_NEEDS_UTMPX
@@ -2663,6 +2677,19 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+ifdef|#
+directive|ifdef
+name|_UNICOS
+name|signal
+argument_list|(
+name|WJSIGNAL
+argument_list|,
+name|cray_job_termination_handler
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _UNICOS */
 ifdef|#
 directive|ifdef
 name|HAVE_CYGWIN
@@ -3227,7 +3254,7 @@ directive|endif
 comment|/* WITH_AIXAUTHENTICATE */
 ifndef|#
 directive|ifndef
-name|USE_PAM
+name|NO_SSH_LASTLOG
 if|if
 condition|(
 name|options
@@ -3305,7 +3332,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !USE_PAM */
+comment|/* NO_SSH_LASTLOG */
 name|do_motd
 argument_list|()
 expr_stmt|;
@@ -4603,7 +4630,7 @@ name|custom_environment
 decl_stmt|;
 name|char
 modifier|*
-name|s
+name|str
 init|=
 name|ce
 operator|->
@@ -4615,14 +4642,14 @@ name|i
 operator|=
 literal|0
 init|;
-name|s
+name|str
 index|[
 name|i
 index|]
 operator|!=
 literal|'='
 operator|&&
-name|s
+name|str
 index|[
 name|i
 index|]
@@ -4633,7 +4660,7 @@ control|)
 empty_stmt|;
 if|if
 condition|(
-name|s
+name|str
 index|[
 name|i
 index|]
@@ -4641,7 +4668,7 @@ operator|==
 literal|'='
 condition|)
 block|{
-name|s
+name|str
 index|[
 name|i
 index|]
@@ -4656,9 +4683,9 @@ argument_list|,
 operator|&
 name|envsize
 argument_list|,
-name|s
+name|str
 argument_list|,
-name|s
+name|str
 operator|+
 name|i
 operator|+
@@ -4686,6 +4713,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* SSH_CLIENT deprecated */
 name|snprintf
 argument_list|(
 name|buf
@@ -4714,6 +4742,44 @@ operator|&
 name|envsize
 argument_list|,
 literal|"SSH_CLIENT"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%.50s %d %.50s %d"
+argument_list|,
+name|get_remote_ipaddr
+argument_list|()
+argument_list|,
+name|get_remote_port
+argument_list|()
+argument_list|,
+name|get_local_ipaddr
+argument_list|(
+name|packet_get_connection_in
+argument_list|()
+argument_list|)
+argument_list|,
+name|get_local_port
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|child_set_env
+argument_list|(
+operator|&
+name|env
+argument_list|,
+operator|&
+name|envsize
+argument_list|,
+literal|"SSH_CONNECTION"
 argument_list|,
 name|buf
 argument_list|)
@@ -4801,6 +4867,34 @@ argument_list|,
 name|original_command
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_UNICOS
+if|if
+condition|(
+name|cray_tmpdir
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|child_set_env
+argument_list|(
+operator|&
+name|env
+argument_list|,
+operator|&
+name|envsize
+argument_list|,
+literal|"TMPDIR"
+argument_list|,
+name|cray_tmpdir
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _UNICOS */
 ifdef|#
 directive|ifdef
 name|_AIX
@@ -4938,11 +5032,21 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|USE_PAM
-comment|/* Pull in any environment variables that may have been set by PAM. */
-name|copy_environment
-argument_list|(
+comment|/* 	 * Pull in any environment variables that may have 	 * been set by PAM. 	 */
+block|{
+name|char
+modifier|*
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
 name|fetch_pam_environment
 argument_list|()
+expr_stmt|;
+name|copy_environment
+argument_list|(
+name|p
 argument_list|,
 operator|&
 name|env
@@ -4951,6 +5055,12 @@ operator|&
 name|envsize
 argument_list|)
 expr_stmt|;
+name|free_pam_environment
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* USE_PAM */
@@ -4976,6 +5086,10 @@ expr_stmt|;
 comment|/* read $HOME/.ssh/environment. */
 if|if
 condition|(
+name|options
+operator|.
+name|permit_user_env
+operator|&&
 operator|!
 name|options
 operator|.
@@ -4991,9 +5105,20 @@ name|buf
 argument_list|,
 literal|"%.200s/.ssh/environment"
 argument_list|,
+name|strcmp
+argument_list|(
 name|pw
 operator|->
 name|pw_dir
+argument_list|,
+literal|"/"
+argument_list|)
+condition|?
+name|pw
+operator|->
+name|pw_dir
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|read_environment_file
@@ -5490,6 +5615,17 @@ name|f
 condition|)
 block|{
 comment|/* /etc/nologin exists.  Print its contents and exit. */
+name|log
+argument_list|(
+literal|"User %.100s not allowed because %s exists"
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|_PATH_NOLOGIN
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -5539,11 +5675,6 @@ modifier|*
 name|pw
 parameter_list|)
 block|{
-name|char
-name|tty
-init|=
-literal|'\0'
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_CYGWIN
@@ -5796,16 +5927,9 @@ comment|/* defined(WITH_IRIX_PROJECT) || defined(WITH_IRIX_JOBS) || defined(WITH
 ifdef|#
 directive|ifdef
 name|_AIX
-comment|/* XXX: Disable tty setting.  Enabled if required later */
 name|aix_usrinfo
 argument_list|(
 name|pw
-argument_list|,
-operator|&
-name|tty
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6036,6 +6160,25 @@ name|use_login
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_UNICOS
+name|cray_setup
+argument_list|(
+name|pw
+operator|->
+name|pw_uid
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _UNICOS */
 comment|/* 	 * Login(1) does this as well, and it needs uid 0 for the "-h" 	 * switch, so we let login(1) to this for us. 	 */
 if|if
 condition|(
@@ -8427,6 +8570,97 @@ end_function
 
 begin_function
 specifier|static
+name|char
+modifier|*
+name|sig2name
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+define|#
+directive|define
+name|SSH_SIG
+parameter_list|(
+name|x
+parameter_list|)
+value|if (sig == SIG ## x) return #x
+name|SSH_SIG
+argument_list|(
+name|ABRT
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|ALRM
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|FPE
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|HUP
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|ILL
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|INT
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|KILL
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|PIPE
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|QUIT
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|SEGV
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|TERM
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|USR1
+argument_list|)
+expr_stmt|;
+name|SSH_SIG
+argument_list|(
+name|USR2
+argument_list|)
+expr_stmt|;
+undef|#
+directive|undef
+name|SSH_SIG
+return|return
+literal|"SIG@openssh.com"
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|session_exit_message
 parameter_list|(
@@ -8541,11 +8775,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|packet_put_int
+name|packet_put_cstring
+argument_list|(
+name|sig2name
 argument_list|(
 name|WTERMSIG
 argument_list|(
 name|status
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

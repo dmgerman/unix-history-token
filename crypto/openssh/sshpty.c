@@ -763,7 +763,7 @@ directive|else
 comment|/* HAVE_DEV_PTS_AND_PTC */
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 name|char
 name|buf
 index|[
@@ -1344,7 +1344,7 @@ directive|endif
 comment|/* USE_VHANGUP */
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 if|if
 condition|(
 name|setsid
@@ -1484,7 +1484,7 @@ name|fd
 expr_stmt|;
 else|#
 directive|else
-comment|/* _CRAY */
+comment|/* _UNICOS */
 comment|/* First disconnect from the old controlling tty. */
 ifdef|#
 directive|ifdef
@@ -1754,7 +1754,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _CRAY */
+comment|/* _UNICOS */
 block|}
 end_function
 

@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: loginrec.c,v 1.40 2002/04/23 13:09:19 djm Exp $"
+literal|"$Id: loginrec.c,v 1.44 2002/09/26 00:38:49 tim Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1694,7 +1694,7 @@ name|USER_PROCESS
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 name|cray_set_tmpdir
 argument_list|(
 name|ut
@@ -1714,7 +1714,7 @@ name|DEAD_PROCESS
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 name|cray_retain_utmp
 argument_list|(
 name|ut
@@ -4412,7 +4412,7 @@ name|log
 argument_list|(
 literal|"wtmpx_get_entry: couldn't stat %s: %s"
 argument_list|,
-name|WTMP_FILE
+name|WTMPX_FILE
 argument_list|,
 name|strerror
 argument_list|(
@@ -4525,6 +4525,10 @@ name|utx
 argument_list|)
 condition|)
 block|{
+name|found
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_TV_IN_UTMPX

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth.h,v 1.39 2002/05/31 11:35:15 markus Exp $	*/
+comment|/*	$OpenBSD: auth.h,v 1.41 2002/09/26 11:38:43 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -537,6 +537,8 @@ parameter_list|,
 name|char
 modifier|*
 modifier|*
+parameter_list|,
+name|KTEXT
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -645,6 +647,9 @@ name|char
 modifier|*
 modifier|*
 name|client
+parameter_list|,
+name|krb5_data
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

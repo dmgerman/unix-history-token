@@ -191,33 +191,6 @@ name|SSH_SERVICE_NAME
 value|"ssh"
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_PAM
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SSHD_PAM_SERVICE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|SSHD_PAM_SERVICE
-value|__progname
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Name of the environment variable containing the process ID of the  * authentication agent.  */
 end_comment
