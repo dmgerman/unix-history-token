@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pcops.h 1.1 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pcops.h 1.2 %G%"; */
 end_comment
 
 begin_comment
@@ -705,38 +705,6 @@ parameter_list|,
 name|m
 parameter_list|)
 value|( ( ( ( t )& ~P2BASETYPE )<< P2TYPESHIFT )	\ 		  | ( m )						\ 		  | ( ( t )& P2BASETYPE ) )
-end_define
-
-begin_comment
-comment|/*      *	the runtime framepointer and argumentpointer registers      */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P2FP
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|P2FPNAME
-value|"fp"
-end_define
-
-begin_define
-define|#
-directive|define
-name|P2AP
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|P2APNAME
-value|"ap"
 end_define
 
 end_unit
