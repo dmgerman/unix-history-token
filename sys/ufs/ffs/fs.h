@@ -36,15 +36,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BBOFF
-value|((off_t)(0))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SBOFF
-value|((off_t)(BBOFF + BBSIZE))
+value|((off_t)(BBSIZE))
 end_define
 
 begin_comment
