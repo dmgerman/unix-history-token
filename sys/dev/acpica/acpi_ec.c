@@ -925,7 +925,14 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"can't install GPE handler - %s\n"
+literal|"can't install GPE handler for %s - %s\n"
+argument_list|,
+name|acpi_name
+argument_list|(
+name|sc
+operator|->
+name|ec_handle
+argument_list|)
 argument_list|,
 name|acpi_strerror
 argument_list|(
@@ -977,12 +984,24 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"can't install address space handler - %s\n"
+literal|"can't install address space handler for %s - %s\n"
+argument_list|,
+name|acpi_name
+argument_list|(
+name|sc
+operator|->
+name|ec_handle
+argument_list|)
 argument_list|,
 name|acpi_strerror
 argument_list|(
 name|Status
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"very suck"
 argument_list|)
 expr_stmt|;
 name|return_VALUE
