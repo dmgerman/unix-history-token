@@ -662,6 +662,12 @@ condition|(
 name|first
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|Lflag
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Active Internet connections"
@@ -676,6 +682,15 @@ argument_list|(
 literal|" (including servers)"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Current listen queue sizes (qlen/incqlen/maxqlen)"
+argument_list|)
+expr_stmt|;
+block|}
 name|putchar
 argument_list|(
 literal|'\n'
@@ -692,6 +707,20 @@ argument_list|,
 literal|"Socket"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Lflag
+condition|)
+name|printf
+argument_list|(
+literal|"%-14.14s %-21.21s\n"
+argument_list|,
+literal|"Listen"
+argument_list|,
+literal|"Local Address"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%-5.5s %-6.6s %-6.6s %-21.21s %-21.21s %s\n"
@@ -749,6 +778,55 @@ name|so_pcb
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Lflag
+condition|)
+if|if
+condition|(
+name|so
+operator|->
+name|so_qlimit
+condition|)
+block|{
+name|char
+name|buf
+index|[
+literal|15
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|15
+argument_list|,
+literal|"%d/%d/%d"
+argument_list|,
+name|so
+operator|->
+name|so_qlen
+argument_list|,
+name|so
+operator|->
+name|so_incqlen
+argument_list|,
+name|so
+operator|->
+name|so_qlimit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-14.14s "
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+continue|continue;
+else|else
 name|printf
 argument_list|(
 literal|"%-5.5s %6ld %6ld "
@@ -792,6 +870,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Lflag
+condition|)
 name|inetprint
 argument_list|(
 operator|&
@@ -841,6 +924,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Lflag
+condition|)
 name|inetprint
 argument_list|(
 operator|&
@@ -882,6 +970,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Lflag
+condition|)
 name|inetprint
 argument_list|(
 operator|&
@@ -911,6 +1004,9 @@ block|}
 if|if
 condition|(
 name|istcp
+operator|&&
+operator|!
+name|Lflag
 condition|)
 block|{
 if|if

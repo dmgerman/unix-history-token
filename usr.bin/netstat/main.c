@@ -1038,7 +1038,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabdf:ghI:iM:mN:np:rstuw:"
+literal|"Aabdf:ghI:iLM:mN:np:rstuw:"
 argument_list|)
 operator|)
 operator|!=
@@ -1254,6 +1254,14 @@ case|case
 literal|'i'
 case|:
 name|iflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'L'
+case|:
+name|Lflag
 operator|=
 literal|1
 expr_stmt|;
@@ -1968,6 +1976,9 @@ name|af
 operator|==
 name|AF_UNSPEC
 operator|)
+operator|&&
+operator|!
+name|Lflag
 operator|&&
 operator|!
 name|sflag
