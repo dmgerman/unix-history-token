@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arff.c	5.3 (Berkeley) %G%"
+literal|"@(#)arff.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ name|char
 name|rt_pad
 decl_stmt|;
 comment|/* unusued */
-name|char
+name|u_char
 name|rt_stat
 decl_stmt|;
 comment|/* type of entry, or end of seg */
@@ -152,7 +152,7 @@ name|u_short
 name|rt_len
 decl_stmt|;
 comment|/* length of file */
-name|char
+name|u_char
 name|rt_chan
 decl_stmt|;
 comment|/* only used in temporary files */
@@ -189,6 +189,17 @@ directive|define
 name|RT_FILE
 value|4
 end_define
+
+begin_define
+define|#
+directive|define
+name|RT_PFILE
+value|(0200|RT_FILE)
+end_define
+
+begin_comment
+comment|/* protected file */
+end_comment
 
 begin_define
 define|#
@@ -1239,6 +1250,9 @@ comment|/* fall thru...*/
 case|case
 name|RT_FILE
 case|:
+case|case
+name|RT_PFILE
+case|:
 if|if
 condition|(
 operator|!
@@ -1525,6 +1539,9 @@ name|RT_TEMP
 case|:
 case|case
 name|RT_FILE
+case|:
+case|case
+name|RT_PFILE
 case|:
 name|sunrad50
 argument_list|(
@@ -2377,6 +2394,9 @@ condition|)
 block|{
 case|case
 name|RT_FILE
+case|:
+case|case
+name|RT_PFILE
 case|:
 case|case
 name|RT_TEMP
