@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_rmap.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_rmap.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -670,9 +670,7 @@ name|m_size
 expr_stmt|;
 block|}
 block|}
-goto|goto
-name|done
-goto|;
+return|return;
 block|}
 comment|/* 	 * Don't abut on the left, check for abutting on 	 * the right. 	 */
 if|if
@@ -715,9 +713,7 @@ name|m_size
 operator|+=
 name|size
 expr_stmt|;
-goto|goto
-name|done
-goto|;
+return|return;
 block|}
 comment|/* 	 * Don't abut at all.  Make a new entry 	 * and check for map overflow. 	 */
 do|do
@@ -836,33 +832,6 @@ operator|.
 name|m_addr
 operator|=
 literal|0
-expr_stmt|;
-block|}
-name|done
-label|:
-comment|/* 	 * THIS IS RIDICULOUS... IT DOESN'T BELONG HERE! 	 */
-if|if
-condition|(
-operator|(
-name|mp
-operator|==
-name|kernelmap
-operator|)
-operator|&&
-name|kmapwnt
-condition|)
-block|{
-name|kmapwnt
-operator|=
-literal|0
-expr_stmt|;
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|kernelmap
-argument_list|)
 expr_stmt|;
 block|}
 return|return;
