@@ -630,7 +630,10 @@ name|dev
 operator|=
 name|devclass_get_device
 argument_list|(
-name|acpi_devclass
+name|devclass_find
+argument_list|(
+literal|"acpi"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)

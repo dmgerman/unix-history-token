@@ -33,13 +33,6 @@ directive|include
 file|<machine/resource.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|devclass_t
-name|acpi_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|acpi_softc

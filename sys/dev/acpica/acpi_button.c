@@ -198,6 +198,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
 name|acpi_button_devclass
 decl_stmt|;

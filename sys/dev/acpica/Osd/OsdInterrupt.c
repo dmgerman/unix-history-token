@@ -112,7 +112,10 @@ name|sc
 operator|=
 name|devclass_get_softc
 argument_list|(
-name|acpi_devclass
+name|devclass_find
+argument_list|(
+literal|"acpi"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -405,7 +408,10 @@ name|sc
 operator|=
 name|devclass_get_softc
 argument_list|(
-name|acpi_devclass
+name|find_devclass
+argument_list|(
+literal|"acpi"
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)

@@ -276,30 +276,26 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|acpi_powerresource_list
 argument_list|,
 argument|acpi_powerresource
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|acpi_powerresources
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|acpi_powerconsumer_list
 argument_list|,
 argument|acpi_powerconsumer
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|acpi_powerconsumers
 expr_stmt|;
 end_expr_stmt
