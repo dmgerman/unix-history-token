@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vnops.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mfs_vnops.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -143,6 +143,9 @@ decl_stmt|,
 name|mfs_inactive
 argument_list|()
 decl_stmt|,
+name|mfs_print
+argument_list|()
+decl_stmt|,
 name|mfs_badop
 argument_list|()
 decl_stmt|,
@@ -159,64 +162,98 @@ init|=
 block|{
 name|mfs_badop
 block|,
+comment|/* lookup */
 name|mfs_badop
 block|,
+comment|/* create */
 name|mfs_badop
 block|,
+comment|/* mknod */
 name|mfs_open
 block|,
+comment|/* open */
 name|mfs_close
 block|,
+comment|/* close */
 name|mfs_badop
 block|,
+comment|/* access */
 name|mfs_badop
 block|,
+comment|/* getattr */
 name|mfs_badop
 block|,
+comment|/* setattr */
 name|mfs_badop
 block|,
+comment|/* read */
 name|mfs_badop
 block|,
+comment|/* write */
 name|mfs_ioctl
 block|,
+comment|/* ioctl */
 name|mfs_badop
 block|,
+comment|/* select */
 name|mfs_badop
 block|,
+comment|/* mmap */
 name|mfs_badop
 block|,
+comment|/* fsync */
 name|mfs_badop
 block|,
+comment|/* seek */
 name|mfs_badop
 block|,
+comment|/* remove */
 name|mfs_badop
 block|,
+comment|/* link */
 name|mfs_badop
 block|,
+comment|/* rename */
 name|mfs_badop
 block|,
+comment|/* mkdir */
 name|mfs_badop
 block|,
+comment|/* rmdir */
 name|mfs_badop
 block|,
+comment|/* symlink */
 name|mfs_badop
 block|,
+comment|/* readdir */
 name|mfs_badop
 block|,
+comment|/* readlink */
 name|mfs_badop
 block|,
+comment|/* abortop */
 name|mfs_inactive
 block|,
+comment|/* inactive */
 name|mfs_nullop
 block|,
+comment|/* reclaim */
 name|mfs_badop
 block|,
+comment|/* lock */
 name|mfs_badop
 block|,
+comment|/* unlock */
 name|mfs_badop
 block|,
+comment|/* bmap */
 name|mfs_strategy
-block|, }
+block|,
+comment|/* strategy */
+name|mfs_print
+block|,
+comment|/* print */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -934,20 +971,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * On last close of a memory filesystem 	 * we must invalidate any in core blocks, so that 	 * we can, free up its vnode. 	 */
-name|bflush
+name|vflushbuf
 argument_list|(
 name|vp
-operator|->
-name|v_mounton
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|binval
+name|vinvalbuf
 argument_list|(
 name|vp
-operator|->
-name|v_mounton
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -1075,6 +1112,58 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Print out the contents of an mfsnode.  */
+end_comment
+
+begin_macro
+name|mfs_print
+argument_list|(
+argument|vp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|mfsnode
+modifier|*
+name|mfsp
+init|=
+name|VTOMFS
+argument_list|(
+name|vp
+argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"tag VT_MFS, pid %d, base %d, size %d\n"
+argument_list|,
+name|mfsp
+operator|->
+name|mfs_pid
+argument_list|,
+name|mfsp
+operator|->
+name|mfs_baseoff
+argument_list|,
+name|mfsp
+operator|->
+name|mfs_size
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
