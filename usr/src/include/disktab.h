@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)disktab.h	4.1 (Berkeley) %G%	*/
+comment|/*	@(#)disktab.h	4.2 (Berkeley) %G%	*/
 end_comment
 
 begin_comment
@@ -12,13 +12,6 @@ define|#
 directive|define
 name|DISKTAB
 value|"/etc/disktab"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DISKNMLG
-value|32
 end_define
 
 begin_struct
