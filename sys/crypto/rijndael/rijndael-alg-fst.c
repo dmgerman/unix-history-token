@@ -1,15 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	$KAME: rijndael-alg-fst.c,v 1.7 2001/05/27 00:23:23 itojun Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * rijndael-alg-fst.c   v2.3   April '2000  *  * Optimised ANSI C code  *  * authors: v1.0: Antoon Bosselaers  *          v2.0: Vincent Rijmen  *          v2.3: Paulo Barreto  *  * This code is placed in the public domain.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

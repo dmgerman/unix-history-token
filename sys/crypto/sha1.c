@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	$KAME: sha1.c,v 1.5 2000/11/08 06:13:08 itojun Exp $	*/
 end_comment
 
@@ -14,6 +10,20 @@ end_comment
 begin_comment
 comment|/*  * FIPS pub 180-1: Secure Hash Algorithm (SHA-1)  * based on: http://csrc.nist.gov/fips/fip180-1.txt  * implemented by Jun-ichiro itojun Itoh<itojun@itojun.org>  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
