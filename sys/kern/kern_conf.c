@@ -81,13 +81,6 @@ directive|include
 file|<machine/stdarg.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|cdevsw_ALLOCSTART
-value|(NUMCDEVSW/2)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
