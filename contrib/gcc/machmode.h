@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Machine mode definitions for GNU C-Compiler; included by rtl.h and tree.h.    Copyright (C) 1991, 1993, 1994, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Machine mode definitions for GCC; included by rtl.h and tree.h.    Copyright (C) 1991, 1993, 1994, 1996, 1998, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -19,65 +19,11 @@ begin_comment
 comment|/* Make an enum class that gives all the machine modes.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEF_MACHMODE
-parameter_list|(
-name|SYM
-parameter_list|,
-name|NAME
-parameter_list|,
-name|TYPE
-parameter_list|,
-name|BITSIZE
-parameter_list|,
-name|SIZE
-parameter_list|,
-name|UNIT
-parameter_list|,
-name|WIDER
-parameter_list|,
-name|INNER
-parameter_list|)
-value|SYM,
-end_define
-
-begin_enum
-enum|enum
-name|machine_mode
-block|{
+begin_include
 include|#
 directive|include
-file|"machmode.def"
-name|MAX_MACHINE_MODE
-block|}
-enum|;
-end_enum
-
-begin_undef
-undef|#
-directive|undef
-name|DEF_MACHMODE
-end_undef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NUM_MACHINE_MODES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NUM_MACHINE_MODES
-value|(int) MAX_MACHINE_MODE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+file|"insn-modes.h"
+end_include
 
 begin_comment
 comment|/* Get the name of mode MODE as a string.  */
@@ -103,35 +49,51 @@ name|GET_MODE_NAME
 parameter_list|(
 name|MODE
 parameter_list|)
-value|(mode_name[(int) (MODE)])
+value|mode_name[MODE]
+end_define
+
+begin_comment
+comment|/* Mode classes.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"mode-classes.def"
+end_include
+
+begin_define
+define|#
+directive|define
+name|DEF_MODE_CLASS
+parameter_list|(
+name|M
+parameter_list|)
+value|M
 end_define
 
 begin_enum
 enum|enum
 name|mode_class
 block|{
-name|MODE_RANDOM
-block|,
-name|MODE_INT
-block|,
-name|MODE_FLOAT
-block|,
-name|MODE_PARTIAL_INT
-block|,
-name|MODE_CC
-block|,
-name|MODE_COMPLEX_INT
-block|,
-name|MODE_COMPLEX_FLOAT
-block|,
-name|MODE_VECTOR_INT
-block|,
-name|MODE_VECTOR_FLOAT
+name|MODE_CLASSES
 block|,
 name|MAX_MODE_CLASS
 block|}
 enum|;
 end_enum
+
+begin_undef
+undef|#
+directive|undef
+name|DEF_MODE_CLASS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MODE_CLASSES
+end_undef
 
 begin_comment
 comment|/* Get the general kind of object that mode MODE represents    (integer, floating, complex, etc.)  */
@@ -140,8 +102,8 @@ end_comment
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|enum
-name|mode_class
+name|unsigned
+name|char
 name|mode_class
 index|[
 name|NUM_MACHINE_MODES
@@ -156,7 +118,7 @@ name|GET_MODE_CLASS
 parameter_list|(
 name|MODE
 parameter_list|)
-value|(mode_class[(int) (MODE)])
+value|mode_class[MODE]
 end_define
 
 begin_comment
@@ -250,12 +212,12 @@ value|(GET_MODE_CLASS (MODE) == MODE_FLOAT)
 end_define
 
 begin_comment
-comment|/* Get the size in bytes of an object of mode MODE.  */
+comment|/* Get the size in bytes and bits of an object of mode MODE.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-specifier|const
+name|CONST_MODE_SIZE
 name|unsigned
 name|char
 name|mode_size
@@ -272,65 +234,8 @@ name|GET_MODE_SIZE
 parameter_list|(
 name|MODE
 parameter_list|)
-value|(mode_size[(int) (MODE)])
+value|((unsigned short) mode_size[MODE])
 end_define
-
-begin_comment
-comment|/* Get the size in bytes of the basic parts of an object of mode MODE.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|unsigned
-name|char
-name|mode_unit_size
-index|[
-name|NUM_MACHINE_MODES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|GET_MODE_UNIT_SIZE
-parameter_list|(
-name|MODE
-parameter_list|)
-value|(mode_unit_size[(int) (MODE)])
-end_define
-
-begin_comment
-comment|/* Get the number of units in the object.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GET_MODE_NUNITS
-parameter_list|(
-name|MODE
-parameter_list|)
-define|\
-value|((GET_MODE_UNIT_SIZE ((MODE)) == 0) ? 0 \    : (GET_MODE_SIZE ((MODE)) / GET_MODE_UNIT_SIZE ((MODE))))
-end_define
-
-begin_comment
-comment|/* Get the size in bits of an object of mode MODE.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|unsigned
-name|short
-name|mode_bitsize
-index|[
-name|NUM_MACHINE_MODES
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -339,28 +244,34 @@ name|GET_MODE_BITSIZE
 parameter_list|(
 name|MODE
 parameter_list|)
-value|(mode_bitsize[(int) (MODE)])
+value|((unsigned short) (GET_MODE_SIZE (MODE) * BITS_PER_UNIT))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* not HAVE_MACHINE_MODES */
+comment|/* Get the number of value bits of an object of mode MODE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-name|HOST_WIDE_INT
-operator|&&
-operator|!
-name|defined
-name|GET_MODE_MASK
-end_if
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|unsigned
+name|short
+name|mode_precision
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|GET_MODE_PRECISION
+parameter_list|(
+name|MODE
+parameter_list|)
+value|mode_precision[MODE]
+end_define
 
 begin_comment
 comment|/* Get a bitmask containing 1 for all bits in a word    that fit within mode MODE.  */
@@ -385,24 +296,24 @@ name|GET_MODE_MASK
 parameter_list|(
 name|MODE
 parameter_list|)
-value|mode_mask_array[(int) (MODE)]
+value|mode_mask_array[MODE]
 end_define
+
+begin_comment
+comment|/* Return the mode of the inner elements in a vector.  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|enum
-name|machine_mode
-name|inner_mode_array
+name|unsigned
+name|char
+name|mode_inner
 index|[
 name|NUM_MACHINE_MODES
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Return the mode of the inner elements in a vector.  */
-end_comment
 
 begin_define
 define|#
@@ -411,34 +322,49 @@ name|GET_MODE_INNER
 parameter_list|(
 name|MODE
 parameter_list|)
-value|inner_mode_array[(int) (MODE)]
+value|mode_inner[MODE]
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* defined (HOST_WIDE_INT)&& ! defined GET_MODE_MASK */
+comment|/* Get the size in bytes of the basic parts of an object of mode MODE.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-name|GET_MODE_WIDER_MODE
-operator|||
-operator|!
-name|defined
-name|GET_MODE_ALIGNMENT
-expr|\
-operator|||
-operator|!
-name|defined
-name|GET_CLASS_NARROWEST_MODE
-end_if
+begin_define
+define|#
+directive|define
+name|GET_MODE_UNIT_SIZE
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(GET_MODE_INNER (MODE) == VOIDmode		\    ? GET_MODE_SIZE (MODE)			\    : GET_MODE_SIZE (GET_MODE_INNER (MODE)))
+end_define
+
+begin_comment
+comment|/* Get the number of units in the object.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|unsigned
+name|char
+name|mode_nunits
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|GET_MODE_NUNITS
+parameter_list|(
+name|MODE
+parameter_list|)
+value|mode_nunits[MODE]
+end_define
 
 begin_comment
 comment|/* Get the next wider natural mode (eg, QI -> HI -> SI -> DI -> TI).  */
@@ -449,7 +375,7 @@ specifier|extern
 specifier|const
 name|unsigned
 name|char
-name|mode_wider_mode
+name|mode_wider
 index|[
 name|NUM_MACHINE_MODES
 index|]
@@ -463,101 +389,89 @@ name|GET_MODE_WIDER_MODE
 parameter_list|(
 name|MODE
 parameter_list|)
-value|((enum machine_mode)mode_wider_mode[(int) (MODE)])
+value|mode_wider[MODE]
 end_define
 
 begin_comment
 comment|/* Return the mode for data of a given size SIZE and mode class CLASS.    If LIMIT is nonzero, then don't use modes bigger than MAX_FIXED_MODE_SIZE.    The value is BLKmode if no other mode is found.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|enum
 name|machine_mode
 name|mode_for_size
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|mode_class
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Similar, but find the smallest mode for a given width.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|enum
 name|machine_mode
 name|smallest_mode_for_size
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|mode_class
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return an integer mode of the exact same size as the input mode,    or BLKmode on failure.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|enum
 name|machine_mode
 name|int_mode_for_mode
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|machine_mode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Find the best mode to use to access a bit field.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|enum
 name|machine_mode
 name|get_best_mode
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|unsigned
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|machine_mode
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Determine alignment, 1<=result<=BIGGEST_ALIGNMENT.  */
@@ -565,17 +479,26 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|CONST_MODE_BASE_ALIGN
 name|unsigned
-name|get_mode_alignment
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
-name|machine_mode
-operator|)
-argument_list|)
+name|char
+name|mode_base_align
+index|[
+name|NUM_MACHINE_MODES
+index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|get_mode_alignment
+parameter_list|(
+name|enum
+name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -594,13 +517,10 @@ end_comment
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|enum
-name|machine_mode
+name|unsigned
+name|char
 name|class_narrowest_mode
 index|[
-operator|(
-name|int
-operator|)
 name|MAX_MODE_CLASS
 index|]
 decl_stmt|;
@@ -613,7 +533,7 @@ name|GET_CLASS_NARROWEST_MODE
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|class_narrowest_mode[(int) (CLASS)]
+value|class_narrowest_mode[CLASS]
 end_define
 
 begin_comment
@@ -644,13 +564,27 @@ name|ptr_mode
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Target-dependent machine mode initialization - in insn-modes.c.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_adjust_machine_modes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* ! defined GET_MODE_WIDER_MODE || ! defined GET_MODE_ALIGNMENT 	  || ! defined GET_CLASS_NARROWEST_MODE */
+comment|/* not HAVE_MACHINE_MODES */
 end_comment
 
 end_unit

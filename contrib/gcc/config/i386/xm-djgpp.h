@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Configuration for GNU C-compiler for Intel 80386 running DJGPP.    Copyright (C) 1988, 1996, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Configuration for GCC for Intel 80386 running DJGPP.    Copyright (C) 1988, 1996, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -19,34 +19,6 @@ define|#
 directive|define
 name|HOST_EXECUTABLE_SUFFIX
 value|".exe"
-end_define
-
-begin_comment
-comment|/* Even though we support "/", allow "\" since everybody tests both.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIR_SEPARATOR
-value|'/'
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIR_SEPARATOR_2
-value|'\\'
-end_define
-
-begin_comment
-comment|/* Allow test for DOS drive names.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_DOS_BASED_FILE_SYSTEM
 end_define
 
 begin_comment
@@ -84,10 +56,6 @@ define|\
 value|do { \     const char xref_ext[] = ".gxref"; \     strcpy (xref_file, file); \     s = basename (xref_file); \     t = strchr (s, '.'); \     if (t) \       strcpy (t, xref_ext); \     else \       strcat (xref_file, xref_ext); \   } while (0)
 end_define
 
-begin_comment
-comment|/* Change /dev/env/DJDIR/prefix/dir/ to canonical form so gcc_exec_prefix    is set properly in 'gcc.c'. It also helps to cut down the number of times    the value of the DJGPP environment variable 'DJDIR' is evaluated.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -103,7 +71,7 @@ value|do { \
 comment|/* If the environment variable DJDIR is not defined, then DJGPP is not \        installed correctly and GCC will quickly become confused with the \        default prefix settings. Report the problem now so the user doesn't \        receive deceptive "file not found" error messages later.  */
 value|\     char *djdir = getenv ("DJDIR"); \     if (djdir == NULL) \       { \
 comment|/* DJDIR is automatically defined by the DJGPP environment config \            file pointed to by the environment variable DJGPP. Examine DJGPP \            to try and figure out what's wrong.  */
-value|\         char *djgpp = getenv ("DJGPP"); \         if (djgpp == NULL) \           fatal ("environment variable DJGPP not defined"); \         else if (access (djgpp, R_OK) == 0) \           fatal ("environment variable DJGPP points to missing file '%s'", \                  djgpp); \         else \           fatal ("environment variable DJGPP points to corrupt file '%s'", \                   djgpp); \       } \     standard_exec_prefix = update_path (standard_exec_prefix, NULL); \     standard_bindir_prefix = update_path (standard_bindir_prefix, NULL); \     standard_startfile_prefix = update_path (standard_startfile_prefix, NULL); \   } while (0)
+value|\         char *djgpp = getenv ("DJGPP"); \         if (djgpp == NULL) \           fatal ("environment variable DJGPP not defined"); \         else if (access (djgpp, R_OK) == 0) \           fatal ("environment variable DJGPP points to missing file '%s'", \                  djgpp); \         else \           fatal ("environment variable DJGPP points to corrupt file '%s'", \                   djgpp); \       } \   } while (0)
 end_define
 
 begin_comment

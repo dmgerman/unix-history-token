@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Subroutines for the C front end on the POWER and PowerPC architectures.    Copyright (C) 2002    Free Software Foundation, Inc.     Contributed by Zack Weinberg<zack@codesourcery.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Subroutines for the C front end on the POWER and PowerPC architectures.    Copyright (C) 2002, 2003    Free Software Foundation, Inc.     Contributed by Zack Weinberg<zack@codesourcery.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -56,20 +68,18 @@ name|SYNTAX_ERROR
 parameter_list|(
 name|msgid
 parameter_list|)
-value|do {					\   warning (msgid);					\   warning ("ignoring malformed #pragma longcall");	\   return;						\ } while (0)
+value|do {			\   warning (msgid);					\   warning ("ignoring malformed #pragma longcall");	\   return;						\ } while (0)
 end_define
 
 begin_function
 name|void
 name|rs6000_pragma_longcall
 parameter_list|(
-name|pfile
-parameter_list|)
 name|cpp_reader
 modifier|*
 name|pfile
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|x
@@ -191,12 +201,10 @@ begin_function
 name|void
 name|rs6000_cpu_cpp_builtins
 parameter_list|(
-name|pfile
-parameter_list|)
 name|cpp_reader
 modifier|*
 name|pfile
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -314,15 +322,6 @@ case|:
 name|builtin_define
 argument_list|(
 literal|"_CALL_SYSV"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ABI_AIX_NODESC
-case|:
-name|builtin_define
-argument_list|(
-literal|"_CALL_AIX"
 argument_list|)
 expr_stmt|;
 break|break;

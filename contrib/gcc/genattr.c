@@ -1,18 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate attribute information (insn-attr.h) from machine description.    Copyright (C) 1991, 1994, 1996, 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate attribute information (insn-attr.h) from machine description.    Copyright (C) 1991, 1994, 1996, 1998, 1999, 2000, 2003    Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|"bconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -92,123 +104,102 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|extend_range
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|range
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|init_range
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|range
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|write_upcase
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_attr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|write_units
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|range
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|range
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|range
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|range
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|range
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|void
 name|extend_range
 parameter_list|(
-name|range
-parameter_list|,
-name|min
-parameter_list|,
-name|max
-parameter_list|)
 name|struct
 name|range
 modifier|*
 name|range
-decl_stmt|;
+parameter_list|,
 name|int
 name|min
-decl_stmt|;
+parameter_list|,
 name|int
 name|max
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -246,13 +237,11 @@ specifier|static
 name|void
 name|init_range
 parameter_list|(
-name|range
-parameter_list|)
 name|struct
 name|range
 modifier|*
 name|range
-decl_stmt|;
+parameter_list|)
 block|{
 name|range
 operator|->
@@ -275,13 +264,11 @@ specifier|static
 name|void
 name|write_upcase
 parameter_list|(
-name|str
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 for|for
 control|(
@@ -309,11 +296,9 @@ specifier|static
 name|void
 name|gen_attr
 parameter_list|(
-name|attr
-parameter_list|)
 name|rtx
 name|attr
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -369,7 +354,7 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"extern int get_attr_%s PARAMS ((%s));\n"
+literal|"extern int get_attr_%s (%s);\n"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -471,7 +456,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern enum attr_%s get_attr_%s PARAMS ((%s));\n\n"
+literal|"extern enum attr_%s get_attr_%s (%s);\n\n"
 argument_list|,
 name|XSTR
 argument_list|(
@@ -516,7 +501,7 @@ condition|)
 block|{
 name|puts
 argument_list|(
-literal|"\ extern void shorten_branches PARAMS ((rtx));\n\ extern int insn_default_length PARAMS ((rtx));\n\ extern int insn_variable_length_p PARAMS ((rtx));\n\ extern int insn_current_length PARAMS ((rtx));\n\n\ #include \"insn-addr.h\"\n"
+literal|"\ extern void shorten_branches (rtx);\n\ extern int insn_default_length (rtx);\n\ extern int insn_variable_length_p (rtx);\n\ extern int insn_current_length (rtx);\n\n\ #include \"insn-addr.h\"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -528,46 +513,34 @@ specifier|static
 name|void
 name|write_units
 parameter_list|(
-name|num_units
-parameter_list|,
-name|multiplicity
-parameter_list|,
-name|simultaneity
-parameter_list|,
-name|ready_cost
-parameter_list|,
-name|issue_delay
-parameter_list|,
-name|blockage
-parameter_list|)
 name|int
 name|num_units
-decl_stmt|;
+parameter_list|,
 name|struct
 name|range
 modifier|*
 name|multiplicity
-decl_stmt|;
+parameter_list|,
 name|struct
 name|range
 modifier|*
 name|simultaneity
-decl_stmt|;
+parameter_list|,
 name|struct
 name|range
 modifier|*
 name|ready_cost
-decl_stmt|;
+parameter_list|,
 name|struct
 name|range
 modifier|*
 name|issue_delay
-decl_stmt|;
+parameter_list|,
 name|struct
 name|range
 modifier|*
 name|blockage
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -581,12 +554,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int result_ready_cost PARAMS ((rtx));\n"
+literal|"extern int result_ready_cost (rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int function_units_used PARAMS ((rtx));\n\n"
+literal|"extern int function_units_used (rtx);\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -631,12 +604,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int (*const ready_cost_function) PARAMS ((rtx));\n"
+literal|"  int (*const ready_cost_function) (rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int (*const conflict_cost_function) PARAMS ((rtx, rtx));\n"
+literal|"  int (*const conflict_cost_function) (rtx, rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -646,12 +619,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  unsigned int (*const blockage_range_function) PARAMS ((rtx));\n"
+literal|"  unsigned int (*const blockage_range_function) (rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  int (*const blockage_function) PARAMS ((rtx, rtx));\n"
+literal|"  int (*const blockage_function) (rtx, rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -785,7 +758,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* INSN_QUEUE_SIZE is a power of two larger than MAX_BLOCKAGE and      MAX_READY_COST.  This is the longest time an isnsn may be queued.  */
+comment|/* INSN_QUEUE_SIZE is a power of two larger than MAX_BLOCKAGE and      MAX_READY_COST.  This is the longest time an insn may be queued.  */
 name|i
 operator|=
 name|MAX
@@ -824,39 +797,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|desc
@@ -1072,17 +1024,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int num_delay_slots PARAMS ((rtx));\n"
+literal|"extern int num_delay_slots (rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int eligible_for_delay PARAMS ((rtx, int, rtx, int));\n\n"
+literal|"extern int eligible_for_delay (rtx, int, rtx, int);\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int const_num_delay_slots PARAMS ((rtx));\n\n"
+literal|"extern int const_num_delay_slots (rtx);\n\n"
 argument_list|)
 expr_stmt|;
 name|have_delay
@@ -1134,7 +1086,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int eligible_for_annul_true PARAMS ((rtx, int, rtx, int));\n"
+literal|"extern int eligible_for_annul_true (rtx, int, rtx, int);\n"
 argument_list|)
 expr_stmt|;
 name|have_annul_true
@@ -1166,7 +1118,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int eligible_for_annul_false PARAMS ((rtx, int, rtx, int));\n"
+literal|"extern int eligible_for_annul_false (rtx, int, rtx, int);\n"
 argument_list|)
 expr_stmt|;
 name|have_annul_false
@@ -1300,11 +1252,6 @@ condition|)
 block|{
 name|unit
 operator|=
-operator|(
-expr|struct
-name|function_unit
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -1709,6 +1656,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\n#ifndef AUTOMATON_ALTS\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define AUTOMATON_ALTS 0\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#endif\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\n#ifndef AUTOMATON_STATE_ALTS\n"
 argument_list|)
 expr_stmt|;
@@ -1780,7 +1742,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int insn_default_latency PARAMS ((rtx));\n\n"
+literal|"extern int insn_default_latency (rtx);\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1795,7 +1757,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int bypass_p PARAMS ((rtx));\n\n"
+literal|"extern int bypass_p (rtx);\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1815,7 +1777,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int insn_latency PARAMS ((rtx, rtx));\n\n"
+literal|"extern int insn_latency (rtx, rtx);\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n#if AUTOMATON_ALTS\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1835,7 +1802,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int insn_alts PARAMS ((rtx));\n\n"
+literal|"extern int insn_alts (rtx);\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#endif\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1870,7 +1842,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int state_size PARAMS ((void));\n\n"
+literal|"extern int state_size (void);\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1885,7 +1857,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern void state_reset PARAMS ((state_t));\n"
+literal|"extern void state_reset (state_t);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1935,7 +1907,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int state_transition PARAMS ((state_t, rtx));\n"
+literal|"extern int state_transition (state_t, rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1975,7 +1947,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int state_alts PARAMS ((state_t, rtx));\n"
+literal|"extern int state_alts (state_t, rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1985,7 +1957,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int min_issue_delay PARAMS ((state_t, rtx));\n"
+literal|"extern int min_issue_delay (state_t, rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2000,7 +1972,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int state_dead_lock_p PARAMS ((state_t));\n"
+literal|"extern int state_dead_lock_p (state_t);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2035,7 +2007,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int min_insn_conflict_delay PARAMS ((state_t, rtx, rtx));\n"
+literal|"extern int min_insn_conflict_delay (state_t, rtx, rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2055,7 +2027,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern void print_reservation PARAMS ((FILE *, rtx));\n"
+literal|"extern void print_reservation (FILE *, rtx);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2075,7 +2047,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int get_cpu_unit_code PARAMS ((const char *));\n"
+literal|"extern int get_cpu_unit_code (const char *);\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2095,12 +2067,37 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern int cpu_unit_reservation_p PARAMS ((state_t, int));\n"
+literal|"extern int cpu_unit_reservation_p (state_t, int);\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"#endif\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"/* Clean insn code cache.  It should be called if there\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   is a chance that condition value in a\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   define_insn_reservation will be changed after\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   last call of dfa_start.  */\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"extern void dfa_clean_insn_cache (void);\n\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2120,12 +2117,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern void dfa_start PARAMS ((void));\n"
+literal|"extern void dfa_start (void);\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"extern void dfa_finish PARAMS ((void));\n"
+literal|"extern void dfa_finish (void);\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2138,7 +2135,7 @@ literal|"typedef void *state_t;\n\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Output flag masks for use by reorg.         Flags are used to hold branch direction and prediction information      for use by eligible_for_...  */
+comment|/* Output flag masks for use by reorg.       Flags are used to hold branch direction and prediction information      for use by eligible_for_...  */
 name|printf
 argument_list|(
 literal|"\n#define ATTR_FLAG_forward\t0x1\n"
@@ -2210,12 +2207,10 @@ name|char
 modifier|*
 name|get_insn_name
 parameter_list|(
-name|code
-parameter_list|)
 name|int
 name|code
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|NULL

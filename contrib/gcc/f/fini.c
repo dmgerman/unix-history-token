@@ -6,7 +6,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USE_HCONFIG
+name|USE_BCONFIG
 end_define
 
 begin_include
@@ -1411,9 +1411,6 @@ expr_stmt|;
 comment|/* Make new name object to store name and its keyword. */
 name|newname
 operator|=
-operator|(
-name|name
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target macros for the FRV port of GCC.    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Red Hat Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Target macros for the FRV port of GCC.    Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Red Hat Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,19 +14,6 @@ define|#
 directive|define
 name|__FRV_H__
 end_define
-
-begin_comment
-comment|/* Set up System V.4 (aka ELF) defaults.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"svr4.h"
-end_include
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* Frv general purpose macros.  */
@@ -106,7 +93,7 @@ name|WORD_SWITCH_TAKES_ARG
 end_undef
 
 begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    the assembler.  It can also specify how to translate options you give to GNU    CC into options for GNU CC to pass to the assembler.  See the file `sun3.h'    for an example of this.     Do not define this macro if it does not need to do anything.     Defined in svr4.h.  */
+comment|/* A C string constant that tells the GCC driver program options to pass to    the assembler.  It can also specify how to translate options you give to GNU    CC into options for GCC to pass to the assembler.  See the file `sun3.h'    for an example of this.     Do not define this macro if it does not need to do anything.     Defined in svr4.h.  */
 end_comment
 
 begin_undef
@@ -119,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"\ %{G*} %{v} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*} \ %{mtomcat-stats} \ %{!mno-eflags: \     %{mcpu=*} \     %{mgpr-*} %{mfpr-*} \     %{msoft-float} %{mhard-float} \     %{mdword} %{mno-dword} \     %{mdouble} %{mno-double} \     %{mmedia} %{mno-media} \     %{mmuladd} %{mno-muladd} \     %{mpack} %{mno-pack} \     %{fpic: -mpic} %{fPIC: -mPIC} %{mlibrary-pic}}"
+value|"\ %{G*} %{v} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*} \ %{mtomcat-stats} \ %{!mno-eflags: \     %{mcpu=*} \     %{mgpr-*} %{mfpr-*} \     %{msoft-float} %{mhard-float} \     %{mdword} %{mno-dword} \     %{mdouble} %{mno-double} \     %{mmedia} %{mno-media} \     %{mmuladd} %{mno-muladd} \     %{mpack} %{mno-pack} \     %{fpic|fpie: -mpic} %{fPIC|fPIE: -mPIC} %{mlibrary-pic}}"
 end_define
 
 begin_comment
@@ -157,7 +144,7 @@ value|"frvend%O%s"
 end_define
 
 begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    CPP.  It can also specify how to translate options you give to GNU CC into    options for GNU CC to pass to the CPP.     Do not define this macro if it does not need to do anything.  */
+comment|/* A C string constant that tells the GCC driver program options to pass to    CPP.  It can also specify how to translate options you give to GCC into    options for GCC to pass to the CPP.     Do not define this macro if it does not need to do anything.  */
 end_comment
 
 begin_comment
@@ -236,7 +223,7 @@ value|(MASK_GPR_32 | MASK_SOFT_FLOAT)
 end_define
 
 begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    `cc1'.  It can also specify how to translate options you give to GNU CC into    options for GNU CC to pass to the `cc1'.     Do not define this macro if it does not need to do anything.  */
+comment|/* A C string constant that tells the GCC driver program options to pass to    `cc1'.  It can also specify how to translate options you give to GCC into    options for GCC to pass to the `cc1'.     Do not define this macro if it does not need to do anything.  */
 end_comment
 
 begin_comment
@@ -251,7 +238,7 @@ value|"%{G*}"
 end_define
 
 begin_comment
-comment|/* A C string constant that tells the GNU CC driver program options to pass to    the linker.  It can also specify how to translate options you give to GNU CC    into options for GNU CC to pass to the linker.     Do not define this macro if it does not need to do anything.     Defined in svr4.h.  */
+comment|/* A C string constant that tells the GCC driver program options to pass to    the linker.  It can also specify how to translate options you give to GCC    into options for GCC to pass to the linker.     Do not define this macro if it does not need to do anything.     Defined in svr4.h.  */
 end_comment
 
 begin_comment
@@ -289,7 +276,7 @@ value|"--start-group -lc -lsim --end-group"
 end_define
 
 begin_comment
-comment|/* This macro defines names of additional specifications to put in the specs    that can be used in various specifications like CC1_SPEC.  Its definition    is an initializer with a subgrouping for each command option.     Each subgrouping contains a string constant, that defines the    specification name, and a string constant that used by the GNU CC driver    program.     Do not define this macro if it does not need to do anything.  */
+comment|/* This macro defines names of additional specifications to put in the specs    that can be used in various specifications like CC1_SPEC.  Its definition    is an initializer with a subgrouping for each command option.     Each subgrouping contains a string constant, that defines the    specification name, and a string constant that used by the GCC driver    program.     Do not define this macro if it does not need to do anything.  */
 end_comment
 
 begin_ifndef
@@ -380,15 +367,13 @@ begin_comment
 comment|/* Run-time target specifications */
 end_comment
 
-begin_comment
-comment|/* Define this to be a string constant containing `-D' options to define the    predefined macros that identify this machine and system.  These macros will    be predefined unless the `-ansi' option is specified.     In addition, a parallel set of macros are predefined, whose names are made    by appending `__' at the beginning and at the end.  These `__' macros are    permitted by the ANSI standard, so they are predefined regardless of whether    `-ansi' is specified.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__frv__ -Amachine(frv)"
+name|TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       builtin_define ("__frv__");		\       builtin_assert ("machine=frv");		\     }						\   while (0)
 end_define
 
 begin_escape
@@ -981,7 +966,7 @@ define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{									    \   { "cpu=",&frv_cpu_string,	 "Set cpu type" },	    \   { "branch-cost=",&frv_branch_cost_string, "Internal debug switch" }, \   { "cond-exec-insns=",&frv_condexec_insns_str, "Internal debug switch" }, \   { "cond-exec-temps=",&frv_condexec_temps_str, "Internal debug switch" }, \   { "sched-lookahead=",&frv_sched_lookahead_str,"Internal debug switch" }, \ }
+value|{									      \   { "cpu=",&frv_cpu_string,	 "Set cpu type", 0},	      \   { "branch-cost=",&frv_branch_cost_string, "Internal debug switch", 0}, \   { "cond-exec-insns=",&frv_condexec_insns_str, "Internal debug switch", 0}, \   { "cond-exec-temps=",&frv_condexec_temps_str, "Internal debug switch", 0}, \   { "sched-lookahead=",&frv_sched_lookahead_str,"Internal debug switch", 0}, \ }
 end_define
 
 begin_comment
@@ -1023,11 +1008,11 @@ value|frv_optimization_options (LEVEL, SIZE)
 end_define
 
 begin_comment
-comment|/* Define this macro if debugging can be performed even without a frame    pointer.  If this macro is defined, GNU CC will turn on the    `-fomit-frame-pointer' option whenever `-O' is specified.  */
+comment|/* Define this macro if debugging can be performed even without a frame    pointer.  If this macro is defined, GCC will turn on the    `-fomit-frame-pointer' option whenever `-O' is specified.  */
 end_comment
 
 begin_comment
-comment|/* Frv needs a specific frame layout that includes the frame pointer */
+comment|/* Frv needs a specific frame layout that includes the frame pointer.  */
 end_comment
 
 begin_define
@@ -1065,28 +1050,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|g_switch_value
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* value of the -G xx switch */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|g_switch_set
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* whether -G xx was passed.  */
-end_comment
-
 begin_comment
 comment|/* Storage Layout */
 end_comment
@@ -1114,7 +1077,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define this macro to have the value 1 if, in a multiword object, the most    significant word has the lowest number.  This applies to both memory    locations and registers; GNU CC fundamentally assumes that the order of    words in memory is the same as the order in registers.  This macro need not    be a constant.  */
+comment|/* Define this macro to have the value 1 if, in a multiword object, the most    significant word has the lowest number.  This applies to both memory    locations and registers; GCC fundamentally assumes that the order of    words in memory is the same as the order in registers.  This macro need not    be a constant.  */
 end_comment
 
 begin_define
@@ -1221,7 +1184,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* An expression for the alignment of a structure field FIELD if the    alignment computed in the usual way is COMPUTED.  GNU CC uses this    value instead of the value in `BIGGEST_ALIGNMENT' or    `BIGGEST_FIELD_ALIGNMENT', if defined, for structure fields only.  */
+comment|/* An expression for the alignment of a structure field FIELD if the    alignment computed in the usual way is COMPUTED.  GCC uses this    value instead of the value in `BIGGEST_ALIGNMENT' or    `BIGGEST_FIELD_ALIGNMENT', if defined, for structure fields only.  */
 end_comment
 
 begin_define
@@ -1288,7 +1251,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define this if you wish to imitate the way many other C compilers handle    alignment of bitfields and the structures that contain them.     The behavior is that the type written for a bit-field (`int', `short', or    other integer type) imposes an alignment for the entire structure, as if the    structure really did contain an ordinary field of that type.  In addition,    the bit-field is placed within the structure so that it would fit within such    a field, not crossing a boundary for it.     Thus, on most machines, a bit-field whose type is written as `int' would not    cross a four-byte boundary, and would force four-byte alignment for the    whole structure.  (The alignment used may not be four bytes; it is    controlled by the other alignment parameters.)     If the macro is defined, its definition should be a C expression; a nonzero    value for the expression enables this behavior.     Note that if this macro is not defined, or its value is zero, some bitfields    may cross more than one alignment boundary.  The compiler can support such    references if there are `insv', `extv', and `extzv' insns that can directly    reference memory.     The other known way of making bitfields work is to define    `STRUCTURE_SIZE_BOUNDARY' as large as `BIGGEST_ALIGNMENT'.  Then every    structure can be accessed with fullwords.     Unless the machine has bit-field instructions or you define    `STRUCTURE_SIZE_BOUNDARY' that way, you must define    `PCC_BITFIELD_TYPE_MATTERS' to have a nonzero value.     If your aim is to make GNU CC use the same conventions for laying out    bitfields as are used by another compiler, here is how to investigate what    the other compiler does.  Compile and run this program:          struct foo1         {           char x;           char :0;           char y;         };          struct foo2         {           char x;           int :0;           char y;         };          main ()         {           printf ("Size of foo1 is %d\n",                   sizeof (struct foo1));           printf ("Size of foo2 is %d\n",                   sizeof (struct foo2));           exit (0);         }     If this prints 2 and 5, then the compiler's behavior is what you would get    from `PCC_BITFIELD_TYPE_MATTERS'.     Defined in svr4.h.  */
+comment|/* Define this if you wish to imitate the way many other C compilers handle    alignment of bitfields and the structures that contain them.     The behavior is that the type written for a bit-field (`int', `short', or    other integer type) imposes an alignment for the entire structure, as if the    structure really did contain an ordinary field of that type.  In addition,    the bit-field is placed within the structure so that it would fit within such    a field, not crossing a boundary for it.     Thus, on most machines, a bit-field whose type is written as `int' would not    cross a four-byte boundary, and would force four-byte alignment for the    whole structure.  (The alignment used may not be four bytes; it is    controlled by the other alignment parameters.)     If the macro is defined, its definition should be a C expression; a nonzero    value for the expression enables this behavior.     Note that if this macro is not defined, or its value is zero, some bitfields    may cross more than one alignment boundary.  The compiler can support such    references if there are `insv', `extv', and `extzv' insns that can directly    reference memory.     The other known way of making bitfields work is to define    `STRUCTURE_SIZE_BOUNDARY' as large as `BIGGEST_ALIGNMENT'.  Then every    structure can be accessed with fullwords.     Unless the machine has bit-field instructions or you define    `STRUCTURE_SIZE_BOUNDARY' that way, you must define    `PCC_BITFIELD_TYPE_MATTERS' to have a nonzero value.     If your aim is to make GCC use the same conventions for laying out    bitfields as are used by another compiler, here is how to investigate what    the other compiler does.  Compile and run this program:          struct foo1         {           char x;           char :0;           char y;         };          struct foo2         {           char x;           int :0;           char y;         };          main ()         {           printf ("Size of foo1 is %d\n",                   sizeof (struct foo1));           printf ("Size of foo2 is %d\n",                   sizeof (struct foo2));           exit (0);         }     If this prints 2 and 5, then the compiler's behavior is what you would get    from `PCC_BITFIELD_TYPE_MATTERS'.     Defined in svr4.h.  */
 end_comment
 
 begin_define
@@ -2457,7 +2420,7 @@ comment|/* Order of allocation of registers.  */
 end_comment
 
 begin_comment
-comment|/* If defined, an initializer for a vector of integers, containing the numbers    of hard registers in the order in which GNU CC should prefer to use them    (from most preferred to least).     If this macro is not defined, registers are used lowest numbered first (all    else being equal).     One use of this macro is on machines where the highest numbered registers    must always be saved and the save-multiple-registers instruction supports    only sequences of consecutive registers.  On such machines, define    `REG_ALLOC_ORDER' to be an initializer that lists the highest numbered    allocatable register first.  */
+comment|/* If defined, an initializer for a vector of integers, containing the numbers    of hard registers in the order in which GCC should prefer to use them    (from most preferred to least).     If this macro is not defined, registers are used lowest numbered first (all    else being equal).     One use of this macro is on machines where the highest numbered registers    must always be saved and the save-multiple-registers instruction supports    only sequences of consecutive registers.  On such machines, define    `REG_ALLOC_ORDER' to be an initializer that lists the highest numbered    allocatable register first.  */
 end_comment
 
 begin_comment
@@ -3806,7 +3769,7 @@ value|frv_function_arg_partial_nregs (&CUM, MODE, TYPE, NAMED)
 end_define
 
 begin_comment
-comment|/* extern int frv_function_arg_partial_nregs PARAMS ((CUMULATIVE_ARGS, int, Tree, int));  */
+comment|/* extern int frv_function_arg_partial_nregs (CUMULATIVE_ARGS, int, Tree, int);  */
 end_comment
 
 begin_comment
@@ -3898,14 +3861,16 @@ name|FNTYPE
 parameter_list|,
 name|LIBNAME
 parameter_list|,
-name|INDIRECT
+name|FNDECL
+parameter_list|,
+name|N_NAMED_ARGS
 parameter_list|)
 define|\
-value|frv_init_cumulative_args (&CUM, FNTYPE, LIBNAME, INDIRECT, FALSE)
+value|frv_init_cumulative_args (&CUM, FNTYPE, LIBNAME, FNDECL, FALSE)
 end_define
 
 begin_comment
-comment|/* Like `INIT_CUMULATIVE_ARGS' but overrides it for the purposes of finding the    arguments for the function being compiled.  If this macro is undefined,    `INIT_CUMULATIVE_ARGS' is used instead.     The value passed for LIBNAME is always 0, since library routines with    special calling conventions are never compiled with GNU CC.  The argument    LIBNAME exists for symmetry with `INIT_CUMULATIVE_ARGS'.  */
+comment|/* Like `INIT_CUMULATIVE_ARGS' but overrides it for the purposes of finding the    arguments for the function being compiled.  If this macro is undefined,    `INIT_CUMULATIVE_ARGS' is used instead.     The value passed for LIBNAME is always 0, since library routines with    special calling conventions are never compiled with GCC.  The argument    LIBNAME exists for symmetry with `INIT_CUMULATIVE_ARGS'.  */
 end_comment
 
 begin_define
@@ -3920,7 +3885,7 @@ parameter_list|,
 name|LIBNAME
 parameter_list|)
 define|\
-value|frv_init_cumulative_args (&CUM, FNTYPE, LIBNAME, FALSE, TRUE)
+value|frv_init_cumulative_args (&CUM, FNTYPE, LIBNAME, NULL, TRUE)
 end_define
 
 begin_comment
@@ -4083,7 +4048,7 @@ comment|/* Generating Code for Profiling.  */
 end_comment
 
 begin_comment
-comment|/* A C statement or compound statement to output to FILE some assembler code to    call the profiling subroutine `mcount'.  Before calling, the assembler code    must load the address of a counter variable into a register where `mcount'    expects to find the address.  The name of this variable is `LP' followed by    the number LABELNO, so you would generate the name using `LP%d' in a    `fprintf'.     The details of how the address should be passed to `mcount' are determined    by your operating system environment, not by GNU CC.  To figure them out,    compile a small program for profiling using the system's installed C    compiler and look at the assembler code that results.     This declaration must be present, but it can be an abort if profiling is    not implemented.  */
+comment|/* A C statement or compound statement to output to FILE some assembler code to    call the profiling subroutine `mcount'.  Before calling, the assembler code    must load the address of a counter variable into a register where `mcount'    expects to find the address.  The name of this variable is `LP' followed by    the number LABELNO, so you would generate the name using `LP%d' in a    `fprintf'.     The details of how the address should be passed to `mcount' are determined    by your operating system environment, not by GCC.  To figure them out,    compile a small program for profiling using the system's installed C    compiler and look at the assembler code that results.     This declaration must be present, but it can be an abort if profiling is    not implemented.  */
 end_comment
 
 begin_define
@@ -4095,7 +4060,6 @@ name|FILE
 parameter_list|,
 name|LABELNO
 parameter_list|)
-value|abort ()
 end_define
 
 begin_escape
@@ -4223,7 +4187,7 @@ value|frv_initialize_trampoline (ADDR, FNADDR, STATIC_CHAIN)
 end_define
 
 begin_comment
-comment|/* Define this macro if trampolines need a special subroutine to do their work.    The macro should expand to a series of `asm' statements which will be    compiled with GNU CC.  They go in a library function named    `__transfer_from_trampoline'.     If you need to avoid executing the ordinary prologue code of a compiled C    function when you jump to the subroutine, you can do so by placing a special    label of your own in the assembler code.  Use one `asm' statement to    generate an assembler label, and another to make the label global.  Then    trampolines can use that label to jump directly to your special assembler    code.  */
+comment|/* Define this macro if trampolines need a special subroutine to do their work.    The macro should expand to a series of `asm' statements which will be    compiled with GCC.  They go in a library function named    `__transfer_from_trampoline'.     If you need to avoid executing the ordinary prologue code of a compiled C    function when you jump to the subroutine, you can do so by placing a special    label of your own in the assembler code.  Use one `asm' statement to    generate an assembler label, and another to make the label global.  Then    trampolines can use that label to jump directly to your special assembler    code.  */
 end_comment
 
 begin_ifdef
@@ -4261,107 +4225,11 @@ define|#
 directive|define
 name|TRANSFER_FROM_TRAMPOLINE
 define|\
-value|extern int _write (int, const void *, unsigned);			\ 									\ void									\ __trampoline_setup (addr, size, fnaddr, sc)				\      short * addr;							\      int size;								\      int fnaddr;							\      int sc;								\ {									\   extern short __trampoline_template[];					\   short * to = addr;							\   short * from =&__trampoline_template[0];				\   int i;								\ 									\   if (size< 20)							\     {									\       _write (2, "__trampoline_setup bad size\n",			\ 	      sizeof ("__trampoline_setup bad size\n") - 1);		\       exit (-1);							\     }									\ 									\   to[0] = from[0];							\   to[1] = (short)(fnaddr);						\   to[2] = from[2];							\   to[3] = (short)(sc);							\   to[4] = from[4];							\   to[5] = (short)(fnaddr>> 16);					\   to[6] = from[6];							\   to[7] = (short)(sc>> 16);						\   to[8] = from[8];							\   to[9] = from[9];							\ 									\   for (i = 0; i< 20; i++)						\     __asm__ volatile ("dcf @(%0,%1)\n\tici @(%0,%1)" :: "r" (to), "r" (i)); \ }									\ 									\ __asm__("\n"								\ 	"\t.globl " TRAMPOLINE_TEMPLATE_NAME "\n"			\ 	"\t.text\n"							\ 	TRAMPOLINE_TEMPLATE_NAME ":\n"					\ 	"\tsetlos #0, gr6\n"
+value|extern int _write (int, const void *, unsigned);			\ 									\ void									\ __trampoline_setup (short * addr, int size, int fnaddr, int sc)		\ {									\   extern short __trampoline_template[];					\   short * to = addr;							\   short * from =&__trampoline_template[0];				\   int i;								\ 									\   if (size< 20)							\     {									\       _write (2, "__trampoline_setup bad size\n",			\ 	      sizeof ("__trampoline_setup bad size\n") - 1);		\       exit (-1);							\     }									\ 									\   to[0] = from[0];							\   to[1] = (short)(fnaddr);						\   to[2] = from[2];							\   to[3] = (short)(sc);							\   to[4] = from[4];							\   to[5] = (short)(fnaddr>> 16);					\   to[6] = from[6];							\   to[7] = (short)(sc>> 16);						\   to[8] = from[8];							\   to[9] = from[9];							\ 									\   for (i = 0; i< 20; i++)						\     __asm__ volatile ("dcf @(%0,%1)\n\tici @(%0,%1)" :: "r" (to), "r" (i)); \ }									\ 									\ __asm__("\n"								\ 	"\t.globl " TRAMPOLINE_TEMPLATE_NAME "\n"			\ 	"\t.text\n"							\ 	TRAMPOLINE_TEMPLATE_NAME ":\n"					\ 	"\tsetlos #0, gr6\n"
 comment|/* jump register */
 value|\ 	"\tsetlos #0, gr7\n"
 comment|/* static chain */
 value|\ 	"\tsethi #0, gr6\n"						\ 	"\tsethi #0, gr7\n"						\ 	"\tjmpl @(gr0,gr6)\n");
-end_define
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Implicit Calls to Library Routines.  */
-end_comment
-
-begin_comment
-comment|/* A C string constant giving the name of the function to call for the    remainder in division of one signed full-word by another.  If you do not    define this macro, the default name is used, which is `__modsi3', a function    defined in `libgcc.a'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODSI3_LIBCALL
-value|"__modi"
-end_define
-
-begin_comment
-comment|/* A C string constant giving the name of the function to call for the    remainder in division of one unsigned full-word by another.  If you do not    define this macro, the default name is used, which is `__umodsi3', a    function defined in `libgcc.a'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMODSI3_LIBCALL
-value|"__umodi"
-end_define
-
-begin_comment
-comment|/* A C string constant giving the name of the function to call for    multiplication of one signed double-word by another.  If you do not define    this macro, the default name is used, which is `__muldi3', a function    defined in `libgcc.a'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MULDI3_LIBCALL
-value|"__mulll"
-end_define
-
-begin_comment
-comment|/* A C string constant giving the name of the function to call for division of    one signed double-word by another.  If you do not define this macro, the    default name is used, which is `__divdi3', a function defined in `libgcc.a'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIVDI3_LIBCALL
-value|"__divll"
-end_define
-
-begin_comment
-comment|/* A C string constant giving the name of the function to call for division of    one unsigned full-word by another.  If you do not define this macro, the    default name is used, which is `__udivdi3', a function defined in    `libgcc.a'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UDIVDI3_LIBCALL
-value|"__udivll"
-end_define
-
-begin_comment
-comment|/* A C string constant giving the name of the function to call for the    remainder in division of one signed double-word by another.  If you do not    define this macro, the default name is used, which is `__moddi3', a function    defined in `libgcc.a'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODDI3_LIBCALL
-value|"__modll"
-end_define
-
-begin_comment
-comment|/* A C string constant giving the name of the function to call for the    remainder in division of one unsigned full-word by another.  If you do not    define this macro, the default name is used, which is `__umoddi3', a    function defined in `libgcc.a'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMODDI3_LIBCALL
-value|"__umodll"
-end_define
-
-begin_comment
-comment|/* Define this macro as a C statement that declares additional library routines    renames existing ones. `init_optabs' calls this macro after initializing all    the normal library routines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INIT_TARGET_OPTABS
-define|\
-value|do								\     {								\       add_optab->handlers [(int) DImode].libfunc		\ 	= init_one_libfunc ("__addll");				\       sub_optab->handlers [(int) DImode].libfunc		\ 	= init_one_libfunc ("__subll");				\       and_optab->handlers [(int) DImode].libfunc		\ 	= init_one_libfunc ("__andll");				\       ior_optab->handlers [(int) DImode].libfunc		\ 	= init_one_libfunc ("__orll");				\       xor_optab->handlers [(int) DImode].libfunc		\ 	= init_one_libfunc ("__xorll");				\       one_cmpl_optab->handlers [(int) DImode].libfunc		\ 	= init_one_libfunc ("__notll");				\       add_optab->handlers [(int) SFmode].libfunc		\ 	= init_one_libfunc ("__addf");				\       sub_optab->handlers [(int) SFmode].libfunc		\ 	= init_one_libfunc ("__subf");				\       smul_optab->handlers [(int) SFmode].libfunc		\ 	= init_one_libfunc ("__mulf");				\       sdiv_optab->handlers [(int) SFmode].libfunc		\ 	= init_one_libfunc ("__divf");				\       add_optab->handlers [(int) DFmode].libfunc		\ 	= init_one_libfunc ("__addd");				\       sub_optab->handlers [(int) DFmode].libfunc		\ 	= init_one_libfunc ("__subd");				\       smul_optab->handlers [(int) DFmode].libfunc		\ 	= init_one_libfunc ("__muld");				\       sdiv_optab->handlers [(int) DFmode].libfunc		\ 	= init_one_libfunc ("__divd");				\       fixsfsi_libfunc = init_one_libfunc ("__ftoi");		\       fixunssfsi_libfunc = init_one_libfunc ("__ftoui");	\       fixsfdi_libfunc = init_one_libfunc ("__ftoll");		\       fixunssfdi_libfunc = init_one_libfunc ("__ftoull");	\       fixdfsi_libfunc = init_one_libfunc ("__dtoi");		\       fixunsdfsi_libfunc = init_one_libfunc ("__dtoui");	\       fixdfdi_libfunc = init_one_libfunc ("__dtoll");		\       fixunsdfdi_libfunc = init_one_libfunc ("__dtoull");	\       floatsisf_libfunc = init_one_libfunc ("__itof");		\       floatdisf_libfunc = init_one_libfunc ("__lltof");		\       floatsidf_libfunc = init_one_libfunc ("__itod");		\       floatdidf_libfunc = init_one_libfunc ("__lltod");		\       extendsfdf2_libfunc = init_one_libfunc ("__ftod");	\       truncdfsf2_libfunc = init_one_libfunc ("__dtof");		\     }								\   while (0)
 end_define
 
 begin_escape
@@ -4591,7 +4459,7 @@ comment|/* A C expression whose value is one if it is always safe to reverse a  
 end_comment
 
 begin_comment
-comment|/* On frv, don't consider floating point comparisons to be reversible.  In    theory, fp equality comparisons can be reversible */
+comment|/* On frv, don't consider floating point comparisons to be reversible.  In    theory, fp equality comparisons can be reversible.  */
 end_comment
 
 begin_define
@@ -4626,51 +4494,6 @@ end_escape
 begin_comment
 comment|/* Describing Relative Costs of Operations.  */
 end_comment
-
-begin_comment
-comment|/* A part of a C `switch' statement that describes the relative costs of    constant RTL expressions.  It must contain `case' labels for expression    codes `const_int', `const', `symbol_ref', `label_ref' and `const_double'.    Each case must ultimately reach a `return' statement to return the relative    cost of the use of that kind of constant value in an expression.  The cost    may depend on the precise value of the constant, which is available for    examination in X, and the rtx code of the expression in which it is    contained, found in OUTER_CODE.     CODE is the expression code--redundant, since it can be obtained with    `GET_CODE (X)'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CONST_COSTS
-parameter_list|(
-name|X
-parameter_list|,
-name|CODE
-parameter_list|,
-name|OUTER_CODE
-parameter_list|)
-define|\
-value|case CONST:								\   case LABEL_REF:							\   case SYMBOL_REF:							\   case CONST_DOUBLE:							\     return COSTS_N_INSNS (2);						\ 									\   case CONST_INT:							\
-comment|/* Make 12 bit integers really cheap */
-value|\     return IN_RANGE_P (INTVAL (X), -2048, 2047) ? 0 : COSTS_N_INSNS (2);
-end_define
-
-begin_comment
-unit|\
-comment|/* Like `CONST_COSTS' but applies to nonconstant RTL expressions.  This can be    used, for example, to indicate how costly a multiply instruction is.  In    writing this macro, you can use the construct `COSTS_N_INSNS (N)' to specify    a cost equal to N fast instructions.  OUTER_CODE is the code of the    expression in which X is contained.     This macro is optional; do not define it if the default cost assumptions are    adequate for the target machine.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTX_COSTS
-parameter_list|(
-name|X
-parameter_list|,
-name|CODE
-parameter_list|,
-name|OUTER_CODE
-parameter_list|)
-define|\
-value|case PLUS:								\   case MINUS:								\   case AND:								\   case IOR:								\   case XOR:								\   case ASHIFT:								\   case ASHIFTRT:							\   case LSHIFTRT:							\   case NOT:								\   case NEG:								\   case COMPARE:								\     if (GET_MODE (X) == SImode)						\       return COSTS_N_INSNS (1);						\     else if (GET_MODE (X) == DImode)					\       return COSTS_N_INSNS (2);						\     else								\       return COSTS_N_INSNS (3);
-comment|/* guess */
-value|\ 									\   case MULT:								\     if (GET_MODE (X) == SImode)						\       return COSTS_N_INSNS (2);						\     else								\       return COSTS_N_INSNS (6);
-comment|/* guess */
-value|\ 									\   case DIV:								\   case UDIV:								\     return COSTS_N_INSNS (18);
-end_define
 
 begin_comment
 comment|/* A C expression for the cost of moving data from a register in class FROM to    one in class TO.  The classes are expressed using the enumeration values    such as `GENERAL_REGS'.  A value of 4 is the default; other values are    interpreted relative to that.     It is not required that the cost always equal 2 when FROM is the same as TO;    on some machines it is expensive to move between registers if they are not    general registers.     If reload sees an insn consisting of a single `set' between two hard    registers, and if `REGISTER_MOVE_COST' applied to their classes returns a    value of 2, reload does not check to ensure that the constraints of the insn    are met.  Setting a cost of other than 2 will allow reload to verify that    the constraints are met.  You should do this if the `movM' pattern's    constraints do not allow such copying.  */
@@ -4713,7 +4536,7 @@ comment|/* A C expression for the cost of a branch instruction.  A value of 1 is
 end_comment
 
 begin_comment
-comment|/* Here are additional macros which do not specify precise relative costs, but    only that certain actions are more expensive than GNU CC would ordinarily    expect.  */
+comment|/* Here are additional macros which do not specify precise relative costs, but    only that certain actions are more expensive than GCC would ordinarily    expect.  */
 end_comment
 
 begin_comment
@@ -4827,13 +4650,6 @@ name|SDATA_SECTION_ASM_OP
 value|"\t.section .sdata,\"aw\""
 end_define
 
-begin_define
-define|#
-directive|define
-name|SBSS_SECTION_ASM_OP
-value|"\t.section .sbss,\"aw\""
-end_define
-
 begin_comment
 comment|/* On svr4, we *do* have support for the .init and .fini sections, and we    can put stuff in there to be executed before and after `main'.  We let    crtstuff.c and other files know this by defining the following symbols.    The definitions say how to change sections to the .init and .fini    sections.  This is the same for all known svr4 assemblers.     The standard System V.4 macros will work, but they look ugly in the    assembly output, so redefine them.  */
 end_comment
@@ -4864,6 +4680,32 @@ name|FINI_SECTION_ASM_OP
 value|"\t.section .fini,\"ax\""
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|CTORS_SECTION_ASM_OP
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|DTORS_SECTION_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CTORS_SECTION_ASM_OP
+value|"\t.section\t.ctors,\"a\""
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTORS_SECTION_ASM_OP
+value|"\t.section\t.dtors,\"a\""
+end_define
+
 begin_comment
 comment|/* A C expression whose value is a string containing the assembler operation to    switch to the fixup section that records all initialized pointers in a -fpic    program so they can be changed program startup time if the program is loaded    at a different address than linked for.  */
 end_comment
@@ -4889,7 +4731,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_sdata, in_sbss, in_const, in_fixup
+value|in_sdata, in_const, in_fixup
 end_define
 
 begin_comment
@@ -4907,7 +4749,7 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|SDATA_SECTION_FUNCTION                                                  \ SBSS_SECTION_FUNCTION							\ FIXUP_SECTION_FUNCTION
+value|SDATA_SECTION_FUNCTION						\ 	FIXUP_SECTION_FUNCTION
 end_define
 
 begin_define
@@ -4915,17 +4757,15 @@ define|#
 directive|define
 name|SDATA_SECTION_FUNCTION
 define|\
-value|void									\ sdata_section ()							\ {									\   if (in_section != in_sdata)						\     {									\       fprintf (asm_out_file, "%s\n", SDATA_SECTION_ASM_OP);		\       in_section = in_sdata;						\     }									\ }									\  #define SBSS_SECTION_FUNCTION						\ void									\ sbss_section ()								\ {									\   if (in_section != in_sbss)						\     {									\       fprintf (asm_out_file, "%s\n", SBSS_SECTION_ASM_OP);		\       in_section = in_sbss;						\     }									\ }									\  #define FIXUP_SECTION_FUNCTION						\ void									\ fixup_section ()							\ {									\   if (in_section != in_fixup)						\     {									\       fprintf (asm_out_file, "%s\n", FIXUP_SECTION_ASM_OP);		\       in_section = in_fixup;						\     }									\ }									\  #define SDATA_FLAG_CHAR '@'
+value|void									\ sdata_section (void)							\ {									\   if (in_section != in_sdata)						\     {									\       fprintf (asm_out_file, "%s\n", SDATA_SECTION_ASM_OP);		\       in_section = in_sdata;						\     }									\ }
 end_define
 
 begin_define
 define|#
 directive|define
-name|SDATA_NAME_P
-parameter_list|(
-name|NAME
-parameter_list|)
-value|(*(NAME) == SDATA_FLAG_CHAR)
+name|FIXUP_SECTION_FUNCTION
+define|\
+value|void									\ fixup_section (void)							\ {									\   if (in_section != in_fixup)						\     {									\       fprintf (asm_out_file, "%s\n", FIXUP_SECTION_ASM_OP);		\       in_section = in_fixup;						\     }									\ }
 end_define
 
 begin_escape
@@ -5089,7 +4929,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {                                                                   	\   if (SDATA_NAME_P (NAME))                                             	\     sbss_section ();                                                 	\   else                                                                 	\      bss_section ();                                                  	\   ASM_OUTPUT_ALIGN (STREAM, floor_log2 ((ALIGN) / BITS_PER_UNIT));     	\   ASM_DECLARE_OBJECT_NAME (STREAM, NAME, DECL);                        	\   ASM_OUTPUT_SKIP (STREAM, (SIZE) ? (SIZE) : 1);                       	\ } while (0)
+value|do {                                                                   	\   if ((SIZE)> 0&& (SIZE)<= g_switch_value)				\     named_section (0, ".sbss", 0);                                    	\   else                                                                 	\     bss_section ();                                                  	\   ASM_OUTPUT_ALIGN (STREAM, floor_log2 ((ALIGN) / BITS_PER_UNIT));     	\   ASM_DECLARE_OBJECT_NAME (STREAM, NAME, DECL);                        	\   ASM_OUTPUT_SKIP (STREAM, (SIZE) ? (SIZE) : 1);                       	\ } while (0)
 end_define
 
 begin_escape
@@ -5128,30 +4968,7 @@ value|"\t.globl "
 end_define
 
 begin_comment
-comment|/* A C statement (sans semicolon) to output to the stdio stream STREAM a    reference in assembler syntax to a label named NAME.  This should add `_' to    the front of the name, if that is customary on your operating system, as it    is in most Berkeley Unix systems.  This macro is used in `assemble_name'.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_LABELREF
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_LABELREF
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\   const char *_name = (NAME);						\   while (*_name == '*' || *_name == SDATA_FLAG_CHAR)			\     _name++;								\   asm_fprintf (STREAM, "%U%s", _name);					\ } while (0)
-end_define
-
-begin_comment
-comment|/* A C statement to store into the string STRING a label whose name is made    from the string PREFIX and the number NUM.     This string, when output subsequently by `assemble_name', should produce the    output that `ASM_OUTPUT_INTERNAL_LABEL' would produce with the same PREFIX    and NUM.     If the string begins with `*', then `assemble_name' will output the rest of    the string unchanged.  It is often convenient for    `ASM_GENERATE_INTERNAL_LABEL' to use `*' in this way.  If the string doesn't    start with `*', then `ASM_OUTPUT_LABELREF' gets to output the string, and    may change it.  (Of course, `ASM_OUTPUT_LABELREF' is also part of your    machine description, so you should know what it does on your machine.)     Defined in svr4.h.  */
+comment|/* A C statement to store into the string STRING a label whose name is made    from the string PREFIX and the number NUM.     This string, when output subsequently by `assemble_name', should produce the    output that `(*targetm.asm_out.internal_label)' would produce with the same PREFIX    and NUM.     If the string begins with `*', then `assemble_name' will output the rest of    the string unchanged.  It is often convenient for    `ASM_GENERATE_INTERNAL_LABEL' to use `*' in this way.  If the string doesn't    start with `*', then `ASM_OUTPUT_LABELREF' gets to output the string, and    may change it.  (Of course, `ASM_OUTPUT_LABELREF' is also part of your    machine description, so you should know what it does on your machine.)     Defined in svr4.h.  */
 end_comment
 
 begin_undef
@@ -5175,25 +4992,6 @@ define|\
 value|do {									\   sprintf (LABEL, "*.%s%ld", PREFIX, (long)NUM);			\ } while (0)
 end_define
 
-begin_comment
-comment|/* A C expression to assign to OUTVAR (which is a variable of type `char *') a    newly allocated string made from the string NAME and the number NUMBER, with    some suitable punctuation added.  Use `alloca' to get space for the string.     The string will be used as an argument to `ASM_OUTPUT_LABELREF' to produce    an assembler label for an internal static variable whose name is NAME.    Therefore, the string must be such as to result in valid assembler code.    The argument NUMBER is different each time this macro is executed; it    prevents conflicts between similarly-named internal static variables in    different scopes.     Ideally this string should not be a valid C identifier, to prevent any    conflict with the user's own symbols.  Most assemblers allow periods or    percent signs in assembler symbols; putting at least one of these between    the name and the number will suffice.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_FORMAT_PRIVATE_NAME
-parameter_list|(
-name|OUTVAR
-parameter_list|,
-name|NAME
-parameter_list|,
-name|NUMBER
-parameter_list|)
-define|\
-value|do {									\   (OUTVAR) = (char *) alloca (strlen ((NAME)) + 12);			\   sprintf ((OUTVAR), "%s.%ld", (NAME), (long)(NUMBER));			\ } while (0)
-end_define
-
 begin_escape
 end_escape
 
@@ -5202,7 +5000,7 @@ comment|/* Macros Controlling Initialization Routines.  */
 end_comment
 
 begin_comment
-comment|/* If defined, a C string constant for the assembler operation to identify the    following data as initialization code.  If not defined, GNU CC will assume    such a section does not exist.  When you are using special sections for    initialization and termination functions, this macro also controls how    `crtstuff.c' and `libgcc2.c' arrange to run the initialization functions.     Defined in svr4.h.  */
+comment|/* If defined, a C string constant for the assembler operation to identify the    following data as initialization code.  If not defined, GCC will assume    such a section does not exist.  When you are using special sections for    initialization and termination functions, this macro also controls how    `crtstuff.c' and `libgcc2.c' arrange to run the initialization functions.     Defined in svr4.h.  */
 end_comment
 
 begin_undef
@@ -5219,52 +5017,6 @@ begin_define
 define|#
 directive|define
 name|INVOKE__main
-end_define
-
-begin_comment
-comment|/* Output appropriate code tp call a static constructor.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_CONSTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_CONSTRUCTOR
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\   ctors_section ();							\   fprintf (STREAM, "\t.picptr\t");					\   assemble_name (STREAM, NAME);						\   fprintf (STREAM, "\n");							\ } while (0)
-end_define
-
-begin_comment
-comment|/* Output appropriate code tp call a static destructor.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_DESTRUCTOR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DESTRUCTOR
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {									\   dtors_section ();							\   fprintf (STREAM, "\t.picptr\t");					\   assemble_name (STREAM, NAME);						\   fprintf (STREAM, "\n");							\ } while (0)
 end_define
 
 begin_escape
@@ -5356,7 +5108,7 @@ parameter_list|(
 name|CODE
 parameter_list|)
 define|\
-value|((CODE) == '.' || (CODE) == '#' || (CODE) == SDATA_FLAG_CHAR || (CODE) == '~'	\  || (CODE) == '*' || (CODE) == '&')
+value|((CODE) == '.' || (CODE) == '#' || (CODE) == '@' || (CODE) == '~'	\  || (CODE) == '*' || (CODE) == '&')
 end_define
 
 begin_comment
@@ -5421,7 +5173,7 @@ comment|/* Output of dispatch tables.  */
 end_comment
 
 begin_comment
-comment|/* This macro should be provided on machines where the addresses in a dispatch    table are relative to the table's own address.     The definition should be a C statement to output to the stdio stream STREAM    an assembler pseudo-instruction to generate a difference between two labels.    VALUE and REL are the numbers of two internal labels.  The definitions of    these labels are output using `ASM_OUTPUT_INTERNAL_LABEL', and they must be    printed in the same way here.  For example,          fprintf (STREAM, "\t.word L%d-L%d\n", VALUE, REL)  */
+comment|/* This macro should be provided on machines where the addresses in a dispatch    table are relative to the table's own address.     The definition should be a C statement to output to the stdio stream STREAM    an assembler pseudo-instruction to generate a difference between two labels.    VALUE and REL are the numbers of two internal labels.  The definitions of    these labels are output using `(*targetm.asm_out.internal_label)', and they must be    printed in the same way here.  For example,          fprintf (STREAM, "\t.word L%d-L%d\n", VALUE, REL)  */
 end_comment
 
 begin_define
@@ -5442,7 +5194,7 @@ value|fprintf (STREAM, "\t.word .L%d-.L%d\n", VALUE, REL)
 end_define
 
 begin_comment
-comment|/* This macro should be provided on machines where the addresses in a dispatch    table are absolute.     The definition should be a C statement to output to the stdio stream STREAM    an assembler pseudo-instruction to generate a reference to a label.  VALUE    is the number of an internal label whose definition is output using    `ASM_OUTPUT_INTERNAL_LABEL'.  For example,          fprintf (STREAM, "\t.word L%d\n", VALUE)  */
+comment|/* This macro should be provided on machines where the addresses in a dispatch    table are absolute.     The definition should be a C statement to output to the stdio stream STREAM    an assembler pseudo-instruction to generate a reference to a label.  VALUE    is the number of an internal label whose definition is output using    `(*targetm.asm_out.internal_label)'.  For example,          fprintf (STREAM, "\t.word L%d\n", VALUE)  */
 end_comment
 
 begin_define
@@ -5459,7 +5211,7 @@ value|fprintf (STREAM, "\t.word .L%d\n", VALUE)
 end_define
 
 begin_comment
-comment|/* Define this if the label before a jump-table needs to be output specially.    The first three arguments are the same as for `ASM_OUTPUT_INTERNAL_LABEL';    the fourth argument is the jump-table which follows (a `jump_insn'    containing an `addr_vec' or `addr_diff_vec').     This feature is used on system V to output a `swbeg' statement for the    table.     If this macro is not defined, these labels are output with    `ASM_OUTPUT_INTERNAL_LABEL'.     Defined in svr4.h.  */
+comment|/* Define this if the label before a jump-table needs to be output specially.    The first three arguments are the same as for `(*targetm.asm_out.internal_label)';    the fourth argument is the jump-table which follows (a `jump_insn'    containing an `addr_vec' or `addr_diff_vec').     This feature is used on system V to output a `swbeg' statement for the    table.     If this macro is not defined, these labels are output with    `(*targetm.asm_out.internal_label)'.     Defined in svr4.h.  */
 end_comment
 
 begin_comment
@@ -5486,7 +5238,7 @@ parameter_list|,
 name|TABLE
 parameter_list|)
 define|\
-value|do {                                                                    \   if (flag_pic)                                                         \     function_section (current_function_decl);                           \   ASM_OUTPUT_INTERNAL_LABEL (STREAM, PREFIX, NUM);                      \ } while (0)
+value|do {                                                                    \   if (flag_pic)                                                         \     function_section (current_function_decl);                           \   (*targetm.asm_out.internal_label) (STREAM, PREFIX, NUM);                      \ } while (0)
 end_define
 
 begin_comment
@@ -5552,7 +5304,7 @@ parameter_list|,
 name|NBYTES
 parameter_list|)
 define|\
-value|fprintf (STREAM, "\t.zero\t%u\n", (NBYTES))
+value|fprintf (STREAM, "\t.zero\t%u\n", (int)(NBYTES))
 end_define
 
 begin_comment
@@ -5572,6 +5324,23 @@ define|\
 value|fprintf ((STREAM), "\t.p2align %d\n", (POWER))
 end_define
 
+begin_comment
+comment|/* Inside the text section, align with unpacked nops rather than zeros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGN_WITH_NOP
+parameter_list|(
+name|STREAM
+parameter_list|,
+name|POWER
+parameter_list|)
+define|\
+value|fprintf ((STREAM), "\t.p2alignl %d,0x80880000\n", (POWER))
+end_define
+
 begin_escape
 end_escape
 
@@ -5580,7 +5349,7 @@ comment|/* Macros Affecting all Debug Formats.  */
 end_comment
 
 begin_comment
-comment|/* A C expression that returns the DBX register number for the compiler    register number REGNO.  In simple cases, the value of this expression may be    REGNO itself.  But sometimes there are some registers that the compiler    knows about and DBX does not, or vice versa.  In such cases, some register    may need to have one number in the compiler and another for DBX.     If two registers have consecutive numbers inside GNU CC, and they can be    used as a pair to hold a multiword value, then they *must* have consecutive    numbers after renumbering with `DBX_REGISTER_NUMBER'.  Otherwise, debuggers    will be unable to access such a pair, because they expect register pairs to    be consecutive in their own numbering scheme.     If you find yourself defining `DBX_REGISTER_NUMBER' in way that does not    preserve register pairs, then what you must do instead is redefine the    actual register numbering scheme.     This declaration is required.  */
+comment|/* A C expression that returns the DBX register number for the compiler    register number REGNO.  In simple cases, the value of this expression may be    REGNO itself.  But sometimes there are some registers that the compiler    knows about and DBX does not, or vice versa.  In such cases, some register    may need to have one number in the compiler and another for DBX.     If two registers have consecutive numbers inside GCC, and they can be    used as a pair to hold a multiword value, then they *must* have consecutive    numbers after renumbering with `DBX_REGISTER_NUMBER'.  Otherwise, debuggers    will be unable to access such a pair, because they expect register pairs to    be consecutive in their own numbering scheme.     If you find yourself defining `DBX_REGISTER_NUMBER' in way that does not    preserve register pairs, then what you must do instead is redefine the    actual register numbering scheme.     This declaration is required.  */
 end_comment
 
 begin_define
@@ -5594,7 +5363,7 @@ value|(REGNO)
 end_define
 
 begin_comment
-comment|/* A C expression that returns the type of debugging output GNU CC produces    when the user specifies `-g' or `-ggdb'.  Define this if you have arranged    for GNU CC to support more than one format of debugging output.  Currently,    the allowable values are `DBX_DEBUG', `SDB_DEBUG', `DWARF_DEBUG',    `DWARF2_DEBUG', and `XCOFF_DEBUG'.     The value of this macro only affects the default debugging output; the user    can always get a specific type of output by using `-gstabs', `-gcoff',    `-gdwarf-1', `-gdwarf-2', or `-gxcoff'.     Defined in svr4.h.  */
+comment|/* A C expression that returns the type of debugging output GCC produces    when the user specifies `-g' or `-ggdb'.  Define this if you have arranged    for GCC to support more than one format of debugging output.  Currently,    the allowable values are `DBX_DEBUG', `SDB_DEBUG', `DWARF_DEBUG',    `DWARF2_DEBUG', and `XCOFF_DEBUG'.     The value of this macro only affects the default debugging output; the user    can always get a specific type of output by using `-gstabs', `-gcoff',    `-gdwarf-1', `-gdwarf-2', or `-gxcoff'.     Defined in svr4.h.  */
 end_comment
 
 begin_undef
@@ -5626,7 +5395,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{ "integer_register_operand",		{ REG, SUBREG }},		\   { "frv_load_operand",			{ REG, SUBREG, MEM }},		\   { "gpr_no_subreg_operand",		{ REG }},			\   { "gpr_or_fpr_operand",		{ REG, SUBREG }},		\   { "gpr_or_int12_operand",		{ REG, SUBREG, CONST_INT }},	\   { "gpr_fpr_or_int12_operand",		{ REG, SUBREG, CONST_INT }},	\   { "gpr_or_int10_operand",		{ REG, SUBREG, CONST_INT }},	\   { "gpr_or_int_operand",		{ REG, SUBREG, CONST_INT }},	\   { "move_source_operand",		{ REG, SUBREG, CONST_INT, MEM,	\ 					  CONST_DOUBLE, CONST,		\ 					  SYMBOL_REF, LABEL_REF }},	\   { "move_destination_operand",		{ REG, SUBREG, MEM }},		\   { "condexec_source_operand",		{ REG, SUBREG, CONST_INT, MEM,	\ 					  CONST_DOUBLE }},		\   { "condexec_dest_operand",		{ REG, SUBREG, MEM }},		\   { "reg_or_0_operand",			{ REG, SUBREG, CONST_INT }},	\   { "lr_operand",			{ REG }},			\   { "gpr_or_memory_operand",		{ REG, SUBREG, MEM }},		\   { "fpr_or_memory_operand",		{ REG, SUBREG, MEM }},		\   { "int12_operand",			{ CONST_INT }},			\   { "int_2word_operand",		{ CONST_INT, CONST_DOUBLE,	\ 					  SYMBOL_REF, LABEL_REF, CONST }}, \   { "pic_register_operand",		{ REG }},			\   { "pic_symbolic_operand",		{ SYMBOL_REF, LABEL_REF, CONST }}, \   { "small_data_register_operand",	{ REG }},			\   { "small_data_symbolic_operand",	{ SYMBOL_REF, CONST }},		\   { "icc_operand",			{ REG }},			\   { "fcc_operand",			{ REG }},			\   { "cc_operand",			{ REG }},			\   { "icr_operand",			{ REG }},			\   { "fcr_operand",			{ REG }},			\   { "cr_operand",			{ REG }},			\   { "fpr_operand",			{ REG, SUBREG }},		\   { "even_reg_operand",			{ REG, SUBREG }},		\   { "odd_reg_operand",			{ REG, SUBREG }},		\   { "even_gpr_operand",			{ REG, SUBREG }},		\   { "odd_gpr_operand",			{ REG, SUBREG }},		\   { "quad_fpr_operand",			{ REG, SUBREG }},		\   { "even_fpr_operand",			{ REG, SUBREG }},		\   { "odd_fpr_operand",			{ REG, SUBREG }},		\   { "dbl_memory_one_insn_operand",	{ MEM }},			\   { "dbl_memory_two_insn_operand",	{ MEM }},			\   { "call_operand",			{ REG, SUBREG, PLUS, CONST_INT,	\ 					  SYMBOL_REF, LABEL_REF, CONST }}, \   { "upper_int16_operand",		{ CONST_INT }},			\   { "uint16_operand",			{ CONST_INT }},			\   { "relational_operator",		{ EQ, NE, LE, LT, GE, GT,	\ 					  LEU, LTU, GEU, GTU }},	\   { "signed_relational_operator",	{ EQ, NE, LE, LT, GE, GT }},	\   { "unsigned_relational_operator",	{ LEU, LTU, GEU, GTU }},	\   { "float_relational_operator",	{ EQ, NE, LE, LT, GE, GT }},	\   { "ccr_eqne_operator",		{ EQ, NE }},			\   { "minmax_operator",			{ SMIN, SMAX, UMIN, UMAX }},	\   { "condexec_si_binary_operator",	{ PLUS, MINUS, AND, IOR, XOR,	\ 					  ASHIFT, ASHIFTRT, LSHIFTRT }}, \   { "condexec_si_divide_operator",	{ DIV, UDIV }},			\   { "condexec_si_unary_operator",	{ NOT, NEG }},			\   { "condexec_sf_binary_operator",	{ PLUS, MINUS, MULT, DIV }},	\   { "condexec_sf_unary_operator",	{ ABS, NEG, SQRT }},		\   { "intop_compare_operator",		{ PLUS, MINUS, AND, IOR, XOR,	\ 					  ASHIFT, ASHIFTRT, LSHIFTRT }}, \   { "condexec_intop_cmp_operator",	{ PLUS, MINUS, AND, IOR, XOR,	\ 					  ASHIFT, ASHIFTRT, LSHIFTRT }}, \   { "fpr_or_int6_operand",		{ REG, SUBREG, CONST_INT }},	\   { "int6_operand",			{ CONST_INT }},			\   { "int5_operand",			{ CONST_INT }},			\   { "uint5_operand",			{ CONST_INT }},			\   { "uint4_operand",			{ CONST_INT }},			\   { "uint1_operand",			{ CONST_INT }},			\   { "acc_operand",			{ REG, SUBREG }},		\   { "even_acc_operand",			{ REG, SUBREG }},		\   { "quad_acc_operand",			{ REG, SUBREG }},		\   { "accg_operand",			{ REG, SUBREG }},
+value|{ "integer_register_operand",		{ REG, SUBREG }},		\   { "frv_load_operand",			{ REG, SUBREG, MEM }},		\   { "gpr_no_subreg_operand",		{ REG }},			\   { "gpr_or_fpr_operand",		{ REG, SUBREG }},		\   { "gpr_or_int12_operand",		{ REG, SUBREG, CONST_INT }},	\   { "gpr_fpr_or_int12_operand",		{ REG, SUBREG, CONST_INT }},	\   { "gpr_or_int10_operand",		{ REG, SUBREG, CONST_INT }},	\   { "gpr_or_int_operand",		{ REG, SUBREG, CONST_INT }},	\   { "move_source_operand",		{ REG, SUBREG, CONST_INT, MEM,	\ 					  CONST_DOUBLE, CONST,		\ 					  SYMBOL_REF, LABEL_REF }},	\   { "move_destination_operand",		{ REG, SUBREG, MEM }},		\   { "condexec_source_operand",		{ REG, SUBREG, CONST_INT, MEM,	\ 					  CONST_DOUBLE }},		\   { "condexec_dest_operand",		{ REG, SUBREG, MEM }},		\   { "reg_or_0_operand",			{ REG, SUBREG, CONST_INT }},	\   { "lr_operand",			{ REG }},			\   { "gpr_or_memory_operand",		{ REG, SUBREG, MEM }},		\   { "fpr_or_memory_operand",		{ REG, SUBREG, MEM }},		\   { "int12_operand",			{ CONST_INT }},			\   { "int_2word_operand",		{ CONST_INT, CONST_DOUBLE,	\ 					  SYMBOL_REF, LABEL_REF, CONST }}, \   { "pic_register_operand",		{ REG }},			\   { "pic_symbolic_operand",		{ SYMBOL_REF, LABEL_REF, CONST }}, \   { "small_data_register_operand",	{ REG }},			\   { "small_data_symbolic_operand",	{ SYMBOL_REF, CONST }},		\   { "icc_operand",			{ REG }},			\   { "fcc_operand",			{ REG }},			\   { "cc_operand",			{ REG }},			\   { "icr_operand",			{ REG }},			\   { "fcr_operand",			{ REG }},			\   { "cr_operand",			{ REG }},			\   { "fpr_operand",			{ REG, SUBREG }},		\   { "even_reg_operand",			{ REG, SUBREG }},		\   { "odd_reg_operand",			{ REG, SUBREG }},		\   { "even_gpr_operand",			{ REG, SUBREG }},		\   { "odd_gpr_operand",			{ REG, SUBREG }},		\   { "quad_fpr_operand",			{ REG, SUBREG }},		\   { "even_fpr_operand",			{ REG, SUBREG }},		\   { "odd_fpr_operand",			{ REG, SUBREG }},		\   { "dbl_memory_one_insn_operand",	{ MEM }},			\   { "dbl_memory_two_insn_operand",	{ MEM }},			\   { "call_operand",			{ REG, SUBREG, PLUS, CONST_INT,	\ 					  SYMBOL_REF, LABEL_REF, CONST }}, \   { "upper_int16_operand",		{ CONST_INT }},			\   { "uint16_operand",			{ CONST_INT }},			\   { "relational_operator",		{ EQ, NE, LE, LT, GE, GT,	\ 					  LEU, LTU, GEU, GTU }},	\   { "signed_relational_operator",	{ EQ, NE, LE, LT, GE, GT }},	\   { "unsigned_relational_operator",	{ LEU, LTU, GEU, GTU }},	\   { "float_relational_operator",	{ EQ, NE, LE, LT, GE, GT }},	\   { "ccr_eqne_operator",		{ EQ, NE }},			\   { "minmax_operator",			{ SMIN, SMAX, UMIN, UMAX }},	\   { "condexec_si_binary_operator",	{ PLUS, MINUS, AND, IOR, XOR,	\ 					  ASHIFT, ASHIFTRT, LSHIFTRT }}, \   { "condexec_si_media_operator",	{ AND, IOR, XOR }},		\   { "condexec_si_divide_operator",	{ DIV, UDIV }},			\   { "condexec_si_unary_operator",	{ NOT, NEG }},			\   { "condexec_sf_add_operator",		{ PLUS, MINUS }},		\   { "condexec_sf_conv_operator",	{ ABS, NEG }},			\   { "intop_compare_operator",		{ PLUS, MINUS, AND, IOR, XOR,	\ 					  ASHIFT, ASHIFTRT, LSHIFTRT }}, \   { "condexec_intop_cmp_operator",	{ PLUS, MINUS, AND, IOR, XOR,	\ 					  ASHIFT, ASHIFTRT, LSHIFTRT }}, \   { "fpr_or_int6_operand",		{ REG, SUBREG, CONST_INT }},	\   { "int6_operand",			{ CONST_INT }},			\   { "int5_operand",			{ CONST_INT }},			\   { "uint5_operand",			{ CONST_INT }},			\   { "uint4_operand",			{ CONST_INT }},			\   { "uint1_operand",			{ CONST_INT }},			\   { "acc_operand",			{ REG, SUBREG }},		\   { "even_acc_operand",			{ REG, SUBREG }},		\   { "quad_acc_operand",			{ REG, SUBREG }},		\   { "accg_operand",			{ REG, SUBREG }},
 end_define
 
 begin_comment
@@ -5947,20 +5716,6 @@ define|#
 directive|define
 name|FIRST_CYCLE_MULTIPASS_SCHEDULING_LOOKAHEAD
 value|frv_sched_lookahead
-end_define
-
-begin_comment
-comment|/* Return true if a function is ok to be called as a sibcall.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_OK_FOR_SIBCALL
-parameter_list|(
-name|DECL
-parameter_list|)
-value|0
 end_define
 
 begin_enum

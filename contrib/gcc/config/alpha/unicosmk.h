@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on Cray    T3E running Unicos/Mk.    Copyright (C) 2001, 2002    Free Software Foundation, Inc.    Contributed by Roman Lechtchinsky (rl@cs.tu-berlin.de)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on Cray    T3E running Unicos/Mk.    Copyright (C) 2001, 2002    Free Software Foundation, Inc.    Contributed by Roman Lechtchinsky (rl@cs.tu-berlin.de)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -212,21 +212,6 @@ begin_comment
 comment|/* Define the offset between two registers, one to be eliminated, and the    other its replacement, at the start of a routine. This is somewhat    complicated on the T3E which is why we use a function.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|unicosmk_initial_elimination_offset
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_undef
 undef|#
 directive|undef
@@ -367,6 +352,8 @@ parameter_list|,
 name|LIBNAME
 parameter_list|,
 name|INDIRECT
+parameter_list|,
+name|N_NAMED_ARGS
 parameter_list|)
 define|\
 value|do { (CUM).num_args = 0;					\        (CUM).num_arg_words = 0;					\        (CUM).num_reg_words = 0;					\        (CUM).force_stack = 0;					\   } while(0)
@@ -400,16 +387,6 @@ value|do {								\   int size;							\ 								\   size = ALPHA_ARG_SIZE (MODE,
 end_define
 
 begin_comment
-comment|/* We want the default definition for this.    ??? In fact, we should delete the definition from alpha.h as it    corresponds to the default definition for little-endian machines.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_ARG_PADDING
-end_undef
-
-begin_comment
 comment|/* An argument is passed either entirely in registers or entirely on stack.  */
 end_comment
 
@@ -422,35 +399,6 @@ end_undef
 begin_comment
 comment|/* #define FUNCTION_ARG_PARTIAL_NREGS(CUM,MODE,TYPE,NAMED) 0 */
 end_comment
-
-begin_comment
-comment|/* Perform any needed actions needed for a function that is receiving a    variable number of arguments.     On Unicos/Mk, the standard subroutine __T3E_MISMATCH stores all register    arguments on the stack. Unfortunately, it doesn't always store the first    one (i.e. the one that arrives in $16 or $f16). This is not a problem    with stdargs as we always have at least one named argument there.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SETUP_INCOMING_VARARGS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SETUP_INCOMING_VARARGS
-parameter_list|(
-name|CUM
-parameter_list|,
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|,
-name|PRETEND_SIZE
-parameter_list|,
-name|NO_RTL
-parameter_list|)
-define|\
-value|{ if ((CUM).num_reg_words< 6)						\     {									\       if (! (NO_RTL))							\         {								\ 	  int start = (CUM).num_reg_words + 1;				\ 									\           emit_insn (gen_umk_mismatch_args (GEN_INT (start)));		\ 	  emit_insn (gen_arg_home_umk ());				\         }								\ 									\       PRETEND_SIZE = 0;							\     }									\ }
-end_define
 
 begin_comment
 comment|/* This ensures that $15 increments/decrements in leaf functions won't get    eliminated.  */
@@ -608,90 +556,44 @@ define|\
 value|COMMON_SECTION			\ SSIB_SECTION
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|common_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|COMMON_SECTION
 define|\
-value|void				\ common_section ()		\ {				\   in_section = in_common;	\ }
+value|void				\ common_section (void)		\ {				\   in_section = in_common;	\ }
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ssib_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|SSIB_SECTION
 define|\
-value|void				\ ssib_section ()			\ {				\   in_section = in_ssib;		\ }
+value|void				\ ssib_section (void)		\ {				\   in_section = in_ssib;		\ }
 end_define
 
 begin_comment
-comment|/* This outputs text to go at the start of an assembler file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-value|unicosmk_asm_file_start (FILE)
-end_define
-
-begin_comment
-comment|/* This outputs text to go at the end of an assembler file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_END
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_END
-parameter_list|(
-name|FILE
-parameter_list|)
-value|unicosmk_asm_file_end (FILE)
-end_define
-
-begin_comment
-comment|/* We take care of that in ASM_FILE_START.  */
+comment|/* We take care of this in unicosmk_file_start.  */
 end_comment
 
 begin_undef
@@ -701,7 +603,7 @@ name|ASM_OUTPUT_SOURCE_FILENAME
 end_undef
 
 begin_comment
-comment|/* This is how to output a label for a jump table.  Arguments are the same as    for ASM_OUTPUT_INTERNAL_LABEL, except the insn for the jump table is    passed.  */
+comment|/* This is how to output a label for a jump table.  Arguments are the same as    for (*targetm.asm_out.internal_label), except the insn for the jump table is    passed.  */
 end_comment
 
 begin_undef
@@ -724,7 +626,7 @@ parameter_list|,
 name|TABLEINSN
 parameter_list|)
 define|\
-value|ASM_OUTPUT_INTERNAL_LABEL (FILE, PREFIX, NUM)
+value|(*targetm.asm_out.internal_label) (FILE, PREFIX, NUM)
 end_define
 
 begin_comment
@@ -872,7 +774,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|fprintf ((STREAM), "\t.byte\t0:%d\n", (SIZE));
+value|fprintf ((STREAM), "\t.byte\t0:"HOST_WIDE_INT_PRINT_UNSIGNED"\n",\ 	   (SIZE));
 end_define
 
 begin_comment
@@ -926,7 +828,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do { data_section ();					\        fprintf (FILE, "\t.align\t%d\n", floor_log2 ((ALIGN) / BITS_PER_UNIT));\        ASM_OUTPUT_LABEL ((FILE), (NAME));		\        fprintf (FILE, "\t.byte 0:%d\n", SIZE);		\   } while (0)
+value|do { data_section ();					\        fprintf (FILE, "\t.align\t%d\n", floor_log2 ((ALIGN) / BITS_PER_UNIT));\        ASM_OUTPUT_LABEL ((FILE), (NAME));		\        fprintf (FILE, "\t.byte 0:"HOST_WIDE_INT_PRINT_UNSIGNED"\n",(SIZE));\   } while (0)
 end_define
 
 begin_comment
@@ -1054,12 +956,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|DWARF_DEBUGGING_INFO
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|DWARF2_DEBUGGING_INFO
 end_undef
 
@@ -1074,48 +970,6 @@ undef|#
 directive|undef
 name|INCOMING_RETURN_ADDR_RTX
 end_undef
-
-begin_comment
-comment|/* We use the functions provided by the system library for integer    division.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|UDIVDI3_LIBCALL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|DIVDI3_LIBCALL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|UDIVDI3_LIBCALL
-value|"$uldiv"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIVDI3_LIBCALL
-value|"$sldiv"
-end_define
-
-begin_comment
-comment|/* This is necessary to prevent gcc from generating calls to __divsi3.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INIT_TARGET_OPTABS
-define|\
-value|do {								\     sdiv_optab->handlers[(int) SImode].libfunc = NULL_RTX;	\     udiv_optab->handlers[(int) SImode].libfunc = NULL_RTX;	\   } while (0)
-end_define
 
 begin_undef
 undef|#
@@ -1156,12 +1010,6 @@ directive|define
 name|LIB_SPEC
 value|"-L/opt/ctl/craylibs/craylibs -lu -lm -lc -lsma"
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|BUILD_VA_LIST_TYPE
-end_undef
 
 begin_undef
 undef|#

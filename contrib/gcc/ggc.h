@@ -1,19 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Garbage collection for the GNU compiler.    Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Garbage collection for the GNU compiler.    Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"varray.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_GGC_H
+end_ifndef
 
-begin_include
-include|#
-directive|include
-file|"gtype-desc.h"
-end_include
+begin_define
+define|#
+directive|define
+name|GCC_GGC_H
+end_define
 
 begin_comment
 comment|/* Symbols are marked with `ggc' for `gcc gc' so as not to interfere with    an external gc library that might be linked in.  */
@@ -60,41 +60,148 @@ value|(digit_vector + ((d) * 2))
 end_define
 
 begin_comment
-comment|/* Manipulate global roots that are needed between calls to gc.      THIS ROUTINE IS OBSOLETE, do not use it for new code.  */
+comment|/* Internal functions and data structures used by the GTY    machinery.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_comment
+comment|/* The first parameter is a pointer to a pointer, the second a cookie.  */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|void
-name|ggc_add_root
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|gt_pointer_operator
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-name|base
-operator|,
-name|int
-name|nelt
-operator|,
-name|int
-name|size
-operator|,
+modifier|*
+parameter_list|,
 name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_include
+include|#
+directive|include
+file|"gtype-desc.h"
+end_include
 
 begin_comment
-comment|/* Structures for the easy way to mark roots.    In an array, terminated by having base == NULL.*/
+comment|/* One of these applies its third parameter (with cookie in the fourth    parameter) to each pointer in the object pointed to by the first    parameter, using the second parameter.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|gt_note_pointers
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|gt_pointer_operator
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* One of these is called before objects are re-ordered in memory.    The first parameter is the original object, the second is the    subobject that has had its pointers reordered, the third parameter    can compute the new values of a pointer when given the cookie in    the fourth parameter.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|gt_handle_reorder
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|gt_pointer_operator
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* Used by the gt_pch_n_* routines.  Register an object in the hash table.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|gt_pch_note_object
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|gt_note_pointers
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Used by the gt_pch_n_* routines.  Register that an object has a reorder    function.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|gt_pch_note_reorder
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|gt_handle_reorder
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Mark the object in the first parameter and anything it points to.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|gt_pointer_walker
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* Structures for the easy way to mark roots.    In an array, terminated by having base == NULL.  */
 end_comment
 
 begin_struct
@@ -111,18 +218,12 @@ decl_stmt|;
 name|size_t
 name|stride
 decl_stmt|;
-name|void
-argument_list|(
-argument|*cb
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+name|gt_pointer_walker
+name|cb
+decl_stmt|;
+name|gt_pointer_walker
+name|pchw
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -131,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|LAST_GGC_ROOT_TAB
-value|{ NULL, 0, 0, NULL }
+value|{ NULL, 0, 0, NULL, NULL }
 end_define
 
 begin_comment
@@ -162,6 +263,30 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ggc_root_tab
+modifier|*
+specifier|const
+name|gt_pch_cache_rtab
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ggc_root_tab
+modifier|*
+specifier|const
+name|gt_pch_scalar_rtab
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Structure for hash table cache marking.  */
 end_comment
@@ -188,31 +313,23 @@ decl_stmt|;
 name|size_t
 name|stride
 decl_stmt|;
-name|void
-argument_list|(
-argument|*cb
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+name|gt_pointer_walker
+name|cb
+decl_stmt|;
+name|gt_pointer_walker
+name|pchw
+decl_stmt|;
 name|int
-argument_list|(
-argument|*marked_p
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|marked_p
+function_decl|)
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -221,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|LAST_GGC_CACHE_TAB
-value|{ NULL, 0, 0, NULL, NULL }
+value|{ NULL, 0, 0, NULL, NULL, NULL }
 end_define
 
 begin_comment
@@ -237,19 +354,6 @@ modifier|*
 specifier|const
 name|gt_ggc_cache_rtab
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ggc_mark_roots
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -271,20 +375,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ggc_mark_rtx
-value|gt_ggc_m_7rtx_def
-end_define
-
-begin_define
-define|#
-directive|define
-name|ggc_mark_tree
-value|gt_ggc_m_9tree_node
-end_define
-
-begin_define
-define|#
-directive|define
 name|ggc_mark
 parameter_list|(
 name|EXPR
@@ -294,163 +384,614 @@ value|do {						\     const void *const a__ = (EXPR);		\     if (a__ != NULL&& a
 end_define
 
 begin_comment
-comment|/* A GC implementation must provide these functions.  */
+comment|/* Actually set the mark on a particular region of memory, but don't    follow pointers.  This function is called by ggc_mark_*.  It    returns zero if the object was not previously marked; nonzero if    the object was already marked, or if, for any other reason,    pointers in this data structure should not be traversed.  */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ggc_set_mark
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return 1 if P has been marked, zero otherwise.    P must have been allocated by the GC allocator; it mustn't point to    static objects, stack variables, or memory allocated with malloc.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|ggc_marked_p
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Mark the entries in the string pool.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_mark_stringpool
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Call ggc_set_mark on all the roots.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_mark_roots
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Save and restore the string pool entries for PCH.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|gt_pch_save_stringpool
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|gt_pch_fixup_stringpool
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|gt_pch_restore_stringpool
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* PCH and GGC handling for strings, mostly trivial.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|gt_pch_p_S
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|gt_pointer_operator
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|gt_pch_n_S
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|gt_ggc_m_S
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Initialize the string pool.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_stringpool
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* A GC implementation must provide these functions.  They are internal    to the GC system.  */
+end_comment
+
+begin_comment
+comment|/* Forward declare the zone structure.  Only ggc_zone implements this.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|alloc_zone
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* Initialize the garbage collector.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|init_ggc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_comment
+comment|/* Start a new GGC zone.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|alloc_zone
+modifier|*
+name|new_ggc_zone
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Free a complete GGC zone, destroying everything in it.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|void
-name|init_stringpool
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|destroy_ggc_zone
+parameter_list|(
+name|struct
+name|alloc_zone
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Start a new GGC context.  Memory allocated in previous contexts    will not be collected while the new context is active.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ggc_push_context
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Finish a GC context.  Any uncollected memory in the new context    will be merged with the old context.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ggc_pop_context
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ggc_pch_data
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* Return a new ggc_pch_data structure.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|ggc_pch_data
+modifier|*
+name|init_ggc_pch
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* The second parameter and third parameters give the address and size    of an object.  Update the ggc_pch_data structure with as much of    that information as is necessary. The last argument should be true    if the object is a string.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_pch_count_object
+parameter_list|(
+name|struct
+name|ggc_pch_data
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return the total size of the data to be written to hold all    the objects previously passed to ggc_pch_count_object.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|size_t
+name|ggc_pch_total_size
+parameter_list|(
+name|struct
+name|ggc_pch_data
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* The objects, when read, will most likely be at the address    in the second parameter.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_pch_this_base
+parameter_list|(
+name|struct
+name|ggc_pch_data
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Assuming that the objects really do end up at the address    passed to ggc_pch_this_base, return the address of this object.    The last argument should be true if the object is a string.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|ggc_pch_alloc_object
+parameter_list|(
+name|struct
+name|ggc_pch_data
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Write out any initial information required.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_pch_prepare_write
+parameter_list|(
+name|struct
+name|ggc_pch_data
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Write out this object, including any padding.  The last argument should be    true if the object is a string.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_pch_write_object
+parameter_list|(
+name|struct
+name|ggc_pch_data
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* All objects have been written, write out any final information    required.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_pch_finish
+parameter_list|(
+name|struct
+name|ggc_pch_data
+modifier|*
+parameter_list|,
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* A PCH file has just been read in at the address specified second    parameter.  Set up the GC implementation for the new objects.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_pch_read
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Allocation.  */
 end_comment
 
 begin_comment
-comment|/* The internal primitive.  */
+comment|/* For single pass garbage.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|alloc_zone
+modifier|*
+name|garbage_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For regular rtl allocations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|alloc_zone
+modifier|*
+name|rtl_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* For regular tree allocations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|alloc_zone
+modifier|*
+name|tree_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The internal primitive.  */
+end_comment
+
+begin_function_decl
+specifier|extern
 name|void
 modifier|*
 name|ggc_alloc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Allocate an object into the specified allocation zone.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|ggc_alloc_zone
+parameter_list|(
+name|size_t
+parameter_list|,
+name|struct
+name|alloc_zone
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Allocate an object of the specified type and size.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|ggc_alloc_typed
+parameter_list|(
+name|enum
+name|gt_types_enum
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Like ggc_alloc, but allocates cleared memory.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 modifier|*
 name|ggc_alloc_cleared
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Like ggc_alloc_zone, but allocates cleared memory.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|ggc_alloc_cleared_zone
+parameter_list|(
+name|size_t
+parameter_list|,
+name|struct
+name|alloc_zone
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Resize a block.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 modifier|*
 name|ggc_realloc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Like ggc_alloc_cleared, but performs a multiplication.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 modifier|*
 name|ggc_calloc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|,
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|ggc_alloc_rtx
 parameter_list|(
-name|NSLOTS
+name|CODE
 parameter_list|)
 define|\
-value|((struct rtx_def *) ggc_alloc (sizeof (struct rtx_def)		  \ 				 + ((NSLOTS) - 1) * sizeof (rtunion)))
+value|((rtx) ggc_alloc_typed (gt_ggc_e_7rtx_def, RTX_SIZE (CODE)))
 end_define
 
 begin_define
@@ -461,7 +1002,7 @@ parameter_list|(
 name|NELT
 parameter_list|)
 define|\
-value|((struct rtvec_def *) ggc_alloc (sizeof (struct rtvec_def)		  \ 				   + ((NELT) - 1) * sizeof (rtx)))
+value|((rtvec) ggc_alloc_typed (gt_ggc_e_9rtvec_def, sizeof (struct rtvec_def) \ 		      + ((NELT) - 1) * sizeof (rtx)))
 end_define
 
 begin_define
@@ -471,7 +1012,7 @@ name|ggc_alloc_tree
 parameter_list|(
 name|LENGTH
 parameter_list|)
-value|((union tree_node *) ggc_alloc (LENGTH))
+value|((tree) ggc_alloc_zone (LENGTH, tree_zone))
 end_define
 
 begin_define
@@ -491,30 +1032,66 @@ define|\
 value|htab_create_alloc (SIZE, HASH, EQ, DEL, ggc_calloc, NULL)
 end_define
 
+begin_define
+define|#
+directive|define
+name|splay_tree_new_ggc
+parameter_list|(
+name|COMPARE
+parameter_list|)
+define|\
+value|splay_tree_new_with_allocator (COMPARE, NULL, NULL,			 \&ggc_splay_alloc,&ggc_splay_dont_free, \ 				 NULL)
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|ggc_splay_alloc
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ggc_splay_dont_free
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Allocate a gc-able string, and fill it with LENGTH bytes from CONTENTS.    If LENGTH is -1, then CONTENTS is assumed to be a    null-terminated string and the memory sized accordingly.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 specifier|const
 name|char
 modifier|*
 name|ggc_alloc_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|contents
-operator|,
+parameter_list|,
 name|int
 name|length
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Make a copy of S, in GC-able memory.  */
@@ -534,56 +1111,66 @@ begin_comment
 comment|/* Invoke the collector.  Garbage collection occurs only when this    function is called, not during allocations.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ggc_collect
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Actually set the mark on a particular region of memory, but don't    follow pointers.  This function is called by ggc_mark_*.  It    returns zero if the object was not previously marked; nonzero if    the object was already marked, or if, for any other reason,    pointers in this data structure should not be traversed.  */
+comment|/* Return the number of bytes allocated at the indicated address.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|int
-name|ggc_set_mark
-name|PARAMS
-argument_list|(
-operator|(
+name|size_t
+name|ggc_get_size
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Return 1 if P has been marked, zero otherwise.    P must have been allocated by the GC allocator; it mustn't point to    static objects, stack variables, or memory allocated with malloc.  */
+comment|/* Write out all GCed objects to F.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|int
-name|ggc_marked_p
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|gt_pch_save
+parameter_list|(
+name|FILE
+modifier|*
+name|f
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Read objects previously saved with gt_pch_save from F.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|gt_pch_restore
+parameter_list|(
+name|FILE
+modifier|*
+name|f
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Statistics.  */
@@ -598,49 +1185,9 @@ typedef|typedef
 struct|struct
 name|ggc_statistics
 block|{
-comment|/* The Ith element is the number of nodes allocated with code I.  */
-name|unsigned
-name|num_trees
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* The Ith element is the number of bytes allocated by nodes with      code I.  */
-name|size_t
-name|size_trees
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* The Ith element is the number of nodes allocated with code I.  */
-name|unsigned
-name|num_rtxs
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* The Ith element is the number of bytes allocated by nodes with      code I.  */
-name|size_t
-name|size_rtxs
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* The total size of the tree nodes allocated.  */
-name|size_t
-name|total_size_trees
-decl_stmt|;
-comment|/* The total size of the RTL nodes allocated.  */
-name|size_t
-name|total_size_rtxs
-decl_stmt|;
-comment|/* The total number of tree nodes allocated.  */
-name|unsigned
-name|total_num_trees
-decl_stmt|;
-comment|/* The total number of RTL nodes allocated.  */
-name|unsigned
-name|total_num_rtxs
+comment|/* At present, we don't really gather any interesting statistics.  */
+name|int
+name|unused
 decl_stmt|;
 block|}
 name|ggc_statistics
@@ -648,117 +1195,85 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Return the number of bytes allocated at the indicated address.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|size_t
-name|ggc_get_size
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Used by the various collectors to gather and print statistics that    do not depend on the collector in use.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ggc_print_common_statistics
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ggc_statistics
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Print allocation statistics.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ggc_print_statistics
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|stringpool_statistics
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Heuristics.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ggc_min_expand_heuristic
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ggc_min_heapsize_heuristic
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|init_ggc_heuristics
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

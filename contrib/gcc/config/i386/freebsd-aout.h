@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994, 1996, 1997, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>    Continued development by David O'Brien<obrien@NUXI.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994, 1996, 1997, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>    Continued development by David O'Brien<obrien@NUXI.org>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -393,6 +393,12 @@ begin_comment
 comment|/* Output the size directive for a decl in rest_of_decl_compilation    in the case where we did not do so before the initializer.    Once we find the error_mark_node, we know that the value of    size_directive_output was set    by ASM_DECLARE_OBJECT_NAME when it was run for the same decl.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_FINISH_DECLARE_OBJECT
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -432,8 +438,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|AS_NEEDS_DASH_FOR_PIPED_INPUT
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASM_SPEC
-value|" %| %{fpic:-k} %{fPIC:-k}"
+value|"%{fpic|fpie|fPIC|fPIE:-k}"
 end_define
 
 begin_define

@@ -1,12 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for 64-bit SPARC running Linux-based GNU systems with ELF.    Copyright 1996, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.    Contributed by David S. Miller (davem@caip.rutgers.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for 64-bit SPARC running Linux-based GNU systems with ELF.    Copyright 1996, 1997, 1998, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by David S. Miller (davem@caip.rutgers.edu)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LINUX_DEFAULT_ELF
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("linux");		\ 	builtin_define ("_LONGLONG");		\ 	builtin_define ("__gnu_linux__");	\ 	builtin_assert ("system=linux");	\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=posix");	\     }						\   while (0)
 end_define
 
 begin_comment
@@ -37,10 +40,16 @@ directive|if
 name|TARGET_CPU_DEFAULT
 operator|==
 name|TARGET_CPU_v9
+expr|\
 operator|||
 name|TARGET_CPU_DEFAULT
 operator|==
 name|TARGET_CPU_ultrasparc
+expr|\
+operator|||
+name|TARGET_CPU_DEFAULT
+operator|==
+name|TARGET_CPU_ultrasparc3
 end_if
 
 begin_comment
@@ -97,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|CPP_ARCH32_SPEC
-value|"%{mlong-double-128:-D__LONG_DOUBLE_128__} \ -D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
+value|"%{mlong-double-128:-D__LONG_DOUBLE_128__}"
 end_define
 
 begin_endif
@@ -115,13 +124,37 @@ directive|undef
 name|STARTFILE_SPEC
 end_undef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LD_PIE
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared:%{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"%{!shared:%{pg|p:gcrt1.o%s;pie:Scrt1.o%s;:crt1.o%s}}\    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbeginS.o%s}"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{!shared:%{pg|p:gcrt1.o%s;:crt1.o%s}}\    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbeginS.o%s}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Provide a ENDFILE_SPEC appropriate for GNU/Linux.  Here we tack on    the GNU/Linux magical crtend.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main', followed by a normal    GNU/Linux "finalizer" file, `crtn.o'.  */
@@ -138,7 +171,7 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 define|\
-value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s\    %{ffast-math|funsafe-math-optimizations:crtfastmath.o%s}"
+value|"%{shared|pie:crtendS.o%s;:crtend.o%s} crtn.o%s\    %{ffast-math|funsafe-math-optimizations:crtfastmath.o%s}"
 end_define
 
 begin_comment
@@ -307,19 +340,6 @@ end_endif
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -D_LONGLONG -D__sparc__ -D__gnu_linux__ -Dlinux -Asystem=unix -Asystem=posix"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|CPP_SUBTARGET_SPEC
 end_undef
 
@@ -327,7 +347,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
-value|"\ %{fPIC:-D__PIC__ -D__pic__} \ %{fpic:-D__PIC__ -D__pic__} \ %{posix:-D_POSIX_SOURCE} \ %{pthread:-D_REENTRANT} \ "
+value|"\ %{fPIC|fpic|fPIE|fpie:-D__PIC__ -D__pic__} \ %{posix:-D_POSIX_SOURCE} \ %{pthread:-D_REENTRANT} \ "
 end_define
 
 begin_undef
@@ -450,6 +470,48 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Support for a compile-time default CPU, et cetera.  The rules are:    --with-cpu is ignored if -mcpu is specified.    --with-tune is ignored if -mtune is specified.    --with-float is ignored if -mhard-float, -msoft-float, -mfpu, or -mno-fpu      are specified.    In the SPARC_BI_ARCH compiler we cannot pass %{!mcpu=*:-mcpu=%(VALUE)}    here, otherwise say -mcpu=v7 would be passed even when -m64.    CC1_SPEC above takes care of this instead.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|OPTION_DEFAULT_SPECS
+end_undef
+
+begin_if
+if|#
+directive|if
+name|DEFAULT_ARCH32_P
+end_if
+
+begin_define
+define|#
+directive|define
+name|OPTION_DEFAULT_SPECS
+define|\
+value|{"cpu", "%{!m64:%{!mcpu=*:-mcpu=%(VALUE)}}" }, \   {"tune", "%{!mtune=*:-mtune=%(VALUE)}" }, \   {"float", "%{!msoft-float:%{!mhard-float:%{!fpu:%{!no-fpu:-m%(VALUE)-float}}}}" }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPTION_DEFAULT_SPECS
+define|\
+value|{"cpu", "%{!m32:%{!mcpu=*:-mcpu=%(VALUE)}}" }, \   {"tune", "%{!mtune=*:-mtune=%(VALUE)}" }, \   {"float", "%{!msoft-float:%{!mhard-float:%{!fpu:%{!no-fpu:-m%(VALUE)-float}}}}" }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -525,7 +587,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"\ %{V} \ %{v:%{!V:-V}} \ %{!Qn:-Qy} \ %{n} \ %{T} \ %{Ym,*} \ %{Wa,*:%*} \ -s %{fpic:-K PIC} %{fPIC:-K PIC} \ %{mlittle-endian:-EL} \ %(asm_cpu) %(asm_arch) %(asm_relax)"
+value|"\ %{V} \ %{v:%{!V:-V}} \ %{!Qn:-Qy} \ %{n} \ %{T} \ %{Ym,*} \ %{Wa,*:%*} \ -s %{fpic|fPIC|fpie|fPIE:-K PIC} \ %{mlittle-endian:-EL} \ %(asm_cpu) %(asm_arch) %(asm_relax)"
 end_define
 
 begin_comment
@@ -547,16 +609,6 @@ name|REGNO
 parameter_list|)
 value|(REGNO)
 end_define
-
-begin_comment
-comment|/* System V Release 4 uses DWARF debugging info.  Buf DWARF1 doesn't do    64-bit anything, so we use DWARF2.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DWARF_DEBUGGING_INFO
-end_undef
 
 begin_define
 define|#
@@ -622,31 +674,6 @@ value|"."
 end_define
 
 begin_comment
-comment|/* This is how to output a definition of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|fprintf (FILE, ".L%s%d:\n", PREFIX, NUM)
-end_define
-
-begin_comment
 comment|/* This is how to output a reference to an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
 end_comment
 
@@ -708,6 +735,19 @@ begin_comment
 comment|/* #define DWARF_OFFSET_SIZE PTR_SIZE */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|DITF_CONVERSION_LIBFUNCS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DITF_CONVERSION_LIBFUNCS
+value|1
+end_define
+
 begin_if
 if|#
 directive|if
@@ -722,6 +762,46 @@ define|#
 directive|define
 name|LINK_EH_SPEC
 value|"%{!static:--eh-frame-hdr} "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AS_TLS
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_SUN_TLS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_GNU_TLS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_SUN_TLS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_GNU_TLS
+value|1
 end_define
 
 begin_endif
@@ -757,6 +837,30 @@ undef|#
 directive|undef
 name|DTORS_SECTION_ASM_OP
 end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_FILE_END
+value|file_end_indicate_exec_stack
+end_define
+
+begin_comment
+comment|/* Determine whether the the entire c99 runtime is present in the    runtime library.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_C99_FUNCTIONS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_HAS_F_SETLKW
+end_define
 
 begin_undef
 undef|#

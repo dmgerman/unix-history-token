@@ -573,42 +573,12 @@ begin_comment
 comment|/*  * Macros to begin and end a function written in assembler.  If -mcall-aixdesc  * or -mcall-nt, create a function descriptor with the given name, and create  * the real function with one or two leading periods respectively.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_RELOCATABLE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DESC_SECTION
-value|".got2"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DESC_SECTION
-value|".got1"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|_CALL_AIXDESC
+name|__powerpc64__
 argument_list|)
 end_if
 
@@ -640,7 +610,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.section DESC_SECTION,"aw"; \ name: \ 	.long GLUE(.,name); \ 	.long _GLOBAL_OFFSET_TABLE_; \ 	.long 0; \ 	.previous; \ 	.type GLUE(.,name),@function; \ 	.globl name; \ 	.globl GLUE(.,name); \ GLUE(.,name):
+value|.section ".opd","aw"; \ name: \ 	.quad GLUE(.,name); \ 	.quad .TOC.@tocbase; \ 	.quad 0; \ 	.previous; \ 	.type GLUE(.,name),@function; \ 	.globl name; \ 	.globl GLUE(.,name); \ GLUE(.,name):
 end_define
 
 begin_define
@@ -659,9 +629,39 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__powerpc64__
+name|_CALL_AIXDESC
 argument_list|)
 end_elif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_RELOCATABLE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DESC_SECTION
+value|".got2"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DESC_SECTION
+value|".got1"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -691,7 +691,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.section ".opd","aw"; \ name: \ 	.quad GLUE(.,name); \ 	.quad .TOC.@tocbase; \ 	.quad 0; \ 	.previous; \ 	.type GLUE(.,name),@function; \ 	.globl name; \ 	.globl GLUE(.,name); \ GLUE(.,name):
+value|.section DESC_SECTION,"aw"; \ name: \ 	.long GLUE(.,name); \ 	.long _GLOBAL_OFFSET_TABLE_; \ 	.long 0; \ 	.previous; \ 	.type GLUE(.,name),@function; \ 	.globl name; \ 	.globl GLUE(.,name); \ GLUE(.,name):
 end_define
 
 begin_define
@@ -781,6 +781,35 @@ parameter_list|)
 define|\
 value|GLUE(.L,name): \ 	.size FUNC_NAME(name),GLUE(.L,name)-FUNC_NAME(name)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+name|__linux__
+operator|&&
+operator|!
+name|defined
+name|__powerpc64__
+end_if
+
+begin_expr_stmt
+operator|.
+name|section
+operator|.
+name|note
+operator|.
+name|GNU
+operator|-
+name|stack
+operator|.
+name|previous
+end_expr_stmt
 
 begin_endif
 endif|#

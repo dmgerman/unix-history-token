@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* st.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       The high-level input level to statement handling for the rest of the       FFE.  ffest_first is the first state for the lexer to invoke to start       a statement.  A statement normally starts with a NUMBER token (to indicate       a label def) followed by a NAME token (to indicate what kind of statement       it is), though of course the NUMBER token may be omitted.	 ffest_first       gathers the first NAME token and returns a state of ffest_second_,       where the trailing underscore means "internal to ffest" and thus outside       users should not depend on this.	ffest_second_ then looks at the second       token in conjunction with the first, decides what possible statements are       meant, and tries each possible statement in turn, from most likely to       least likely.  A successful attempt currently is recorded, and further       successful attempts by other possibilities raise an assertion error in       ffest_confirmed (this is to detect ambiguities).	A failure in an       attempt is signaled by calling ffest_ffebad_start; this results in the       next token sent by ffest_save_ (the intermediary when more than one       possible statement exists) being EOS to shut down processing and the next       possibility tried.        When all possibilities have been tried, the successful one is retried with       inhibition turned off (FALSE) as reported by ffest_is_inhibited().  If       there is no successful one, the first one is retried so the user gets to       see the error messages.        In the future, after syntactic bugs have been reasonably shaken out and       ambiguities thus detected, the first successful possibility will be       enabled (inhibited goes FALSE) as soon as it confirms success by calling       ffest_confirmed, thus retrying the possibility will not be necessary.        The only complication in all this is that expression handling is       happening while possibilities are inhibited.  It is up to the expression       handler, conceptually, to not make any changes to its knowledge base for       variable names and so on when inhibited that cannot be undone if       the current possibility fails (shuts down via ffest_ffebad_start).  In       fact, this business is handled not be ffeexpr, but by lower levels.        ffesta functions serve only to provide information used in syntactic       processing of possible statements, and thus may not make changes to the       knowledge base for variables and such.        ffestb functions perform the syntactic analysis for possible statements,       and thus again may not make changes to the knowledge base except under the       auspices of ffeexpr and its subordinates, changes which can be undone when       necessary.        ffestc functions perform the semantic analysis for the chosen statement,       and thus may change the knowledge base as necessary since they are invoked       by ffestb functions only after a given statement is confirmed and       enabled.	Note, however, that a few ffestc functions (identified by       their statement names rather than grammar numbers) indicate valid forms       that are, outside of any context, ambiguous, such as ELSE WHERE and       PRIVATE; these functions should make a quick decision as to what is       intended and dispatch to the appropriate specific ffestc function.        ffestd functions actually implement statements.  When called, the       statement is considered valid and is either an executable statement or       a nonexecutable statement with direct-output results.  For example, CALL,       GOTO, and assignment statements pass through ffestd because they are       executable; DATA statements pass through because they map directly to the       output file (or at least might so map); ENTRY statements also pass through       because they essentially affect code generation in an immediate way;       whereas INTEGER, SAVE, and SUBROUTINE statements do not go through       ffestd functions because they merely update the knowledge base.     Modifications: */
+comment|/* st.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 2003 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       The high-level input level to statement handling for the rest of the       FFE.  ffest_first is the first state for the lexer to invoke to start       a statement.  A statement normally starts with a NUMBER token (to indicate       a label def) followed by a NAME token (to indicate what kind of statement       it is), though of course the NUMBER token may be omitted.	 ffest_first       gathers the first NAME token and returns a state of ffest_second_,       where the trailing underscore means "internal to ffest" and thus outside       users should not depend on this.	ffest_second_ then looks at the second       token in conjunction with the first, decides what possible statements are       meant, and tries each possible statement in turn, from most likely to       least likely.  A successful attempt currently is recorded, and further       successful attempts by other possibilities raise an assertion error in       ffest_confirmed (this is to detect ambiguities).	A failure in an       attempt is signaled by calling ffest_ffebad_start; this results in the       next token sent by ffest_save_ (the intermediary when more than one       possible statement exists) being EOS to shut down processing and the next       possibility tried.        When all possibilities have been tried, the successful one is retried with       inhibition turned off (FALSE) as reported by ffest_is_inhibited().  If       there is no successful one, the first one is retried so the user gets to       see the error messages.        In the future, after syntactic bugs have been reasonably shaken out and       ambiguities thus detected, the first successful possibility will be       enabled (inhibited goes FALSE) as soon as it confirms success by calling       ffest_confirmed, thus retrying the possibility will not be necessary.        The only complication in all this is that expression handling is       happening while possibilities are inhibited.  It is up to the expression       handler, conceptually, to not make any changes to its knowledge base for       variable names and so on when inhibited that cannot be undone if       the current possibility fails (shuts down via ffest_ffebad_start).  In       fact, this business is handled not be ffeexpr, but by lower levels.        ffesta functions serve only to provide information used in syntactic       processing of possible statements, and thus may not make changes to the       knowledge base for variables and such.        ffestb functions perform the syntactic analysis for possible statements,       and thus again may not make changes to the knowledge base except under the       auspices of ffeexpr and its subordinates, changes which can be undone when       necessary.        ffestc functions perform the semantic analysis for the chosen statement,       and thus may change the knowledge base as necessary since they are invoked       by ffestb functions only after a given statement is confirmed and       enabled.	Note, however, that a few ffestc functions (identified by       their statement names rather than grammar numbers) indicate valid forms       that are, outside of any context, ambiguous, such as ELSE WHERE and       PRIVATE; these functions should make a quick decision as to what is       intended and dispatch to the appropriate specific ffestc function.        ffestd functions actually implement statements.  When called, the       statement is considered valid and is either an executable statement or       a nonexecutable statement with direct-output results.  For example, CALL,       GOTO, and assignment statements pass through ffestd because they are       executable; DATA statements pass through because they map directly to the       output file (or at least might so map); ENTRY statements also pass through       because they essentially affect code generation in an immediate way;       whereas INTEGER, SAVE, and SUBROUTINE statements do not go through       ffestd functions because they merely update the knowledge base.     Modifications: */
 end_comment
 
 begin_comment
@@ -145,7 +145,9 @@ end_comment
 begin_function
 name|void
 name|ffest_confirmed
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_confirmed
 argument_list|()
@@ -160,7 +162,9 @@ end_comment
 begin_function
 name|void
 name|ffest_eof
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_eof
 argument_list|()
@@ -262,7 +266,9 @@ end_comment
 begin_function
 name|void
 name|ffest_init_0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_init_0
 argument_list|()
@@ -310,7 +316,9 @@ end_comment
 begin_function
 name|void
 name|ffest_init_1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_init_1
 argument_list|()
@@ -358,7 +366,9 @@ end_comment
 begin_function
 name|void
 name|ffest_init_2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_init_2
 argument_list|()
@@ -406,7 +416,9 @@ end_comment
 begin_function
 name|void
 name|ffest_init_3
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_init_3
 argument_list|()
@@ -457,7 +469,9 @@ end_comment
 begin_function
 name|void
 name|ffest_init_4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_init_4
 argument_list|()
@@ -505,7 +519,9 @@ end_comment
 begin_function
 name|bool
 name|ffest_is_entry_valid
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ffesta_is_entry_valid
@@ -520,7 +536,9 @@ end_comment
 begin_function
 name|bool
 name|ffest_is_inhibited
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ffesta_is_inhibited
@@ -536,7 +554,9 @@ end_comment
 begin_function
 name|bool
 name|ffest_seen_first_exec
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ffesta_seen_first_exec
@@ -551,7 +571,9 @@ end_comment
 begin_function
 name|void
 name|ffest_shutdown
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_shutdown
 argument_list|()
@@ -608,7 +630,9 @@ end_comment
 begin_function
 name|void
 name|ffest_terminate_0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_terminate_0
 argument_list|()
@@ -656,7 +680,9 @@ end_comment
 begin_function
 name|void
 name|ffest_terminate_1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_terminate_1
 argument_list|()
@@ -704,7 +730,9 @@ end_comment
 begin_function
 name|void
 name|ffest_terminate_2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_terminate_2
 argument_list|()
@@ -752,7 +780,9 @@ end_comment
 begin_function
 name|void
 name|ffest_terminate_3
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_terminate_3
 argument_list|()
@@ -800,7 +830,9 @@ end_comment
 begin_function
 name|void
 name|ffest_terminate_4
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffesta_terminate_4
 argument_list|()

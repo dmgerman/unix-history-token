@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Red Hat, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2004    Free Software Foundation, Inc.    Contributed by Red Hat, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -312,7 +324,7 @@ value|(REGSTATE_IF_TRUE | REGSTATE_IF_FALSE)
 end_define
 
 begin_comment
-comment|/* the following is not sure in the reg_state bytes, so can have a larger value    than 0xff.  */
+comment|/* The following is not sure in the reg_state bytes, so can have a larger value    than 0xff.  */
 end_comment
 
 begin_define
@@ -384,7 +396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Conditional execution support gathered together in one structure */
+comment|/* Conditional execution support gathered together in one structure.  */
 end_comment
 
 begin_typedef
@@ -414,7 +426,7 @@ comment|/* Current number of temp registers available.  */
 name|int
 name|cur_scratch_regs
 decl_stmt|;
-comment|/* Number of nested conditional execution blocks */
+comment|/* Number of nested conditional execution blocks.  */
 name|int
 name|num_nested_cond_exec
 decl_stmt|;
@@ -422,11 +434,11 @@ comment|/* Map of insns that set up constants in scratch registers.  */
 name|bitmap
 name|scratch_insns_bitmap
 decl_stmt|;
-comment|/* Conditional execution test register (CC0..CC7) */
+comment|/* Conditional execution test register (CC0..CC7).  */
 name|rtx
 name|cr_reg
 decl_stmt|;
-comment|/* Conditional execution compare register that is paired with cr_reg, so that        nested compares can be done.  The csubcc and caddcc instructions don't        have enough bits to specify both a CC register to be set and a CR register        to do the test on, so the same bit number is used for both.  Needless to        say, this is rather inconvient for GCC.  */
+comment|/* Conditional execution compare register that is paired with cr_reg, so that        nested compares can be done.  The csubcc and caddcc instructions don't        have enough bits to specify both a CC register to be set and a CR register        to do the test on, so the same bit number is used for both.  Needless to        say, this is rather inconvenient for GCC.  */
 name|rtx
 name|nested_cc_reg
 decl_stmt|;
@@ -437,7 +449,7 @@ decl_stmt|;
 name|rtx
 name|extra_fp_cr
 decl_stmt|;
-comment|/* Previous CR used in nested if, to make sure we are dealing with the same        nested if as the previous statement. */
+comment|/* Previous CR used in nested if, to make sure we are dealing with the same        nested if as the previous statement.  */
 name|rtx
 name|last_nested_if_cr
 decl_stmt|;
@@ -469,7 +481,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Map class letter into register class */
+comment|/* Map class letter into register class.  */
 end_comment
 
 begin_decl_stmt
@@ -483,7 +495,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Cached value of frv_stack_info */
+comment|/* Cached value of frv_stack_info.  */
 end_comment
 
 begin_decl_stmt
@@ -636,948 +648,811 @@ begin_comment
 comment|/* Forward references */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_default_flags_for_cpu
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_string_begins_with
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|FRV_INLINE
-name|int
-name|symbol_ref_small_data_p
-name|PARAMS
-argument_list|(
-operator|(
-name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|FRV_INLINE
 name|int
 name|const_small_data_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|FRV_INLINE
 name|int
 name|plus_small_data_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_print_operand_memory_reference_reg
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_print_operand_memory_reference
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|rtx
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_print_operand_jump_hint
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|FRV_INLINE
 name|int
 name|frv_regno_ok_for_base_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|single_set_pattern
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_function_contains_far_jump
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_alloc_temp_reg
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|frv_tmp_reg_t
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|reg_class
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|machine_mode
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_frame_offset_rtx
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_frame_mem
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|machine_mode
-operator|,
+parameter_list|,
 name|rtx
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_dwarf_store
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_frame_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_frame_access
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|frv_frame_accessor_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|rtx
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_frame_access_multi
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|frv_frame_accessor_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|frv_stack_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_frame_access_standard_regs
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|frv_stack_op
-operator|,
+parameter_list|,
 name|frv_stack_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|machine_function
 modifier|*
 name|frv_init_machine_status
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_legitimate_memory_operand
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|machine_mode
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_int_to_acc
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|machine_mode
 name|frv_matching_accg_mode
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|machine_mode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_read_argument
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_check_constant_argument
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_legitimize_target
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_legitimize_argument
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_set_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_unop_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_binop_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_cut_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_binopimm_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_voidbinop_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_voidtriop_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_voidaccop_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_mclracc_builtin
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_mrdacc_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_mwtacc_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_noargs_builtin
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|insn_code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_emit_comparison
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|rtx_code
-operator|,
+parameter_list|,
 name|rtx
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_clear_registers_used
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_ifcvt_add_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|rtx
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_ifcvt_rewrite_mem
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|machine_mode
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_ifcvt_load_value
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_registers_update
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|unsigned
 name|char
 index|[]
-operator|,
+parameter_list|,
 name|int
 index|[]
-operator|,
+parameter_list|,
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_registers_used_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|unsigned
 name|char
 index|[]
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|frv_registers_set_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|unsigned
 name|char
 index|[]
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+name|int
+name|frv_issue_rate
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|frv_use_dfa_pipeline_interface
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|frv_pack_insns
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_function_prologue
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|HOST_WIDE_INT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_function_epilogue
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|HOST_WIDE_INT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|bool
 name|frv_assemble_integer
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 name|unsigned
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|frv_strip_name_encoding
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|frv_encode_section_info
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_init_builtins
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|rtx
 name|frv_expand_builtin
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|,
+parameter_list|,
 name|rtx
-operator|,
+parameter_list|,
 name|rtx
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|machine_mode
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+name|void
+name|frv_init_libfuncs
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|bool
 name|frv_in_small_data_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|frv_asm_output_mi_thunk
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|tree
-operator|,
+parameter_list|,
 name|HOST_WIDE_INT
-operator|,
+parameter_list|,
 name|HOST_WIDE_INT
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|bool
+name|frv_rtx_costs
+parameter_list|(
+name|rtx
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|frv_asm_out_constructor
+parameter_list|(
+name|rtx
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|frv_asm_out_destructor
+parameter_list|(
+name|rtx
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -1628,32 +1503,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|TARGET_STRIP_NAME_ENCODING
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_STRIP_NAME_ENCODING
-value|frv_strip_name_encoding
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|TARGET_ENCODE_SECTION_INFO
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_ENCODE_SECTION_INFO
-value|frv_encode_section_info
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|TARGET_INIT_BUILTINS
 end_undef
 
@@ -1680,6 +1529,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|TARGET_INIT_LIBFUNCS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_INIT_LIBFUNCS
+value|frv_init_libfuncs
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|TARGET_IN_SMALL_DATA_P
 end_undef
 
@@ -1688,6 +1550,45 @@ define|#
 directive|define
 name|TARGET_IN_SMALL_DATA_P
 value|frv_in_small_data_p
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_RTX_COSTS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_RTX_COSTS
+value|frv_rtx_costs
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ASM_CONSTRUCTOR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_CONSTRUCTOR
+value|frv_asm_out_constructor
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ASM_DESTRUCTOR
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_DESTRUCTOR
+value|frv_asm_out_destructor
 end_define
 
 begin_undef
@@ -1716,6 +1617,32 @@ name|TARGET_ASM_CAN_OUTPUT_MI_THUNK
 value|default_can_output_mi_thunk_no_vcall
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_SCHED_ISSUE_RATE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_SCHED_ISSUE_RATE
+value|frv_issue_rate
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_SCHED_USE_DFA_PIPELINE_INTERFACE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_SCHED_USE_DFA_PIPELINE_INTERFACE
+value|frv_use_dfa_pipeline_interface
+end_define
+
 begin_decl_stmt
 name|struct
 name|gcc_target
@@ -1729,36 +1656,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a SYMBOL_REF, return true if it points to small data.  */
-end_comment
-
-begin_function
-specifier|static
-name|FRV_INLINE
-name|int
-name|symbol_ref_small_data_p
-parameter_list|(
-name|x
-parameter_list|)
-name|rtx
-name|x
-decl_stmt|;
-block|{
-return|return
-name|SDATA_NAME_P
-argument_list|(
-name|XSTR
-argument_list|(
-name|x
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Given a CONST, return true if the symbol_ref points to small data.  */
 end_comment
 
@@ -1768,11 +1665,9 @@ name|FRV_INLINE
 name|int
 name|const_small_data_p
 parameter_list|(
-name|x
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|x0
@@ -1820,14 +1715,9 @@ operator|!=
 name|SYMBOL_REF
 operator|||
 operator|!
-name|SDATA_NAME_P
-argument_list|(
-name|XSTR
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|x0
-argument_list|,
-literal|0
-argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -1889,16 +1779,12 @@ name|FRV_INLINE
 name|int
 name|plus_small_data_p
 parameter_list|(
+name|rtx
 name|op0
 parameter_list|,
+name|rtx
 name|op1
 parameter_list|)
-name|rtx
-name|op0
-decl_stmt|;
-name|rtx
-name|op1
-decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1934,7 +1820,7 @@ operator|==
 name|SYMBOL_REF
 condition|)
 return|return
-name|symbol_ref_small_data_p
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|op1
 argument_list|)
@@ -1968,7 +1854,9 @@ begin_function
 specifier|static
 name|int
 name|frv_default_flags_for_cpu
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -2019,14 +1907,16 @@ end_comment
 begin_function
 name|void
 name|frv_override_options
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|regno
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* Set the cpu type */
+comment|/* Set the cpu type.  */
 if|if
 condition|(
 name|frv_cpu_string
@@ -2235,7 +2125,7 @@ argument_list|(
 literal|"-fpic and -gdwarf are incompatible (-fpic and -g/-gdwarf-2 are fine)"
 argument_list|)
 expr_stmt|;
-comment|/* Change the branch cost value */
+comment|/* Change the branch cost value.  */
 if|if
 condition|(
 name|frv_branch_cost_string
@@ -2247,7 +2137,7 @@ argument_list|(
 name|frv_branch_cost_string
 argument_list|)
 expr_stmt|;
-comment|/* Change the # of insns to be converted to conditional execution */
+comment|/* Change the # of insns to be converted to conditional execution.  */
 if|if
 condition|(
 name|frv_condexec_insns_str
@@ -2259,7 +2149,7 @@ argument_list|(
 name|frv_condexec_insns_str
 argument_list|)
 expr_stmt|;
-comment|/* Change # of temporary registers used to hold integer constants */
+comment|/* Change # of temporary registers used to hold integer constants.  */
 if|if
 condition|(
 name|frv_condexec_temps_str
@@ -2271,7 +2161,7 @@ argument_list|(
 name|frv_condexec_temps_str
 argument_list|)
 expr_stmt|;
-comment|/* Change scheduling look ahead. */
+comment|/* Change scheduling look ahead.  */
 if|if
 condition|(
 name|frv_sched_lookahead_str
@@ -2283,7 +2173,7 @@ argument_list|(
 name|frv_sched_lookahead_str
 argument_list|)
 expr_stmt|;
-comment|/* A C expression whose value is a register class containing hard      register REGNO.  In general there is more than one such class;      choose a class which is "minimal", meaning that no smaller class      also contains the register. */
+comment|/* A C expression whose value is a register class containing hard      register REGNO.  In general there is more than one such class;      choose a class which is "minimal", meaning that no smaller class      also contains the register.  */
 for|for
 control|(
 name|regno
@@ -2750,17 +2640,13 @@ begin_function
 name|void
 name|frv_optimization_options
 parameter_list|(
-name|level
-parameter_list|,
-name|size
-parameter_list|)
 name|int
 name|level
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2803,18 +2689,14 @@ specifier|static
 name|int
 name|frv_string_begins_with
 parameter_list|(
-name|name
-parameter_list|,
-name|prefix
-parameter_list|)
 name|tree
 name|name
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|prefix
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|prefix_len
@@ -2852,209 +2734,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Encode section information of DECL, which is either a VAR_DECL,    FUNCTION_DECL, STRING_CST, CONSTRUCTOR, or ???.     For the FRV we want to record:     - whether the object lives in .sdata/.sbss.      objects living in .sdata/.sbss are prefixed with SDATA_FLAG_CHAR  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|frv_encode_section_info
-parameter_list|(
-name|decl
-parameter_list|,
-name|first
-parameter_list|)
-name|tree
-name|decl
-decl_stmt|;
-name|int
-name|first
-decl_stmt|;
-block|{
-if|if
-condition|(
-operator|!
-name|first
-condition|)
-return|return;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|decl
-argument_list|)
-operator|==
-name|VAR_DECL
-condition|)
-block|{
-name|int
-name|size
-init|=
-name|int_size_in_bytes
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|decl
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|tree
-name|section_name
-init|=
-name|DECL_SECTION_NAME
-argument_list|(
-name|decl
-argument_list|)
-decl_stmt|;
-name|int
-name|is_small
-init|=
-literal|0
-decl_stmt|;
-comment|/* Don't apply the -G flag to internal compiler structures.  We 	 should leave such structures in the main data section, partly 	 for efficiency and partly because the size of some of them 	 (such as C++ typeinfos) is not known until later.  */
-if|if
-condition|(
-operator|!
-name|DECL_ARTIFICIAL
-argument_list|(
-name|decl
-argument_list|)
-operator|&&
-name|size
-operator|>
-literal|0
-operator|&&
-name|size
-operator|<=
-name|g_switch_value
-condition|)
-name|is_small
-operator|=
-literal|1
-expr_stmt|;
-comment|/* If we already know which section the decl should be in, see if 	 it's a small data section.  */
-if|if
-condition|(
-name|section_name
-condition|)
-block|{
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|section_name
-argument_list|)
-operator|==
-name|STRING_CST
-condition|)
-block|{
-if|if
-condition|(
-name|frv_string_begins_with
-argument_list|(
-name|section_name
-argument_list|,
-literal|".sdata"
-argument_list|)
-condition|)
-name|is_small
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|frv_string_begins_with
-argument_list|(
-name|section_name
-argument_list|,
-literal|".sbss"
-argument_list|)
-condition|)
-name|is_small
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|is_small
-condition|)
-block|{
-name|rtx
-name|sym_ref
-init|=
-name|XEXP
-argument_list|(
-name|DECL_RTL
-argument_list|(
-name|decl
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-name|char
-modifier|*
-name|str
-init|=
-name|xmalloc
-argument_list|(
-literal|2
-operator|+
-name|strlen
-argument_list|(
-name|XSTR
-argument_list|(
-name|sym_ref
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|str
-index|[
-literal|0
-index|]
-operator|=
-name|SDATA_FLAG_CHAR
-expr_stmt|;
-name|strcpy
-argument_list|(
-operator|&
-name|str
-index|[
-literal|1
-index|]
-argument_list|,
-name|XSTR
-argument_list|(
-name|sym_ref
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|XSTR
-argument_list|(
-name|sym_ref
-argument_list|,
-literal|0
-argument_list|)
-operator|=
-name|str
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
-
 begin_escape
 end_escape
 
@@ -3065,7 +2744,9 @@ end_comment
 begin_function
 name|void
 name|frv_conditional_register_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3278,7 +2959,9 @@ begin_function
 name|frv_stack_t
 modifier|*
 name|frv_stack_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|frv_stack_t
@@ -3318,7 +3001,7 @@ decl_stmt|;
 name|int
 name|offset
 decl_stmt|;
-comment|/* If we've already calculated the values and reload is complete, just return now */
+comment|/* If we've already calculated the values and reload is complete,      just return now.  */
 if|if
 condition|(
 name|frv_stack_cache
@@ -3326,12 +3009,12 @@ condition|)
 return|return
 name|frv_stack_cache
 return|;
-comment|/* Zero all fields */
+comment|/* Zero all fields.  */
 name|info
 operator|=
 name|zero_info
 expr_stmt|;
-comment|/* Set up the register range information */
+comment|/* Set up the register range information.  */
 name|info_ptr
 operator|->
 name|regs
@@ -3767,7 +3450,7 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* Iterate over all of the register ranges */
+comment|/* Iterate over all of the register ranges.  */
 for|for
 control|(
 name|range
@@ -3823,7 +3506,7 @@ decl_stmt|;
 name|int
 name|regno
 decl_stmt|;
-comment|/* Calculate which registers need to be saved& save area size */
+comment|/* Calculate which registers need to be saved& save area size.  */
 switch|switch
 condition|(
 name|range
@@ -3953,7 +3636,7 @@ condition|(
 name|varargs_p
 condition|)
 block|{
-comment|/* If this is a stdarg function with an non varardic argument split 		 between registers and the stack, adjust the saved registers 		 downward */
+comment|/* If this is a stdarg function with a non varardic 		 argument split between registers and the stack, 		 adjust the saved registers downward.  */
 name|last
 operator|-=
 operator|(
@@ -4036,7 +3719,7 @@ condition|(
 name|size_1word
 condition|)
 block|{
-comment|/* If this is a field, it only takes one word */
+comment|/* If this is a field, it only takes one word.  */
 if|if
 condition|(
 name|reg_ptr
@@ -4047,7 +3730,7 @@ name|size_1word
 operator|=
 name|UNITS_PER_WORD
 expr_stmt|;
-comment|/* Determine which register pairs can be saved together */
+comment|/* Determine which register pairs can be saved together.  */
 elseif|else
 if|if
 condition|(
@@ -4320,7 +4003,7 @@ literal|4
 operator|*
 name|UNITS_PER_WORD
 expr_stmt|;
-comment|/* Calculate the offsets to save normal register pairs */
+comment|/* Calculate the offsets to save normal register pairs.  */
 for|for
 control|(
 name|range
@@ -4431,7 +4114,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Calculate the offsets to save normal single registers */
+comment|/* Calculate the offsets to save normal single registers.  */
 for|for
 control|(
 name|range
@@ -4816,19 +4499,17 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Print the information about the frv stack offsets, etc. when debugging. */
+comment|/* Print the information about the frv stack offsets, etc. when debugging.  */
 end_comment
 
 begin_function
 name|void
 name|frv_debug_stack
 parameter_list|(
-name|info
-parameter_list|)
 name|frv_stack_t
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|range
@@ -5158,7 +4839,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The following variable value is TRUE if the next output insn should    finish cpu cycle.  In order words the insn will have packing bit    (which means absence of asm code suffix `.p' on assembler. */
+comment|/* The following variable value is TRUE if the next output insn should    finish cpu cycle.  In order words the insn will have packing bit    (which means absence of asm code suffix `.p' on assembler.  */
 end_comment
 
 begin_decl_stmt
@@ -5176,7 +4857,9 @@ begin_function
 specifier|static
 name|int
 name|frv_function_contains_far_jump
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|rtx
 name|insn
@@ -5254,18 +4937,14 @@ specifier|static
 name|void
 name|frv_function_prologue
 parameter_list|(
-name|file
-parameter_list|,
-name|size
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|HOST_WIDE_INT
 name|size
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* If no frame was created, check whether the function uses a call      instruction to implement a far jump.  If so, save the link in gr3 and      replace all returns to LR with returns to GR3.  GR3 is used because it      is call-clobbered, because is not available to the register allocator,      and because all functions that take a hidden argument pointer will have      a stack frame.  */
 if|if
@@ -5456,38 +5135,28 @@ specifier|static
 name|rtx
 name|frv_alloc_temp_reg
 parameter_list|(
-name|info
-parameter_list|,
-name|class
-parameter_list|,
-name|mode
-parameter_list|,
-name|mark_as_used
-parameter_list|,
-name|no_abort
-parameter_list|)
 name|frv_tmp_reg_t
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 comment|/* which registers are available */
 name|enum
 name|reg_class
 name|class
-decl_stmt|;
+parameter_list|,
 comment|/* register class desired */
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 comment|/* mode to allocate register with */
 name|int
 name|mark_as_used
-decl_stmt|;
+parameter_list|,
 comment|/* register not available after allocation */
 name|int
 name|no_abort
-decl_stmt|;
+parameter_list|)
 comment|/* return NULL instead of aborting */
 block|{
 name|int
@@ -5657,11 +5326,9 @@ specifier|static
 name|rtx
 name|frv_frame_offset_rtx
 parameter_list|(
-name|offset
-parameter_list|)
 name|int
 name|offset
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|offset_rtx
@@ -5759,22 +5426,16 @@ specifier|static
 name|rtx
 name|frv_frame_mem
 parameter_list|(
-name|mode
-parameter_list|,
-name|base
-parameter_list|,
-name|offset
-parameter_list|)
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|base
-decl_stmt|;
+parameter_list|,
 name|int
 name|offset
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|gen_rtx_MEM
@@ -5806,16 +5467,12 @@ specifier|static
 name|rtx
 name|frv_dwarf_store
 parameter_list|(
-name|reg
-parameter_list|,
-name|offset
-parameter_list|)
 name|rtx
 name|reg
-decl_stmt|;
+parameter_list|,
 name|int
 name|offset
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|set
@@ -5864,16 +5521,12 @@ specifier|static
 name|void
 name|frv_frame_insn
 parameter_list|(
+name|rtx
 name|pattern
 parameter_list|,
+name|rtx
 name|dwarf_pattern
 parameter_list|)
-name|rtx
-name|pattern
-decl_stmt|;
-name|rtx
-name|dwarf_pattern
-decl_stmt|;
 block|{
 name|rtx
 name|insn
@@ -5911,7 +5564,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Emit instructions that transfer REG to or from the memory location (sp +    STACK_OFFSET).  The register is stored in memory if ACCESSOR->OP is    FRV_STORE and loaded if it is FRV_LOAD.  Only the prologue uses this    function to store registers and only the epilogue uses it to load them.     The caller sets up ACCESSOR so that BASE is equal to (sp + BASE_OFFSET).    The generated instruction will use BASE as its base register.  BASE may    simply be the stack pointer, but if several accesses are being made to a    region far away from the stack pointer, it may be more efficient to set    up a temporary instead.        Store instructions will be frame-related and will be annotated with the    overall effect of the store.  Load instructions will be followed by a    (use) to prevent later optimizations from zapping them.     The function takes care of the moves to and from SPRs, using TEMP_REGNO    as a temporary in such cases.  */
+comment|/* Emit instructions that transfer REG to or from the memory location (sp +    STACK_OFFSET).  The register is stored in memory if ACCESSOR->OP is    FRV_STORE and loaded if it is FRV_LOAD.  Only the prologue uses this    function to store registers and only the epilogue uses it to load them.     The caller sets up ACCESSOR so that BASE is equal to (sp + BASE_OFFSET).    The generated instruction will use BASE as its base register.  BASE may    simply be the stack pointer, but if several accesses are being made to a    region far away from the stack pointer, it may be more efficient to set    up a temporary instead.     Store instructions will be frame-related and will be annotated with the    overall effect of the store.  Load instructions will be followed by a    (use) to prevent later optimizations from zapping them.     The function takes care of the moves to and from SPRs, using TEMP_REGNO    as a temporary in such cases.  */
 end_comment
 
 begin_function
@@ -5919,22 +5572,16 @@ specifier|static
 name|void
 name|frv_frame_access
 parameter_list|(
-name|accessor
-parameter_list|,
-name|reg
-parameter_list|,
-name|stack_offset
-parameter_list|)
 name|frv_frame_accessor_t
 modifier|*
 name|accessor
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|reg
-decl_stmt|;
+parameter_list|,
 name|int
 name|stack_offset
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -6219,23 +5866,17 @@ specifier|static
 name|void
 name|frv_frame_access_multi
 parameter_list|(
-name|accessor
-parameter_list|,
-name|info
-parameter_list|,
-name|reg_set
-parameter_list|)
 name|frv_frame_accessor_t
 modifier|*
 name|accessor
-decl_stmt|;
+parameter_list|,
 name|frv_stack_t
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|int
 name|reg_set
-decl_stmt|;
+parameter_list|)
 block|{
 name|frv_stack_regs_t
 modifier|*
@@ -6327,18 +5968,14 @@ specifier|static
 name|void
 name|frv_frame_access_standard_regs
 parameter_list|(
-name|op
-parameter_list|,
-name|info
-parameter_list|)
 name|enum
 name|frv_stack_op
 name|op
-decl_stmt|;
+parameter_list|,
 name|frv_stack_t
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|frv_frame_accessor_t
 name|accessor
@@ -6401,7 +6038,9 @@ end_comment
 begin_function
 name|void
 name|frv_expand_prologue
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|frv_stack_t
 modifier|*
@@ -6709,7 +6348,7 @@ name|gen_blockage
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* Set up pic register/small data register for this function. */
+comment|/* Set up pic register/small data register for this function.  */
 if|if
 condition|(
 name|flag_pic
@@ -6752,7 +6391,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Under frv, all of the work is done via frv_expand_epilogue, but    this function provides a convient place to do cleanup.  */
+comment|/* Under frv, all of the work is done via frv_expand_epilogue, but    this function provides a convenient place to do cleanup.  */
 end_comment
 
 begin_function
@@ -6760,19 +6399,15 @@ specifier|static
 name|void
 name|frv_function_epilogue
 parameter_list|(
-name|file
-parameter_list|,
-name|size
-parameter_list|)
 name|FILE
 modifier|*
 name|file
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|HOST_WIDE_INT
 name|size
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|frv_stack_cache
 operator|=
@@ -6782,12 +6417,9 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* zap last used registers for conditional execution.  */
+comment|/* Zap last used registers for conditional execution.  */
 name|memset
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|frv_ifcvt
 operator|.
@@ -6803,7 +6435,7 @@ name|tmp_reg
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* release the bitmap of created insns.  */
+comment|/* Release the bitmap of created insns.  */
 name|BITMAP_XFREE
 argument_list|(
 name|frv_ifcvt
@@ -6825,11 +6457,9 @@ begin_function
 name|void
 name|frv_expand_epilogue
 parameter_list|(
-name|sibcall_p
-parameter_list|)
 name|int
 name|sibcall_p
-decl_stmt|;
+parameter_list|)
 block|{
 name|frv_stack_t
 modifier|*
@@ -7102,34 +6732,24 @@ specifier|static
 name|void
 name|frv_asm_output_mi_thunk
 parameter_list|(
-name|file
-parameter_list|,
-name|thunk_fndecl
-parameter_list|,
-name|delta
-parameter_list|,
-name|vcall_offset
-parameter_list|,
-name|function
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|tree
 name|thunk_fndecl
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|HOST_WIDE_INT
 name|delta
-decl_stmt|;
+parameter_list|,
 name|HOST_WIDE_INT
 name|vcall_offset
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|tree
 name|function
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -7187,7 +6807,7 @@ else|:
 literal|""
 operator|)
 decl_stmt|;
-comment|/* Do the add using an addi if possible */
+comment|/* Do the add using an addi if possible.  */
 if|if
 condition|(
 name|IN_RANGE_P
@@ -7221,6 +6841,7 @@ block|{
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|name_add
 init|=
 name|reg_names
@@ -7233,24 +6854,12 @@ argument_list|(
 name|file
 argument_list|,
 literal|"\tsethi%s #hi("
+name|HOST_WIDE_INT_PRINT_DEC
+literal|"),%s\n"
 argument_list|,
 name|parallel
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|delta
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-literal|"),%s\n"
 argument_list|,
 name|name_add
 argument_list|)
@@ -7260,22 +6869,10 @@ argument_list|(
 name|file
 argument_list|,
 literal|"\tsetlo #lo("
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
 name|HOST_WIDE_INT_PRINT_DEC
+literal|"),%s\n"
 argument_list|,
 name|delta
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-literal|"),%s\n"
 argument_list|,
 name|name_add
 argument_list|)
@@ -7514,7 +7111,7 @@ name|name_jmp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Jump to the function address */
+comment|/* Jump to the function address.  */
 name|fprintf
 argument_list|(
 name|file
@@ -7542,13 +7139,15 @@ comment|/* A C expression which is nonzero if a function must have and use a fra
 end_comment
 
 begin_comment
-comment|/* On frv, create a frame whenever we need to create stack */
+comment|/* On frv, create a frame whenever we need to create stack.  */
 end_comment
 
 begin_function
 name|int
 name|frv_frame_pointer_required
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7635,16 +7234,12 @@ begin_function
 name|int
 name|frv_initial_elimination_offset
 parameter_list|(
+name|int
 name|from
 parameter_list|,
+name|int
 name|to
 parameter_list|)
-name|int
-name|from
-decl_stmt|;
-name|int
-name|to
-decl_stmt|;
 block|{
 name|frv_stack_t
 modifier|*
@@ -7691,7 +7286,6 @@ name|FRAME_POINTER_REGNUM
 condition|)
 name|ret
 operator|=
-operator|-
 name|info
 operator|->
 name|reg_offset
@@ -7773,35 +7367,25 @@ begin_function
 name|void
 name|frv_setup_incoming_varargs
 parameter_list|(
-name|cum
-parameter_list|,
-name|mode
-parameter_list|,
-name|type
-parameter_list|,
-name|pretend_size
-parameter_list|,
-name|second_time
-parameter_list|)
 name|CUMULATIVE_ARGS
 modifier|*
 name|cum
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|type
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|pretend_size
-decl_stmt|;
+parameter_list|,
 name|int
 name|second_time
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7840,7 +7424,9 @@ end_comment
 begin_function
 name|rtx
 name|frv_expand_builtin_saveregs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|offset
@@ -7892,16 +7478,12 @@ begin_function
 name|void
 name|frv_expand_builtin_va_start
 parameter_list|(
-name|valist
-parameter_list|,
-name|nextarg
-parameter_list|)
 name|tree
 name|valist
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|nextarg
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|t
@@ -8010,16 +7592,12 @@ begin_function
 name|rtx
 name|frv_expand_builtin_va_arg
 parameter_list|(
+name|tree
 name|valist
 parameter_list|,
+name|tree
 name|type
 parameter_list|)
-name|tree
-name|valist
-decl_stmt|;
-name|tree
-name|type
-decl_stmt|;
 block|{
 name|rtx
 name|addr
@@ -8165,12 +7743,10 @@ begin_function
 name|int
 name|frv_expand_block_move
 parameter_list|(
-name|operands
-parameter_list|)
 name|rtx
 name|operands
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|orig_dest
@@ -8265,7 +7841,7 @@ name|enum
 name|machine_mode
 name|mode
 decl_stmt|;
-comment|/* If this is not a fixed size move, just call memcpy */
+comment|/* If this is not a fixed size move, just call memcpy.  */
 if|if
 condition|(
 operator|!
@@ -8274,7 +7850,7 @@ condition|)
 return|return
 name|FALSE
 return|;
-comment|/* If this is not a fixed size alignment, abort */
+comment|/* If this is not a fixed size alignment, abort.  */
 if|if
 condition|(
 name|GET_CODE
@@ -8374,7 +7950,7 @@ name|move_bytes
 operator|)
 control|)
 block|{
-comment|/* Calculate the correct offset for src/dest */
+comment|/* Calculate the correct offset for src/dest.  */
 if|if
 condition|(
 name|offset
@@ -8582,12 +8158,10 @@ begin_function
 name|int
 name|frv_expand_block_clear
 parameter_list|(
-name|operands
-parameter_list|)
 name|rtx
 name|operands
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|orig_dest
@@ -8653,7 +8227,7 @@ name|enum
 name|machine_mode
 name|mode
 decl_stmt|;
-comment|/* If this is not a fixed size move, just call memcpy */
+comment|/* If this is not a fixed size move, just call memcpy.  */
 if|if
 condition|(
 operator|!
@@ -8662,7 +8236,7 @@ condition|)
 return|return
 name|FALSE
 return|;
-comment|/* If this is not a fixed size alignment, abort */
+comment|/* If this is not a fixed size alignment, abort.  */
 if|if
 condition|(
 name|GET_CODE
@@ -8750,7 +8324,7 @@ name|clear_bytes
 operator|)
 control|)
 block|{
-comment|/* Calculate the correct offset for src/dest */
+comment|/* Calculate the correct offset for src/dest.  */
 name|dest_addr
 operator|=
 operator|(
@@ -8770,7 +8344,7 @@ name|offset
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* Generate the appropriate store of gr0 */
+comment|/* Generate the appropriate store of gr0.  */
 if|if
 condition|(
 name|bytes
@@ -8846,7 +8420,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The following variable is used to output modifiers of assembler    code of the current output insn.. */
+comment|/* The following variable is used to output modifiers of assembler    code of the current output insn.  */
 end_comment
 
 begin_decl_stmt
@@ -8858,7 +8432,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The following function is used to add assembler insn code suffix .p    if it is necessary. */
+comment|/* The following function is used to add assembler insn code suffix .p    if it is necessary.  */
 end_comment
 
 begin_function
@@ -8867,19 +8441,15 @@ name|char
 modifier|*
 name|frv_asm_output_opcode
 parameter_list|(
-name|f
-parameter_list|,
-name|ptr
-parameter_list|)
 name|FILE
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -9023,30 +8593,24 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following function sets up the packing bit for the current    output insn.  Remember that the function is not called for asm    insns. */
+comment|/* The following function sets up the packing bit for the current    output insn.  Remember that the function is not called for asm    insns.  */
 end_comment
 
 begin_function
 name|void
 name|frv_final_prescan_insn
 parameter_list|(
-name|insn
-parameter_list|,
-name|opvec
-parameter_list|,
-name|noperands
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|,
 name|rtx
 modifier|*
 name|opvec
-decl_stmt|;
+parameter_list|,
 name|int
 name|noperands
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -9057,22 +8621,18 @@ condition|)
 return|return;
 if|if
 condition|(
-name|GET_RTX_CLASS
-argument_list|(
-name|GET_CODE
+operator|!
+name|INSN_P
 argument_list|(
 name|insn
 argument_list|)
-argument_list|)
-operator|!=
-literal|'i'
 condition|)
 return|return;
 name|frv_insn_operands
 operator|=
 name|opvec
 expr_stmt|;
-comment|/* Look for the next printable instruction.  frv_pack_insns () has set      things up so that any printable instruction will have TImode if it      starts a new packet and VOIDmode if it should be packed with the      previous instruction.       Printable instructions will be asm_operands or match one of the .md      patterns.  Since asm instructions cannot be packed -- and will      therefore have TImode -- this loop terminates on any recognisable      instruction, and on any unrecognisable instruction with TImode.  */
+comment|/* Look for the next printable instruction.  frv_pack_insns () has set      things up so that any printable instruction will have TImode if it      starts a new packet and VOIDmode if it should be packed with the      previous instruction.       Printable instructions will be asm_operands or match one of the .md      patterns.  Since asm instructions cannot be packed -- and will      therefore have TImode -- this loop terminates on any recognizable      instruction, and on any unrecognizable instruction with TImode.  */
 for|for
 control|(
 name|insn
@@ -9130,7 +8690,7 @@ literal|1
 condition|)
 break|break;
 block|}
-comment|/* Set frv_insn_packing_flag to FALSE if the next instruction should      be packed with this one.  Set it to TRUE otherwise.  If the next      instruction is an asm insntruction, this statement will set the      flag to TRUE, and that value will still hold when the asm operands      themselves are printed.  */
+comment|/* Set frv_insn_packing_flag to FALSE if the next instruction should      be packed with this one.  Set it to TRUE otherwise.  If the next      instruction is an asm instruction, this statement will set the      flag to TRUE, and that value will still hold when the asm operands      themselves are printed.  */
 name|frv_insn_packing_flag
 operator|=
 operator|!
@@ -9168,11 +8728,9 @@ begin_function
 name|rtx
 name|frv_dynamic_chain_address
 parameter_list|(
-name|frame
-parameter_list|)
 name|rtx
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|cfun
 operator|->
@@ -9196,17 +8754,13 @@ begin_function
 name|rtx
 name|frv_return_addr_rtx
 parameter_list|(
-name|count
-parameter_list|,
-name|frame
-parameter_list|)
 name|int
 name|count
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|cfun
 operator|->
@@ -9240,22 +8794,16 @@ begin_function
 name|rtx
 name|frv_index_memory
 parameter_list|(
-name|memref
-parameter_list|,
-name|mode
-parameter_list|,
-name|index
-parameter_list|)
 name|rtx
 name|memref
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|int
 name|index
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|base
@@ -9319,17 +8867,13 @@ begin_function
 name|void
 name|frv_print_operand_address
 parameter_list|(
-name|stream
-parameter_list|,
-name|x
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -9444,17 +8988,13 @@ specifier|static
 name|void
 name|frv_print_operand_memory_reference_reg
 parameter_list|(
-name|stream
-parameter_list|,
-name|x
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -9501,22 +9041,16 @@ specifier|static
 name|void
 name|frv_print_operand_memory_reference
 parameter_list|(
-name|stream
-parameter_list|,
-name|x
-parameter_list|,
-name|addr_offset
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr_offset
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|x0
@@ -9820,7 +9354,7 @@ argument_list|)
 operator|==
 name|SDA_BASE_REG
 operator|&&
-name|symbol_ref_small_data_p
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|x1
 argument_list|)
@@ -9922,7 +9456,9 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"+%d)"
+literal|"+"
+name|HOST_WIDE_INT_PRINT_DEC
+literal|")"
 argument_list|,
 name|INTVAL
 argument_list|(
@@ -9996,11 +9532,9 @@ specifier|static
 name|int
 name|frv_print_operand_jump_hint
 parameter_list|(
-name|insn
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|note
@@ -10184,22 +9718,16 @@ begin_function
 name|void
 name|frv_print_operand
 parameter_list|(
-name|file
-parameter_list|,
-name|x
-parameter_list|,
-name|code
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|int
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 name|HOST_WIDE_INT
 name|value
@@ -10325,7 +9853,7 @@ block|{
 case|case
 literal|'.'
 case|:
-comment|/* Output r0 */
+comment|/* Output r0.  */
 name|fputs
 argument_list|(
 name|reg_names
@@ -10354,9 +9882,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SDATA_FLAG_CHAR
+literal|'@'
 case|:
-comment|/* Output small data area base register (gr16). */
+comment|/* Output small data area base register (gr16).  */
 name|fputs
 argument_list|(
 name|reg_names
@@ -10371,7 +9899,7 @@ break|break;
 case|case
 literal|'~'
 case|:
-comment|/* Output pic register (gr17). */
+comment|/* Output pic register (gr17).  */
 name|fputs
 argument_list|(
 name|reg_names
@@ -10386,7 +9914,7 @@ break|break;
 case|case
 literal|'*'
 case|:
-comment|/* Output the temporary integer CCR register */
+comment|/* Output the temporary integer CCR register.  */
 name|fputs
 argument_list|(
 name|reg_names
@@ -10401,7 +9929,7 @@ break|break;
 case|case
 literal|'&'
 case|:
-comment|/* Output the temporary integer CC register */
+comment|/* Output the temporary integer CC register.  */
 name|fputs
 argument_list|(
 name|reg_names
@@ -10413,11 +9941,11 @@ name|file
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* case 'a': print an address */
+comment|/* case 'a': print an address.  */
 case|case
 literal|'C'
 case|:
-comment|/* Print appropriate test for integer branch false operation */
+comment|/* Print appropriate test for integer branch false operation.  */
 switch|switch
 condition|(
 name|GET_CODE
@@ -10550,7 +10078,7 @@ comment|/* case 'c': print a constant without the constant prefix.  If        CO
 case|case
 literal|'c'
 case|:
-comment|/* Print appropriate test for integer branch true operation */
+comment|/* Print appropriate test for integer branch true operation.  */
 switch|switch
 condition|(
 name|GET_CODE
@@ -10728,7 +10256,7 @@ break|break;
 case|case
 literal|'F'
 case|:
-comment|/* Print appropriate test for floating point branch false operation */
+comment|/* Print appropriate test for floating point branch false operation.  */
 switch|switch
 condition|(
 name|GET_CODE
@@ -10816,7 +10344,7 @@ break|break;
 case|case
 literal|'f'
 case|:
-comment|/* Print appropriate test for floating point branch true operation */
+comment|/* Print appropriate test for floating point branch true operation.  */
 switch|switch
 condition|(
 name|GET_CODE
@@ -10904,7 +10432,7 @@ break|break;
 case|case
 literal|'I'
 case|:
-comment|/* Print 'i' if the operand is a constant, or is a memory reference that          adds a constant */
+comment|/* Print 'i' if the operand is a constant, or is a memory reference that          adds a constant.  */
 if|if
 condition|(
 name|GET_CODE
@@ -10983,7 +10511,7 @@ break|break;
 case|case
 literal|'i'
 case|:
-comment|/* For jump instructions, print 'i' if the operand is a constant or          is an expression that adds a constant */
+comment|/* For jump instructions, print 'i' if the operand is a constant or          is an expression that adds a constant.  */
 if|if
 condition|(
 name|GET_CODE
@@ -11092,7 +10620,7 @@ name|x
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* case 'l': print a LABEL_REF */
+comment|/* case 'l': print a LABEL_REF.  */
 case|case
 literal|'M'
 case|:
@@ -11283,7 +10811,7 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-comment|/* case 'n': negate and print a constant int */
+comment|/* case 'n': negate and print a constant int.  */
 case|case
 literal|'P'
 case|:
@@ -11323,7 +10851,7 @@ break|break;
 case|case
 literal|'U'
 case|:
-comment|/* Print 'u' if the operand is a update load/store */
+comment|/* Print 'u' if the operand is a update load/store.  */
 if|if
 condition|(
 name|GET_CODE
@@ -11356,7 +10884,7 @@ break|break;
 case|case
 literal|'z'
 case|:
-comment|/* If value is 0, print gr0, otherwise it must be a register  */
+comment|/* If value is 0, print gr0, otherwise it must be a register.  */
 if|if
 condition|(
 name|GET_CODE
@@ -11418,7 +10946,7 @@ break|break;
 case|case
 literal|'x'
 case|:
-comment|/* Print constant in hex */
+comment|/* Print constant in hex.  */
 if|if
 condition|(
 name|GET_CODE
@@ -11452,7 +10980,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* fall through */
+comment|/* Fall through.  */
 case|case
 literal|'\0'
 case|:
@@ -11580,32 +11108,22 @@ begin_function
 name|void
 name|frv_init_cumulative_args
 parameter_list|(
-name|cum
-parameter_list|,
-name|fntype
-parameter_list|,
-name|libname
-parameter_list|,
-name|indirect
-parameter_list|,
-name|incoming
-parameter_list|)
 name|CUMULATIVE_ARGS
 modifier|*
 name|cum
-decl_stmt|;
+parameter_list|,
 name|tree
 name|fntype
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|libname
-decl_stmt|;
-name|int
-name|indirect
-decl_stmt|;
+parameter_list|,
+name|tree
+name|fndecl
+parameter_list|,
 name|int
 name|incoming
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 name|cum
@@ -11626,7 +11144,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|indirect
+operator|!
+name|fndecl
+operator|&&
+name|fntype
 condition|)
 name|fputs
 argument_list|(
@@ -11738,19 +11259,15 @@ begin_function
 name|int
 name|frv_function_arg_boundary
 parameter_list|(
-name|mode
-parameter_list|,
-name|type
-parameter_list|)
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|tree
 name|type
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|BITS_PER_WORD
@@ -11769,35 +11286,25 @@ begin_function
 name|rtx
 name|frv_function_arg
 parameter_list|(
-name|cum
-parameter_list|,
-name|mode
-parameter_list|,
-name|type
-parameter_list|,
-name|named
-parameter_list|,
-name|incoming
-parameter_list|)
 name|CUMULATIVE_ARGS
 modifier|*
 name|cum
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|type
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|named
-decl_stmt|;
+parameter_list|,
 name|int
 name|incoming
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -11926,29 +11433,21 @@ begin_function
 name|void
 name|frv_function_arg_advance
 parameter_list|(
-name|cum
-parameter_list|,
-name|mode
-parameter_list|,
-name|type
-parameter_list|,
-name|named
-parameter_list|)
 name|CUMULATIVE_ARGS
 modifier|*
 name|cum
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|type
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|named
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -12036,30 +11535,22 @@ begin_function
 name|int
 name|frv_function_arg_partial_nregs
 parameter_list|(
-name|cum
-parameter_list|,
-name|mode
-parameter_list|,
-name|type
-parameter_list|,
-name|named
-parameter_list|)
 name|CUMULATIVE_ARGS
 modifier|*
 name|cum
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|type
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|named
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -12163,30 +11654,22 @@ begin_function
 name|int
 name|frv_function_arg_pass_by_reference
 parameter_list|(
-name|cum
-parameter_list|,
-name|mode
-parameter_list|,
-name|type
-parameter_list|,
-name|named
-parameter_list|)
 name|CUMULATIVE_ARGS
 modifier|*
 name|cum
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|type
-decl_stmt|;
+parameter_list|,
 name|int
 name|named
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|MUST_PASS_IN_STACK
@@ -12207,32 +11690,24 @@ begin_function
 name|int
 name|frv_function_arg_callee_copies
 parameter_list|(
-name|cum
-parameter_list|,
-name|mode
-parameter_list|,
-name|type
-parameter_list|,
-name|named
-parameter_list|)
 name|CUMULATIVE_ARGS
 modifier|*
 name|cum
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|tree
 name|type
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|named
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -12248,32 +11723,24 @@ begin_function
 name|int
 name|frv_function_arg_keep_as_reference
 parameter_list|(
-name|cum
-parameter_list|,
-name|mode
-parameter_list|,
-name|type
-parameter_list|,
-name|named
-parameter_list|)
 name|CUMULATIVE_ARGS
 modifier|*
 name|cum
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|tree
 name|type
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|named
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -12294,16 +11761,12 @@ name|FRV_INLINE
 name|int
 name|frv_regno_ok_for_base_p
 parameter_list|(
+name|int
 name|regno
 parameter_list|,
+name|int
 name|strict_p
 parameter_list|)
-name|int
-name|regno
-decl_stmt|;
-name|int
-name|strict_p
-decl_stmt|;
 block|{
 if|if
 condition|(
@@ -12367,27 +11830,19 @@ begin_function
 name|int
 name|frv_legitimate_address_p
 parameter_list|(
-name|mode
-parameter_list|,
-name|x
-parameter_list|,
-name|strict_p
-parameter_list|,
-name|condexec_p
-parameter_list|)
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|int
 name|strict_p
-decl_stmt|;
+parameter_list|,
 name|int
 name|condexec_p
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|x0
@@ -12435,7 +11890,7 @@ operator|!=
 name|REG
 condition|)
 break|break;
-comment|/* fall through */
+comment|/* Fall through.  */
 case|case
 name|REG
 case|:
@@ -12707,11 +12162,11 @@ operator|!=
 name|REG
 condition|)
 break|break;
-comment|/* fall through */
+comment|/* Fall through.  */
 case|case
 name|REG
 case|:
-comment|/* Do not allow reg+reg addressing for modes> 1 word if we can't depend 	     on having move double instructions */
+comment|/* Do not allow reg+reg addressing for modes> 1 word if we 	     can't depend on having move double instructions.  */
 if|if
 condition|(
 name|GET_MODE_SIZE
@@ -12817,7 +12272,7 @@ name|regno0
 operator|==
 name|SDA_BASE_REG
 operator|&&
-name|symbol_ref_small_data_p
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|x1
 argument_list|)
@@ -12910,24 +12365,18 @@ begin_function
 name|rtx
 name|frv_legitimize_address
 parameter_list|(
-name|x
-parameter_list|,
-name|oldx
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|oldx
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|ret
@@ -12948,7 +12397,7 @@ argument_list|)
 operator|==
 name|SYMBOL_REF
 operator|&&
-name|symbol_ref_small_data_p
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|x
 argument_list|)
@@ -13039,22 +12488,16 @@ specifier|static
 name|int
 name|frv_legitimate_memory_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|,
-name|condexec_p
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|int
 name|condexec_p
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -13109,17 +12552,13 @@ begin_function
 name|int
 name|frv_load_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -13211,17 +12650,13 @@ begin_function
 name|int
 name|gpr_or_fpr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -13332,17 +12767,13 @@ begin_function
 name|int
 name|gpr_or_int12_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -13453,17 +12884,13 @@ begin_function
 name|int
 name|gpr_fpr_or_int12_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -13597,17 +13024,13 @@ begin_function
 name|int
 name|fpr_or_int6_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -13718,17 +13141,13 @@ begin_function
 name|int
 name|gpr_or_int10_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -13839,17 +13258,13 @@ begin_function
 name|int
 name|gpr_or_int_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -13949,18 +13364,14 @@ begin_function
 name|int
 name|int12_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -13999,18 +13410,14 @@ begin_function
 name|int
 name|int6_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14049,18 +13456,14 @@ begin_function
 name|int
 name|int5_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|GET_CODE
@@ -14094,18 +13497,14 @@ begin_function
 name|int
 name|uint5_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|GET_CODE
@@ -14138,18 +13537,14 @@ begin_function
 name|int
 name|uint4_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|GET_CODE
@@ -14182,18 +13577,14 @@ begin_function
 name|int
 name|uint1_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|GET_CODE
@@ -14226,18 +13617,14 @@ begin_function
 name|int
 name|int_2word_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|HOST_WIDE_INT
 name|value
@@ -14300,7 +13687,7 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|symbol_ref_small_data_p
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|op
 argument_list|)
@@ -14415,18 +13802,14 @@ begin_function
 name|int
 name|pic_register_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14467,25 +13850,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if operand is a symbolic reference when a PIC option is specified    that takes 3 seperate instructions to form.  */
+comment|/* Return 1 if operand is a symbolic reference when a PIC option is specified    that takes 3 separate instructions to form.  */
 end_comment
 
 begin_function
 name|int
 name|pic_symbolic_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14517,7 +13896,7 @@ case|:
 comment|/* small data references are already 1 word */
 return|return
 operator|!
-name|symbol_ref_small_data_p
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|op
 argument_list|)
@@ -14548,18 +13927,14 @@ begin_function
 name|int
 name|small_data_register_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14599,18 +13974,14 @@ begin_function
 name|int
 name|small_data_symbolic_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -14635,7 +14006,7 @@ case|case
 name|SYMBOL_REF
 case|:
 return|return
-name|symbol_ref_small_data_p
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|op
 argument_list|)
@@ -14648,25 +14019,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if operand is a 16 bit unsigned immediate */
+comment|/* Return 1 if operand is a 16 bit unsigned immediate.  */
 end_comment
 
 begin_function
 name|int
 name|uint16_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14697,25 +14064,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if operand is an integer constant with the bottom 16 bits clear */
+comment|/* Return 1 if operand is an integer constant with the bottom 16 bits    clear.  */
 end_comment
 
 begin_function
 name|int
 name|upper_int16_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14747,24 +14110,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is a GPR register. */
+comment|/* Return true if operand is a GPR register.  */
 end_comment
 
 begin_function
 name|int
 name|integer_register_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14852,17 +14211,13 @@ begin_function
 name|int
 name|gpr_no_subreg_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -14905,24 +14260,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is a FPR register. */
+comment|/* Return true if operand is a FPR register.  */
 end_comment
 
 begin_function
 name|int
 name|fpr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -15003,24 +14354,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an even GPR or FPR register. */
+comment|/* Return true if operand is an even GPR or FPR register.  */
 end_comment
 
 begin_function
 name|int
 name|even_reg_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -15158,24 +14505,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an odd GPR register. */
+comment|/* Return true if operand is an odd GPR register.  */
 end_comment
 
 begin_function
 name|int
 name|odd_reg_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -15253,7 +14596,7 @@ argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
-comment|/* assume that reload will give us an even register */
+comment|/* Assume that reload will give us an even register.  */
 if|if
 condition|(
 name|regno
@@ -15314,24 +14657,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an even GPR register. */
+comment|/* Return true if operand is an even GPR register.  */
 end_comment
 
 begin_function
 name|int
 name|even_gpr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -15448,24 +14787,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an odd GPR register. */
+comment|/* Return true if operand is an odd GPR register.  */
 end_comment
 
 begin_function
 name|int
 name|odd_gpr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -15543,7 +14878,7 @@ argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
-comment|/* assume that reload will give us an even register */
+comment|/* Assume that reload will give us an even register.  */
 if|if
 condition|(
 name|regno
@@ -15583,24 +14918,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is a quad aligned FPR register. */
+comment|/* Return true if operand is a quad aligned FPR register.  */
 end_comment
 
 begin_function
 name|int
 name|quad_fpr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -15717,24 +15048,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an even FPR register. */
+comment|/* Return true if operand is an even FPR register.  */
 end_comment
 
 begin_function
 name|int
 name|even_fpr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -15851,24 +15178,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an odd FPR register. */
+comment|/* Return true if operand is an odd FPR register.  */
 end_comment
 
 begin_function
 name|int
 name|odd_fpr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -15946,7 +15269,7 @@ argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
-comment|/* assume that reload will give us an even register */
+comment|/* Assume that reload will give us an even register.  */
 if|if
 condition|(
 name|regno
@@ -15993,17 +15316,13 @@ begin_function
 name|int
 name|dbl_memory_one_insn_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|addr
@@ -16190,17 +15509,13 @@ begin_function
 name|int
 name|dbl_memory_two_insn_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -16260,17 +15575,13 @@ begin_function
 name|int
 name|move_destination_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|subreg
@@ -16419,17 +15730,13 @@ begin_function
 name|int
 name|move_source_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|subreg
@@ -16601,17 +15908,13 @@ begin_function
 name|int
 name|condexec_dest_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|subreg
@@ -16760,17 +16063,13 @@ begin_function
 name|int
 name|condexec_source_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|subreg
@@ -16931,17 +16230,13 @@ begin_function
 name|int
 name|reg_or_0_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -17003,24 +16298,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is the link register */
+comment|/* Return true if operand is the link register.  */
 end_comment
 
 begin_function
 name|int
 name|lr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -17083,17 +16374,13 @@ begin_function
 name|int
 name|gpr_or_memory_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -17125,17 +16412,13 @@ begin_function
 name|int
 name|fpr_or_memory_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -17160,24 +16443,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an icc register */
+comment|/* Return true if operand is an icc register.  */
 end_comment
 
 begin_function
 name|int
 name|icc_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -17227,24 +16506,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an fcc register */
+comment|/* Return true if operand is an fcc register.  */
 end_comment
 
 begin_function
 name|int
 name|fcc_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -17294,24 +16569,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is either an fcc or icc register */
+comment|/* Return true if operand is either an fcc or icc register.  */
 end_comment
 
 begin_function
 name|int
 name|cc_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -17368,24 +16639,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an integer CCR register */
+comment|/* Return true if operand is an integer CCR register.  */
 end_comment
 
 begin_function
 name|int
 name|icr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -17435,24 +16702,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is an fcc register */
+comment|/* Return true if operand is an fcc register.  */
 end_comment
 
 begin_function
 name|int
 name|fcr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -17502,24 +16765,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operand is either an fcc or icc register */
+comment|/* Return true if operand is either an fcc or icc register.  */
 end_comment
 
 begin_function
 name|int
 name|cr_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -17583,17 +16842,13 @@ begin_function
 name|int
 name|call_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -17643,24 +16898,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operator is an kind of relational operator */
+comment|/* Return true if operator is a kind of relational operator.  */
 end_comment
 
 begin_function
 name|int
 name|relational_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|op0
@@ -17825,24 +17076,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operator is a signed integer relational operator */
+comment|/* Return true if operator is a signed integer relational operator.  */
 end_comment
 
 begin_function
 name|int
 name|signed_relational_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|op0
@@ -17988,24 +17235,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operator is a signed integer relational operator */
+comment|/* Return true if operator is a signed integer relational operator.  */
 end_comment
 
 begin_function
 name|int
 name|unsigned_relational_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|op0
@@ -18145,24 +17388,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return true if operator is a floating point relational operator */
+comment|/* Return true if operator is a floating point relational operator.  */
 end_comment
 
 begin_function
 name|int
 name|float_relational_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|op0
@@ -18321,17 +17560,13 @@ begin_function
 name|int
 name|ccr_eqne_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -18458,17 +17693,13 @@ begin_function
 name|int
 name|minmax_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -18562,17 +17793,13 @@ begin_function
 name|int
 name|condexec_si_binary_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -18647,17 +17874,13 @@ begin_function
 name|int
 name|condexec_si_media_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -18717,17 +17940,13 @@ begin_function
 name|int
 name|condexec_si_divide_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -18784,17 +18003,13 @@ begin_function
 name|int
 name|condexec_si_unary_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -18851,17 +18066,13 @@ begin_function
 name|int
 name|condexec_sf_conv_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -18918,17 +18129,13 @@ begin_function
 name|int
 name|condexec_sf_add_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -18985,17 +18192,13 @@ begin_function
 name|int
 name|condexec_memory_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -19101,17 +18304,13 @@ begin_function
 name|int
 name|intop_compare_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -19214,17 +18413,13 @@ begin_function
 name|int
 name|condexec_intop_cmp_operator
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -19320,24 +18515,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if operand is a valid ACC register number */
+comment|/* Return 1 if operand is a valid ACC register number.  */
 end_comment
 
 begin_function
 name|int
 name|acc_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -19425,24 +18616,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if operand is a valid even ACC register number */
+comment|/* Return 1 if operand is a valid even ACC register number.  */
 end_comment
 
 begin_function
 name|int
 name|even_acc_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -19544,24 +18731,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if operand is zero or four */
+comment|/* Return 1 if operand is zero or four.  */
 end_comment
 
 begin_function
 name|int
 name|quad_acc_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -19663,24 +18846,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if operand is a valid ACCG register number */
+comment|/* Return 1 if operand is a valid ACCG register number.  */
 end_comment
 
 begin_function
 name|int
 name|accg_operand
 parameter_list|(
-name|op
-parameter_list|,
-name|mode
-parameter_list|)
 name|rtx
 name|op
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -19770,7 +18949,9 @@ end_comment
 begin_function
 name|int
 name|direct_return_p
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|frv_stack_t
 modifier|*
@@ -19812,16 +18993,12 @@ begin_function
 name|int
 name|frv_emit_movsi
 parameter_list|(
+name|rtx
 name|dest
 parameter_list|,
+name|rtx
 name|src
 parameter_list|)
-name|rtx
-name|dest
-decl_stmt|;
-name|rtx
-name|src
-decl_stmt|;
 block|{
 name|int
 name|base_regno
@@ -19853,7 +19030,7 @@ name|src
 argument_list|,
 name|SImode
 argument_list|)
-comment|/* Virtual registers will almost always be replaced by an 		add instruction, so expose this to CSE by copying to 		an intermediate register */
+comment|/* Virtual registers will almost always be replaced by an 		add instruction, so expose this to CSE by copying to 		an intermediate register.  */
 operator|||
 operator|(
 name|GET_CODE
@@ -19951,7 +19128,7 @@ name|SYMBOL_REF
 case|:
 if|if
 condition|(
-name|symbol_ref_small_data_p
+name|SYMBOL_REF_SMALL_P
 argument_list|(
 name|src
 argument_list|)
@@ -20037,17 +19214,13 @@ name|char
 modifier|*
 name|output_move_single
 parameter_list|(
-name|operands
-parameter_list|,
-name|insn
-parameter_list|)
 name|rtx
 name|operands
 index|[]
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|dest
@@ -20678,17 +19851,13 @@ name|char
 modifier|*
 name|output_move_double
 parameter_list|(
-name|operands
-parameter_list|,
-name|insn
-parameter_list|)
 name|rtx
 name|operands
 index|[]
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|dest
@@ -21171,17 +20340,13 @@ name|char
 modifier|*
 name|output_condmove_single
 parameter_list|(
-name|operands
-parameter_list|,
-name|insn
-parameter_list|)
 name|rtx
 name|operands
 index|[]
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|dest
@@ -21600,22 +20765,16 @@ specifier|static
 name|rtx
 name|frv_emit_comparison
 parameter_list|(
-name|test
-parameter_list|,
-name|op0
-parameter_list|,
-name|op1
-parameter_list|)
 name|enum
 name|rtx_code
 name|test
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|op0
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|op1
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -21624,7 +20783,7 @@ decl_stmt|;
 name|rtx
 name|cc_reg
 decl_stmt|;
-comment|/* Floating point doesn't have comparison against a constant */
+comment|/* Floating point doesn't have comparison against a constant.  */
 if|if
 condition|(
 name|GET_MODE
@@ -21729,17 +20888,13 @@ begin_function
 name|int
 name|frv_emit_cond_branch
 parameter_list|(
-name|test
-parameter_list|,
-name|label
-parameter_list|)
 name|enum
 name|rtx_code
 name|test
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|label
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|test_rtx
@@ -21836,17 +20991,13 @@ begin_function
 name|int
 name|frv_emit_scc
 parameter_list|(
-name|test
-parameter_list|,
-name|target
-parameter_list|)
 name|enum
 name|rtx_code
 name|test
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|set
@@ -21966,38 +21117,28 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Split a SCC instruction into component parts, returning a SEQUENCE to hold    the seperate insns.  */
+comment|/* Split a SCC instruction into component parts, returning a SEQUENCE to hold    the separate insns.  */
 end_comment
 
 begin_function
 name|rtx
 name|frv_split_scc
 parameter_list|(
-name|dest
-parameter_list|,
-name|test
-parameter_list|,
-name|cc_reg
-parameter_list|,
-name|cr_reg
-parameter_list|,
-name|value
-parameter_list|)
 name|rtx
 name|dest
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|test
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|cc_reg
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|cr_reg
-decl_stmt|;
+parameter_list|,
 name|HOST_WIDE_INT
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|ret
@@ -22100,26 +21241,18 @@ begin_function
 name|int
 name|frv_emit_cond_move
 parameter_list|(
+name|rtx
 name|dest
 parameter_list|,
+name|rtx
 name|test_rtx
 parameter_list|,
+name|rtx
 name|src1
 parameter_list|,
+name|rtx
 name|src2
 parameter_list|)
-name|rtx
-name|dest
-decl_stmt|;
-name|rtx
-name|test_rtx
-decl_stmt|;
-name|rtx
-name|src1
-decl_stmt|;
-name|rtx
-name|src2
-decl_stmt|;
 block|{
 name|rtx
 name|set
@@ -22201,7 +21334,7 @@ argument_list|(
 name|src2
 argument_list|)
 decl_stmt|;
-comment|/* having 0 as one of the constants can be done by loading the other          constant, and optionally moving in gr0.  */
+comment|/* Having 0 as one of the constants can be done by loading the other          constant, and optionally moving in gr0.  */
 if|if
 condition|(
 name|value1
@@ -22433,19 +21566,17 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Split a conditonal move into constituent parts, returning a SEQUENCE    containing all of the insns.  */
+comment|/* Split a conditional move into constituent parts, returning a SEQUENCE    containing all of the insns.  */
 end_comment
 
 begin_function
 name|rtx
 name|frv_split_cond_move
 parameter_list|(
-name|operands
-parameter_list|)
 name|rtx
 name|operands
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|dest
@@ -22572,7 +21703,7 @@ argument_list|(
 name|src2
 argument_list|)
 decl_stmt|;
-comment|/* having 0 as one of the constants can be done by loading the other          constant, and optionally moving in gr0.  */
+comment|/* Having 0 as one of the constants can be done by loading the other          constant, and optionally moving in gr0.  */
 if|if
 condition|(
 name|value1
@@ -22867,16 +21998,12 @@ begin_function
 name|void
 name|frv_split_double_load
 parameter_list|(
+name|rtx
 name|dest
 parameter_list|,
+name|rtx
 name|source
 parameter_list|)
-name|rtx
-name|dest
-decl_stmt|;
-name|rtx
-name|source
-decl_stmt|;
 block|{
 name|int
 name|regno
@@ -23014,16 +22141,12 @@ begin_function
 name|void
 name|frv_split_double_store
 parameter_list|(
+name|rtx
 name|dest
 parameter_list|,
+name|rtx
 name|source
 parameter_list|)
-name|rtx
-name|dest
-decl_stmt|;
-name|rtx
-name|source
-decl_stmt|;
 block|{
 name|rtx
 name|dest1
@@ -23119,12 +22242,10 @@ begin_function
 name|rtx
 name|frv_split_minmax
 parameter_list|(
-name|operands
-parameter_list|)
 name|rtx
 name|operands
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|dest
@@ -23193,7 +22314,7 @@ decl_stmt|;
 name|start_sequence
 argument_list|()
 expr_stmt|;
-comment|/* Figure out which test to use */
+comment|/* Figure out which test to use.  */
 switch|switch
 condition|(
 name|GET_CODE
@@ -23455,12 +22576,10 @@ begin_function
 name|rtx
 name|frv_split_abs
 parameter_list|(
-name|operands
-parameter_list|)
 name|rtx
 name|operands
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|dest
@@ -23542,7 +22661,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Emit the conditional negate if the value is negative */
+comment|/* Emit the conditional negate if the value is negative.  */
 name|emit_insn
 argument_list|(
 name|gen_rtx_COND_EXEC
@@ -23631,18 +22750,14 @@ specifier|static
 name|int
 name|frv_clear_registers_used
 parameter_list|(
-name|ptr
-parameter_list|,
-name|data
-parameter_list|)
 name|rtx
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -23739,13 +22854,11 @@ begin_function
 name|void
 name|frv_ifcvt_init_extra_fields
 parameter_list|(
-name|ce_info
-parameter_list|)
 name|ce_if_block_t
 modifier|*
 name|ce_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|frv_ifcvt
 operator|.
@@ -23810,21 +22923,15 @@ specifier|static
 name|void
 name|frv_ifcvt_add_insn
 parameter_list|(
-name|pattern
-parameter_list|,
-name|insn
-parameter_list|,
-name|before_p
-parameter_list|)
 name|rtx
 name|pattern
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|,
 name|int
 name|before_p
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|link
@@ -23844,7 +22951,7 @@ name|jump
 operator|=
 name|before_p
 expr_stmt|;
-comment|/* mark to add this before or after insn */
+comment|/* Mark to add this before or after insn.  */
 name|frv_ifcvt
 operator|.
 name|added_insns_list
@@ -23908,24 +23015,18 @@ begin_function
 name|void
 name|frv_ifcvt_modify_tests
 parameter_list|(
-name|ce_info
-parameter_list|,
-name|p_true
-parameter_list|,
-name|p_false
-parameter_list|)
 name|ce_if_block_t
 modifier|*
 name|ce_info
-decl_stmt|;
+parameter_list|,
 name|rtx
 modifier|*
 name|p_true
-decl_stmt|;
+parameter_list|,
 name|rtx
 modifier|*
 name|p_false
-decl_stmt|;
+parameter_list|)
 block|{
 name|basic_block
 name|test_bb
@@ -24055,12 +23156,9 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* Figure out which registers we can allocate for our own purposes.  Only      consider registers that are not preserved across function calls and are      not fixed.  However, allow the ICC/ICR temporary registers to be allocated      if we did not need to use them in reloading other registers. */
+comment|/* Figure out which registers we can allocate for our own purposes.  Only      consider registers that are not preserved across function calls and are      not fixed.  However, allow the ICC/ICR temporary registers to be allocated      if we did not need to use them in reloading other registers.  */
 name|memset
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|tmp_reg
 operator|->
@@ -24377,22 +23475,24 @@ block|{
 name|rtx
 name|last_insn
 init|=
+name|BB_END
+argument_list|(
 name|bb
 index|[
 name|j
 index|]
-operator|->
-name|end
+argument_list|)
 decl_stmt|;
 name|rtx
 name|insn
 init|=
+name|BB_HEAD
+argument_list|(
 name|bb
 index|[
 name|j
 index|]
-operator|->
-name|head
+argument_list|)
 decl_stmt|;
 name|int
 name|regno
@@ -24448,12 +23548,13 @@ name|int
 operator|)
 name|INSN_UID
 argument_list|(
+name|BB_HEAD
+argument_list|(
 name|bb
 index|[
 name|j
 index|]
-operator|->
-name|head
+argument_list|)
 argument_list|)
 argument_list|,
 operator|(
@@ -24461,12 +23562,13 @@ name|int
 operator|)
 name|INSN_UID
 argument_list|(
+name|BB_END
+argument_list|(
 name|bb
 index|[
 name|j
 index|]
-operator|->
-name|end
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -24482,7 +23584,7 @@ argument_list|,
 argument|{ 				   if (regno< FIRST_PSEUDO_REGISTER) 				     CLEAR_HARD_REG_BIT (tmp_reg->regs, regno); 				 }
 argument_list|)
 empty_stmt|;
-comment|/* loop through the insns in the block.  */
+comment|/* Loop through the insns in the block.  */
 for|for
 control|(
 init|;
@@ -25297,9 +24399,10 @@ name|frv_ifcvt_add_insn
 argument_list|(
 name|check_insn
 argument_list|,
+name|BB_END
+argument_list|(
 name|test_bb
-operator|->
-name|end
+argument_list|)
 argument_list|,
 name|TRUE
 argument_list|)
@@ -25389,29 +24492,21 @@ begin_function
 name|void
 name|frv_ifcvt_modify_multiple_tests
 parameter_list|(
-name|ce_info
-parameter_list|,
-name|bb
-parameter_list|,
-name|p_true
-parameter_list|,
-name|p_false
-parameter_list|)
 name|ce_if_block_t
 modifier|*
 name|ce_info
-decl_stmt|;
+parameter_list|,
 name|basic_block
 name|bb
-decl_stmt|;
+parameter_list|,
 name|rtx
 modifier|*
 name|p_true
-decl_stmt|;
+parameter_list|,
 name|rtx
 modifier|*
 name|p_false
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|old_true
@@ -25794,9 +24889,10 @@ argument_list|,
 name|new_cr
 argument_list|)
 argument_list|,
+name|BB_END
+argument_list|(
 name|bb
-operator|->
-name|end
+argument_list|)
 argument_list|,
 name|TRUE
 argument_list|)
@@ -25851,14 +24947,15 @@ argument_list|,
 name|if_else
 argument_list|)
 expr_stmt|;
-comment|/* add the new check insn to the list of check insns that need to be      inserted.  */
+comment|/* Add the new check insn to the list of check insns that need to be      inserted.  */
 name|frv_ifcvt_add_insn
 argument_list|(
 name|check_insn
 argument_list|,
+name|BB_END
+argument_list|(
 name|bb
-operator|->
-name|end
+argument_list|)
 argument_list|,
 name|TRUE
 argument_list|)
@@ -25906,7 +25003,7 @@ name|p_false
 operator|=
 name|NULL_RTX
 expr_stmt|;
-comment|/* If we allocated a CR register, release it. */
+comment|/* If we allocated a CR register, release it.  */
 if|if
 condition|(
 name|new_cr
@@ -25959,17 +25056,13 @@ specifier|static
 name|rtx
 name|frv_ifcvt_load_value
 parameter_list|(
-name|value
-parameter_list|,
-name|insn
-parameter_list|)
 name|rtx
 name|value
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|insn
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|num_alloc
@@ -26068,7 +25161,7 @@ argument_list|)
 return|;
 block|}
 block|}
-comment|/* Have we exhausted the number of registers available? */
+comment|/* Have we exhausted the number of registers available?  */
 if|if
 condition|(
 name|num_alloc
@@ -26256,22 +25349,16 @@ specifier|static
 name|rtx
 name|frv_ifcvt_rewrite_mem
 parameter_list|(
-name|mem
-parameter_list|,
-name|mode
-parameter_list|,
-name|insn
-parameter_list|)
 name|rtx
 name|mem
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|addr
@@ -26468,11 +25555,9 @@ specifier|static
 name|rtx
 name|single_set_pattern
 parameter_list|(
-name|pattern
-parameter_list|)
 name|rtx
 name|pattern
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|set
@@ -26612,23 +25697,16 @@ begin_function
 name|rtx
 name|frv_ifcvt_modify_insn
 parameter_list|(
-name|ce_info
-parameter_list|,
-name|pattern
-parameter_list|,
-name|insn
-parameter_list|)
 name|ce_if_block_t
 modifier|*
 name|ce_info
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|pattern
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|orig_ce_pattern
@@ -26877,7 +25955,7 @@ argument_list|(
 name|dest
 argument_list|)
 decl_stmt|;
-comment|/* Check for normal binary operators */
+comment|/* Check for normal binary operators.  */
 if|if
 condition|(
 name|mode
@@ -27174,6 +26252,51 @@ argument_list|(
 name|insn
 argument_list|)
 argument_list|)
+comment|/* We must not unconditionally set a reg set used as 		  scratch in the THEN branch if the same reg is live 		  in the ELSE branch.  */
+operator|&&
+name|REG_P
+argument_list|(
+name|SET_DEST
+argument_list|(
+name|set
+argument_list|)
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|ce_info
+operator|->
+name|else_bb
+operator|||
+name|BLOCK_FOR_INSN
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|ce_info
+operator|->
+name|else_bb
+operator|||
+operator|!
+operator|(
+name|REGNO_REG_SET_P
+argument_list|(
+name|ce_info
+operator|->
+name|else_bb
+operator|->
+name|global_live_at_start
+argument_list|,
+name|REGNO
+argument_list|(
+name|SET_DEST
+argument_list|(
+name|set
+argument_list|)
+argument_list|)
+argument_list|)
+operator|)
+operator|)
 condition|)
 name|pattern
 operator|=
@@ -27674,13 +26797,11 @@ begin_function
 name|void
 name|frv_ifcvt_modify_final
 parameter_list|(
-name|ce_info
-parameter_list|)
 name|ce_if_block_t
 modifier|*
 name|ce_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|existing_insn
@@ -27893,13 +27014,11 @@ begin_function
 name|void
 name|frv_ifcvt_modify_cancel
 parameter_list|(
-name|ce_info
-parameter_list|)
 name|ce_if_block_t
 modifier|*
 name|ce_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -28005,7 +27124,9 @@ end_comment
 begin_function
 name|int
 name|frv_trampoline_size
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|5
@@ -28028,21 +27149,15 @@ begin_function
 name|void
 name|frv_initialize_trampoline
 parameter_list|(
+name|rtx
 name|addr
 parameter_list|,
+name|rtx
 name|fnaddr
 parameter_list|,
+name|rtx
 name|static_chain
 parameter_list|)
-name|rtx
-name|addr
-decl_stmt|;
-name|rtx
-name|fnaddr
-decl_stmt|;
-name|rtx
-name|static_chain
-decl_stmt|;
 block|{
 name|rtx
 name|sc_reg
@@ -28105,30 +27220,22 @@ name|enum
 name|reg_class
 name|frv_secondary_reload_class
 parameter_list|(
-name|class
-parameter_list|,
-name|mode
-parameter_list|,
-name|x
-parameter_list|,
-name|in_p
-parameter_list|)
 name|enum
 name|reg_class
 name|class
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|int
 name|in_p
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|reg_class
@@ -28298,12 +27405,10 @@ begin_function
 name|int
 name|frv_class_likely_spilled_p
 parameter_list|(
-name|class
-parameter_list|)
 name|enum
 name|reg_class
 name|class
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -28365,7 +27470,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* An expression for the alignment of a structure field FIELD if the    alignment computed in the usual way is COMPUTED.  GNU CC uses this    value instead of the value in `BIGGEST_ALIGNMENT' or    `BIGGEST_FIELD_ALIGNMENT', if defined, for structure fields only.  */
+comment|/* An expression for the alignment of a structure field FIELD if the    alignment computed in the usual way is COMPUTED.  GCC uses this    value instead of the value in `BIGGEST_ALIGNMENT' or    `BIGGEST_FIELD_ALIGNMENT', if defined, for structure fields only.  */
 end_comment
 
 begin_comment
@@ -28376,18 +27481,14 @@ begin_function
 name|int
 name|frv_adjust_field_align
 parameter_list|(
-name|field
-parameter_list|,
-name|computed
-parameter_list|)
 name|tree
 name|field
-decl_stmt|;
+parameter_list|,
 name|int
 name|computed
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* C++ provides a null DECL_CONTEXT if the bit field is wider than its      type.  */
+comment|/* Make sure that the bitfield is not wider than the type.  */
 if|if
 condition|(
 name|DECL_BIT_FIELD
@@ -28395,7 +27496,8 @@ argument_list|(
 name|field
 argument_list|)
 operator|&&
-name|DECL_CONTEXT
+operator|!
+name|DECL_ARTIFICIAL
 argument_list|(
 name|field
 argument_list|)
@@ -28417,7 +27519,6 @@ decl_stmt|;
 name|tree
 name|cur
 decl_stmt|;
-comment|/* Loop finding the previous field to the current one */
 for|for
 control|(
 name|cur
@@ -28464,7 +27565,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* If this isn't a :0 field and if the previous element is a bitfield 	 also, see if the type is different, if so, we will need to align the 	 bit-field to the next boundary */
+comment|/* If this isn't a :0 field and if the previous element is a bitfield 	 also, see if the type is different, if so, we will need to align the 	 bit-field to the next boundary.  */
 if|if
 condition|(
 name|prev
@@ -28548,17 +27649,13 @@ begin_function
 name|int
 name|frv_hard_regno_mode_ok
 parameter_list|(
-name|regno
-parameter_list|,
-name|mode
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|base
@@ -28670,6 +27767,10 @@ name|GPR_P
 argument_list|(
 name|regno
 argument_list|)
+operator|||
+name|regno
+operator|==
+name|AP_FIRST
 condition|)
 name|base
 operator|=
@@ -28699,6 +27800,20 @@ name|base
 operator|=
 name|ACC_FIRST
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|SPR_P
+argument_list|(
+name|regno
+argument_list|)
+condition|)
+return|return
+name|mode
+operator|==
+name|SImode
+return|;
+comment|/* Fill in the table.  */
 else|else
 return|return
 literal|0
@@ -28767,17 +27882,13 @@ begin_function
 name|int
 name|frv_hard_regno_nregs
 parameter_list|(
-name|regno
-parameter_list|,
-name|mode
-parameter_list|)
 name|int
 name|regno
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -28821,18 +27932,14 @@ begin_function
 name|int
 name|frv_class_max_nregs
 parameter_list|(
-name|class
-parameter_list|,
-name|mode
-parameter_list|)
 name|enum
 name|reg_class
 name|class
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -28876,11 +27983,9 @@ begin_function
 name|int
 name|frv_legitimate_constant_p
 parameter_list|(
-name|x
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -28891,7 +27996,7 @@ argument_list|(
 name|x
 argument_list|)
 decl_stmt|;
-comment|/* All of the integer constants are ok */
+comment|/* All of the integer constants are ok.  */
 if|if
 condition|(
 name|GET_CODE
@@ -28904,7 +28009,7 @@ condition|)
 return|return
 name|TRUE
 return|;
-comment|/* double integer constants are ok */
+comment|/* double integer constants are ok.  */
 if|if
 condition|(
 name|mode
@@ -28918,7 +28023,7 @@ condition|)
 return|return
 name|TRUE
 return|;
-comment|/* 0 is always ok */
+comment|/* 0 is always ok.  */
 if|if
 condition|(
 name|x
@@ -28931,7 +28036,7 @@ condition|)
 return|return
 name|TRUE
 return|;
-comment|/* If floating point is just emulated, allow any constant, since it will be      constructed in the GPRs */
+comment|/* If floating point is just emulated, allow any constant, since it will be      constructed in the GPRs.  */
 if|if
 condition|(
 operator|!
@@ -28991,18 +28096,14 @@ begin_function
 name|int
 name|frv_register_move_cost
 parameter_list|(
+name|enum
+name|reg_class
 name|from
 parameter_list|,
+name|enum
+name|reg_class
 name|to
 parameter_list|)
-name|enum
-name|reg_class
-name|from
-decl_stmt|;
-name|enum
-name|reg_class
-name|to
-decl_stmt|;
 block|{
 switch|switch
 condition|(
@@ -29185,22 +28286,16 @@ specifier|static
 name|bool
 name|frv_assemble_integer
 parameter_list|(
-name|value
-parameter_list|,
-name|size
-parameter_list|,
-name|aligned_p
-parameter_list|)
 name|rtx
 name|value
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|size
-decl_stmt|;
+parameter_list|,
 name|int
 name|aligned_p
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -29367,7 +28462,9 @@ name|struct
 name|machine_function
 modifier|*
 name|frv_init_machine_status
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ggc_alloc_cleared
@@ -29386,6 +28483,84 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Implement TARGET_SCHED_ISSUE_RATE.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|frv_issue_rate
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|TARGET_PACK
+condition|)
+return|return
+literal|1
+return|;
+switch|switch
+condition|(
+name|frv_cpu_type
+condition|)
+block|{
+default|default:
+case|case
+name|FRV_CPU_FR300
+case|:
+case|case
+name|FRV_CPU_SIMPLE
+case|:
+return|return
+literal|1
+return|;
+case|case
+name|FRV_CPU_FR400
+case|:
+return|return
+literal|2
+return|;
+case|case
+name|FRV_CPU_GENERIC
+case|:
+case|case
+name|FRV_CPU_FR500
+case|:
+case|case
+name|FRV_CPU_TOMCAT
+case|:
+return|return
+literal|4
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Implement TARGET_SCHED_USE_DFA_PIPELINE_INTERFACE.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|frv_use_dfa_pipeline_interface
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* Update the register state information, to know about which registers are set    or clobbered.  */
 end_comment
 
@@ -29394,35 +28569,25 @@ specifier|static
 name|void
 name|frv_registers_update
 parameter_list|(
-name|x
-parameter_list|,
-name|reg_state
-parameter_list|,
-name|modified
-parameter_list|,
-name|p_num_mod
-parameter_list|,
-name|flag
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 name|reg_state
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 name|modified
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|p_num_mod
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -29780,7 +28945,7 @@ name|x
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* Fall through.  */
 name|reg_common
 label|:
 if|if
@@ -30018,23 +29183,17 @@ specifier|static
 name|int
 name|frv_registers_used_p
 parameter_list|(
-name|x
-parameter_list|,
-name|reg_state
-parameter_list|,
-name|flag
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 name|reg_state
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -30074,7 +29233,7 @@ condition|)
 block|{
 default|default:
 break|break;
-comment|/* Skip clobber, that doesn't use the previous value */
+comment|/* Skip clobber, that doesn't use the previous value.  */
 case|case
 name|CLOBBER
 case|:
@@ -30419,7 +29578,7 @@ name|x
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* Fall through.  */
 name|reg_common
 label|:
 while|while
@@ -30472,7 +29631,7 @@ condition|)
 return|return
 name|TRUE
 return|;
-comment|/* See if the variable is only modified in a conditional 		 execution expression opposite to the conditional execution 		 expression that governs this expression (ie, true vs. false 		 for the same CC register).  If this isn't two halves of the 		 same conditional expression, consider the register 		 modified. */
+comment|/* See if the variable is only modified in a conditional 		 execution expression opposite to the conditional execution 		 expression that governs this expression (ie, true vs. false 		 for the same CC register).  If this isn't two halves of the 		 same conditional expression, consider the register 		 modified.  */
 if|if
 condition|(
 operator|(
@@ -30686,23 +29845,17 @@ specifier|static
 name|int
 name|frv_registers_set_p
 parameter_list|(
-name|x
-parameter_list|,
-name|reg_state
-parameter_list|,
-name|modify_p
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 name|reg_state
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 name|modify_p
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -30803,7 +29956,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* just to be sure, make sure it is the type of cond_exec we          expect.  */
+comment|/* Just to be sure, make sure it is the type of cond_exec we          expect.  */
 if|if
 condition|(
 operator|(
@@ -30980,7 +30133,7 @@ name|x
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* Fall through.  */
 name|reg_common
 label|:
 if|if
@@ -31161,10 +30314,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* In rare cases, correct code generation requires extra machine dependent    processing between the second jump optimization pass and delayed branch    scheduling.  On those machines, define this macro as a C statement to act on    the code starting at INSN.  */
-end_comment
-
-begin_comment
 comment|/* On the FR-V, this pass is used to rescan the insn chain, and pack    conditional branches/calls/jumps, etc. with previous insns where it can.  It    does not reorder the instructions.  We assume the scheduler left the flow    information in a reasonable state.  */
 end_comment
 
@@ -31172,7 +30321,9 @@ begin_function
 specifier|static
 name|void
 name|frv_pack_insns
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|state_t
 name|frv_state
@@ -31234,37 +30385,13 @@ operator|!
 name|flag_schedule_insns_after_reload
 operator|||
 name|TARGET_NO_VLIW_BRANCH
+operator|||
+name|frv_issue_rate
+argument_list|()
+operator|==
+literal|1
 condition|)
 return|return;
-switch|switch
-condition|(
-name|frv_cpu_type
-condition|)
-block|{
-default|default:
-case|case
-name|FRV_CPU_FR300
-case|:
-comment|/* FR300/simple are single issue */
-case|case
-name|FRV_CPU_SIMPLE
-case|:
-return|return;
-case|case
-name|FRV_CPU_GENERIC
-case|:
-comment|/* FR-V and FR500 are multi-issue */
-case|case
-name|FRV_CPU_FR400
-case|:
-case|case
-name|FRV_CPU_FR500
-case|:
-case|case
-name|FRV_CPU_TOMCAT
-case|:
-break|break;
-block|}
 comment|/* Set up the instruction and register states.  */
 name|dfa_start
 argument_list|()
@@ -31282,9 +30409,6 @@ argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|reg_state
 argument_list|,
 name|REGSTATE_DEAD
@@ -31417,7 +30541,7 @@ empty_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/* things like labels reset everything.  */
+comment|/* Things like labels reset everything.  */
 if|if
 condition|(
 name|GET_RTX_CLASS
@@ -31434,7 +30558,7 @@ name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Clear the VLIW start flag on random USE and CLOBBER insns, which is          set on the USE insn that preceeds the return, and potentially on          CLOBBERs for setting multiword variables.  Also skip the ADDR_VEC          holding the case table labels.  */
+comment|/* Clear the VLIW start flag on random USE and CLOBBER insns, which is          set on the USE insn that precedes the return, and potentially on          CLOBBERs for setting multiword variables.  Also skip the ADDR_VEC          holding the case table labels.  */
 name|pattern_code
 operator|=
 name|GET_CODE
@@ -31565,7 +30689,7 @@ comment|/* Determine if we need to start a new VLIW instruction.  */
 if|if
 condition|(
 name|cur_start_vliw_p
-comment|/* Do not check for register conflicts in a setlo instruction 	     because any output or true dependencies will be with the 	     partnering sethi instruction, with which it can be packed.  	     Although output dependencies are rare they are still 	     possible.  So check output dependencies in VLIW insn. */
+comment|/* Do not check for register conflicts in a setlo instruction 	     because any output or true dependencies will be with the 	     partnering sethi instruction, with which it can be packed.  	     Although output dependencies are rare they are still 	     possible.  So check output dependencies in VLIW insn.  */
 operator|||
 operator|(
 name|get_attr_type
@@ -31693,7 +30817,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Process the death notices */
+comment|/* Process the death notices.  */
 for|for
 control|(
 name|link
@@ -31790,9 +30914,6 @@ block|}
 block|}
 name|free
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|frv_state
 argument_list|)
 expr_stmt|;
@@ -31878,7 +30999,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Media intrinsics that take just one argument. */
+comment|/* Media intrinsics that take just one argument.  */
 end_comment
 
 begin_decl_stmt
@@ -31953,7 +31074,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Media intrinsics that take two arguments. */
+comment|/* Media intrinsics that take two arguments.  */
 end_comment
 
 begin_decl_stmt
@@ -32259,7 +31380,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Two-argument media intrinsics with an immediate second argument. */
+comment|/* Two-argument media intrinsics with an immediate second argument.  */
 end_comment
 
 begin_decl_stmt
@@ -32454,7 +31575,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Media intrinsics that take two arguments and return void, the first argument    being a pointer to 4 words in memory. */
+comment|/* Media intrinsics that take two arguments and return void, the first argument    being a pointer to 4 words in memory.  */
 end_comment
 
 begin_decl_stmt
@@ -32493,7 +31614,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Media intrinsics that take three arguments, the first being a const_int that    denotes an accumulator, and that return void. */
+comment|/* Media intrinsics that take three arguments, the first being a const_int that    denotes an accumulator, and that return void.  */
 end_comment
 
 begin_decl_stmt
@@ -32895,14 +32016,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initialize media builtins. */
+comment|/* Initialize media builtins.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|frv_init_builtins
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tree
 name|endlink
@@ -34114,6 +33237,355 @@ block|}
 end_function
 
 begin_comment
+comment|/* Set the names for various arithmetic operations according to the    FRV ABI.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|frv_init_libfuncs
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|set_optab_libfunc
+argument_list|(
+name|smod_optab
+argument_list|,
+name|SImode
+argument_list|,
+literal|"__modi"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|umod_optab
+argument_list|,
+name|SImode
+argument_list|,
+literal|"__umodi"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|add_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__addll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|sub_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__subll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|smul_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__mulll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|sdiv_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__divll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|smod_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__modll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|umod_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__umodll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|and_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__andll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|ior_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__orll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|xor_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__xorll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|one_cmpl_optab
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__notll"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|add_optab
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__addf"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|sub_optab
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__subf"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|smul_optab
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__mulf"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|sdiv_optab
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__divf"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|add_optab
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__addd"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|sub_optab
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__subd"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|smul_optab
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__muld"
+argument_list|)
+expr_stmt|;
+name|set_optab_libfunc
+argument_list|(
+name|sdiv_optab
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__divd"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sext_optab
+argument_list|,
+name|DFmode
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__ftod"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|trunc_optab
+argument_list|,
+name|SFmode
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__dtof"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sfix_optab
+argument_list|,
+name|SImode
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__ftoi"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sfix_optab
+argument_list|,
+name|DImode
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__ftoll"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sfix_optab
+argument_list|,
+name|SImode
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__dtoi"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sfix_optab
+argument_list|,
+name|DImode
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__dtoll"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|ufix_optab
+argument_list|,
+name|SImode
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__ftoui"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|ufix_optab
+argument_list|,
+name|DImode
+argument_list|,
+name|SFmode
+argument_list|,
+literal|"__ftoull"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|ufix_optab
+argument_list|,
+name|SImode
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__dtoui"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|ufix_optab
+argument_list|,
+name|DImode
+argument_list|,
+name|DFmode
+argument_list|,
+literal|"__dtoull"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sfloat_optab
+argument_list|,
+name|SFmode
+argument_list|,
+name|SImode
+argument_list|,
+literal|"__itof"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sfloat_optab
+argument_list|,
+name|SFmode
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__lltof"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sfloat_optab
+argument_list|,
+name|DFmode
+argument_list|,
+name|SImode
+argument_list|,
+literal|"__itod"
+argument_list|)
+expr_stmt|;
+name|set_conv_libfunc
+argument_list|(
+name|sfloat_optab
+argument_list|,
+name|DFmode
+argument_list|,
+name|DImode
+argument_list|,
+literal|"__lltod"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Convert an integer constant to an accumulator register.  ICODE is the    code of the target instruction, OPNUM is the number of the    accumulator operand and OPVAL is the constant integer.  Try both    ACC and ACCG registers; only report an error if neither fit the    instruction.  */
 end_comment
 
@@ -34122,22 +33594,16 @@ specifier|static
 name|rtx
 name|frv_int_to_acc
 parameter_list|(
-name|icode
-parameter_list|,
-name|opnum
-parameter_list|,
-name|opval
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|int
 name|opnum
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|opval
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|reg
@@ -34303,12 +33769,10 @@ name|enum
 name|machine_mode
 name|frv_matching_accg_mode
 parameter_list|(
-name|mode
-parameter_list|)
 name|enum
 name|machine_mode
 name|mode
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -34349,11 +33813,9 @@ begin_function
 name|rtx
 name|frv_matching_accg_for_acc
 parameter_list|(
-name|acc
-parameter_list|)
 name|rtx
 name|acc
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|gen_rtx_REG
@@ -34388,12 +33850,10 @@ specifier|static
 name|rtx
 name|frv_read_argument
 parameter_list|(
-name|arglistptr
-parameter_list|)
 name|tree
 modifier|*
 name|arglistptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|next
@@ -34437,22 +33897,16 @@ specifier|static
 name|int
 name|frv_check_constant_argument
 parameter_list|(
-name|icode
-parameter_list|,
-name|opnum
-parameter_list|,
-name|opval
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|int
 name|opnum
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|opval
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -34535,17 +33989,13 @@ specifier|static
 name|rtx
 name|frv_legitimize_target
 parameter_list|(
-name|icode
-parameter_list|,
-name|target
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -34610,7 +34060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given that ARG is being passed as operand OPNUM to instruction ICODE,    check whether ARG satisfies the operand's contraints.  If it doesn't,    copy ARG to a temporary register and return that.  Otherwise return ARG    itself.  */
+comment|/* Given that ARG is being passed as operand OPNUM to instruction ICODE,    check whether ARG satisfies the operand's constraints.  If it doesn't,    copy ARG to a temporary register and return that.  Otherwise return ARG    itself.  */
 end_comment
 
 begin_function
@@ -34618,22 +34068,16 @@ specifier|static
 name|rtx
 name|frv_legitimize_argument
 parameter_list|(
-name|icode
-parameter_list|,
-name|opnum
-parameter_list|,
-name|arg
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|int
 name|opnum
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|machine_mode
@@ -34697,22 +34141,16 @@ specifier|static
 name|rtx
 name|frv_expand_set_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|,
-name|target
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -34782,7 +34220,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Expand builtins that take one operand. */
+comment|/* Expand builtins that take one operand.  */
 end_comment
 
 begin_function
@@ -34790,22 +34228,16 @@ specifier|static
 name|rtx
 name|frv_expand_unop_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|,
-name|target
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -34871,7 +34303,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Expand builtins that take two operands. */
+comment|/* Expand builtins that take two operands.  */
 end_comment
 
 begin_function
@@ -34879,22 +34311,16 @@ specifier|static
 name|rtx
 name|frv_expand_binop_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|,
-name|target
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -34982,7 +34408,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Expand cut-style builtins, which take two operands and an implicit ACCG    one. */
+comment|/* Expand cut-style builtins, which take two operands and an implicit ACCG    one.  */
 end_comment
 
 begin_function
@@ -34990,22 +34416,16 @@ specifier|static
 name|rtx
 name|frv_expand_cut_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|,
-name|target
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -35144,7 +34564,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Expand builtins that take two operands and the second is immediate. */
+comment|/* Expand builtins that take two operands and the second is immediate.  */
 end_comment
 
 begin_function
@@ -35152,22 +34572,16 @@ specifier|static
 name|rtx
 name|frv_expand_binopimm_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|,
-name|target
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|target
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -35259,7 +34673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Expand builtins that take two operands, the first operand being a pointer to    ints and return void. */
+comment|/* Expand builtins that take two operands, the first operand being a pointer to    ints and return void.  */
 end_comment
 
 begin_function
@@ -35267,17 +34681,13 @@ specifier|static
 name|rtx
 name|frv_expand_voidbinop_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -35469,17 +34879,13 @@ specifier|static
 name|rtx
 name|frv_expand_voidtriop_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -35606,17 +35012,13 @@ specifier|static
 name|rtx
 name|frv_expand_voidaccop_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -35741,11 +35143,9 @@ specifier|static
 name|rtx
 name|frv_expand_mclracc_builtin
 parameter_list|(
-name|arglist
-parameter_list|)
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|insn_code
@@ -35818,12 +35218,10 @@ specifier|static
 name|rtx
 name|frv_expand_noargs_builtin
 parameter_list|(
-name|icode
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -35863,17 +35261,13 @@ specifier|static
 name|rtx
 name|frv_expand_mrdacc_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -35954,17 +35348,13 @@ specifier|static
 name|rtx
 name|frv_expand_mwtacc_builtin
 parameter_list|(
-name|icode
-parameter_list|,
-name|arglist
-parameter_list|)
 name|enum
 name|insn_code
 name|icode
-decl_stmt|;
+parameter_list|,
 name|tree
 name|arglist
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|pat
@@ -36045,7 +35435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Expand builtins. */
+comment|/* Expand builtins.  */
 end_comment
 
 begin_function
@@ -36053,35 +35443,25 @@ specifier|static
 name|rtx
 name|frv_expand_builtin
 parameter_list|(
-name|exp
-parameter_list|,
-name|target
-parameter_list|,
-name|subtarget
-parameter_list|,
-name|mode
-parameter_list|,
-name|ignore
-parameter_list|)
 name|tree
 name|exp
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|target
-decl_stmt|;
+parameter_list|,
 name|rtx
 name|subtarget
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_mode
 name|mode
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|ignore
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|arglist
@@ -36257,7 +35637,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* Expand unique builtins. */
+comment|/* Expand unique builtins.  */
 switch|switch
 condition|(
 name|fcode
@@ -36348,7 +35728,7 @@ return|;
 default|default:
 break|break;
 block|}
-comment|/* Expand groups of builtins. */
+comment|/* Expand groups of builtins.  */
 for|for
 control|(
 name|i
@@ -36361,14 +35741,10 @@ name|bdesc_set
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|bdesc_set
 argument_list|)
-operator|/
-sizeof|sizeof
-expr|*
-name|d
 condition|;
 name|i
 operator|++
@@ -36408,14 +35784,10 @@ name|bdesc_1arg
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|bdesc_1arg
 argument_list|)
-operator|/
-sizeof|sizeof
-expr|*
-name|d
 condition|;
 name|i
 operator|++
@@ -36455,14 +35827,10 @@ name|bdesc_2arg
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|bdesc_2arg
 argument_list|)
-operator|/
-sizeof|sizeof
-expr|*
-name|d
 condition|;
 name|i
 operator|++
@@ -36502,14 +35870,10 @@ name|bdesc_cut
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|bdesc_cut
 argument_list|)
-operator|/
-sizeof|sizeof
-expr|*
-name|d
 condition|;
 name|i
 operator|++
@@ -36549,14 +35913,10 @@ name|bdesc_2argimm
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|bdesc_2argimm
 argument_list|)
-operator|/
-sizeof|sizeof
-expr|*
-name|d
 condition|;
 name|i
 operator|++
@@ -36564,7 +35924,6 @@ operator|,
 name|d
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|d
@@ -36585,7 +35944,6 @@ argument_list|,
 name|target
 argument_list|)
 return|;
-block|}
 for|for
 control|(
 name|i
@@ -36598,14 +35956,10 @@ name|bdesc_void2arg
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|bdesc_void2arg
 argument_list|)
-operator|/
-sizeof|sizeof
-expr|*
-name|d
 condition|;
 name|i
 operator|++
@@ -36613,7 +35967,6 @@ operator|,
 name|d
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|d
@@ -36632,7 +35985,6 @@ argument_list|,
 name|arglist
 argument_list|)
 return|;
-block|}
 for|for
 control|(
 name|i
@@ -36645,14 +35997,10 @@ name|bdesc_void3arg
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|bdesc_void3arg
 argument_list|)
-operator|/
-sizeof|sizeof
-expr|*
-name|d
 condition|;
 name|i
 operator|++
@@ -36660,7 +36008,6 @@ operator|,
 name|d
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|d
@@ -36679,7 +36026,6 @@ argument_list|,
 name|arglist
 argument_list|)
 return|;
-block|}
 for|for
 control|(
 name|i
@@ -36692,14 +36038,10 @@ name|bdesc_voidacc
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|ARRAY_SIZE
 argument_list|(
 name|bdesc_voidacc
 argument_list|)
-operator|/
-sizeof|sizeof
-expr|*
-name|d
 condition|;
 name|i
 operator|++
@@ -36707,7 +36049,6 @@ operator|,
 name|d
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|d
@@ -36726,45 +36067,8 @@ argument_list|,
 name|arglist
 argument_list|)
 return|;
-block|}
 return|return
 literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|frv_strip_name_encoding
-parameter_list|(
-name|str
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|str
-decl_stmt|;
-block|{
-while|while
-condition|(
-operator|*
-name|str
-operator|==
-literal|'*'
-operator|||
-operator|*
-name|str
-operator|==
-name|SDATA_FLAG_CHAR
-condition|)
-name|str
-operator|++
-expr_stmt|;
-return|return
-name|str
 return|;
 block|}
 end_function
@@ -36774,15 +36078,89 @@ specifier|static
 name|bool
 name|frv_in_small_data_p
 parameter_list|(
-name|decl
-parameter_list|)
 name|tree
 name|decl
-decl_stmt|;
+parameter_list|)
 block|{
 name|HOST_WIDE_INT
 name|size
-init|=
+decl_stmt|;
+name|tree
+name|section_name
+decl_stmt|;
+comment|/* Don't apply the -G flag to internal compiler structures.  We      should leave such structures in the main data section, partly      for efficiency and partly because the size of some of them      (such as C++ typeinfos) is not known until later.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|!=
+name|VAR_DECL
+operator|||
+name|DECL_ARTIFICIAL
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|/* If we already know which section the decl should be in, see if      it's a small data section.  */
+name|section_name
+operator|=
+name|DECL_SECTION_NAME
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|section_name
+condition|)
+block|{
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|section_name
+argument_list|)
+operator|!=
+name|STRING_CST
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|frv_string_begins_with
+argument_list|(
+name|section_name
+argument_list|,
+literal|".sdata"
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|frv_string_begins_with
+argument_list|(
+name|section_name
+argument_list|,
+literal|".sbss"
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+name|size
+operator|=
 name|int_size_in_bytes
 argument_list|(
 name|TREE_TYPE
@@ -36790,29 +36168,318 @@ argument_list|(
 name|decl
 argument_list|)
 argument_list|)
-decl_stmt|;
-return|return
-name|symbol_ref_small_data_p
-argument_list|(
-name|XEXP
-argument_list|(
-name|DECL_RTL
-argument_list|(
-name|decl
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-operator|&&
+expr_stmt|;
+if|if
+condition|(
 name|size
 operator|>
 literal|0
 operator|&&
+operator|(
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
 name|size
 operator|<=
 name|g_switch_value
+condition|)
+return|return
+name|true
 return|;
+return|return
+name|false
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_function
+specifier|static
+name|bool
+name|frv_rtx_costs
+parameter_list|(
+name|rtx
+name|x
+parameter_list|,
+name|int
+name|code
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|int
+name|outer_code
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|int
+modifier|*
+name|total
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|code
+condition|)
+block|{
+case|case
+name|CONST_INT
+case|:
+comment|/* Make 12 bit integers really cheap.  */
+if|if
+condition|(
+name|IN_RANGE_P
+argument_list|(
+name|INTVAL
+argument_list|(
+name|x
+argument_list|)
+argument_list|,
+operator|-
+literal|2048
+argument_list|,
+literal|2047
+argument_list|)
+condition|)
+block|{
+operator|*
+name|total
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+comment|/* Fall through.  */
+case|case
+name|CONST
+case|:
+case|case
+name|LABEL_REF
+case|:
+case|case
+name|SYMBOL_REF
+case|:
+case|case
+name|CONST_DOUBLE
+case|:
+operator|*
+name|total
+operator|=
+name|COSTS_N_INSNS
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+case|case
+name|PLUS
+case|:
+case|case
+name|MINUS
+case|:
+case|case
+name|AND
+case|:
+case|case
+name|IOR
+case|:
+case|case
+name|XOR
+case|:
+case|case
+name|ASHIFT
+case|:
+case|case
+name|ASHIFTRT
+case|:
+case|case
+name|LSHIFTRT
+case|:
+case|case
+name|NOT
+case|:
+case|case
+name|NEG
+case|:
+case|case
+name|COMPARE
+case|:
+if|if
+condition|(
+name|GET_MODE
+argument_list|(
+name|x
+argument_list|)
+operator|==
+name|SImode
+condition|)
+operator|*
+name|total
+operator|=
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|GET_MODE
+argument_list|(
+name|x
+argument_list|)
+operator|==
+name|DImode
+condition|)
+operator|*
+name|total
+operator|=
+name|COSTS_N_INSNS
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+name|total
+operator|=
+name|COSTS_N_INSNS
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+case|case
+name|MULT
+case|:
+if|if
+condition|(
+name|GET_MODE
+argument_list|(
+name|x
+argument_list|)
+operator|==
+name|SImode
+condition|)
+operator|*
+name|total
+operator|=
+name|COSTS_N_INSNS
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+name|total
+operator|=
+name|COSTS_N_INSNS
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* guess */
+return|return
+name|true
+return|;
+case|case
+name|DIV
+case|:
+case|case
+name|UDIV
+case|:
+case|case
+name|MOD
+case|:
+case|case
+name|UMOD
+case|:
+operator|*
+name|total
+operator|=
+name|COSTS_N_INSNS
+argument_list|(
+literal|18
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_function
+specifier|static
+name|void
+name|frv_asm_out_constructor
+parameter_list|(
+name|rtx
+name|symbol
+parameter_list|,
+name|int
+name|priority
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+name|ctors_section
+argument_list|()
+expr_stmt|;
+name|assemble_align
+argument_list|(
+name|POINTER_SIZE
+argument_list|)
+expr_stmt|;
+name|assemble_integer_with_op
+argument_list|(
+literal|"\t.picptr\t"
+argument_list|,
+name|symbol
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|frv_asm_out_destructor
+parameter_list|(
+name|rtx
+name|symbol
+parameter_list|,
+name|int
+name|priority
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+name|dtors_section
+argument_list|()
+expr_stmt|;
+name|assemble_align
+argument_list|(
+name|POINTER_SIZE
+argument_list|)
+expr_stmt|;
+name|assemble_integer_with_op
+argument_list|(
+literal|"\t.picptr\t"
+argument_list|,
+name|symbol
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine GNU compiler.  IA-64 version.    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Steve Ellcey<sje@cup.hp.com> and                   Reva Cuthbertson<reva@cup.hp.com>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine GNU compiler.  IA-64 version.    Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Steve Ellcey<sje@cup.hp.com> and                   Reva Cuthbertson<reva@cup.hp.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -15,11 +15,24 @@ value|fprintf (stderr, " (IA-64) HP-UX");
 end_define
 
 begin_comment
-comment|/* Target OS builtins.  */
+comment|/* Enable HPUX ABI quirks.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_HPUX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_HPUX
+value|1
+end_define
+
 begin_comment
-comment|/* -D__fpreg=long double is needed to compensate for    the lack of __fpreg which is a primative type in    HP C but does not exist in GNU C.  */
+comment|/* Target OS builtins.  */
 end_comment
 
 begin_define
@@ -28,7 +41,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do {							\ 	builtin_assert("system=hpux");			\ 	builtin_assert("system=posix");			\ 	builtin_assert("system=unix");			\ 	builtin_define_std("hpux");			\ 	builtin_define_std("unix");			\ 	builtin_define("__IA64__");			\ 	builtin_define("_LONGLONG");			\ 	builtin_define("_UINT128_T");			\ 	builtin_define("__fpreg=long double");		\ 	builtin_define("__float80=long double");	\ 	builtin_define("__float128=long double");	\ 	if (c_language == clk_cplusplus || !flag_iso)	\ 	  {						\ 	    builtin_define("_HPUX_SOURCE");		\ 	    builtin_define("__STDC_EXT__");		\ 	  }						\ } while (0)
+value|do {							\ 	builtin_assert("system=hpux");			\ 	builtin_assert("system=posix");			\ 	builtin_assert("system=unix");			\ 	builtin_define_std("hpux");			\ 	builtin_define_std("unix");			\ 	builtin_define("__IA64__");			\ 	builtin_define("_LONGLONG");			\ 	builtin_define("_INCLUDE_LONGLONG");		\ 	builtin_define("_UINT128_T");			\ 	if (c_dialect_cxx () || !flag_iso)		\ 	  {						\ 	    builtin_define("_HPUX_SOURCE");		\ 	    builtin_define("__STDC_EXT__");		\ 	    builtin_define("__STDCPP__");		\ 	  }						\ 	if (TARGET_ILP32)				\ 	  builtin_define("_ILP32");			\ } while (0)
 end_define
 
 begin_undef
@@ -126,7 +139,7 @@ define|#
 directive|define
 name|LIBGCC_SPEC
 define|\
-value|"%{shared-libgcc:%{!mlp64:-lgcc_s_hpux32}%{mlp64:-lgcc_s_hpux64} -lgcc} \    %{!shared-libgcc:-lgcc}"
+value|"%{shared-libgcc:%{!mlp64:-lgcc_s}%{mlp64:-lgcc_s_hpux64} -lgcc} \    %{!shared-libgcc:-lgcc}"
 end_define
 
 begin_endif
@@ -146,6 +159,13 @@ directive|define
 name|SUBTARGET_SWITCHES
 define|\
 value|{ "ilp32",    MASK_ILP32,     "Generate ILP32 code" }, \   { "lp64",    -MASK_ILP32,     "Generate LP64 code" },
+end_define
+
+begin_define
+define|#
+directive|define
+name|MULTILIB_DEFAULTS
+value|{ "milp32" }
 end_define
 
 begin_comment
@@ -180,7 +200,7 @@ value|(MASK_DWARF2_ASM | MASK_BIG_ENDIAN | MASK_ILP32)
 end_define
 
 begin_comment
-comment|/* This needs to be set to force structure arguments with a single    field to be treated as structures and not as the type of their    field.  Without this a structure with a single char will be    returned just like a char variable and that is wrong on HP-UX    IA64.  */
+comment|/* This needs to be set to force structure arguments with a single    integer field to be treated as structures and not as the type of    their field.  Without this a structure with a single char will be    returned just like a char variable, instead of being returned at the    top of the register as specified for big-endian IA64.  */
 end_comment
 
 begin_define
@@ -192,7 +212,8 @@ name|FIELD
 parameter_list|,
 name|MODE
 parameter_list|)
-value|(TREE_CODE (TREE_TYPE (FIELD)) != REAL_TYPE || (MODE == TFmode&& !INTEL_EXTENDED_IEEE_FORMAT))
+define|\
+value|(!FLOAT_MODE_P (MODE) || (MODE) == TFmode)
 end_define
 
 begin_comment
@@ -254,11 +275,9 @@ begin_define
 define|#
 directive|define
 name|REGISTER_TARGET_PRAGMAS
-parameter_list|(
-name|PFILE
-parameter_list|)
+parameter_list|()
 define|\
-value|cpp_register_pragma (PFILE, 0, "builtin", ia64_hpux_handle_builtin_pragma)
+value|c_register_pragma (0, "builtin", ia64_hpux_handle_builtin_pragma)
 end_define
 
 begin_comment
@@ -296,11 +315,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASM_FILE_END
-parameter_list|(
-name|STREAM
-parameter_list|)
-value|ia64_hpux_asm_file_end(STREAM)
+name|TARGET_ASM_FILE_END
+value|ia64_hpux_file_end
 end_define
 
 begin_undef
@@ -472,6 +488,42 @@ define|#
 directive|define
 name|TARGET_SECTION_TYPE_FLAGS
 value|ia64_rwreloc_section_type_flags
+end_define
+
+begin_comment
+comment|/* ia64 HPUX has the float and long double forms of math functions.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_C99_FUNCTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_C99_FUNCTIONS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_INIT_LIBFUNCS
+value|ia64_hpux_init_libfuncs
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLOAT_LIB_COMPARE_RETURNS_BOOL
+parameter_list|(
+name|MODE
+parameter_list|,
+name|COMPARISON
+parameter_list|)
+value|((MODE) == TFmode)
 end_define
 
 end_unit

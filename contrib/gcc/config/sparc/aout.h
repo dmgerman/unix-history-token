@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for SPARC using a.out.    Copyright (C) 1994, 1996, 2002 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GCC, for SPARC using a.out.    Copyright (C) 1994, 1996, 2002 Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -12,17 +12,6 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fprintf (stderr, " (sparc)");
-end_define
-
-begin_comment
-comment|/* Names to predefine in the preprocessor for this target machine.    ??? It would be nice to not include any subtarget specific values here,    however there's no way to portably provide subtarget values to    CPP_PREFINES.  Also, -D values in CPP_SUBTARGET_SPEC don't get turned into    foo, __foo and __foo__.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|"-Dsparc -Acpu=sparc -Amachine=sparc"
 end_define
 
 begin_comment
@@ -122,9 +111,11 @@ parameter_list|(
 name|file
 parameter_list|,
 name|line
+parameter_list|,
+name|counter
 parameter_list|)
 define|\
-value|{ static int sym_lineno = 1;				\     fprintf (file, ".stabn 68,0,%d,LM%d\nLM%d:\n",	\ 	     line, sym_lineno, sym_lineno);		\     sym_lineno += 1; }
+value|fprintf (file, ".stabn 68,0,%d,LM%d\nLM%d:\n",	\ 	   line, counter, counter)
 end_define
 
 end_unit

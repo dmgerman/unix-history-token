@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target independent definitions for LynxOS.    Copyright (C) 1993, 1994, 1995, 1996, 1999, 2000, 2002    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target independent definitions for LynxOS using gas and gnu ld.    Copyright (C) 1993, 1994, 1995, 1996, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* LynxOS is a multi-platform Unix, similar to SVR3, but not identical.    We can get quite a bit from generic svr3, but have to do some overrides.  */
+comment|/* LynxOS is a multi-platform Unix, similar to SVR3, but not identical.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"svr3.h"
-end_include
 
 begin_comment
 comment|/* Define various macros, depending on the combination of flags.  */
@@ -198,9 +192,11 @@ parameter_list|(
 name|file
 parameter_list|,
 name|line
+parameter_list|,
+name|counter
 parameter_list|)
 define|\
-value|{ static int sym_lineno = 1;				\     fprintf (file, ".stabn 68,0,%d,.LM%d-",		\ 	     line, sym_lineno);				\     assemble_name (file,				\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0)); \     fprintf (file, "\n.LM%d:\n", sym_lineno);		\     sym_lineno += 1; }
+value|{ fprintf (file, ".stabn 68,0,%d,.LM%d-",		\ 	     line, counter);				\     assemble_name (file,				\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0)); \     fprintf (file, "\n.LM%d:\n", counter); }
 end_define
 
 begin_comment

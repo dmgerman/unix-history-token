@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Operating system specific defines to be used when targeting GCC for some    generic System V Release 4 system.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).    Renamed and changed to suit Dynix/ptx v4 and later.    Modified by Tim Wright (timw@sequent.com).    Modified by Janis Johnson (janis@us.ibm.com).    This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Operating system specific defines to be used when targeting GCC for    Sequent's Dynix/ptx v4 and later.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.    Generic SysV4 file Contributed by Ron Guilmette (rfg@monkeys.com).    Renamed and changed to suit Dynix/ptx v4 and later.    Modified by Tim Wright (timw@sequent.com).    Modified by Janis Johnson (janis@us.ibm.com).    This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ name|USING_SVR4_H
 end_define
 
 begin_comment
-comment|/* Use DWARF debugging info by default.  */
+comment|/* Use DWARF 2 debugging info by default.  */
 end_comment
 
 begin_undef
@@ -27,7 +27,14 @@ begin_define
 define|#
 directive|define
 name|PREFERRED_DEBUGGING_TYPE
-value|DWARF_DEBUG
+value|DWARF2_DEBUG
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -63,16 +70,6 @@ parameter_list|)
 define|\
 value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)			\&& strcmp (STR, "Tdata")&& strcmp (STR, "Ttext")	\&& strcmp (STR, "Tbss"))
 end_define
-
-begin_comment
-comment|/* You should redefine CPP_PREDEFINES in any file which includes this one.    The definition should be appropriate for the type of target system    involved, and it should include any -A (assertion) options which are    appropriate for the given target system.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
 
 begin_comment
 comment|/* Provide an ASM_SPEC appropriate for svr4.  Here we try to support as    many of the specialized svr4 assembler options as seems reasonable,    given that there are certain options which we can't (or shouldn't)    support directly due to the fact that they conflict with other options     for other svr4 tools (e.g. ld) or with other options for GCC itself.    For example, we don't support the -o (output file) or -R (remove    input file) options because GCC already handles these things.  We    also don't support the -m (run m4) option for the assembler because    that conflicts with the -m (produce load map) option of the svr4    linker.  We do however allow passing arbitrary options to the svr4    assembler via the -Wa, option.     Note that gcc doesn't allow a space to follow -Y in a -Ym,* or -Yd,*    option. */
@@ -116,21 +113,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* svr4 assemblers need the `-' (indicating input from stdin) to come after    the -o option (and its argument) for some reason.  If we try to put it    before the -o option, the assembler will try to read the file named as    the output file in the -o option as an input file (after it has already    written some stuff to it) and the binary stuff contained therein will    cause totally confuse the assembler, resulting in many spurious error    messages.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FINAL_SPEC
-end_undef
-
 begin_define
 define|#
 directive|define
-name|ASM_FINAL_SPEC
-value|"%{pipe:-}"
+name|AS_NEEDS_DASH_FOR_PIPED_INPUT
 end_define
 
 begin_comment
@@ -256,9 +242,11 @@ parameter_list|(
 name|file
 parameter_list|,
 name|line
+parameter_list|,
+name|counter
 parameter_list|)
 define|\
-value|do									\   {									\     static int sym_lineno = 1;						\     fprintf (file, ".stabn 68,0,%d,.LM%d-",				\ 	     line, sym_lineno);						\     assemble_name (file,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     fprintf (file, "\n.LM%d:\n", sym_lineno);				\     sym_lineno += 1;							\   }									\ while (0)
+value|do									\   {									\     fprintf (file, ".stabn 68,0,%d,.LM%d-",				\ 	     line, counter);						\     assemble_name (file,						\ 		   XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     fprintf (file, "\n.LM%d:\n", counter);				\   }									\ while (0)
 end_define
 
 begin_comment
@@ -364,7 +352,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), ",%u\n", (SIZE));					\ } while (0)
+value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), ",%lu\n", (unsigned long)(SIZE)); \ } while (0)
 end_define
 
 end_unit

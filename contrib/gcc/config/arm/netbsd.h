@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* NetBSD/arm a.out version.    Copyright (C) 1993, 1994, 1997, 1998 Free Software Foundation, Inc.    Contributed by Mark Brinicombe (amb@physig.ph.kcl.ac.uk)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* NetBSD/arm a.out version.    Copyright (C) 1993, 1994, 1997, 1998, 2003 Free Software Foundation, Inc.    Contributed by Mark Brinicombe (amb@physig.ph.kcl.ac.uk)     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -18,23 +18,6 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fputs (" (ARM/NetBSD)", stderr);
-end_define
-
-begin_comment
-comment|/* This is used in ASM_FILE_START.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ARM_OS_NAME
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ARM_OS_NAME
-value|"NetBSD"
 end_define
 
 begin_comment
@@ -88,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|(ARM_FLAG_APCS_32 | ARM_FLAG_SOFT_FLOAT | ARM_FLAG_APCS_FRAME)
+value|(ARM_FLAG_APCS_32 | ARM_FLAG_SOFT_FLOAT | ARM_FLAG_APCS_FRAME | ARM_FLAG_MMU_TRAPS)
 end_define
 
 begin_comment
@@ -266,7 +249,7 @@ value|"%%%s"
 end_define
 
 begin_comment
-comment|/* NetBSD uses the old PCC style aggregate returning conventions. */
+comment|/* NetBSD uses the old PCC style aggregate returning conventions.  */
 end_comment
 
 begin_undef
@@ -293,7 +276,7 @@ name|RETURN_IN_MEMORY
 end_undef
 
 begin_comment
-comment|/* VERY BIG NOTE : Change of structure alignment for RiscBSD.    There are consequences you should be aware of...     Normally GCC/arm uses a structure alignment of 32 for compatibility    with armcc.  This means that structures are padded to a word    boundary.  However this causes problems with bugged NetBSD kernel    code (possibly userland code as well - I have not checked every    binary).  The nature of this bugged code is to rely on sizeof()    returning the correct size of various structures rounded to the    nearest byte (SCSI and ether code are two examples, the vm system    is another).  This code breaks when the structure alignment is 32    as sizeof() will report a word=rounded size.  By changing the    structure alignment to 8. GCC will conform to what is expected by    NetBSD.     This has several side effects that should be considered.    1. Structures will only be aligned to the size of the largest member.       i.e. structures containing only bytes will be byte aligned.            structures containing shorts will be half word alinged.            structures containing ints will be word aligned.        This means structures should be padded to a word boundary if       alignment of 32 is required for byte structures etc.           2. A potential performance penalty may exist if strings are no longer       word aligned.  GCC will not be able to use word load/stores to copy       short strings.           This modification is not encouraged but with the present state of the    NetBSD source tree it is currently the only solution that meets the    requirements.  */
+comment|/* VERY BIG NOTE : Change of structure alignment for RiscBSD.    There are consequences you should be aware of...     Normally GCC/arm uses a structure alignment of 32 for compatibility    with armcc.  This means that structures are padded to a word    boundary.  However this causes problems with bugged NetBSD kernel    code (possibly userland code as well - I have not checked every    binary).  The nature of this bugged code is to rely on sizeof()    returning the correct size of various structures rounded to the    nearest byte (SCSI and ether code are two examples, the vm system    is another).  This code breaks when the structure alignment is 32    as sizeof() will report a word=rounded size.  By changing the    structure alignment to 8. GCC will conform to what is expected by    NetBSD.     This has several side effects that should be considered.    1. Structures will only be aligned to the size of the largest member.       i.e. structures containing only bytes will be byte aligned.            structures containing shorts will be half word aligned.            structures containing ints will be word aligned.        This means structures should be padded to a word boundary if       alignment of 32 is required for byte structures etc.           2. A potential performance penalty may exist if strings are no longer       word aligned.  GCC will not be able to use word load/stores to copy       short strings.           This modification is not encouraged but with the present state of the    NetBSD source tree it is currently the only solution that meets the    requirements.  */
 end_comment
 
 begin_undef

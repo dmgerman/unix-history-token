@@ -8,7 +8,7 @@ comment|/* Compile this one with gcc.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Mumit Khan<khan@xraylith.wisc.edu>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1999, 2000, 2002, 2003  Free Software Foundation, Inc.    Contributed by Mumit Khan<khan@xraylith.wisc.edu>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1000,8 +1000,8 @@ return|;
 endif|#
 directive|endif
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|__GTHREAD_HIDE_WIN32API
 comment|/* The implementations are in config/i386/gthr-win32.c in libgcc.a.    Only stubs are exposed to avoid polluting the C++ namespace with    windows api definitions.  */
 specifier|extern
@@ -1160,24 +1160,6 @@ name|key
 argument_list|,
 name|dtor
 argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|int
-name|__gthread_key_dtor
-parameter_list|(
-name|__gthread_key_t
-name|key
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-comment|/* Nothing needed.  */
-return|return
-literal|0
 return|;
 block|}
 specifier|static
@@ -1511,25 +1493,6 @@ argument_list|()
 expr_stmt|;
 return|return
 name|status
-return|;
-block|}
-comment|/* Currently, this routine is called only for Mingw runtime, and if    -mthreads option is chosen to link in the thread support DLL.  */
-specifier|static
-specifier|inline
-name|int
-name|__gthread_key_dtor
-parameter_list|(
-name|__gthread_key_t
-name|key
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-comment|/* Nothing needed.  */
-return|return
-literal|0
 return|;
 block|}
 specifier|static

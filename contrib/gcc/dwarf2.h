@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations and definitions of codes relating to the DWARF2 symbolic    debugging information format.    Copyright (C) 1992, 1993, 1995, 1996, 1997, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Written by Gary Funck (gary@intrepid.com) The Ada Joint Program    Office (AJPO), Florida State Unviversity and Silicon Graphics Inc.    provided support for this effort -- June 21, 1995.     Derived from the DWARF 1 implementation written by Ron Guilmette    (rfg@netcom.com), November 1990.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations and definitions of codes relating to the DWARF2 symbolic    debugging information format.    Copyright (C) 1992, 1993, 1995, 1996, 1997, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     Written by Gary Funck (gary@intrepid.com) The Ada Joint Program    Office (AJPO), Florida State University and Silicon Graphics Inc.    provided support for this effort -- June 21, 1995.     Derived from the DWARF 1 implementation written by Ron Guilmette    (rfg@netcom.com), November 1990.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -10,6 +10,18 @@ end_comment
 begin_comment
 comment|/* This file is shared between GCC and GDB, and should not contain    prototypes.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_DWARF2_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_DWARF2_H
+end_define
 
 begin_comment
 comment|/* Tag names and codes.  */
@@ -2227,6 +2239,15 @@ directive|define
 name|DW_EH_PE_indirect
 value|0x80
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* dwarf2.h */
+end_comment
 
 end_unit
 

@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Sun SPARC64 running FreeBSD using the ELF format    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions for Sun SPARC64 running FreeBSD using the ELF format    Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SUBTARGET_EXTRA_SPECS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_EXTRA_SPECS
+define|\
+value|{ "fbsd_dynamic_linker", FBSD_DYNAMIC_LINKER }
+end_define
 
 begin_comment
 comment|/* FreeBSD needs the platform name (sparc64) defined.    Emacs needs to know if the arch is 64 or 32-bits.  */
@@ -18,28 +32,14 @@ define|#
 directive|define
 name|CPP_CPU64_DEFAULT_SPEC
 define|\
-value|"-D__sparc64__ -D__sparc_v9__ -D__sparcv9 -D__sparc__ -D__arch64__"
+value|"-D__sparc64__ -D__sparc_v9__ -D__sparcv9 -D__arch64__"
 end_define
-
-begin_comment
-comment|/* Because we include sparc/sysv4.h.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_comment
-comment|/* Do not define it here, we now use TARGET_OS_CPP_BUILTINS.  */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"%(link_arch)						\   %{!mno-relax:%{!r:-relax}}						\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}			\   %{Wl,*:%*}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}}	\     %{static:-Bstatic}}"
+value|"%(link_arch)						\   %{!mno-relax:%{!r:-relax}}						\   %{p:%nconsider using `-pg' instead of `-p' with gprof(1)}				\   %{Wl,*:%*}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker %(fbsd_dynamic_linker) }}	\     %{static:-Bstatic}}"
 end_define
 
 begin_comment
@@ -233,7 +233,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TRANSFER_FROM_TRAMPOLINE
+name|ENABLE_EXECUTE_STACK
 define|\
 value|static int need_enable_exec_stack;					\   static void check_enabling(void) __attribute__ ((constructor));	\   static void check_enabling(void)					\   {									\     extern int sysctlbyname(const char *, void *, size_t *, void *, size_t);\     int prot = 0;							\     size_t len = sizeof(prot);						\ 									\     sysctlbyname ("kern.stackprot",&prot,&len, NULL, 0);		\     if (prot != 7)							\       need_enable_exec_stack = 1;					\   }									\   extern void __enable_execute_stack (void *);				\   void __enable_execute_stack (void *addr)				\   {									\     if (!need_enable_exec_stack)					\       return;								\     else {								\
 comment|/* 7 is PROT_READ | PROT_WRITE | PROT_EXEC */
@@ -255,35 +255,6 @@ define|#
 directive|define
 name|LOCAL_LABEL_PREFIX
 value|"."
-end_define
-
-begin_comment
-comment|/* XXX2 */
-end_comment
-
-begin_comment
-comment|/* This is how to output a definition of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|fprintf (FILE, ".L%s%d:\n", PREFIX, NUM)
 end_define
 
 begin_comment
@@ -341,7 +312,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|sprintf (LABEL, "*.L%s%d", PREFIX, NUM)
+value|sprintf (LABEL, "*.L%s%lu", PREFIX, (unsigned long)(NUM))
 end_define
 
 begin_comment

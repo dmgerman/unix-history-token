@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF2 exception handling and frame unwind runtime interface routines.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* SJLJ exception handling and frame unwind runtime interface routines.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     In addition to the permissions in the GNU General Public License, the    Free Software Foundation gives you unlimited permission to link the    compiled version of this file into combinations with other programs,    and to distribute those combinations without any restriction coming    from the use of this file.  (The General Public License restrictions    do apply in other respects; for example, they cover modification of    the file, and distribution when not linked into a combined    executable.)     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"tsystem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -245,26 +257,6 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|fc_key_dtor
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-name|__gthread_key_dtor
-argument_list|(
-name|fc_key
-argument_list|,
-name|ptr
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|fc_key_init
 parameter_list|(
 name|void
@@ -277,7 +269,7 @@ argument_list|(
 operator|&
 name|fc_key
 argument_list|,
-name|fc_key_dtor
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -532,22 +524,31 @@ begin_comment
 comment|/* Get the value of the CFA as saved in CONTEXT.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|_Unwind_Word
 name|_Unwind_GetCFA
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|_Unwind_Context
-modifier|*
+operator|*
 name|context
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+argument_list|)
 block|{
 comment|/* ??? Ideally __builtin_setjmp places the CFA in the jmpbuf.  */
 return|return
-name|NULL
+operator|(
+name|_Unwind_Word
+operator|)
+literal|0
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|void
@@ -678,21 +679,27 @@ return|;
 block|}
 end_decl_stmt
 
-begin_function
+begin_decl_stmt
 name|void
 modifier|*
 name|_Unwind_FindEnclosingFunction
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|pc
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+argument_list|)
 block|{
 return|return
 name|NULL
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_ifndef
 ifndef|#

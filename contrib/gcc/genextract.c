@@ -1,18 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generate code from machine description to extract operands from insn as rtl.    Copyright (C) 1987, 1991, 1992, 1993, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generate code from machine description to extract operands from insn as rtl.    Copyright (C) 1987, 1991, 1992, 1993, 1997, 1998, 1999, 2000, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|"bconfig.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -40,7 +52,7 @@ file|"gensupport.h"
 end_include
 
 begin_comment
-comment|/* This structure contains all the information needed to describe one    set of extractions methods.  Each method may be used by more than     one pattern if the operands are in the same place.     The string for each operand describes that path to the operand and    contains `0' through `9' when going into an expression and `a' through    `z' when going into a vector.  We assume here that only the first operand    of an rtl expression is a vector.  genrecog.c makes the same assumption    (and uses the same representation) and it is currently true.  */
+comment|/* This structure contains all the information needed to describe one    set of extractions methods.  Each method may be used by more than    one pattern if the operands are in the same place.     The string for each operand describes that path to the operand and    contains `0' through `9' when going into an expression and `a' through    `z' when going into a vector.  We assume here that only the first operand    of an rtl expression is a vector.  genrecog.c makes the same assumption    (and uses the same representation) and it is currently true.  */
 end_comment
 
 begin_struct
@@ -230,78 +242,64 @@ name|peepholes
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|gen_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|walk_rtx
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_path
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|record_insn_name
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|void
 name|gen_insn
 parameter_list|(
-name|insn
-parameter_list|)
 name|rtx
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -422,11 +420,6 @@ expr_stmt|;
 block|}
 name|link
 operator|=
-operator|(
-expr|struct
-name|code_ptr
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -613,11 +606,6 @@ block|}
 comment|/* Otherwise, make a new extraction method.  */
 name|p
 operator|=
-operator|(
-expr|struct
-name|extraction
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -734,18 +722,14 @@ specifier|static
 name|void
 name|walk_rtx
 parameter_list|(
-name|x
-parameter_list|,
-name|path
-parameter_list|)
 name|rtx
 name|x
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 name|RTX_CODE
 name|code
@@ -905,10 +889,6 @@ operator|++
 expr_stmt|;
 name|newpath
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|depth
@@ -1027,10 +1007,6 @@ argument_list|)
 expr_stmt|;
 name|newpath
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|depth
@@ -1141,10 +1117,6 @@ argument_list|)
 expr_stmt|;
 name|newpath
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|depth
@@ -1240,10 +1212,6 @@ break|break;
 block|}
 name|newpath
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|depth
@@ -1412,13 +1380,11 @@ specifier|static
 name|void
 name|print_path
 parameter_list|(
-name|path
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -1574,39 +1540,18 @@ end_function
 begin_escape
 end_escape
 
-begin_decl_stmt
-specifier|extern
-name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|rtx
 name|desc
@@ -1682,6 +1627,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#include \"coretypes.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#include \"tm.h\"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#include \"rtl.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -1708,12 +1663,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"void\ninsn_extract (insn)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"     rtx insn;\n"
+literal|"void\ninsn_extract (rtx insn)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1741,16 +1691,21 @@ argument_list|(
 literal|"  int i ATTRIBUTE_UNUSED;\n\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_CHECKING
 name|printf
 argument_list|(
-literal|"  memset (ro, 0, sizeof (*ro) * MAX_RECOG_OPERANDS);\n"
+literal|"  memset (ro, 0xab, sizeof (*ro) * MAX_RECOG_OPERANDS);\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  memset (ro_loc, 0, sizeof (*ro_loc) * MAX_RECOG_OPERANDS);\n"
+literal|"  memset (ro_loc, 0xab, sizeof (*ro_loc) * MAX_RECOG_OPERANDS);\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"  switch (INSN_CODE (insn))\n"
@@ -1842,11 +1797,6 @@ name|code_ptr
 modifier|*
 name|link
 init|=
-operator|(
-expr|struct
-name|code_ptr
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -2161,12 +2111,10 @@ name|char
 modifier|*
 name|get_insn_name
 parameter_list|(
-name|code
-parameter_list|)
 name|int
 name|code
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2192,18 +2140,14 @@ specifier|static
 name|void
 name|record_insn_name
 parameter_list|(
-name|code
-parameter_list|,
-name|name
-parameter_list|)
 name|int
 name|code
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -2247,11 +2191,6 @@ operator|)
 expr_stmt|;
 name|insn_name_ptr
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|xrealloc
 argument_list|(
 name|insn_name_ptr

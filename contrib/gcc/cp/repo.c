@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Code to maintain a C++ template repository.    Copyright (C) 1995, 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.    Contributed by Jason Merrill (jason@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Code to maintain a C++ template repository.    Copyright (C) 1995, 1996, 1997, 1998, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Jason Merrill (jason@cygnus.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -17,6 +17,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -52,103 +64,79 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ggc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"diagnostic.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|tree
 name|repo_get_id
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|extract_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|get_base_filename
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|open_repo_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|afgets
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|reopen_repo_file_for_write
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 specifier|static
@@ -242,22 +230,22 @@ comment|/* Record the flags used to compile this translation unit.  */
 end_comment
 
 begin_comment
-unit|void repo_compile_flags (argc, argv)      int argc;      char **argv; { }
+unit|void repo_compile_flags (int argc, char **argv) { }
 comment|/* If this template has not been seen before, add a note to the repository    saying where the declaration was.  This may be used to find the    definition at link time.  */
 end_comment
 
 begin_comment
-unit|void repo_template_declared (t)      tree t; {}
+unit|void repo_template_declared (tree t) {}
 comment|/* Note where the definition of a template lives so that instantiations can    be generated later.  */
 end_comment
 
 begin_comment
-unit|void repo_template_defined (t)      tree t; {}
+unit|void repo_template_defined (tree t) {}
 comment|/* Note where the definition of a class lives to that template    instantiations can use it.  */
 end_comment
 
 begin_endif
-unit|void repo_class_defined (t)      tree t; {}
+unit|void repo_class_defined (tree t) {}
 endif|#
 directive|endif
 end_endif
@@ -267,11 +255,9 @@ specifier|static
 name|tree
 name|repo_get_id
 parameter_list|(
-name|t
-parameter_list|)
 name|tree
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -342,11 +328,9 @@ begin_function
 name|void
 name|repo_template_used
 parameter_list|(
-name|t
-parameter_list|)
 name|tree
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|id
@@ -475,12 +459,12 @@ comment|/* Note that the vtable for a class has been used, and offer to emit it.
 end_comment
 
 begin_comment
-unit|static void repo_vtable_used (t)      tree t; {   if (! flag_use_repository)     return;    pending_repo = tree_cons (NULL_TREE, t, pending_repo); }
+unit|static void repo_vtable_used (tree t) {   if (! flag_use_repository)     return;    pending_repo = tree_cons (NULL_TREE, t, pending_repo); }
 comment|/* Note that an inline with external linkage has been used, and offer to    emit it.  */
 end_comment
 
 begin_comment
-unit|void repo_inline_used (fn)      tree fn; {   if (! flag_use_repository)     return;
+unit|void repo_inline_used (tree fn) {   if (! flag_use_repository)     return;
 comment|/* Member functions of polymorphic classes go with their vtables.  */
 end_comment
 
@@ -490,7 +474,7 @@ comment|/* Note that a particular typeinfo node has been used, and offer to    e
 end_comment
 
 begin_endif
-unit|void repo_tinfo_used (ti)      tree ti; { }
+unit|void repo_tinfo_used (tree ti) { }
 endif|#
 directive|endif
 end_endif
@@ -499,16 +483,12 @@ begin_function
 name|void
 name|repo_template_instantiated
 parameter_list|(
-name|t
-parameter_list|,
-name|extern_p
-parameter_list|)
 name|tree
 name|t
-decl_stmt|;
-name|int
+parameter_list|,
+name|bool
 name|extern_p
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -549,13 +529,11 @@ name|char
 modifier|*
 name|extract_string
 parameter_list|(
-name|pp
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -679,18 +657,17 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|get_base_filename
 parameter_list|(
-name|filename
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -810,15 +787,12 @@ specifier|static
 name|void
 name|open_repo_file
 parameter_list|(
-name|filename
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -926,12 +900,10 @@ name|char
 modifier|*
 name|afgets
 parameter_list|(
-name|stream
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -996,13 +968,11 @@ begin_function
 name|void
 name|init_repo
 parameter_list|(
-name|filename
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1176,7 +1146,9 @@ begin_function
 specifier|static
 name|void
 name|reopen_repo_file_for_write
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1225,15 +1197,17 @@ end_comment
 begin_function
 name|void
 name|finish_repo
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|tree
 name|t
 decl_stmt|;
-name|int
+name|bool
 name|repo_changed
 init|=
-literal|0
+name|false
 decl_stmt|;
 name|char
 modifier|*
@@ -1296,7 +1270,7 @@ condition|)
 block|{
 name|repo_changed
 operator|=
-literal|1
+name|true
 expr_stmt|;
 break|break;
 block|}
@@ -1346,7 +1320,7 @@ condition|)
 block|{
 name|repo_changed
 operator|=
-literal|1
+name|true
 expr_stmt|;
 break|break;
 block|}
@@ -1417,7 +1391,7 @@ operator|)
 condition|)
 name|repo_changed
 operator|=
-literal|1
+name|true
 expr_stmt|;
 if|if
 condition|(

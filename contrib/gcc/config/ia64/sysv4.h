@@ -167,7 +167,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {						\   const char *name_ = NAME;			\   if (*name_ == ENCODE_SECTION_INFO_CHAR)	\     name_ += 2;					\   if (*name_ == '*')				\     name_++;					\   else						\     fputs (user_label_prefix, STREAM);		\   fputs (name_, STREAM);			\   if (!ia64_asm_output_label)			\     fputc ('#', STREAM);			\ } while (0)
+value|do {						\   const char *name_ = NAME;			\   if (*name_ == '*')				\     name_++;					\   else						\     fputs (user_label_prefix, STREAM);		\   fputs (name_, STREAM);			\   if (!ia64_asm_output_label)			\     fputc ('#', STREAM);			\ } while (0)
 end_define
 
 begin_comment
@@ -322,39 +322,6 @@ value|do {									\   fputs ("\t.endp ", FILE);						\   assemble_name (FILE, N
 end_define
 
 begin_comment
-comment|/* A C expression which outputs to the stdio stream STREAM some appropriate    text to go at the start of an assembler file.  */
-end_comment
-
-begin_comment
-comment|/* ??? Looks like almost every port, except for a few original ones, get this    wrong.  Must emit #NO_APP as first line of file to turn of special assembler    preprocessing of files.  */
-end_comment
-
-begin_comment
-comment|/* ??? Even worse, it doesn't work, because gas does not accept the tab chars    that dwarf2out.c emits when #NO_APP.  */
-end_comment
-
-begin_comment
-comment|/* ??? Unrelated, but dwarf2out.c emits unnecessary newlines after strings,    may as well fix at the same time.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|STREAM
-parameter_list|)
-define|\
-value|do {									\   output_file_directive (STREAM, main_input_filename);			\   emit_safe_across_calls (STREAM);					\ } while (0)
-end_define
-
-begin_comment
 comment|/* Override default elf definition.  */
 end_comment
 
@@ -410,7 +377,7 @@ define|#
 directive|define
 name|SDATA_SECTION_FUNCTION
 define|\
-value|void									\ sdata_section ()							\ {									\   if (in_section != in_sdata)						\     {									\       fprintf (asm_out_file, "%s\n", SDATA_SECTION_ASM_OP);		\       in_section = in_sdata;						\     }									\ }
+value|void									\ sdata_section (void)							\ {									\   if (in_section != in_sdata)						\     {									\       fprintf (asm_out_file, "%s\n", SDATA_SECTION_ASM_OP);		\       in_section = in_sdata;						\     }									\ }
 end_define
 
 begin_define
@@ -425,7 +392,7 @@ define|#
 directive|define
 name|SBSS_SECTION_FUNCTION
 define|\
-value|void									\ sbss_section ()								\ {									\   if (in_section != in_sbss)						\     {									\       fprintf (asm_out_file, "%s\n", SBSS_SECTION_ASM_OP);		\       in_section = in_sbss;						\     }									\ }
+value|void									\ sbss_section (void)							\ {									\   if (in_section != in_sbss)						\     {									\       fprintf (asm_out_file, "%s\n", SBSS_SECTION_ASM_OP);		\       in_section = in_sbss;						\     }									\ }
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Define constants and variables for communication with parse.y.    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    2000 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)    and by Brendan Kehoe (brendan@cygnus.com).  This file is part of GNU CC.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.  No author or distributor accepts responsibility to anyone for the consequences of using it or for whether it serves any particular purpose or works at all, unless he says so in writing.  Refer to the GNU CC General Public License for full details.  Everyone is granted permission to copy, modify and redistribute GNU CC, but only under the conditions described in the GNU CC General Public License.   A copy of this license is supposed to have been given to you along with GNU CC so you can know your rights and responsibilities.  It should be in a file named COPYING.  Among other things, the copyright notice and this notice must be preserved on all copies.  */
+comment|/* Define constants and variables for communication with the parser.    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)    and by Brendan Kehoe (brendan@cygnus.com).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -205,89 +205,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* the declaration found for the last IDENTIFIER token read in.    yylex must look this up to detect typedefs, which get token type TYPENAME,    so it is left around in case the identifier is not a typedef but is    used in a context which makes it a reference to a variable.  */
-end_comment
-
-begin_extern
-extern|extern GTY((
-end_extern
-
-begin_decl_stmt
-unit|))
-name|tree
-name|lastiddecl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Back-door communication channel to the lexer.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|looking_for_typename
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|looking_for_template
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Tell the lexer where to look for names.  */
-end_comment
-
-begin_extern
-extern|extern GTY((
-end_extern
-
-begin_decl_stmt
-unit|))
-name|tree
-name|got_scope
-decl_stmt|;
-end_decl_stmt
-
-begin_extern
-extern|extern GTY((
-end_extern
-
-begin_decl_stmt
-unit|))
-name|tree
-name|got_object
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Pending language change.    Positive is push count, negative is pop count.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pending_lang_change
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|yylex
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#

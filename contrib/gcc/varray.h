@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Virtual array support.    Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Cygnus Solutions.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    the Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* Virtual array support.    Copyright (C) 1998, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Cygnus Solutions.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    the Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -44,6 +44,18 @@ directive|include
 file|"system.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -63,9 +75,7 @@ operator|)
 argument_list|)
 block|{
 comment|/* Map pseudo reg number in calling function to equivalent constant.  We      cannot in general substitute constants into parameter pseudo registers,      since some machine descriptions (many RISCs) won't always handle      the resulting insns.  So if an incoming parameter has a constant      equivalent, we record it here, and if the resulting insn is      recognizable, we go with it.       We also use this mechanism to convert references to incoming arguments      and stacked variables.  copy_rtx_and_substitute will replace the virtual      incoming argument and virtual stacked variables registers with new      pseudos that contain pointers into the replacement area allocated for      this inline instance.  These pseudos are then marked as being equivalent      to the appropriate address and substituted if valid.  */
-name|struct
-name|rtx_def
-modifier|*
+name|rtx
 name|rtx
 decl_stmt|;
 comment|/* Record the valid age for each entry.  The entry is invalid if its      age is less than const_age.  */
@@ -80,7 +90,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* Enum indicating what the varray contains.      If this is changed, `element_size' in varray.c needs to be updated.  */
+comment|/* Enum indicating what the varray contains.    If this is changed, `element' in varray.c needs to be updated.  */
 end_comment
 
 begin_enum
@@ -423,9 +433,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|rtx_def
-modifier|*
+name|rtx
 name|GTY
 argument_list|(
 operator|(
@@ -448,9 +456,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|rtvec_def
-modifier|*
+name|rtvec
 name|GTY
 argument_list|(
 operator|(
@@ -473,9 +479,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|union
-name|tree_node
-modifier|*
+name|tree
 name|GTY
 argument_list|(
 operator|(
@@ -680,7 +684,7 @@ operator|)
 argument_list|)
 name|data
 decl_stmt|;
-comment|/* The data elements follow,  						   must be last.  */
+comment|/* The data elements follow, 						   must be last.  */
 block|}
 end_decl_stmt
 
@@ -701,25 +705,22 @@ begin_comment
 comment|/* Allocate a virtual array with NUM elements, each of which is SIZE bytes    long, named NAME.  Array elements are zeroed.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|varray_type
 name|varray_init
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|varray_data_enum
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1040,20 +1041,17 @@ begin_comment
 comment|/* Grow/shrink the virtual array VA to N elements.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|varray_type
 name|varray_grow
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|varray_type
-operator|,
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1107,18 +1105,25 @@ parameter_list|)
 value|varray_clear(VA)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|varray_clear
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|varray_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|dump_varray_statistics
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Check for VARRAY_xxx macros being in bound.  */
@@ -1141,23 +1146,41 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|varray_check_failed
-name|PARAMS
 argument_list|(
-operator|(
 name|varray_type
-operator|,
+argument_list|,
 name|size_t
-operator|,
+argument_list|,
 specifier|const
 name|char
 operator|*
-operator|,
+argument_list|,
 name|int
-operator|,
+argument_list|,
 specifier|const
 name|char
 operator|*
-operator|)
+argument_list|)
+name|ATTRIBUTE_NORETURN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|varray_underflow
+argument_list|(
+name|varray_type
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|int
+argument_list|,
+specifier|const
+name|char
+operator|*
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;
@@ -1174,7 +1197,17 @@ name|N
 parameter_list|,
 name|T
 parameter_list|)
-value|__extension__			\ (*({ varray_type const _va = (VA);				\      const size_t _n = (N); 					\      if (_n>= _va->num_elements)				\        varray_check_failed (_va, _n, __FILE__, __LINE__, __FUNCTION__);	\&_va->data.T[_n]; }))
+value|__extension__			\ (*({ varray_type const _va = (VA);				\      const size_t _n = (N);					\      if (_n>= _va->num_elements)				\        varray_check_failed (_va, _n, __FILE__, __LINE__, __FUNCTION__);	\&_va->data.T[_n]; }))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VARRAY_POP
+parameter_list|(
+name|VA
+parameter_list|)
+value|do {					\   varray_type const _va = (VA);					\   if (_va->elements_used == 0)					\     varray_underflow (_va, __FILE__, __LINE__, __FUNCTION__);	\   else								\     _va->elements_used--;					\ } while (0)
 end_define
 
 begin_else
@@ -1194,6 +1227,20 @@ parameter_list|,
 name|T
 parameter_list|)
 value|((VA)->data.T[N])
+end_define
+
+begin_comment
+comment|/* Pop the top element of VA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VARRAY_POP
+parameter_list|(
+name|VA
+parameter_list|)
+value|do { ((VA)->elements_used--); } while (0)
 end_define
 
 begin_endif
@@ -1218,38 +1265,6 @@ name|X
 parameter_list|)
 define|\
 value|do							\     {							\       if ((VA)->elements_used>= (VA)->num_elements)	\         VARRAY_GROW ((VA), 2 * (VA)->num_elements);	\       (VA)->data.T[(VA)->elements_used++] = (X);	\     }							\   while (0)
-end_define
-
-begin_comment
-comment|/* Pop the top element of VA.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VARRAY_POP
-parameter_list|(
-name|VA
-parameter_list|)
-define|\
-value|((VA)->elements_used--)
-end_define
-
-begin_comment
-comment|/* Return the top element of VA.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VARRAY_TOP
-parameter_list|(
-name|VA
-parameter_list|,
-name|T
-parameter_list|)
-define|\
-value|((VA)->data.T[(VA)->elements_used - 1])
 end_define
 
 begin_define
@@ -1727,6 +1742,18 @@ end_define
 begin_comment
 comment|/* Return the last element of VA.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VARRAY_TOP
+parameter_list|(
+name|VA
+parameter_list|,
+name|T
+parameter_list|)
+value|VARRAY_CHECK(VA, (VA)->elements_used - 1, T)
+end_define
 
 begin_define
 define|#

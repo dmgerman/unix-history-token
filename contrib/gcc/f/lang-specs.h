@@ -53,7 +53,7 @@ begin_block
 block|{
 literal|"@f77-cpp-input"
 operator|,
-literal|"cc1 -E -traditional-cpp -D_LANGUAGE_FORTRAN %(cpp_options) \         %{E|M|MM:%(cpp_debug_options)}\         %{!M:%{!MM:%{!E:%{!pipe:%g.f} |\n\     f771 %{!pipe:%g.f} %(cc1_options) %{I*} %{!fsyntax-only:%(invoke_as)}}}}"
+literal|"cc1 -E -traditional-cpp -D_LANGUAGE_FORTRAN %(cpp_options) \         %{E|M|MM:%(cpp_debug_options)}\         %{!M:%{!MM:%{!E: -o %|.f |\n\     f771 %|.f %(cc1_options) %{I*} %{!fsyntax-only:%(invoke_as)}}}}"
 operator|,
 literal|0
 block|}
@@ -81,7 +81,7 @@ begin_block
 block|{
 literal|"@ratfor"
 operator|,
-literal|"%{C:%{!E:%eGNU C does not support -C without using -E}}\     %{CC:%{!E:%eGNU C does not support -CC without using -E}}\     ratfor %{C} %{CC} %{v} %{E:%W{o*}} %{!E: %{!pipe:-o %g.f} %i |\n\     f771 %{!pipe:%g.f} %(cc1_options) %{I*} %{!fsyntax-only:%(invoke_as)}}"
+literal|"%{C:%{!E:%eGCC does not support -C without using -E}}\     %{CC:%{!E:%eGCC does not support -CC without using -E}}\     ratfor %{C} %{CC} %{v} %{E:%W{o*}} %{!E: %{!pipe:-o %g.f} %i |\n\     f771 %m.f %(cc1_options) %{I*} %{!fsyntax-only:%(invoke_as)}}"
 operator|,
 literal|0
 block|}

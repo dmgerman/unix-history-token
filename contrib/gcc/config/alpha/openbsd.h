@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Configuration file for an alpha OpenBSD target.    Copyright (C) 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Configuration file for an alpha OpenBSD target.    Copyright (C) 1999, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -13,52 +13,6 @@ directive|define
 name|TARGET_ENDIAN_DEFAULT
 value|0
 end_define
-
-begin_define
-define|#
-directive|define
-name|OBSD_NO_DYNAMIC_LIBRARIES
-end_define
-
-begin_define
-define|#
-directive|define
-name|OBSD_HAS_DECLARE_FUNCTION_NAME
-end_define
-
-begin_define
-define|#
-directive|define
-name|OBSD_HAS_DECLARE_FUNCTION_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|OBSD_HAS_DECLARE_OBJECT
-end_define
-
-begin_comment
-comment|/* alpha ecoff supports only weak aliases, see below.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_WEAKEN_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-value|ASM_OUTPUT_WEAK_ALIAS (FILE,NAME,0)
-end_define
-
-begin_include
-include|#
-directive|include
-file|<openbsd.h>
-end_include
 
 begin_comment
 comment|/* Controlling the compilation driver.  */
@@ -213,7 +167,7 @@ comment|/* Assembler format: exception region output.  */
 end_comment
 
 begin_comment
-comment|/* All configurations that don't use elf must be explicit about not using    dwarf unwind information. egcs doesn't try too hard to check internal    configuration files...  */
+comment|/* All configurations that don't use elf must be explicit about not using    dwarf unwind information.  */
 end_comment
 
 begin_ifdef
@@ -241,38 +195,30 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Assembler format: file framework.  */
+comment|/* Assembler format: label output.  */
 end_comment
 
 begin_comment
-comment|/* Taken from alpha/osf.h. This used to be common to all alpha    configurations, but elf has departed from it.    Check alpha/alpha.h, alpha/osf.h for it when egcs is upgraded.  */
+comment|/* alpha ecoff supports only weak aliases.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASM_FILE_START
-end_ifndef
+begin_undef
+undef|#
+directive|undef
+name|ASM_WEAKEN_LABEL
+end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_FILE_START
+name|ASM_WEAKEN_LABEL
 parameter_list|(
 name|FILE
+parameter_list|,
+name|NAME
 parameter_list|)
-define|\
-value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");                          \   fprintf (FILE, "\t.set noat\n");				\   if (TARGET_SUPPORT_ARCH)					\     fprintf (FILE, "\t.arch %s\n",				\              TARGET_CPU_EV6 ? "ev6"				\ 	     : (TARGET_CPU_EV5					\ 		? (TARGET_MAX ? "pca56" : TARGET_BWX ? "ev56" : "ev5") \ 		: "ev4"));					\ 								\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
+value|ASM_OUTPUT_WEAK_ALIAS (FILE,NAME,0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Assembler format: label output.  */
-end_comment
 
 begin_define
 define|#

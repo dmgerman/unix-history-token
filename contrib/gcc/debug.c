@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Do-nothing debug hooks for GCC.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Do-nothing debug hooks for GCC.    Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -84,7 +96,10 @@ name|debug_nothing_tree
 block|,
 comment|/* outlining_inline_function */
 name|debug_nothing_rtx
+block|,
 comment|/* label */
+name|debug_nothing_int
+comment|/* handle_pch */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -96,7 +111,9 @@ end_comment
 begin_function
 name|void
 name|debug_nothing_void
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
@@ -104,12 +121,10 @@ begin_function
 name|void
 name|debug_nothing_tree
 parameter_list|(
-name|decl
-parameter_list|)
 name|tree
 name|decl
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -117,12 +132,10 @@ begin_function
 name|bool
 name|debug_true_tree
 parameter_list|(
-name|block
-parameter_list|)
 name|tree
 name|block
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|true
@@ -134,12 +147,10 @@ begin_function
 name|void
 name|debug_nothing_rtx
 parameter_list|(
-name|insn
-parameter_list|)
 name|rtx
 name|insn
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -147,14 +158,12 @@ begin_function
 name|void
 name|debug_nothing_charstar
 parameter_list|(
-name|main_filename
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|main_filename
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -162,21 +171,17 @@ begin_function
 name|void
 name|debug_nothing_int_charstar
 parameter_list|(
-name|line
-parameter_list|,
-name|text
-parameter_list|)
 name|unsigned
 name|int
 name|line
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|text
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -184,13 +189,11 @@ begin_function
 name|void
 name|debug_nothing_int
 parameter_list|(
-name|line
-parameter_list|)
 name|unsigned
 name|int
 name|line
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -198,20 +201,16 @@ begin_function
 name|void
 name|debug_nothing_int_int
 parameter_list|(
+name|unsigned
+name|int
 name|line
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|unsigned
+name|int
 name|n
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-name|unsigned
-name|int
-name|line
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|unsigned
-name|int
-name|n
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
 block|{ }
 end_function
 

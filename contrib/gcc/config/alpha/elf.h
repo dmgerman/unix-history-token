@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha w/ELF.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Richard Henderson (rth@tamu.edu).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.    */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha w/ELF.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Richard Henderson (rth@tamu.edu).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -64,17 +64,17 @@ directive|undef
 name|ASM_FINAL_SPEC
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_SUBTARGET_SPEC
-end_undef
+begin_comment
+comment|/* alpha/ doesn't use elfos.h for some reason.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CPP_SUBTARGET_SPEC
-value|"-D__ELF__"
+name|TARGET_OBJFMT_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define ("__ELF__");		\     }						\   while (0)
 end_define
 
 begin_undef
@@ -101,27 +101,6 @@ define|#
 directive|define
 name|ASM_SPEC
 value|"%{G*} %{relax:-relax} %{!gstabs*:-no-mdebug}%{gstabs*:-mdebug}"
-end_define
-
-begin_comment
-comment|/* Output at beginning of assembler file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|do {								\   if (write_symbols == DBX_DEBUG)				\     {								\       alpha_write_verstamp (FILE);				\       output_file_directive (FILE, main_input_filename);	\     }								\   fprintf (FILE, "\t.set noat\n");				\   fprintf (FILE, "\t.set noreorder\n");				\   if (TARGET_EXPLICIT_RELOCS)					\     fprintf (FILE, "\t.set nomacro\n");				\   if (TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)	\     {								\       fprintf (FILE, "\t.arch %s\n",				\                (TARGET_CPU_EV6 ? "ev6"				\                 : TARGET_MAX ? "pca56" : "ev56"));		\     }								\ } while (0)
 end_define
 
 begin_undef
@@ -193,7 +172,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|fprintf (FILE, "%s%u\n", SKIP_ASM_OP, (SIZE))
+value|fprintf (FILE, "%s"HOST_WIDE_INT_PRINT_UNSIGNED"\n", SKIP_ASM_OP, (SIZE))
 end_define
 
 begin_comment
@@ -261,7 +240,7 @@ parameter_list|,
 name|JUMPTABLE
 parameter_list|)
 define|\
-value|do {									\     ASM_OUTPUT_BEFORE_CASE_LABEL (FILE, PREFIX, NUM, JUMPTABLE)		\     ASM_OUTPUT_INTERNAL_LABEL (FILE, PREFIX, NUM);			\   } while (0)
+value|do {									\     ASM_OUTPUT_BEFORE_CASE_LABEL (FILE, PREFIX, NUM, JUMPTABLE)		\     (*targetm.asm_out.internal_label) (FILE, PREFIX, NUM);			\   } while (0)
 end_define
 
 begin_comment
@@ -324,7 +303,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\ } while (0)
+value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), "," HOST_WIDE_INT_PRINT_UNSIGNED ",%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\ } while (0)
 end_define
 
 begin_comment
@@ -380,11 +359,11 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   (*targetm.asm_out.globalize_label) (FILE, NAME);	       		\   ASM_OUTPUT_ALIGNED_LOCAL (FILE, NAME, SIZE, ALIGN);			\ } while (0)
+value|do {									\   ASM_OUTPUT_ALIGNED_LOCAL (FILE, NAME, SIZE, ALIGN);			\ } while (0)
 end_define
 
 begin_comment
-comment|/* Biggest alignment supported by the object file format of this    machine.  Use this macro to limit the alignment which can be    specified using the `__attribute__ ((aligned (N)))' construct.  If    not defined, the default value is `BIGGEST_ALIGNMENT'.      This value is really 2^63.  Since gcc figures the alignment in bits,    we could only potentially get to 2^60 on suitible hosts.  Due to other    considerations in varasm, we must restrict this to what fits in an int.  */
+comment|/* Biggest alignment supported by the object file format of this    machine.  Use this macro to limit the alignment which can be    specified using the `__attribute__ ((aligned (N)))' construct.  If    not defined, the default value is `BIGGEST_ALIGNMENT'.      This value is really 2^63.  Since gcc figures the alignment in bits,    we could only potentially get to 2^60 on suitable hosts.  Due to other    considerations in varasm, we must restrict this to what fits in an int.  */
 end_comment
 
 begin_undef
@@ -568,31 +547,25 @@ define|\
 value|SECTION_FUNCTION_TEMPLATE(sbss_section, in_sbss, SBSS_SECTION_ASM_OP)	\   SECTION_FUNCTION_TEMPLATE(sdata_section, in_sdata, SDATA_SECTION_ASM_OP)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|sbss_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|sdata_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_undef
 undef|#
@@ -612,7 +585,7 @@ parameter_list|,
 name|OP
 parameter_list|)
 define|\
-value|void FN ()					\ {						\   if (in_section != ENUM)			\     {						\       fprintf (asm_out_file, "%s\n", OP);	\       in_section = ENUM;			\     }						\ }
+value|void FN (void)					\ {						\   if (in_section != ENUM)			\     {						\       fprintf (asm_out_file, "%s\n", OP);	\       in_section = ENUM;			\     }						\ }
 end_define
 
 begin_comment
@@ -907,7 +880,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for ELF.  Here we add the    (even more) magical crtbegin.o file which provides part of the    support for getting C++ file-scope static object constructed    before entering `main'.   */
+comment|/* Provide a STARTFILE_SPEC appropriate for ELF.  Here we add the    (even more) magical crtbegin.o file which provides part of the    support for getting C++ file-scope static object constructed    before entering `main'.  */
 end_comment
 
 begin_undef
@@ -916,13 +889,37 @@ directive|undef
 name|STARTFILE_SPEC
 end_undef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LD_PIE
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{shared:crtbeginS.o%s}%{!shared:crtbegin.o%s}}"
+value|"%{!shared: %{pg|p:gcrt1.o%s;pie:Scrt1.o%s;:crt1.o%s}}\    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{!shared: %{pg|p:gcrt1.o%s;:crt1.o%s}}\    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Provide a ENDFILE_SPEC appropriate for ELF.  Here we tack on the    magical crtend.o file which provides part of the support for    getting C++ file-scope static object constructed before entering    `main', followed by a normal ELF "finalizer" file, `crtn.o'.  */
@@ -939,7 +936,7 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 define|\
-value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    %{shared:crtendS.o%s}%{!shared:crtend.o%s} crtn.o%s"
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    %{shared|pie:crtendS.o%s;:crtend.o%s} crtn.o%s"
 end_define
 
 begin_comment

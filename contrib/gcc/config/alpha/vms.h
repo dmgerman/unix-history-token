@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Output variables, constants and external declarations, for GNU compiler.    Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Output variables, constants and external declarations, for GNU compiler.    Copyright (C) 1996, 1997, 1998, 2000, 2001, 2002, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -34,17 +34,6 @@ name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
 value|do {					\ 	builtin_define_std ("vms");		\ 	builtin_define_std ("VMS");		\ 	builtin_define ("__ALPHA");		\ 	builtin_assert ("system=vms");		\ 	if (TARGET_FLOAT_VAX)			\ 	  builtin_define ("__G_FLOAT");		\ 	else					\ 	  builtin_define ("__IEEE_FLOAT");	\     } while (0)
-end_define
-
-begin_comment
-comment|/* By default, allow $ to be part of an identifier.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOLLARS_IN_IDENTIFIERS
-value|2
 end_define
 
 begin_undef
@@ -97,23 +86,6 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fprintf (stderr, " (%s)", TARGET_NAME);
-end_define
-
-begin_comment
-comment|/* The structure return address arrives as an "argument" on VMS.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|STRUCT_VALUE_REGNUM
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STRUCT_VALUE
-value|0
 end_define
 
 begin_undef
@@ -380,6 +352,8 @@ parameter_list|,
 name|LIBNAME
 parameter_list|,
 name|INDIRECT
+parameter_list|,
+name|N_NAMED_ARGS
 parameter_list|)
 define|\
 value|(CUM).num_args = 0;						\   (CUM).atypes[0] = (CUM).atypes[1] = (CUM).atypes[2] = I64;	\   (CUM).atypes[3] = (CUM).atypes[4] = (CUM).atypes[5] = I64;
@@ -436,35 +410,6 @@ value|((CUM).num_args< 6&& 6< (CUM).num_args				\    + ALPHA_ARG_SIZE (MODE, TYP
 end_define
 
 begin_comment
-comment|/* Perform any needed actions needed for a function that is receiving a    variable number of arguments.      CUM is as for INIT_CUMULATIVE_ARGS.     MODE and TYPE are the mode and type of the current parameter.     PRETEND_SIZE is a variable that should be set to the amount of stack    that must be pushed by the prolog to pretend that our caller pushed    it.     Normally, this macro will push all remaining incoming registers on the    stack and set PRETEND_SIZE to the length of the registers pushed.      For VMS, we allocate space for all 6 arg registers plus a count.     However, if NO registers need to be saved, don't allocate any space.    This is not only because we won't need the space, but because AP includes    the current_pretend_args_size and we don't want to mess up any    ap-relative addresses already made.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SETUP_INCOMING_VARARGS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SETUP_INCOMING_VARARGS
-parameter_list|(
-name|CUM
-parameter_list|,
-name|MODE
-parameter_list|,
-name|TYPE
-parameter_list|,
-name|PRETEND_SIZE
-parameter_list|,
-name|NO_RTL
-parameter_list|)
-define|\
-value|{ if ((CUM).num_args< 6)				\     {							\       if (! (NO_RTL))					\ 	{						\ 	  emit_move_insn (gen_rtx_REG (DImode, 1),	\ 			  virtual_incoming_args_rtx);	\ 	  emit_insn (gen_arg_home ());			\ 	}						\ 						        \       PRETEND_SIZE = 7 * UNITS_PER_WORD;		\     }							\ }
-end_define
-
-begin_comment
 comment|/* ABI has stack checking, but it's broken.  */
 end_comment
 
@@ -479,23 +424,6 @@ define|#
 directive|define
 name|STACK_CHECK_BUILTIN
 value|0
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");				\   if (TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)	\     {								\       fprintf (FILE, "\t.arch %s\n",				\                (TARGET_CPU_EV6 ? "ev6"				\                 : TARGET_MAX ? "pca56" : "ev56"));		\     }								\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
 end_define
 
 begin_define
@@ -557,34 +485,28 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|void								\ link_section ()							\ {								\   if (in_section != in_link)					\     {								\       fprintf (asm_out_file, "%s\n", LINK_SECTION_ASM_OP); 	\       in_section = in_link;					\     }								\ }                                                               \ void								\ literals_section ()						\ {								\   if (in_section != in_literals)				\     {								\       fprintf (asm_out_file, "%s\n", LITERALS_SECTION_ASM_OP); 	\       in_section = in_literals;					\     }								\ }
+value|void								\ link_section (void)						\ {								\   if (in_section != in_link)					\     {								\       fprintf (asm_out_file, "%s\n", LINK_SECTION_ASM_OP); 	\       in_section = in_link;					\     }								\ }                                                               \ void								\ literals_section (void)						\ {								\   if (in_section != in_literals)				\     {								\       fprintf (asm_out_file, "%s\n", LITERALS_SECTION_ASM_OP); 	\       in_section = in_literals;					\     }								\ }
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|link_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|literals_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_undef
 undef|#
@@ -666,7 +588,7 @@ parameter_list|,
 name|TABLEINSN
 parameter_list|)
 define|\
-value|{ ASM_OUTPUT_ALIGN (FILE, 3); ASM_OUTPUT_INTERNAL_LABEL (FILE, PREFIX, NUM); }
+value|{ ASM_OUTPUT_ALIGN (FILE, 3); (*targetm.asm_out.internal_label) (FILE, PREFIX, NUM); }
 end_define
 
 begin_comment
@@ -700,7 +622,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\ } while (0)
+value|do {									\   fprintf ((FILE), "%s", COMMON_ASM_OP);				\   assemble_name ((FILE), (NAME));					\   fprintf ((FILE), "," HOST_WIDE_INT_PRINT_UNSIGNED ",%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\ } while (0)
 end_define
 
 begin_escape
@@ -960,25 +882,11 @@ name|PREFERRED_DEBUGGING_TYPE
 value|VMS_AND_DWARF2_DEBUG
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_FORMAT_PRIVATE_NAME
-end_undef
-
 begin_define
 define|#
 directive|define
-name|ASM_FORMAT_PRIVATE_NAME
-parameter_list|(
-name|OUTPUT
-parameter_list|,
-name|NAME
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|( (OUTPUT) = (char *) alloca (strlen ((NAME)) + 12),	\   sprintf ((OUTPUT), "%s___%d", (NAME), (LABELNO)))
+name|ASM_PN_FORMAT
+value|"%s___%lu"
 end_define
 
 begin_comment
@@ -1039,7 +947,7 @@ value|{                                                  \    if (write_symbols 
 end_define
 
 begin_comment
-comment|/* Link with vms-dwarf2.o if -g (except -g0). This causes the    VMS link to pull all the dwarf2 debug sections together. */
+comment|/* Link with vms-dwarf2.o if -g (except -g0). This causes the    VMS link to pull all the dwarf2 debug sections together.  */
 end_comment
 
 begin_undef
@@ -1079,66 +987,6 @@ define|#
 directive|define
 name|LIB_SPEC
 value|"-lc"
-end_define
-
-begin_comment
-comment|/* Define the names of the division and modulus functions.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIVSI3_LIBCALL
-value|"OTS$DIV_I"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIVDI3_LIBCALL
-value|"OTS$DIV_L"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDIVSI3_LIBCALL
-value|"OTS$DIV_UI"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDIVDI3_LIBCALL
-value|"OTS$DIV_UL"
-end_define
-
-begin_define
-define|#
-directive|define
-name|MODSI3_LIBCALL
-value|"OTS$REM_I"
-end_define
-
-begin_define
-define|#
-directive|define
-name|MODDI3_LIBCALL
-value|"OTS$REM_L"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UMODSI3_LIBCALL
-value|"OTS$REM_UI"
-end_define
-
-begin_define
-define|#
-directive|define
-name|UMODDI3_LIBCALL
-value|"OTS$REM_UL"
 end_define
 
 begin_define

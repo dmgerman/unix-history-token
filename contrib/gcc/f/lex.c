@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implementation of Fortran lexer    Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002    Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Implementation of Fortran lexer    Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -882,35 +882,18 @@ name|size
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MAP_CHARACTER
-name|Sorry
-operator|,
-name|MAP_CHARACTER
-name|is
-name|not
-name|going
-name|to
-name|work
-name|as
-name|expected
-name|in
-name|GNU
-name|Fortran
-operator|,
-name|please
-name|contact
-name|fortran
-expr|@
-name|gnu
-operator|.
-name|org
-if|if you wish to fund work to port g77 to non-ASCII machines.
-endif|#
-directive|endif
-if|ffelex_token_->text[ffelex_token_->length++] = c
-empty_stmt|;
+name|ffelex_token_
+operator|->
+name|text
+index|[
+name|ffelex_token_
+operator|->
+name|length
+operator|++
+index|]
+operator|=
+name|c
+expr_stmt|;
 block|}
 end_function
 
@@ -2635,12 +2618,37 @@ name|buffer_length
 operator|*=
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|==
+operator|&
+name|buff
+index|[
+literal|0
+index|]
+condition|)
+block|{
 name|q
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
+name|xmalloc
+argument_list|(
+name|buffer_length
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|q
+argument_list|,
+name|buff
+argument_list|,
+name|bytes_used
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|q
+operator|=
 name|xrealloc
 argument_list|(
 name|q
@@ -2771,6 +2779,8 @@ literal|0
 decl_stmt|;
 name|int
 name|d
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
@@ -2871,12 +2881,37 @@ name|bytes_used
 operator|*
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|==
+operator|&
+name|buff
+index|[
+literal|0
+index|]
+condition|)
+block|{
 name|q
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
+name|xmalloc
+argument_list|(
+name|buffer_length
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|q
+argument_list|,
+name|buff
+argument_list|,
+name|bytes_used
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|q
+operator|=
 name|xrealloc
 argument_list|(
 name|q
@@ -2981,7 +3016,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|input_filename
+name|filename
 parameter_list|)
 block|{
 if|if
@@ -3021,6 +3056,8 @@ call|)
 argument_list|(
 name|input_file_stack
 operator|->
+name|location
+operator|.
 name|line
 argument_list|)
 expr_stmt|;
@@ -3038,9 +3075,11 @@ name|input_file_stack
 condition|)
 name|input_file_stack
 operator|->
-name|name
+name|location
+operator|.
+name|file
 operator|=
-name|input_filename
+name|filename
 expr_stmt|;
 block|}
 end_function
@@ -3056,7 +3095,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|input_filename
+name|filename
 parameter_list|)
 block|{
 name|struct
@@ -3064,11 +3103,6 @@ name|file_stack
 modifier|*
 name|p
 init|=
-operator|(
-expr|struct
-name|file_stack
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -3080,6 +3114,8 @@ argument_list|)
 decl_stmt|;
 name|input_file_stack
 operator|->
+name|location
+operator|.
 name|line
 operator|=
 name|old_lineno
@@ -3092,9 +3128,11 @@ name|input_file_stack
 expr_stmt|;
 name|p
 operator|->
-name|name
+name|location
+operator|.
+name|file
 operator|=
-name|input_filename
+name|filename
 expr_stmt|;
 name|input_file_stack
 operator|=
@@ -3112,7 +3150,7 @@ call|)
 argument_list|(
 literal|0
 argument_list|,
-name|input_filename
+name|filename
 argument_list|)
 expr_stmt|;
 comment|/* Now that we've pushed or popped the input stack,      update the name in the top element.  */
@@ -3122,9 +3160,11 @@ name|input_file_stack
 condition|)
 name|input_file_stack
 operator|->
-name|name
+name|location
+operator|.
+name|file
 operator|=
-name|input_filename
+name|filename
 expr_stmt|;
 block|}
 end_function
@@ -3137,7 +3177,9 @@ begin_function
 specifier|static
 name|void
 name|ffelex_prepare_eos_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3327,7 +3369,9 @@ begin_function
 specifier|static
 name|void
 name|ffelex_finish_statement_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3487,10 +3531,6 @@ condition|)
 block|{
 name|directive_buffer
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 literal|128
@@ -3545,10 +3585,6 @@ literal|2
 expr_stmt|;
 name|directive_buffer
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xrealloc
 argument_list|(
 name|directive_buffer
@@ -3714,62 +3750,6 @@ begin_comment
 comment|/* Handle # directives that make it through (or are generated by) the    preprocessor.  As much as reasonably possible, emulate the behavior    of the gcc compiler phase cc1, though interactions between #include    and INCLUDE might possibly produce bizarre results in terms of    error reporting and the generation of debugging info vis-a-vis the    locations of some things.     Returns the next character unhandled, which is always newline or EOF.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-name|HANDLE_PRAGMA
-end_if
-
-begin_comment
-comment|/* Local versions of these macros, that can be passed as function pointers.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|pragma_getc
-parameter_list|()
-block|{
-return|return
-name|getc
-argument_list|(
-name|finput
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|pragma_ungetc
-parameter_list|(
-name|arg
-parameter_list|)
-name|int
-name|arg
-decl_stmt|;
-block|{
-name|ungetc
-argument_list|(
-name|arg
-argument_list|,
-name|finput
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HANDLE_PRAGMA */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -3893,32 +3873,6 @@ name|EOF
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* g77 doesn't handle pragmas, so ignores them FOR NOW. */
-block|static char buffer [128]; 	      char * buff = buffer;
-comment|/* Read the pragma name into a buffer. 		 ISSPACE() may evaluate its argument more than once!  */
-block|while (((c = getc (finput)), ISSPACE(c))) 		continue;  	      do 		{ 		  * buff ++ = c; 		  c = getc (finput); 		} 	      while (c != EOF&& ! ISSPACE (c)&& c != '\n'&& buff< buffer + 128);  	      pragma_ungetc (c);  	      * -- buff = 0;
-ifdef|#
-directive|ifdef
-name|HANDLE_PRAGMA
-block|if (HANDLE_PRAGMA (pragma_getc, pragma_ungetc, buffer)) 		goto skipline;
-endif|#
-directive|endif
-comment|/* HANDLE_PRAGMA */
-ifdef|#
-directive|ifdef
-name|HANDLE_GENERIC_PRAGMAS
-block|if (handle_generic_pragma (buffer)) 		goto skipline;
-endif|#
-directive|endif
-comment|/* !HANDLE_GENERIC_PRAGMAS */
-comment|/* Issue a warning message if we have been asked to do so. 		 Ignoring unknown pragmas in system header file unless 		 an explcit -Wunknown-pragmas has been given. */
-block|if (warn_unknown_pragmas> 1 		  || (warn_unknown_pragmas&& ! in_system_header)) 		warning ("ignoring pragma: %s", token_buffer);
-endif|#
-directive|endif
-comment|/* 0 */
 goto|goto
 name|skipline
 goto|;
@@ -4022,7 +3976,7 @@ operator|->
 name|define
 call|)
 argument_list|(
-name|lineno
+name|input_line
 argument_list|,
 name|text
 argument_list|)
@@ -4123,7 +4077,7 @@ operator|->
 name|undef
 call|)
 argument_list|(
-name|lineno
+name|input_line
 argument_list|,
 name|text
 argument_list|)
@@ -4415,17 +4369,10 @@ name|FFELEX_typeNUMBER
 operator|)
 condition|)
 block|{
-name|int
-name|old_lineno
+name|location_t
+name|old_loc
 init|=
-name|lineno
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|old_input_filename
-init|=
-name|input_filename
+name|input_location
 decl_stmt|;
 name|ffewhereFile
 name|wf
@@ -4474,7 +4421,7 @@ name|EOF
 condition|)
 block|{
 comment|/* No more: store the line number and check following line.  */
-name|lineno
+name|input_line
 operator|=
 name|l
 expr_stmt|;
@@ -4553,7 +4500,7 @@ goto|goto
 name|skipline
 goto|;
 block|}
-name|lineno
+name|input_line
 operator|=
 name|l
 expr_stmt|;
@@ -4668,7 +4615,9 @@ name|input_file_stack
 condition|)
 name|input_file_stack
 operator|->
-name|name
+name|location
+operator|.
+name|file
 operator|=
 name|input_filename
 expr_stmt|;
@@ -4735,13 +4684,15 @@ condition|(
 name|ffelex_kludge_flag_
 condition|)
 block|{
-name|lineno
+name|input_line
 operator|=
 literal|1
 expr_stmt|;
 name|input_filename
 operator|=
-name|old_input_filename
+name|old_loc
+operator|.
+name|file
 expr_stmt|;
 name|error
 argument_list|(
@@ -4759,7 +4710,9 @@ block|{
 comment|/* Pushing to a new file.  */
 name|ffelex_file_push_
 argument_list|(
-name|old_lineno
+name|old_loc
+operator|.
+name|line
 argument_list|,
 name|input_filename
 argument_list|)
@@ -4885,13 +4838,15 @@ operator|&&
 name|ffelex_kludge_flag_
 condition|)
 block|{
-name|lineno
+name|input_line
 operator|=
 literal|1
 expr_stmt|;
 name|input_filename
 operator|=
-name|old_input_filename
+name|old_loc
+operator|.
+name|file
 expr_stmt|;
 name|error
 argument_list|(
@@ -5232,7 +5187,9 @@ begin_function
 specifier|static
 name|void
 name|ffelex_include_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffewhereFile
 name|include_wherefile
@@ -5298,17 +5255,10 @@ argument_list|(
 name|current_wl
 argument_list|)
 decl_stmt|;
-name|int
-name|old_lineno
+name|location_t
+name|old_loc
 init|=
-name|lineno
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|old_input_filename
-init|=
-name|input_filename
+name|input_location
 decl_stmt|;
 if|if
 condition|(
@@ -5362,7 +5312,9 @@ argument_list|)
 expr_stmt|;
 name|ffelex_file_push_
 argument_list|(
-name|old_lineno
+name|old_loc
+operator|.
+name|line
 argument_list|,
 name|ffewhere_file_name
 argument_list|(
@@ -5418,15 +5370,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|REDUCE_CARD_SIZE_AFTER_BIGGY
-comment|/* Define if occasional large lines. */
-error|#
-directive|error
-literal|"need to handle possible reduction of card size here!!"
-endif|#
-directive|endif
 name|assert
 argument_list|(
 name|ffelex_card_size_
@@ -5452,13 +5395,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|input_filename
+name|input_location
 operator|=
-name|old_input_filename
-expr_stmt|;
-name|lineno
-operator|=
-name|old_lineno
+name|old_loc
 expr_stmt|;
 name|ffelex_linecount_current_
 operator|=
@@ -5596,7 +5535,9 @@ begin_function
 specifier|static
 name|void
 name|ffelex_next_line_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffelex_linecount_current_
 operator|=
@@ -5606,7 +5547,7 @@ operator|++
 name|ffelex_linecount_next_
 expr_stmt|;
 operator|++
-name|lineno
+name|input_line
 expr_stmt|;
 block|}
 end_function
@@ -5615,7 +5556,9 @@ begin_function
 specifier|static
 name|void
 name|ffelex_send_token_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|++
 name|ffelex_number_of_tokens_
@@ -5884,7 +5827,9 @@ begin_function
 specifier|static
 name|ffelexToken
 name|ffelex_token_new_
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffelexToken
 name|t
@@ -5894,9 +5839,6 @@ name|ffelex_total_tokens_
 expr_stmt|;
 name|t
 operator|=
-operator|(
-name|ffelexToken
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|malloc_pool_image
@@ -6150,7 +6092,9 @@ end_comment
 begin_function
 name|bool
 name|ffelex_expecting_character
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -6244,7 +6188,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|lineno
+name|input_line
 operator|=
 literal|0
 expr_stmt|;
@@ -6311,42 +6255,6 @@ comment|/* Come here directly when last line didn't clarify the continuation iss
 name|beginning_of_line_again
 label|:
 comment|/* :::::::::::::::::::: */
-ifdef|#
-directive|ifdef
-name|REDUCE_CARD_SIZE_AFTER_BIGGY
-comment|/* Define if occasional large lines. */
-if|if
-condition|(
-name|ffelex_card_size_
-operator|!=
-name|FFELEX_columnINITIAL_SIZE_
-condition|)
-block|{
-name|ffelex_card_image_
-operator|=
-name|malloc_resize_ks
-argument_list|(
-name|malloc_pool_image
-argument_list|()
-argument_list|,
-name|ffelex_card_image_
-argument_list|,
-name|FFELEX_columnINITIAL_SIZE_
-operator|+
-literal|9
-argument_list|,
-name|ffelex_card_size_
-operator|+
-literal|9
-argument_list|)
-expr_stmt|;
-name|ffelex_card_size_
-operator|=
-name|FFELEX_columnINITIAL_SIZE_
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|first_line
 label|:
 comment|/* :::::::::::::::::::: */
@@ -10007,7 +9915,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|lineno
+name|input_line
 operator|=
 literal|0
 expr_stmt|;
@@ -13039,7 +12947,9 @@ end_function
 begin_function
 name|void
 name|ffelex_init_1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -13407,7 +13317,9 @@ end_comment
 begin_function
 name|bool
 name|ffelex_is_names_expected
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ffelex_names_
@@ -13423,7 +13335,9 @@ begin_function
 name|char
 modifier|*
 name|ffelex_line
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ffelex_card_image_
@@ -13438,7 +13352,9 @@ end_comment
 begin_function
 name|ffewhereColumnNumber
 name|ffelex_line_length
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ffelex_card_length_
@@ -13453,7 +13369,9 @@ end_comment
 begin_function
 name|ffewhereLineNumber
 name|ffelex_line_number
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|ffelex_linecount_current_
@@ -14771,7 +14689,9 @@ end_comment
 begin_function
 name|ffelexToken
 name|ffelex_token_new_eof
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|ffelexToken
 name|t

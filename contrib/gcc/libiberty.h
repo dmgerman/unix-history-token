@@ -175,6 +175,20 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* A well-defined realpath () that is always compiled in.  */
+specifier|extern
+name|char
+modifier|*
+name|lrealpath
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Concatenate an arbitrary number of strings.  You must pass NULL as    the last argument of this function, to terminate the list of    strings.  Allocates memory using xmalloc.  */
 specifier|extern
 name|char
@@ -628,6 +642,7 @@ name|_hex_bad
 value|99
 specifier|extern
 specifier|const
+name|unsigned
 name|char
 name|_hex_value
 index|[
@@ -658,7 +673,7 @@ name|hex_value
 parameter_list|(
 name|c
 parameter_list|)
-value|(_hex_value[(unsigned char) (c)])
+value|((unsigned int) _hex_value[(unsigned char) (c)])
 comment|/* Definitions used by the pexecute routine.  */
 define|#
 directive|define

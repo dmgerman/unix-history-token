@@ -886,7 +886,7 @@ name|void
 modifier|*
 name|odata
 decl_stmt|;
-name|int
+name|fibheapkey_t
 name|okey
 decl_stmt|;
 name|fibnode_t

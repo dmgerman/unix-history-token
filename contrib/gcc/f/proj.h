@@ -18,13 +18,13 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USE_HCONFIG
+name|USE_BCONFIG
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"hconfig.h"
+file|"bconfig.h"
 end_include
 
 begin_else
@@ -47,6 +47,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_if

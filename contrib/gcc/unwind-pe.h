@@ -1,11 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Exception handling and frame unwind runtime interface routines.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Exception handling and frame unwind runtime interface routines.    Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     In addition to the permissions in the GNU General Public License, the    Free Software Foundation gives you unlimited permission to link the    compiled version of this file into combinations with other programs,    and to distribute those combinations without any restriction coming    from the use of this file.  (The General Public License restrictions    do apply in other respects; for example, they cover modification of    the file, and distribution when not linked into a combined    executable.)     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* @@@ Really this should be out of line, but this also causes link    compatibility problems with the base ABI.  This is slightly better    than duplicating code, however.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GCC_UNWIND_PE_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GCC_UNWIND_PE_H
+end_define
 
 begin_comment
 comment|/* If using C++, references to abort have to be qualified with std::.  */
@@ -167,6 +179,12 @@ end_define
 begin_escape
 end_escape
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SIZE_OF_ENCODED_VALUE
+end_ifndef
+
 begin_comment
 comment|/* Given an encoding, return the number of bytes the format occupies.    This is only defined for fixed-size encodings, and so does not    include leb128.  */
 end_comment
@@ -232,6 +250,11 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -376,6 +399,9 @@ expr_stmt|;
 name|result
 operator||=
 operator|(
+operator|(
+name|_Unwind_Word
+operator|)
 name|byte
 operator|&
 literal|0x7f
@@ -457,6 +483,9 @@ expr_stmt|;
 name|result
 operator||=
 operator|(
+operator|(
+name|_Unwind_Word
+operator|)
 name|byte
 operator|&
 literal|0x7f
@@ -500,7 +529,12 @@ name|result
 operator||=
 operator|-
 operator|(
+operator|(
+operator|(
+name|_Unwind_Word
+operator|)
 literal|1L
+operator|)
 operator|<<
 name|shift
 operator|)
@@ -636,12 +670,14 @@ name|__packed__
 operator|)
 argument_list|)
 union|;
+specifier|const
 name|union
 name|unaligned
 modifier|*
 name|u
 init|=
 operator|(
+specifier|const
 expr|union
 name|unaligned
 operator|*
@@ -704,7 +740,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
-operator|(
+call|(
+name|_Unwind_Internal_Ptr
+call|)
+argument_list|(
 name|a
 operator|+
 sizeof|sizeof
@@ -712,7 +751,7 @@ argument_list|(
 name|void
 operator|*
 argument_list|)
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1003,6 +1042,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unwind-pe.h */
+end_comment
 
 end_unit
 

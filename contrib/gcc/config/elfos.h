@@ -1,7 +1,16 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* elfos.h  --  operating system specific defines to be used when    targeting GCC for some generic ELF system    Copyright (C) 1991, 1994, 1995, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Based on svr4.h contributed by Ron Guilmette (rfg@netcom.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* elfos.h  --  operating system specific defines to be used when    targeting GCC for some generic ELF system    Copyright (C) 1991, 1994, 1995, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Based on svr4.h contributed by Ron Guilmette (rfg@netcom.com).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_OBJFMT_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define ("__ELF__");		\     }						\   while (0)
+end_define
 
 begin_comment
 comment|/* Define a symbol indicating that we are using elfos.h.    Some CPU specific configuration files use this.  */
@@ -106,17 +115,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* System V Release 4 uses DWARF debugging info.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DWARF_DEBUGGING_INFO
-value|1
-end_define
-
-begin_comment
 comment|/* All ELF targets can support DWARF-2.  */
 end_comment
 
@@ -197,24 +195,14 @@ value|"\t.set\t"
 end_define
 
 begin_comment
-comment|/* This is how to begin an assembly language file.  Most svr4 assemblers want    at least a .file directive to come first, and some want to see a .version    directive come right after that.  Here we just establish a default    which generates only the .file directive.  If you need a .version    directive for any specific target, you should override this definition    in the target-specific file which includes this one.  */
+comment|/* Most svr4 assemblers want a .file directive at the beginning of    their input file.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_FILE_START
-end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_FILE_START
-parameter_list|(
-name|FILE
-parameter_list|)
-define|\
-value|output_file_directive ((FILE), main_input_filename)
+name|TARGET_ASM_FILE_START_FILE_DIRECTIVE
+value|true
 end_define
 
 begin_comment
@@ -244,32 +232,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|fprintf (FILE, "%s%u\n", SKIP_ASM_OP, (SIZE))
-end_define
-
-begin_comment
-comment|/* This is how to output an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.     For most svr4 systems, the convention is that any symbol which begins    with a period is not put into the linker symbol table by the assembler.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|do								\     {								\       fprintf (FILE, ".%s%u:\n", PREFIX, (unsigned) (NUM));	\     }								\   while (0)
+value|fprintf ((FILE), "%s"HOST_WIDE_INT_PRINT_UNSIGNED"\n",\ 	    SKIP_ASM_OP, (SIZE))
 end_define
 
 begin_comment
@@ -362,7 +325,7 @@ parameter_list|,
 name|JUMPTABLE
 parameter_list|)
 define|\
-value|do									\     {									\       ASM_OUTPUT_BEFORE_CASE_LABEL (FILE, PREFIX, NUM, JUMPTABLE)	\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, PREFIX, NUM);			\     }									\   while (0)
+value|do									\     {									\       ASM_OUTPUT_BEFORE_CASE_LABEL (FILE, PREFIX, NUM, JUMPTABLE)	\ 	(*targetm.asm_out.internal_label) (FILE, PREFIX, NUM);			\     }									\   while (0)
 end_define
 
 begin_comment
@@ -413,7 +376,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do									\     {									\       fprintf ((FILE), "%s", COMMON_ASM_OP);				\       assemble_name ((FILE), (NAME));					\       fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\     }									\   while (0)
+value|do									\     {									\       fprintf ((FILE), "%s", COMMON_ASM_OP);				\       assemble_name ((FILE), (NAME));					\       fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",		\ 	       (SIZE), (ALIGN) / BITS_PER_UNIT);			\     }									\   while (0)
 end_define
 
 begin_comment
@@ -608,7 +571,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do					\     {					\       fputs ("\t.weak\t", (FILE));	\       assemble_name ((FILE), (NAME)); 	\       fputc ('\n', (FILE));		\     }					\   while (0)
+value|do					\     {					\       fputs ("\t.weak\t", (FILE));	\       assemble_name ((FILE), (NAME));	\       fputc ('\n', (FILE));		\     }					\   while (0)
 end_define
 
 begin_comment
@@ -705,6 +668,12 @@ begin_comment
 comment|/* Output the size directive for a decl in rest_of_decl_compilation    in the case where we did not do so before the initializer.    Once we find the error_mark_node, we know that the value of    size_directive_output was set    by ASM_DECLARE_OBJECT_NAME when it was run for the same decl.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ASM_FINISH_DECLARE_OBJECT
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -719,7 +688,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do								\     {								\       const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);	\       HOST_WIDE_INT size;					\       								\       if (!flag_inhibit_size_directive				\&& DECL_SIZE (DECL)					\&& ! AT_END&& TOP_LEVEL				\&& DECL_INITIAL (DECL) == error_mark_node		\&& !size_directive_output)				\ 	{							\ 	  size_directive_output = 1;				\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);		\ 	}							\     }								\   while (0)
+value|do								\     {								\       const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);	\       HOST_WIDE_INT size;					\ 								\       if (!flag_inhibit_size_directive				\&& DECL_SIZE (DECL)					\&& ! AT_END&& TOP_LEVEL				\&& DECL_INITIAL (DECL) == error_mark_node		\&& !size_directive_output)				\ 	{							\ 	  size_directive_output = 1;				\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);		\ 	}							\     }								\   while (0)
 end_define
 
 begin_comment
@@ -796,7 +765,7 @@ parameter_list|,
 name|STR
 parameter_list|)
 define|\
-value|do							\     {							\       register const unsigned char *_limited_str =	\ 	(const unsigned char *) (STR);			\       register unsigned ch;				\       							\       fprintf ((FILE), "%s\"", STRING_ASM_OP);		\       							\       for (; (ch = *_limited_str); _limited_str++)	\         {						\ 	  register int escape;				\ 	  						\ 	  switch (escape = ESCAPES[ch])			\ 	    {						\ 	    case 0:					\ 	      putc (ch, (FILE));			\ 	      break;					\ 	    case 1:					\ 	      fprintf ((FILE), "\\%03o", ch);		\ 	      break;					\ 	    default:					\ 	      putc ('\\', (FILE));			\ 	      putc (escape, (FILE));			\ 	      break;					\ 	    }						\         }						\       							\       fprintf ((FILE), "\"\n");				\     }							\   while (0)
+value|do							\     {							\       register const unsigned char *_limited_str =	\ 	(const unsigned char *) (STR);			\       register unsigned ch;				\ 							\       fprintf ((FILE), "%s\"", STRING_ASM_OP);		\ 							\       for (; (ch = *_limited_str); _limited_str++)	\         {						\ 	  register int escape;				\ 							\ 	  switch (escape = ESCAPES[ch])			\ 	    {						\ 	    case 0:					\ 	      putc (ch, (FILE));			\ 	      break;					\ 	    case 1:					\ 	      fprintf ((FILE), "\\%03o", ch);		\ 	      break;					\ 	    default:					\ 	      putc ('\\', (FILE));			\ 	      putc (escape, (FILE));			\ 	      break;					\ 	    }						\         }						\ 							\       fprintf ((FILE), "\"\n");				\     }							\   while (0)
 end_define
 
 begin_comment
@@ -821,7 +790,7 @@ parameter_list|,
 name|LENGTH
 parameter_list|)
 define|\
-value|do									\     {									\       register const unsigned char *_ascii_bytes =			\ 	(const unsigned char *) (STR);					\       register const unsigned char *limit = _ascii_bytes + (LENGTH);	\       register unsigned bytes_in_chunk = 0;				\ 									\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  register const unsigned char *p;				\       									\ 	  if (bytes_in_chunk>= 60)					\ 	    {								\ 	      fprintf ((FILE), "\"\n");					\ 	      bytes_in_chunk = 0;					\ 	    }								\       									\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\       									\ 	  if (p< limit&& (p - _ascii_bytes)<= (long)STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fprintf ((FILE), "\"\n");				\ 		  bytes_in_chunk = 0;					\ 		}							\       									\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      register int escape;					\ 	      register unsigned ch;					\       									\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "%s\"", ASCII_DATA_ASM_OP);		\       									\ 	      switch (escape = ESCAPES[ch = *_ascii_bytes])		\ 		{							\ 		case 0:							\ 		  putc (ch, (FILE));					\ 		  bytes_in_chunk++;					\ 		  break;						\ 		case 1:							\ 		  fprintf ((FILE), "\\%03o", ch);			\ 		  bytes_in_chunk += 4;					\ 		  break;						\ 		default:						\ 		  putc ('\\', (FILE));					\ 		  putc (escape, (FILE));				\ 		  bytes_in_chunk += 2;					\ 		  break;						\ 		}							\ 	    }								\ 	}								\       									\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\"\n");					\     }									\   while (0)
+value|do									\     {									\       register const unsigned char *_ascii_bytes =			\ 	(const unsigned char *) (STR);					\       register const unsigned char *limit = _ascii_bytes + (LENGTH);	\       register unsigned bytes_in_chunk = 0;				\ 									\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  register const unsigned char *p;				\ 									\ 	  if (bytes_in_chunk>= 60)					\ 	    {								\ 	      fprintf ((FILE), "\"\n");					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 									\ 	  for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)		\ 	    continue;							\ 									\ 	  if (p< limit&& (p - _ascii_bytes)<= (long)STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fprintf ((FILE), "\"\n");				\ 		  bytes_in_chunk = 0;					\ 		}							\ 									\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      register int escape;					\ 	      register unsigned ch;					\ 									\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "%s\"", ASCII_DATA_ASM_OP);		\ 									\ 	      switch (escape = ESCAPES[ch = *_ascii_bytes])		\ 		{							\ 		case 0:							\ 		  putc (ch, (FILE));					\ 		  bytes_in_chunk++;					\ 		  break;						\ 		case 1:							\ 		  fprintf ((FILE), "\\%03o", ch);			\ 		  bytes_in_chunk += 4;					\ 		  break;						\ 		default:						\ 		  putc ('\\', (FILE));					\ 		  putc (escape, (FILE));				\ 		  bytes_in_chunk += 2;					\ 		  break;						\ 		}							\ 	    }								\ 	}								\ 									\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\"\n");					\     }									\   while (0)
 end_define
 
 end_unit

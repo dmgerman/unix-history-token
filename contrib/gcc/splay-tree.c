@@ -1735,7 +1735,7 @@ name|sp
 operator|->
 name|root
 return|;
-comment|/* Otherwise, find the leftmost element of the right subtree.  */
+comment|/* Otherwise, find the rightmost element of the left subtree.  */
 name|node
 operator|=
 name|sp
@@ -1840,7 +1840,7 @@ name|sp
 operator|->
 name|root
 return|;
-comment|/* Otherwise, find the rightmost element of the left subtree.  */
+comment|/* Otherwise, find the leftmost element of the right subtree.  */
 name|node
 operator|=
 name|sp

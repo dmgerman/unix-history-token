@@ -2,12 +2,6 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|"ansidecl.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"version.h"
 end_include
 
@@ -21,7 +15,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"3.3.3 20031106 (prerelease)"
+literal|"3.4.2 20040728 (prerelease)"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Base configuration file for all NetBSD targets.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Base configuration file for all NetBSD targets.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -14,19 +14,6 @@ name|NETBSD_OS_CPP_BUILTINS_COMMON
 parameter_list|()
 define|\
 value|do						\     {						\       builtin_define ("__NetBSD__");		\       builtin_assert ("system=unix");		\       builtin_assert ("system=NetBSD");		\     }						\   while (0)
-end_define
-
-begin_comment
-comment|/* TARGET_OS_CPP_BUILTINS() common to all LP64 NetBSD targets.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETBSD_OS_CPP_BUILTINS_LP64
-parameter_list|()
-define|\
-value|do						\     {						\       builtin_define ("_LP64");			\     }						\   while (0)
 end_define
 
 begin_comment
@@ -352,7 +339,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Attempt to turn on execute permission for the stack.  This may be    used by TRANSFER_FROM_TRAMPOLINE of the target needs it (that is,    if the target machine can change execute permissions on a page).     There is no way to query the execute permission of the stack, so    we always issue the mprotect() call.     Note that we go out of our way to use namespace-non-invasive calls    here.  Unfortunately, there is no libc-internal name for mprotect().     Also note that no errors should be emitted by this code; it is considered    dangerous for library calls to send messages to stdout/stderr.  */
+comment|/* Attempt to turn on execute permission for the stack.  This may be    used by INITIALIZE_TRAMPOLINE of the target needs it (that is,    if the target machine can change execute permissions on a page).     There is no way to query the execute permission of the stack, so    we always issue the mprotect() call.     Note that we go out of our way to use namespace-non-invasive calls    here.  Unfortunately, there is no libc-internal name for mprotect().     Also note that no errors should be emitted by this code; it is considered    dangerous for library calls to send messages to stdout/stderr.  */
 end_comment
 
 begin_define
@@ -360,7 +347,7 @@ define|#
 directive|define
 name|NETBSD_ENABLE_EXECUTE_STACK
 define|\
-value|extern void __enable_execute_stack (void *);				\ void									\ __enable_execute_stack (addr)						\      void *addr;							\ {									\   extern int mprotect (void *, size_t, int);				\   extern int __sysctl (int *, unsigned int, void *, size_t *,		\ 		       void *, size_t);					\ 									\   static int size;							\   static long mask;							\ 									\   char *page, *end;							\ 									\   if (size == 0)							\     {									\       int mib[2];							\       size_t len;							\ 									\       mib[0] = 6;
+value|extern void __enable_execute_stack (void *);				\ void									\ __enable_execute_stack (void *addr)					\ {									\   extern int mprotect (void *, size_t, int);				\   extern int __sysctl (int *, unsigned int, void *, size_t *,		\ 		       void *, size_t);					\ 									\   static int size;							\   static long mask;							\ 									\   char *page, *end;							\ 									\   if (size == 0)							\     {									\       int mib[2];							\       size_t len;							\ 									\       mib[0] = 6;
 comment|/* CTL_HW */
 value|\       mib[1] = 7;
 comment|/* HW_PAGESIZE */

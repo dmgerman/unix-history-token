@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Compilation switch flag definitions for GCC.    Copyright (C) 1987, 1988, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Compilation switch flag definitions for GCC.    Copyright (C) 1987, 1988, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002,    2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,19 +14,6 @@ define|#
 directive|define
 name|GCC_FLAGS_H
 end_define
-
-begin_comment
-comment|/* Name of the input .c file being compiled.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|main_input_filename
-decl_stmt|;
-end_decl_stmt
 
 begin_enum
 enum|enum
@@ -71,6 +58,21 @@ name|write_symbols
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Names of debug_info_type, for error messages.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|debug_type_names
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_enum
 enum|enum
 name|debug_info_level
@@ -108,8 +110,19 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|use_gnu_debug_info_extensions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means emit debugging information only for symbols which are used.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_debug_only_used_symbols
 decl_stmt|;
 end_decl_stmt
 
@@ -147,17 +160,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Print times taken by the various passes.  -ftime-report.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|time_report
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Print memory still in use at end of compilation (which may have little    to do with peak memory consumption).  -fmem-report.  */
 end_comment
 
@@ -174,7 +176,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|inhibit_warnings
 decl_stmt|;
 end_decl_stmt
@@ -185,19 +187,30 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_system_headers
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Do print extra warnings (such as for uninitialized variables).  -W.  */
+comment|/* Do print extra warnings (such as for uninitialized variables).    -W/-Wextra.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|extra_warnings
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If -Werror.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|warnings_are_errors
 decl_stmt|;
 end_decl_stmt
 
@@ -205,51 +218,48 @@ begin_comment
 comment|/* Nonzero to warn about unused variables, functions et.al.  Use    set_Wunused() to update the -Wunused-* flags that correspond to the    -Wunused option.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|set_Wunused
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|setting
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_unused_function
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_unused_label
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_unused_parameter
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_unused_variable
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_unused_value
 decl_stmt|;
 end_decl_stmt
@@ -260,7 +270,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_notreached
 decl_stmt|;
 end_decl_stmt
@@ -271,7 +281,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_inline
 decl_stmt|;
 end_decl_stmt
@@ -288,23 +298,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Zero if unknown pragmas are ignored    One if the compiler should warn about an unknown pragma not in    a system include file.    Greater than one if the compiler should warn for all unknown    pragmas.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|warn_unknown_pragmas
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero means warn about all declarations which shadow others.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_shadow
 decl_stmt|;
 end_decl_stmt
@@ -315,7 +314,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_switch
 decl_stmt|;
 end_decl_stmt
@@ -326,7 +325,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_switch_default
 decl_stmt|;
 end_decl_stmt
@@ -337,7 +336,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_switch_enum
 decl_stmt|;
 end_decl_stmt
@@ -359,7 +358,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_missing_noreturn
 decl_stmt|;
 end_decl_stmt
@@ -370,7 +369,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_cast_align
 decl_stmt|;
 end_decl_stmt
@@ -381,7 +380,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_larger_than
 decl_stmt|;
 end_decl_stmt
@@ -399,7 +398,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_aggregate_return
 decl_stmt|;
 end_decl_stmt
@@ -410,7 +409,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_packed
 decl_stmt|;
 end_decl_stmt
@@ -421,7 +420,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_padded
 decl_stmt|;
 end_decl_stmt
@@ -432,7 +431,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_disabled_optimization
 decl_stmt|;
 end_decl_stmt
@@ -443,7 +442,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_deprecated_decl
 decl_stmt|;
 end_decl_stmt
@@ -454,7 +453,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|warn_strict_aliasing
 decl_stmt|;
 end_decl_stmt
@@ -478,6 +477,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|profile_arc_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if value profile should be measured.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_profile_values
 decl_stmt|;
 end_decl_stmt
 
@@ -682,7 +692,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|flag_unroll_loops
+name|flag_old_unroll_loops
 decl_stmt|;
 end_decl_stmt
 
@@ -693,7 +703,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|flag_unroll_all_loops
+name|flag_old_unroll_all_loops
 decl_stmt|;
 end_decl_stmt
 
@@ -808,39 +818,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means all references through pointers are volatile.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_volatile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means treat all global and extern variables as volatile.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_volatile_global
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means treat all static variables as volatile.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_volatile_static
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero allows GCC to optimize sibling and tail recursive calls.  */
 end_comment
 
@@ -892,6 +869,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_trapping_math
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means disable transformations that assume default floating    point rounding behavior.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_rounding_math
 decl_stmt|;
 end_decl_stmt
 
@@ -1012,6 +1000,20 @@ name|flag_schedule_insns_after_reload
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_sched2_use_superblocks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_sched2_use_traces
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* The following flags have effect only for scheduling before register    allocation:     flag_schedule_interblock means schedule insns across basic blocks.    flag_schedule_speculative means allow speculative motion of non-load insns.    flag_schedule_speculative_load means allow speculative motion of some    load insns.    flag_schedule_speculative_load_dangerous allows speculative motion of more    load insns.  */
 end_comment
@@ -1041,6 +1043,24 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_schedule_speculative_load_dangerous
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The following flags have an effect during scheduling after register    allocation:        sched_stalled_insns means that insns can be moved prematurely from the queue    of stalled insns into the ready list.     sched_stalled_insns_dep controls how many recently scheduled cycles will     be examined for a dependency on a stalled insn that is candidate for    premature removal from the queue of stalled insns into the ready list (has     an effect only if the flag 'sched_stalled_insns' is set).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_sched_stalled_insns
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_sched_stalled_insns_dep
 decl_stmt|;
 end_decl_stmt
 
@@ -1111,6 +1131,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero if we are compiling position independent code for executable.    1 vs 2 for a target-dependent "small" or "large" mode.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_pie
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we are compiling code for a shared library, zero for    executable.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_shlib
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means generate extra code for exception handling and enable    exception handling.  */
 end_comment
 
@@ -1122,7 +1164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means generate frame unwind info table when supported */
+comment|/* Nonzero means generate frame unwind info table when supported.  */
 end_comment
 
 begin_decl_stmt
@@ -1133,7 +1175,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means generate frame unwind info table exact at each insn boundary */
+comment|/* Nonzero means generate frame unwind info table exact at each insn boundary.  */
 end_comment
 
 begin_decl_stmt
@@ -1217,13 +1259,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -fgnu-linker specifies use of the GNU linker for initializations.    -fno-gnu-linker says that collect will be used.  */
+comment|/* Greater than zero if user symbols are prepended by a leading underscore    in generated assembly code.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|flag_gnu_linker
+name|flag_leading_underscore
 decl_stmt|;
 end_decl_stmt
 
@@ -1305,7 +1347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Try to guess branch probablities.  */
+comment|/* Try to guess branch probabilities.  */
 end_comment
 
 begin_decl_stmt
@@ -1378,19 +1420,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Value of the -G xx switch, and whether it was passed or not.  */
+comment|/* Nonzero if the signed arithmetic overflow should wrap around.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
+name|flag_wrapv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if subexpressions must be evaluated from left-to-right.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_evaluation_order
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Value of the -G xx switch, and whether it was passed or not.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|HOST_WIDE_INT
 name|g_switch_value
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|g_switch_set
 decl_stmt|;
 end_decl_stmt
@@ -1535,6 +1600,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means perform global CSE.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_gcse
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero if we want to perform enhanced load motion during gcse.  */
 end_comment
 
@@ -1557,6 +1633,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero if we want to perform redundant load-after-store elimination    in gcse.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_gcse_las
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if value histograms should be used to optimize code.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_value_profile_transformations
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Perform branch target register optimization before prologue / epilogue    threading.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_branch_target_load_optimize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Perform branch target register optimization after prologue / epilogue    threading and jump2.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_branch_target_load_optimize2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means we should do dwarf2 duplicate elimination.  */
 end_comment
 
@@ -1564,6 +1684,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_eliminate_dwarf2_dups
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means we should do unused type elimination.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_eliminate_unused_debug_types
 decl_stmt|;
 end_decl_stmt
 
@@ -1611,6 +1742,31 @@ name|flag_signaling_nans
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_unit_at_a_time
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_web
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means that we defer emitting functions until they are actually    used.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_remove_unreachable_functions
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* A string that's used when a random name is required.  NULL means    to make it really random.  */
 end_comment
@@ -1623,6 +1779,32 @@ modifier|*
 name|flag_random_seed
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  The version of the C++ ABI in use.  The following values are     allowed:      0: The version of the ABI believed most conformant with the         C++ ABI specification.  This ABI may change as bugs are        discovered and fixed.  Therefore, 0 will not necessarily        indicate the same ABI in different versions of G++.      1: The version of the ABI first used in G++ 3.2.      Additional positive integers will be assigned as new versions of     the ABI become the default version of the ABI.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_abi_version
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Returns TRUE if generated code should match ABI version N or    greater is in use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|abi_version_at_least
+parameter_list|(
+name|N
+parameter_list|)
+define|\
+value|(flag_abi_version == 0 || flag_abi_version>= (N))
+end_define
 
 begin_comment
 comment|/* True if the given mode has a NaN representation and the treatment of    NaN operands is important.  Certain optimizations, such as folding    x * 0 into x, are not correct for NaN operands, and are normally    disabled for modes with NaNs.  The user can ask for them to be    done anyway using the -funsafe-math-optimizations switch.  */
@@ -1669,7 +1851,7 @@ value|(MODE_HAS_INFINITIES (MODE)&& !flag_finite_math_only)
 end_define
 
 begin_comment
-comment|/* Like HONOR_NANS, but true if the given mode distinguishes between    postive and negative zero, and the sign of zero is important.  */
+comment|/* Like HONOR_NANS, but true if the given mode distinguishes between    positive and negative zero, and the sign of zero is important.  */
 end_comment
 
 begin_define
@@ -1695,7 +1877,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|(MODE_HAS_SIGN_DEPENDENT_ROUNDING (MODE)&& !flag_unsafe_math_optimizations)
+value|(MODE_HAS_SIGN_DEPENDENT_ROUNDING (MODE)&& flag_rounding_math)
 end_define
 
 begin_endif

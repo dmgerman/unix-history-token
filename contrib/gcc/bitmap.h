@@ -224,257 +224,218 @@ begin_comment
 comment|/* Clear a bitmap by freeing up the linked list.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bitmap_clear
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Copy a bitmap to another bitmap.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bitmap_copy
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* True if two bitmaps are identical.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|bitmap_equal_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Perform an operation on two bitmaps, yielding a third.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|bitmap_operation
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|bitmap_bits
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* `or' into one bitmap the `and' of a second bitmap witih the complement    of a third.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bitmap_ior_and_compl
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Clear a single register in a register set.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bitmap_clear_bit
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Set a single register in a register set.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bitmap_set_bit
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return true if a register is set in a register set.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|bitmap_bit_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Debug functions to print a bitmap linked list.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|debug_bitmap
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|debug_bitmap_file
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Print a bitmap */
+comment|/* Print a bitmap.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bitmap_print
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bitmap
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Initialize a bitmap header.  If HEAD is NULL, a new header will be    allocated.  USING_OBSTACK indicates how elements should be allocated.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bitmap
 name|bitmap_initialize
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
 name|head
-operator|,
+parameter_list|,
 name|int
 name|using_obstack
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Release all memory used by the bitmap obstack.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|bitmap_release_memory
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* A few compatibility/functions macros for compatibility with sbitmaps */
@@ -530,50 +491,41 @@ parameter_list|)
 value|bitmap_operation (a, b, c, BITMAP_AND)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|bitmap_union_of_diff
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|,
+parameter_list|,
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|bitmap_first_set_bit
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|bitmap_last_set_bit
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bitmap
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Allocate a bitmap with oballoc.  */
@@ -587,7 +539,7 @@ parameter_list|(
 name|OBSTACK
 parameter_list|)
 define|\
-value|bitmap_initialize ((bitmap) obstack_alloc (OBSTACK, sizeof (bitmap_head)), 1)
+value|bitmap_initialize (obstack_alloc (OBSTACK, sizeof (bitmap_head)), 1)
 end_define
 
 begin_comment
@@ -613,7 +565,7 @@ directive|define
 name|BITMAP_XMALLOC
 parameter_list|()
 define|\
-value|bitmap_initialize ((bitmap) xmalloc (sizeof (bitmap_head)), 1)
+value|bitmap_initialize (xmalloc (sizeof (bitmap_head)), 1)
 end_define
 
 begin_comment
@@ -704,7 +656,7 @@ value|do {									\   bitmap_element *ptr1_ = (BITMAP1)->first;				\   bitmap_e
 comment|/* Find the block the minimum bit is in in the first bitmap.  */
 value|\   while (ptr1_ != 0&& ptr1_->indx< indx_)				\     ptr1_ = ptr1_->next;						\ 									\   if (ptr1_ != 0&& ptr1_->indx != indx_)				\     {									\       bit_num_ = 0;							\       word_num_ = 0;							\     }									\ 									\   for (; ptr1_ != 0 ; ptr1_ = ptr1_->next)				\     {									\
 comment|/* Advance BITMAP2 to the equivalent link, using an all		\ 	 zero element if an equivalent link doesn't exist.  */
-value|\       bitmap_element *tmp2_;						\ 									\       while (ptr2_ != 0&& ptr2_->indx< ptr1_->indx)			\ 	ptr2_ = ptr2_->next;						\ 									\       tmp2_ = ((ptr2_ != 0&& ptr2_->indx == ptr1_->indx)		\ 	       ? ptr2_ :&bitmap_zero_bits); 				\ 									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  BITMAP_WORD word_ = (ptr1_->bits[word_num_]			\& ~ tmp2_->bits[word_num_]);		\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< BITMAP_WORD_BITS; bit_num_++)		\ 		{							\ 		  BITMAP_WORD mask_ = ((BITMAP_WORD) 1)<< bit_num_;	\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr1_->indx * BITMAP_ELEMENT_ALL_BITS \ 				  + word_num_ * BITMAP_WORD_BITS	\ 				  + bit_num_);				\ 									\ 		      CODE;						\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)
+value|\       bitmap_element *tmp2_;						\ 									\       while (ptr2_ != 0&& ptr2_->indx< ptr1_->indx)			\ 	ptr2_ = ptr2_->next;						\ 									\       tmp2_ = ((ptr2_ != 0&& ptr2_->indx == ptr1_->indx)		\ 	       ? ptr2_ :&bitmap_zero_bits);				\ 									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  BITMAP_WORD word_ = (ptr1_->bits[word_num_]			\& ~ tmp2_->bits[word_num_]);		\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< BITMAP_WORD_BITS; bit_num_++)		\ 		{							\ 		  BITMAP_WORD mask_ = ((BITMAP_WORD) 1)<< bit_num_;	\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr1_->indx * BITMAP_ELEMENT_ALL_BITS \ 				  + word_num_ * BITMAP_WORD_BITS	\ 				  + bit_num_);				\ 									\ 		      CODE;						\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)
 end_define
 
 begin_comment
@@ -730,7 +682,7 @@ define|\
 value|do {									\   bitmap_element *ptr1_ = (BITMAP1)->first;				\   bitmap_element *ptr2_ = (BITMAP2)->first;				\   unsigned int indx_ = (MIN) / BITMAP_ELEMENT_ALL_BITS;			\   unsigned bit_num_ = (MIN) % BITMAP_WORD_BITS;				\   unsigned word_num_ = (MIN) / BITMAP_WORD_BITS % BITMAP_ELEMENT_WORDS;	\ 									\
 comment|/* Find the block the minimum bit is in in the first bitmap.  */
 value|\   while (ptr1_ != 0&& ptr1_->indx< indx_)				\     ptr1_ = ptr1_->next;						\ 									\   if (ptr1_ != 0&& ptr1_->indx != indx_)				\     {									\       bit_num_ = 0;							\       word_num_ = 0;							\     }									\ 									\   for (; ptr1_ != 0 ; ptr1_ = ptr1_->next)				\     {									\
-comment|/* Advance BITMAP2 to the equivalent link */
+comment|/* Advance BITMAP2 to the equivalent link.  */
 value|\       while (ptr2_ != 0&& ptr2_->indx< ptr1_->indx)			\ 	ptr2_ = ptr2_->next;						\ 									\       if (ptr2_ == 0)							\ 	{								\
 comment|/* If there are no more elements in BITMAP2, exit loop now.  */
 value|\ 	  ptr1_ = (bitmap_element *)0;					\ 	  break;							\ 	}								\       else if (ptr2_->indx> ptr1_->indx)				\ 	{								\ 	  bit_num_ = word_num_ = 0;					\ 	  continue;							\ 	}								\ 									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  BITMAP_WORD word_ = (ptr1_->bits[word_num_]			\& ptr2_->bits[word_num_]);		\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< BITMAP_WORD_BITS; bit_num_++)		\ 		{							\ 		  BITMAP_WORD mask_ = ((BITMAP_WORD) 1)<< bit_num_;	\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr1_->indx * BITMAP_ELEMENT_ALL_BITS \ 				  + word_num_ * BITMAP_WORD_BITS	\ 				  + bit_num_);				\ 									\ 		      CODE;						\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)

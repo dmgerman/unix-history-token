@@ -1,12 +1,15 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for SPARC running Linux-based GNU systems with ELF.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Eddie C. Dost (ecd@skynet.be)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for SPARC running Linux-based GNU systems with ELF.    Copyright (C) 1996, 1997, 1998, 1999, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Eddie C. Dost (ecd@skynet.be)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LINUX_DEFAULT_ELF
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("unix");		\ 	builtin_define_std ("linux");		\ 	builtin_define ("__gnu_linux__");	\ 	builtin_assert ("system=linux");	\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=posix");	\     }						\   while (0)
 end_define
 
 begin_comment
@@ -18,34 +21,6 @@ define|#
 directive|define
 name|NO_IMPLICIT_EXTERN_C
 end_define
-
-begin_comment
-comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|MULTIBYTE_CHARS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|MULTIBYTE_CHARS
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -83,6 +58,21 @@ define|\
 value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|HAVE_LD_PIE
+end_elif
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{!shared: %{pg|p:gcrt1.o%s;pie:Scrt1.o%s;:crt1.o%s}}\    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -93,7 +83,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"%{!shared: %{pg|p:gcrt1.o%s;:crt1.o%s}}\    crti.o%s %{static:crtbeginT.o%s;shared|pie:crtbeginS.o%s;:crtbegin.o%s}"
 end_define
 
 begin_endif
@@ -116,7 +106,7 @@ define|#
 directive|define
 name|ENDFILE_SPEC
 define|\
-value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    %{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    %{shared|pie:crtendS.o%s;:crtend.o%s} crtn.o%s"
 end_define
 
 begin_comment
@@ -235,19 +225,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -D__sparc__ -D__gnu_linux__ -Dlinux -Asystem=unix -Asystem=posix"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|CPP_SUBTARGET_SPEC
 end_undef
 
@@ -262,7 +239,7 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 define|\
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} \ %{mlong-double-128:-D__LONG_DOUBLE_128__}"
+value|"%{fPIC|fPIE|fpic|fpie:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} \ %{mlong-double-128:-D__LONG_DOUBLE_128__}"
 end_define
 
 begin_else
@@ -275,7 +252,7 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 define|\
-value|"%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} \ %{pthread:-D_REENTRANT} %{mlong-double-128:-D__LONG_DOUBLE_128__}"
+value|"%{fPIC|fPIE|fpic|fpie:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} \ %{pthread:-D_REENTRANT} %{mlong-double-128:-D__LONG_DOUBLE_128__}"
 end_define
 
 begin_endif
@@ -369,35 +346,12 @@ directive|ifdef
 name|USE_GNULIBC_1
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LINUX_DEFAULT_ELF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/elf/ld-linux.so.1} \         %{!rpath:-rpath /lib/elf/}} %{static:-static}}}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|LINK_SPEC
 value|"-m elf32_sparc -Y P,/usr/lib %{shared:-shared} \   %{!shared: \     %{!ibcs: \       %{!static: \         %{rdynamic:-export-dynamic} \         %{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.1}} \         %{static:-static}}}"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -431,7 +385,7 @@ define|#
 directive|define
 name|ASM_SPEC
 define|\
-value|"%{V} %{v:%{!V:-V}} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Wa,*:%*} -s %{fpic:-K PIC} \    %{fPIC:-K PIC} %(asm_cpu) %(asm_relax)"
+value|"%{V} %{v:%{!V:-V}} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Wa,*:%*} -s \    %{fpic|fPIC|fpie|fPIE:-K PIC} %(asm_cpu) %(asm_relax)"
 end_define
 
 begin_comment
@@ -501,31 +455,6 @@ define|#
 directive|define
 name|LOCAL_LABEL_PREFIX
 value|"."
-end_define
-
-begin_comment
-comment|/* This is how to output a definition of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|fprintf (FILE, ".L%s%d:\n", PREFIX, NUM)
 end_define
 
 begin_comment
@@ -637,6 +566,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|DITF_CONVERSION_LIBFUNCS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DITF_CONVERSION_LIBFUNCS
+value|1
+end_define
+
 begin_if
 if|#
 directive|if
@@ -657,6 +599,46 @@ define|#
 directive|define
 name|LINK_EH_SPEC
 value|"%{!static:--eh-frame-hdr} "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_AS_TLS
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_SUN_TLS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_GNU_TLS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_SUN_TLS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_GNU_TLS
+value|1
 end_define
 
 begin_endif
@@ -692,6 +674,30 @@ undef|#
 directive|undef
 name|DTORS_SECTION_ASM_OP
 end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_FILE_END
+value|file_end_indicate_exec_stack
+end_define
+
+begin_comment
+comment|/* Determine whether the the entire c99 runtime is present in the    runtime library.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_C99_FUNCTIONS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_HAS_F_SETLKW
+end_define
 
 begin_undef
 undef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Routines for GCC for ARM/pe.    Copyright (C) 1995, 1996, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Routines for GCC for ARM/pe.    Copyright (C) 1995, 1996, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -617,11 +629,13 @@ name|decl
 argument_list|)
 condition|)
 block|{
-name|error_with_decl
+name|error
 argument_list|(
+literal|"%Jinitialized variable '%D' is marked dllimport"
+argument_list|,
 name|decl
 argument_list|,
-literal|"initialized variable `%s' is marked dllimport"
+name|decl
 argument_list|)
 expr_stmt|;
 return|return;
@@ -647,11 +661,13 @@ literal|0
 comment|/*???*/
 condition|)
 block|{
-name|error_with_decl
+name|error
 argument_list|(
+literal|"%Jstatic variable '%D' is marked dllimport"
+argument_list|,
 name|decl
 argument_list|,
-literal|"static variable `%s' is marked dllimport"
+name|decl
 argument_list|)
 expr_stmt|;
 return|return;
@@ -763,10 +779,15 @@ name|arm_pe_encode_section_info
 parameter_list|(
 name|decl
 parameter_list|,
+name|rtl
+parameter_list|,
 name|first
 parameter_list|)
 name|tree
 name|decl
+decl_stmt|;
+name|rtx
+name|rtl
 decl_stmt|;
 name|int
 name|first
@@ -797,32 +818,6 @@ operator|!=
 name|STRING_CST
 operator|)
 condition|)
-block|{
-name|rtx
-name|rtl
-init|=
-operator|(
-name|TREE_CODE_CLASS
-argument_list|(
-name|TREE_CODE
-argument_list|(
-name|decl
-argument_list|)
-argument_list|)
-operator|!=
-literal|'d'
-condition|?
-name|TREE_CST_RTL
-argument_list|(
-name|decl
-argument_list|)
-else|:
-name|DECL_RTL
-argument_list|(
-name|decl
-argument_list|)
-operator|)
-decl_stmt|;
 name|SYMBOL_REF_FLAG
 argument_list|(
 name|XEXP
@@ -835,7 +830,6 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-block|}
 comment|/* Mark the decl so we can tell from the rtl whether the object is      dllexport'd or dllimport'd.  */
 if|if
 condition|(

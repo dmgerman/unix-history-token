@@ -1,27 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on Tru64 5.    Copyright (C) 2000, 2001 Free Software Foundation, Inc.     This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GNU CC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GNU CC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on Tru64 5.    Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* Tru64 5.1 uses IEEE QUAD format.  */
 end_comment
 
-begin_comment
-comment|/* ??? However, since there is no support for VAX H_floating, we must    drop back to a 64-bit long double to avoid a crash looking for the    format associated with TFmode.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
-name|LONG_DOUBLE_TYPE_SIZE
+name|TARGET_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|LONG_DOUBLE_TYPE_SIZE
-value|(TARGET_FLOAT_VAX ? 64 : 128)
+name|TARGET_DEFAULT
+value|MASK_FP | MASK_FPREGS | MASK_LONG_DOUBLE_128
 end_define
 
 begin_comment
@@ -55,6 +51,23 @@ begin_define
 define|#
 directive|define
 name|TARGET_LD_BUGGY_LDGP
+value|1
+end_define
+
+begin_comment
+comment|/* Tru64 v5.1 has the float and long double forms of math functions.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_C99_FUNCTIONS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_C99_FUNCTIONS
 value|1
 end_define
 

@@ -55,6 +55,12 @@ directive|include
 file|"real.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"toplev.h"
+end_include
+
 begin_comment
 comment|/* Externals defined here. */
 end_comment
@@ -127,46 +133,6 @@ end_function_decl
 begin_comment
 comment|/* Internal macros. */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_VALUE_ATOF
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FFETARGET_ATOF_
-parameter_list|(
-name|p
-parameter_list|,
-name|m
-parameter_list|)
-value|REAL_VALUE_ATOF ((p),(m))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FFETARGET_ATOF_
-parameter_list|(
-name|p
-parameter_list|,
-name|m
-parameter_list|)
-value|atof ((p))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_escape
 end_escape
@@ -9327,10 +9293,6 @@ name|p
 operator|=
 name|ptr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|malloc_pool_image
@@ -9434,13 +9396,12 @@ block|{
 name|REAL_VALUE_TYPE
 name|rv
 decl_stmt|;
-name|rv
-operator|=
-name|FFETARGET_ATOF_
+name|real_from_string
 argument_list|(
-name|ptr
+operator|&
+name|rv
 argument_list|,
-name|SFmode
+name|ptr
 argument_list|)
 expr_stmt|;
 name|ffetarget_make_real1
@@ -9607,10 +9568,6 @@ name|p
 operator|=
 name|ptr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc_new_ks
 argument_list|(
 name|malloc_pool_image
@@ -9721,13 +9678,12 @@ block|{
 name|REAL_VALUE_TYPE
 name|rv
 decl_stmt|;
-name|rv
-operator|=
-name|FFETARGET_ATOF_
+name|real_from_string
 argument_list|(
-name|ptr
+operator|&
+name|rv
 argument_list|,
-name|DFmode
+name|ptr
 argument_list|)
 expr_stmt|;
 name|ffetarget_make_real2

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Exception handling and frame unwind runtime interface routines.    Copyright (C) 2001, 2003 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Exception handling and frame unwind runtime interface routines.    Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -10,6 +10,18 @@ end_comment
 begin_comment
 comment|/* This is derived from the C++ ABI for IA-64.  Where we diverge    for cross-architecture compatibility are noted with "@@@".  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UNWIND_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_UNWIND_H
+end_define
 
 begin_ifdef
 ifdef|#
@@ -506,12 +518,18 @@ specifier|static
 specifier|inline
 name|_Unwind_Ptr
 name|_Unwind_GetTextRelBase
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|_Unwind_Context
-modifier|*
+operator|*
 name|_C
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 name|abort
 argument_list|()
@@ -573,6 +591,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unwind.h */
+end_comment
 
 end_unit
 

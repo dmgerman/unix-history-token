@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle #pragma, system V.4 style.  Supports #pragma weak and #pragma pack.    Copyright (C) 1992, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Handle #pragma, system V.4 style.  Supports #pragma weak and #pragma pack.    Copyright (C) 1992, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -154,19 +166,16 @@ directive|ifdef
 name|HANDLE_PRAGMA_PACK
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|handle_pragma_pack
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -196,33 +205,27 @@ define|\
 value|(default_alignment = maximum_field_alignment = (ALIGN))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|push_alignment
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|pop_alignment
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Push an alignment value onto the stack.  */
@@ -233,16 +236,12 @@ specifier|static
 name|void
 name|push_alignment
 parameter_list|(
-name|alignment
-parameter_list|,
-name|id
-parameter_list|)
 name|int
 name|alignment
-decl_stmt|;
+parameter_list|,
 name|tree
 name|id
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -267,10 +266,6 @@ name|entry
 decl_stmt|;
 name|entry
 operator|=
-operator|(
-name|align_stack
-operator|*
-operator|)
 name|ggc_alloc
 argument_list|(
 sizeof|sizeof
@@ -342,11 +337,9 @@ specifier|static
 name|void
 name|pop_alignment
 parameter_list|(
-name|id
-parameter_list|)
 name|tree
 name|id
-decl_stmt|;
+parameter_list|)
 block|{
 name|align_stack
 modifier|*
@@ -531,13 +524,11 @@ specifier|static
 name|void
 name|handle_pragma_pack
 parameter_list|(
-name|dummy
-parameter_list|)
 name|cpp_reader
 modifier|*
 name|dummy
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|x
@@ -945,49 +936,40 @@ directive|ifdef
 name|HANDLE_PRAGMA_WEAK
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|apply_pragma_weak
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|,
+parameter_list|,
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|handle_pragma_weak
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
 name|void
 name|apply_pragma_weak
 parameter_list|(
-name|decl
-parameter_list|,
-name|value
-parameter_list|)
 name|tree
 name|decl
-decl_stmt|,
+parameter_list|,
+name|tree
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1047,6 +1029,13 @@ argument_list|(
 name|decl
 argument_list|)
 operator|&&
+operator|!
+name|DECL_WEAK
+argument_list|(
+name|decl
+argument_list|)
+comment|/* Don't complain about a redundant #pragma.  */
+operator|&&
 name|TREE_SYMBOL_REFERENCED
 argument_list|(
 name|DECL_ASSEMBLER_NAME
@@ -1055,11 +1044,14 @@ name|decl
 argument_list|)
 argument_list|)
 condition|)
-name|warning_with_decl
+name|warning
 argument_list|(
+literal|"%Japplying #pragma weak '%D' after first use results "
+literal|"in unspecified behavior"
+argument_list|,
 name|decl
 argument_list|,
-literal|"applying #pragma weak `%s' after first use results in unspecified behavior"
+name|decl
 argument_list|)
 expr_stmt|;
 name|declare_weak
@@ -1074,11 +1066,9 @@ begin_function
 name|void
 name|maybe_apply_pragma_weak
 parameter_list|(
-name|decl
-parameter_list|)
 name|tree
 name|decl
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 modifier|*
@@ -1201,13 +1191,11 @@ specifier|static
 name|void
 name|handle_pragma_weak
 parameter_list|(
-name|dummy
-parameter_list|)
 name|cpp_reader
 modifier|*
 name|dummy
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|name
@@ -1356,12 +1344,10 @@ begin_function
 name|void
 name|maybe_apply_pragma_weak
 parameter_list|(
-name|decl
-parameter_list|)
 name|tree
 name|decl
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -1391,19 +1377,16 @@ directive|ifdef
 name|HANDLE_PRAGMA_REDEFINE_EXTNAME
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|handle_pragma_redefine_extname
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* #pragma redefined_extname oldname newname */
@@ -1414,13 +1397,11 @@ specifier|static
 name|void
 name|handle_pragma_redefine_extname
 parameter_list|(
-name|dummy
-parameter_list|)
 name|cpp_reader
 modifier|*
 name|dummy
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|oldname
@@ -1501,15 +1482,21 @@ if|if
 condition|(
 name|decl
 operator|&&
-name|TREE_CODE_CLASS
-argument_list|(
+operator|(
 name|TREE_CODE
 argument_list|(
 name|decl
 argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|||
+name|TREE_CODE
+argument_list|(
+name|decl
 argument_list|)
 operator|==
-literal|'d'
+name|VAR_DECL
+operator|)
 condition|)
 block|{
 if|if
@@ -1531,7 +1518,7 @@ argument_list|(
 literal|"#pragma redefine_extname conflicts with declaration"
 argument_list|)
 expr_stmt|;
-name|SET_DECL_ASSEMBLER_NAME
+name|change_decl_assembler_name
 argument_list|(
 name|decl
 argument_list|,
@@ -1559,15 +1546,12 @@ begin_function
 name|void
 name|add_to_renaming_pragma_list
 parameter_list|(
-name|oldname
-parameter_list|,
-name|newname
-parameter_list|)
 name|tree
 name|oldname
-decl_stmt|,
+parameter_list|,
+name|tree
 name|newname
-decl_stmt|;
+parameter_list|)
 block|{
 name|pending_redefine_extname
 operator|=
@@ -1600,19 +1584,16 @@ directive|ifdef
 name|HANDLE_PRAGMA_EXTERN_PREFIX
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|handle_pragma_extern_prefix
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|cpp_reader
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* #pragma extern_prefix "prefix" */
@@ -1623,13 +1604,11 @@ specifier|static
 name|void
 name|handle_pragma_extern_prefix
 parameter_list|(
-name|dummy
-parameter_list|)
 name|cpp_reader
 modifier|*
 name|dummy
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|prefix
@@ -1702,22 +1681,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Hook from the front ends to apply the results of one of the preceeding    pragmas that rename variables.  */
+comment|/* Hook from the front ends to apply the results of one of the preceding    pragmas that rename variables.  */
 end_comment
 
 begin_function
 name|tree
 name|maybe_apply_renaming_pragma
 parameter_list|(
-name|decl
-parameter_list|,
-name|asmname
-parameter_list|)
 name|tree
 name|decl
-decl_stmt|,
+parameter_list|,
+name|tree
 name|asmname
-decl_stmt|;
+parameter_list|)
 block|{
 name|tree
 name|oldname
@@ -1982,18 +1958,66 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Front-end wrapper for pragma registration to avoid dragging    cpplib.h in almost everywhere.  */
+end_comment
+
 begin_function
 name|void
-name|init_pragma
-parameter_list|()
+name|c_register_pragma
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|space
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|handler
+function_decl|)
+parameter_list|(
+name|struct
+name|cpp_reader
+modifier|*
+parameter_list|)
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|HANDLE_PRAGMA_PACK
 name|cpp_register_pragma
 argument_list|(
 name|parse_in
 argument_list|,
+name|space
+argument_list|,
+name|name
+argument_list|,
+name|handler
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Set up front-end pragmas.  */
+end_comment
+
+begin_function
+name|void
+name|init_pragma
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|HANDLE_PRAGMA_PACK
+name|c_register_pragma
+argument_list|(
 literal|0
 argument_list|,
 literal|"pack"
@@ -2006,10 +2030,8 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|HANDLE_PRAGMA_WEAK
-name|cpp_register_pragma
+name|c_register_pragma
 argument_list|(
-name|parse_in
-argument_list|,
 literal|0
 argument_list|,
 literal|"weak"
@@ -2022,10 +2044,8 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|HANDLE_PRAGMA_REDEFINE_EXTNAME
-name|cpp_register_pragma
+name|c_register_pragma
 argument_list|(
-name|parse_in
-argument_list|,
 literal|0
 argument_list|,
 literal|"redefine_extname"
@@ -2038,10 +2058,8 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|HANDLE_PRAGMA_EXTERN_PREFIX
-name|cpp_register_pragma
+name|c_register_pragma
 argument_list|(
-name|parse_in
-argument_list|,
 literal|0
 argument_list|,
 literal|"extern_prefix"
@@ -2055,9 +2073,7 @@ ifdef|#
 directive|ifdef
 name|REGISTER_TARGET_PRAGMAS
 name|REGISTER_TARGET_PRAGMAS
-argument_list|(
-name|parse_in
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* PowerPC AltiVec include file.    Copyright (C) 2002 Free Software Foundation, Inc.    Contributed by Aldy Hernandez (aldyh@redhat.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* PowerPC AltiVec include file.    Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Aldy Hernandez (aldyh@redhat.com).     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published    by the Free Software Foundation; either version 2, or (at your    option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ value|__attribute__((vector_size(16)))
 end_define
 
 begin_comment
-comment|/* You are allowed to undef this for C++ compatability.  */
+comment|/* You are allowed to undef this for C++ compatibility.  */
 end_comment
 
 begin_define
@@ -498,11 +498,11 @@ directive|ifdef
 name|__cplusplus
 end_ifdef
 
-begin_comment
+begin_extern
+extern|extern
+literal|"C++"
+block|{
 comment|/* Prototypes for builtins that take literals and must always be    inlined.  */
-end_comment
-
-begin_function_decl
 specifier|inline
 name|vector
 name|float
@@ -518,10 +518,11 @@ parameter_list|)
 function_decl|__attribute__
 parameter_list|(
 function_decl|(always_inline
-end_function_decl
+block|)
+end_extern
 
 begin_empty_stmt
-unit|))
+unit|)
 empty_stmt|;
 end_empty_stmt
 
@@ -8605,13 +8606,13 @@ operator|(
 name|vector
 name|float
 operator|)
-name|a1
+name|a2
 argument_list|,
 operator|(
 name|vector
 name|float
 operator|)
-name|a2
+name|a1
 argument_list|)
 return|;
 block|}
@@ -9191,7 +9192,9 @@ begin_function
 specifier|inline
 name|void
 name|vec_dssall
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|__builtin_altivec_dssall
 argument_list|()
@@ -16515,7 +16518,9 @@ name|vector
 name|unsigned
 name|short
 name|vec_mfvscr
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -32107,104 +32112,12 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* vec_vsubuhs */
-end_comment
-
 begin_function
 specifier|inline
 name|vector
 name|unsigned
 name|short
-name|vec_vsubsuhs
-parameter_list|(
-name|vector
-name|signed
-name|short
-name|a1
-parameter_list|,
-name|vector
-name|unsigned
-name|short
-name|a2
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|unsigned
-name|short
-operator|)
-name|__builtin_altivec_vsubuhs
-argument_list|(
-operator|(
-name|vector
-name|signed
-name|short
-operator|)
-name|a1
-argument_list|,
-operator|(
-name|vector
-name|signed
-name|short
-operator|)
-name|a2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|inline
-name|vector
-name|unsigned
-name|short
-name|vec_vsubsuhs
-parameter_list|(
-name|vector
-name|unsigned
-name|short
-name|a1
-parameter_list|,
-name|vector
-name|signed
-name|short
-name|a2
-parameter_list|)
-block|{
-return|return
-operator|(
-name|vector
-name|unsigned
-name|short
-operator|)
-name|__builtin_altivec_vsubuhs
-argument_list|(
-operator|(
-name|vector
-name|signed
-name|short
-operator|)
-name|a1
-argument_list|,
-operator|(
-name|vector
-name|signed
-name|short
-operator|)
-name|a2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|inline
-name|vector
-name|unsigned
-name|short
-name|vec_vsubsuhs
+name|vec_vsubuhs
 parameter_list|(
 name|vector
 name|unsigned
@@ -32300,7 +32213,7 @@ specifier|inline
 name|vector
 name|unsigned
 name|char
-name|vec_vsubsubs
+name|vec_vsububs
 parameter_list|(
 name|vector
 name|signed
@@ -32344,7 +32257,7 @@ specifier|inline
 name|vector
 name|unsigned
 name|char
-name|vec_vsubsubs
+name|vec_vsububs
 parameter_list|(
 name|vector
 name|unsigned
@@ -32388,7 +32301,7 @@ specifier|inline
 name|vector
 name|unsigned
 name|char
-name|vec_vsubsubs
+name|vec_vsububs
 parameter_list|(
 name|vector
 name|unsigned
@@ -37083,7 +36996,7 @@ block|{
 return|return
 name|__builtin_altivec_vcmpeqfp_p
 argument_list|(
-name|__CR6_EQ
+name|__CR6_LT
 argument_list|,
 name|a1
 argument_list|,
@@ -40477,6 +40390,11 @@ parameter_list|)
 value|__vec_step_help<typeof(t)>::_S_elem
 end_define
 
+begin_comment
+unit|}
+comment|//extern "C++"
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -41021,7 +40939,7 @@ name|a1
 parameter_list|,
 name|a2
 parameter_list|)
-value|__builtin_altivec_vcmpgefp ((a1), (a2))
+value|__builtin_altivec_vcmpgefp ((a2), (a1))
 end_define
 
 begin_define
@@ -43199,7 +43117,7 @@ name|vec_all_numeric
 parameter_list|(
 name|a1
 parameter_list|)
-value|__builtin_altivec_vcmpeqfp_p (__CR6_EQ, (a1), (a1))
+value|__builtin_altivec_vcmpeqfp_p (__CR6_LT, (a1), (a1))
 end_define
 
 begin_define

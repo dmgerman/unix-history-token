@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Function integration definitions for GNU C-Compiler    Copyright (C) 1990, 1995, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Function integration definitions for GCC    Copyright (C) 1990, 1995, 1998, 1999, 2000, 2001, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -22,9 +22,7 @@ name|int
 name|integrating
 decl_stmt|;
 comment|/* Definition of function be inlined.  */
-name|union
-name|tree_node
-modifier|*
+name|tree
 name|fndecl
 decl_stmt|;
 comment|/* Place to put insns needed at start of function.  */
@@ -140,7 +138,7 @@ index|[
 name|MAX_RECOG_OPERANDS
 index|]
 struct|;
-comment|/* Record the last thing assigned to pc.  This is used for folded       conditional branch insns.  */
+comment|/* Record the last thing assigned to pc.  This is used for folded      conditional branch insns.  */
 name|rtx
 name|last_pc_value
 decl_stmt|;
@@ -169,244 +167,198 @@ begin_comment
 comment|/* Return a copy of an rtx (as needed), substituting pseudo-register,    labels, and frame-pointer offsets as necessary.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|rtx
 name|copy_rtx_and_substitute
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|inline_remap
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return a pseudo that corresponds to the value in the specified hard    reg as of the start of the function (for inlined functions, the    value at the start of the parent function).  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|rtx
 name|get_hard_reg_initial_val
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|machine_mode
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Likewise, but for a different than the current function, or    arbitrary expression.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|rtx
 name|get_func_hard_reg_initial_val
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|function
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Likewise, but iff someone else has caused it to become allocated.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|rtx
 name|has_func_hard_reg_initial_val
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|function
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Likewise, but for common cases.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|rtx
 name|has_hard_reg_initial_val
-name|PARAMS
-argument_list|(
-operator|(
-expr|enum
+parameter_list|(
+name|enum
 name|machine_mode
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* If a pseudo represents an initial hard reg (or expression), return    it, else return NULL_RTX.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|rtx
 name|get_hard_reg_initial_reg
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|function
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Called from rest_of_compilation.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|emit_initial_value_sets
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|allocate_initial_values
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Copy a declaration when one function is substituted inline into    another.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|union
-name|tree_node
-modifier|*
+name|tree
 name|copy_decl_for_inlining
-name|PARAMS
-argument_list|(
-operator|(
-expr|union
-name|tree_node
-operator|*
-operator|,
-expr|union
-name|tree_node
-operator|*
-operator|,
-expr|union
-name|tree_node
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|tree
+parameter_list|,
+name|tree
+parameter_list|,
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Check whether there's any attribute in a function declaration that    makes the function uninlinable.  Returns false if it finds any,    true otherwise.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bool
 name|function_attribute_inlinable_p
-name|PARAMS
-argument_list|(
-operator|(
-expr|union
-name|tree_node
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|try_constants
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|rtx
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|inline_remap
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return the label indicated.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|rtx
 name|get_label_from_map
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|inline_remap
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Set the label indicated.  */

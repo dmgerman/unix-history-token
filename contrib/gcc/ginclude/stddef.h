@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1989, 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -2321,8 +2321,14 @@ name|_STDDEF_H
 end_ifdef
 
 begin_comment
-comment|/* Offset of member MEMBER in a struct of type TYPE.  */
+comment|/* Offset of member MEMBER in a struct of type TYPE. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_define
 define|#
@@ -2335,6 +2341,37 @@ name|MEMBER
 parameter_list|)
 value|((size_t)&((TYPE *)0)->MEMBER)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* The cast to "char&" below avoids problems with user-defined    "operator&", which can appear in a POD type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|MEMBER
+parameter_list|)
+define|\
+value|(__offsetof__ (reinterpret_cast<size_t>		\                  (&reinterpret_cast<char&>		\                   (static_cast<TYPE *> (0)->MEMBER))))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* C++ */
+end_comment
 
 begin_endif
 endif|#

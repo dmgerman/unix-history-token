@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for ELF on NetBSD/sparc    and NetBSD/sparc64.    Copyright (C) 2002 Free Software Foundation, Inc.    Contributed by Matthew Green (mrg@eterna.com.au).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GCC, for ELF on NetBSD/sparc    and NetBSD/sparc64.    Copyright (C) 2002, 2003 Free Software Foundation, Inc.    Contributed by Matthew Green (mrg@eterna.com.au).  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -9,7 +9,7 @@ directive|define
 name|TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do							\     {							\       NETBSD_OS_CPP_BUILTINS_ELF();			\       if (TARGET_ARCH64)				\ 	{						\ 	  NETBSD_OS_CPP_BUILTINS_LP64();		\ 	  builtin_define ("__sparc64__");		\ 	  builtin_define ("__sparc_v9__");		\ 	}						\       else						\ 	builtin_define ("__sparc");			\       builtin_define ("__sparc__");			\     }							\   while (0)
+value|do							\     {							\       NETBSD_OS_CPP_BUILTINS_ELF();			\       if (TARGET_ARCH64)				\ 	{						\ 	  builtin_define ("__sparc64__");		\ 	  builtin_define ("__sparc_v9__");		\ 	  builtin_define ("__sparcv9");			\ 	}						\       else						\ 	builtin_define ("__sparc");			\       builtin_define ("__sparc__");			\     }							\   while (0)
 end_define
 
 begin_comment
@@ -26,16 +26,6 @@ begin_undef
 undef|#
 directive|undef
 name|MD_STARTFILE_PREFIX
-end_undef
-
-begin_comment
-comment|/* Make sure this is undefined.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
 end_undef
 
 begin_comment
@@ -146,31 +136,6 @@ value|"."
 end_define
 
 begin_comment
-comment|/* This is how to output a definition of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_INTERNAL_LABEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_INTERNAL_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|PREFIX
-parameter_list|,
-name|NUM
-parameter_list|)
-define|\
-value|fprintf (FILE, ".L%s%d:\n", PREFIX, NUM)
-end_define
-
-begin_comment
 comment|/* This is how to output a reference to an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.  */
 end_comment
 
@@ -243,7 +208,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%{fpic:-K PIC} %{fPIC:-K PIC} %{V} %{v:%{!V:-V}} \ %{mlittle-endian:-EL} \ %(asm_cpu) %(asm_arch) %(asm_relax)"
+value|"%{fpic|fPIC|fpie|fPIE:-K PIC} %{V} %{v:%{!V:-V}} \ %{mlittle-endian:-EL} \ %(asm_cpu) %(asm_arch) %(asm_relax)"
 end_define
 
 begin_undef
@@ -259,7 +224,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRANSFER_FROM_TRAMPOLINE
+name|ENABLE_EXECUTE_STACK
 value|NETBSD_ENABLE_EXECUTE_STACK
 end_define
 
@@ -274,56 +239,6 @@ define|#
 directive|define
 name|TARGET_VERSION
 value|fprintf (stderr, " (%s)", TARGET_NAME);
-end_define
-
-begin_comment
-comment|/*  * Clean up afterwards generic SPARC ELF configuration.  */
-end_comment
-
-begin_comment
-comment|/* FIXME: Aren't these supposed to be available for SPARC ELF?  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|MULDI3_LIBCALL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|DIVDI3_LIBCALL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|UDIVDI3_LIBCALL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|MODDI3_LIBCALL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|UMODDI3_LIBCALL
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|INIT_SUBTARGET_OPTABS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INIT_SUBTARGET_OPTABS
 end_define
 
 begin_comment

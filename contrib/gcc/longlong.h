@@ -186,7 +186,7 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|do {									\     UDItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("umulh %r1,%2,%0"						\ 	     : "=r" ((UDItype) ph)					\ 	     : "%rJ" (__m0),						\ 	       "rI" (__m1));						\     (pl) = __m0 * __m1;							\   } while (0)
+value|do {									\     UDItype __m0 = (m0), __m1 = (m1);					\     (ph) = __builtin_alpha_umulh (__m0, __m1);				\     (pl) = __m0 * __m1;							\   } while (0)
 end_define
 
 begin_define
@@ -269,8 +269,7 @@ name|COUNT
 parameter_list|,
 name|X
 parameter_list|)
-define|\
-value|__asm__("ctlz %1,%0" : "=r"(COUNT) : "r"(X))
+value|((COUNT) = __builtin_clzl (X))
 end_define
 
 begin_define
@@ -282,8 +281,7 @@ name|COUNT
 parameter_list|,
 name|X
 parameter_list|)
-define|\
-value|__asm__("cttz %1,%0" : "=r"(COUNT) : "r"(X))
+value|((COUNT) = __builtin_ctzl (X))
 end_define
 
 begin_define
@@ -304,6 +302,7 @@ specifier|const
 name|UQItype
 name|__clz_tab
 index|[]
+name|ATTRIBUTE_HIDDEN
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +316,7 @@ parameter_list|,
 name|X
 parameter_list|)
 define|\
-value|do {									\     UDItype __xr = (X), __t, __a;					\     __asm__("cmpbge $31,%1,%0" : "=r"(__t) : "r"(__xr));		\     __a = __clz_tab[__t ^ 0xff] - 1;					\     __asm__("extbl %1,%2,%0" : "=r"(__t) : "r"(__xr), "r"(__a));	\     (COUNT) = 64 - (__clz_tab[__t] + __a*8);				\   } while (0)
+value|do {									\     UDItype __xr = (X), __t, __a;					\     __t = __builtin_alpha_cmpbge (0, __xr);				\     __a = __clz_tab[__t ^ 0xff] - 1;					\     __t = __builtin_alpha_extbl (__xr, __a);				\     (COUNT) = 64 - (__clz_tab[__t] + __a*8);				\   } while (0)
 end_define
 
 begin_define
@@ -330,7 +329,7 @@ parameter_list|,
 name|X
 parameter_list|)
 define|\
-value|do {									\     UDItype __xr = (X), __t, __a;					\     __asm__("cmpbge $31,%1,%0" : "=r"(__t) : "r"(__xr));		\     __t = ~__t& -~__t;							\     __a = ((__t& 0xCC) != 0) * 2;					\     __a += ((__t& 0xF0) != 0) * 4;					\     __a += ((__t& 0xAA) != 0);						\     __asm__("extbl %1,%2,%0" : "=r"(__t) : "r"(__xr), "r"(__a));	\     __a<<= 3;								\     __t&= -__t;							\     __a += ((__t& 0xCC) != 0) * 2;					\     __a += ((__t& 0xF0) != 0) * 4;					\     __a += ((__t& 0xAA) != 0);						\     (COUNT) = __a;							\   } while (0)
+value|do {									\     UDItype __xr = (X), __t, __a;					\     __t = __builtin_alpha_cmpbge (0, __xr);				\     __t = ~__t& -~__t;							\     __a = ((__t& 0xCC) != 0) * 2;					\     __a += ((__t& 0xF0) != 0) * 4;					\     __a += ((__t& 0xAA) != 0);						\     __t = __builtin_alpha_extbl (__xr, __a);				\     __a<<= 3;								\     __t&= -__t;							\     __a += ((__t& 0xCC) != 0) * 2;					\     __a += ((__t& 0xF0) != 0) * 4;					\     __a += ((__t& 0xAA) != 0);						\     (COUNT) = __a;							\   } while (0)
 end_define
 
 begin_endif
@@ -973,7 +972,7 @@ parameter_list|)
 define|\
 comment|/* The cmp clears the condition bit.  */
 define|\
-value|__asm__ ("cmp %0,%0\n\taddx %%5,%1\n\taddx %%3,%0"			\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl))					\ 	   : "cbit")
+value|__asm__ ("cmp %0,%0\n\taddx %1,%5\n\taddx %0,%3"			\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl))					\ 	   : "cbit")
 end_define
 
 begin_define
@@ -996,7 +995,7 @@ parameter_list|)
 define|\
 comment|/* The cmp clears the condition bit.  */
 define|\
-value|__asm__ ("cmp %0,%0\n\tsubx %5,%1\n\tsubx %3,%0"			\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl))					\ 	   : "cbit")
+value|__asm__ ("cmp %0,%0\n\tsubx %1,%5\n\tsubx %0,%3"			\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl))					\ 	   : "cbit")
 end_define
 
 begin_endif
@@ -1195,12 +1194,51 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|__mcf5200__
+name|__mcoldfire__
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|umul_ppmm
+parameter_list|(
+name|xh
+parameter_list|,
+name|xl
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|__asm__ ("| Inlined umul_ppmm\n"					\ 	   "	move%.l	%2,%/d0\n"					\ 	   "	move%.l	%3,%/d1\n"					\ 	   "	move%.l	%/d0,%/d2\n"					\ 	   "	swap	%/d0\n"						\ 	   "	move%.l	%/d1,%/d3\n"					\ 	   "	swap	%/d1\n"						\ 	   "	move%.w	%/d2,%/d4\n"					\ 	   "	mulu	%/d3,%/d4\n"					\ 	   "	mulu	%/d1,%/d2\n"					\ 	   "	mulu	%/d0,%/d3\n"					\ 	   "	mulu	%/d0,%/d1\n"					\ 	   "	move%.l	%/d4,%/d0\n"					\ 	   "	clr%.w	%/d0\n"						\ 	   "	swap	%/d0\n"						\ 	   "	add%.l	%/d0,%/d2\n"					\ 	   "	add%.l	%/d3,%/d2\n"					\ 	   "	jcc	1f\n"						\ 	   "	add%.l	%#65536,%/d1\n"					\ 	   "1:	swap	%/d2\n"						\ 	   "	moveq	%#0,%/d0\n"					\ 	   "	move%.w	%/d2,%/d0\n"					\ 	   "	move%.w	%/d4,%/d2\n"					\ 	   "	move%.l	%/d2,%1\n"					\ 	   "	add%.l	%/d1,%/d0\n"					\ 	   "	move%.l	%/d0,%0"					\ 	   : "=g" ((USItype) (xh)),					\ 	     "=g" ((USItype) (xl))					\ 	   : "g" ((USItype) (a)),					\ 	     "g" ((USItype) (b))					\ 	   : "d0", "d1", "d2", "d3", "d4")
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMUL_TIME
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDIV_TIME
+value|400
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not ColdFire */
+end_comment
 
 begin_comment
 comment|/* %/ inserts REGISTER_PREFIX, %# inserts IMMEDIATE_PREFIX.  */
@@ -1243,7 +1281,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not mcf5200 */
+comment|/* not ColdFire */
 end_comment
 
 begin_endif
@@ -1256,12 +1294,13 @@ comment|/* not mc68020 */
 end_comment
 
 begin_comment
-comment|/* The '020, '030, '040 and '060 have bitfield insns.  */
+comment|/* The '020, '030, '040 and '060 have bitfield insns.    cpu32 disguises as a 68020, but lacks them.  */
 end_comment
 
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__mc68020__
@@ -1303,6 +1342,14 @@ operator|||
 name|defined
 argument_list|(
 name|mc68060
+argument_list|)
+operator|)
+expr|\
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mcpu32__
 argument_list|)
 end_if
 
@@ -1797,11 +1844,6 @@ operator|||
 name|defined
 argument_list|(
 name|PPC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__vxworks__
 argument_list|)
 end_if
 
@@ -3192,6 +3234,7 @@ specifier|const
 name|UQItype
 name|__clz_tab
 index|[]
+name|ATTRIBUTE_HIDDEN
 decl_stmt|;
 end_decl_stmt
 
