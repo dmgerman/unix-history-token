@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.23 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -149,28 +149,15 @@ modifier|*
 name|fts_link
 decl_stmt|;
 comment|/* next file in directory */
-union|union
-block|{
 name|long
-name|number
+name|fts_number
 decl_stmt|;
 comment|/* local numeric value */
 name|void
 modifier|*
-name|pointer
+name|fts_pointer
 decl_stmt|;
 comment|/* local address value */
-block|}
-name|fts_local
-union|;
-define|#
-directive|define
-name|fts_number
-value|fts_local.number
-define|#
-directive|define
-name|fts_pointer
-value|fts_local.pointer
 name|char
 modifier|*
 name|fts_accpath

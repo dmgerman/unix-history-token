@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.32 (Berkeley) %G%"
+literal|"@(#)fts.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3850,17 +3850,12 @@ name|fts_number
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOT_NECESSARY
 name|p
 operator|->
 name|fts_pointer
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|p
