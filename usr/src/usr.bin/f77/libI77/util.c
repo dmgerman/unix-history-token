@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_util[] = "@(#)util.c	1.3";  *  * utility routines  */
+comment|/* char id_util[] = "@(#)util.c	1.4";  *  * utility routines  */
 end_comment
 
 begin_include
@@ -98,10 +98,6 @@ name|NO
 expr_stmt|;
 name|p
 operator|->
-name|ublnk
-operator|=
-name|p
-operator|->
 name|uscrtch
 operator|=
 name|p
@@ -110,6 +106,10 @@ name|uend
 operator|=
 name|NO
 expr_stmt|;
+name|p
+operator|->
+name|ublnk
+operator|=
 name|p
 operator|->
 name|uprnt
