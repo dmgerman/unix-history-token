@@ -9,14 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)preen.c	8.5 (Berkeley) 4/28/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)preen.c	8.5 (Berkeley) 4/28/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -389,11 +407,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't open checklist file: %s\n"
+literal|"can't open checklist file: %s"
 argument_list|,
 name|_PATH_FSTAB
 argument_list|)
@@ -1244,20 +1260,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 name|dk
 operator|=
 operator|*
@@ -1280,20 +1289,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1468,20 +1470,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 name|pt
 operator|=
 operator|*
@@ -1507,20 +1502,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1553,20 +1541,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|8
 argument_list|,
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1658,7 +1639,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -1767,7 +1748,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"/"
 argument_list|)
@@ -1802,8 +1783,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|newname
 argument_list|)
 expr_stmt|;
@@ -1866,8 +1849,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|raw
 argument_list|)
 expr_stmt|;
