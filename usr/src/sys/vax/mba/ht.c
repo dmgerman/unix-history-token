@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.16	81/04/03	*/
+comment|/*	ht.c	4.17	81/05/09	*/
 end_comment
 
 begin_include
@@ -631,7 +631,25 @@ name|HTDS_MOL
 operator|)
 operator|==
 literal|0
-operator|||
+condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"ht%d: not online\n"
+argument_list|,
+name|htunit
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|EIO
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|flag
 operator|&
@@ -645,7 +663,25 @@ name|sc_dsreg
 operator|&
 name|HTDS_WRL
 operator|)
-operator|||
+condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"ht%d: no write ring\n"
+argument_list|,
+name|htunit
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|EIO
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|sc
 operator|->
@@ -669,6 +705,13 @@ operator|->
 name|sc_dens
 condition|)
 block|{
+name|uprintf
+argument_list|(
+literal|"ht%d: can't change density in mid-tape\n"
+argument_list|,
+name|htunit
+argument_list|)
+expr_stmt|;
 name|u
 operator|.
 name|u_error
