@@ -225,9 +225,9 @@ name|di
 operator|->
 name|bas
 operator|.
-name|iobase
+name|chan
 operator|=
-name|ivar
+literal|0
 expr_stmt|;
 name|di
 operator|->

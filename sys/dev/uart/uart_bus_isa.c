@@ -816,6 +816,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -833,6 +835,8 @@ operator|(
 name|uart_bus_probe
 argument_list|(
 name|dev
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

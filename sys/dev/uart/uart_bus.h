@@ -628,6 +628,9 @@ name|rclk
 parameter_list|,
 name|int
 name|rid
+parameter_list|,
+name|int
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl

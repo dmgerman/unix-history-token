@@ -192,9 +192,9 @@ name|di
 operator|->
 name|bas
 operator|.
-name|iobase
+name|chan
 operator|=
-literal|0x3f8
+literal|0
 expr_stmt|;
 name|di
 operator|->
@@ -378,9 +378,9 @@ name|di
 operator|->
 name|bas
 operator|.
-name|iobase
+name|chan
 operator|=
-name|ivar
+literal|0
 expr_stmt|;
 name|di
 operator|->

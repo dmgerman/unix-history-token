@@ -70,29 +70,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-name|b1
-operator|->
-name|iobase
-operator|==
-name|b2
-operator|->
-name|iobase
-operator|&&
-name|b1
-operator|->
-name|bst
-operator|==
-name|b2
-operator|->
-name|bst
-operator|)
-condition|?
-literal|1
-else|:
 literal|0
 operator|)
 return|;
+comment|/* XXX */
 block|}
 end_function
 
@@ -240,9 +221,9 @@ name|di
 operator|->
 name|bas
 operator|.
-name|iobase
+name|chan
 operator|=
-name|ivar
+literal|0
 expr_stmt|;
 name|di
 operator|->
