@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udcformat.c	1.1	86/01/12	*/
+comment|/*	udcformat.c	1.2	86/01/21	*/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/vbaparam.h"
 end_include
 
 begin_include
@@ -287,7 +293,7 @@ index|[
 literal|0
 index|]
 operator|+
-name|IOBASE
+name|VBIOBASE
 operator|)
 expr_stmt|;
 comment|/* Booting from cntrlr 0 */
@@ -1099,7 +1105,7 @@ index|[
 literal|0
 index|]
 operator|+
-name|IOBASE
+name|VBIOBASE
 operator|)
 expr_stmt|;
 comment|/* Booting from cntrlr 0 */

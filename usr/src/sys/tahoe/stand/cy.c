@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	7.1	86/01/12	*/
+comment|/*	cy.c	7.2	86/01/21	*/
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ directive|include
 file|"cyvar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../tahoevba/vbaparam.h"
+end_include
+
 begin_decl_stmt
 name|long
 name|cystd
@@ -65,6 +71,16 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CYADDR
+parameter_list|(
+name|i
+parameter_list|)
+value|(cystd[i] + (int)VBIOBASE)
+end_define
 
 begin_struct
 struct|struct
@@ -316,15 +332,10 @@ name|ctlradr
 expr_stmt|;
 name|ctlradr
 operator|=
-name|cystd
-index|[
+name|CYADDR
+argument_list|(
 literal|0
-index|]
-operator|+
-operator|(
-name|int
-operator|)
-name|IOBASE
+argument_list|)
 expr_stmt|;
 name|SCP
 operator|=
@@ -946,15 +957,10 @@ name|j
 decl_stmt|;
 name|ctlradr
 operator|=
-name|cystd
-index|[
+name|CYADDR
+argument_list|(
 literal|0
-index|]
-operator|+
-operator|(
-name|int
-operator|)
-name|IOBASE
+argument_list|)
 expr_stmt|;
 name|cywait
 argument_list|(

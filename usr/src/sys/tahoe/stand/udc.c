@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udc.c	1.1	86/01/12	*/
+comment|/*	udc.c	1.2	86/01/21	*/
 end_comment
 
 begin_include
@@ -30,7 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../tahoevba/udc.h"
+file|"../tahoevba/vbaparam.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoestand/udc.h"
 end_include
 
 begin_include
@@ -345,7 +351,7 @@ index|[
 literal|0
 index|]
 operator|+
-name|IOBASE
+name|VBIOBASE
 operator|)
 expr_stmt|;
 comment|/* Booting from cntrlr 0 */
@@ -1354,7 +1360,7 @@ index|[
 literal|0
 index|]
 operator|+
-name|IOBASE
+name|VBIOBASE
 operator|)
 expr_stmt|;
 comment|/* Booting from cntrlr 0 */
