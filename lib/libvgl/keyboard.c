@@ -122,7 +122,9 @@ name|term
 operator|.
 name|c_oflag
 operator|=
-literal|0
+name|OPOST
+operator||
+name|ONLCR
 expr_stmt|;
 name|term
 operator|.
@@ -184,6 +186,8 @@ argument_list|(
 literal|0
 argument_list|,
 name|TCSANOW
+operator||
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|term
@@ -267,6 +271,8 @@ argument_list|(
 literal|0
 argument_list|,
 name|TCSANOW
+operator||
+name|TCSAFLUSH
 argument_list|,
 operator|&
 name|VGLKeyboardTty
