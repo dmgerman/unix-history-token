@@ -421,6 +421,9 @@ comment|/* subdisk I/O */
 name|loginfo_sdiol
 block|,
 comment|/* subdisk I/O launch */
+name|loginfo_sdiodone
+block|,
+comment|/* subdisk iodone */
 name|loginfo_lockwait
 block|,
 comment|/* wait for range lock */
