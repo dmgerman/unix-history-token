@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c	5.4 (Berkeley) %G%"
+literal|"@(#)symbols.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: symbols.c,v 1.3 87/03/26 23:17:35 donn Exp $"
+literal|"$Header: symbols.c,v 1.4 88/04/02 01:29:03 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5949,7 +5949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert a tree to a type via a conversion operator;  * if this isn't possible generate an error.  *  * Note the tree is call by address, hence the #define below.  */
+comment|/*  * Convert a tree to a type via a conversion operator;  * if this isn't possible generate an error.  */
 end_comment
 
 begin_function
@@ -6019,6 +6019,7 @@ name|t_int
 argument_list|)
 condition|)
 block|{
+comment|/* we can convert int => floating but not the reverse */
 name|tree
 operator|=
 name|build
@@ -6044,13 +6045,6 @@ block|{
 name|beginerrmsg
 argument_list|()
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"expected integer or real, found \""
-argument_list|)
-expr_stmt|;
 name|prtree
 argument_list|(
 name|stderr
@@ -6062,33 +6056,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\""
+literal|": illegal type in operation"
 argument_list|)
 expr_stmt|;
 name|enderrmsg
 argument_list|()
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|op
-operator|!=
-name|O_NOP
-name|and
-name|s
-operator|!=
-name|t
-condition|)
-block|{
-name|tree
-operator|=
-name|build
-argument_list|(
-name|op
-argument_list|,
-name|tree
-argument_list|)
 expr_stmt|;
 block|}
 operator|*
