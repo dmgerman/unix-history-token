@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.21 (Berkeley) %G%"
+literal|"@(#)startup.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,9 +574,13 @@ name|int_flags
 operator|=
 name|flags
 operator|=
+operator|(
+literal|0xffff
+operator|&
 name|ifm
 operator|->
 name|ifm_flags
+operator|)
 operator||
 name|IFF_INTERFACE
 expr_stmt|;
