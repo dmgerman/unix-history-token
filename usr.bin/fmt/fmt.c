@@ -632,11 +632,6 @@ name|fi
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|cp
-operator|=
-literal|'\0'
-expr_stmt|;
 comment|/* 		 * Toss anything remaining on the input line. 		 */
 while|while
 condition|(
@@ -655,6 +650,35 @@ argument_list|(
 name|fi
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+else|else
+block|{
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|getc
+argument_list|(
+name|fi
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* 		 * Expand tabs on the way to canonb. 		 */
 name|col
 operator|=
