@@ -149,6 +149,8 @@ name|iflag
 decl_stmt|,
 name|nflag
 decl_stmt|,
+name|qflag
+decl_stmt|,
 name|rflag
 decl_stmt|,
 name|sflag
@@ -406,6 +408,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'q'
+case|:
+name|qflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'P'
 case|:
 name|ftsoptions
@@ -614,7 +624,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mtree [-PUcdeinrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
+literal|"usage: mtree [-PUcdeinqrux] [-f spec] [-K key] [-k key] [-p path] [-s seed]\n"
 literal|"\t[-X excludes]\n"
 argument_list|)
 expr_stmt|;
