@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	4.9	83/05/12	*/
+comment|/*	route.h	4.10	83/05/30	*/
 end_comment
 
 begin_comment
-comment|/*  * Kernel resident routing tables.  *   * The routing tables are initialized at boot time by  * making entries for all directly connected interfaces.  * Routing daemons can thereafter update the routing tables.  *  * TODO:  *	keep statistics  */
+comment|/*  * Kernel resident routing tables.  *   * The routing tables are initialized at boot time by  * making entries for all directly connected interfaces.  */
 end_comment
 
 begin_comment
@@ -81,46 +81,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RTHASHSIZ
-value|7
-end_define
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|rthost
-index|[
-name|RTHASHSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|rtnet
-index|[
-name|RTHASHSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -154,6 +114,44 @@ begin_comment
 comment|/* host entry (net otherwise) */
 end_comment
 
+begin_comment
+comment|/*  * Routing statistics.  */
+end_comment
+
+begin_struct
+struct|struct
+name|rtstat
+block|{
+name|short
+name|rts_badredirect
+decl_stmt|;
+comment|/* bogus redirect calls */
+name|short
+name|rts_dynamic
+decl_stmt|;
+comment|/* routes created by redirects */
+name|short
+name|rts_newgateway
+decl_stmt|;
+comment|/* routes modified by redirects */
+name|short
+name|rts_unreach
+decl_stmt|;
+comment|/* lookups which failed */
+name|short
+name|rts_wildcard
+decl_stmt|;
+comment|/* lookups satisfied by a wildcard */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -164,6 +162,47 @@ parameter_list|)
 define|\
 value|if ((rt)->rt_refcnt == 1) \ 		rtfree(rt); \ 	else \ 		(rt)->rt_refcnt--;
 end_define
+
+begin_define
+define|#
+directive|define
+name|RTHASHSIZ
+value|7
+end_define
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|rthost
+index|[
+name|RTHASHSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|rtnet
+index|[
+name|RTHASHSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|rtstat
+name|rtstat
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
