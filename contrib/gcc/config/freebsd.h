@@ -324,6 +324,12 @@ directive|define
 name|HANDLE_SYSV_PRAGMA
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WANT_DWARF2_UNWIND
+end_ifdef
+
 begin_comment
 comment|/* FreeBSD ELF uses across the board will now use DWARF2 unwinding as the IA-64    psABI requires it.  */
 end_comment
@@ -332,8 +338,29 @@ begin_define
 define|#
 directive|define
 name|DWARF2_UNWIND_INFO
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Maintain compatibility with the FreeBSD {3,4}.x C++ ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Do not use ``thunks'' to implement C++ vtables.  This method still has    fatal bugs.  Also, GCC 3.0 will have a new C++ ABI that may not even    support `thunks'.  */
