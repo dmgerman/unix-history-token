@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.7 (Berkeley) %G%"
+literal|"@(#)printf.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1114,11 +1114,20 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|atol
+name|strtol
 argument_list|(
 operator|*
 name|gargv
 operator|++
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
