@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.32 1999/02/13 09:59:24 dillon Exp $"
+literal|"$Id: vmstat.c,v 1.33 1999/02/15 14:15:28 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2234,6 +2234,14 @@ operator|.
 name|t_sw
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|pgtok
+undef|#
+directive|undef
+name|pgtok
+endif|#
+directive|endif
 define|#
 directive|define
 name|pgtok
@@ -4283,6 +4291,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|MAX_KMSTATS
+value|200
+end_define
+
 begin_function
 name|void
 name|domem
@@ -4337,17 +4352,20 @@ name|struct
 name|malloc_type
 name|kmemstats
 index|[
-literal|200
+name|MAX_KMSTATS
 index|]
 decl_stmt|,
 modifier|*
 name|kmsp
+decl_stmt|,
+modifier|*
+name|first_kmsp
 decl_stmt|;
 name|char
 modifier|*
 name|kmemnames
 index|[
-literal|200
+name|MAX_KMSTATS
 index|]
 decl_stmt|;
 name|char
@@ -4390,6 +4408,10 @@ name|kmsp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|first_kmsp
+operator|=
+name|kmsp
+expr_stmt|;
 for|for
 control|(
 name|nkms
@@ -4398,7 +4420,7 @@ literal|0
 init|;
 name|nkms
 operator|<
-literal|200
+name|MAX_KMSTATS
 operator|&&
 name|kmsp
 operator|!=
@@ -4502,6 +4524,18 @@ operator|.
 name|ks_shortdesc
 argument_list|)
 expr_stmt|;
+name|buf
+index|[
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|kmemstats
 index|[
 name|nkms
@@ -4523,7 +4557,31 @@ index|]
 operator|.
 name|ks_next
 expr_stmt|;
+if|if
+condition|(
+name|kmsp
+operator|==
+name|first_kmsp
+condition|)
+break|break;
 block|}
+if|if
+condition|(
+name|kmsp
+operator|!=
+name|NULL
+operator|&&
+name|nkms
+operator|>=
+name|MAX_KMSTATS
+condition|)
+name|warnx
+argument_list|(
+literal|"Truncated to the first %d types."
+argument_list|,
+name|MAX_KMSTATS
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
