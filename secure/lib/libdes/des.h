@@ -41,29 +41,9 @@ typedef|typedef
 struct|struct
 name|des_ks_struct
 block|{
-union|union
-block|{
 name|des_cblock
 name|_
 decl_stmt|;
-comment|/* make sure things are correct size on machines with 		 * 8 byte longs */
-name|unsigned
-name|long
-name|pad
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|ks
-union|;
-undef|#
-directive|undef
-name|_
-define|#
-directive|define
-name|_
-value|ks._
 block|}
 name|des_key_schedule
 index|[
@@ -792,31 +772,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|PERL5
 end_ifdef
 
-begin_function_decl
-name|char
-modifier|*
-name|des_crypt
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|buf
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|salt
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_else
+unit|char *des_crypt(const char *buf,const char *salt);
 else|#
 directive|else
 end_else
@@ -831,36 +800,17 @@ directive|ifdef
 name|HEADER_DES_LOCL_H
 end_ifdef
 
-begin_function_decl
-name|char
-modifier|*
-name|crypt
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|buf
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|salt
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_else
+unit|char *crypt(const char *buf,const char *salt);
 else|#
 directive|else
 end_else
 
-begin_function_decl
-name|char
-modifier|*
-name|crypt
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_endif
+unit|char *crypt();
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1367,32 +1317,29 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|PERL5
 end_ifdef
 
-begin_function_decl
-name|char
-modifier|*
-name|des_crypt
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_else
+unit|char *des_crypt();
 else|#
 directive|else
 end_else
 
-begin_function_decl
-name|char
-modifier|*
-name|crypt
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_endif
+unit|char *crypt();
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
