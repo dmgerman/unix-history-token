@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.85 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.86 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/lockf.h>
 end_include
 
@@ -163,9 +169,9 @@ expr|struct
 name|vnode
 operator|*
 operator|,
-name|u_int
+name|uid_t
 operator|,
-name|u_int
+name|gid_t
 operator|,
 expr|struct
 name|ucred
@@ -1020,8 +1026,6 @@ directive|endif
 name|vap
 operator|->
 name|va_atime
-operator|.
-name|tv_sec
 operator|=
 name|ip
 operator|->
@@ -1029,17 +1033,7 @@ name|i_atime
 expr_stmt|;
 name|vap
 operator|->
-name|va_atime
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-name|vap
-operator|->
 name|va_mtime
-operator|.
-name|tv_sec
 operator|=
 name|ip
 operator|->
@@ -1047,29 +1041,11 @@ name|i_mtime
 expr_stmt|;
 name|vap
 operator|->
-name|va_mtime
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
-name|vap
-operator|->
 name|va_ctime
-operator|.
-name|tv_sec
 operator|=
 name|ip
 operator|->
 name|i_ctime
-expr_stmt|;
-name|vap
-operator|->
-name|va_ctime
-operator|.
-name|tv_usec
-operator|=
-literal|0
 expr_stmt|;
 name|vap
 operator|->
@@ -1310,7 +1286,7 @@ operator|->
 name|va_uid
 operator|!=
 operator|(
-name|u_short
+name|uid_t
 operator|)
 name|VNOVAL
 operator|||
@@ -1319,7 +1295,7 @@ operator|->
 name|va_gid
 operator|!=
 operator|(
-name|u_short
+name|gid_t
 operator|)
 name|VNOVAL
 condition|)
@@ -1525,7 +1501,7 @@ operator|->
 name|va_mode
 operator|!=
 operator|(
-name|u_short
+name|mode_t
 operator|)
 name|VNOVAL
 condition|)
@@ -1853,10 +1829,10 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|u_int
+name|uid_t
 name|uid
 decl_stmt|;
-name|u_int
+name|gid_t
 name|gid
 decl_stmt|;
 name|struct
@@ -1909,7 +1885,7 @@ condition|(
 name|uid
 operator|==
 operator|(
-name|u_short
+name|uid_t
 operator|)
 name|VNOVAL
 condition|)
@@ -1924,7 +1900,7 @@ condition|(
 name|gid
 operator|==
 operator|(
-name|u_short
+name|gid_t
 operator|)
 name|VNOVAL
 condition|)
@@ -2889,7 +2865,7 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DIANOSTIC
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -2919,8 +2895,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
-name|short
+name|nlink_t
 operator|)
 name|ip
 operator|->
@@ -3769,7 +3744,7 @@ literal|1
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DIANOSTIC
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -4245,8 +4220,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|unsigned
-name|short
+name|nlink_t
 operator|)
 name|dp
 operator|->
@@ -5167,7 +5141,7 @@ name|dmode
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DIANOSTIC
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
@@ -5197,8 +5171,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
-name|short
+name|nlink_t
 operator|)
 name|dp
 operator|->
@@ -7860,7 +7833,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DIANOSTIC
+name|DIAGNOSTIC
 if|if
 condition|(
 operator|(
