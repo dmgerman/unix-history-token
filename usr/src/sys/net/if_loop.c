@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_loop.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_loop.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -82,25 +82,25 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_systm.h"
+file|"netinet/in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_var.h"
+file|"netinet/in_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip.h"
+file|"netinet/ip.h"
 end_include
 
 begin_endif
@@ -117,13 +117,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netns/ns.h"
+file|"netns/ns.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netns/ns_if.h"
+file|"netns/ns_if.h"
 end_include
 
 begin_endif
@@ -140,13 +140,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|"netiso/iso.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_var.h"
+file|"netiso/iso_var.h"
 end_include
 
 begin_endif
