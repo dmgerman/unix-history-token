@@ -4,133 +4,13 @@ comment|/* commands.c: vinum interface program, main commands */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.15 2001/05/22 08:40:21 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.22 2003/04/28 06:19:06 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vext.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/linker.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<readline/history.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<readline/readline.h>
 end_include
 
 begin_include
@@ -497,11 +377,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|history
+name|History
 condition|)
 name|fprintf
 argument_list|(
-name|history
+name|History
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -1288,6 +1168,14 @@ name|checkupdates
 argument_list|()
 expr_stmt|;
 comment|/* make sure we're updating */
+comment|/* Arguably we should be cleverer about this. */
+if|if
+condition|(
+name|no_devfs
+condition|)
+name|make_devices
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1319,6 +1207,14 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|" WARNING!  This command will completely wipe out your vinum configuration.\n"
@@ -1419,6 +1315,15 @@ argument_list|()
 expr_stmt|;
 comment|/* make sure we're updating */
 block|}
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Please enter this command from a terminal\n"
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -1464,11 +1369,11 @@ decl_stmt|;
 comment|/* type returned */
 if|if
 condition|(
-name|history
+name|History
 condition|)
 name|fflush
 argument_list|(
-name|history
+name|History
 argument_list|)
 expr_stmt|;
 comment|/* don't let all the kids do it. */
@@ -1837,18 +1742,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|message->index = plexno;
-comment|/* pass object number */
-block|message->type = plex_object;
-comment|/* and type of object */
-block|message->state = object_up; 	message->force = 1;
-comment|/* insist */
-block|ioctl(superdev, VINUM_SETSTATE, message);
-endif|#
-directive|endif
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -2660,6 +2553,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
+comment|/* Submitted by Pete Carah<pete@ns.altadena.net> */
 if|if
 condition|(
 operator|(
@@ -10122,9 +10016,17 @@ expr_stmt|;
 comment|/*      * First, check our drives.      */
 if|if
 condition|(
+operator|(
+name|argc
+operator|<
+literal|2
+operator|)
+operator|||
+operator|(
 name|argc
 operator|&
 literal|1
+operator|)
 condition|)
 block|{
 name|fprintf
