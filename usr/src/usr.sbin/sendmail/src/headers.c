@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.21 (Berkeley) %G%"
+literal|"@(#)headers.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2436,10 +2436,6 @@ argument_list|(
 name|sbp
 argument_list|,
 literal|" proto=%s,"
-argument_list|,
-name|e
-operator|->
-name|e_id
 argument_list|,
 name|p
 argument_list|)
