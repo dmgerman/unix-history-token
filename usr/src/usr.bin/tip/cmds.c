@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmds.c	4.3	81/06/02	*/
+comment|/*	cmds.c	4.4	81/06/09	*/
 end_comment
 
 begin_include
@@ -3063,6 +3063,28 @@ name|CHANGED
 expr_stmt|;
 name|setscript
 argument_list|()
+expr_stmt|;
+comment|/* 		 * So that "set record=blah script" doesn't 		 *  cause two transactions to occur. 		 */
+if|if
+condition|(
+name|vtable
+index|[
+name|RECORD
+index|]
+operator|.
+name|v_access
+operator|&
+name|CHANGED
+condition|)
+name|vtable
+index|[
+name|RECORD
+index|]
+operator|.
+name|v_access
+operator|&=
+operator|~
+name|CHANGED
 expr_stmt|;
 block|}
 if|if
