@@ -339,7 +339,27 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* XXX KASSERT != NULL? */
+name|KASSERT
+argument_list|(
+name|ic
+operator|->
+name|ic_bss
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"unable to setup inital BSS node"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_bss
+operator|->
+name|ni_chan
+operator|=
+name|IEEE80211_CHAN_ANYC
+expr_stmt|;
 block|}
 end_function
 
