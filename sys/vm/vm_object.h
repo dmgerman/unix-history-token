@@ -389,21 +389,33 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|vm_object_t
-name|kernel_object
+name|struct
+name|vm_object
+name|kernel_object_store
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* the single kernel object */
-end_comment
 
 begin_decl_stmt
 specifier|extern
-name|vm_object_t
-name|kmem_object
+name|struct
+name|vm_object
+name|kmem_object_store
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|kernel_object
+value|(&kernel_object_store)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kmem_object
+value|(&kmem_object_store)
+end_define
 
 begin_define
 define|#

@@ -287,19 +287,6 @@ comment|/* lock for object list and count */
 end_comment
 
 begin_decl_stmt
-name|vm_object_t
-name|kernel_object
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_object_t
-name|kmem_object
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|vm_object
 name|kernel_object_store
@@ -307,7 +294,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|vm_object
 name|kmem_object_store
@@ -775,11 +761,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|kernel_object
-operator|=
-operator|&
-name|kernel_object_store
-expr_stmt|;
 name|VM_OBJECT_LOCK_INIT
 argument_list|(
 operator|&
@@ -801,11 +782,6 @@ name|kernel_object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The kmem object's mutex is given a unique name, instead of 	 * "vm object", to avoid false reports of lock-order reversal 	 * with a system map mutex. 	 */
-name|kmem_object
-operator|=
-operator|&
-name|kmem_object_store
-expr_stmt|;
 name|mtx_init
 argument_list|(
 name|VM_OBJECT_MTX
