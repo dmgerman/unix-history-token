@@ -355,21 +355,29 @@ begin_struct
 struct|struct
 name|card_vcc
 block|{
+name|struct
+name|atmio_vcc
+name|param
+decl_stmt|;
+comment|/* traffic parameters */
 name|void
 modifier|*
 name|rxhand
 decl_stmt|;
-name|uint32_t
-name|pcr
+name|uint
+name|vflags
 decl_stmt|;
 name|uint32_t
-name|flags
+name|ipackets
 decl_stmt|;
-name|uint8_t
-name|aal
+name|uint32_t
+name|opackets
 decl_stmt|;
-name|uint8_t
-name|traffic
+name|uint32_t
+name|ibytes
+decl_stmt|;
+name|uint32_t
+name|obytes
 decl_stmt|;
 block|}
 struct|;
@@ -582,6 +590,7 @@ comment|/* keep mbufs in queue if full */
 name|struct
 name|card_vcc
 modifier|*
+modifier|*
 name|vccs
 decl_stmt|;
 comment|/* table of vccs */
@@ -597,6 +606,10 @@ name|int
 name|large_cnt
 decl_stmt|;
 comment|/* number of buffers owned by card */
+name|uma_zone_t
+name|vcc_zone
+decl_stmt|;
+comment|/* allocator for VCCs */
 comment|/* receiving */
 name|struct
 name|rbuf
