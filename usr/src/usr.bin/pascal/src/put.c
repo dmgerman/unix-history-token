@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.13 %G%"
+literal|"@(#)put.c 1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1415,18 +1415,24 @@ name|i
 operator|==
 name|n
 condition|)
+block|{
+name|sp
+operator|=
+operator|(
+name|short
+operator|*
+operator|)
+name|lp
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\t%d "
 argument_list|,
-name|p
-index|[
-name|i
-operator|-
-literal|1
-index|]
+operator|*
+name|sp
 argument_list|)
 expr_stmt|;
+block|}
 name|pchr
 argument_list|(
 literal|'\n'
