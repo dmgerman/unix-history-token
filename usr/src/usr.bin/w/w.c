@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.35 (Berkeley) %G%"
+literal|"@(#)w.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,6 +478,26 @@ name|usage
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt_argv
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
 name|int
 operator|)
 argument_list|)
@@ -1415,11 +1435,6 @@ operator|->
 name|next
 control|)
 block|{
-name|char
-modifier|*
-name|fmt_argv
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|ep
@@ -1974,8 +1989,30 @@ name|buf
 index|[
 literal|256
 index|]
+decl_stmt|,
+name|fmt
+index|[
+literal|10
+index|]
 decl_stmt|;
-comment|/* Print time of day. */
+comment|/* 	 * Print time of day. 	 * 	 * Note, SCCS forces the string manipulation below, as it 	 * replaces w.c with file information. 	 */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|fmt
+argument_list|,
+literal|"%l:%%%p"
+argument_list|)
+expr_stmt|;
+name|fmt
+index|[
+literal|4
+index|]
+operator|=
+literal|'M'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1988,7 +2025,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%l:w.cp"
+name|fmt
 argument_list|,
 name|localtime
 argument_list|(
