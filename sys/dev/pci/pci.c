@@ -9592,7 +9592,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some drivers apparently write to these registers w/o 	 * updating our cahced copy.  No harm happens if we update the 	 * copy, so do so here so we can restore them.  The COMMAND 	 * register is modified by the bus w/o updating the cache.  This 	 * should represent the normally writable portion of the 'defined' 	 * part of type 0 headers.  In theory we also need to save/restore 	 * the PCI capability structures we know about, but apart from power 	 * we don't know any that are writable. 	 */
+comment|/* 	 * Some drivers apparently write to these registers w/o updating our 	 * cahced copy.  No harm happens if we update the copy, so do so here 	 * so we can restore them.  The COMMAND register is modified by the 	 * bus w/o updating the cache.  This should represent the normally 	 * writable portion of the 'defined' part of type 0 headers.  In 	 * theory we also need to save/restore the PCI capability structures 	 * we know about, but apart from power we don't know any that are 	 * writable. 	 */
 name|dinfo
 operator|->
 name|cfg
@@ -9818,7 +9818,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * don't set the state for display devices and for memory devices 	 * since bad things happen.  we should (a) have drivers that can easily 	 * detach and (b) use generic drivers for these devices so that some 	 * device actually attaches.  We need to make sure that when we 	 * implement (a) we don't power the device down on a reattach. 	 */
+comment|/* 	 * don't set the state for display devices, base peripherals and 	 * memory devices since bad things happen when they are powered down. 	 * We should (a) have drivers that can easily detach and (b) use 	 * generic drivers for these devices so that some device actually 	 * attaches.  We need to make sure that when we implement (a) we don't 	 * power the device down on a reattach. 	 */
 name|cls
 operator|=
 name|pci_get_class
@@ -9843,7 +9843,7 @@ operator|!=
 name|PCIC_BASEPERIPH
 condition|)
 block|{
-comment|/* 		 * PCI spec is clear that we can only go into D3 state from 		 * D0 state.  Transition from D[12] into D0 before going 		 * to D3 state. 		 */
+comment|/* 		 * PCI spec says we can only go into D3 state from D0 state. 		 * Transition from D[12] into D0 before going to D3 state. 		 */
 name|ps
 operator|=
 name|pci_get_powerstate
