@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uname.c	5.2 (Berkeley) %G%"
+literal|"@(#)uname.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
-name|name
+name|mib
 index|[
 literal|2
 index|]
@@ -286,14 +286,14 @@ operator|&
 name|SFLAG
 condition|)
 block|{
-name|name
+name|mib
 index|[
 literal|0
 index|]
 operator|=
 name|CTL_KERN
 expr_stmt|;
-name|name
+name|mib
 index|[
 literal|1
 index|]
@@ -311,7 +311,7 @@ if|if
 condition|(
 name|sysctl
 argument_list|(
-name|name
+name|mib
 argument_list|,
 literal|2
 argument_list|,
@@ -362,14 +362,14 @@ operator|&
 name|NFLAG
 condition|)
 block|{
-name|name
+name|mib
 index|[
 literal|0
 index|]
 operator|=
 name|CTL_KERN
 expr_stmt|;
-name|name
+name|mib
 index|[
 literal|1
 index|]
@@ -387,7 +387,7 @@ if|if
 condition|(
 name|sysctl
 argument_list|(
-name|name
+name|mib
 argument_list|,
 literal|2
 argument_list|,
@@ -438,14 +438,14 @@ operator|&
 name|RFLAG
 condition|)
 block|{
-name|name
+name|mib
 index|[
 literal|0
 index|]
 operator|=
 name|CTL_KERN
 expr_stmt|;
-name|name
+name|mib
 index|[
 literal|1
 index|]
@@ -463,7 +463,7 @@ if|if
 condition|(
 name|sysctl
 argument_list|(
-name|name
+name|mib
 argument_list|,
 literal|2
 argument_list|,
@@ -514,14 +514,14 @@ operator|&
 name|VFLAG
 condition|)
 block|{
-name|name
+name|mib
 index|[
 literal|0
 index|]
 operator|=
 name|CTL_KERN
 expr_stmt|;
-name|name
+name|mib
 index|[
 literal|1
 index|]
@@ -539,7 +539,7 @@ if|if
 condition|(
 name|sysctl
 argument_list|(
-name|name
+name|mib
 argument_list|,
 literal|2
 argument_list|,
@@ -623,14 +623,14 @@ operator|&
 name|MFLAG
 condition|)
 block|{
-name|name
+name|mib
 index|[
 literal|0
 index|]
 operator|=
 name|CTL_HW
 expr_stmt|;
-name|name
+name|mib
 index|[
 literal|1
 index|]
@@ -648,7 +648,7 @@ if|if
 condition|(
 name|sysctl
 argument_list|(
-name|name
+name|mib
 argument_list|,
 literal|2
 argument_list|,
