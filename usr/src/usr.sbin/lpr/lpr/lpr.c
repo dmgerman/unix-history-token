@@ -49,7 +49,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	5.1 (Berkeley) %G%"
+literal|"@(#)lpr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_include
@@ -656,6 +662,15 @@ sizeof|sizeof
 argument_list|(
 name|host
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"lpd"
+argument_list|,
+literal|0
+argument_list|,
+name|LOG_LPR
 argument_list|)
 expr_stmt|;
 while|while

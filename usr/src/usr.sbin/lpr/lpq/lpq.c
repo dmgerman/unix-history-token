@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpq.c	5.1 (Berkeley) %G%"
+literal|"@(#)lpq.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -341,6 +341,15 @@ sizeof|sizeof
 argument_list|(
 name|host
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"lpd"
+argument_list|,
+literal|0
+argument_list|,
+name|LOG_LPR
 argument_list|)
 expr_stmt|;
 while|while

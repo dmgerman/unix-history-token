@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpc.c	5.1 (Berkeley) %G%"
+literal|"@(#)lpc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_include
@@ -169,6 +175,15 @@ name|argv
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"lpd"
+argument_list|,
+literal|0
+argument_list|,
+name|LOG_LPR
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
