@@ -1,11 +1,61 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  ** Copyright (c) 1995 Michael Smith, All rights reserved.  **  ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  **  ** THIS SOFTWARE IS PROVIDED BY Michael Smith ``AS IS'' AND ANY  ** EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  ** PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Michael Smith BE LIABLE FOR  ** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  ** CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  ** SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  ** BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  ** WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  ** OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  ** EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **  **      $Id: moused.c,v 1.8 1997/03/29 12:10:26 peter Exp $  **/
+comment|/**  ** Copyright (c) 1995 Michael Smith, All rights reserved.  **  ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  **  ** THIS SOFTWARE IS PROVIDED BY Michael Smith ``AS IS'' AND ANY  ** EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  ** PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Michael Smith BE LIABLE FOR  ** ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  ** CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  ** SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  ** BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  ** WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  ** OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  ** EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **/
 end_comment
 
 begin_comment
 comment|/**  ** MOUSED.C  **  ** Mouse daemon : listens to serial port for mouse data stream,  ** interprets same and passes ioctls off to the console driver.  **  ** The mouse interface functions are derived closely from the mouse  ** handler in the XFree86 X server.  Many thanks to the XFree86 people  ** for their great work!  **   **/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
@@ -23,24 +73,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -84,15 +116,8 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (debug&&nodaemon) fprintf(stderr,"%s: " fmt "\n", progname, ##args)
+value|if (debug&&nodaemon) warnx(fmt, ##args)
 end_define
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -468,28 +493,12 @@ modifier|*
 name|act
 decl_stmt|;
 name|struct
-name|termios
-name|t
-decl_stmt|;
-name|struct
 name|mouse_info
 name|mouse
-decl_stmt|;
-name|int
-name|saved_buttons
-init|=
-literal|0
 decl_stmt|;
 name|fd_set
 name|fds
 decl_stmt|;
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -743,7 +752,7 @@ condition|)
 break|break;
 name|warnx
 argument_list|(
-literal|"No port name specified"
+literal|"no port name specified"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -775,7 +784,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't open %s"
+literal|"can't open %s"
 argument_list|,
 name|rodent
 operator|.
@@ -991,7 +1000,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"Activity : buttons 0x%02x  dx %d  dy %d"
+literal|"activity : buttons 0x%02x  dx %d  dy %d"
 argument_list|,
 name|act
 operator|->
@@ -1026,25 +1035,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" Usage is %s [options] -p<port> -t<mousetype>\n"
-literal|"  Options are   -s   Select 9600 baud mouse.\n"
-literal|"                -f   Don't become a daemon\n"
-literal|"                -d   Enable debugging messages\n"
-literal|"                -c   Enable ChordMiddle option\n"
-literal|"                -R   Lower RTS\n"
-literal|"                -D   Lower DTR\n"
-literal|"                -S baud  Select explicit baud (1200..9600).\n"
-literal|"<mousetype> should be one of :\n"
-literal|"                microsoft\n"
-literal|"                mousesystems\n"
-literal|"                mmseries\n"
-literal|"                logitech\n"
-literal|"                busmouse\n"
-literal|"                mouseman\n"
-literal|"                ps/2\n"
-literal|"                mmhittab\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|progname
+literal|"usage: moused [-DRcdfs] [-r samplerate] [-S baudrate]"
+argument_list|,
+literal|"              -p<port> -t<mousetype>"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2048,7 +2043,7 @@ return|;
 comment|/*      * assembly full package      */
 name|debug
 argument_list|(
-literal|"Assembled full packet (len %d) %x,%x,%x,%x,%x"
+literal|"assembled full packet (len %d) %x,%x,%x,%x,%x"
 argument_list|,
 name|proto
 index|[
@@ -2711,7 +2706,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Warning: unable to get status of mouse fd"
+literal|"warning: unable to get status of mouse fd"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2869,7 +2864,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unable to set status of mouse fd"
+literal|"unable to set status of mouse fd"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3010,7 +3005,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unable to write to mouse fd"
+literal|"unable to write to mouse fd"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3041,7 +3036,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Unable to set status of mouse fd"
+literal|"unable to set status of mouse fd"
 argument_list|)
 expr_stmt|;
 block|}
