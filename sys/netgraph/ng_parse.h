@@ -16,7 +16,7 @@ name|_NETGRAPH_PARSE_H_
 end_define
 
 begin_comment
-comment|/*    This defines a library of routines for converting between various C   language types in binary form and ASCII strings.  Types are user   definable.  Several pre-defined types are supplied, for some common   C types: structures, variable and fixed length arrays, integer types,   variable and fixed length strings, IP addresses, etc.    A netgraph node type may provide a list of types that correspond to   the structures it expects to send and receive in the arguments field   of a control message.  This allows these messages to be converted   between their native binary form and the corresponding ASCII form.    A future use of the ASCII form may be for inter-machine communication   of control messages, because the ASCII form is machine independent   whereas the native binary form is not.    Syntax   ------      Structures:        '{' [<name>=<value> ... ] '}'        Omitted fields have their default values by implication.       The order in which the fields are specified does not matter.      Arrays:        '[' [ [index=]<value> ... ] ']'        Element value may be specified with or without the "<index>=" prefix;       If omitted, the index after the previous element is used.       Omitted fields have their default values by implication.      Strings:        "foo bar blah\r\n"        That is, strings are specified just like C strings. The usual       backslash escapes are accepted.      Other simple types (integers, IP addresses) have their obvious forms.    Example   -------      Suppose we have a netgraph command that takes as an argument     a 'struct foo' shown below.  Here is an example of a possible     value for the structure, and the corresponding ASCII encoding     of that value:  	Structure			Binary value 	---------			------------  	struct foo { 	    struct in_addr ip;  	01 02 03 04 	    int bar;			00 00 00 00 	    char label[8];		61 62 63 0a 00 00 00 00 	    u_char alen;		03 00 	    short ary[0];	  	05 00 00 00 0a 00 	};  	ASCII value 	-----------  	{ ip=1.2.3.4 label="abc\n" alen=3 ary=[ 5 2=10 ] }      Note that omitted fields and array elements get their default     values ("bar" and ary[2]), and that the alignment is handled     automatically (the extra 00 byte after "num").  Also, since byte     order and alignment are inherently machine dependent, so is this     conversion process.  The above example shows an x86 (little     endian) encoding.  Also the above example is tricky because the     structure is variable length, depending on 'alen', the number of     elements in the array 'ary'.      Here is how one would define a parse type for the above structure,     subclassing the pre-defined types below.  We construct the type in     a 'bottom up' fashion, defining each field's type first, then the     type for the whole structure ('//' comments used to avoid breakage).      // Super-type info for 'label' field     struct ng_parse_fixedstring_info foo_label_info = { 8 };      // Parse type for 'label' field     struct ng_parse_type foo_label_type = {&ng_parse_fixedstring_type		// super-type&foo_label_info			// super-type info     };      #define OFFSETOF(s, e) ((char *)&((s *)0)->e - (char *)((s *)0))      // Function to compute the length of the array 'ary', which     // is variable length, depending on the previous field 'alen'.     // Upon entry 'buf' will be pointing at&ary[0].     int     foo_ary_getLength(const struct ng_parse_type *type, 	    const u_char *start, const u_char *buf)     { 	    const struct foo *f;  	    f = (const struct foo *)(buf - OFFSETOF(struct foo, ary)); 	    return f->alen;     }      // Super-type info for 'ary' field     struct ng_parse_array_info foo_ary_info = {&ng_parse_int16_type,		// element type&foo_ary_getLength			// func to get array length     }      // Parse type for 'ary' field     struct ng_parse_type foo_ary_type = {&ng_parse_array_type,		// super-type&foo_ary_info			// super-type info     };      // Super-type info for struct foo     struct ng_parse_struct_info foo_fields = { 	    { "ip",&ng_parse_ipaddr_type	}, 	    { "bar",&ng_parse_int32_type	}, 	    { "label",&foo_label_type		}, 	    { "alen",&ng_parse_int8_type	}, 	    { "ary",&foo_ary_type		}, 	    { NULL }     };      // Parse type for struct foo     struct ng_parse_type foo_type = {&ng_parse_struct_type,		// super-type&foo_fields				// super-type info     };    To define a type, you can define it as a sub-type of a predefined   type as shown above, possibly overriding some of the predefined   type's methods, or define an entirely new syntax, with the restriction   that the ASCII representation of your type's value must not contain   any whitespace or any of these characters: { } [ ] = "    See ng_ksocket.c for an example of how to do this for 'struct sockaddr'.   See ng_parse.c to see implementations of the pre-defined types below.  */
+comment|/*    This defines a library of routines for converting between various C   language types in binary form and ASCII strings.  Types are user   definable.  Several pre-defined types are supplied, for some common   C types: structures, variable and fixed length arrays, integer types,   variable and fixed length strings, IP addresses, etc.    A netgraph node type may provide a list of types that correspond to   the structures it expects to send and receive in the arguments field   of a control message.  This allows these messages to be converted   between their native binary form and the corresponding ASCII form.    A future use of the ASCII form may be for inter-machine communication   of control messages, because the ASCII form is machine independent   whereas the native binary form is not.    Syntax   ------      Structures:        '{' [<name>=<value> ... ] '}'        Omitted fields have their default values by implication.       The order in which the fields are specified does not matter.      Arrays:        '[' [ [index=]<value> ... ] ']'        Element value may be specified with or without the "<index>=" prefix;       If omitted, the index after the previous element is used.       Omitted fields have their default values by implication.      Strings:        "foo bar blah\r\n"        That is, strings are specified just like C strings. The usual       backslash escapes are accepted.      Other simple types (integers, IP addresses) have their obvious forms.    Example   -------      Suppose we have a netgraph command that takes as an argument     a 'struct foo' shown below.  Here is an example of a possible     value for the structure, and the corresponding ASCII encoding     of that value:  	Structure			Binary value 	---------			------------  	struct foo { 	    struct in_addr ip;  	01 02 03 04 	    int bar;			00 00 00 00 	    char label[8];		61 62 63 0a 00 00 00 00 	    u_char alen;		03 00 	    short ary[0];	  	05 00 00 00 0a 00 	};  	ASCII value 	-----------  	{ ip=1.2.3.4 label="abc\n" alen=3 ary=[ 5 2=10 ] }      Note that omitted fields and array elements get their default     values ("bar" and ary[2]), and that the alignment is handled     automatically (the extra 00 byte after "num").  Also, since byte     order and alignment are inherently machine dependent, so is this     conversion process.  The above example shows an x86 (little     endian) encoding.  Also the above example is tricky because the     structure is variable length, depending on 'alen', the number of     elements in the array 'ary'.      Here is how one would define a parse type for the above structure,     subclassing the pre-defined types below.  We construct the type in     a 'bottom up' fashion, defining each field's type first, then the     type for the whole structure ('//' comments used to avoid breakage).      // Super-type info for 'label' field     struct ng_parse_fixedstring_info foo_label_info = { 8 };      // Parse type for 'label' field     struct ng_parse_type foo_label_type = {&ng_parse_fixedstring_type		// super-type&foo_label_info			// super-type info     };      #define OFFSETOF(s, e) ((char *)&((s *)0)->e - (char *)((s *)0))      // Function to compute the length of the array 'ary', which     // is variable length, depending on the previous field 'alen'.     // Upon entry 'buf' will be pointing at&ary[0].     int     foo_ary_getLength(const struct ng_parse_type *type, 	    const u_char *start, const u_char *buf)     { 	    const struct foo *f;  	    f = (const struct foo *)(buf - OFFSETOF(struct foo, ary)); 	    return f->alen;     }      // Super-type info for 'ary' field     struct ng_parse_array_info foo_ary_info = {&ng_parse_int16_type,		// element type&foo_ary_getLength			// func to get array length     }      // Parse type for 'ary' field     struct ng_parse_type foo_ary_type = {&ng_parse_array_type,		// super-type&foo_ary_info			// super-type info     };      // Super-type info for struct foo     struct ng_parse_struct_info foo_fields = { 	{ 	    { "ip",&ng_parse_ipaddr_type	}, 	    { "bar",&ng_parse_int32_type	}, 	    { "label",&foo_label_type		}, 	    { "alen",&ng_parse_uint8_type	}, 	    { "ary",&foo_ary_type		}, 	    { NULL } 	}     };      // Parse type for struct foo     struct ng_parse_type foo_type = {&ng_parse_struct_type,		// super-type&foo_fields				// super-type info     };    To define a type, you can define it as a sub-type of a predefined   type as shown above, possibly overriding some of the predefined   type's methods, or define an entirely new syntax, with the restriction   that the ASCII representation of your type's value must not contain   any whitespace or any of these characters: { } [ ] = "    See ng_ksocket.c for an example of how to do this for 'struct sockaddr'.   See ng_parse.c to see implementations of the pre-defined types below.  */
 end_comment
 
 begin_comment
@@ -540,6 +540,86 @@ specifier|const
 name|struct
 name|ng_parse_type
 name|ng_parse_int64_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Same thing but unparse as unsigned quantities */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_uint8_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_uint16_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_uint32_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_uint64_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Same thing but unparse as hex quantities, e.g., "0xe7" */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_hint8_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_hint16_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_hint32_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_hint64_type
 decl_stmt|;
 end_decl_stmt
 
