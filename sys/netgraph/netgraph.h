@@ -735,7 +735,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do {								\ 		struct mbuf *ret_m = NULL;				\ 		meta_p ret_meta = NULL;					\ 		(error) = ng_send_dataq((hook), (m), (a),&ret_m,&ret_meta);\ 		(m) = ret_m;						\ 		(a) = ret_meta;						\ 	} while (0)
+value|do {								\ 		struct mbuf *rm = NULL;					\ 		meta_p ra = NULL;					\ 		(error) = ng_send_data((hook), (m), (a),&rm,&ra);	\ 		(m) = rm;						\ 		(a) = ra;						\ 	} while (0)
 end_define
 
 begin_comment
