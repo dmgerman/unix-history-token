@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -148,7 +148,7 @@ operator||
 name|MDP_ULTRIX
 operator|)
 expr_stmt|;
-comment|/* 	 * Convert the user struct virtual address to a physical one 	 * and cache it in the proc struct. Note: if the phyical address 	 * can change (due to memory compaction in kmem_alloc?), 	 * we will have to update things. 	 */
+comment|/* 	 * Cache the PTEs for the user area in the machine dependent 	 * part of the proc struct so cpu_switch() can quickly map in 	 * the user struct and kernel stack. Note: if the virtual address 	 * translation changes (e.g. swapout) we have to update this. 	 */
 name|pte
 operator|=
 name|kvtopte
@@ -275,6 +275,87 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Finish a swapin operation.  * We neded to update the cached PTEs for the user area in the  * machine dependent part of the proc structure.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_swapin
+parameter_list|(
+name|p
+parameter_list|)
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|user
+modifier|*
+name|up
+init|=
+name|p
+operator|->
+name|p_addr
+decl_stmt|;
+specifier|register
+name|pt_entry_t
+modifier|*
+name|pte
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+comment|/* 	 * Cache the PTEs for the user area in the machine dependent 	 * part of the proc struct so cpu_switch() can quickly map in 	 * the user struct and kernel stack. 	 */
+name|pte
+operator|=
+name|kvtopte
+argument_list|(
+name|up
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|UPAGES
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|p
+operator|->
+name|p_md
+operator|.
+name|md_upte
+index|[
+name|i
+index|]
+operator|=
+name|pte
+operator|->
+name|pt_entry
+operator|&
+operator|~
+name|PG_G
+expr_stmt|;
+name|pte
+operator|++
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*  * cpu_exit is called as the last action during exit.  * We release the address space and machine-dependent resources,  * including the memory for the user structure and kernel stack.  * Once finished, we call switch_exit, which switches to a temporary  * pcb and stack and never returns.  We block memory allocation  * until switch_exit has made things safe again.  */
