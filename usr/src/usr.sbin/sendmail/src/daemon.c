@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.30 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.31 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.30 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.31 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,7 +262,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"554 server \"smtp\" unknown"
+literal|"554 service \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -952,7 +952,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"554 makeconnection: server \"smtp\" unknown"
+literal|"554 makeconnection: service \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
 return|return
