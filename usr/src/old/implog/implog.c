@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<netinet/in.h>
 end_include
 
 begin_define
@@ -60,7 +60,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<net/if_imp.h>
+file|<netimp/if_imp.h>
 end_include
 
 begin_define
@@ -532,7 +532,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"usage: prlog [ -D ] [ -c ] [ -f ] [-h #] [-i #] [ -t # ] [-l [#]] [logfile]\n"
+literal|"usage: implog [ -D ] [ -c ] [ -f ] [-h #] [-i #] [ -t # ] [-l [#]] [logfile]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1030,22 +1030,20 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
-if|#
-directive|if
-name|vax
 name|ip
 operator|->
 name|il_imp
 operator|=
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|il_imp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|mp
@@ -1172,6 +1170,9 @@ name|il_host
 argument_list|,
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|il_imp
@@ -1207,6 +1208,9 @@ literal|" len=%d bytes>\n"
 argument_list|,
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|il_length
@@ -1538,6 +1542,9 @@ name|il_host
 argument_list|,
 name|ntohs
 argument_list|(
+operator|(
+name|u_short
+operator|)
 name|ip
 operator|->
 name|il_imp
@@ -1621,7 +1628,7 @@ name|hostdead
 index|[]
 init|=
 block|{
-literal|"???"
+literal|"#0"
 block|,
 literal|"ready-line negated"
 block|,
@@ -1647,9 +1654,9 @@ literal|"host down due to hardware failure"
 block|,
 literal|"host not scheduled to be up"
 block|,
-literal|"???"
+literal|"#13"
 block|,
-literal|"???"
+literal|"#14"
 block|,
 literal|"host in the process of coming up"
 block|}
@@ -2076,9 +2083,9 @@ name|notify
 index|[]
 init|=
 block|{
-literal|"???"
+literal|"#0"
 block|,
-literal|"???"
+literal|"#1"
 block|,
 literal|"connection not available"
 block|,
