@@ -109,6 +109,26 @@ operator|+
 literal|4
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|width
+operator|>
+name|COLS
+condition|)
+name|width
+operator|=
+name|COLS
+expr_stmt|;
+if|if
+condition|(
+name|height
+operator|>
+name|LINES
+condition|)
+name|height
+operator|=
+name|LINES
+expr_stmt|;
 comment|/* center dialog box on screen */
 name|x
 operator|=
