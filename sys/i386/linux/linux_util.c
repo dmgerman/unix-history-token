@@ -565,6 +565,13 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|pbuf
+operator|!=
+name|NULL
+condition|)
 name|error
 operator|=
 name|copyout
@@ -576,6 +583,11 @@ name|pbuf
 argument_list|,
 name|sz
 argument_list|)
+expr_stmt|;
+else|else
+name|error
+operator|=
+name|ENAMETOOLONG
 expr_stmt|;
 name|free
 argument_list|(

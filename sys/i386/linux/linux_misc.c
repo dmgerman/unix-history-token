@@ -4266,6 +4266,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|tvp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENAMETOOLONG
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|error
 operator|=
