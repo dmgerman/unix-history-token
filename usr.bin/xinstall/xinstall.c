@@ -35,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "From: @(#)xinstall.c	8.1 (Berkeley) 7/21/93";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "From: @(#)xinstall.c	8.1 (Berkeley) 7/21/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -46,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.17 1996/09/29 23:09:51 imp Exp $"
+literal|"$Id: xinstall.c,v 1.18 1996/10/01 03:59:57 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
