@@ -702,7 +702,27 @@ literal|0x43525934
 block|,
 literal|0
 block|,
-literal|"Cirrus Logic CS4299D"
+literal|"Cirrus Logic CS4299D/E/F/G/H"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43525935
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4299K"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x43525936
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic CS4299L"
 block|,
 literal|0
 block|}
@@ -872,7 +892,7 @@ literal|0x54524103
 block|,
 literal|0
 block|,
-literal|"TriTech TR?????"
+literal|"TriTech TR28023"
 block|,
 literal|0
 block|}
