@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.17 (Berkeley) %G%"
+literal|"@(#)df.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,7 +531,7 @@ name|MOUNT_UFS
 argument_list|,
 name|mntpt
 argument_list|,
-name|M_RDONLY
+name|MNT_RDONLY
 argument_list|,
 operator|&
 name|mdev
