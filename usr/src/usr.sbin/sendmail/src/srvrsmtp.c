@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.14 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.15 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.14 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.15 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1120,7 +1120,17 @@ argument_list|)
 operator|>
 literal|0
 condition|)
+block|{
+comment|/* this failed -- undo work */
+if|if
+condition|(
+name|InChild
+condition|)
+name|finis
+argument_list|()
+expr_stmt|;
 break|break;
+block|}
 name|QuickAbort
 operator|=
 name|TRUE
@@ -1132,13 +1142,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Errors
-operator|==
-literal|0
-condition|)
-block|{
 name|message
 argument_list|(
 literal|"250"
@@ -1149,15 +1152,6 @@ expr_stmt|;
 name|gotmail
 operator|=
 name|TRUE
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|InChild
-condition|)
-name|finis
-argument_list|()
 expr_stmt|;
 break|break;
 case|case
