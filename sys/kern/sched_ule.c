@@ -737,6 +737,32 @@ name|kg_slptime
 value|kg_sched->skg_slptime
 end_define
 
+begin_define
+define|#
+directive|define
+name|SLOT_RELEASE
+parameter_list|(
+name|kg
+parameter_list|)
+define|\
+value|do {									\ 	kg->kg_avail_opennings++; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot released (->%d)",		\ 	kg,								\ 	kg->kg_concurrency,						\ 	 kg->kg_avail_opennings);					\
+comment|/*KASSERT((kg->kg_avail_opennings<= kg->kg_concurrency),	\ 	    ("slots out of whack")); */
+value|\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLOT_USE
+parameter_list|(
+name|kg
+parameter_list|)
+define|\
+value|do {									\ 	kg->kg_avail_opennings--; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot used (->%d)",			\ 	kg,								\ 	kg->kg_concurrency,						\ 	 kg->kg_avail_opennings);					\
+comment|/*KASSERT((kg->kg_avail_opennings>= 0),			\ 	    ("slots out of whack"));*/
+value|\ } while (0)
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -5170,13 +5196,6 @@ name|void
 parameter_list|)
 block|{
 comment|/* 	 * Set up the scheduler specific parts of proc0. 	 */
-name|ksegrp0
-operator|.
-name|kg_sched
-operator|=
-operator|&
-name|kg_sched0
-expr_stmt|;
 name|proc0
 operator|.
 name|p_sched
@@ -5184,9 +5203,16 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX */
+name|ksegrp0
+operator|.
+name|kg_sched
+operator|=
+operator|&
+name|kg_sched0
+expr_stmt|;
 name|thread0
 operator|.
-name|td_kse
+name|td_sched
 operator|=
 operator|&
 name|kse0
@@ -5526,33 +5552,6 @@ operator|&=
 operator|~
 name|TDP_OWEPREEMPT
 expr_stmt|;
-comment|/* 	 * If we bring in a thread,  	 * then account for it as if it had been added to the run queue and then chosen. 	 */
-if|if
-condition|(
-name|newtd
-condition|)
-block|{
-name|newtd
-operator|->
-name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|--
-expr_stmt|;
-name|newtd
-operator|->
-name|td_kse
-operator|->
-name|ke_flags
-operator||=
-name|KEF_DIDRUN
-expr_stmt|;
-name|TD_SET_RUNNING
-argument_list|(
-name|newtd
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * If the KSE has been assigned it may be in the process of switching 	 * to the new cpu.  This is the case in sched_bind(). 	 */
 if|if
 condition|(
@@ -5586,12 +5585,12 @@ block|}
 else|else
 block|{
 comment|/* We are ending our run so make our slot available again */
+name|SLOT_RELEASE
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5695,6 +5694,27 @@ name|newtd
 operator|!=
 name|NULL
 condition|)
+block|{
+name|newtd
+operator|->
+name|td_kse
+operator|->
+name|ke_flags
+operator||=
+name|KEF_DIDRUN
+expr_stmt|;
+name|TD_SET_RUNNING
+argument_list|(
+name|newtd
+argument_list|)
+expr_stmt|;
+name|SLOT_USE
+argument_list|(
+name|newtd
+operator|->
+name|td_ksegrp
+argument_list|)
+expr_stmt|;
 name|kseq_load_add
 argument_list|(
 name|KSEQ_SELF
@@ -5705,6 +5725,7 @@ operator|->
 name|td_kse
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|newtd
 operator|=
@@ -7771,12 +7792,12 @@ name|td
 argument_list|)
 condition|)
 return|return;
+name|SLOT_USE
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|--
+argument_list|)
 expr_stmt|;
 name|ke
 operator|->
@@ -7873,12 +7894,12 @@ name|ke_state
 operator|=
 name|KES_THREAD
 expr_stmt|;
+name|SLOT_RELEASE
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|++
+argument_list|)
 expr_stmt|;
 name|ke
 operator|->

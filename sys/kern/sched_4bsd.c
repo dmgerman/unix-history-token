@@ -401,6 +401,32 @@ name|kg_runq_kses
 value|kg_sched->skg_runq_kses
 end_define
 
+begin_define
+define|#
+directive|define
+name|SLOT_RELEASE
+parameter_list|(
+name|kg
+parameter_list|)
+define|\
+value|do {									\ 	kg->kg_avail_opennings++; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot released (->%d)",		\ 	kg,								\ 	kg->kg_concurrency,						\ 	 kg->kg_avail_opennings);					\
+comment|/*	KASSERT((kg->kg_avail_opennings<= kg->kg_concurrency),		\ 	    ("slots out of whack"));*/
+value|\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLOT_USE
+parameter_list|(
+name|kg
+parameter_list|)
+define|\
+value|do {									\ 	kg->kg_avail_opennings--; 					\ 	CTR3(KTR_RUNQ, "kg %p(%d) Slot used (->%d)",			\ 	kg,								\ 	kg->kg_concurrency,						\ 	 kg->kg_avail_opennings);					\
+comment|/*	KASSERT((kg->kg_avail_opennings>= 0),				\ 	    ("slots out of whack"));*/
+value|\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * KSE_CAN_MIGRATE macro returns true if the kse can migrate between  * cpus.  */
 end_comment
@@ -2918,12 +2944,12 @@ literal|"trying to run inhibitted thread"
 operator|)
 argument_list|)
 expr_stmt|;
+name|SLOT_USE
+argument_list|(
 name|newtd
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|--
+argument_list|)
 expr_stmt|;
 name|newtd
 operator|->
@@ -3001,12 +3027,12 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|SLOT_RELEASE
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|++
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3851,12 +3877,12 @@ condition|)
 name|sched_tdcnt
 operator|++
 expr_stmt|;
+name|SLOT_USE
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|--
+argument_list|)
 expr_stmt|;
 name|runq_add
 argument_list|(
@@ -3964,12 +3990,12 @@ condition|)
 name|sched_tdcnt
 operator|--
 expr_stmt|;
+name|SLOT_RELEASE
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_avail_opennings
-operator|++
+argument_list|)
 expr_stmt|;
 name|runq_remove
 argument_list|(
