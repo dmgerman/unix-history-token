@@ -304,7 +304,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: fils.c,v 2.2.2.4 1999/12/04 02:06:24 darrenr Exp $"
+literal|"@(#)$Id: fils.c,v 2.2.2.5 2000/01/27 08:49:40 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1365,7 +1365,7 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|" counted %lu\n"
+literal|" counted %lu short %lu\n"
 argument_list|,
 name|fp
 operator|->
@@ -1375,6 +1375,15 @@ literal|0
 index|]
 operator|.
 name|fr_acct
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_short
 argument_list|)
 expr_stmt|;
 name|PRINTF
@@ -1411,16 +1420,25 @@ argument_list|)
 expr_stmt|;
 name|PRINTF
 argument_list|(
-literal|" counted %lu\n"
+literal|" counted %lu short %lu\n"
 argument_list|,
 name|fp
 operator|->
 name|f_st
 index|[
-literal|0
+literal|1
 index|]
 operator|.
 name|fr_acct
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_short
 argument_list|)
 expr_stmt|;
 name|PRINTF

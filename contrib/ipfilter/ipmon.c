@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.3.2.3 1999/11/28 04:05:28 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.3.2.4 2000/01/24 12:45:25 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2222,6 +2222,10 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
+name|char
+modifier|*
+name|proto
+decl_stmt|;
 name|nl
 operator|=
 operator|(
@@ -2430,6 +2434,15 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+name|proto
+operator|=
+name|getproto
+argument_list|(
+name|nl
+operator|->
+name|nl_p
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2452,7 +2465,7 @@ name|portname
 argument_list|(
 name|res
 argument_list|,
-name|NULL
+name|proto
 argument_list|,
 operator|(
 name|u_int
@@ -2492,7 +2505,7 @@ name|portname
 argument_list|(
 name|res
 argument_list|,
-name|NULL
+name|proto
 argument_list|,
 operator|(
 name|u_int
@@ -2532,7 +2545,7 @@ name|portname
 argument_list|(
 name|res
 argument_list|,
-name|NULL
+name|proto
 argument_list|,
 operator|(
 name|u_int

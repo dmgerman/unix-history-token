@@ -329,7 +329,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipt.c,v 2.1 1999/08/04 17:30:08 darrenr Exp $"
+literal|"@(#)$Id: ipt.c,v 2.1.2.1 2000/01/24 14:49:11 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -422,6 +422,13 @@ operator|,
 name|int
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_running
 decl_stmt|;
 end_decl_stmt
 
@@ -689,6 +696,10 @@ argument_list|()
 expr_stmt|;
 name|initparse
 argument_list|()
+expr_stmt|;
+name|fr_running
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
