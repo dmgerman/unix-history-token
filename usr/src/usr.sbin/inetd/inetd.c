@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.22 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3672,7 +3672,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|char
+name|int
 name|c
 decl_stmt|;
 name|c
