@@ -6854,11 +6854,6 @@ name|ifmultiaddr
 modifier|*
 name|inm
 decl_stmt|;
-name|struct
-name|sockaddr_dl
-modifier|*
-name|sdl
-decl_stmt|;
 name|u_int32_t
 name|crc
 decl_stmt|;
@@ -6870,9 +6865,6 @@ index|]
 decl_stmt|;
 name|u_int32_t
 name|macc
-decl_stmt|;
-name|int
-name|len
 decl_stmt|;
 comment|/* Clear hash table */
 name|hash
@@ -7021,8 +7013,12 @@ operator|!=
 name|AF_LINK
 condition|)
 continue|continue;
-name|sdl
+name|crc
 operator|=
+name|ether_crc32_le
+argument_list|(
+name|LLADDR
+argument_list|(
 operator|(
 expr|struct
 name|sockaddr_dl
@@ -7031,12 +7027,7 @@ operator|)
 name|inm
 operator|->
 name|ifma_addr
-expr_stmt|;
-name|crc
-operator|=
-name|ether_crc32_le
-argument_list|(
-name|sdl
+argument_list|)
 argument_list|,
 name|ETHER_ADDR_LEN
 argument_list|)
