@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.27 (Berkeley) %G%"
+literal|"@(#)route.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -716,30 +716,6 @@ name|rt_msghdr
 modifier|*
 name|rtm
 decl_stmt|;
-struct|struct
-block|{
-name|struct
-name|rt_msghdr
-name|m_rtm
-decl_stmt|;
-union|union
-block|{
-name|char
-name|u_saddrs
-index|[
-literal|200
-index|]
-decl_stmt|;
-name|struct
-name|sockaddr
-name|u_sa
-decl_stmt|;
-block|}
-name|m_u
-union|;
-block|}
-name|m
-struct|;
 name|shutdown
 argument_list|(
 name|s
@@ -1070,12 +1046,16 @@ name|sockaddr
 modifier|*
 name|sa
 init|=
-operator|&
-name|m
-operator|.
-name|m_u
-operator|.
-name|u_sa
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|(
+name|rtm
+operator|+
+literal|1
+operator|)
 decl_stmt|;
 name|printf
 argument_list|(
@@ -2558,6 +2538,14 @@ name|K_NET
 case|:
 name|forcenet
 operator|++
+expr_stmt|;
+break|break;
+case|case
+name|K_REJECT
+case|:
+name|flags
+operator||=
+name|RTF_REJECT
 expr_stmt|;
 break|break;
 case|case
@@ -4991,7 +4979,7 @@ name|char
 name|routeflags
 index|[]
 init|=
-literal|"\1UP\2GATEWAY\3HOST\5DYNAMIC\6MODIFIED\7DONE\010MASK_PRESENT\011CLONING\012XRESOLVE"
+literal|"\1UP\2GATEWAY\3HOST\4REJECT\5DYNAMIC\6MODIFIED\7DONE\010MASK_PRESENT\011CLONING\012XRESOLVE"
 decl_stmt|;
 end_decl_stmt
 
