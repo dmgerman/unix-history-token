@@ -2825,6 +2825,12 @@ operator|&
 name|sb
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|NOCRED
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -2999,6 +3005,12 @@ operator|&
 name|sb
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|NOCRED
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -3133,6 +3145,10 @@ name|fp
 argument_list|,
 operator|&
 name|ub
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)

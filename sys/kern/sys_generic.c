@@ -4350,9 +4350,9 @@ index|[
 name|msk
 index|]
 argument_list|,
-name|fp
+name|td
 operator|->
-name|f_cred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -5218,9 +5218,9 @@ name|fds
 operator|->
 name|events
 argument_list|,
-name|fp
+name|td
 operator|->
-name|f_cred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)

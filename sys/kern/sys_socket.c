@@ -688,7 +688,7 @@ name|fp
 parameter_list|,
 name|events
 parameter_list|,
-name|cred
+name|active_cred
 parameter_list|,
 name|td
 parameter_list|)
@@ -703,7 +703,7 @@ decl_stmt|;
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread
@@ -738,7 +738,9 @@ name|so
 argument_list|,
 name|events
 argument_list|,
-name|cred
+name|fp
+operator|->
+name|f_cred
 argument_list|,
 name|td
 argument_list|)
@@ -754,6 +756,8 @@ name|fp
 parameter_list|,
 name|ub
 parameter_list|,
+name|active_cred
+parameter_list|,
 name|td
 parameter_list|)
 name|struct
@@ -765,6 +769,11 @@ name|struct
 name|stat
 modifier|*
 name|ub
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread

@@ -311,7 +311,7 @@ parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 parameter_list|,
 name|struct
 name|thread
@@ -353,6 +353,11 @@ name|struct
 name|stat
 modifier|*
 name|sb
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|active_cred
 parameter_list|,
 name|struct
 name|thread
@@ -5141,7 +5146,7 @@ name|fp
 parameter_list|,
 name|events
 parameter_list|,
-name|cred
+name|active_cred
 parameter_list|,
 name|td
 parameter_list|)
@@ -5156,7 +5161,7 @@ decl_stmt|;
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread
@@ -5214,9 +5219,7 @@ name|error
 operator|=
 name|mac_check_pipe_op
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|active_cred
 argument_list|,
 name|rpipe
 argument_list|,
@@ -5469,6 +5472,8 @@ name|fp
 parameter_list|,
 name|ub
 parameter_list|,
+name|active_cred
+parameter_list|,
 name|td
 parameter_list|)
 name|struct
@@ -5480,6 +5485,11 @@ name|struct
 name|stat
 modifier|*
 name|ub
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread
@@ -5512,9 +5522,7 @@ name|error
 operator|=
 name|mac_check_pipe_op
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|active_cred
 argument_list|,
 name|pipe
 argument_list|,

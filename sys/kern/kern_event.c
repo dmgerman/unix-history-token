@@ -288,7 +288,7 @@ parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 parameter_list|,
 name|struct
 name|thread
@@ -330,6 +330,11 @@ name|struct
 name|stat
 modifier|*
 name|st
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|active_cred
 parameter_list|,
 name|struct
 name|thread
@@ -4155,7 +4160,7 @@ parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 parameter_list|,
 name|struct
 name|thread
@@ -4270,6 +4275,11 @@ name|struct
 name|stat
 modifier|*
 name|st
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|active_cred
 parameter_list|,
 name|struct
 name|thread

@@ -373,7 +373,7 @@ parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 parameter_list|,
 name|struct
 name|thread
@@ -415,6 +415,11 @@ name|struct
 name|stat
 modifier|*
 name|sb
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|active_cred
 parameter_list|,
 name|struct
 name|thread
@@ -3631,6 +3636,10 @@ operator|&
 name|ub
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3808,6 +3817,10 @@ operator|&
 name|ub
 argument_list|,
 name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3968,6 +3981,10 @@ name|fp
 argument_list|,
 operator|&
 name|ub
+argument_list|,
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -9825,7 +9842,7 @@ name|fp
 parameter_list|,
 name|events
 parameter_list|,
-name|cred
+name|active_cred
 parameter_list|,
 name|td
 parameter_list|)
@@ -9840,7 +9857,7 @@ decl_stmt|;
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread
@@ -9893,6 +9910,8 @@ name|fp
 parameter_list|,
 name|sb
 parameter_list|,
+name|active_cred
+parameter_list|,
 name|td
 parameter_list|)
 name|struct
@@ -9904,6 +9923,11 @@ name|struct
 name|stat
 modifier|*
 name|sb
+decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread
