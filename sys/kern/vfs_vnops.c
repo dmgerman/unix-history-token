@@ -4815,6 +4815,13 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"IO_NODELOCKED with no vp lock held"
+argument_list|)
+expr_stmt|;
 comment|/* authorize attribute retrieval as kernel */
 name|error
 operator|=
@@ -5035,6 +5042,13 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"IO_NODELOCKED with no vp lock held"
+argument_list|)
+expr_stmt|;
 comment|/* authorize attribute setting as kernel */
 name|error
 operator|=
@@ -5168,6 +5182,13 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"IO_NODELOCKED with no vp lock held"
+argument_list|)
+expr_stmt|;
 comment|/* authorize attribute removal as kernel */
 name|error
 operator|=
