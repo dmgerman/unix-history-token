@@ -49,7 +49,7 @@ decl_stmt|;
 comment|/* see below */
 name|char
 modifier|*
-name|f_special
+name|f_compilewith
 decl_stmt|;
 comment|/* special make rule if present */
 name|char
