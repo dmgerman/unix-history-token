@@ -186,6 +186,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SNDCARD_AWE32
+value|20
+end_define
+
 begin_comment
 comment|/***********************************  * IOCTL Commands for /dev/sequencer  */
 end_comment
@@ -1739,6 +1746,10 @@ define|#
 directive|define
 name|SAMPLE_TYPE_GUS
 value|0x10
+define|#
+directive|define
+name|SAMPLE_TYPE_AWE32
+value|0x20
 name|int
 name|perc_mode
 decl_stmt|;
