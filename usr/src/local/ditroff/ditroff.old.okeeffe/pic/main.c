@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	(Berkeley)	1.3	83/08/15	*/
+comment|/* main.c	(Berkeley)	1.4	83/10/07	*/
 end_comment
 
 begin_include
@@ -52,7 +52,7 @@ name|char
 modifier|*
 name|dev
 init|=
-literal|"var"
+literal|"va"
 decl_stmt|;
 end_decl_stmt
 
@@ -501,6 +501,9 @@ expr_stmt|;
 break|break;
 case|case
 literal|'T'
+case|:
+case|case
+literal|'P'
 case|:
 name|dev
 operator|=
