@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c 4.2 %G%"
+literal|"@(#)init.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,6 +227,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEWGRP
+end_ifdef
+
 begin_function_decl
 specifier|extern
 name|int
@@ -234,6 +240,11 @@ name|donewgrp
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -802,6 +813,9 @@ literal|0
 block|,
 literal|0
 block|,
+ifdef|#
+directive|ifdef
+name|NEWGRP
 literal|"newgrp"
 block|,
 name|donewgrp
@@ -810,6 +824,8 @@ literal|1
 block|,
 literal|1
 block|,
+endif|#
+directive|endif
 literal|"nice"
 block|,
 name|donice

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* csh.h 4.7 83/02/09 */
+comment|/* csh.h 4.8 83/06/11 */
 end_comment
 
 begin_include
@@ -88,6 +88,16 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(strcmp(a, b) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mask
+parameter_list|(
+name|s
+parameter_list|)
+value|(1<< ((s)-1))
 end_define
 
 begin_comment
