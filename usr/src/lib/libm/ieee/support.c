@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)support.c	1.1 (Berkeley) 5/23/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -624,7 +624,10 @@ ifdef|#
 directive|ifdef
 name|VAX
 return|return
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 operator|(
 operator|*
@@ -637,7 +640,7 @@ name|gap
 operator|)
 operator|-
 name|bias
-operator|)
+argument_list|)
 return|;
 else|#
 directive|else
