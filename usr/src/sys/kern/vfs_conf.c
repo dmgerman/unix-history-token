@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -459,8 +459,6 @@ name|vop_advlock_desc
 decl_stmt|,
 name|vop_blkatoff_desc
 decl_stmt|,
-name|vop_vget_desc
-decl_stmt|,
 name|vop_valloc_desc
 decl_stmt|,
 name|vop_vfree_desc
@@ -589,9 +587,6 @@ name|vop_advlock_desc
 block|,
 operator|&
 name|vop_blkatoff_desc
-block|,
-operator|&
-name|vop_vget_desc
 block|,
 operator|&
 name|vop_valloc_desc
