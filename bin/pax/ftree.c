@@ -631,6 +631,36 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * ftree_notsel()  *	this entry has not been selected by pax.  */
+end_comment
+
+begin_function
+name|void
+name|ftree_notsel
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ftent
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|fts_set
+argument_list|(
+name|ftsp
+argument_list|,
+name|ftent
+argument_list|,
+name|FTS_SKIP
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * ftree_chk()  *	called at end on pax execution. Prints all those file args that did not  *	have a selected member (reference count still 0)  */
 end_comment
 

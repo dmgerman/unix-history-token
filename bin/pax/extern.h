@@ -972,6 +972,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ftree_notsel
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ftree_chk
 parameter_list|(
 name|void

@@ -1436,7 +1436,12 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|ftree_notsel
+argument_list|()
+expr_stmt|;
 continue|continue;
+block|}
 name|fd
 operator|=
 operator|-
@@ -2521,7 +2526,12 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|ftree_notsel
+argument_list|()
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 		 * if there is already a file in the destination directory with 		 * the same name and it is newer, skip the one stored on the 		 * archive. 		 * NOTE: this test is done BEFORE name modifications as 		 * specified by pax. this can be confusing to the user who 		 * might expect the test to be done on an existing file AFTER 		 * the name mod. In honesty the pax spec is probably flawed in 		 * this respect 		 */
 if|if
 condition|(
