@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.11 (Berkeley) %G%"
+literal|"@(#)table.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1528,8 +1528,6 @@ block|,
 literal|0
 block|,
 name|RLEFT
-operator||
-name|RRIGHT
 operator||
 name|RESCC
 block|,
