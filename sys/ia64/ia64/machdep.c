@@ -748,7 +748,7 @@ begin_decl_stmt
 name|vm_offset_t
 name|phys_avail
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 end_decl_stmt
