@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.45 1999/09/09 12:26:47 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.52 1999/10/13 08:10:58 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -91,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
 end_include
 
 begin_include
@@ -240,6 +246,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|usbd_get_string
@@ -258,6 +265,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|usbd_getnewaddr
 name|__P
@@ -270,7 +278,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
 begin_decl_stmt
+specifier|static
 name|int
 name|usbd_print
 name|__P
@@ -289,16 +307,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
 begin_decl_stmt
+specifier|static
 name|int
 name|usbd_submatch
 name|__P
@@ -328,6 +338,7 @@ argument_list|)
 end_elif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|usbd_submatch
 name|__P
@@ -351,6 +362,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usbd_free_iface_data
 name|__P
@@ -367,6 +379,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usbd_kill_pipe
 name|__P
@@ -379,6 +392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|usbd_status
 name|usbd_probe_and_attach
 name|__P
@@ -397,6 +411,15 @@ name|int
 name|addr
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int32_t
+name|usb_cookie_no
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -470,7 +493,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* USBVERBOSE */
+end_comment
+
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -605,7 +633,7 @@ name|usb_device_request_t
 name|req
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|req
 operator|.
@@ -649,7 +677,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* only size byte first */
-name|r
+name|err
 operator|=
 name|usbd_do_request
 argument_list|(
@@ -663,13 +691,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 name|USETW
@@ -749,7 +775,7 @@ name|u_int16_t
 name|c
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 if|if
 condition|(
@@ -787,7 +813,7 @@ name|USBD_NOLANG
 condition|)
 block|{
 comment|/* Set up default language */
-name|r
+name|err
 operator|=
 name|usbd_get_string_desc
 argument_list|(
@@ -803,9 +829,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 operator|||
 name|us
 operator|.
@@ -841,7 +865,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|r
+name|err
 operator|=
 name|usbd_get_string_desc
 argument_list|(
@@ -859,9 +883,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
@@ -961,7 +983,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|buf
+operator|)
 return|;
 block|}
 end_function
@@ -1022,8 +1046,9 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
 name|dev
+operator|==
+name|NULL
 condition|)
 block|{
 name|v
@@ -1071,8 +1096,9 @@ directive|ifdef
 name|USBVERBOSE
 if|if
 condition|(
-operator|!
 name|vendor
+operator|==
+name|NULL
 condition|)
 block|{
 for|for
@@ -1176,6 +1202,8 @@ directive|endif
 if|if
 condition|(
 name|vendor
+operator|!=
+name|NULL
 condition|)
 name|strcpy
 argument_list|(
@@ -1202,6 +1230,8 @@ expr_stmt|;
 if|if
 condition|(
 name|product
+operator|!=
+name|NULL
 condition|)
 name|strcpy
 argument_list|(
@@ -1546,7 +1576,7 @@ name|usb_device_request_t
 name|req
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|int
 name|n
@@ -1590,7 +1620,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_do_request
 argument_list|(
@@ -1613,20 +1643,18 @@ name|port
 operator|,
 name|usbd_errstr
 argument_list|(
-name|r
+name|err
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 name|n
@@ -1643,7 +1671,7 @@ argument_list|,
 name|USB_PORT_RESET_DELAY
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_get_port_status
 argument_list|(
@@ -1656,9 +1684,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|DPRINTF
@@ -1666,13 +1692,13 @@ argument_list|(
 operator|(
 literal|"usbd_reset_port: get status failed %d\n"
 operator|,
-name|r
+name|err
 operator|)
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -1716,7 +1742,7 @@ name|USBD_IOERROR
 operator|)
 return|;
 block|}
-name|r
+name|err
 operator|=
 name|usbd_clear_port_feature
 argument_list|(
@@ -1732,16 +1758,14 @@ directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 name|DPRINTF
 argument_list|(
 operator|(
 literal|"usbd_reset_port: clear port feature failed %d\n"
 operator|,
-name|r
+name|err
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1757,7 +1781,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -2025,8 +2049,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|d
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2688,7 +2713,7 @@ name|usb_config_descriptor_t
 name|cd
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -2720,7 +2745,7 @@ name|index
 operator|++
 control|)
 block|{
-name|r
+name|err
 operator|=
 name|usbd_get_config_desc
 argument_list|(
@@ -2734,13 +2759,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 if|if
@@ -2802,7 +2825,7 @@ modifier|*
 name|cdp
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|int
 name|ifcidx
@@ -2912,7 +2935,7 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* Figure out what config number to use. */
-name|r
+name|err
 operator|=
 name|usbd_get_config_desc
 argument_list|(
@@ -2926,13 +2949,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 name|len
@@ -2959,14 +2980,14 @@ if|if
 condition|(
 name|cdp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
 name|USBD_NOMEM
 operator|)
 return|;
-name|r
+name|err
 operator|=
 name|usbd_get_desc
 argument_list|(
@@ -2983,9 +3004,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 goto|goto
 name|bad
@@ -3013,7 +3032,7 @@ name|bDescriptorType
 operator|)
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|USBD_INVAL
 expr_stmt|;
@@ -3027,6 +3046,17 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|dev
+operator|->
+name|quirks
+operator|->
+name|uq_flags
+operator|&
+name|UQ_BUS_POWERED
+operator|)
+operator|&&
 name|cdp
 operator|->
 name|bmAttributes
@@ -3045,7 +3075,7 @@ name|UC_BUS_POWERED
 condition|)
 block|{
 comment|/* Must ask device. */
-name|r
+name|err
 operator|=
 name|usbd_get_device_status
 argument_list|(
@@ -3057,9 +3087,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|==
-name|USBD_NORMAL_COMPLETION
+operator|!
+name|err
 operator|&&
 operator|(
 name|UGETW
@@ -3091,7 +3120,7 @@ argument_list|)
 operator|,
 name|usbd_errstr
 argument_list|(
-name|r
+name|err
 argument_list|)
 operator|)
 argument_list|)
@@ -3132,10 +3161,11 @@ directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
-operator|!
 name|dev
 operator|->
 name|powersrc
+operator|==
+name|NULL
 condition|)
 block|{
 name|DPRINTF
@@ -3208,7 +3238,7 @@ operator|->
 name|power
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|USBD_NO_POWER
 expr_stmt|;
@@ -3239,7 +3269,7 @@ name|bConfigurationValue
 operator|)
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_set_config
 argument_list|(
@@ -3252,9 +3282,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|DPRINTF
@@ -3269,7 +3297,7 @@ name|bConfigurationValue
 operator|,
 name|usbd_errstr
 argument_list|(
-name|r
+name|err
 argument_list|)
 operator|)
 argument_list|)
@@ -3323,7 +3351,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|r
+name|err
 operator|=
 name|USBD_NOMEM
 expr_stmt|;
@@ -3372,7 +3400,7 @@ name|ifcidx
 operator|++
 control|)
 block|{
-name|r
+name|err
 operator|=
 name|usbd_fill_iface_data
 argument_list|(
@@ -3385,9 +3413,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 while|while
@@ -3425,7 +3451,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -3467,7 +3493,7 @@ name|usbd_pipe_handle
 name|p
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -3505,7 +3531,7 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3543,7 +3569,7 @@ literal|1
 expr_stmt|;
 name|p
 operator|->
-name|intrreqh
+name|intrxfer
 operator|=
 literal|0
 expr_stmt|;
@@ -3567,7 +3593,7 @@ operator|->
 name|queue
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|dev
 operator|->
@@ -3582,9 +3608,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|DPRINTFN
@@ -3604,7 +3628,7 @@ name|bEndpointAddress
 operator|,
 name|usbd_errstr
 argument_list|(
-name|r
+name|err
 argument_list|)
 operator|)
 argument_list|)
@@ -3618,7 +3642,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -3784,8 +3808,6 @@ operator|->
 name|ddesc
 decl_stmt|;
 name|int
-name|r
-decl_stmt|,
 name|found
 decl_stmt|,
 name|i
@@ -3793,6 +3815,9 @@ decl_stmt|,
 name|confi
 decl_stmt|,
 name|nifaces
+decl_stmt|;
+name|usbd_status
+name|err
 decl_stmt|;
 name|device_ptr_t
 name|dv
@@ -4055,7 +4080,7 @@ name|confi
 operator|)
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_set_config_index
 argument_list|(
@@ -4068,9 +4093,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 ifdef|#
@@ -4093,7 +4116,7 @@ name|addr
 operator|,
 name|usbd_errstr
 argument_list|(
-name|r
+name|err
 argument_list|)
 operator|)
 argument_list|)
@@ -4133,7 +4156,7 @@ endif|#
 directive|endif
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -4263,11 +4286,12 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 name|ifaces
 index|[
 name|i
 index|]
+operator|==
+name|NULL
 condition|)
 continue|continue;
 comment|/* interface already claimed */
@@ -4314,6 +4338,8 @@ expr_stmt|;
 if|if
 condition|(
 name|dv
+operator|!=
+name|NULL
 condition|)
 block|{
 name|dev
@@ -4535,6 +4561,8 @@ expr_stmt|;
 if|if
 condition|(
 name|dv
+operator|!=
+name|NULL
 condition|)
 block|{
 name|dev
@@ -4670,7 +4698,7 @@ modifier|*
 name|dd
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|int
 name|addr
@@ -4740,7 +4768,7 @@ if|if
 condition|(
 name|dev
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -4877,8 +4905,17 @@ name|langid
 operator|=
 name|USBD_NOLANG
 expr_stmt|;
+name|dev
+operator|->
+name|cookie
+operator|.
+name|cookie
+operator|=
+operator|++
+name|usb_cookie_no
+expr_stmt|;
 comment|/* Establish the the default pipe. */
-name|r
+name|err
 operator|=
 name|usbd_setup_pipe
 argument_list|(
@@ -4899,9 +4936,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|usbd_remove_device
@@ -4913,7 +4948,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -4931,6 +4966,7 @@ operator|->
 name|ddesc
 expr_stmt|;
 comment|/* Try a few times in case the device is slow (i.e. outside specs.) */
+comment|/* for (i = 0; i< 5; i++) { */
 for|for
 control|(
 name|i
@@ -4939,14 +4975,14 @@ literal|0
 init|;
 name|i
 operator|<
-literal|5
+literal|3
 condition|;
 name|i
 operator|++
 control|)
 block|{
 comment|/* Get the first 8 bytes of the device descriptor. */
-name|r
+name|err
 operator|=
 name|usbd_get_desc
 argument_list|(
@@ -4963,9 +4999,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|==
-name|USBD_NORMAL_COMPLETION
+operator|!
+name|err
 condition|)
 break|break;
 name|usbd_delay_ms
@@ -4978,9 +5013,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|DPRINTFN
@@ -5005,7 +5038,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -5137,7 +5170,7 @@ name|bMaxPacketSize
 argument_list|)
 expr_stmt|;
 comment|/* Get the full device descriptor. */
-name|r
+name|err
 operator|=
 name|usbd_get_device_desc
 argument_list|(
@@ -5148,9 +5181,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|DPRINTFN
@@ -5175,7 +5206,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -5190,7 +5221,7 @@ name|dd
 argument_list|)
 expr_stmt|;
 comment|/* Set the address */
-name|r
+name|err
 operator|=
 name|usbd_set_address
 argument_list|(
@@ -5201,9 +5232,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|DPRINTFN
@@ -5218,7 +5247,7 @@ name|addr
 operator|)
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|USBD_SET_ADDR_FAILED
 expr_stmt|;
@@ -5231,7 +5260,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
@@ -5285,7 +5314,7 @@ name|parent
 operator|)
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_probe_and_attach
 argument_list|(
@@ -5300,9 +5329,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|usbd_remove_device
@@ -5314,10 +5341,17 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}
+name|usbd_add_event
+argument_list|(
+name|USB_EVENT_ATTACH
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
@@ -5357,6 +5391,8 @@ condition|(
 name|dev
 operator|->
 name|default_pipe
+operator|!=
+name|NULL
 condition|)
 name|usbd_kill_pipe
 argument_list|(
@@ -5818,7 +5854,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|r
+name|err
 decl_stmt|,
 name|s
 decl_stmt|;
@@ -5989,7 +6025,7 @@ name|p
 operator|->
 name|device
 condition|)
-name|r
+name|err
 operator|=
 name|p
 operator|->
@@ -6016,7 +6052,7 @@ name|s
 operator|&
 name|UPS_PORT_ENABLED
 condition|)
-name|r
+name|err
 operator|=
 name|USB_PORT_ENABLED
 expr_stmt|;
@@ -6027,7 +6063,7 @@ name|s
 operator|&
 name|UPS_SUSPEND
 condition|)
-name|r
+name|err
 operator|=
 name|USB_PORT_SUSPENDED
 expr_stmt|;
@@ -6038,12 +6074,12 @@ name|s
 operator|&
 name|UPS_PORT_POWER
 condition|)
-name|r
+name|err
 operator|=
 name|USB_PORT_POWERED
 expr_stmt|;
 else|else
-name|r
+name|err
 operator|=
 name|USB_PORT_DISABLED
 expr_stmt|;
@@ -6055,7 +6091,7 @@ index|[
 name|i
 index|]
 operator|=
-name|r
+name|err
 expr_stmt|;
 block|}
 name|di
@@ -6098,6 +6134,8 @@ condition|(
 name|dev
 operator|->
 name|default_pipe
+operator|!=
+name|NULL
 condition|)
 name|usbd_kill_pipe
 argument_list|(
@@ -6111,6 +6149,8 @@ condition|(
 name|dev
 operator|->
 name|ifaces
+operator|!=
+name|NULL
 condition|)
 block|{
 name|nifc
@@ -6156,6 +6196,8 @@ condition|(
 name|dev
 operator|->
 name|cdesc
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -6171,6 +6213,8 @@ condition|(
 name|dev
 operator|->
 name|subdevs
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -6186,6 +6230,274 @@ argument_list|(
 name|dev
 argument_list|,
 name|M_USB
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*  * The general mechanism for detaching drivers works as follows: Each  * driver is responsible for maintaining a reference count on the  * number of outstanding references to its softc (e.g.  from  * processing hanging in a read or write).  The detach method of the  * driver decrements this counter and flags in the softc that the  * driver is dying and then wakes any sleepers.  It then sleeps on the  * softc.  Each place that can sleep must maintain the reference  * count.  When the reference count drops to -1 (0 is the normal value  * of the reference count) the a wakeup on the softc is performed  * signaling to the detach waiter that all references are gone.  */
+comment|/*  * Called from process context when we discover that a port has  * been disconnected.  */
+name|void
+name|usb_disconnect_port
+parameter_list|(
+name|up
+parameter_list|,
+name|parent
+parameter_list|)
+name|struct
+name|usbd_port
+modifier|*
+name|up
+decl_stmt|;
+name|device_ptr_t
+name|parent
+decl_stmt|;
+block|{
+name|usbd_device_handle
+name|dev
+init|=
+name|up
+operator|->
+name|device
+decl_stmt|;
+name|char
+modifier|*
+name|hubname
+init|=
+name|USBDEVPTRNAME
+argument_list|(
+name|parent
+argument_list|)
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|3
+argument_list|,
+operator|(
+literal|"uhub_disconnect: up=%p dev=%p port=%d\n"
+operator|,
+name|up
+operator|,
+name|dev
+operator|,
+name|up
+operator|->
+name|portno
+operator|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+operator|!
+name|dev
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"usb_disconnect_port: no device\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|cdesc
+condition|)
+block|{
+comment|/* Partially attached device, just drop it. */
+name|dev
+operator|->
+name|bus
+operator|->
+name|devices
+index|[
+name|dev
+operator|->
+name|address
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|up
+operator|->
+name|device
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|dev
+operator|->
+name|subdevs
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+condition|)
+comment|/* skip empty elements */
+continue|continue;
+name|printf
+argument_list|(
+literal|"%s: at %s"
+argument_list|,
+name|USBDEVPTRNAME
+argument_list|(
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|,
+name|hubname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|portno
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" port %d"
+argument_list|,
+name|up
+operator|->
+name|portno
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" (addr %d) disconnected\n"
+argument_list|,
+name|dev
+operator|->
+name|address
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+name|config_detach
+argument_list|(
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+argument_list|,
+name|DETACH_FORCE
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|device_delete_child
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+argument_list|)
+argument_list|,
+name|dev
+operator|->
+name|subdevs
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+block|}
+name|usbd_add_event
+argument_list|(
+name|USB_EVENT_DETACH
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|bus
+operator|->
+name|devices
+index|[
+name|dev
+operator|->
+name|address
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|up
+operator|->
+name|device
+operator|=
+literal|0
+expr_stmt|;
+name|usb_free_device
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 block|}

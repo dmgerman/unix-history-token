@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.c,v 1.13 1999/09/15 12:30:59 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.c,v 1.14 1999/09/15 13:57:09 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -60,6 +60,7 @@ directive|endif
 end_endif
 
 begin_struct
+specifier|static
 struct|struct
 name|usbd_quirk_entry
 block|{
@@ -77,7 +78,7 @@ name|usbd_quirks
 name|quirks
 decl_stmt|;
 block|}
-name|quirks
+name|usb_quirks
 index|[]
 init|=
 block|{
@@ -225,7 +226,7 @@ for|for
 control|(
 name|t
 operator|=
-name|quirks
+name|usb_quirks
 init|;
 name|t
 operator|->

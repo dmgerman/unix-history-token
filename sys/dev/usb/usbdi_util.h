@@ -549,8 +549,8 @@ name|usbd_bulk_transfer
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|,
 name|usbd_pipe_handle
 name|pipe

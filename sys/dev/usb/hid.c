@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: hid.c,v 1.8 1999/08/14 14:49:31 augustss Exp $	*/
+comment|/*	$NetBSD: hid.c,v 1.9 1999/10/13 08:10:55 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -382,6 +382,8 @@ operator|->
 name|cur
 operator|.
 name|next
+operator|!=
+name|NULL
 condition|)
 block|{
 name|struct
@@ -489,6 +491,8 @@ condition|(
 name|s
 operator|->
 name|multimax
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -1689,6 +1693,8 @@ condition|(
 name|h
 operator|.
 name|report_ID
+operator|!=
+literal|0
 condition|)
 name|id
 operator|=
@@ -1712,6 +1718,8 @@ expr_stmt|;
 if|if
 condition|(
 name|id
+operator|!=
+literal|0
 condition|)
 block|{
 name|size
@@ -1846,6 +1854,8 @@ block|{
 if|if
 condition|(
 name|loc
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|loc
@@ -1857,6 +1867,8 @@ expr_stmt|;
 if|if
 condition|(
 name|flags
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|flags
@@ -2104,7 +2116,7 @@ name|hid_item
 name|hi
 decl_stmt|;
 name|int
-name|r
+name|err
 decl_stmt|;
 name|hd
 operator|=
@@ -2119,15 +2131,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|hd
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-name|r
+name|err
 operator|=
 name|hid_get_item
 argument_list|(
@@ -2156,7 +2169,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|r
+name|err
 operator|)
 return|;
 block|}

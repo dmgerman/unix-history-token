@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ulpt.c,v 1.23 1999/09/11 10:40:07 augustss Exp $	*/
+comment|/*	$NetBSD: ulpt.c,v 1.27 1999/10/13 08:10:57 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|ULPT_BSIZE
-value|1024
+value|16384
 end_define
 
 begin_ifdef
@@ -408,87 +408,13 @@ name|__OpenBSD__
 argument_list|)
 end_if
 
-begin_decl_stmt
-name|int
-name|ulptopen
-name|__P
+begin_expr_stmt
+name|cdev_decl
 argument_list|(
-operator|(
-name|dev_t
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-expr|struct
-name|proc
-operator|*
-operator|)
+name|ulpt
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ulptclose
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ulptwrite
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-operator|,
-expr|struct
-name|uio
-operator|*
-name|uio
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ulptioctl
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-operator|,
-name|u_long
-operator|,
-name|caddr_t
-operator|,
-name|int
-operator|,
-expr|struct
-name|proc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_elif
 elif|#
@@ -742,10 +668,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|uaa
 operator|->
 name|iface
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -764,6 +691,8 @@ expr_stmt|;
 if|if
 condition|(
 name|id
+operator|!=
+name|NULL
 operator|&&
 name|id
 operator|->
@@ -856,7 +785,7 @@ modifier|*
 name|ed
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -914,8 +843,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ed
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|nobulk
@@ -954,8 +884,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ed
+operator|==
+name|NULL
 condition|)
 goto|goto
 name|nobulk
@@ -1012,7 +943,7 @@ name|sc_iface
 operator|=
 name|iface
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_interface2device_handle
 argument_list|(
@@ -1026,9 +957,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|sc
@@ -1052,7 +981,7 @@ if|#
 directive|if
 literal|0
 comment|/*  * This code is disabled because for some mysterious it causes  * printing not to work.  But only sometimes, and mostly with  * UHCI and less often with OHCI.  *sigh*  */
-block|{ 	usb_config_descriptor_t *cd = usbd_get_config_descriptor(dev); 	usb_device_request_t req; 	int len, alen;  	req.bmRequestType = UT_READ_CLASS_INTERFACE; 	req.bRequest = UR_GET_DEVICE_ID; 	USETW(req.wValue, cd->bConfigurationValue); 	USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 	USETW(req.wLength, sizeof devinfo - 1); 	r = usbd_do_request_flags(dev,&req, devinfo,USBD_SHORT_XFER_OK,&alen); 	if (r != USBD_NORMAL_COMPLETION) { 		printf("%s: cannot get device id\n", USBDEVNAME(sc->sc_dev)); 	} else if (alen<= 2) { 		printf("%s: empty device id, no printer connected?\n", 		       USBDEVNAME(sc->sc_dev)); 	} else {
+block|{ 	usb_config_descriptor_t *cd = usbd_get_config_descriptor(dev); 	usb_device_request_t req; 	int len, alen;  	req.bmRequestType = UT_READ_CLASS_INTERFACE; 	req.bRequest = UR_GET_DEVICE_ID; 	USETW(req.wValue, cd->bConfigurationValue); 	USETW2(req.wIndex, id->bInterfaceNumber, id->bAlternateSetting); 	USETW(req.wLength, sizeof devinfo - 1); 	err = usbd_do_request_flags(dev,&req, devinfo, USBD_SHORT_XFER_OK,&alen); 	if (err) { 		printf("%s: cannot get device id\n", USBDEVNAME(sc->sc_dev)); 	} else if (alen<= 2) { 		printf("%s: empty device id, no printer connected?\n", 		       USBDEVNAME(sc->sc_dev)); 	} else {
 comment|/* devinfo now contains an IEEE-1284 device ID */
 block|len = ((devinfo[0]& 0xff)<< 8) | (devinfo[1]& 0xff); 		if (len> sizeof devinfo - 3) 			len = sizeof devinfo - 3; 		devinfo[len] = 0; 		printf("%s: device id<", USBDEVNAME(sc->sc_dev)); 		ieee1284_print_id(devinfo+2); 		printf(">\n"); 	} 	}
 endif|#
@@ -1304,6 +1233,8 @@ condition|(
 name|sc
 operator|->
 name|sc_bulkpipe
+operator|!=
+name|NULL
 condition|)
 name|usbd_abort_pipe
 argument_list|(
@@ -1447,7 +1378,7 @@ name|usb_device_request_t
 name|req
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|u_char
 name|status
@@ -1493,7 +1424,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_do_request
 argument_list|(
@@ -1513,19 +1444,18 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"ulpt_status: status=0x%02x r=%d\n"
+literal|"ulpt_status: status=0x%02x err=%d\n"
 operator|,
 name|status
 operator|,
-name|r
+name|err
 operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|==
-name|USBD_NORMAL_COMPLETION
+operator|!
+name|err
 condition|)
 return|return
 operator|(
@@ -1663,8 +1593,13 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|struct
+name|ulpt_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|int
 name|spin
@@ -1685,13 +1620,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
+operator|==
+name|NULL
 operator|||
-operator|!
 name|sc
 operator|->
 name|sc_iface
+operator|==
+name|NULL
 operator|||
 name|sc
 operator|->
@@ -1866,7 +1803,7 @@ operator|)
 return|;
 block|}
 block|}
-name|r
+name|err
 operator|=
 name|usbd_open_pipe
 argument_list|(
@@ -1888,9 +1825,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|sc
@@ -2068,6 +2003,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|struct
+name|ulpt_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|USB_GET_SC
 argument_list|(
 name|ulpt
@@ -2164,11 +2104,11 @@ name|void
 modifier|*
 name|bufp
 decl_stmt|;
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|DPRINTF
 argument_list|(
@@ -2177,7 +2117,7 @@ literal|"ulptwrite\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|reqh
+name|xfer
 operator|=
 name|usbd_alloc_request
 argument_list|(
@@ -2188,9 +2128,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|reqh
+name|xfer
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2201,7 +2141,7 @@ name|bufp
 operator|=
 name|usbd_alloc_buffer
 argument_list|(
-name|reqh
+name|xfer
 argument_list|,
 name|ULPT_BSIZE
 argument_list|)
@@ -2210,12 +2150,12 @@ if|if
 condition|(
 name|bufp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|usbd_free_request
 argument_list|(
-name|reqh
+name|xfer
 argument_list|)
 expr_stmt|;
 return|return
@@ -2279,17 +2219,17 @@ name|n
 operator|)
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_bulk_transfer
 argument_list|(
-name|reqh
+name|xfer
 argument_list|,
 name|sc
 operator|->
 name|sc_bulkpipe
 argument_list|,
-literal|0
+name|USBD_NO_COPY
 argument_list|,
 name|USBD_NO_TIMEOUT
 argument_list|,
@@ -2303,9 +2243,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|DPRINTF
@@ -2313,7 +2251,7 @@ argument_list|(
 operator|(
 literal|"ulptwrite: error=%d\n"
 operator|,
-name|r
+name|err
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2326,7 +2264,7 @@ block|}
 block|}
 name|usbd_free_request
 argument_list|(
-name|reqh
+name|xfer
 argument_list|)
 expr_stmt|;
 return|return
@@ -2359,6 +2297,14 @@ name|int
 name|flags
 decl_stmt|;
 block|{
+name|struct
+name|ulpt_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|USB_GET_SC
 argument_list|(
 name|ulpt
@@ -2371,9 +2317,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|int
-name|error
-decl_stmt|;
 if|if
 condition|(
 name|sc

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohcireg.h,v 1.8 1999/08/22 23:41:00 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -779,6 +779,23 @@ define|#
 directive|define
 name|OHCI_HCCA_ALIGN
 value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_PAGE_SIZE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_PAGE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)&~ 0xfff)
 end_define
 
 begin_typedef

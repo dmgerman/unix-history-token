@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.28 1999/09/11 08:19:27 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.31 1999/10/13 08:10:58 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -50,9 +50,9 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|usbd_request
+name|usbd_xfer
 modifier|*
-name|usbd_request_handle
+name|usbd_xfer_handle
 typedef|;
 end_typedef
 
@@ -135,7 +135,7 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
+name|usbd_xfer_handle
 operator|,
 name|usbd_private_handle
 operator|,
@@ -160,23 +160,34 @@ begin_comment
 comment|/* Request flags */
 end_comment
 
-begin_comment
-comment|/* in usb.h #define USBD_SHORT_XFER_OK	0x04*/
-end_comment
+begin_define
+define|#
+directive|define
+name|USBD_NO_COPY
+value|0x01
+end_define
 
 begin_comment
-comment|/* allow short reads */
+comment|/* do not copy data to DMA buffer */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|USBD_SYNCHRONOUS
-value|0x08
+value|0x02
 end_define
 
 begin_comment
 comment|/* wait for completion */
+end_comment
+
+begin_comment
+comment|/* in usb.h #define USBD_SHORT_XFER_OK	0x04*/
+end_comment
+
+begin_comment
+comment|/* allow short reads */
 end_comment
 
 begin_define
@@ -260,7 +271,7 @@ name|usbd_transfer
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
+name|usbd_xfer_handle
 name|req
 operator|)
 argument_list|)
@@ -268,7 +279,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|usbd_request_handle
+name|usbd_xfer_handle
 name|usbd_alloc_request
 name|__P
 argument_list|(
@@ -285,8 +296,8 @@ name|usbd_free_request
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|)
 argument_list|)
 decl_stmt|;
@@ -298,8 +309,8 @@ name|usbd_setup_request
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|,
 name|usbd_pipe_handle
 name|pipe
@@ -332,8 +343,8 @@ name|usbd_setup_default_request
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|,
 name|usbd_device_handle
 name|dev
@@ -370,8 +381,8 @@ name|usbd_setup_isoc_request
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|,
 name|usbd_pipe_handle
 name|pipe
@@ -386,6 +397,9 @@ operator|,
 name|u_int32_t
 name|nframes
 operator|,
+name|u_int16_t
+name|flags
+operator|,
 name|usbd_callback
 operator|)
 argument_list|)
@@ -398,8 +412,8 @@ name|usbd_get_request_status
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|,
 name|usbd_private_handle
 operator|*
@@ -568,7 +582,7 @@ name|usbd_alloc_buffer
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
+name|usbd_xfer_handle
 name|req
 operator|,
 name|u_int32_t
@@ -584,8 +598,22 @@ name|usbd_free_buffer
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
+name|usbd_xfer_handle
 name|req
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|usbd_get_buffer
+name|__P
+argument_list|(
+operator|(
+name|usbd_xfer_handle
+name|xfer
 operator|)
 argument_list|)
 decl_stmt|;
@@ -597,7 +625,7 @@ name|usbd_sync_transfer
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
+name|usbd_xfer_handle
 name|req
 operator|)
 argument_list|)
@@ -895,6 +923,35 @@ name|iface
 operator|,
 name|int
 name|on
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|usbd_errstr
+name|__P
+argument_list|(
+operator|(
+name|usbd_status
+name|err
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usbd_add_event
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|usbd_device_handle
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1259,20 +1316,6 @@ name|iface
 operator|,
 name|u_int8_t
 name|address
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|usbd_errstr
-name|__P
-argument_list|(
-operator|(
-name|usbd_status
 operator|)
 argument_list|)
 decl_stmt|;

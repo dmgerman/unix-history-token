@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhid.c,v 1.24 1999/09/05 19:32:18 augustss Exp $	*/
+comment|/*	$NetBSD: uhid.c,v 1.26 1999/10/13 08:10:56 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -512,12 +512,13 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|void
 name|uhid_intr
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
+name|usbd_xfer_handle
 operator|,
 name|usbd_private_handle
 operator|,
@@ -528,6 +529,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|uhid_do_read
 name|__P
@@ -549,6 +551,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|uhid_do_write
 name|__P
@@ -570,6 +573,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|uhid_do_ioctl
 name|__P
@@ -623,10 +627,11 @@ name|id
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|uaa
 operator|->
 name|iface
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -644,8 +649,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|id
+operator|==
+name|NULL
 operator|||
 name|id
 operator|->
@@ -707,7 +713,7 @@ modifier|*
 name|desc
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|char
 name|devinfo
@@ -774,8 +780,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ed
+operator|==
+name|NULL
 condition|)
 block|{
 name|printf
@@ -909,7 +916,7 @@ name|desc
 operator|=
 literal|0
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_alloc_report_desc
 argument_list|(
@@ -928,9 +935,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|printf
@@ -954,6 +959,8 @@ expr_stmt|;
 if|if
 condition|(
 name|desc
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
@@ -1204,12 +1211,8 @@ name|flags
 operator|)
 argument_list|)
 expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
+else|#
+directive|else
 name|DPRINTF
 argument_list|(
 operator|(
@@ -1232,6 +1235,8 @@ condition|(
 name|sc
 operator|->
 name|sc_intrpipe
+operator|!=
+name|NULL
 condition|)
 name|usbd_abort_pipe
 argument_list|(
@@ -1376,14 +1381,14 @@ begin_function
 name|void
 name|uhid_intr
 parameter_list|(
-name|reqh
+name|xfer
 parameter_list|,
 name|addr
 parameter_list|,
 name|status
 parameter_list|)
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 decl_stmt|;
 name|usbd_private_handle
 name|addr
@@ -1564,8 +1569,13 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|struct
+name|uhid_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|USB_GET_SC_OPEN
 argument_list|(
@@ -1618,17 +1628,6 @@ name|sc_state
 operator||=
 name|UHID_OPEN
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
 if|if
 condition|(
 name|clalloc
@@ -1660,26 +1659,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|clist_alloc_cblocks
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_q
-argument_list|,
-name|UHID_BSIZE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_ibuf
@@ -1711,7 +1690,7 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* Set up interrupt pipe. */
-name|r
+name|err
 operator|=
 name|usbd_open_pipe_intr
 argument_list|(
@@ -1745,9 +1724,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|DPRINTF
@@ -1756,7 +1733,7 @@ operator|(
 literal|"uhidopen: usbd_open_pipe_intr failed, "
 literal|"error=%d\n"
 operator|,
-name|r
+name|err
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1833,6 +1810,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|struct
+name|uhid_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|USB_GET_SC
 argument_list|(
 name|uhid
@@ -1875,17 +1857,6 @@ name|sc_intrpipe
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
 name|clfree
 argument_list|(
 operator|&
@@ -1894,22 +1865,6 @@ operator|->
 name|sc_q
 argument_list|)
 expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|clist_free_cblocks
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_q
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|free
 argument_list|(
 name|sc
@@ -1985,7 +1940,7 @@ name|UHID_CHUNK
 index|]
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -2014,7 +1969,7 @@ literal|"uhidread immed\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_get_report
 argument_list|(
@@ -2037,9 +1992,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
@@ -2334,6 +2287,14 @@ name|int
 name|flag
 decl_stmt|;
 block|{
+name|struct
+name|uhid_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|USB_GET_SC
 argument_list|(
 name|uhid
@@ -2346,9 +2307,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|sc
 operator|->
 name|sc_refcnt
@@ -2423,7 +2381,7 @@ name|int
 name|size
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -2493,7 +2451,7 @@ name|sc
 operator|->
 name|sc_oid
 condition|)
-name|r
+name|err
 operator|=
 name|usbd_set_report
 argument_list|(
@@ -2522,7 +2480,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|r
+name|err
 operator|=
 name|usbd_set_report
 argument_list|(
@@ -2543,16 +2501,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
-block|{
 name|error
 operator|=
 name|EIO
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -2584,6 +2538,14 @@ name|int
 name|flag
 decl_stmt|;
 block|{
+name|struct
+name|uhid_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|USB_GET_SC
 argument_list|(
 name|uhid
@@ -2596,9 +2558,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|sc
 operator|->
 name|sc_refcnt
@@ -2692,7 +2651,7 @@ decl_stmt|,
 name|id
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
@@ -2785,8 +2744,8 @@ operator|)
 name|addr
 condition|)
 block|{
-comment|/* XXX should read into ibuf, but does it matter */
-name|r
+comment|/* XXX should read into ibuf, but does it matter? */
+name|err
 operator|=
 name|usbd_get_report
 argument_list|(
@@ -2811,9 +2770,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
@@ -2910,7 +2867,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|r
+name|err
 operator|=
 name|usbd_get_report
 argument_list|(
@@ -2933,9 +2890,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
@@ -2990,6 +2945,14 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|struct
+name|uhid_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|USB_GET_SC
 argument_list|(
 name|uhid
@@ -3002,9 +2965,6 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|sc
 operator|->
 name|sc_refcnt
@@ -3074,6 +3034,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|struct
+name|uhid_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|int
 name|revents
 init|=

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcivar.h,v 1.12 1999/08/22 23:41:00 augustss Exp $	*/
+comment|/*	$NetBSD: uhcivar.h,v 1.16 1999/10/13 08:10:56 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -71,8 +71,8 @@ name|uhci_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 decl_stmt|;
 name|uhci_soft_td_t
 modifier|*
@@ -274,30 +274,6 @@ decl_stmt|;
 name|bus_space_handle_t
 name|ioh
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-name|void
-modifier|*
-name|sc_ih
-decl_stmt|;
-comment|/* interrupt vectoring */
-name|bus_dma_tag_t
-name|sc_dmatag
-decl_stmt|;
-comment|/* DMA tag */
-comment|/* XXX should keep track of all DMA memory */
-endif|#
-directive|endif
-comment|/* defined(__FreeBSD__) */
 name|uhci_physaddr_t
 modifier|*
 name|sc_pframes
@@ -351,22 +327,11 @@ comment|/* device configuration */
 name|char
 name|sc_isreset
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|char
 name|sc_suspend
 decl_stmt|;
-endif|#
-directive|endif
-name|usbd_request_handle
+name|usbd_xfer_handle
 name|sc_has_timo
-decl_stmt|;
-name|int
-name|sc_intrs
 decl_stmt|;
 name|LIST_HEAD
 argument_list|(
@@ -398,6 +363,13 @@ index|]
 decl_stmt|;
 name|int
 name|sc_id_vendor
+decl_stmt|;
+name|void
+modifier|*
+name|sc_powerhook
+decl_stmt|;
+name|device_ptr_t
+name|sc_child
 decl_stmt|;
 block|}
 name|uhci_softc_t
@@ -433,11 +405,48 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-literal|0
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 end_if
 
+begin_decl_stmt
+name|int
+name|uhci_detach
+name|__P
+argument_list|(
+operator|(
+name|uhci_softc_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|uhci_activate
+name|__P
+argument_list|(
+operator|(
+name|device_ptr_t
+operator|,
+expr|enum
+name|devact
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
-unit|void		uhci_reset __P((void *));
 endif|#
 directive|endif
 end_endif

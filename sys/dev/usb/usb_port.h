@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_port.h,v 1.11 1999/09/11 08:19:27 augustss Exp $	*/
+comment|/*	$NetBSD: usb_port.h,v 1.13 1999/10/13 08:10:58 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -33,6 +33,66 @@ include|#
 directive|include
 file|"opt_usbverbose.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UHID_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UGEN_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHCI_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHUB_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ULPT_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UAUDIO_DEBUG
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -247,7 +307,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|struct __CONCAT(dname,_softc) *sc; \ 	if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (!sc) \ 		return (ENXIO)
+value|if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (!sc) \ 		return (ENXIO)
 end_define
 
 begin_define
@@ -262,7 +322,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|struct __CONCAT(dname,_softc) *sc = __CONCAT(dname,_cd).cd_devs[unit]
+value|sc = __CONCAT(dname,_cd).cd_devs[unit]
 end_define
 
 begin_define
@@ -298,6 +358,59 @@ end_elif
 begin_comment
 comment|/*  * OpenBSD  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UHID_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UGEN_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHCI_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHUB_DEBUG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ULPT_DEBUG
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -370,6 +483,34 @@ define|#
 directive|define
 name|ugenpoll
 value|ugenselect
+end_define
+
+begin_define
+define|#
+directive|define
+name|powerhook_establish
+parameter_list|(
+name|fn
+parameter_list|,
+name|sc
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|powerhook_disestablish
+parameter_list|(
+name|hdl
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PWR_RESUME
+value|0
 end_define
 
 begin_typedef
@@ -577,7 +718,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|struct __CONCAT(dname,_softc) *sc; \ 	if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (!sc) \ 		return (ENXIO)
+value|if (unit>= __CONCAT(dname,_cd).cd_ndevs) \ 		return (ENXIO); \ 	sc = __CONCAT(dname,_cd).cd_devs[unit]; \ 	if (!sc) \ 		return (ENXIO)
 end_define
 
 begin_define
@@ -592,7 +733,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|struct __CONCAT(dname,_softc) *sc = __CONCAT(dname,_cd).cd_devs[unit]
+value|sc = __CONCAT(dname,_cd).cd_devs[unit]
 end_define
 
 begin_define
@@ -734,20 +875,41 @@ parameter_list|)
 value|swap32(x)
 end_define
 
-begin_comment
-comment|/* XXX not available in FreeBSD */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|kthread_create1
+parameter_list|(
+name|function
+parameter_list|,
+name|sc
+parameter_list|,
+name|priv
+parameter_list|,
+name|string
+parameter_list|,
+name|name
+parameter_list|)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kthread_create
+parameter_list|(
+name|create_function
+parameter_list|,
+name|sc
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kthread_exit
+parameter_list|(
+name|err
+parameter_list|)
 end_define
 
 begin_define
@@ -783,12 +945,63 @@ end_define
 begin_define
 define|#
 directive|define
+name|clalloc
+parameter_list|(
+name|p
+parameter_list|,
+name|s
+parameter_list|,
+name|x
+parameter_list|)
+value|(clist_alloc_cblocks((p), (s), (x)), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|clfree
+parameter_list|(
+name|p
+parameter_list|)
+value|clist_free_cblocks((p))
+end_define
+
+begin_define
+define|#
+directive|define
+name|powerhook_establish
+parameter_list|(
+name|fn
+parameter_list|,
+name|sc
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|powerhook_disestablish
+parameter_list|(
+name|hdl
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PWR_RESUME
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_DECLARE_DRIVER_INIT
 parameter_list|(
 name|dname
 parameter_list|,
 name|init
-modifier|...
 parameter_list|)
 define|\
 value|static device_probe_t __CONCAT(dname,_match); \ static device_attach_t __CONCAT(dname,_attach); \ static device_detach_t __CONCAT(dname,_detach); \ \ static devclass_t __CONCAT(dname,_devclass); \ \ static device_method_t __CONCAT(dname,_methods)[] = { \         DEVMETHOD(device_probe, __CONCAT(dname,_match)), \         DEVMETHOD(device_attach, __CONCAT(dname,_attach)), \         DEVMETHOD(device_detach, __CONCAT(dname,_detach)), \ 	init, \         {0,0} \ }; \ \ static driver_t __CONCAT(dname,_driver) = { \         #dname, \         __CONCAT(dname,_methods), \         sizeof(struct __CONCAT(dname,_softc)) \ }
@@ -923,7 +1136,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|struct __CONCAT(dname,_softc) *sc = \ 		devclass_get_softc(__CONCAT(dname,_devclass), unit); \ 	if (!sc) \ 		return (ENXIO)
+value|sc = devclass_get_softc(__CONCAT(dname,_devclass), unit); \ 	if (!sc) \ 		return (ENXIO)
 end_define
 
 begin_define
@@ -938,7 +1151,7 @@ parameter_list|,
 name|sc
 parameter_list|)
 define|\
-value|struct __CONCAT(dname,_softc) *sc = \ 		devclass_get_softc(__CONCAT(dname,_devclass), unit)
+value|sc = devclass_get_softc(__CONCAT(dname,_devclass), unit)
 end_define
 
 begin_define
@@ -1065,34 +1278,6 @@ end_endif
 begin_comment
 comment|/* __FreeBSD__ */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

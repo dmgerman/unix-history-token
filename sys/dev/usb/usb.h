@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.33 1999/09/11 08:19:27 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.37 1999/10/13 18:52:54 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_if
@@ -1009,6 +1015,13 @@ define|#
 directive|define
 name|UE_ISO_SYNC
 value|0x0c
+define|#
+directive|define
+name|UE_GET_ISO_TYPE
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& UE_ISO_TYPE)
 name|uWord
 name|wMaxPacketSize
 decl_stmt|;
@@ -1766,7 +1779,7 @@ value|0xfe
 end_define
 
 begin_comment
-comment|/* see Prot. Unit Func. Desc. */
+comment|/* see Prot. Unit Func. Desc.*/
 end_comment
 
 begin_define
@@ -2303,6 +2316,52 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* indexed by transfer type UE_* */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int32_t
+name|cookie
+decl_stmt|;
+block|}
+name|usb_event_cookie_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Events that can be read from /dev/usb */
+end_comment
+
+begin_struct
+struct|struct
+name|usb_event
+block|{
+name|int
+name|ue_type
+decl_stmt|;
+define|#
+directive|define
+name|USB_EVENT_ATTACH
+value|1
+define|#
+directive|define
+name|USB_EVENT_DETACH
+value|2
+name|struct
+name|usb_device_info
+name|ue_device
+decl_stmt|;
+name|struct
+name|timespec
+name|ue_time
+decl_stmt|;
+name|usb_event_cookie_t
+name|ue_cookie
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      $NetBSD: ukbd.c,v 1.22 1999/01/09 12:10:36 drochner Exp $        */
-end_comment
-
-begin_comment
 comment|/*	$FreeBSD$	*/
 end_comment
 
@@ -363,7 +359,7 @@ typedef|typedef
 name|void
 name|usbd_intr_t
 parameter_list|(
-name|usbd_request_handle
+name|usbd_xfer_handle
 parameter_list|,
 name|usbd_private_handle
 parameter_list|,
@@ -874,8 +870,8 @@ begin_function
 name|void
 name|ukbd_intr
 parameter_list|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 parameter_list|,
 name|usbd_private_handle
 name|addr
@@ -3098,7 +3094,7 @@ operator|->
 name|kb_data
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 if|if
 condition|(
@@ -3123,7 +3119,7 @@ name|ks_ifstate
 operator||=
 name|INTRENABLED
 expr_stmt|;
-name|r
+name|err
 operator|=
 name|usbd_open_pipe_intr
 argument_list|(
@@ -3161,9 +3157,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 return|return
 operator|(
@@ -6808,7 +6802,7 @@ modifier|*
 name|ed
 decl_stmt|;
 name|usbd_status
-name|r
+name|err
 decl_stmt|;
 operator|*
 name|type
@@ -6952,7 +6946,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|r
+name|err
 operator|=
 name|usbd_set_protocol
 argument_list|(
@@ -6974,9 +6968,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
-operator|!=
-name|USBD_NORMAL_COMPLETION
+name|err
 condition|)
 block|{
 name|printf

@@ -1137,8 +1137,8 @@ block|{
 name|usbd_device_handle
 name|dev
 decl_stmt|;
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 decl_stmt|;
 name|usbd_private_handle
 name|priv
@@ -1162,7 +1162,7 @@ operator|&
 name|dev
 argument_list|)
 expr_stmt|;
-name|reqh
+name|xfer
 operator|=
 name|usbd_alloc_request
 argument_list|(
@@ -1172,7 +1172,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|reqh
+name|xfer
 condition|)
 block|{
 name|DPRINTF
@@ -1193,7 +1193,7 @@ name|void
 operator|)
 name|usbd_setup_request
 argument_list|(
-name|reqh
+name|xfer
 argument_list|,
 name|pipe
 argument_list|,
@@ -1215,7 +1215,7 @@ name|err
 operator|=
 name|usbd_sync_transfer
 argument_list|(
-name|reqh
+name|xfer
 argument_list|)
 expr_stmt|;
 if|if
@@ -1239,7 +1239,7 @@ argument_list|)
 expr_stmt|;
 name|usbd_free_request
 argument_list|(
-name|reqh
+name|xfer
 argument_list|)
 expr_stmt|;
 return|return
@@ -1250,7 +1250,7 @@ return|;
 block|}
 name|usbd_get_request_status
 argument_list|(
-name|reqh
+name|xfer
 argument_list|,
 operator|&
 name|priv
@@ -1276,7 +1276,7 @@ name|size
 expr_stmt|;
 name|usbd_free_request
 argument_list|(
-name|reqh
+name|xfer
 argument_list|)
 expr_stmt|;
 return|return

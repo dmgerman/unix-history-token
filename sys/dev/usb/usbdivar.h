@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.30 1999/09/11 08:19:27 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.39 1999/11/10 04:19:59 mycroft Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_expr_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|usbd_request
+name|usbd_xfer
 struct_decl|;
 end_struct_decl
 
@@ -128,8 +128,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|)
 argument_list|)
 expr_stmt|;
@@ -140,8 +140,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|)
 argument_list|)
 expr_stmt|;
@@ -152,8 +152,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|)
 argument_list|)
 expr_stmt|;
@@ -188,8 +188,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|)
 argument_list|)
 expr_stmt|;
@@ -323,6 +323,29 @@ name|struct
 name|usb_device_stats
 name|stats
 decl_stmt|;
+name|int
+name|intr_context
+decl_stmt|;
+name|u_int
+name|no_intrs
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+name|bus_dma_tag_t
+name|dmatag
+decl_stmt|;
+comment|/* DMA tag */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -367,6 +390,10 @@ define|#
 directive|define
 name|USBD_NOLANG
 value|(-1)
+name|usb_event_cookie_t
+name|cookie
+decl_stmt|;
+comment|/* unique connection id */
 name|struct
 name|usbd_port
 modifier|*
@@ -481,7 +508,7 @@ decl_stmt|;
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
-argument|usbd_request
+argument|usbd_xfer
 argument_list|)
 name|queue
 expr_stmt|;
@@ -491,8 +518,8 @@ argument|usbd_pipe
 argument_list|)
 name|next
 expr_stmt|;
-name|usbd_request_handle
-name|intrreqh
+name|usbd_xfer_handle
+name|intrxfer
 decl_stmt|;
 comment|/* used for repeating requests */
 name|char
@@ -510,7 +537,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|usbd_request
+name|usbd_xfer
 block|{
 name|struct
 name|usbd_pipe
@@ -585,7 +612,7 @@ name|URQ_DEV_DMABUF
 value|0x20
 name|SIMPLEQ_ENTRY
 argument_list|(
-argument|usbd_request
+argument|usbd_xfer
 argument_list|)
 name|next
 expr_stmt|;
@@ -613,6 +640,30 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|void
+name|usbd_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usbd_finish
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Routines from usb_subr.c */
@@ -810,8 +861,8 @@ name|usb_insert_transfer
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
 operator|)
 argument_list|)
 decl_stmt|;
@@ -823,8 +874,25 @@ name|usb_transfer_complete
 name|__P
 argument_list|(
 operator|(
-name|usbd_request_handle
-name|reqh
+name|usbd_xfer_handle
+name|xfer
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usb_disconnect_port
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|usbd_port
+operator|*
+name|up
+operator|,
+name|device_ptr_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -857,6 +925,36 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SPLUSBCHECK
+define|\
+value|do { int _s = splusb(), _su = splusb(); \ 	     extern int cold; \              if (!cold&& _s != _su) printf("SPLUSBCHECK failed 0x%x!=0x%x, %s:%d\n", \ 				   _s, _su, __FILE__, __LINE__); \ 	     splx(_s); \         } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SPLUSBCHECK
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Locator stuff. */

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_mem.h,v 1.7 1999/09/09 12:26:47 augustss Exp $	*/
+comment|/*	$NetBSD: usb_mem.h,v 1.9 1999/10/13 08:10:58 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ name|usb_allocmem
 name|__P
 argument_list|(
 operator|(
-name|bus_dma_tag_t
+name|usbd_bus_handle
 operator|,
 name|size_t
 operator|,
@@ -113,7 +113,7 @@ name|usb_freemem
 name|__P
 argument_list|(
 operator|(
-name|bus_dma_tag_t
+name|usbd_bus_handle
 operator|,
 name|usb_dma_t
 operator|*
