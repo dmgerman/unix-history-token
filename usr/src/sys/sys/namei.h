@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)namei.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)namei.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -312,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|LOCKLEAF
-value|0x04
+value|0x004
 end_define
 
 begin_comment
@@ -323,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|LOCKPARENT
-value|0x08
+value|0x008
 end_define
 
 begin_comment
@@ -334,7 +334,7 @@ begin_define
 define|#
 directive|define
 name|WANTPARENT
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -345,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|NOCACHE
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|FOLLOW
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -367,22 +367,44 @@ begin_define
 define|#
 directive|define
 name|NOFOLLOW
-value|0x0
+value|0x000
 end_define
 
 begin_comment
-comment|/* don't follow symbolic links (pseudo) */
+comment|/* do not follow symbolic links (pseudo) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NOMOUNT
-value|0x80
+name|NOCROSSMOUNT
+value|0x080
 end_define
 
 begin_comment
-comment|/* don't cross mount points */
+comment|/* do not cross mount points */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REMOTE
+value|0x100
+end_define
+
+begin_comment
+comment|/* lookup for remote filesystem servers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASBUF
+value|0x200
+end_define
+
+begin_comment
+comment|/* has preallocated pathname buffer */
 end_comment
 
 begin_endif
