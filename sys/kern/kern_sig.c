@@ -7000,8 +7000,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|SIGNOTEMPTY
+name|SIGISEMPTY
 argument_list|(
 name|mask
 argument_list|)
