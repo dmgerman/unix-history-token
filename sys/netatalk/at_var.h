@@ -107,7 +107,7 @@ parameter_list|(
 name|aa
 parameter_list|)
 define|\
-value|((struct sockaddr_at *)&((struct at_ifaddr *)(aa))->aa_addr)
+value|(&(aa->aa_addr))
 end_define
 
 begin_define

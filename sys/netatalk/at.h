@@ -141,6 +141,23 @@ begin_comment
 comment|/* There is no BCAST for NET */
 end_comment
 
+begin_struct
+struct|struct
+name|netrange
+block|{
+name|u_char
+name|nr_phase
+decl_stmt|;
+name|u_short
+name|nr_firstnet
+decl_stmt|;
+name|u_short
+name|nr_lastnet
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Socket address, AppleTalk style.  We keep magic information in the   * zero bytes.  There are three types, NONE, CONFIG which has the phase  * and a net range, and IFACE which has the network address of an  * interface.  IFACE may be filled in by the client, and is filled in  * by the kernel.  */
 end_comment
@@ -162,33 +179,32 @@ name|struct
 name|at_addr
 name|sat_addr
 decl_stmt|;
+union|union
+block|{
+name|struct
+name|netrange
+name|r_netrange
+decl_stmt|;
 name|char
-name|sat_zero
+name|r_zero
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* Hide a struct netrange in here */
 block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|netrange
-block|{
-name|u_char
-name|nr_phase
-decl_stmt|;
-name|u_short
-name|nr_firstnet
-decl_stmt|;
-name|u_short
-name|nr_lastnet
-decl_stmt|;
+name|sat_range
+union|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|sat_zero
+value|sat_range.r_zero
+end_define
 
 begin_ifdef
 ifdef|#
