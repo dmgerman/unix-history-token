@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	math.h	4.3	%G%	*/
+comment|/*	math.h	4.4	%G%	*/
 end_comment
 
 begin_decl_stmt
@@ -31,19 +31,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|double
-name|E
-argument_list|()
-decl_stmt|,
-name|L
-argument_list|()
-decl_stmt|,
 name|exp
+argument_list|()
+decl_stmt|,
+name|expm1
 argument_list|()
 decl_stmt|,
 name|log
 argument_list|()
 decl_stmt|,
 name|log10
+argument_list|()
+decl_stmt|,
+name|log1p
 argument_list|()
 decl_stmt|,
 name|pow
@@ -68,7 +68,7 @@ end_decl_stmt
 begin_function_decl
 specifier|extern
 name|double
-name|gamma
+name|lgama
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -100,6 +100,33 @@ name|scalb
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|finite
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|double
+name|infnan
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
