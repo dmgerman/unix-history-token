@@ -131,6 +131,28 @@ name|port_hints
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+literal|0x30d2
+block|,
+literal|0x30d0
+block|,
+literal|0x30d4
+block|,
+literal|0x30d6
+block|,
+literal|0x30d8
+block|,
+literal|0x30da
+block|,
+literal|0x30dc
+block|,
+literal|0x30de
+block|,
+else|#
+directive|else
+comment|/* IBM-PC */
 literal|0x230
 block|,
 comment|/*SB Pro& SB16*/
@@ -175,6 +197,9 @@ comment|/*IBM*/
 endif|#
 directive|endif
 comment|/*0*/
+endif|#
+directive|endif
+comment|/* PC98 */
 operator|-
 literal|1
 block|}

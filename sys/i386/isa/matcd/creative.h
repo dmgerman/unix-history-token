@@ -40,6 +40,76 @@ begin_comment
 comment|/*Read - data/status from drive*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PHASE
+value|0x100
+end_define
+
+begin_comment
+comment|/*Write - switch between data/status*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STATUS
+value|0x100
+end_define
+
+begin_comment
+comment|/*Read - bus status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESET
+value|0x200
+end_define
+
+begin_comment
+comment|/*Write - reset all attached drives*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALTDATA
+value|0x200
+end_define
+
+begin_comment
+comment|/*<20>Read - data on non Creative bds.*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SELECT
+value|0x300
+end_define
+
+begin_comment
+comment|/*Write - drive select*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !PC98 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -97,6 +167,15 @@ end_define
 
 begin_comment
 comment|/*Write - drive select*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*PC98*/
 end_comment
 
 begin_comment

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.8 1996/10/23 07:25:13 asami Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.9 1996/10/29 08:36:19 asami Exp $  */
+end_comment
+
+begin_comment
+comment|/*  * Routines to handle clock hardware.  */
 end_comment
 
 begin_comment
@@ -9,10 +13,6 @@ end_comment
 
 begin_comment
 comment|/*  * modified for PC98 by Kakefuda  */
-end_comment
-
-begin_comment
-comment|/*  * Primitive clock interrupt routines.  */
 end_comment
 
 begin_include
@@ -116,12 +116,6 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/timerreg.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -145,16 +139,16 @@ directive|include
 file|<i386/isa/rtc.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/timerreg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * 32-bit time_t's can't reach leap years before 1904 or after 2036, so we  * can use a simple formula for leap years.  */
@@ -230,16 +224,6 @@ comment|/* disable resettodr() if != 0 */
 end_comment
 
 begin_decl_stmt
-name|int
-name|wall_cmos_clock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* wall	CMOS clock assumed if != 0 */
-end_comment
-
-begin_decl_stmt
 name|u_int
 name|idelayed
 decl_stmt|;
@@ -283,20 +267,6 @@ name|i586_ctr_multiplier
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|long
-name|long
-name|i586_last_tick
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|long
-name|i586_avg_tick
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -323,7 +293,6 @@ name|TIMER_FREQ
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|u_int
 name|timer_freq
 init|=
@@ -355,7 +324,6 @@ name|PC98_8M
 end_ifndef
 
 begin_decl_stmt
-specifier|static
 name|u_int
 name|timer_freq
 init|=
@@ -373,7 +341,6 @@ comment|/* !PC98_8M */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|u_int
 name|timer_freq
 init|=
@@ -400,7 +367,6 @@ comment|/* AUTO_CLOCK */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|u_int
 name|timer_freq
 init|=
@@ -427,7 +393,6 @@ comment|/* IBM-PC */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|u_int
 name|timer_freq
 init|=
@@ -466,6 +431,16 @@ name|u_int
 name|timer0_prescaler_count
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|wall_cmos_clock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* wall	CMOS clock assumed if != 0 */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1585,6 +1560,8 @@ argument_list|(
 name|TIMER_MODE
 argument_list|,
 name|TIMER_SEL0
+operator||
+name|TIMER_LATCH
 argument_list|)
 expr_stmt|;
 name|low
@@ -2387,7 +2364,7 @@ name|timeout
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Calibrating clock(s) relative to mc146818A clock...\n"
+literal|"Calibrating clock(s) relative to mc146818A clock ... "
 argument_list|)
 expr_stmt|;
 if|if
@@ -4587,17 +4564,11 @@ name|i586_ctr_freq
 operator|!=
 literal|0
 condition|)
-block|{
-name|i586_last_tick
+name|i586_ctr_bias
 operator|=
 name|rdtsc
 argument_list|()
 expr_stmt|;
-name|i586_ctr_bias
-operator|=
-name|i586_last_tick
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 ifndef|#

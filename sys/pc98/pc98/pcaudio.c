@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1994 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.5 1996/09/10 09:38:24 asami Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.6 1996/10/09 21:46:40 asami Exp $  */
 end_comment
 
 begin_include
@@ -45,13 +45,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -90,24 +84,6 @@ directive|include
 file|<pc98/pc98/pc98.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/timerreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/sound/ulaw.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -118,6 +94,11 @@ include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -142,11 +123,6 @@ include|#
 directive|include
 file|<i386/isa/sound/ulaw.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -352,6 +328,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|pcaintr
 parameter_list|(
@@ -645,7 +622,9 @@ begin_function
 specifier|static
 name|void
 name|pca_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|pca_status
 operator|.
@@ -1033,7 +1012,9 @@ begin_function
 specifier|static
 name|void
 name|pca_pause
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|x
@@ -1075,7 +1056,9 @@ begin_function
 specifier|static
 name|void
 name|pca_continue
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|x
@@ -2118,6 +2101,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcaintr
 parameter_list|(
@@ -2165,7 +2149,7 @@ directive|else
 asm|"outb %0,$0x42"
 endif|#
 directive|endif
-asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current ^= 1; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   int pcaselect(dev_t dev, int rw, struct proc *p) {  	int s = spltty();  	struct proc *p1;   	switch (rw) {  	case FWRITE:  		if (!pca_status.in_use[0] || !pca_status.in_use[1]) {  			splx(s);  			return(1);  		}  		if (pca_status.wsel.si_pid&& (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait)  			pca_status.wsel.si_flags = SI_COLL;  		else  			pca_status.wsel.si_pid = p->p_pid;  		splx(s);  		return 0; 	default:  		splx(s);  		return(0); 	} }  static pca_devsw_installed = 0;  static void 	pca_drvinit(void *unused) { 	dev_t dev;  	if( ! pca_devsw_installed ) { 		dev = makedev(CDEV_MAJOR, 0); 		cdevsw_add(&dev,&pca_cdevsw, NULL); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
+asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current ^= 1; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcaselect(dev_t dev, int rw, struct proc *p) {  	int s = spltty();  	struct proc *p1;   	switch (rw) {  	case FWRITE:  		if (!pca_status.in_use[0] || !pca_status.in_use[1]) {  			splx(s);  			return(1);  		}  		if (pca_status.wsel.si_pid&& (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait)  			pca_status.wsel.si_flags = SI_COLL;  		else  			pca_status.wsel.si_pid = p->p_pid;  		splx(s);  		return 0; 	default:  		splx(s);  		return(0); 	} }  static pca_devsw_installed = 0;  static void 	pca_drvinit(void *unused) { 	dev_t dev;  	if( ! pca_devsw_installed ) { 		dev = makedev(CDEV_MAJOR, 0); 		cdevsw_add(&dev,&pca_cdevsw, NULL); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
 end_function
 
 begin_endif

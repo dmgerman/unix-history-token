@@ -53,9 +53,6 @@ operator|*
 name|dev
 operator|,
 name|int
-name|unit
-operator|,
-name|int
 name|type
 operator|)
 argument_list|)
@@ -102,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|ED_NOVELL_NIC_OFFSET
-value|ed_novell_nic_offset[unit]
+value|sc->edreg.nic_offset
 end_define
 
 begin_ifdef
@@ -126,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|ED_NOVELL_ASIC_OFFSET
-value|ed_novell_asic_offset[unit]
+value|sc->edreg.asic_offset
 end_define
 
 begin_comment
@@ -154,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|ED_NOVELL_DATA
-value|ed_novell_data[unit]
+value|sc->edreg.data
 end_define
 
 begin_comment
@@ -182,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|ED_NOVELL_RESET
-value|ed_novell_reset[unit]
+value|sc->edreg.reset
 end_define
 
 begin_comment
@@ -314,7 +311,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_CR
-value|edp[unit][0x00]
+value|sc->edreg.port[0x00]
 end_define
 
 begin_undef
@@ -327,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_CLDA0
-value|edp[unit][0x01]
+value|sc->edreg.port[0x01]
 end_define
 
 begin_undef
@@ -340,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_PSTART
-value|edp[unit][0x01]
+value|sc->edreg.port[0x01]
 end_define
 
 begin_undef
@@ -353,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_CLDA1
-value|edp[unit][0x02]
+value|sc->edreg.port[0x02]
 end_define
 
 begin_undef
@@ -366,7 +363,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_PSTOP
-value|edp[unit][0x02]
+value|sc->edreg.port[0x02]
 end_define
 
 begin_undef
@@ -379,7 +376,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_BNRY
-value|edp[unit][0x03]
+value|sc->edreg.port[0x03]
 end_define
 
 begin_undef
@@ -392,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_TSR
-value|edp[unit][0x04]
+value|sc->edreg.port[0x04]
 end_define
 
 begin_undef
@@ -405,7 +402,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_TPSR
-value|edp[unit][0x04]
+value|sc->edreg.port[0x04]
 end_define
 
 begin_undef
@@ -418,7 +415,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_NCR
-value|edp[unit][0x05]
+value|sc->edreg.port[0x05]
 end_define
 
 begin_undef
@@ -431,7 +428,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_TBCR0
-value|edp[unit][0x05]
+value|sc->edreg.port[0x05]
 end_define
 
 begin_undef
@@ -444,7 +441,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_FIFO
-value|edp[unit][0x06]
+value|sc->edreg.port[0x06]
 end_define
 
 begin_undef
@@ -457,7 +454,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_TBCR1
-value|edp[unit][0x06]
+value|sc->edreg.port[0x06]
 end_define
 
 begin_undef
@@ -470,7 +467,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_ISR
-value|edp[unit][0x07]
+value|sc->edreg.port[0x07]
 end_define
 
 begin_undef
@@ -483,7 +480,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_CRDA0
-value|edp[unit][0x08]
+value|sc->edreg.port[0x08]
 end_define
 
 begin_undef
@@ -496,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_RSAR0
-value|edp[unit][0x08]
+value|sc->edreg.port[0x08]
 end_define
 
 begin_undef
@@ -509,7 +506,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_CRDA1
-value|edp[unit][0x09]
+value|sc->edreg.port[0x09]
 end_define
 
 begin_undef
@@ -522,7 +519,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_RSAR1
-value|edp[unit][0x09]
+value|sc->edreg.port[0x09]
 end_define
 
 begin_undef
@@ -535,7 +532,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_RBCR0
-value|edp[unit][0x0a]
+value|sc->edreg.port[0x0a]
 end_define
 
 begin_undef
@@ -548,7 +545,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_RBCR1
-value|edp[unit][0x0b]
+value|sc->edreg.port[0x0b]
 end_define
 
 begin_undef
@@ -561,7 +558,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_RSR
-value|edp[unit][0x0c]
+value|sc->edreg.port[0x0c]
 end_define
 
 begin_undef
@@ -574,7 +571,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_RCR
-value|edp[unit][0x0c]
+value|sc->edreg.port[0x0c]
 end_define
 
 begin_undef
@@ -587,7 +584,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_CNTR0
-value|edp[unit][0x0d]
+value|sc->edreg.port[0x0d]
 end_define
 
 begin_undef
@@ -600,7 +597,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_TCR
-value|edp[unit][0x0d]
+value|sc->edreg.port[0x0d]
 end_define
 
 begin_undef
@@ -613,7 +610,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_CNTR1
-value|edp[unit][0x0e]
+value|sc->edreg.port[0x0e]
 end_define
 
 begin_undef
@@ -626,7 +623,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_DCR
-value|edp[unit][0x0e]
+value|sc->edreg.port[0x0e]
 end_define
 
 begin_undef
@@ -639,7 +636,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_CNTR2
-value|edp[unit][0x0f]
+value|sc->edreg.port[0x0f]
 end_define
 
 begin_undef
@@ -652,7 +649,7 @@ begin_define
 define|#
 directive|define
 name|ED_P0_IMR
-value|edp[unit][0x0f]
+value|sc->edreg.port[0x0f]
 end_define
 
 begin_comment
@@ -669,7 +666,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_CR
-value|edp[unit][0x00]
+value|sc->edreg.port[0x00]
 end_define
 
 begin_undef
@@ -682,7 +679,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_PAR0
-value|edp[unit][0x01]
+value|sc->edreg.port[0x01]
 end_define
 
 begin_undef
@@ -695,7 +692,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_PAR1
-value|edp[unit][0x02]
+value|sc->edreg.port[0x02]
 end_define
 
 begin_undef
@@ -708,7 +705,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_PAR2
-value|edp[unit][0x03]
+value|sc->edreg.port[0x03]
 end_define
 
 begin_undef
@@ -721,7 +718,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_PAR3
-value|edp[unit][0x04]
+value|sc->edreg.port[0x04]
 end_define
 
 begin_undef
@@ -734,7 +731,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_PAR4
-value|edp[unit][0x05]
+value|sc->edreg.port[0x05]
 end_define
 
 begin_undef
@@ -747,7 +744,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_PAR5
-value|edp[unit][0x06]
+value|sc->edreg.port[0x06]
 end_define
 
 begin_undef
@@ -760,7 +757,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_CURR
-value|edp[unit][0x07]
+value|sc->edreg.port[0x07]
 end_define
 
 begin_undef
@@ -773,7 +770,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_MAR0
-value|edp[unit][0x08]
+value|sc->edreg.port[0x08]
 end_define
 
 begin_undef
@@ -786,7 +783,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_MAR1
-value|edp[unit][0x09]
+value|sc->edreg.port[0x09]
 end_define
 
 begin_undef
@@ -799,7 +796,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_MAR2
-value|edp[unit][0x0a]
+value|sc->edreg.port[0x0a]
 end_define
 
 begin_undef
@@ -812,7 +809,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_MAR3
-value|edp[unit][0x0b]
+value|sc->edreg.port[0x0b]
 end_define
 
 begin_undef
@@ -825,7 +822,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_MAR4
-value|edp[unit][0x0c]
+value|sc->edreg.port[0x0c]
 end_define
 
 begin_undef
@@ -838,7 +835,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_MAR5
-value|edp[unit][0x0d]
+value|sc->edreg.port[0x0d]
 end_define
 
 begin_undef
@@ -851,7 +848,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_MAR6
-value|edp[unit][0x0e]
+value|sc->edreg.port[0x0e]
 end_define
 
 begin_undef
@@ -864,7 +861,7 @@ begin_define
 define|#
 directive|define
 name|ED_P1_MAR7
-value|edp[unit][0x0f]
+value|sc->edreg.port[0x0f]
 end_define
 
 begin_comment
@@ -881,7 +878,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_CR
-value|edp[unit][0x00]
+value|sc->edreg.port[0x00]
 end_define
 
 begin_undef
@@ -894,7 +891,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_PSTART
-value|edp[unit][0x01]
+value|sc->edreg.port[0x01]
 end_define
 
 begin_undef
@@ -907,7 +904,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_CLDA0
-value|edp[unit][0x01]
+value|sc->edreg.port[0x01]
 end_define
 
 begin_undef
@@ -920,7 +917,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_PSTOP
-value|edp[unit][0x02]
+value|sc->edreg.port[0x02]
 end_define
 
 begin_undef
@@ -933,7 +930,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_CLDA1
-value|edp[unit][0x02]
+value|sc->edreg.port[0x02]
 end_define
 
 begin_undef
@@ -946,7 +943,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_RNPP
-value|edp[unit][0x03]
+value|sc->edreg.port[0x03]
 end_define
 
 begin_undef
@@ -959,7 +956,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_TPSR
-value|edp[unit][0x04]
+value|sc->edreg.port[0x04]
 end_define
 
 begin_undef
@@ -972,7 +969,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_LNPP
-value|edp[unit][0x05]
+value|sc->edreg.port[0x05]
 end_define
 
 begin_undef
@@ -985,7 +982,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_ACU
-value|edp[unit][0x06]
+value|sc->edreg.port[0x06]
 end_define
 
 begin_undef
@@ -998,7 +995,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_ACL
-value|edp[unit][0x07]
+value|sc->edreg.port[0x07]
 end_define
 
 begin_undef
@@ -1011,7 +1008,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_RCR
-value|edp[unit][0x0c]
+value|sc->edreg.port[0x0c]
 end_define
 
 begin_undef
@@ -1024,7 +1021,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_TCR
-value|edp[unit][0x0d]
+value|sc->edreg.port[0x0d]
 end_define
 
 begin_undef
@@ -1037,7 +1034,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_DCR
-value|edp[unit][0x0e]
+value|sc->edreg.port[0x0e]
 end_define
 
 begin_undef
@@ -1050,7 +1047,7 @@ begin_define
 define|#
 directive|define
 name|ED_P2_IMR
-value|edp[unit][0x0f]
+value|sc->edreg.port[0x0f]
 end_define
 
 begin_comment
@@ -1078,7 +1075,7 @@ begin_define
 define|#
 directive|define
 name|ED_PC_MISC
-value|ed_pc_misc[unit]
+value|sc->edreg.pc_misc
 end_define
 
 begin_ifdef
@@ -1102,7 +1099,7 @@ begin_define
 define|#
 directive|define
 name|ED_PC_RESET
-value|ed_pc_reset[unit]
+value|sc->edreg.pc_reset
 end_define
 
 begin_comment
@@ -1469,93 +1466,6 @@ value|0x05
 end_define
 
 begin_comment
-comment|/* register offsets */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-modifier|*
-name|edp
-index|[
-name|NED
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|pc98_io_skip
-index|[
-name|NED
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ed_novell_nic_offset
-index|[
-name|NED
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ed_novell_asic_offset
-index|[
-name|NED
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ed_novell_data
-index|[
-name|NED
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ed_novell_reset
-index|[
-name|NED
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ed_pc_misc
-index|[
-name|NED
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ed_pc_reset
-index|[
-name|NED
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* NE2000, LGY-98, ICM, LPC-T, C-NET(98)E/L */
 end_comment
 
@@ -1909,12 +1819,22 @@ modifier|*
 name|dev
 parameter_list|,
 name|int
-name|unit
-parameter_list|,
-name|int
 name|type
 parameter_list|)
 block|{
+name|struct
+name|ed_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|ed_softc
+index|[
+name|dev
+operator|->
+name|id_unit
+index|]
+decl_stmt|;
 name|int
 name|adj
 decl_stmt|;
@@ -1926,17 +1846,19 @@ block|{
 case|case
 name|ED_TYPE98_GENERIC
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_generic
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|1
 expr_stmt|;
@@ -1968,17 +1890,19 @@ break|break;
 case|case
 name|ED_TYPE98_LGY
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_generic
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|1
 expr_stmt|;
@@ -2010,17 +1934,19 @@ break|break;
 case|case
 name|ED_TYPE98_EGY
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_egy98
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|2
 expr_stmt|;
@@ -2052,17 +1978,19 @@ break|break;
 case|case
 name|ED_TYPE98_ICM
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_generic
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|1
 expr_stmt|;
@@ -2094,17 +2022,19 @@ break|break;
 case|case
 name|ED_TYPE98_BDN
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_bdn98
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|0x1000
 expr_stmt|;
@@ -2136,17 +2066,19 @@ break|break;
 case|case
 name|ED_TYPE98_SIC
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_sic98
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|0x200
 expr_stmt|;
@@ -2181,17 +2113,19 @@ break|break;
 case|case
 name|ED_TYPE98_LPC
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_generic
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|0x1
 expr_stmt|;
@@ -2223,17 +2157,19 @@ break|break;
 case|case
 name|ED_TYPE98_108
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_nec108
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|2
 expr_stmt|;
@@ -2285,17 +2221,19 @@ break|break;
 case|case
 name|ED_TYPE98_LA98
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_la98
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|0x1000
 expr_stmt|;
@@ -2327,17 +2265,19 @@ break|break;
 case|case
 name|ED_TYPE98_CNET98EL
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_generic
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|1
 expr_stmt|;
@@ -2366,17 +2306,19 @@ break|break;
 case|case
 name|ED_TYPE98_CNET98
 case|:
-name|edp
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|port
 operator|=
 name|edp_cnet98
 expr_stmt|;
-name|pc98_io_skip
-index|[
-name|unit
-index|]
+name|sc
+operator|->
+name|edreg
+operator|.
+name|ioskip
 operator|=
 literal|2
 expr_stmt|;

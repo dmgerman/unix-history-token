@@ -7,6 +7,127 @@ begin_comment
 comment|/*  * Disk Controller ATAPI register definitions.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AR_DATA
+value|0x0
+end_define
+
+begin_comment
+comment|/* RW - data register (16 bits) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ERROR
+value|0x2
+end_define
+
+begin_comment
+comment|/*  R - error register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_FEATURES
+value|0x2
+end_define
+
+begin_comment
+comment|/*  W - features */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_IREASON
+value|0x4
+end_define
+
+begin_comment
+comment|/* RW - interrupt reason */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_TAG
+value|0x6
+end_define
+
+begin_comment
+comment|/*    - reserved for SAM TAG byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CNTLO
+value|0x8
+end_define
+
+begin_comment
+comment|/* RW - byte count, low byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_CNTHI
+value|0xa
+end_define
+
+begin_comment
+comment|/* RW - byte count, high byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_DRIVE
+value|0xc
+end_define
+
+begin_comment
+comment|/* RW - drive select */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_COMMAND
+value|0xe
+end_define
+
+begin_comment
+comment|/*  W - command register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_STATUS
+value|0xe
+end_define
+
+begin_comment
+comment|/*  R - immediate status */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -116,6 +237,11 @@ end_define
 begin_comment
 comment|/*  R - immediate status */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Status register bits  */

@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.11 1996/10/23 07:25:30 asami Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.12 1996/10/29 08:36:27 asami Exp $  */
 end_comment
 
 begin_include
@@ -230,13 +230,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/timerreg.h>
+file|<i386/isa/timerreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/kbdtables.h>
+file|<i386/isa/kbdtables.h>
 end_include
 
 begin_include
@@ -542,21 +542,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_short
-name|buffer
+name|sc_buffer
 index|[
 name|ROW
 operator|*
 name|COL
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|in_debugger
-init|=
-name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -1306,11 +1297,25 @@ specifier|static
 name|u_int
 name|scgetc
 parameter_list|(
-name|int
-name|noblock
+name|u_int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|SCGETC_CN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCGETC_NONBLOCK
+value|2
+end_define
 
 begin_function_decl
 specifier|static
@@ -3151,10 +3156,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* copy screen to buffer */
+comment|/* copy temporary buffer to final buffer */
 name|bcopyw
 argument_list|(
-name|buffer
+name|sc_buffer
 argument_list|,
 name|scp
 operator|->
@@ -4370,7 +4375,7 @@ name|c
 operator|=
 name|scgetc
 argument_list|(
-literal|1
+name|SCGETC_NONBLOCK
 argument_list|)
 expr_stmt|;
 name|cur_tty
@@ -8146,16 +8151,14 @@ block|{
 name|int
 name|pitch
 init|=
-name|TIMER_FREQ
+name|timer_freq
 operator|/
-operator|(
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|data
-operator|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -9365,16 +9368,6 @@ name|kernel_default
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|scp
-operator|->
-name|scr_buf
-operator|==
-name|buffer
-operator|||
-name|in_debugger
-operator|)
-operator|&&
 operator|!
 operator|(
 name|scp
@@ -9384,13 +9377,11 @@ operator|&
 name|UNKNOWN_MODE
 operator|)
 condition|)
-block|{
 name|remove_cursor_image
 argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
-block|}
 name|buf
 index|[
 literal|0
@@ -9593,7 +9584,7 @@ name|c
 init|=
 name|scgetc
 argument_list|(
-literal|0
+name|SCGETC_CN
 argument_list|)
 decl_stmt|;
 name|splx
@@ -9631,7 +9622,9 @@ name|c
 operator|=
 name|scgetc
 argument_list|(
-literal|1
+name|SCGETC_CN
+operator||
+name|SCGETC_NONBLOCK
 argument_list|)
 expr_stmt|;
 name|splx
@@ -9798,6 +9791,11 @@ argument_list|,
 name|hz
 operator|/
 literal|10
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -18309,20 +18307,12 @@ name|BELL_PITCH
 operator|=
 literal|1339
 expr_stmt|;
-name|TIMER_FREQ
-operator|=
-literal|1996800L
-expr_stmt|;
 block|}
 else|else
 block|{
 name|BELL_PITCH
 operator|=
 literal|1678
-expr_stmt|;
-name|TIMER_FREQ
-operator|=
-literal|2457600L
 expr_stmt|;
 block|}
 endif|#
@@ -18709,6 +18699,33 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* copy screen to temporary buffer */
+name|bcopyw
+argument_list|(
+name|Crtat
+argument_list|,
+name|sc_buffer
+argument_list|,
+name|console
+index|[
+literal|0
+index|]
+operator|->
+name|xsize
+operator|*
+name|console
+index|[
+literal|0
+index|]
+operator|->
+name|ysize
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|console
 index|[
 literal|0
@@ -18723,7 +18740,7 @@ index|]
 operator|->
 name|mouse_pos
 operator|=
-name|buffer
+name|sc_buffer
 expr_stmt|;
 name|console
 index|[
@@ -18739,7 +18756,7 @@ index|]
 operator|->
 name|cursor_oldpos
 operator|=
-name|buffer
+name|sc_buffer
 operator|+
 name|hw_cursor
 expr_stmt|;
@@ -19929,13 +19946,13 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/*  * scgetc(noblock) - get character from keyboard.  * If noblock = 0 wait until a key is pressed.  * Else return NOKEY.  */
+comment|/*  * scgetc(flags) - get character from keyboard.  * If flags& SCGETC_CN, then avoid harmful side effects.  * If flags& SCGETC_NONBLOCK, then wait until a key is pressed, else  * return NOKEY if there is nothing there.  */
 specifier|static
 name|u_int
 name|scgetc
 parameter_list|(
-name|int
-name|noblock
+name|u_int
+name|flags
 parameter_list|)
 block|{
 name|u_char
@@ -20002,7 +20019,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|noblock
+name|flags
+operator|&
+name|SCGETC_NONBLOCK
 condition|)
 else|#
 directive|else
@@ -20016,7 +20035,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|noblock
+name|flags
+operator|&
+name|SCGETC_NONBLOCK
 condition|)
 endif|#
 directive|endif
@@ -20030,6 +20051,15 @@ goto|goto
 name|next_code
 goto|;
 comment|/* do the /dev/random device a favour */
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCGETC_CN
+operator|)
+condition|)
 name|add_keyboard_randomness
 argument_list|(
 name|scancode
@@ -21864,18 +21894,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|in_debugger
-operator|=
-name|TRUE
-expr_stmt|;
 name|Debugger
 argument_list|(
 literal|"manual escape to debugger"
 argument_list|)
-expr_stmt|;
-name|in_debugger
-operator|=
-name|FALSE
 expr_stmt|;
 return|return
 operator|(

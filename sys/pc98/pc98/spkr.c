@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.3 1996/08/30 10:43:09 asami Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.4 1996/09/04 09:52:27 asami Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * modified for PC98  *    $Id: spkr.c,v 1.3 1996/08/30 10:43:09 asami Exp $  */
+comment|/*  * modified for PC98  *    $Id: spkr.c,v 1.4 1996/09/04 09:52:27 asami Exp $  */
 end_comment
 
 begin_include
@@ -42,19 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -81,12 +69,6 @@ directive|include
 file|<pc98/pc98/pc98.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/timerreg.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -98,16 +80,16 @@ directive|include
 file|<i386/isa/isa.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/timerreg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -222,11 +204,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**************** MACHINE DEPENDENT PART STARTS HERE *************************  *  * This section defines a function tone() which causes a tone of given  * frequency and duration from the 80x86's console speaker.  * Another function endtone() is defined to force sound off, and there is  * also a rest() entry point to do pauses.  *  * Audible sound is generated using the Programmable Interval Timer (PIT) and  * Programmable Peripheral Interface (PPI) attached to the 80x86's speaker. The  * PPI controls whether sound is passed through at all; the PIT's channel 2 is  * used to generate clicks (a square wave) of whatever frequency is desired.  */
+comment|/**************** MACHINE DEPENDENT PART STARTS HERE *************************  *  * This section defines a function tone() which causes a tone of given  * frequency and duration from the ISA console speaker.  * Another function endtone() is defined to force sound off, and there is  * also a rest() entry point to do pauses.  *  * Audible sound is generated using the Programmable Interval Timer (PIT) and  * Programmable Peripheral Interface (PPI) attached to the ISA speaker. The  * PPI controls whether sound is passed through at all; the PIT's channel 2 is  * used to generate clicks (a square wave) of whatever frequency is desired.  */
 end_comment
 
 begin_comment
-comment|/*  * PIT and PPI port addresses and control values  *  * Most of the magic is hidden in the TIMER_PREP value, which selects PIT  * channel 2, frequency LSB first, square-wave mode and binary encoding.  * The encoding is as follows:  *  * +----------+----------+---------------+-----+  * |  1    0  |  1    1  |  0    1    1  |  0  |  * | SC1  SC0 | RW1  RW0 | M2   M1   M0  | BCD |  * +----------+----------+---------------+-----+  *   Counter     Write        Mode 3      Binary  *  Channel 2  LSB first,  (Square Wave) Encoding  *             MSB second  */
+comment|/*  * PPI control values.  * XXX should be in a header and used in clock.c.  */
 end_comment
 
 begin_ifdef
@@ -257,17 +239,6 @@ begin_comment
 comment|/* PIT count address */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PIT_MODE
-value|0x76
-end_define
-
-begin_comment
-comment|/* set timer mode for sound generation */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -282,105 +253,6 @@ end_define
 
 begin_comment
 comment|/* turn these PPI bits on to pass sound */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIT_MODE
-value|0xB6
-end_define
-
-begin_comment
-comment|/* set timer mode for sound generation */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Magic numbers for timer control.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AUTO_CLOCK
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98_8M
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TIMER_CLK
-value|2457600L
-end_define
-
-begin_comment
-comment|/* ???? for 5MHz system */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|TIMER_CLK
-value|1996800L
-end_define
-
-begin_comment
-comment|/* ???? for 8MHz system */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !AUTO_CLOCK */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* IBM_PC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMER_CLK
-value|1193180L
-end_define
-
-begin_comment
-comment|/* corresponds to 18.2 MHz tick rate */
 end_comment
 
 begin_endif
@@ -570,7 +442,7 @@ else|#
 directive|else
 name|divisor
 operator|=
-name|TIMER_CLK
+name|timer_freq
 operator|/
 name|thz
 expr_stmt|;
@@ -608,7 +480,11 @@ if|if
 condition|(
 name|acquire_timer1
 argument_list|(
-name|PIT_MODE
+name|TIMER_SEL1
+operator||
+name|TIMER_SQWAVE
+operator||
+name|TIMER_16BIT
 argument_list|)
 condition|)
 block|{
@@ -618,7 +494,11 @@ if|if
 condition|(
 name|acquire_timer2
 argument_list|(
-name|PIT_MODE
+name|TIMER_SEL2
+operator||
+name|TIMER_SQWAVE
+operator||
+name|TIMER_16BIT
 argument_list|)
 condition|)
 block|{

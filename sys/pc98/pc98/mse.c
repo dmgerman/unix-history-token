@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.4 1996/09/07 02:13:57 asami Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.5 1996/09/10 09:38:15 asami Exp $  */
 end_comment
 
 begin_comment
@@ -3079,12 +3079,6 @@ name|HC_NO_CLEAR
 argument_list|)
 expr_stmt|;
 comment|/* HC = 0 */
-if|#
-directive|if
-literal|0
-block|if (inb(msport + PORT_C)& 0x80 != 0) { 		return (0); 	}
-endif|#
-directive|endif
 name|outb
 argument_list|(
 name|msport
@@ -3095,12 +3089,6 @@ name|HC_CLEAR
 argument_list|)
 expr_stmt|;
 comment|/* HC = 1 */
-if|#
-directive|if
-literal|0
-block|if (inb(msport + PORT_C)& 0x80 == 0) { 		return (0); 	}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1

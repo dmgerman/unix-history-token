@@ -4,11 +4,15 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.22 1996/09/06 23:07:07 phk Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.23 1996/10/15 19:22:04 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
 comment|/* TODO list:  * 1) Get the DMA stuff working.  * 2) Get the iov/uio stuff working. Is this a good thing ???  * 3) Get the synch stuff working.  * 4) Rewrite it to use malloc for the acb structs instead of static alloc.?  */
+end_comment
+
+begin_comment
+comment|/*  * PC-9801-100/AHA-1030P support by URATA S.  */
 end_comment
 
 begin_comment
@@ -673,6 +677,23 @@ begin_comment
 comment|/* AIC6360 definitions */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/aic_98.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1089,6 +1110,11 @@ end_define
 begin_comment
 comment|/* ID register */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3162,6 +3188,16 @@ comment|/* Message pointer (for multibyte messages) */
 name|u_char
 name|imlen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|int
+modifier|*
+name|aicport
+decl_stmt|;
+comment|/* I/O port information */
+endif|#
+directive|endif
 block|}
 modifier|*
 name|aicdata
@@ -3920,6 +3956,41 @@ name|dev
 operator|->
 name|id_iobase
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+name|AIC_TYPE98
+argument_list|(
+name|dev
+operator|->
+name|id_flags
+argument_list|)
+operator|==
+name|AIC98_100
+condition|)
+block|{
+comment|/* PC-9801-100 */
+name|aic
+operator|->
+name|aicport
+operator|=
+name|aicport_100
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* generic card */
+name|aic
+operator|->
+name|aicport
+operator|=
+name|aicport_generic
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|aic_find
@@ -3951,6 +4022,25 @@ block|}
 name|aicunit
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+if|if
+condition|(
+name|AIC_TYPE98
+argument_list|(
+name|dev
+operator|->
+name|id_flags
+argument_list|)
+operator|==
+name|AIC98_100
+condition|)
+return|return
+literal|0x40
+return|;
+endif|#
+directive|endif
 return|return
 literal|0x20
 return|;

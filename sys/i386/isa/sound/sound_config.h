@@ -252,6 +252,28 @@ directive|ifndef
 name|SBC_BASE
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SBC_BASE
+value|0x20d2
+end_define
+
+begin_comment
+comment|/* 0x20d2 is the factory default. */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -268,11 +290,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|SBC_IRQ
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SBC_IRQ
+value|10
+end_define
+
+begin_comment
+comment|/* IQR10 is not the factory default on PC9821.	 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -290,11 +339,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|SBC_DMA
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SBC_DMA
+value|3
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -308,11 +380,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|SB16_DMA
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SB16_DMA
+value|3
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -326,11 +421,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|SB16MIDI_BASE
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SB16MIDI_BASE
+value|0x80d2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -338,6 +456,11 @@ directive|define
 name|SB16MIDI_BASE
 value|0x300
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -983,6 +1106,28 @@ name|DMA_AUTOINIT
 value|0x10
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FM_MONO
+value|0x28d2
+end_define
+
+begin_comment
+comment|/* This is the I/O address used by AdLib */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -993,6 +1138,11 @@ end_define
 begin_comment
 comment|/* This is the I/O address used by AdLib */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* SEQ_MAX_QUEUE is the maximum number of sequencer events buffered by the    driver. (There is no need to alter this) */
