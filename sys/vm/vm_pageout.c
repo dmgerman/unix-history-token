@@ -206,6 +206,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|vm_pageout_page_free
+parameter_list|(
+name|vm_page_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|vm_pageout_pmap_collect
 parameter_list|(
 name|void
@@ -2397,6 +2407,7 @@ comment|/*  * Don't try to be fancy - being fancy can lead to VOP_LOCK's and the
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_pageout_page_free
 parameter_list|(
