@@ -133,7 +133,7 @@ begin_define
 define|#
 directive|define
 name|WITNESS_COUNT
-value|200
+value|1024
 end_define
 
 begin_define
@@ -759,18 +759,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_WITNESS
-argument_list|,
-literal|"witness"
-argument_list|,
-literal|"witness structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_NODE
