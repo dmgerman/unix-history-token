@@ -25,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 2.1 %G%"
+literal|"@(#)main.c 1.9.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -698,6 +698,15 @@ operator|=
 name|TRUE
 expr_stmt|;
 continue|continue;
+case|case
+literal|'L'
+case|:
+name|togopt
+argument_list|(
+literal|'L'
+argument_list|)
+expr_stmt|;
+continue|continue;
 default|default:
 name|usage
 label|:
@@ -1021,6 +1030,15 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+case|case
+literal|'L'
+case|:
+name|togopt
+argument_list|(
+literal|'L'
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 label|:
@@ -1179,6 +1197,8 @@ block|}
 name|stabsource
 argument_list|(
 name|filename
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 endif|#
