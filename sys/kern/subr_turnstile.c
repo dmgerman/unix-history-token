@@ -2125,6 +2125,13 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
 switch|switch
 condition|(
 name|what
