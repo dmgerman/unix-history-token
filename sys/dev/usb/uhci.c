@@ -4478,6 +4478,52 @@ name|uhci_intr_info_t
 modifier|*
 name|ii
 decl_stmt|;
+comment|/* 	 * It can happen that an interrupt will be delivered to 	 * us before the device has been fully attached and the 	 * softc struct has been configured. Usually this happens 	 * when kldloading the USB support as a module after the 	 * system has been booted. If we detect this condition, 	 * we need to squelch the unwanted interrupts until we're 	 * ready for them. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+operator|==
+name|NULL
+condition|)
+block|{
+name|UWRITE2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_STS
+argument_list|,
+literal|0xFFFF
+argument_list|)
+expr_stmt|;
+comment|/* ack pending interrupts */
+name|uhci_run
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* stop the controller */
+name|UWRITE2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_INTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* disable interrupts */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|UHCI_DEBUG
@@ -5900,6 +5946,7 @@ name|run
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * When activating the controller, set the MAXP bit. 	 * Certain high speed devices such as network adapters 	 * require this in order to avoid babble errors that 	 * can cause an endpoint stall. 	 */
 name|UHCICMD
 argument_list|(
 name|sc
@@ -5907,6 +5954,8 @@ argument_list|,
 name|run
 condition|?
 name|UHCI_CMD_RS
+operator||
+name|UHCI_CMD_MAXP
 else|:
 literal|0
 argument_list|)
