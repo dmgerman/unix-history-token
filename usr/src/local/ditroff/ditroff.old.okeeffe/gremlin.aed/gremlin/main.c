@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)main.c	1.4	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
+comment|/* @(#)main.c	1.5	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This is the main routine for the gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -436,7 +436,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	1.4	(Berkeley)	%G%"
+literal|"@(#)main.c	1.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1264,28 +1264,28 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* Ignore quit signals, catch interrupts and stops. */
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
 name|OnStop
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGTTIN
 argument_list|,
 name|OnStop
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|SIGTTOU
 argument_list|,
@@ -1295,7 +1295,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGTINT
-name|sigset
+name|signal
 argument_list|(
 name|SIGTINT
 argument_list|,
@@ -2273,11 +2273,16 @@ block|{
 name|TxClose
 argument_list|()
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|signo
 argument_list|,
 name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|sigsetmask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2290,7 +2295,7 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
-name|sigset
+name|signal
 argument_list|(
 name|signo
 argument_list|,
