@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.3 81/10/30 */
+comment|/* tcp_output.c 4.4 81/10/31 */
 end_comment
 
 begin_include
@@ -186,10 +186,6 @@ name|rcv_nxt
 expr_stmt|;
 if|if
 condition|(
-name|hehas
-operator|>
-literal|32
-operator|&&
 operator|(
 literal|100
 operator|*
