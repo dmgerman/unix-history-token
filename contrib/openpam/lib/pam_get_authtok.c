@@ -98,6 +98,11 @@ condition|(
 name|r
 operator|==
 name|PAM_SUCCESS
+operator|&&
+operator|*
+name|authtok
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdarg.h>
 end_include
 
@@ -80,6 +86,8 @@ modifier|*
 name|format
 decl_stmt|;
 name|int
+name|len
+decl_stmt|,
 name|priority
 decl_stmt|;
 switch|switch
@@ -127,6 +135,32 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|fmt
+argument_list|)
+init|;
+name|len
+operator|>
+literal|0
+operator|&&
+name|isspace
+argument_list|(
+name|fmt
+index|[
+name|len
+index|]
+argument_list|)
+condition|;
+name|len
+operator|--
+control|)
+comment|/* nothing */
+empty_stmt|;
 if|if
 condition|(
 operator|(
@@ -139,12 +173,9 @@ argument_list|(
 name|func
 argument_list|)
 operator|+
-name|strlen
-argument_list|(
-name|fmt
-argument_list|)
+name|len
 operator|+
-literal|8
+literal|16
 argument_list|)
 operator|)
 operator|!=
@@ -155,9 +186,11 @@ name|sprintf
 argument_list|(
 name|format
 argument_list|,
-literal|"in %s(): %s"
+literal|"in %s(): %.*s\n"
 argument_list|,
 name|func
+argument_list|,
+name|len
 argument_list|,
 name|fmt
 argument_list|)
@@ -171,6 +204,20 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|format
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|format

@@ -223,6 +223,24 @@ operator|->
 name|next
 control|)
 block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_DEBUG
+argument_list|,
+literal|"calling %s() in %s"
+argument_list|,
+name|_pam_sm_func_name
+index|[
+name|primitive
+index|]
+argument_list|,
+name|chain
+operator|->
+name|module
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chain
@@ -357,6 +375,7 @@ operator|!=
 name|PAM_SM_SETCRED
 condition|)
 break|break;
+continue|continue;
 block|}
 name|_openpam_check_error_code
 argument_list|(
@@ -388,6 +407,13 @@ operator|!
 name|fail
 condition|)
 block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_DEBUG
+argument_list|,
+literal|"required module failed"
+argument_list|)
+expr_stmt|;
 name|fail
 operator|=
 literal|1
@@ -407,6 +433,13 @@ operator|==
 name|PAM_REQUISITE
 condition|)
 block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_DEBUG
+argument_list|,
+literal|"requisite module failed"
+argument_list|)
+expr_stmt|;
 name|fail
 operator|=
 literal|1
@@ -414,13 +447,32 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|fail
+condition|)
+name|err
+operator|=
+name|PAM_SUCCESS
+expr_stmt|;
+name|openpam_log
+argument_list|(
+name|PAM_LOG_DEBUG
+argument_list|,
+literal|"returning: %s"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|fail
-condition|?
 name|err
-else|:
-name|PAM_SUCCESS
 operator|)
 return|;
 block|}
@@ -453,11 +505,11 @@ if|if
 condition|(
 name|r
 operator|==
-name|PAM_SERVICE_ERR
+name|PAM_SUCCESS
 operator|||
 name|r
 operator|==
-name|PAM_BUF_ERR
+name|PAM_SERVICE_ERR
 operator|||
 name|r
 operator|==
@@ -470,6 +522,10 @@ operator|||
 name|r
 operator|==
 name|PAM_PERM_DENIED
+operator|||
+name|r
+operator|==
+name|PAM_ABORT
 condition|)
 return|return;
 comment|/* specific error codes */
