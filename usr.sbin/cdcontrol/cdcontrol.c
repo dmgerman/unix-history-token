@@ -1,12 +1,50 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * Fixed and further modified on 5-Sep-1995 by Jukka Ukkonen<jau@funet.fi>.  *  * 11-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              A couple of further fixes to my own earlier "fixes".  *  * 18-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              Added an ability to specify addresses relative to the  *              beginning of a track. This is in fact a variation of  *              doing the simple play_msf() call.  *  * 11-Oct-1995: Serge V.Vakulenko<vak@cronyx.ru>  *              New eject algorithm.  *              Some code style reformatting.  *  * $Id: cdcontrol.c,v 1.12 1996/02/09 01:16:23 ache Exp $  */
+comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * Fixed and further modified on 5-Sep-1995 by Jukka Ukkonen<jau@funet.fi>.  *  * 11-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              A couple of further fixes to my own earlier "fixes".  *  * 18-Sep-1995: Jukka A. Ukkonen<jau@funet.fi>  *              Added an ability to specify addresses relative to the  *              beginning of a track. This is in fact a variation of  *              doing the simple play_msf() call.  *  * 11-Oct-1995: Serge V.Vakulenko<vak@cronyx.ru>  *              New eject algorithm.  *              Some code style reformatting.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -31,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -518,14 +550,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|setvol
 name|__P
@@ -949,45 +973,12 @@ name|void
 name|usage
 parameter_list|()
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"Usage:\n\t%s [ -vs ] [ -f disc ] [ command args... ]\n"
+name|stderr
 argument_list|,
-name|__progname
+literal|"usage: cdcontrol [-vs] [-f disc] [command args ...]\n"
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-v       - verbose mode\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-s       - silent mode\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\t-f disc  - a block device name such as /dev/cd0c\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tMUSIC_CD - shell variable with device name\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Commands:\n"
-argument_list|)
-expr_stmt|;
-name|help
-argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -1152,11 +1143,9 @@ name|cdname
 operator|=
 name|DEFAULT_CD_DRIVE
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"No CD device name specified. Defaulting to %s.\n"
+literal|"no CD device name specified, defaulting to %s"
 argument_list|,
 name|cdname
 argument_list|)
@@ -1334,9 +1323,9 @@ if|if
 condition|(
 name|verbose
 condition|)
-name|perror
+name|warn
 argument_list|(
-name|__progname
+name|NULL
 argument_list|)
 expr_stmt|;
 name|close
@@ -1638,11 +1627,9 @@ argument_list|,
 name|CDIOCCLRDEBUG
 argument_list|)
 return|;
-name|printf
+name|warnx
 argument_list|(
-literal|"%s: Invalid command arguments\n"
-argument_list|,
-name|__progname
+literal|"invalid command arguments"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1834,11 +1821,9 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
-name|printf
+name|warnx
 argument_list|(
-literal|"%s: Invalid command arguments\n"
-argument_list|,
-name|__progname
+literal|"invalid command arguments"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1997,11 +1982,9 @@ name|r
 argument_list|)
 condition|)
 block|{
-name|printf
+name|warnx
 argument_list|(
-literal|"%s: Invalid command arguments\n"
-argument_list|,
-name|__progname
+literal|"invalid command arguments"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3973,11 +3956,9 @@ operator|)
 return|;
 name|Clean_up
 label|:
-name|printf
+name|warnx
 argument_list|(
-literal|"%s: Invalid command arguments\n"
-argument_list|,
-name|__progname
+literal|"invalid command arguments"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4454,7 +4435,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"getting toc header"
 argument_list|)
@@ -5510,9 +5491,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s> "
-argument_list|,
-name|__progname
+literal|"cdcontrol> "
 argument_list|)
 expr_stmt|;
 if|if
@@ -5815,11 +5794,9 @@ operator|->
 name|command
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Ambiguous command\n"
+literal|"ambiguous command"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5846,13 +5823,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Invalid command, enter ``help'' for commands.\n"
-argument_list|,
-name|__progname
+literal|"invalid command, enter ``help'' for commands"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5994,13 +5967,9 @@ name|ENXIO
 condition|)
 block|{
 comment|/*  ENXIO has an overloaded meaning here. 			 *  The original "Device not configured" should 			 *  be interpreted as "No disc in drive %s". */
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: No disc in drive %s.\n"
-argument_list|,
-name|__progname
+literal|"no disc in drive %s"
 argument_list|,
 name|devbuf
 argument_list|)
@@ -6011,14 +5980,13 @@ literal|0
 operator|)
 return|;
 block|}
-name|perror
-argument_list|(
-name|devbuf
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|devbuf
 argument_list|)
 expr_stmt|;
 block|}
