@@ -166,6 +166,9 @@ index|[
 name|BUFSIZE
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PERIPH_1284
 name|struct
 name|resource
 modifier|*
@@ -177,6 +180,9 @@ modifier|*
 name|intr_cookie
 decl_stmt|;
 comment|/* interrupt registration cookie */
+endif|#
+directive|endif
+comment|/* PERIPH_1284 */
 block|}
 struct|;
 end_struct
@@ -504,6 +510,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|PERIPH_1284
 name|uintptr_t
 name|irq
 decl_stmt|;
@@ -512,6 +521,9 @@ name|zero
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* PERIPH_1284 */
 name|struct
 name|ppi_data
 modifier|*
@@ -522,6 +534,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PERIPH_1284
 comment|/* retrive the irq */
 name|BUS_READ_IVAR
 argument_list|(
@@ -561,28 +576,9 @@ argument_list|,
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ppi
-operator|->
-name|intr_resource
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"can't allocate irq\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
+endif|#
+directive|endif
+comment|/* PERIPH_1284 */
 name|make_dev
 argument_list|(
 operator|&
@@ -616,6 +612,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PERIPH_1284
+end_ifdef
+
 begin_comment
 comment|/*  * Cable  * -----  *  * Use an IEEE1284 compliant (DB25/DB25) cable with the following tricks:  *  * nStrobe<-> nAck		1<-> 10  * nAutofd<-> Busy		11<-> 14  * nSelectin<-> Select		17<-> 13  * nInit<-> nFault		15<-> 16  *  */
 end_comment
@@ -630,9 +632,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|PERIPH_1284
 name|device_t
 name|ppidev
 init|=
@@ -806,12 +805,18 @@ argument_list|(
 name|ppidev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PERIPH_1284 */
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PERIPH_1284 */
+end_comment
 
 begin_function
 specifier|static
@@ -930,6 +935,16 @@ name|ppi_flags
 operator||=
 name|HAVE_PPBUS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PERIPH_1284
+if|if
+condition|(
+name|ppi
+operator|->
+name|intr_resource
+condition|)
+block|{
 comment|/* register our interrupt handler */
 name|BUS_SETUP_INTR
 argument_list|(
@@ -956,6 +971,10 @@ operator|->
 name|intr_cookie
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* PERIPH_1284 */
 block|}
 name|ppi
 operator|->
