@@ -965,9 +965,6 @@ block|{
 if|if
 condition|(
 name|cflag
-operator|&&
-operator|*
-name|str
 condition|)
 operator|(
 name|void
