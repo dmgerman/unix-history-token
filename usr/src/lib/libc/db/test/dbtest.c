@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	8.4 (Berkeley) %G%"
+literal|"@(#)dbtest.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +462,8 @@ name|len
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|oflags
 decl_stmt|;
 name|char
 modifier|*
@@ -488,6 +490,12 @@ name|fname
 operator|=
 name|NULL
 expr_stmt|;
+name|oflags
+operator|=
+name|O_CREAT
+operator||
+name|O_RDWR
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -499,7 +507,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:i:o:"
+literal|"f:i:lo:"
 argument_list|)
 operator|)
 operator|!=
@@ -524,6 +532,14 @@ case|:
 name|infoarg
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|oflags
+operator||=
+name|DB_LOCK
 expr_stmt|;
 break|break;
 case|case
@@ -737,9 +753,7 @@ name|dbopen
 argument_list|(
 name|fname
 argument_list|,
-name|O_CREAT
-operator||
-name|O_RDWR
+name|oflags
 argument_list|,
 name|S_IRUSR
 operator||
@@ -3332,7 +3346,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dbtest [-f file] [-i info] [-o file] type script\n"
+literal|"usage: dbtest [-l] [-f file] [-i info] [-o file] type script\n"
 argument_list|)
 expr_stmt|;
 name|exit
