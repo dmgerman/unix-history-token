@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.13 (Berkeley) %G%"
+literal|"@(#)du.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,51 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_decl_stmt
+name|char
+modifier|*
+name|getbsize
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|linkchk
+name|__P
+argument_list|(
+operator|(
+name|FTSENT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -112,14 +157,10 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|register
 name|FTS
 modifier|*
@@ -132,8 +173,6 @@ name|p
 decl_stmt|;
 specifier|register
 name|int
-name|kvalue
-decl_stmt|,
 name|listdirs
 decl_stmt|,
 name|listfiles
@@ -141,9 +180,13 @@ decl_stmt|;
 name|int
 name|aflag
 decl_stmt|,
+name|blocksize
+decl_stmt|,
 name|ch
 decl_stmt|,
 name|ftsoptions
+decl_stmt|,
+name|notused
 decl_stmt|,
 name|sflag
 decl_stmt|;
@@ -155,10 +198,6 @@ decl_stmt|;
 name|ftsoptions
 operator|=
 name|FTS_PHYSICAL
-expr_stmt|;
-name|kvalue
-operator|=
-literal|0
 expr_stmt|;
 name|save
 operator|=
@@ -203,9 +242,16 @@ break|break;
 case|case
 literal|'k'
 case|:
-name|kvalue
-operator|=
-literal|1
+comment|/* Delete before 4.4BSD. */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"du: -k no longer supported\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -303,9 +349,26 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|getbsize
+argument_list|(
+literal|"du"
+argument_list|,
+operator|&
+name|notused
+argument_list|,
+operator|&
+name|blocksize
+argument_list|)
+expr_stmt|;
+name|blocksize
+operator|/=
+literal|512
+expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|fts
 operator|=
@@ -315,16 +378,11 @@ name|argv
 argument_list|,
 name|ftsoptions
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
 name|NULL
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 operator|(
@@ -334,7 +392,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"du: %s.\n"
+literal|"du: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -407,20 +465,14 @@ name|printf
 argument_list|(
 literal|"%ld\t%s\n"
 argument_list|,
-name|kvalue
-condition|?
 name|howmany
 argument_list|(
 name|p
 operator|->
 name|fts_number
 argument_list|,
-literal|2
+name|blocksize
 argument_list|)
-else|:
-name|p
-operator|->
-name|fts_number
 argument_list|,
 name|p
 operator|->
@@ -444,7 +496,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"du: %s: %s.\n"
+literal|"du: %s: %s\n"
 argument_list|,
 name|p
 operator|->
@@ -518,8 +570,6 @@ name|printf
 argument_list|(
 literal|"%ld\t%s\n"
 argument_list|,
-name|kvalue
-condition|?
 name|howmany
 argument_list|(
 name|p
@@ -528,14 +578,8 @@ name|fts_statp
 operator|->
 name|st_blocks
 argument_list|,
-literal|2
+name|blocksize
 argument_list|)
-else|:
-name|p
-operator|->
-name|fts_statp
-operator|->
-name|st_blocks
 argument_list|,
 name|p
 operator|->
@@ -579,19 +623,17 @@ name|ID
 typedef|;
 end_typedef
 
-begin_expr_stmt
+begin_function
+name|int
 name|linkchk
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
 name|FTSENT
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|static
 name|ID
@@ -684,14 +726,9 @@ name|nfiles
 operator|==
 name|maxfiles
 operator|&&
-operator|!
 operator|(
 name|files
 operator|=
-operator|(
-name|ID
-operator|*
-operator|)
 name|realloc
 argument_list|(
 operator|(
@@ -717,6 +754,8 @@ operator|)
 argument_list|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 operator|(
@@ -767,14 +806,12 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -783,7 +820,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-a | -s] [-kx] [file ...]\n"
+literal|"usage: du [-a | -s] [-x] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -792,7 +829,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
