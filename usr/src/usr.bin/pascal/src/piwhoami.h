@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)piwhoami.h 1.3 %G%"; */
+comment|/* static	char sccsid[] = "@(#)piwhoami.h 1.4 %G%"; */
 end_comment
 
 begin_comment
@@ -164,6 +164,12 @@ undef|#
 directive|undef
 name|PI1
 end_undef
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+end_define
 
 end_unit
 
