@@ -1520,6 +1520,9 @@ if|if
 condition|(
 name|mediasize
 operator|>
+operator|(
+name|off_t
+operator|)
 literal|4999L
 operator|*
 literal|1024L
@@ -1533,9 +1536,12 @@ name|sl
 operator|->
 name|sl_text
 argument_list|,
-literal|"FreeBSD%luG cyl %u alt %u hd %u sec %u"
+literal|"FreeBSD%jdG cyl %u alt %u hd %u sec %u"
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|mediasize
 operator|+
 literal|512
@@ -1543,7 +1549,7 @@ operator|*
 literal|1024
 operator|*
 literal|1024
-operator|)
+argument_list|)
 operator|/
 operator|(
 literal|1024
@@ -1579,15 +1585,18 @@ name|sl
 operator|->
 name|sl_text
 argument_list|,
-literal|"FreeBSD%luM cyl %u alt %u hd %u sec %u"
+literal|"FreeBSD%jdM cyl %u alt %u hd %u sec %u"
 argument_list|,
-operator|(
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|mediasize
 operator|+
 literal|512
 operator|*
 literal|1024
-operator|)
+argument_list|)
 operator|/
 operator|(
 literal|1024
