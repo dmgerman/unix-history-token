@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.46 (Berkeley) %G%"
+literal|"@(#)conf.c	8.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5091,6 +5091,11 @@ operator|||
 name|defined
 argument_list|(
 name|DGUX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX3
 argument_list|)
 end_if
 
