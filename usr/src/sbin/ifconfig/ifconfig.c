@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	8.1 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,13 +140,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -158,7 +158,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -171,6 +171,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -599,7 +605,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * XNS support liberally adapted from  * code written at the University of Maryland  * principally by James O'Toole and Chris Torek.  */
+comment|/*  * XNS support liberally adapted from code written at the University of  * Maryland principally by James O'Toole and Chris Torek.  */
 end_comment
 
 begin_decl_stmt
@@ -1140,6 +1146,26 @@ operator|==
 name|NEXTARG
 condition|)
 block|{
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"'%s' requires argument"
+argument_list|,
+name|p
+operator|->
+name|c_name
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|p
@@ -2403,7 +2429,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"netmask %x "
+literal|"netmask 0x%x "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -3165,13 +3191,6 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ifconfig: "
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|errno
@@ -3180,11 +3199,11 @@ block|{
 case|case
 name|ENXIO
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: no such interface\n"
+literal|"%s: no such interface"
 argument_list|,
 name|cmd
 argument_list|)
@@ -3193,28 +3212,27 @@ break|break;
 case|case
 name|EPERM
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: permission denied\n"
+literal|"%s: permission denied"
 argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -3413,22 +3431,15 @@ name|INADDR_ANY
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: bad value\n"
+literal|"%s: bad value"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -3898,20 +3909,13 @@ name|nsellength
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Negative NSEL length is absurd\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Negative NSEL length is absurd"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|afp
@@ -3924,20 +3928,13 @@ name|af_af
 operator|!=
 name|AF_ISO
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Setting NSEL length valid only for iso\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Setting NSEL length valid only for iso"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
