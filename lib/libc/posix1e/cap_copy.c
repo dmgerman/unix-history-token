@@ -32,7 +32,7 @@ file|<stdlib.h>
 end_include
 
 begin_function
-name|int
+name|ssize_t
 name|cap_copy_ext
 parameter_list|(
 name|void
@@ -207,7 +207,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|ssize_t
 name|cap_size
 parameter_list|(
 name|cap_t
