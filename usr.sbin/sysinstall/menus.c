@@ -3075,6 +3075,21 @@ literal|"=ftp://ftp.hk.super.net"
 block|}
 block|,
 block|{
+literal|" Hungary"
+block|,
+literal|"ftp.hu.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.hu.freebsd.org"
+block|}
+block|,
+block|{
 literal|"Iceland"
 block|,
 literal|"ftp.is.freebsd.org"
