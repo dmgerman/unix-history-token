@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1994 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id$  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.9 1997/02/22 09:43:43 peter Exp $  */
 end_comment
 
 begin_include
@@ -58,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/filio.h>
 end_include
 
 begin_include
@@ -184,10 +190,10 @@ name|char
 modifier|*
 name|buf
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
-comment|/* double buffering */
+comment|/* triple buffering */
 name|unsigned
 name|char
 modifier|*
@@ -197,7 +203,7 @@ comment|/* current buffer ptr */
 name|unsigned
 name|in_use
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 comment|/* buffers fill */
@@ -247,6 +253,10 @@ name|selinfo
 name|wsel
 decl_stmt|;
 comment|/* select status */
+name|char
+name|non_block
+decl_stmt|;
+comment|/* set non-block on write status */
 block|}
 name|pca_status
 struct|;
@@ -266,6 +276,16 @@ begin_decl_stmt
 specifier|static
 name|char
 name|buffer2
+index|[
+name|BUF_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|buffer3
 index|[
 name|BUF_SIZE
 index|]
@@ -567,8 +587,9 @@ operator|*
 name|volume
 operator|)
 operator|/
-literal|100
+literal|25
 expr_stmt|;
+comment|/* XXX 		j = ((i-128)*volume)/100; */
 if|if
 condition|(
 name|j
@@ -682,6 +703,24 @@ index|]
 expr_stmt|;
 name|pca_status
 operator|.
+name|buf
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|&
+name|buffer3
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|pca_status
+operator|.
 name|buffer
 operator|=
 name|pca_status
@@ -703,6 +742,13 @@ operator|.
 name|in_use
 index|[
 literal|1
+index|]
+operator|=
+name|pca_status
+operator|.
+name|in_use
+index|[
+literal|3
 index|]
 operator|=
 literal|0
@@ -961,6 +1007,13 @@ index|[
 literal|1
 index|]
 operator|=
+name|pca_status
+operator|.
+name|in_use
+index|[
+literal|2
+index|]
+operator|=
 literal|0
 expr_stmt|;
 name|pca_status
@@ -1168,6 +1221,13 @@ operator|.
 name|in_use
 index|[
 literal|1
+index|]
+operator|||
+name|pca_status
+operator|.
+name|in_use
+index|[
+literal|2
 index|]
 condition|)
 block|{
@@ -1427,6 +1487,13 @@ index|[
 literal|1
 index|]
 operator|=
+name|pca_status
+operator|.
+name|in_use
+index|[
+literal|2
+index|]
+operator|=
 literal|0
 expr_stmt|;
 name|pca_status
@@ -1447,6 +1514,13 @@ name|processed
 operator|=
 literal|0
 expr_stmt|;
+name|pca_status
+operator|.
+name|non_block
+operator|=
+literal|0
+expr_stmt|;
+comment|/* block on write */
 return|return
 literal|0
 return|;
@@ -1589,8 +1663,24 @@ name|in_use
 index|[
 literal|1
 index|]
+operator|&&
+name|pca_status
+operator|.
+name|in_use
+index|[
+literal|2
+index|]
 condition|)
 block|{
+if|if
+condition|(
+name|pca_status
+operator|.
+name|non_block
+condition|)
+return|return
+name|EWOULDBLOCK
+return|;
 name|x
 operator|=
 name|spltty
@@ -1644,18 +1734,39 @@ name|error
 return|;
 block|}
 block|}
-name|which
-operator|=
+if|if
+condition|(
+operator|!
 name|pca_status
 operator|.
 name|in_use
 index|[
 literal|0
 index|]
-condition|?
-literal|1
-else|:
+condition|)
+name|which
+operator|=
 literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|pca_status
+operator|.
+name|in_use
+index|[
+literal|1
+index|]
+condition|)
+name|which
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|which
+operator|=
+literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -2093,6 +2204,28 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+case|case
+name|FIONBIO
+case|:
+name|pca_status
+operator|.
+name|non_block
+operator|=
+call|(
+name|char
+call|)
+argument_list|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 return|return
 name|ENXIO
@@ -2149,7 +2282,7 @@ directive|else
 asm|"outb %0,$0x42"
 endif|#
 directive|endif
-asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current ^= 1; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcaselect(dev_t dev, int rw, struct proc *p) {  	int s = spltty();  	struct proc *p1;   	switch (rw) {  	case FWRITE:  		if (!pca_status.in_use[0] || !pca_status.in_use[1]) {  			splx(s);  			return(1);  		}  		if (pca_status.wsel.si_pid&& (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait)  			pca_status.wsel.si_flags = SI_COLL;  		else  			pca_status.wsel.si_pid = p->p_pid;  		splx(s);  		return 0; 	default:  		splx(s);  		return(0); 	} }  static pca_devsw_installed = 0;  static void 	pca_drvinit(void *unused) { 	dev_t dev;  	if( ! pca_devsw_installed ) { 		dev = makedev(CDEV_MAJOR, 0); 		cdevsw_add(&dev,&pca_cdevsw, NULL); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
+asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current++;  		if(pca_status.current> 2) pca_status.current = 0; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcaselect(dev_t dev, int rw, struct proc *p) {  	int s = spltty();  	struct proc *p1;   	switch (rw) {  	case FWRITE:  		if (!pca_status.in_use[0] || !pca_status.in_use[1] || !pca_status.in_use[2]) {  			splx(s);  			return(1);  		}  		if (pca_status.wsel.si_pid&& (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait)  			pca_status.wsel.si_flags = SI_COLL;  		else  			pca_status.wsel.si_pid = p->p_pid;  		splx(s);  		return 0; 	default:  		splx(s);  		return(0); 	} }  static pca_devsw_installed = 0;  static void 	pca_drvinit(void *unused) { 	dev_t dev;  	if( ! pca_devsw_installed ) { 		dev = makedev(CDEV_MAJOR, 0); 		cdevsw_add(&dev,&pca_cdevsw, NULL); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
 end_function
 
 begin_endif
