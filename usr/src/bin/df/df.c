@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.10 (Berkeley) %G%"
+literal|"@(#)df.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -78,6 +72,30 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -97,6 +115,8 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|iflag
+decl_stmt|,
+name|kflag
 decl_stmt|;
 end_decl_stmt
 
@@ -152,10 +172,17 @@ name|i
 decl_stmt|;
 name|long
 name|mntsize
+decl_stmt|,
+name|getmntinfo
+argument_list|()
 decl_stmt|;
 name|char
 modifier|*
 name|mntpt
+decl_stmt|,
+modifier|*
+name|mktemp
+argument_list|()
 decl_stmt|;
 name|struct
 name|stat
@@ -183,7 +210,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"io"
+literal|"iko"
 argument_list|)
 operator|)
 operator|!=
@@ -198,7 +225,16 @@ case|case
 literal|'i'
 case|:
 name|iflag
-operator|++
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|kflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 ifdef|#
@@ -208,7 +244,8 @@ case|case
 literal|'o'
 case|:
 name|oflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 endif|#
@@ -222,7 +259,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-i] [filsys ...]\n"
+literal|"usage: df [-ik] [file | file_system ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -241,7 +278,13 @@ name|optind
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Filesystem    kbytes    used   avail capacity"
+literal|"Filesystem  %s    used   avail capacity"
+argument_list|,
+name|kflag
+condition|?
+literal|"  kbytes"
+else|:
+literal|"512-blks"
 argument_list|)
 expr_stmt|;
 if|if
@@ -366,14 +409,19 @@ operator|==
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
-name|err
-expr_stmt|;
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"df: %s: %s\n"
+argument_list|,
 operator|*
 name|argv
+argument_list|,
+name|strerror
+argument_list|(
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -409,7 +457,10 @@ literal|0
 condition|)
 name|mntpt
 operator|=
-literal|"/tmp/.mnt"
+name|mktemp
+argument_list|(
+literal|"/df.XXXXXX"
+argument_list|)
 expr_stmt|;
 name|mdev
 operator|.
@@ -466,14 +517,24 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"df: %s: %s\n"
+argument_list|,
 operator|*
 name|argv
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
+operator|(
+name|void
+operator|)
 name|umount
 argument_list|(
 name|mntpt
@@ -481,6 +542,9 @@ argument_list|,
 name|MNT_NOFORCE
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|rmdir
 argument_list|(
 name|mntpt
@@ -507,9 +571,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"df: %s: %s\n"
+argument_list|,
 name|mntpt
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -529,23 +602,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|long
 name|getmntinfo
-argument_list|(
-argument|mntbufp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mntbufp
+parameter_list|)
 name|struct
 name|statfs
 modifier|*
 modifier|*
 name|mntbufp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -674,7 +742,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"no space for mount table buffer\n"
+literal|"df: no space for mount table buffer\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -735,7 +803,7 @@ name|mntsize
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -880,7 +948,13 @@ name|sfsp
 operator|->
 name|f_fsize
 operator|/
+operator|(
+name|kflag
+condition|?
 literal|1024
+else|:
+literal|512
+operator|)
 argument_list|,
 name|used
 operator|*
@@ -888,7 +962,13 @@ name|sfsp
 operator|->
 name|f_fsize
 operator|/
+operator|(
+name|kflag
+condition|?
 literal|1024
+else|:
+literal|512
+operator|)
 argument_list|,
 name|sfsp
 operator|->
@@ -898,7 +978,13 @@ name|sfsp
 operator|->
 name|f_fsize
 operator|/
+operator|(
+name|kflag
+condition|?
 literal|1024
+else|:
+literal|512
+operator|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1004,12 +1090,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/fs.h>
 end_include
 
@@ -1029,7 +1109,7 @@ begin_decl_stmt
 name|char
 name|root
 index|[
-literal|32
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1095,11 +1175,6 @@ name|fstab
 modifier|*
 name|fsp
 decl_stmt|;
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
 name|sync
 argument_list|()
 expr_stmt|;
@@ -1280,10 +1355,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|mntpt
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1327,7 +1398,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: screwy fstab entry\n"
+literal|"df: %s: screwy fstab entry\n"
 argument_list|,
 name|file
 argument_list|)
@@ -1402,7 +1473,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: mounted on unknown device\n"
+literal|"df: %s: mounted on unknown device\n"
 argument_list|,
 name|file
 argument_list|)
@@ -1420,7 +1491,7 @@ name|open
 argument_list|(
 name|file
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -1745,7 +1816,7 @@ name|fi
 argument_list|,
 name|off
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 if|if
