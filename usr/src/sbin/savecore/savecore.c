@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	8.1 (Berkeley) %G%"
+literal|"@(#)savecore.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3183,9 +3183,13 @@ expr_stmt|;
 block|}
 name|needed
 operator|=
+operator|(
 name|dumpsize
 operator|+
 name|vmunixsize
+operator|)
+operator|/
+literal|1024
 expr_stmt|;
 if|if
 condition|(
