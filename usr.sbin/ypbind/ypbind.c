@@ -6,16 +6,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LINT
+name|lint
 end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.24 1997/04/10 14:18:03 wpaul Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +24,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -87,24 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -117,13 +104,55 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -177,13 +206,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<rpc/rpc_com.h>
 end_include
 
 begin_include
@@ -1263,7 +1286,11 @@ operator|->
 name|ypsetdom_domain
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 name|fromsin
 operator|=
@@ -1299,7 +1326,11 @@ argument_list|(
 name|transp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 break|break;
 case|case
@@ -1315,7 +1346,11 @@ argument_list|(
 name|transp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1334,7 +1369,11 @@ argument_list|(
 name|transp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1350,7 +1389,11 @@ argument_list|(
 name|transp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 name|bzero
 argument_list|(
@@ -1415,7 +1458,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -1873,12 +1920,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|char
-name|path
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
 name|struct
 name|timeval
 name|tv
@@ -1923,18 +1964,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|YPBINDLOCK
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|flock
@@ -1953,20 +1991,13 @@ name|errno
 operator|==
 name|EWOULDBLOCK
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Another ypbind is already running. Aborting.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"another ypbind is already running. Aborting"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* XXX domainname will be overriden if we use restricted mode */
 name|yp_get_default_domain
 argument_list|(
@@ -1983,20 +2014,13 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"domainname not set. Aborting.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"domainname not set. Aborting"
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -2206,18 +2230,13 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"fork"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|pmap_unset
@@ -2240,20 +2259,13 @@ name|udptransp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot create udp service.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot create udp service"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2270,20 +2282,13 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (YPBINDPROG, YPBINDVERS, udp).\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (YPBINDPROG, YPBINDVERS, udp)"
 argument_list|)
 expr_stmt|;
-block|}
 name|tcptransp
 operator|=
 name|svctcp_create
@@ -2301,20 +2306,13 @@ name|tcptransp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot create tcp service.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot create tcp service"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2331,20 +2329,13 @@ argument_list|,
 name|IPPROTO_TCP
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unable to register (YPBINDPROG, YPBINDVERS, tcp).\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to register (YPBINDPROG, YPBINDVERS, tcp)"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* build initial domain binding, make it "unsuccessful" */
 name|ypbindlist
 operator|=
@@ -2366,18 +2357,13 @@ name|ypbindlist
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"malloc"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|(
@@ -3290,7 +3276,7 @@ condition|(
 name|ypdb
 operator|->
 name|dom_vers
-operator|=
+operator|==
 operator|-
 literal|1
 operator|&&
@@ -3749,9 +3735,6 @@ decl_stmt|;
 name|CLIENT
 modifier|*
 name|client_handle
-decl_stmt|;
-name|time_t
-name|t
 decl_stmt|;
 name|interval
 operator|.
@@ -4365,7 +4348,7 @@ condition|(
 name|ypdb
 operator|->
 name|dom_vers
-operator|=
+operator|==
 operator|-
 literal|1
 operator|&&
