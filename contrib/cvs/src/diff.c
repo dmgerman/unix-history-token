@@ -2642,17 +2642,11 @@ name|NULL
 condition|)
 name|run_setup
 argument_list|(
-literal|"%s %s -L%s -L%s %s %s"
+literal|"%s %s %s %s"
 argument_list|,
 name|DIFF
 argument_list|,
 name|opts
-argument_list|,
-name|DEVNULL
-argument_list|,
-name|finfo
-operator|->
-name|fullname
 argument_list|,
 name|DEVNULL
 argument_list|,
@@ -2753,17 +2747,11 @@ block|}
 comment|/* FIXME: what if retcode> 0?  */
 name|run_setup
 argument_list|(
-literal|"%s %s -L%s -L%s %s %s"
+literal|"%s %s %s %s"
 argument_list|,
 name|DIFF
 argument_list|,
 name|opts
-argument_list|,
-name|DEVNULL
-argument_list|,
-name|finfo
-operator|->
-name|fullname
 argument_list|,
 name|DEVNULL
 argument_list|,
@@ -2862,15 +2850,11 @@ block|}
 comment|/* FIXME: what if retcode> 0?  */
 name|run_setup
 argument_list|(
-literal|"%s %s -L%s %s %s"
+literal|"%s %s %s %s"
 argument_list|,
 name|DIFF
 argument_list|,
 name|opts
-argument_list|,
-name|finfo
-operator|->
-name|fullname
 argument_list|,
 name|tmp
 argument_list|,
@@ -2888,7 +2872,7 @@ condition|)
 block|{
 name|run_setup
 argument_list|(
-literal|"%s%s -x,v/ %s %s -r%s -r%s -L%s"
+literal|"%s%s -x,v/ %s %s -r%s -r%s"
 argument_list|,
 name|Rcsbin
 argument_list|,
@@ -2908,10 +2892,6 @@ argument_list|,
 name|use_rev1
 argument_list|,
 name|use_rev2
-argument_list|,
-name|finfo
-operator|->
-name|fullname
 argument_list|)
 expr_stmt|;
 block|}
@@ -2919,7 +2899,7 @@ else|else
 block|{
 name|run_setup
 argument_list|(
-literal|"%s%s -x,v/ %s %s -r%s -L%s"
+literal|"%s%s -x,v/ %s %s -r%s"
 argument_list|,
 name|Rcsbin
 argument_list|,
@@ -2937,10 +2917,6 @@ operator|->
 name|options
 argument_list|,
 name|use_rev1
-argument_list|,
-name|finfo
-operator|->
-name|fullname
 argument_list|)
 expr_stmt|;
 block|}
