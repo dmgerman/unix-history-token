@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_input.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_input.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -318,6 +318,11 @@ modifier|*
 name|nsp
 decl_stmt|;
 name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
 name|mbuf
 modifier|*
 name|m0
@@ -344,12 +349,14 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-name|IF_DEQUEUE
+name|IF_DEQUEUEIF
 argument_list|(
 operator|&
 name|nsintrq
 argument_list|,
 name|m
+argument_list|,
+name|ifp
 argument_list|)
 expr_stmt|;
 name|splx
