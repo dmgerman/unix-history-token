@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.45 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1186,6 +1186,16 @@ name|int
 name|wy
 decl_stmt|;
 block|{
+specifier|static
+name|__LDATA
+name|blank
+init|=
+block|{
+literal|' '
+block|,
+literal|0
+block|}
+decl_stmt|;
 specifier|register
 name|int
 name|nlsp
@@ -1221,15 +1231,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|ce
-decl_stmt|;
-name|__LDATA
-name|blank
-init|=
-block|{
-literal|' '
-block|,
-literal|0
-block|}
 decl_stmt|;
 comment|/* Is the cursor still on the end of the last line? */
 if|if
