@@ -4853,6 +4853,8 @@ condition|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 literal|0
@@ -8523,6 +8525,8 @@ condition|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|vprint
@@ -10679,6 +10683,8 @@ condition|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 continue|continue;

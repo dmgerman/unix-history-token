@@ -445,6 +445,8 @@ operator|,
 name|VOP_ISLOCKED
 argument_list|(
 name|upperrootvp
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 argument_list|)
@@ -1347,6 +1349,8 @@ argument_list|(
 name|um
 operator|->
 name|um_uppervp
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 argument_list|)
@@ -1419,6 +1423,8 @@ argument_list|(
 name|um
 operator|->
 name|um_uppervp
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 argument_list|)

@@ -1137,6 +1137,8 @@ operator|&
 name|kernel_map
 operator|->
 name|lock
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{

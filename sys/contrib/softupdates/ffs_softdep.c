@@ -18085,6 +18085,8 @@ operator|!
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 operator|&&
 operator|(

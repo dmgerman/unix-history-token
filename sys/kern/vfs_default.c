@@ -919,7 +919,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -956,6 +956,10 @@ operator|(
 name|lockstatus
 argument_list|(
 name|l
+argument_list|,
+name|ap
+operator|->
+name|a_p
 argument_list|)
 operator|)
 return|;
@@ -1655,7 +1659,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1689,6 +1693,10 @@ argument_list|(
 name|vp
 operator|->
 name|v_vnlock
+argument_list|,
+name|ap
+operator|->
+name|a_p
 argument_list|)
 operator|)
 return|;

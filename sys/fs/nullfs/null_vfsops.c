@@ -523,6 +523,8 @@ argument_list|(
 name|mp
 operator|->
 name|mnt_vnodecovered
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -582,6 +584,8 @@ argument_list|(
 name|mp
 operator|->
 name|mnt_vnodecovered
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 name|vn_lock
@@ -1199,6 +1203,8 @@ condition|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{

@@ -1054,6 +1054,8 @@ condition|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 continue|continue;

@@ -2881,6 +2881,8 @@ condition|(
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 operator|||
 name|TAILQ_EMPTY

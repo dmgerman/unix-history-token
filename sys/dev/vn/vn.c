@@ -1429,6 +1429,8 @@ argument_list|(
 name|vn
 operator|->
 name|sc_vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{

@@ -852,6 +852,8 @@ operator|!
 name|VOP_ISLOCKED
 argument_list|(
 name|dvp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -889,6 +891,8 @@ operator|&&
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{

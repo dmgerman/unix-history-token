@@ -1624,6 +1624,8 @@ operator|,
 name|VOP_ISLOCKED
 argument_list|(
 name|upperdvp
+argument_list|,
+name|NULL
 argument_list|)
 operator|,
 name|uppervp
@@ -1645,6 +1647,8 @@ condition|?
 name|VOP_ISLOCKED
 argument_list|(
 name|uppervp
+argument_list|,
+name|NULL
 argument_list|)
 else|:
 operator|-
@@ -6520,6 +6524,8 @@ argument_list|(
 name|ap
 operator|->
 name|a_dvp
+argument_list|,
+name|NULL
 argument_list|)
 decl_stmt|;
 name|struct
@@ -6888,7 +6894,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * If no exclusive locks remain and we are holding an uppervp lock, 	 * remove the uppervp lock. 	 */
-block|if ((un->un_flags& UN_ULOCK)&&  	    lockstatus(&un->un_lock) != LK_EXCLUSIVE) { 		un->un_flags&= ~UN_ULOCK; 		VOP_UNLOCK(un->un_uppervp, LK_EXCLUSIVE, p); 	}
+block|if ((un->un_flags& UN_ULOCK)&&  	    lockstatus(&un->un_lock, NULL) != LK_EXCLUSIVE) { 		un->un_flags&= ~UN_ULOCK; 		VOP_UNLOCK(un->un_uppervp, LK_EXCLUSIVE, p); 	}
 endif|#
 directive|endif
 return|return

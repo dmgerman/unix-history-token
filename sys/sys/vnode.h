@@ -1610,7 +1610,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|if ((vp)&& IS_LOCKING_VFS(vp)&& !VOP_ISLOCKED(vp)) {	\ 	panic("%s: %p is not locked but should be", str, vp);	\     }
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&& !VOP_ISLOCKED(_vp, NULL))	\ 		panic("%s: %p is not locked but should be", str, _vp);	\ } while (0)
 end_define
 
 begin_define
@@ -1623,7 +1623,46 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|if ((vp)&& IS_LOCKING_VFS(vp)&& VOP_ISLOCKED(vp)) {	\ 	panic("%s: %p is locked but shouldn't be", str, vp);	\     }
+value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)) {				\ 		lockstate = VOP_ISLOCKED(_vp, curproc);			\ 		if (lockstate == LK_EXCLUSIVE)				\ 			panic("%s: %p is locked but should not be",	\ 			    str, _vp);					\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_VOP_ELOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|str
+parameter_list|)
+define|\
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, curproc) != LK_EXCLUSIVE)			\ 		panic("%s: %p is not exclusive locked but should be",	\ 		    str, _vp);						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_VOP_ELOCKED_OTHER
+parameter_list|(
+name|vp
+parameter_list|,
+name|str
+parameter_list|)
+define|\
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, curproc) != LK_EXCLOTHER)			\ 		panic("%s: %p is not exclusive locked by another proc",	\ 		    str, _vp);						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_VOP_SLOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|str
+parameter_list|)
+define|\
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, NULL) != LK_SHARED)			\ 		panic("%s: %p is not locked shared but should be",	\ 		    str, _vp);						\ } while (0)
 end_define
 
 begin_else

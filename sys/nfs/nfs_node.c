@@ -1301,7 +1301,7 @@ end_comment
 
 begin_comment
 unit|int nfs_islocked(ap) 	struct vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
 end_comment
 
 begin_endif

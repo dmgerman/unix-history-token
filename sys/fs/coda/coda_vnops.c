@@ -8095,6 +8095,10 @@ operator|&
 name|cp
 operator|->
 name|c_lock
+argument_list|,
+name|ap
+operator|->
+name|a_p
 argument_list|)
 operator|)
 return|;
