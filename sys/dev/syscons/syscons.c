@@ -15069,12 +15069,6 @@ name|flags
 operator|&
 name|SC_SPLASH_SCRN
 operator|)
-operator|&&
-operator|(
-name|flags
-operator|&
-name|SC_KERNEL_CONSOLE
-operator|)
 condition|)
 block|{
 comment|/* we are ready to put up the splash image! */
