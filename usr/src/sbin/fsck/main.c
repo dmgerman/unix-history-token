@@ -4,7 +4,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.18	(Berkeley)	%G%"
+literal|"@(#)main.c	2.19	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
