@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus_private.h,v 1.3 1998/07/22 08:35:50 dfr Exp $  */
+comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus_private.h,v 1.4 1998/11/14 21:58:41 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,38 @@ include|#
 directive|include
 file|<sys/bus.h>
 end_include
+
+begin_comment
+comment|/*  * Used to attach drivers to devclasses.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|driverlink
+modifier|*
+name|driverlink_t
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|driverlink
+block|{
+name|driver_t
+modifier|*
+name|driver
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|driverlink
+argument_list|)
+name|link
+expr_stmt|;
+comment|/* list of drivers in devclass */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Forward declarations  */
@@ -43,7 +75,7 @@ name|TAILQ_HEAD
 argument_list|(
 argument|driver_list
 argument_list|,
-argument|driver
+argument|driverlink
 argument_list|)
 name|driver_list_t
 expr_stmt|;
@@ -266,7 +298,11 @@ comment|/* device class which we are in */
 name|int
 name|unit
 decl_stmt|;
-specifier|const
+name|char
+modifier|*
+name|nameunit
+decl_stmt|;
+comment|/* name+unit e.g. foodev0 */
 name|char
 modifier|*
 name|desc
@@ -282,6 +318,25 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_SYSCTLS
+name|struct
+name|sysctl_oid
+name|oid
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|struct
+name|sysctl_oid_list
+name|oidlist
+index|[
+literal|1
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|DF_ENABLED
@@ -297,6 +352,16 @@ directive|define
 name|DF_WILDCARD
 value|4
 comment|/* unit was originally wildcard */
+define|#
+directive|define
+name|DF_DESCMALLOCED
+value|8
+comment|/* description was malloced */
+define|#
+directive|define
+name|DF_QUIET
+value|16
+comment|/* don't print verbose attach message */
 name|void
 modifier|*
 name|ivars

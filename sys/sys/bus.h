@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus.h,v 1.8 1999/01/16 17:44:08 dfr Exp $  */
+comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus.h,v 1.9 1999/03/06 16:52:04 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -185,13 +185,6 @@ modifier|*
 name|priv
 decl_stmt|;
 comment|/* driver private data */
-name|TAILQ_ENTRY
-argument_list|(
-argument|driver
-argument_list|)
-name|link
-expr_stmt|;
-comment|/* list of devices on bus */
 name|device_ops_t
 name|ops
 decl_stmt|;
@@ -617,6 +610,52 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|bus_setup_intr
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|,
+name|driver_intr_t
+name|handler
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|cookiep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bus_teardown_intr
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|,
+name|void
+modifier|*
+name|cookie
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Access functions for device.  */
 end_comment
@@ -825,6 +864,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|device_get_nameunit
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|device_get_softc
@@ -857,16 +908,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|device_is_enabled
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|device_is_alive
 parameter_list|(
 name|device_t
@@ -878,6 +919,26 @@ end_function_decl
 begin_comment
 comment|/* did probe succeed? */
 end_comment
+
+begin_function_decl
+name|int
+name|device_is_enabled
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|device_is_quiet
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -926,7 +987,32 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|device_quiet
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|device_set_desc
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|desc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|device_set_desc_copy
 parameter_list|(
 name|device_t
 name|dev
@@ -981,6 +1067,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|device_unbusy
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|device_verbose
 parameter_list|(
 name|device_t
 name|dev
