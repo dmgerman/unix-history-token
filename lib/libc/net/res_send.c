@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.18 1997/06/28 04:19:52 peter Exp $"
+literal|"$Id: res_send.c,v 1.19 1997/09/14 09:44:34 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2593,18 +2593,22 @@ operator|=
 name|oerrno
 expr_stmt|;
 block|}
+comment|/* XXX why does nosys() return EINVAL? */
 if|if
 condition|(
 name|n
 operator|<
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
+operator|(
 name|errno
 operator|==
 name|ENOSYS
+operator|||
+name|errno
+operator|==
+name|EINVAL
+operator|)
 condition|)
 block|{
 name|use_poll
@@ -2615,6 +2619,24 @@ goto|goto
 name|othersyscall
 goto|;
 block|}
+elseif|else
+if|if
+condition|(
+name|use_poll
+operator|==
+literal|1
+condition|)
+name|use_poll
+operator|=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|errno
@@ -2640,16 +2662,6 @@ goto|goto
 name|next_ns
 goto|;
 block|}
-if|if
-condition|(
-name|use_poll
-operator|==
-literal|1
-condition|)
-name|use_poll
-operator|=
-literal|2
-expr_stmt|;
 block|}
 else|else
 block|{
