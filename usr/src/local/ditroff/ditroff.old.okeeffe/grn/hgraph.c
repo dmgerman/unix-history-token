@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.12	(Berkeley) 84/05/25  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.13	(Berkeley) 84/10/08  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -81,11 +81,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|stipple_index
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* stipple font index for stipples 1 - 8 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|stipple
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* stipple type (cf or ug) */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -220,6 +236,12 @@ literal|1
 decl_stmt|;
 comment|/* flag to prevent multipe messages about no */
 comment|/* stipple font requested from being printed */
+name|float
+name|firstx
+decl_stmt|,
+name|firsty
+decl_stmt|;
+comment|/* for completing polygons */
 if|if
 condition|(
 operator|!
@@ -504,9 +526,14 @@ name|printf
 argument_list|(
 literal|"\\D'p %d"
 argument_list|,
+name|stipple_index
+index|[
 name|element
 operator|->
 name|size
+operator|-
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -516,9 +543,14 @@ name|printf
 argument_list|(
 literal|"\\D'P %d"
 argument_list|,
+name|stipple_index
+index|[
 name|element
 operator|->
 name|size
+operator|-
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -548,14 +580,24 @@ literal|"\\D'p 0"
 argument_list|)
 expr_stmt|;
 block|}
+name|firstx
+operator|=
+name|p1
+operator|->
+name|x
+expr_stmt|;
+name|firsty
+operator|=
+name|p1
+operator|->
+name|y
+expr_stmt|;
 while|while
 condition|(
 operator|!
 name|Nullpoint
 argument_list|(
 operator|(
-name|p1
-operator|=
 name|PTNextPoint
 argument_list|(
 name|p1
@@ -564,6 +606,13 @@ operator|)
 argument_list|)
 condition|)
 block|{
+name|p1
+operator|=
+name|PTNextPoint
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 name|dx
 argument_list|(
 operator|(
@@ -587,6 +636,43 @@ expr_stmt|;
 block|}
 comment|/* end while */
 empty_stmt|;
+comment|/* close polygon if not done so by user */
+if|if
+condition|(
+operator|(
+name|firstx
+operator|!=
+name|p1
+operator|->
+name|x
+operator|)
+operator|||
+operator|(
+name|firsty
+operator|!=
+name|p1
+operator|->
+name|y
+operator|)
+condition|)
+block|{
+name|dx
+argument_list|(
+operator|(
+name|double
+operator|)
+name|firstx
+argument_list|)
+expr_stmt|;
+name|dy
+argument_list|(
+operator|(
+name|double
+operator|)
+name|firsty
+argument_list|)
+expr_stmt|;
+block|}
 name|putchar
 argument_list|(
 literal|'\''
