@@ -1714,6 +1714,9 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 return|return
 literal|0
