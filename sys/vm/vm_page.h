@@ -1001,6 +1001,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* page allocation classes: */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1025,6 +1029,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_ALLOC_CLASS_MASK
+value|3
+end_define
+
+begin_comment
+comment|/* page allocation flags: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_WIRED
+value|0x20
+end_define
+
+begin_comment
+comment|/* vm_page_alloc() only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VM_ALLOC_ZERO
 value|0x40
 end_define
@@ -1035,6 +1061,10 @@ directive|define
 name|VM_ALLOC_RETRY
 value|0x80
 end_define
+
+begin_comment
+comment|/* vm_page_grab() only */
+end_comment
 
 begin_function_decl
 name|void

@@ -5613,7 +5613,9 @@ name|kptobj
 argument_list|,
 name|pindex
 argument_list|,
-name|VM_ALLOC_SYSTEM
+name|VM_ALLOC_INTERRUPT
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5640,11 +5642,6 @@ argument_list|)
 expr_stmt|;
 name|nklev2
 operator|++
-expr_stmt|;
-name|vm_page_wire
-argument_list|(
-name|nkpg
-argument_list|)
 expr_stmt|;
 name|pmap_zero_page
 argument_list|(
@@ -5760,7 +5757,9 @@ name|kptobj
 argument_list|,
 name|nklev3
 argument_list|,
-name|VM_ALLOC_SYSTEM
+name|VM_ALLOC_INTERRUPT
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 if|if
@@ -5775,11 +5774,6 @@ argument_list|)
 expr_stmt|;
 name|nklev3
 operator|++
-expr_stmt|;
-name|vm_page_wire
-argument_list|(
-name|nkpg
-argument_list|)
 expr_stmt|;
 name|pmap_zero_page
 argument_list|(
