@@ -170,6 +170,12 @@ file|<dev/lnc/if_lncreg.h>
 end_include
 
 begin_decl_stmt
+name|devclass_t
+name|lnc_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 specifier|const
