@@ -99,6 +99,11 @@ argument_list|,
 literal|0644
 argument_list|)
 expr_stmt|;
+else|else
+name|RunningAsInit
+operator|=
+name|TRUE
+expr_stmt|;
 name|term
 operator|=
 name|getenv
