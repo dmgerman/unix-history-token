@@ -641,6 +641,11 @@ block|}
 block|}
 name|fail
 label|:
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
