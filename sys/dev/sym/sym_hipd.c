@@ -7639,8 +7639,11 @@ name|device_id
 operator|==
 name|PCI_ID_LSI53C1010_2
 operator|&&
-comment|/* np->revision_id< 0xff */
-literal|1
+name|np
+operator|->
+name|revision_id
+operator|<
+literal|0x1
 operator|&&
 name|np
 operator|->
@@ -11535,8 +11538,11 @@ name|device_id
 operator|==
 name|PCI_ID_LSI53C1010
 operator|&&
-comment|/* np->revision_id< 0xff */
-literal|1
+name|np
+operator|->
+name|revision_id
+operator|<
+literal|0x2
 condition|)
 name|np
 operator|->
@@ -11936,12 +11942,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+operator|(
 name|INB
 argument_list|(
 name|nc_gpreg
 argument_list|)
 operator|&
 literal|0x08
+operator|)
 condition|)
 name|np
 operator|->
