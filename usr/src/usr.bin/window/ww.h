@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.5 83/08/17	  */
+comment|/*  *	@(#)ww.h	3.6 83/08/17	  */
 end_comment
 
 begin_include
@@ -628,6 +628,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* actually supported modes */
+end_comment
+
+begin_decl_stmt
+name|char
+name|wwwrap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* terminal has auto wrap around */
 end_comment
 
 begin_decl_stmt

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinschar.c	3.5 83/08/17"
+literal|"@(#)wwinschar.c	3.6 83/08/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,6 +451,12 @@ name|col
 operator|)
 operator|/
 literal|2
+operator|&&
+name|col
+operator|!=
+name|wwncol
+operator|-
+literal|1
 condition|)
 block|{
 specifier|register
