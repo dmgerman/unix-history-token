@@ -1016,7 +1016,7 @@ operator|*
 operator|)
 name|context
 decl_stmt|;
-name|ACPI_FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 operator|(
 name|char
@@ -1026,6 +1026,8 @@ operator|(
 name|uintptr_t
 operator|)
 name|__func__
+argument_list|,
+name|context
 argument_list|)
 expr_stmt|;
 if|if
@@ -1050,7 +1052,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|return_VALUE
+name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
 argument_list|)
