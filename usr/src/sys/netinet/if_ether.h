@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -222,12 +222,6 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* ethernet address */
-name|struct
-name|mbuf
-modifier|*
-name|at_hold
-decl_stmt|;
-comment|/* last packet until resolved/timeout */
 name|u_char
 name|at_timer
 decl_stmt|;
@@ -236,6 +230,12 @@ name|u_char
 name|at_flags
 decl_stmt|;
 comment|/* flags */
+name|struct
+name|mbuf
+modifier|*
+name|at_hold
+decl_stmt|;
+comment|/* last packet until resolved/timeout */
 block|}
 struct|;
 end_struct
