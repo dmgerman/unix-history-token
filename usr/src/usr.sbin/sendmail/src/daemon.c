@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.9 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.10 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.9 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.10 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3247,13 +3247,6 @@ name|sa_family
 operator|==
 name|AF_INET
 condition|)
-block|{
-specifier|extern
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
 return|return
 name|inet_ntoa
 argument_list|(
@@ -3269,7 +3262,6 @@ operator|->
 name|sin_addr
 argument_list|)
 return|;
-block|}
 endif|#
 directive|endif
 comment|/* unknown family -- just dump bytes */
