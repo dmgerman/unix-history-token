@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tune.h	7.3	%G%  */
+comment|/* sccs id:	@(#)ex_tune.h	7.4	%G%  */
 end_comment
 
 begin_comment
@@ -355,6 +355,12 @@ end_comment
 begin_comment
 comment|/*  * Except on VMUNIX, these are a ridiculously small due to the  * lousy arglist processing implementation which fixes core  * proportional to them.  Argv (and hence NARGS) is really unnecessary,  * and argument character space not needed except when  * arguments exist.  Argument lists should be saved before the "zero"  * of the incore line information and could then  * be reasonably large.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NCARGS
+end_undef
 
 begin_ifndef
 ifndef|#
