@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getch.c	5.1 (Berkeley) %G%"
+literal|"@(#)getch.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,10 +173,18 @@ argument_list|,
 name|win
 operator|->
 name|_cury
+operator|+
+name|win
+operator|->
+name|_begy
 argument_list|,
 name|win
 operator|->
 name|_curx
+operator|+
+name|win
+operator|->
+name|_begx
 argument_list|,
 name|inp
 argument_list|)
