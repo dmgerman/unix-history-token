@@ -1123,6 +1123,13 @@ name|priv
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|FREE
+argument_list|(
+name|priv
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
 name|NG_NODE_SET_PRIVATE
 argument_list|(
 name|node
