@@ -45,34 +45,6 @@ begin_comment
 comment|/* Return the address of the .dynamic section in the dynamic linker. */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|rtld_dynamic
-parameter_list|(
-name|obj
-parameter_list|)
-define|\
-value|((const Elf_Dyn *)((obj)->relocbase + (Elf_Addr)&_DYNAMIC))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -81,21 +53,6 @@ parameter_list|(
 name|obj
 parameter_list|)
 value|(&_DYNAMIC)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|rtld_dynamic
-parameter_list|(
-name|obj
-parameter_list|)
-value|(const Elf_Dyn *)((obj)->relocbase)
 end_define
 
 begin_function_decl
@@ -155,6 +112,78 @@ define|\
 value|(((InitFunc)(target))())
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|unsigned
+name|long
+name|ti_module
+decl_stmt|;
+name|unsigned
+name|long
+name|ti_offset
+decl_stmt|;
+block|}
+name|tls_index
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|round
+parameter_list|(
+name|size
+parameter_list|,
+name|align
+parameter_list|)
+define|\
+value|(((size) + (align) - 1)& ~((align) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|calculate_first_tls_offset
+parameter_list|(
+name|size
+parameter_list|,
+name|align
+parameter_list|)
+define|\
+value|round(size, align)
+end_define
+
+begin_define
+define|#
+directive|define
+name|calculate_tls_offset
+parameter_list|(
+name|prev_offset
+parameter_list|,
+name|prev_size
+parameter_list|,
+name|size
+parameter_list|,
+name|align
+parameter_list|)
+define|\
+value|round(prev_offset + prev_size, align)
+end_define
+
+begin_define
+define|#
+directive|define
+name|calculate_tls_end
+parameter_list|(
+name|off
+parameter_list|,
+name|size
+parameter_list|)
+value|((off) + (size))
+end_define
+
 begin_comment
 comment|/*  * Lazy binding entry point, called via PLT.  */
 end_comment
@@ -164,6 +193,19 @@ name|void
 name|_rtld_bind_start
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|__tls_get_addr
+parameter_list|(
+name|tls_index
+modifier|*
+name|ti
 parameter_list|)
 function_decl|;
 end_function_decl
