@@ -984,6 +984,8 @@ name|strlen
 argument_list|(
 name|src
 argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* XXX allocation is too big, realloc?*/
