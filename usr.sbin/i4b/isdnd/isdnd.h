@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main header file  *	-----------------------------  *  * $FreeBSD$  *  *      last edit-date: [Thu Dec 27 10:16:53 2001]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main header file  *	-----------------------------  *  * $FreeBSD$  *  *      last edit-date: [Tue Mar 26 14:36:20 2002]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -879,7 +879,41 @@ index|[
 name|TELNO_MAX
 index|]
 decl_stmt|;
+comment|/* number	*/
+name|char
+name|subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* subaddr	*/
+block|}
+name|number_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	this struct describes the numbers to try to dial out  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+name|number
+index|[
+name|TELNO_MAX
+index|]
+decl_stmt|;
 comment|/* remote number to dial	*/
+name|char
+name|subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* remote subaddr	*/
 name|int
 name|flag
 decl_stmt|;
@@ -913,6 +947,13 @@ name|TELNO_MAX
 index|]
 decl_stmt|;
 comment|/* calling party number		*/
+name|char
+name|subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* calling party subaddr	*/
 block|}
 name|incoming_number_t
 typedef|;
@@ -989,6 +1030,10 @@ name|int
 name|remote_numbers_count
 decl_stmt|;
 comment|/* number of remote numbers	*/
+name|int
+name|remote_subaddr_count
+decl_stmt|;
+comment|/* number of remote subaddr	*/
 define|#
 directive|define
 name|MAXRNUMBERS
@@ -1020,18 +1065,12 @@ directive|define
 name|RNH_FIRST
 value|2
 comment|/* always use first number for next call    */
-name|char
+name|number_t
 name|local_phone_dialout
-index|[
-name|TELNO_MAX
-index|]
 decl_stmt|;
 comment|/* our number to tell remote*/
-name|char
+name|number_t
 name|local_phone_incoming
-index|[
-name|TELNO_MAX
-index|]
 decl_stmt|;
 comment|/* answer calls for this local number */
 define|#
@@ -1042,6 +1081,10 @@ name|int
 name|incoming_numbers_count
 decl_stmt|;
 comment|/* number of incoming allowed numbers */
+name|int
+name|incoming_subaddr_count
+decl_stmt|;
+comment|/* number of incoming allowed subaddr */
 name|incoming_number_t
 name|remote_phone_incoming
 index|[
@@ -1284,6 +1327,10 @@ define|#
 directive|define
 name|DIR_OUTONLY
 value|2
+name|int
+name|usesubaddr
+decl_stmt|;
+comment|/* use subaddresses		*/
 name|int
 name|budget_callbackperiod
 decl_stmt|;
@@ -1583,22 +1630,16 @@ name|int
 name|hangup
 decl_stmt|;
 comment|/* flag, hangup connection asap */
-name|char
+name|number_t
 name|real_phone_incoming
-index|[
-name|TELNO_MAX
-index|]
 decl_stmt|;
 comment|/* real remote telno in case of wildcard */
 name|int
 name|last_remote_number
 decl_stmt|;
 comment|/* index of last used dialout number*/
-name|char
+name|number_t
 name|remote_phone_dialout
-index|[
-name|TELNO_MAX
-index|]
 decl_stmt|;
 comment|/* used remote number to dial */
 name|int
@@ -3370,18 +3411,9 @@ name|cfg_entry_t
 modifier|*
 name|find_by_device_for_dialoutnumber
 parameter_list|(
-name|int
-name|drivertype
-parameter_list|,
-name|int
-name|driverunit
-parameter_list|,
-name|int
-name|cmdlen
-parameter_list|,
-name|char
+name|msg_dialoutnumber_ind_t
 modifier|*
-name|cmd
+name|mp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Sun Mar 17 10:09:55 2002]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Tue Mar 26 14:44:15 2002]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -14,60 +14,6 @@ define|#
 directive|define
 name|_I4B_IOCTL_H_
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_MACHINE_TYPES_H_
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<machine/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _MACHINE_TYPES_H_ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	version and release number for isdn4bsd package  *---------------------------------------------------------------------------*/
@@ -88,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|1
+value|2
 end_define
 
 begin_comment
@@ -99,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|STEP
-value|1
+value|0
 end_define
 
 begin_comment
@@ -846,6 +792,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SUBADDR_MAX
+value|21
+end_define
+
+begin_comment
+comment|/* max length of a subaddress (+ '\0')        */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DISPLAY_MAX
 value|91
 end_define
@@ -1248,12 +1205,26 @@ index|]
 decl_stmt|;
 comment|/* destination telno	*/
 name|char
+name|dst_subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* dest subaddr */
+name|char
 name|src_telno
 index|[
 name|TELNO_MAX
 index|]
 decl_stmt|;
 comment|/* source telno		*/
+name|char
+name|src_subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* src subaddr	*/
 name|int
 name|scr_ind
 decl_stmt|;
@@ -1464,6 +1435,10 @@ name|int
 name|cmdlen
 decl_stmt|;
 comment|/* length of string	*/
+name|int
+name|subaddrlen
+decl_stmt|;
+comment|/* length of subaddr	*/
 name|char
 name|cmd
 index|[
@@ -1471,6 +1446,13 @@ name|TELNO_MAX
 index|]
 decl_stmt|;
 comment|/* the number to dial	*/
+name|char
+name|subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* dest subaddr	*/
 block|}
 name|msg_dialoutnumber_ind_t
 typedef|;
@@ -1937,12 +1919,26 @@ index|]
 decl_stmt|;
 comment|/* destination telephone no  */
 name|char
+name|dst_subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* dest subaddr      */
+name|char
 name|src_telno
 index|[
 name|TELNO_MAX
 index|]
 decl_stmt|;
 comment|/* source telephone number   */
+name|char
+name|src_subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* source subaddr    */
 name|char
 name|keypad
 index|[

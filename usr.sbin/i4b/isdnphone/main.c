@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isdnphone - main module  *	=======================  *  * $FreeBSD$  *  *      last edit-date: [Wed Oct 17 14:08:44 2001]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1999, 2002 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isdnphone - main module  *	=======================  *  * $FreeBSD$  *  *      last edit-date: [Tue Mar 26 14:39:27 2002]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -156,6 +156,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|opt_s
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|opt_h
 init|=
 literal|0
@@ -168,6 +173,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|number
+init|=
+literal|""
+decl_stmt|;
+name|char
+modifier|*
+name|subaddr
 init|=
 literal|""
 decl_stmt|;
@@ -189,7 +200,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dhk:n:u:"
+literal|"dhk:n:s:u:"
 argument_list|)
 operator|)
 operator|!=
@@ -238,6 +249,18 @@ operator|=
 name|optarg
 expr_stmt|;
 name|opt_n
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|subaddr
+operator|=
+name|optarg
+expr_stmt|;
+name|opt_s
 operator|=
 literal|1
 expr_stmt|;
@@ -327,6 +350,22 @@ condition|(
 name|opt_n
 condition|)
 block|{
+if|if
+condition|(
+name|opt_s
+condition|)
+name|sprintf
+argument_list|(
+name|commandbuffer
+argument_list|,
+literal|"D%s*%s"
+argument_list|,
+name|number
+argument_list|,
+name|subaddr
+argument_list|)
+expr_stmt|;
+else|else
 name|sprintf
 argument_list|(
 name|commandbuffer

@@ -610,12 +610,26 @@ index|]
 decl_stmt|;
 comment|/* destination number	*/
 name|u_char
+name|dst_subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* destination subaddr	*/
+name|u_char
 name|src_telno
 index|[
 name|TELNO_MAX
 index|]
 decl_stmt|;
 comment|/* source number	*/
+name|u_char
+name|src_subaddr
+index|[
+name|SUBADDR_MAX
+index|]
+decl_stmt|;
+comment|/* source subaddr	*/
 name|int
 name|scr_ind
 decl_stmt|;
