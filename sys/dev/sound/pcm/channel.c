@@ -5205,6 +5205,14 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+if|if
+condition|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHN_F_TRIGGERED
+condition|)
 name|chn_trigger
 argument_list|(
 name|c
