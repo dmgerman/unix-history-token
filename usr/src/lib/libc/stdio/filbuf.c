@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)filbuf.c	4.1 (Berkeley) %G% */
+comment|/* @(#)filbuf.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -38,6 +38,20 @@ index|[
 name|_NFILE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|iop
+operator|->
+name|_flag
+operator|&
+name|_IORW
+condition|)
+name|iop
+operator|->
+name|_flag
+operator||=
+name|_IOREAD
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -210,12 +224,29 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|iop
 operator|->
 name|_flag
 operator||=
 name|_IOEOF
 expr_stmt|;
+if|if
+condition|(
+name|iop
+operator|->
+name|_flag
+operator|&
+name|_IORW
+condition|)
+name|iop
+operator|->
+name|_flag
+operator|&=
+operator|~
+name|_IOREAD
+expr_stmt|;
+block|}
 else|else
 name|iop
 operator|->

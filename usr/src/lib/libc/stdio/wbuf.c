@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)wbuf.c	4.1 (Berkeley) %G% */
+comment|/* @(#)wbuf.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -51,6 +51,29 @@ name|char
 name|_sobuf
 index|[]
 decl_stmt|;
+if|if
+condition|(
+name|iop
+operator|->
+name|_flag
+operator|&
+name|_IORW
+condition|)
+block|{
+name|iop
+operator|->
+name|_flag
+operator||=
+name|_IOWRT
+expr_stmt|;
+name|iop
+operator|->
+name|_flag
+operator|&=
+operator|~
+name|_IOEOF
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -573,6 +596,8 @@ operator|(
 name|_IOREAD
 operator||
 name|_IOWRT
+operator||
+name|_IORW
 operator|)
 operator|&&
 operator|(
@@ -666,6 +691,8 @@ operator||
 name|_IOEOF
 operator||
 name|_IOSTRG
+operator||
+name|_IORW
 operator|)
 expr_stmt|;
 name|iop

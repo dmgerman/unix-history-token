@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fdopen.c	4.1 (Berkeley) %G% */
+comment|/* @(#)fdopen.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -62,6 +62,8 @@ operator|(
 name|_IOREAD
 operator||
 name|_IOWRT
+operator||
+name|_IORW
 operator|)
 condition|;
 name|iop
@@ -128,6 +130,34 @@ name|_flag
 operator||=
 name|_IOREAD
 expr_stmt|;
+if|if
+condition|(
+name|mode
+index|[
+literal|1
+index|]
+operator|==
+literal|'+'
+condition|)
+block|{
+name|iop
+operator|->
+name|_flag
+operator|&=
+operator|~
+operator|(
+name|_IOREAD
+operator||
+name|_IOWRT
+operator|)
+expr_stmt|;
+name|iop
+operator|->
+name|_flag
+operator||=
+name|_IORW
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|iop
