@@ -4875,6 +4875,14 @@ literal|"Intel 82443GX (440 GX) PCI-PCI (AGP) bridge"
 operator|)
 return|;
 case|case
+literal|0x11318086
+case|:
+return|return
+operator|(
+literal|"Intel 82815 (i815 GMCH) PCI-PCI (AGP) bridge"
+operator|)
+return|;
+case|case
 literal|0x84cb8086
 case|:
 return|return
@@ -4904,6 +4912,14 @@ case|:
 return|return
 operator|(
 literal|"Intel 82801AB (ICH0) Hub to PCI bridge"
+operator|)
+return|;
+case|case
+literal|0x244E8086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA (ICH2) Hub to PCI bridge"
 operator|)
 return|;
 comment|/* VLSI -- vendor 0x1004 */
@@ -5744,6 +5760,14 @@ operator|(
 literal|"Intel 82801AB (ICH0) PCI to LPC bridge"
 operator|)
 return|;
+case|case
+literal|0x24408086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA (ICH2) PCI to LPC bridge"
+operator|)
+return|;
 comment|/* VLSI -- vendor 0x1004 */
 case|case
 literal|0x00061004
@@ -6273,6 +6297,22 @@ case|:
 return|return
 operator|(
 literal|"Intel 82801AB (ICH0) USB controller"
+operator|)
+return|;
+case|case
+literal|0x24428086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA (ICH2) USB controller #1"
+operator|)
+return|;
+case|case
+literal|0x24448086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA (ICH2) USB controller #2"
 operator|)
 return|;
 comment|/* VIA Technologies -- vendor 0x1106 (0x1107 on the Apollo Master) */
@@ -6868,6 +6908,14 @@ literal|"Intel 82810E (i810E GMCH) Host To Hub bridge"
 operator|)
 return|;
 case|case
+literal|0x11308086
+case|:
+return|return
+operator|(
+literal|"Intel 82815 (i815 GMCH) Host To Hub bridge"
+operator|)
+return|;
+case|case
 literal|0x24158086
 case|:
 return|return
@@ -6884,6 +6932,22 @@ literal|"Intel 82801AB (ICH0) AC'97 Audio Controller"
 operator|)
 return|;
 case|case
+literal|0x24458086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA (ICH2) AC'97 Audio Controller"
+operator|)
+return|;
+case|case
+literal|0x24468086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA (ICH2) AC'97 Modem Controller"
+operator|)
+return|;
+case|case
 literal|0x71958086
 case|:
 return|return
@@ -6897,6 +6961,14 @@ case|:
 return|return
 operator|(
 literal|"Intel 82443MX SMBus and power management controller"
+operator|)
+return|;
+case|case
+literal|0x24438086
+case|:
+return|return
+operator|(
+literal|"Intel 82801BA (ICH2) SMBus controller"
 operator|)
 return|;
 comment|/* Sony -- vendor 0x104d */
