@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)icheck.c	5.8 (Berkeley) %G%"
+literal|"@(#)icheck.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,6 +446,10 @@ init|;
 name|i
 operator|<
 name|NB
+operator|&&
+name|argc
+operator|>=
+literal|2
 condition|;
 name|i
 operator|++
