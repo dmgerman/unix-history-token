@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_mbuf_frag_test.h"
+file|"opt_mbuf_stress_test.h"
 end_include
 
 begin_include
@@ -312,7 +312,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|MBUF_FRAG_TEST
+name|MBUF_STRESS_TEST
 end_ifdef
 
 begin_decl_stmt
@@ -3962,7 +3962,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|MBUF_FRAG_TEST
+name|MBUF_STRESS_TEST
 if|if
 condition|(
 name|mbuf_frag_size
