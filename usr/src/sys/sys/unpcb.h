@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)unpcb.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)unpcb.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Protocol control block for an active  * instance of a UNIX internal protocol.  *  * A socket may be associated with an inode in the  * file system.  If so, the unp_inode pointer holds  * a reference count to this inode, which should be irele'd  * when the socket goes away.  *  * A socket may be connected to another socket, in which  * case the control block of the socket to which it is connected  * is given by unp_conn.  *  * A socket may be referenced by a number of sockets (e.g. several  * sockets may be connected to a datagram socket.)  These sockets  * are in a linked list starting with unp_refs, linked through  * unp_nextref and null-terminated.  Note that a socket may be referenced  * by a number of other sockets and may also reference a socket (not  * necessarily one which is referencing it).  This generates  * the need for unp_refs and unp_nextref to be separate fields.  */
+comment|/*  * Protocol control block for an active  * instance of a UNIX internal protocol.  *  * A socket may be associated with an inode in the  * file system.  If so, the unp_inode pointer holds  * a reference count to this inode, which should be irele'd  * when the socket goes away.  *  * A socket may be connected to another socket, in which  * case the control block of the socket to which it is connected  * is given by unp_conn.  *  * A socket may be referenced by a number of sockets (e.g. several  * sockets may be connected to a datagram socket.)  These sockets  * are in a linked list starting with unp_refs, linked through  * unp_nextref and null-terminated.  Note that a socket may be referenced  * by a number of other sockets and may also reference a socket (not  * necessarily one which is referencing it).  This generates  * the need for unp_refs and unp_nextref to be separate fields.  *  * Stream sockets keep copies of receive sockbuf sb_cc and sb_mbcnt  * so that changes in the sockbuf may be computed to modify  * back pressure on the sender accordingly.  */
 end_comment
 
 begin_struct
@@ -23,6 +23,10 @@ modifier|*
 name|unp_inode
 decl_stmt|;
 comment|/* if associated with file */
+name|ino_t
+name|unp_ino
+decl_stmt|;
+comment|/* fake inode number */
 name|struct
 name|unpcb
 modifier|*
@@ -44,9 +48,17 @@ comment|/* link in unp_refs list */
 name|struct
 name|mbuf
 modifier|*
-name|unp_remaddr
+name|unp_addr
 decl_stmt|;
-comment|/* address of connected socket */
+comment|/* bound address of socket */
+name|int
+name|unp_cc
+decl_stmt|;
+comment|/* copy of rcv.sb_cc */
+name|int
+name|unp_mbcnt
+decl_stmt|;
+comment|/* copy of rcv.sb_mbcnt */
 block|}
 struct|;
 end_struct
