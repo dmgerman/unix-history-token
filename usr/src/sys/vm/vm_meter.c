@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.11	81/04/28	*/
+comment|/*	vm_meter.c	4.12	81/06/07	*/
 end_comment
 
 begin_include
@@ -296,7 +296,7 @@ operator|)
 operator|/
 literal|3
 expr_stmt|;
-comment|/* 	 * Clock to scan using max of ~~15% of processor time for sampling, 	 *     this estimated to allow maximum of 300 samples per second. 	 * This yields a ``fastscan'' of roughly (with CLSIZE=2): 	 *<=1m	2m	3m	4m>=6m 	 * 	5s	6s	7s	13s	20s 	 */
+comment|/* 	 * Clock to scan using max of ~~10% of processor time for sampling, 	 *     this estimated to allow maximum of 200 samples per second. 	 * This yields a ``fastscan'' of roughly (with CLSIZE=2): 	 *<=1m	2m	3m	4m	8m 	 * 	5s	10s	15s	20s	40s 	 */
 if|if
 condition|(
 name|nswdev
@@ -336,7 +336,7 @@ operator|/
 name|CLSIZE
 operator|)
 operator|/
-literal|300
+literal|200
 expr_stmt|;
 if|if
 condition|(
@@ -347,16 +347,6 @@ condition|)
 name|fastscan
 operator|=
 literal|5
-expr_stmt|;
-if|if
-condition|(
-name|fastscan
-operator|>
-name|maxslp
-condition|)
-name|fastscan
-operator|=
-name|maxslp
 expr_stmt|;
 if|if
 condition|(
@@ -374,7 +364,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* 	 * Set slow scan time to 1/3 the fast scan time but at most 	 * maxslp (a macroscopic slow). 	 */
+comment|/* 	 * Set slow scan time to 1/2 the fast scan time. 	 */
 if|if
 condition|(
 name|slowscan
@@ -383,19 +373,9 @@ literal|0
 condition|)
 name|slowscan
 operator|=
-literal|3
+literal|2
 operator|*
 name|fastscan
-expr_stmt|;
-if|if
-condition|(
-name|slowscan
-operator|>
-name|maxslp
-condition|)
-name|slowscan
-operator|=
-name|maxslp
 expr_stmt|;
 if|#
 directive|if
