@@ -3323,6 +3323,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TC_DEVICEID_HURRICANE_555
+value|0x5055
+end_define
+
+begin_define
+define|#
+directive|define
 name|TC_DEVICEID_HURRICANE_556
 value|0x6055
 end_define
