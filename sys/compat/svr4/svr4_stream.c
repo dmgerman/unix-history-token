@@ -264,7 +264,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -287,7 +287,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9225,14 +9225,14 @@ begin_function
 name|int
 name|svr4_sys_getmsg
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|svr4_sys_getmsg_args
@@ -9284,7 +9284,7 @@ name|error
 operator|=
 name|svr4_do_getmsg
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|uap
 argument_list|,
