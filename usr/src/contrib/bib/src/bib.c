@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bib.c	2.7	%G%"
+literal|"@(#)bib.c	2.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +278,8 @@ decl_stmt|,
 name|doacite
 decl_stmt|,
 name|sort
+decl_stmt|,
+name|max_klen
 decl_stmt|,
 name|personal
 decl_stmt|;
@@ -2014,7 +2016,7 @@ name|huntstr
 argument_list|,
 name|file
 argument_list|,
-literal|6
+name|max_klen
 argument_list|,
 name|common
 argument_list|)
@@ -2274,12 +2276,12 @@ name|ncites
 operator|=
 literal|0
 expr_stmt|;
+do|do
+block|{
 name|neg
 operator|=
 literal|1
 expr_stmt|;
-do|do
-block|{
 name|n
 operator|=
 literal|0
