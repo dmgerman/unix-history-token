@@ -37025,11 +37025,14 @@ operator|.
 name|csum_data
 operator|+
 name|IPPROTO_TCP
-argument_list|)
 operator|+
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_len
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
