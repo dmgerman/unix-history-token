@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.36 1998/12/14 18:09:13 luigi Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.36.2.1 1999/08/16 17:29:51 luigi Exp $  */
 end_comment
 
 begin_ifndef
@@ -196,6 +196,22 @@ modifier|*
 name|next_rule_ptr
 decl_stmt|;
 comment|/* next rule in case of match */
+name|uid_t
+name|fw_uid
+decl_stmt|;
+comment|/* uid to match */
+name|gid_t
+name|fw_gid
+decl_stmt|;
+comment|/* gid to match */
+name|int
+name|fw_logamount
+decl_stmt|;
+comment|/* amount to log */
+name|u_int64_t
+name|fw_loghighest
+decl_stmt|;
+comment|/* highest number packet to log */
 block|}
 struct|;
 end_struct
@@ -584,6 +600,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_UID
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* filter by uid			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_GID
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* filter by gid			*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_RND_MATCH
 value|0x00800000
 end_define
@@ -596,7 +634,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_MASK
-value|0x009FFFFF
+value|0x00FFFFFF
 end_define
 
 begin_comment
