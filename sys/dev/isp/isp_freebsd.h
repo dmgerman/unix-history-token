@@ -801,12 +801,129 @@ end_define
 begin_define
 define|#
 directive|define
-name|XS_INITERR
+name|ISP_SPRIV_ERRSET
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SPRIV_INWDOG
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SPRIV_GRACE
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SPRIV_DONE
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_S_WDOG
 parameter_list|(
-name|ccb
+name|sccb
 parameter_list|)
-define|\
-value|(ccb)->ccb_h.status&= ~CAM_STATUS_MASK, \ 	(ccb)->ccb_h.status |= CAM_REQ_INPROG, \ 	(ccb)->ccb_h.spriv_field0 = CAM_REQ_INPROG
+value|(sccb)->ccb_h.spriv_field0 |= ISP_SPRIV_INWDOG
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_C_WDOG
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0&= ~ISP_SPRIV_INWDOG
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_WDOG_P
+parameter_list|(
+name|sccb
+parameter_list|)
+value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_INWDOG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_S_GRACE
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0 |= ISP_SPRIV_GRACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_C_GRACE
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0&= ~ISP_SPRIV_GRACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_GRACE_P
+parameter_list|(
+name|sccb
+parameter_list|)
+value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_GRACE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_S_DONE
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0 |= ISP_SPRIV_DONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_C_DONE
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0&= ~ISP_SPRIV_DONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_DONE_P
+parameter_list|(
+name|sccb
+parameter_list|)
+value|((sccb)->ccb_h.spriv_field0& ISP_SPRIV_DONE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_S_CLEAR
+parameter_list|(
+name|sccb
+parameter_list|)
+value|(sccb)->ccb_h.spriv_field0 = 0
 end_define
 
 begin_define
@@ -818,7 +935,17 @@ name|ccb
 parameter_list|,
 name|v
 parameter_list|)
-value|(ccb)->ccb_h.spriv_field0 = v
+value|(ccb)->ccb_h.status&= ~CAM_STATUS_MASK, \ 				(ccb)->ccb_h.status |= v, \ 				(ccb)->ccb_h.spriv_field0 |= ISP_SPRIV_ERRSET
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_INITERR
+parameter_list|(
+name|ccb
+parameter_list|)
+value|XS_SETERR(ccb, CAM_REQ_INPROG), \ 				XS_CMD_S_CLEAR(ccb)
 end_define
 
 begin_define
@@ -828,7 +955,7 @@ name|XS_ERR
 parameter_list|(
 name|ccb
 parameter_list|)
-value|(ccb)->ccb_h.spriv_field0
+value|((ccb)->ccb_h.status& CAM_STATUS_MASK)
 end_define
 
 begin_define
@@ -839,7 +966,14 @@ parameter_list|(
 name|ccb
 parameter_list|)
 define|\
-value|((ccb)->ccb_h.spriv_field0 == CAM_REQ_INPROG)
+value|(((ccb)->ccb_h.spriv_field0& ISP_SPRIV_ERRSET) == 0 || \ 	 ((ccb)->ccb_h.status& CAM_STATUS_MASK) == CAM_REQ_INPROG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CMD_DONE
+value|isp_done
 end_define
 
 begin_function_decl
@@ -853,27 +987,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|XS_CMD_DONE
-parameter_list|(
-name|sccb
-parameter_list|)
-value|isp_done(sccb)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XS_IS_CMD_DONE
-parameter_list|(
-name|ccb
-parameter_list|)
-define|\
-value|(((ccb)->ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_INPROG)
-end_define
 
 begin_comment
 comment|/*  * Can we tag?  */
@@ -930,17 +1043,6 @@ define|#
 directive|define
 name|CMD_RQLATER
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|STOP_WATCHDOG
-parameter_list|(
-name|f
-parameter_list|,
-name|s
-parameter_list|)
 end_define
 
 begin_function_decl
