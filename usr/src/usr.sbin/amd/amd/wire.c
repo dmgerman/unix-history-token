@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)wire.c	5.4 (Berkeley) %G%  *  * $Id: wire.c,v 5.2.2.1 1992/02/09 15:09:15 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)wire.c	5.5 (Berkeley) %G%  *  * $Id: wire.c,v 5.2.2.1 1992/02/09 15:09:15 jsp beta $  *  */
 end_comment
 
 begin_comment
@@ -578,7 +578,7 @@ operator|=
 literal|4
 expr_stmt|;
 block|}
-comment|/* 			 * If there are more bits than the standard mask 			 * would suggest, subnets must be in use. 			 * Guess at the subnet mask, assuming reasonable 			 * width subnet fields. 			 */
+comment|/* 			 * If there are more bits than the standard mask 			 * would suggest, subnets must be in use. 			 * Guess at the subnet mask, assuming reasonable 			 * width subnet fields. 			 * XXX: Or-in at least 1 byte's worth of 1s to make 			 * sure the top bits remain set. 			 */
 while|while
 condition|(
 name|subnet
@@ -589,11 +589,12 @@ condition|)
 name|mask
 operator|=
 operator|(
-name|long
-operator|)
 name|mask
 operator|>>
 name|subnetshift
+operator|)
+operator||
+literal|0xff000000
 expr_stmt|;
 name|net
 operator|=
