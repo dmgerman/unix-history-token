@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine scrolls the window up a line.  *  * %G% (Berkeley) @(#)scroll.c	1.1  */
+comment|/*  *	This routine scrolls the window up a line.  *  * %G% (Berkeley) @(#)scroll.c	1.2  */
 end_comment
 
 begin_macro
@@ -71,7 +71,7 @@ name|win
 operator|->
 name|_maxy
 operator|-
-literal|1
+literal|2
 condition|;
 name|i
 operator|++

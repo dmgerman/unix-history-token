@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine reads in a character from the window.  *  * %G% (Berkeley) @(#)getch.c	1.1  */
+comment|/*  *	This routine reads in a character from the window.  *  * %G% (Berkeley) @(#)getch.c	1.2  */
 end_comment
 
 begin_macro
@@ -58,6 +58,8 @@ operator|==
 name|win
 operator|->
 name|_maxx
+operator|-
+literal|1
 operator|&&
 name|win
 operator|->
@@ -66,6 +68,8 @@ operator|==
 name|win
 operator|->
 name|_maxy
+operator|-
+literal|1
 condition|)
 return|return
 name|ERR
