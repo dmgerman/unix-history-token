@@ -72,10 +72,10 @@ name|SYSTEM_ID_DEFAULT
 value|"FreeBSD"
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -90,10 +90,16 @@ name|SYSTEM_ID_DEFAULT
 value|"QNX"
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
 
 begin_define
 define|#
@@ -106,6 +112,37 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__osf__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM_ID_DEFAULT
+value|"OSF"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSTEM_ID_DEFAULT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM_ID_DEFAULT
+value|"UNKNOWNSYS"
+end_define
 
 begin_endif
 endif|#
