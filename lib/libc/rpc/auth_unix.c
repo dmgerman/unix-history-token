@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: auth_unix.c,v 1.3 1995/03/18 17:55:03 ache Exp $"
+literal|"$Id: auth_unix.c,v 1.4 1995/05/30 05:41:12 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,18 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -199,7 +211,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|bool_t
+name|void
 name|marshal_new_auth
 parameter_list|()
 function_decl|;
@@ -219,7 +231,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|set_rpc_maxgrouplist
 parameter_list|(
 name|int
@@ -1393,7 +1405,7 @@ end_comment
 
 begin_function
 specifier|static
-name|bool_t
+name|void
 name|marshal_new_auth
 parameter_list|(
 name|auth

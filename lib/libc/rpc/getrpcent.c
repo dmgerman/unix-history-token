@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getrpcent.c,v 1.1 1994/08/07 18:35:51 wollman Exp $"
+literal|"$Id: getrpcent.c,v 1.2 1995/05/30 05:41:21 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -818,18 +824,11 @@ directive|ifdef
 name|YP
 name|char
 modifier|*
-name|key
-init|=
-name|NULL
-decl_stmt|,
-modifier|*
 name|val
 init|=
 name|NULL
 decl_stmt|;
 name|int
-name|keylen
-decl_stmt|,
 name|vallen
 decl_stmt|;
 endif|#

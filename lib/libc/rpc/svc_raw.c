@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_raw.c,v 1.1 1994/08/07 18:36:08 wollman Exp $"
+literal|"$Id: svc_raw.c,v 1.2 1995/05/30 05:41:34 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_comment
