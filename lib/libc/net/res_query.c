@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ++Copyright++ 1988, 1993  * -  * Copyright (c) 1988, 1993  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
+comment|/*  * Copyright (c) 1988, 1993  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -33,7 +41,7 @@ specifier|static
 name|char
 name|orig_rcsid
 init|=
-literal|"From: Id: res_query.c,v 8.10 1997/06/01 20:34:37 vixie Exp"
+literal|"From: Id: res_query.c,v 8.14 1997/06/09 17:47:05 halley Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +51,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 1.14 1997/06/27 08:22:03 peter Exp $"
+literal|"$Id: res_query.c,v 1.15 1997/09/01 01:19:21 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,31 +91,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"res_config.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arpa/nameser.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<resolv.h>
 end_include
 
 begin_include
@@ -125,6 +109,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -132,6 +134,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"res_config.h"
 end_include
 
 begin_if
@@ -165,28 +173,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|hostalias
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|h_errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Formulate a normal query, send, and await answer.  * Returned answer is placed in supplied buffer "answer".  * Perform preliminary check of answer, returning success only  * if no error is indicated and the answer count is nonzero.  * Return the size of the response on success, -1 on error.  * Error number is left in h_errno.  *  * Caller must parse answer and determine whether it answers the question.  */
@@ -234,7 +220,6 @@ index|[
 name|MAXPACKET
 index|]
 decl_stmt|;
-specifier|register
 name|HEADER
 modifier|*
 name|hp
@@ -567,7 +552,6 @@ name|anslen
 decl_stmt|;
 comment|/* size of answer */
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -694,7 +678,7 @@ condition|)
 name|trailing_dot
 operator|++
 expr_stmt|;
-comment|/* 	 * if there aren't any dots, it could be a user-level alias 	 */
+comment|/* If there aren't any dots, it could be a user-level alias */
 if|if
 condition|(
 operator|!
@@ -703,7 +687,7 @@ operator|&&
 operator|(
 name|cp
 operator|=
-name|__hostalias
+name|hostalias
 argument_list|(
 name|name
 argument_list|)
@@ -947,7 +931,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* if we have not already tried the name "as is", do that now. 	 * note that we do this regardless of how many dots were in the 	 * name or whether it ends with a dot unless NOTLDQUERY is set. 	 */
+comment|/* 	 * If we have not already tried the name "as is", do that now. 	 * note that we do this regardless of how many dots were in the 	 * name or whether it ends with a dot unless NOTLDQUERY is set. 	 */
 if|if
 condition|(
 operator|!
@@ -1328,7 +1312,6 @@ name|hostalias
 parameter_list|(
 name|name
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -1377,19 +1360,9 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* XXX issetguid() would be better here, but we don't have that. */
 if|if
 condition|(
-name|getuid
-argument_list|()
-operator|!=
-name|geteuid
-argument_list|()
-operator|||
-name|getgid
-argument_list|()
-operator|!=
-name|getegid
+name|issetugid
 argument_list|()
 condition|)
 return|return

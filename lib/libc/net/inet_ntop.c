@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: inet_ntop.c,v 1.3 1997/02/22 15:00:21 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -89,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -397,9 +397,9 @@ struct|;
 name|u_int
 name|words
 index|[
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 operator|/
-name|INT16SZ
+name|NS_INT16SZ
 index|]
 decl_stmt|;
 name|int
@@ -424,7 +424,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 condition|;
 name|i
 operator|++
@@ -480,9 +480,9 @@ init|;
 name|i
 operator|<
 operator|(
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 operator|/
-name|INT16SZ
+name|NS_INT16SZ
 operator|)
 condition|;
 name|i
@@ -638,9 +638,9 @@ init|;
 name|i
 operator|<
 operator|(
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 operator|/
-name|INT16SZ
+name|NS_INT16SZ
 operator|)
 condition|;
 name|i
@@ -815,9 +815,9 @@ name|len
 operator|)
 operator|==
 operator|(
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 operator|/
-name|INT16SZ
+name|NS_INT16SZ
 operator|)
 condition|)
 operator|*

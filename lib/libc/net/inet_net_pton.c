@@ -25,7 +25,7 @@ name|char
 name|orig_rcsid
 index|[]
 init|=
-literal|"From Id: inet_net_pton.c,v 8.3 1996/11/11 06:36:52 vixie Exp"
+literal|"From Id: inet_net_pton.c,v 1.8 1996/11/21 10:28:12 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: inet_net_pton.c,v 1.3 1997/02/22 15:00:18 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: inet_pton.c,v 1.3 1997/02/22 15:00:22 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,7 @@ decl_stmt|;
 name|u_char
 name|tmp
 index|[
-name|INADDRSZ
+name|NS_INADDRSZ
 index|]
 decl_stmt|,
 modifier|*
@@ -411,7 +411,7 @@ name|dst
 argument_list|,
 name|tmp
 argument_list|,
-name|INADDRSZ
+name|NS_INADDRSZ
 argument_list|)
 expr_stmt|;
 return|return
@@ -461,7 +461,7 @@ decl_stmt|;
 name|u_char
 name|tmp
 index|[
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 index|]
 decl_stmt|,
 modifier|*
@@ -499,14 +499,14 @@ operator|)
 argument_list|,
 literal|'\0'
 argument_list|,
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 argument_list|)
 expr_stmt|;
 name|endp
 operator|=
 name|tp
 operator|+
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 expr_stmt|;
 name|colonp
 operator|=
@@ -667,7 +667,7 @@ if|if
 condition|(
 name|tp
 operator|+
-name|INT16SZ
+name|NS_INT16SZ
 operator|>
 name|endp
 condition|)
@@ -722,7 +722,7 @@ operator|(
 operator|(
 name|tp
 operator|+
-name|INADDRSZ
+name|NS_INADDRSZ
 operator|)
 operator|<=
 name|endp
@@ -740,7 +740,7 @@ condition|)
 block|{
 name|tp
 operator|+=
-name|INADDRSZ
+name|NS_INADDRSZ
 expr_stmt|;
 name|saw_xdigit
 operator|=
@@ -764,7 +764,7 @@ if|if
 condition|(
 name|tp
 operator|+
-name|INT16SZ
+name|NS_INT16SZ
 operator|>
 name|endp
 condition|)
@@ -878,7 +878,7 @@ name|dst
 argument_list|,
 name|tmp
 argument_list|,
-name|IN6ADDRSZ
+name|NS_IN6ADDRSZ
 argument_list|)
 expr_stmt|;
 return|return

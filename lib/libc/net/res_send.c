@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ++Copyright++ 1985, 1989, 1993  * -  * Copyright (c) 1985, 1989, 1993  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
+comment|/*  * Copyright (c) 1985, 1989, 1993  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_if
@@ -34,7 +42,7 @@ name|char
 name|orig_rcsid
 index|[]
 init|=
-literal|"From: Id: res_send.c,v 8.14 1998/04/07 04:59:46 vixie Exp $"
+literal|"From: Id: res_send.c,v 8.20 1998/04/06 23:27:51 halley Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.21 1998/05/02 13:11:02 peter Exp $"
+literal|"$Id: res_send.c,v 1.22 1998/05/02 15:51:54 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,31 +108,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"res_config.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arpa/nameser.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -136,7 +126,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -161,6 +163,12 @@ begin_include
 include|#
 directive|include
 file|<poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"res_config.h"
 end_include
 
 begin_decl_stmt
@@ -217,8 +225,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* is the socket a virtual ciruit? */
+comment|/* is the socket a virtual circuit? */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|res_send_qhook
+name|Qhook
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|res_send_rhook
+name|Rhook
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -479,24 +505,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|res_send_qhook
-name|Qhook
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|res_send_rhook
-name|Rhook
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|res_send_setqhook
@@ -552,7 +560,6 @@ name|struct
 name|sockaddr_in
 name|ina
 decl_stmt|;
-specifier|register
 name|int
 name|ns
 decl_stmt|,
@@ -583,7 +590,6 @@ name|ns
 operator|++
 control|)
 block|{
-specifier|register
 specifier|const
 name|struct
 name|sockaddr_in
@@ -654,7 +660,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* int  * res_nameinquery(name, type, class, buf, eom)  *	look for (name,type,class) in the query section of packet (buf,eom)  * requires:  *	buf + HFIXESDZ<= eom  * returns:  *	-1 : format error  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
+comment|/* int  * res_nameinquery(name, type, class, buf, eom)  *	look for (name,type,class) in the query section of packet (buf,eom)  * requires:  *	buf + HFIXEDSZ<= eom  * returns:  *	-1 : format error  *	0  : not found  *>0 : found  * author:  *	paul vixie, 29may94  */
 end_comment
 
 begin_function
@@ -676,7 +682,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 name|int
 name|type
 decl_stmt|,
@@ -694,7 +699,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -736,7 +740,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|,
@@ -794,7 +797,7 @@ operator|)
 return|;
 name|ttype
 operator|=
-name|_getshort
+name|ns_get16
 argument_list|(
 name|cp
 argument_list|)
@@ -805,7 +808,7 @@ name|INT16SZ
 expr_stmt|;
 name|tclass
 operator|=
-name|_getshort
+name|ns_get16
 argument_list|(
 name|cp
 argument_list|)
@@ -886,7 +889,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 specifier|const
 name|u_char
 modifier|*
@@ -932,6 +934,42 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* 	 * Only header section present in replies to 	 * dynamic update packets. 	 */
+if|if
+condition|(
+operator|(
+operator|(
+operator|(
+name|HEADER
+operator|*
+operator|)
+name|buf1
+operator|)
+operator|->
+name|opcode
+operator|==
+name|ns_o_update
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|HEADER
+operator|*
+operator|)
+name|buf2
+operator|)
+operator|->
+name|opcode
+operator|==
+name|ns_o_update
+operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|qdcount
@@ -970,7 +1008,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|,
@@ -1028,7 +1065,7 @@ operator|)
 return|;
 name|ttype
 operator|=
-name|_getshort
+name|ns_get16
 argument_list|(
 name|cp
 argument_list|)
@@ -1039,7 +1076,7 @@ name|INT16SZ
 expr_stmt|;
 name|tclass
 operator|=
-name|_getshort
+name|ns_get16
 argument_list|(
 name|cp
 argument_list|)
@@ -1140,15 +1177,13 @@ decl_stmt|,
 name|resplen
 decl_stmt|,
 name|ns
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|n
 decl_stmt|;
 name|u_int
 name|badns
 decl_stmt|;
-comment|/* XXX NSMAX can't exceed #/bits in this var */
+comment|/* XXX NSMAX can't exceed #/bits in this variable */
 if|if
 condition|(
 operator|(
@@ -1487,16 +1522,18 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|s
 operator|<
 literal|0
-operator|)
 operator|||
-operator|(
 operator|!
 name|vc
-operator|)
+operator|||
+name|hp
+operator|->
+name|opcode
+operator|==
+name|ns_o_update
 condition|)
 block|{
 if|if
@@ -1564,10 +1601,8 @@ operator|)
 name|nsap
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr
-argument_list|)
+expr|*
+name|nsap
 argument_list|)
 operator|<
 literal|0
@@ -1820,7 +1855,7 @@ goto|;
 block|}
 name|resplen
 operator|=
-name|_getshort
+name|ns_get16
 argument_list|(
 name|ans
 argument_list|)
@@ -2168,9 +2203,8 @@ operator|<
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-operator|!
+ifndef|#
+directive|ifndef
 name|CAN_RECONNECT
 name|bad_dg_sock
 label|:
@@ -2201,6 +2235,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|CANNOT_CONNECT_DGRAM
 comment|/* 			 * On a 4.3BSD+ machine (client and server, 			 * actually), sending to a nameserver datagram 			 * port with no nameserver will cause an 			 * ICMP port unreachable message to be returned. 			 * If our datagram socket is "connected" to the 			 * server, we get an ECONNREFUSED error on the next 			 * socket operation, and select returns if the 			 * error message is received.  We can thus detect 			 * the absence of a nameserver without timing out. 			 * If we have sent queries to at least two servers, 			 * however, we don't want to remain connected, 			 * as we wish to receive answers from the first 			 * server to respond. 			 */
 if|if
 condition|(
@@ -2242,10 +2279,8 @@ operator|)
 name|nsap
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr
-argument_list|)
+expr|*
+name|nsap
 argument_list|)
 operator|<
 literal|0
@@ -2336,8 +2371,8 @@ condition|(
 name|connected
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|CAN_RECONNECT
 name|struct
 name|sockaddr_in
@@ -2379,9 +2414,7 @@ operator|&
 name|no_addr
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|no_addr
-argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
@@ -2435,6 +2468,7 @@ argument|)
 argument_list|)
 endif|#
 directive|endif
+comment|/* CAN_RECONNECT */
 name|connected
 operator|=
 literal|0
@@ -2444,6 +2478,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !CANNOT_CONNECT_DGRAM */
 if|if
 condition|(
 name|sendto
@@ -2468,10 +2505,8 @@ operator|)
 name|nsap
 argument_list|,
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr
-argument_list|)
+expr|*
+name|nsap
 argument_list|)
 operator|!=
 name|buflen
@@ -2504,7 +2539,13 @@ goto|goto
 name|next_ns
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|CANNOT_CONNECT_DGRAM
 block|}
+endif|#
+directive|endif
+comment|/* !CANNOT_CONNECT_DGRAM */
 comment|/* 			 * Wait for reply 			 */
 name|othersyscall
 label|:
@@ -3154,8 +3195,8 @@ goto|goto
 name|wait
 goto|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|CHECK_SRVR_ADDR
 if|if
 condition|(
@@ -3633,6 +3674,7 @@ condition|(
 operator|!
 name|v_circuit
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -3649,6 +3691,7 @@ operator|=
 name|ETIMEDOUT
 expr_stmt|;
 comment|/* no answer obtained */
+block|}
 else|else
 name|errno
 operator|=

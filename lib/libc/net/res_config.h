@@ -10,16 +10,6 @@ begin_comment
 comment|/* enable debugging code (needed for dig) */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ALLOW_T_UNSPEC
-end_undef
-
-begin_comment
-comment|/* enable the "unspec" RR type for old athena */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -80,6 +70,17 @@ end_define
 
 begin_comment
 comment|/* confirm that the server requested sent the reply */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIND_UPDATE
+value|1
+end_define
+
+begin_comment
+comment|/* update support */
 end_comment
 
 end_unit

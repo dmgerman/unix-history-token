@@ -85,6 +85,8 @@ decl_stmt|,
 name|base
 decl_stmt|,
 name|n
+decl_stmt|,
+name|i
 decl_stmt|;
 specifier|register
 name|char
@@ -100,10 +102,6 @@ modifier|*
 name|pp
 init|=
 name|parts
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 name|again
 label|:
@@ -156,6 +154,8 @@ operator|=
 operator|*
 name|cp
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if

@@ -1,10 +1,45 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Copyright (c) 1996, 1998 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
 comment|/*  * Portions Copyright (c) 1995 by International Business Machines, Inc.  *  * International Business Machines, Inc. (hereinafter called IBM) grants  * permission under its copyrights to use, copy, modify, and distribute this  * Software with or without fee, provided that the above copyright notice and  * all paragraphs of this notice appear in all copies, and that the name of IBM  * not be used in connection with the marketing of any product incorporating  * the Software or modifications thereof, without specific, written prior  * permission.  *  * To the extent it has a right to do so, IBM grants an immunity from suit  * under its patents, if any, for the use, sale or manufacture of products to  * the extent that such products are used for performing Domain Name System  * dynamic updates in TCP/IP networks by means of the Software.  No immunity is  * granted for any product per se or for any other function of any product.  *  * THE SOFTWARE IS PROVIDED "AS IS", AND IBM DISCLAIMS ALL WARRANTIES,  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE.  IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL,  * DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER ARISING  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE, EVEN  * IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH DAMAGES.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LINT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CODECENTER
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: base64.c,v 8.5 1998/03/27 00:17:46 halley Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -61,26 +96,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|AF_INET6
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -92,22 +107,6 @@ include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|"../conf/portability.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -148,29 +147,21 @@ begin_function
 name|int
 name|b64_ntop
 parameter_list|(
-name|src
-parameter_list|,
-name|srclength
-parameter_list|,
-name|target
-parameter_list|,
-name|targsize
-parameter_list|)
 name|u_char
 specifier|const
 modifier|*
 name|src
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|srclength
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|target
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|targsize
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|datalength
@@ -189,7 +180,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 while|while
@@ -783,6 +774,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|tarindex
 operator|>=
 name|targsize
@@ -822,6 +816,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|tarindex
 operator|+
 literal|1
@@ -885,6 +882,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|tarindex
 operator|+
 literal|1
@@ -948,6 +948,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|tarindex
 operator|>=
 name|targsize
@@ -1026,6 +1029,9 @@ comment|/* Valid, means one byte of info */
 comment|/* Skip any number of spaces. */
 for|for
 control|(
+operator|(
+name|void
+operator|)
 name|NULL
 init|;
 name|ch
@@ -1076,6 +1082,9 @@ comment|/* Valid, means two bytes of info */
 comment|/* 			 * We know this char is an =.  Is there anything but 			 * whitespace after it? 			 */
 for|for
 control|(
+operator|(
+name|void
+operator|)
 name|NULL
 init|;
 name|ch
