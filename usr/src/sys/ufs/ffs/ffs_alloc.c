@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3820,23 +3820,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * block layout info is not available, so just have 		 * to take any block in this cylinder. 		 */
-name|bpref
-operator|=
-name|howmany
-argument_list|(
-name|fs
-operator|->
-name|fs_spc
-operator|*
-name|cylno
-argument_list|,
-name|NSPF
-argument_list|(
-name|fs
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Block layout information is not available. 		 * Leaving bpref unchanged means we take the 		 * next available free block following the one  		 * we just allocated. Hopefully this will at 		 * least hit a track cache on drives of unknown 		 * geometry (e.g. SCSI). 		 */
 goto|goto
 name|norot
 goto|;
