@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -319,7 +319,7 @@ begin_decl_stmt
 name|int
 name|ledebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1229,7 +1229,7 @@ name|struct
 name|ether_multistep
 name|step
 decl_stmt|;
-comment|/* 	 * Set up multicast address filter by passing all multicast 	 * addresses through a crc generator, and then using the high 	 * order 6 bits as a index into the 64 bit logical address 	 * filter. The high order two bits select the word, while the 	 * rest of the bits select the bit within the word. 	 */
+comment|/* 	 * Set up multicast address filter by passing all multicast 	 * addresses through a crc generator, and then using the high 	 * order 6 bits as an index into the 64 bit logical address 	 * filter. The high order two bits select the word, while the 	 * rest of the bits select the bit within the word. 	 */
 name|LER2_ladrf0
 argument_list|(
 name|ler2
