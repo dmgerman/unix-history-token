@@ -63,12 +63,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nl_types.h>
 end_include
 
@@ -76,6 +70,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_include
 include|#
