@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -58,10 +52,6 @@ literal|2
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/*  * TODO: Supply a macro version of this.  */
-end_comment
 
 begin_function
 name|wint_t
