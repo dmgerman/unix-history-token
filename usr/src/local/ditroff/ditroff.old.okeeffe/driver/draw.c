@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	draw.c	1.1	83/09/07  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
+comment|/*	draw.c	1.2	83/09/14  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
 end_comment
 
 begin_include
