@@ -116,6 +116,19 @@ parameter_list|)
 value|((c) == '\t' || (c) == ' ')
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|__FreeBSD__
+operator|<
+literal|3
+end_if
+
 begin_function
 name|void
 name|randinit
@@ -123,9 +136,10 @@ parameter_list|()
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-operator|>=
-literal|3
+argument_list|)
 specifier|static
 name|int
 name|initdone
@@ -167,6 +181,11 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|ssize_t

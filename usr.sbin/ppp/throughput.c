@@ -90,6 +90,14 @@ name|t
 operator|->
 name|OctetsOut
 operator|=
+name|t
+operator|->
+name|PacketsIn
+operator|=
+name|t
+operator|->
+name|PacketsOut
+operator|=
 literal|0
 expr_stmt|;
 name|t
@@ -522,6 +530,21 @@ operator|->
 name|OctetsOut
 argument_list|)
 expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|prompt
+argument_list|,
+literal|"%llu packets in, %llu packets out\n"
+argument_list|,
+name|t
+operator|->
+name|PacketsIn
+argument_list|,
+name|t
+operator|->
+name|PacketsOut
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -701,6 +724,30 @@ argument_list|,
 name|t
 operator|->
 name|OctetsOut
+argument_list|)
+expr_stmt|;
+name|log_Printf
+argument_list|(
+name|level
+argument_list|,
+literal|"%s%s: %llu packets in, %llu packets out\n"
+argument_list|,
+name|title
+argument_list|,
+operator|*
+name|title
+condition|?
+literal|": "
+else|:
+literal|""
+argument_list|,
+name|t
+operator|->
+name|PacketsIn
+argument_list|,
+name|t
+operator|->
+name|PacketsOut
 argument_list|)
 expr_stmt|;
 if|if
@@ -1355,6 +1402,11 @@ name|OctetsIn
 operator|+=
 name|n
 expr_stmt|;
+name|t
+operator|->
+name|PacketsIn
+operator|++
+expr_stmt|;
 block|}
 end_function
 
@@ -1377,6 +1429,11 @@ operator|->
 name|OctetsOut
 operator|+=
 name|n
+expr_stmt|;
+name|t
+operator|->
+name|PacketsOut
+operator|++
 expr_stmt|;
 block|}
 end_function

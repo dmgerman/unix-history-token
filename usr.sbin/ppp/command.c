@@ -18549,7 +18549,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"The alias command is depricated\n"
+literal|"The alias command is deprecated\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -18557,7 +18557,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"The alias command is depricated\n"
+literal|"The alias command is deprecated\n"
 argument_list|)
 expr_stmt|;
 block|}
