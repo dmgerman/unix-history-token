@@ -1708,8 +1708,6 @@ operator|->
 name|uio_resid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|uiomove
@@ -1730,6 +1728,10 @@ name|cnt
 argument_list|,
 name|uio
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|splx
@@ -1840,8 +1842,6 @@ name|TWS_XMITTING
 operator|)
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|tsleep
@@ -1859,6 +1859,10 @@ literal|"twwrite"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|splx
@@ -4124,8 +4128,6 @@ name|sc_state
 operator||=
 name|TWS_WANT
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|tsleep
@@ -4148,6 +4150,10 @@ literal|"twread"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 return|return

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.56 1998/12/07 21:58:21 archie Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.57 1999/05/06 18:12:27 peter Exp $  */
 end_comment
 
 begin_comment
@@ -4101,6 +4101,7 @@ expr_stmt|;
 comment|/* 	 * loop until there are no more new interrupts 	 */
 while|while
 condition|(
+operator|(
 name|isr
 operator|=
 name|inb
@@ -4111,6 +4112,9 @@ name|nic_addr
 operator|+
 name|ED_P0_ISR
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* 		 * reset all the bits that we are 'acknowleging' 		 *	by writing a '1' to each bit position that was set 		 * (writing a '1' *clears* the bit) 		 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.47 1998/12/18 18:07:10 bde Exp $  *  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id: wt.c,v 1.48 1999/04/28 10:53:07 dt Exp $  *  */
 end_comment
 
 begin_comment
@@ -1536,8 +1536,6 @@ name|TPSTART
 condition|)
 block|{
 comment|/* If rewind is going on, wait */
-if|if
-condition|(
 name|error
 operator|=
 name|wtwait
@@ -1548,6 +1546,10 @@ name|PCATCH
 argument_list|,
 literal|"wtrew"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2396,8 +2398,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|wtwait
@@ -2408,6 +2408,10 @@ name|PCATCH
 argument_list|,
 literal|"wtorew"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2451,8 +2455,6 @@ operator|--
 name|count
 control|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|wtwait
@@ -2463,20 +2465,26 @@ name|PCATCH
 argument_list|,
 literal|"wtorfm"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|wtreadfm
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2517,8 +2525,6 @@ operator|(
 name|EACCES
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|wtwait
@@ -2529,20 +2535,26 @@ name|PCATCH
 argument_list|,
 literal|"wtowfm"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|wtwritefm
 argument_list|(
 name|t
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2558,8 +2570,6 @@ case|case
 name|MTRETENS
 case|:
 comment|/* re-tension tape */
-if|if
-condition|(
 name|error
 operator|=
 name|wtwait
@@ -2570,6 +2580,10 @@ name|PCATCH
 argument_list|,
 literal|"wtretens"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -2611,8 +2625,6 @@ operator|(
 name|EACCES
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|wtwait
@@ -2623,6 +2635,10 @@ name|PCATCH
 argument_list|,
 literal|"wterase"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -4384,8 +4400,7 @@ operator||
 name|TPWMARK
 operator|)
 condition|)
-if|if
-condition|(
+block|{
 name|error
 operator|=
 name|tsleep
@@ -4403,12 +4418,17 @@ name|msg
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0

@@ -4476,8 +4476,6 @@ goto|goto
 name|out
 goto|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|tsleep
@@ -4495,6 +4493,10 @@ literal|"rcbi"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
