@@ -1090,39 +1090,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|void
-name|longjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* the kernel doesn't define this */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|int
-name|setjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void

@@ -25,21 +25,6 @@ begin_comment
 comment|/* this was defined as LongJmp */
 end_comment
 
-begin_function_decl
-name|void
-name|longjmp
-parameter_list|(
-name|jmp_buf
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* the kernel doesn't define this */
-end_comment
-
 begin_include
 include|#
 directive|include
