@@ -650,6 +650,11 @@ modifier|*
 name|Pred1InitInput
 parameter_list|(
 name|struct
+name|bundle
+modifier|*
+name|bundle
+parameter_list|,
+name|struct
 name|fsm_opt
 modifier|*
 name|o
@@ -699,6 +704,11 @@ name|void
 modifier|*
 name|Pred1InitOutput
 parameter_list|(
+name|struct
+name|bundle
+modifier|*
+name|bundle
+parameter_list|,
 name|struct
 name|fsm_opt
 modifier|*
@@ -1595,6 +1605,11 @@ name|void
 name|Pred1InitOptsOutput
 parameter_list|(
 name|struct
+name|bundle
+modifier|*
+name|bundle
+parameter_list|,
+name|struct
 name|fsm_opt
 modifier|*
 name|o
@@ -1622,6 +1637,11 @@ specifier|static
 name|int
 name|Pred1SetOpts
 parameter_list|(
+name|struct
+name|bundle
+modifier|*
+name|bundle
+parameter_list|,
 name|struct
 name|fsm_opt
 modifier|*

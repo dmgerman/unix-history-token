@@ -2173,6 +2173,10 @@ operator|.
 name|OptInit
 operator|)
 operator|(
+name|fp
+operator|->
+name|bundle
+operator|,
 operator|&
 operator|(
 operator|*
@@ -3115,6 +3119,10 @@ operator|.
 name|Init
 operator|)
 operator|(
+name|fp
+operator|->
+name|bundle
+operator|,
 operator|&
 name|ccp
 operator|->
@@ -3279,6 +3287,10 @@ operator|.
 name|Init
 operator|)
 operator|(
+name|fp
+operator|->
+name|bundle
+operator|,
 operator|&
 operator|(
 operator|*
@@ -3721,6 +3733,10 @@ operator|.
 name|Set
 operator|)
 operator|(
+name|fp
+operator|->
+name|bundle
+operator|,
 operator|&
 name|ccp
 operator|->
@@ -3907,6 +3923,10 @@ operator|.
 name|Set
 operator|)
 operator|(
+name|fp
+operator|->
+name|bundle
+operator|,
 operator|&
 name|o
 operator|->

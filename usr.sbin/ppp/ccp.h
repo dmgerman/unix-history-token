@@ -483,6 +483,10 @@ name|Set
 function_decl|)
 parameter_list|(
 name|struct
+name|bundle
+modifier|*
+parameter_list|,
+name|struct
 name|fsm_opt
 modifier|*
 parameter_list|,
@@ -499,6 +503,10 @@ modifier|*
 name|Init
 function_decl|)
 parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
 name|struct
 name|fsm_opt
 modifier|*
@@ -582,6 +590,10 @@ name|OptInit
 function_decl|)
 parameter_list|(
 name|struct
+name|bundle
+modifier|*
+parameter_list|,
+name|struct
 name|fsm_opt
 modifier|*
 parameter_list|,
@@ -597,6 +609,10 @@ modifier|*
 name|Set
 function_decl|)
 parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
 name|struct
 name|fsm_opt
 modifier|*
@@ -614,6 +630,10 @@ modifier|*
 name|Init
 function_decl|)
 parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
 name|struct
 name|fsm_opt
 modifier|*
