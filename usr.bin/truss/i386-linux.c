@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extern.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"syscall.h"
 end_include
 
@@ -811,6 +817,7 @@ comment|/*  * Linux syscalls return negative errno's, we do positive and map the
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|bsd_to_linux_errno
 index|[]

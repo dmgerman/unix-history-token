@@ -105,6 +105,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -591,6 +597,7 @@ name|restore_proc
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 specifier|extern
