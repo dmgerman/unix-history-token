@@ -1761,6 +1761,19 @@ index|]
 operator|.
 name|dir
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dir
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no root directory - giving up\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|"root_directory: len=0x%04x(%d) crc=0x%04x"
