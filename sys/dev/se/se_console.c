@@ -197,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|CDEV_MAJOR
-value|200
+value|168
 end_define
 
 begin_decl_stmt
