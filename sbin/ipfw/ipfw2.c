@@ -1495,10 +1495,6 @@ return|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/*  * conditionally runs the command.  */
 end_comment
@@ -1706,10 +1702,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/**  * match_value takes a table and a value, returns the string associated  * with the value (NULL in case of failure).  */
