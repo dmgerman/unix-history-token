@@ -287,18 +287,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_CPU_NOTIFY_PERF_STATES
-value|0x80
-end_define
-
-begin_comment
-comment|/* _PSS changed. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_CPU_NOTIFY_CX_STATES
+name|ACPI_NOTIFY_CX_STATES
 value|0x81
 end_define
 
@@ -3832,7 +3821,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Re-evaluate the _PSS and _CST objects when we are notified that they  * have changed.  *  * XXX Re-evaluation disabled until locking is done.  */
+comment|/*  * Re-evaluate the _CST object when we are notified that it changed.  *  * XXX Re-evaluation disabled until locking is done.  */
 end_comment
 
 begin_function
@@ -3863,28 +3852,13 @@ operator|*
 operator|)
 name|context
 decl_stmt|;
-switch|switch
+if|if
 condition|(
 name|notify
+operator|!=
+name|ACPI_NOTIFY_CX_STATES
 condition|)
-block|{
-case|case
-name|ACPI_CPU_NOTIFY_PERF_STATES
-case|:
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|cpu_dev
-argument_list|,
-literal|"Performance states changed\n"
-argument_list|)
-expr_stmt|;
-comment|/* acpi_cpu_px_available(sc); */
-break|break;
-case|case
-name|ACPI_CPU_NOTIFY_CX_STATES
-case|:
+return|return;
 name|device_printf
 argument_list|(
 name|sc
@@ -3895,21 +3869,6 @@ literal|"Cx states changed\n"
 argument_list|)
 expr_stmt|;
 comment|/* acpi_cpu_cx_cst(sc); */
-break|break;
-default|default:
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|cpu_dev
-argument_list|,
-literal|"Unknown notify %#x\n"
-argument_list|,
-name|notify
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 block|}
 end_function
 

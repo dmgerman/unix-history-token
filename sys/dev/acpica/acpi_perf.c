@@ -247,6 +247,17 @@ define|\
 value|(bus_space_write_4(rman_get_bustag((reg)), 	\ 	    rman_get_bushandle((reg)), 0, (val)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_PERF_STATES
+value|0x80
+end_define
+
+begin_comment
+comment|/* _PSS changed. */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -648,7 +659,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"acpi_perf: add child failed\n"
+literal|"add acpi_perf child failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1506,6 +1517,13 @@ name|sc
 operator|=
 name|context
 expr_stmt|;
+if|if
+condition|(
+name|notify
+operator|!=
+name|ACPI_NOTIFY_PERF_STATES
+condition|)
+return|return;
 name|acpi_px_available
 argument_list|(
 name|sc
