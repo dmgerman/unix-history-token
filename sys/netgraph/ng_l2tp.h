@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_L2TP_COOKIE
-value|1091448040
+value|1091515793
 end_define
 
 begin_comment
@@ -322,6 +322,45 @@ value|{			\ 	  { "xmitPackets",&ng_parse_uint32_type	},	\ 	  { "xmitOctets",&ng_
 end_define
 
 begin_comment
+comment|/* Session statistics struct. */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_l2tp_session_stats
+block|{
+name|u_int64_t
+name|xmitPackets
+decl_stmt|;
+comment|/* number of packets xmit */
+name|u_int64_t
+name|xmitOctets
+decl_stmt|;
+comment|/* number of octets xmit */
+name|u_int64_t
+name|recvPackets
+decl_stmt|;
+comment|/* number of packets received */
+name|u_int64_t
+name|recvOctets
+decl_stmt|;
+comment|/* number of octets received */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_L2TP_SESSION_STATS_TYPE_INFO
+value|{			\ 	  { "xmitPackets",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { "recvPackets",&ng_parse_uint64_type	},	\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { NULL }						\ }
+end_define
+
+begin_comment
 comment|/* Netgraph commands */
 end_comment
 
@@ -351,6 +390,15 @@ comment|/* clears stats */
 name|NGM_L2TP_GETCLR_STATS
 block|,
 comment|/* returns& clears stats */
+name|NGM_L2TP_GET_SESSION_STATS
+block|,
+comment|/* returns session stats */
+name|NGM_L2TP_CLR_SESSION_STATS
+block|,
+comment|/* clears session stats */
+name|NGM_L2TP_GETCLR_SESSION_STATS
+block|,
+comment|/* returns& clears session stats */
 name|NGM_L2TP_ACK_FAILURE
 block|,
 comment|/* sent *from* node after ack timeout */
