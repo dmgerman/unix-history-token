@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|G_RAID3_VERSION
-value|0
+value|1
 end_define
 
 begin_define
@@ -93,8 +93,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_RAID3_DEVICE_FLAG_ROUND_ROBIN
+value|0x0000000000000002ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_RAID3_DEVICE_FLAG_MASK
-value|(G_RAID3_DEVICE_FLAG_NOAUTOSYNC)
+value|(G_RAID3_DEVICE_FLAG_NOAUTOSYNC | \ 					 G_RAID3_DEVICE_FLAG_ROUND_ROBIN)
 end_define
 
 begin_ifdef
@@ -511,6 +518,9 @@ name|u_int
 name|sc_ndisks
 decl_stmt|;
 comment|/* Number of disks. */
+name|u_int
+name|sc_round_robin
+decl_stmt|;
 name|struct
 name|g_raid3_disk
 modifier|*
@@ -1388,6 +1398,23 @@ condition|)
 name|printf
 argument_list|(
 literal|" NOAUTOSYNC"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|md
+operator|->
+name|md_mflags
+operator|&
+name|G_RAID3_DEVICE_FLAG_ROUND_ROBIN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" ROUND-ROBIN"
 argument_list|)
 expr_stmt|;
 block|}

@@ -231,6 +231,26 @@ block|,
 name|G_TYPE_NONE
 block|}
 block|,
+block|{
+literal|'r'
+block|,
+literal|"round_robin"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
+block|{
+literal|'R'
+block|,
+literal|"noround_robin"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
 name|G_OPT_SENTINEL
 block|}
 block|}
@@ -299,6 +319,16 @@ block|{
 literal|'n'
 block|,
 literal|"noautosync"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
+block|{
+literal|'r'
+block|,
+literal|"round_robin"
 block|,
 name|NULL
 block|,
@@ -402,10 +432,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s label [-hnv] name prov prov prov [prov [...]]\n"
+literal|"usage: %s label [-hnrv] name prov prov prov [prov [...]]\n"
 literal|"       %s clear [-v] prov [prov [...]]\n"
 literal|"       %s dump prov [prov [...]]\n"
-literal|"       %s configure [-adhnv] name\n"
+literal|"       %s configure [-adhnrRv] name\n"
 literal|"       %s rebuild [-v] name prov\n"
 literal|"       %s insert [-hv]<-n number> name prov\n"
 literal|"       %s remove [-v]<-n number> name\n"
@@ -601,6 +631,10 @@ decl_stmt|,
 modifier|*
 name|noautosync
 decl_stmt|,
+modifier|*
+name|round_robin
+decl_stmt|;
+name|int
 name|error
 decl_stmt|,
 name|i
@@ -843,6 +877,50 @@ operator|.
 name|md_mflags
 operator||=
 name|G_RAID3_DEVICE_FLAG_NOAUTOSYNC
+expr_stmt|;
+name|round_robin
+operator|=
+name|gctl_get_paraml
+argument_list|(
+name|req
+argument_list|,
+literal|"round_robin"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|round_robin
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|round_robin
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"No '%s' argument."
+argument_list|,
+literal|"round_robin"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|*
+name|round_robin
+condition|)
+name|md
+operator|.
+name|md_mflags
+operator||=
+name|G_RAID3_DEVICE_FLAG_ROUND_ROBIN
 expr_stmt|;
 name|hardcode
 operator|=
