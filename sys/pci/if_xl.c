@@ -10157,9 +10157,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|xl_reset
+name|CSR_WRITE_2
 argument_list|(
 name|sc
+argument_list|,
+name|XL_COMMAND
+argument_list|,
+name|XL_CMD_TX_RESET
 argument_list|)
 expr_stmt|;
 name|xl_wait
@@ -10169,7 +10173,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|10000
 argument_list|)
 expr_stmt|;
 if|if
