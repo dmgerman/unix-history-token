@@ -40,16 +40,6 @@ name|PMAP_CONTEXT_MAX
 value|8192
 end_define
 
-begin_define
-define|#
-directive|define
-name|pmap_page_is_mapped
-parameter_list|(
-name|m
-parameter_list|)
-value|(!TAILQ_EMPTY(&(m)->md.tte_list))
-end_define
-
 begin_typedef
 typedef|typedef
 name|struct
@@ -184,6 +174,16 @@ name|pmap_kremove_flags
 parameter_list|(
 name|vm_offset_t
 name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
+name|pmap_page_is_mapped
+parameter_list|(
+name|vm_page_t
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
