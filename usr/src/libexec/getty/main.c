@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,18 +39,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * getty -- adapt to terminal speed on dialup, and call login  *  * Melbourne getty, June 83, kre.  */
+comment|/* not lint */
 end_comment
 
 begin_define
@@ -101,7 +103,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -115,15 +129,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -189,24 +194,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|crmod
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|upper
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|lower
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|digit
+decl_stmt|,
+name|lower
+decl_stmt|,
+name|upper
 decl_stmt|;
 end_decl_stmt
 
@@ -680,12 +673,21 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
 name|char
 modifier|*
 name|tname
@@ -1006,7 +1008,7 @@ operator|&
 name|off
 argument_list|)
 expr_stmt|;
-comment|/* ditto for asynchronous mode */
+comment|/* ditto for async mode */
 if|if
 condition|(
 name|IS
@@ -1485,13 +1487,14 @@ end_macro
 begin_block
 block|{
 specifier|register
+name|int
+name|c
+decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|np
 decl_stmt|;
-specifier|register
-name|c
-expr_stmt|;
 name|char
 name|cs
 decl_stmt|;
@@ -1587,17 +1590,11 @@ argument_list|)
 expr_stmt|;
 name|crmod
 operator|=
-literal|0
-expr_stmt|;
-name|upper
+name|digit
 operator|=
-literal|0
-expr_stmt|;
 name|lower
 operator|=
-literal|0
-expr_stmt|;
-name|digit
+name|upper
 operator|=
 literal|0
 expr_stmt|;
@@ -1618,7 +1615,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|cs
@@ -1696,7 +1693,8 @@ name|c
 argument_list|)
 condition|)
 name|lower
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 elseif|else
 if|if
@@ -1707,7 +1705,8 @@ name|c
 argument_list|)
 condition|)
 name|upper
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 elseif|else
 if|if
@@ -1871,7 +1870,8 @@ operator|==
 literal|'\r'
 condition|)
 name|crmod
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2089,7 +2089,7 @@ index|]
 operator|)
 condition|)
 return|return;
-comment|/* 	 * Round up by a half a character frame, 	 * and then do the delay. 	 * Too bad there are no user program accessible programmed delays. 	 * Transmitting pad characters slows many 	 * terminals down and also loads the system. 	 */
+comment|/* 	 * Round up by a half a character frame, and then do the delay. 	 * Too bad there are no user program accessible programmed delays. 	 * Transmitting pad characters slows many terminals down and also 	 * loads the system. 	 */
 name|mspc10
 operator|=
 name|tmspc10
@@ -2235,7 +2235,7 @@ block|}
 else|else
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 operator|&
 name|c
@@ -2259,7 +2259,7 @@ name|obufcnt
 condition|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|outbuf
 argument_list|,
@@ -2311,27 +2311,23 @@ end_expr_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|slash
-decl_stmt|;
-name|char
-name|datebuffer
-index|[
-literal|60
-index|]
-decl_stmt|;
 specifier|extern
 name|char
 name|editedhost
 index|[]
 decl_stmt|;
-specifier|extern
+name|time_t
+name|t
+decl_stmt|;
 name|char
 modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
+name|slash
+decl_stmt|,
+name|db
+index|[
+literal|100
+index|]
+decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -2412,14 +2408,36 @@ break|break;
 case|case
 literal|'d'
 case|:
-name|get_date
+operator|(
+name|void
+operator|)
+name|time
 argument_list|(
-name|datebuffer
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strftime
+argument_list|(
+name|db
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|db
+argument_list|)
+argument_list|,
+literal|"%l:main.cP on %A, %d %B %Y"
+argument_list|,
+operator|&
+name|t
 argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-name|datebuffer
+name|db
 argument_list|)
 expr_stmt|;
 break|break;
