@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dis.c	1.1 (Berkeley) %G%"
+literal|"@(#)dis.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,10 +22,6 @@ end_endif
 
 begin_comment
 comment|/* **	Dis -- VDU page display program ** **	"dis [-t<timeout>] [-c<refresh count>] [-u]" ** **	Bugs and comments to:	Piers Lauder **				Dept of Comp Sci **				Sydney University **	May '80. */
-end_comment
-
-begin_comment
-comment|/* #include<local-system> */
 end_comment
 
 begin_include
