@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.14 1999/03/11 15:09:51 phk Exp $  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10   * The echo output pin is pin#14  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: pps.c,v 1.15 1999/03/13 16:22:18 phk Exp $  *  * This driver implements a draft-mogul-pps-api-02.txt PPS source.  *  * The input pin is pin#10   * The echo output pin is pin#14  *  */
 end_comment
 
 begin_include
@@ -92,6 +92,9 @@ name|pps_data
 block|{
 name|int
 name|pps_unit
+decl_stmt|;
+name|int
+name|pps_open
 decl_stmt|;
 name|struct
 name|ppb_device
@@ -557,6 +560,14 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|sc
+operator|->
+name|pps_open
+condition|)
+block|{
+if|if
+condition|(
 name|ppb_request_bus
 argument_list|(
 operator|&
@@ -594,6 +605,13 @@ argument_list|,
 name|IRQENABLE
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|pps_open
+operator|=
+literal|1
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -673,6 +691,12 @@ name|sc
 operator|->
 name|pps_dev
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|pps_open
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
