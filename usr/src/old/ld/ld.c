@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.15 (Berkeley) %G%"
+literal|"@(#)ld.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1030,24 +1030,11 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|defaultname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* l.out */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
 name|ofilename
+init|=
+literal|"l.out"
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* name given to -o */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1243,19 +1230,6 @@ condition|)
 name|exit
 argument_list|(
 literal|4
-argument_list|)
-expr_stmt|;
-name|ofilename
-operator|=
-name|defaultname
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|genbuildname
-argument_list|(
-literal|"l.out"
 argument_list|)
 expr_stmt|;
 name|pagesize
@@ -1463,16 +1437,9 @@ argument_list|)
 expr_stmt|;
 name|ofilename
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|genbuildname
-argument_list|(
 operator|*
 name|p
 operator|++
-argument_list|)
 expr_stmt|;
 name|ofilfnd
 operator|++
@@ -2164,7 +2131,7 @@ argument_list|()
 expr_stmt|;
 name|unlink
 argument_list|(
-name|defaultname
+literal|"l.out"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We have to insure that the last block of the data segment 	 * is allocated a full pagesize block. If the underlying 	 * file system allocates frags that are smaller than pagesize, 	 * a full zero filled pagesize block needs to be allocated so  	 * that when it is demand paged, the paged in block will be  	 * appropriately filled with zeros. 	 */
@@ -7597,10 +7564,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|char
-modifier|*
-name|newname
-decl_stmt|;
 name|int
 name|nsymt
 decl_stmt|;
@@ -7659,29 +7622,18 @@ operator|!
 name|ofilfnd
 condition|)
 block|{
-name|newname
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|genbuildname
-argument_list|(
-literal|"a.out"
-argument_list|)
-expr_stmt|;
 name|unlink
 argument_list|(
-name|newname
+literal|"a.out"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|link
 argument_list|(
-name|defaultname
+literal|"l.out"
 argument_list|,
-name|newname
+literal|"a.out"
 argument_list|)
 operator|<
 literal|0
@@ -7695,7 +7647,7 @@ argument_list|)
 expr_stmt|;
 name|ofilename
 operator|=
-name|newname
+literal|"a.out"
 expr_stmt|;
 block|}
 name|delarg
@@ -8737,14 +8689,7 @@ name|infil
 operator|=
 name|open
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|genbuildname
-argument_list|(
 name|filname
-argument_list|)
 argument_list|,
 name|O_RDONLY
 argument_list|)

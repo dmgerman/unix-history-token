@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.20 %G%"
+literal|"@(#)cc.c 4.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1772,12 +1772,6 @@ literal|0
 condition|)
 name|unlink
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|genbuildname
-argument_list|(
 name|setsuf
 argument_list|(
 name|clist
@@ -1786,7 +1780,6 @@ literal|0
 index|]
 argument_list|,
 literal|'o'
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
