@@ -222,13 +222,19 @@ begin_define
 define|#
 directive|define
 name|AF_INET6
-value|24
+value|28
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIN6_LEN
+end_ifdef
 
 begin_define
 define|#
