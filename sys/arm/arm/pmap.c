@@ -9523,10 +9523,6 @@ argument_list|(
 name|pte
 argument_list|)
 expr_stmt|;
-name|cpu_dcache_wbinv_all
-argument_list|()
-expr_stmt|;
-comment|/* XXX: shouldn't be needed */
 block|}
 end_function
 
@@ -9806,6 +9802,10 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|cpu_dcache_wbinv_all
+argument_list|()
+expr_stmt|;
+comment|/* XXX: shouldn't be needed */
 block|}
 end_function
 
@@ -11628,12 +11628,6 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
-name|pmap_dcache_wbinv_all
-argument_list|(
-name|pmap
-argument_list|)
-comment|/* XXX: Shouldn't be needed. */
-expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -11676,6 +11670,12 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|pmap_dcache_wbinv_all
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+comment|/* XXX: shouldn't be needed */
 return|return
 operator|(
 name|NULL
