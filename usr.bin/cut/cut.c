@@ -798,6 +798,9 @@ specifier|static
 name|size_t
 name|npos
 decl_stmt|;
+name|size_t
+name|oldnpos
+decl_stmt|;
 comment|/* Grow the positions array to at least the specified size. */
 if|if
 condition|(
@@ -806,6 +809,10 @@ operator|>
 name|npos
 condition|)
 block|{
+name|oldnpos
+operator|=
+name|npos
+expr_stmt|;
 if|if
 condition|(
 name|npos
@@ -846,6 +853,23 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"realloc"
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|positions
+operator|+
+name|oldnpos
+argument_list|,
+literal|0
+argument_list|,
+name|npos
+operator|-
+name|oldnpos
 argument_list|)
 expr_stmt|;
 block|}
