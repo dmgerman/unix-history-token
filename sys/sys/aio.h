@@ -274,7 +274,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cancel I/O -- implemented only to return AIO_NOTCANCELLED or  *	AIO_ALLDONE.  No cancellation operation will occur.  */
+comment|/*  * Cancel I/O  */
 end_comment
 
 begin_function_decl
