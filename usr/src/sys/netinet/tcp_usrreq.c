@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.50 82/02/19 */
+comment|/* tcp_usrreq.c 1.51 82/02/25 */
 end_comment
 
 begin_include
@@ -876,6 +876,26 @@ return|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|tcp_sendspace
+init|=
+literal|1024
+operator|*
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tcp_recvspace
+init|=
+literal|1024
+operator|*
+literal|3
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Attach TCP protocol to socket, allocating  * internet protocol control block, tcp control block,  * bufer space, and entering LISTEN state if to accept connections.  */
 end_comment
@@ -930,9 +950,9 @@ argument_list|,
 operator|&
 name|tcb
 argument_list|,
-literal|2048
+name|tcp_sendspace
 argument_list|,
-literal|2048
+name|tcp_recvspace
 argument_list|,
 operator|(
 expr|struct
