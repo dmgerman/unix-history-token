@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -294,52 +294,35 @@ begin_comment
 comment|/*  * Trivial lookup routine that always fails.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_lookup
-argument_list|(
-argument|vp
-argument_list|,
-argument|ndp
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dvp
+parameter_list|,
+name|vpp
+parameter_list|,
+name|cnp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
-name|vp
+name|dvp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
-name|nameidata
+name|vnode
 modifier|*
-name|ndp
+modifier|*
+name|vpp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
-name|proc
+name|componentname
 modifier|*
-name|p
+name|cnp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|ndp
-operator|->
-name|ni_dvp
-operator|=
-name|vp
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_vp
+operator|*
+name|vpp
 operator|=
 name|NULL
 expr_stmt|;
@@ -349,7 +332,7 @@ name|ENOTDIR
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Open a special file: Don't allow open if fs is mounted -nodev,  * and don't allow opens of block devices that are currently mounted.  * Otherwise, call device driver open function.  */
