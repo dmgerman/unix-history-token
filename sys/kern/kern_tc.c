@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  */
+comment|/*-  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/timetc.h>
 end_include
 
 begin_include
@@ -42,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/timex.h>
+file|<sys/timetc.h>
 end_include
 
 begin_include
@@ -51,8 +45,20 @@ directive|include
 file|<sys/timepps.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/timex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
+end_include
+
 begin_comment
-comment|/*  * Implement a dummy timecounter which we can use until we get a real one  * in the air.  This allows the console and other early stuff to use  * timeservices.  */
+comment|/*  * Implement a dummy timecounter which we can use until we get a real one  * in the air.  This allows the console and other early stuff to use  * time services.  */
 end_comment
 
 begin_function
@@ -96,7 +102,7 @@ block|,
 literal|1000000
 block|,
 literal|"dummy"
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +137,7 @@ name|struct
 name|timespec
 name|th_nanotime
 decl_stmt|;
-comment|/* Fields not to be copied in tc_windup start with th_generation */
+comment|/* Fields not to be copied in tc_windup start with th_generation. */
 specifier|volatile
 name|u_int
 name|th_generation
@@ -186,7 +192,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th0
@@ -227,7 +233,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th9
@@ -268,7 +274,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th8
@@ -309,7 +315,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th7
@@ -350,7 +356,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th6
@@ -391,7 +397,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th5
@@ -432,7 +438,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th4
@@ -473,7 +479,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th3
@@ -514,7 +520,7 @@ block|,
 literal|0
 block|}
 block|,
-literal|1
+literal|0
 block|,
 operator|&
 name|th2
@@ -534,9 +540,14 @@ name|dummy_timecounter
 block|,
 literal|0
 block|,
-literal|18446744073709ULL
+operator|(
+name|uint64_t
+operator|)
+operator|-
+literal|1
+operator|/
+literal|1000000
 block|,
-comment|/* 2^64/1000000 */
 literal|0
 block|,
 block|{
@@ -608,6 +619,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|bintime
 name|boottimebin
@@ -668,7 +680,7 @@ parameter_list|(
 name|foo
 parameter_list|)
 define|\
-value|static u_int foo; \ 	SYSCTL_INT(_kern_timecounter, OID_AUTO, foo, CTLFLAG_RD,& foo, 0, "")
+value|static u_int foo; \ 	SYSCTL_INT(_kern_timecounter, OID_AUTO, foo, CTLFLAG_RD,&foo, 0, "") \ 	struct __hack
 end_define
 
 begin_expr_stmt
@@ -784,7 +796,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Get delta hardware ticks relative to our timehands */
+comment|/*  * Return the difference between the timehands' counter value now and what  * was when we copied it to the timehands' offset_count.  */
 end_comment
 
 begin_function
@@ -834,7 +846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Functions for reading the time.  We have to loop until we are sure that  * the timehands we operated on was not updated under our feet.  * See comment in<sys/time.h> for description of these 12 functions.  */
+comment|/*  * Functions for reading the time.  We have to loop until we are sure that  * the timehands that we operated on was not updated under our feet.  See  * the comment in<sys/time.h> for a description of these 12 functions.  */
 end_comment
 
 begin_function
@@ -915,7 +927,7 @@ parameter_list|(
 name|struct
 name|timespec
 modifier|*
-name|ts
+name|tsp
 parameter_list|)
 block|{
 name|struct
@@ -936,7 +948,7 @@ argument_list|(
 operator|&
 name|bt
 argument_list|,
-name|ts
+name|tsp
 argument_list|)
 expr_stmt|;
 block|}
@@ -949,7 +961,7 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
-name|tv
+name|tvp
 parameter_list|)
 block|{
 name|struct
@@ -970,11 +982,17 @@ argument_list|(
 operator|&
 name|bt
 argument_list|,
-name|tv
+name|tvp
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_define
+define|#
+directive|define
+name|SYNC_TIME
+end_define
 
 begin_function
 name|void
@@ -1012,7 +1030,7 @@ parameter_list|(
 name|struct
 name|timespec
 modifier|*
-name|ts
+name|tsp
 parameter_list|)
 block|{
 name|struct
@@ -1033,7 +1051,7 @@ argument_list|(
 operator|&
 name|bt
 argument_list|,
-name|ts
+name|tsp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1046,7 +1064,7 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
-name|tv
+name|tvp
 parameter_list|)
 block|{
 name|struct
@@ -1067,7 +1085,7 @@ argument_list|(
 operator|&
 name|bt
 argument_list|,
-name|tv
+name|tvp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1430,7 +1448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Initialize a new timecounter.  * We should really try to rank the timecounters and intelligently determine  * if the new timecounter is better than the current one.  This is subject  * to further study.  For now always use the new timecounter.  */
+comment|/*  * Initialize a new timecounter.  * We should really try to rank the timecounters and intelligently determine  * if the new timecounter is better than the current one.  This is subject  * to further study.  For now always use the new timecounter.  */
 end_comment
 
 begin_function
@@ -1469,6 +1487,9 @@ operator|->
 name|tc_frequency
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tc
 operator|->
 name|tc_get_timecount
@@ -1476,6 +1497,9 @@ argument_list|(
 name|tc
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tc
 operator|->
 name|tc_get_timecount
@@ -1491,7 +1515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Report frequency of the current timecounter. */
+comment|/* Report the frequency of the current timecounter. */
 end_comment
 
 begin_function
@@ -1514,7 +1538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Step our concept of GMT.  This is done by modifying our estimate of  * when we booted.  XXX: needs futher work.  */
+comment|/*  * Step our concept of GMT.  This is done by modifying our estimate of  * when we booted.  XXX: needs futher work.  */
 end_comment
 
 begin_function
@@ -1549,6 +1573,7 @@ name|ts2
 operator|.
 name|tv_sec
 expr_stmt|;
+comment|/* XXX boottime should probably be a timespec. */
 name|boottime
 operator|.
 name|tv_usec
@@ -1595,7 +1620,7 @@ operator|&
 name|boottimebin
 argument_list|)
 expr_stmt|;
-comment|/* fiddle all the little crinkly bits around the fiords... */
+comment|/* XXX fiddle all the little crinkly bits around the fiords... */
 name|tc_windup
 argument_list|()
 expr_stmt|;
@@ -1603,7 +1628,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * tc_windup() will initialize the next struct timehands in the ring and make  * it the active timehands.  Along the way we might switch to a different  * timecounter and/or do seconds processing in NTP.  Slightly magic.  */
+comment|/*  * Initialize the next struct timehands in the ring and make  * it the active timehands.  Along the way we might switch to a different  * timecounter and/or do seconds processing in NTP.  Slightly magic.  */
 end_comment
 
 begin_function
@@ -1615,6 +1640,10 @@ name|void
 parameter_list|)
 block|{
 name|struct
+name|bintime
+name|bt
+decl_stmt|;
+name|struct
 name|timehands
 modifier|*
 name|th
@@ -1622,29 +1651,20 @@ decl_stmt|,
 modifier|*
 name|tho
 decl_stmt|;
-name|struct
-name|bintime
-name|bt
+name|u_int64_t
+name|scale
 decl_stmt|;
 name|u_int
-name|ogen
-decl_stmt|,
 name|delta
 decl_stmt|,
 name|ncount
+decl_stmt|,
+name|ogen
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_int64_t
-name|scale
-decl_stmt|;
-name|ncount
-operator|=
-literal|0
-expr_stmt|;
-comment|/* GCC is lame */
-comment|/*- 	 * Make the next timehands a copy of the current one, but do not 	 * overwrite the generation or next pointer.  While we update 	 * the contents, the generation must be zero. 	 */
+comment|/* 	 * Make the next timehands a copy of the current one, but do not 	 * overwrite the generation or next pointer.  While we update 	 * the contents, the generation must be zero. 	 */
 name|tho
 operator|=
 name|timehands
@@ -1673,7 +1693,7 @@ name|tho
 argument_list|,
 name|th
 argument_list|,
-name|__offsetof
+name|offsetof
 argument_list|(
 expr|struct
 name|timehands
@@ -1682,7 +1702,7 @@ name|th_generation
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*- 	 * Capture a timecounter delta on the current timecounter and if 	 * changing timecounters, a counter value from the new timecounter. 	 * Update the offset fields accordingly. 	 */
+comment|/* 	 * Capture a timecounter delta on the current timecounter and if 	 * changing timecounters, a counter value from the new timecounter. 	 * Update the offset fields accordingly. 	 */
 name|delta
 operator|=
 name|tc_delta
@@ -1706,6 +1726,11 @@ name|tc_get_timecount
 argument_list|(
 name|timecounter
 argument_list|)
+expr_stmt|;
+else|else
+name|ncount
+operator|=
+literal|0
 expr_stmt|;
 name|th
 operator|->
@@ -1737,7 +1762,7 @@ operator|*
 name|delta
 argument_list|)
 expr_stmt|;
-comment|/*- 	 * Hardware latching timecounters may not generate interrupts on 	 * PPS events, so instead we poll them.  There is a finite risk that 	 * the hardware might capture a count which is later than the one we 	 * got above, and therefore possibly in the next NTP second which might 	 * have a different rate than the current NTP second.  It doesn't 	 * matter in practice. 	 */
+comment|/* 	 * Hardware latching timecounters may not generate interrupts on 	 * PPS events, so instead we poll them.  There is a finite risk that 	 * the hardware might capture a count which is later than the one we 	 * got above, and therefore possibly in the next NTP second which might 	 * have a different rate than the current NTP second.  It doesn't 	 * matter in practice. 	 */
 if|if
 condition|(
 name|tho
@@ -1757,7 +1782,7 @@ operator|->
 name|th_counter
 argument_list|)
 expr_stmt|;
-comment|/*- 	 * Deal with NTP second processing.  The for() loop probably doesn't 	 * do anything normally, but in a few extreme situations it might 	 * keep timecounters sane if timeouts are not run for several seconds. 	 */
+comment|/* 	 * Deal with NTP second processing.  The for loop normally only 	 * iterates once, but in extreme situations it might keep NTP sane 	 * if timeouts are not run for several seconds. 	 */
 for|for
 control|(
 name|i
@@ -1819,10 +1844,13 @@ operator|=
 name|ncount
 expr_stmt|;
 block|}
-comment|/*- 	 * Recalculate the scaling factor.  We want the number of 1/2^64 	 * fractions of a second per period of the hardware counter, taking 	 * into account the th_adjustment factor which the NTP PLL/adjtime(2) 	 * processing provides us with. 	 * 	 * The th_adjustment is nanoseconds per second with 32 bit binary 	 * fraction and want 64 bit binary fraction of second: 	 * 	 *	 x = a * 2^32 / 10^9 = a * 4.294967296 	 * 	 * The range of th_adjustment is +/- 5000PPM so inside a 64bit int 	 * we can only multiply by about 850 without overflowing, but that 	 * leaves suitably precise fractions for multiply before divide. 	 * 	 * Divide before multiply with a fraction of 2199/512 results in a 	 * systematic undercompensation of 10PPM of th_adjustment.  On a 	 * 5000PPM adjustment this is a 0.05PPM error.  This is acceptable.  	 * 	 * We happily sacrifice the lowest of the 64 bits of our result 	 * to the goddess of code clarity. 	 */
+comment|/*-? 	 * Recalculate the scaling factor.  We want the number of 1/2^64 	 * fractions of a second per period of the hardware counter, taking 	 * into account the th_adjustment factor which the NTP PLL/adjtime(2) 	 * processing provides us with. 	 * 	 * The th_adjustment is nanoseconds per second with 32 bit binary 	 * fraction and want 64 bit binary fraction of second: 	 * 	 *	 x = a * 2^32 / 10^9 = a * 4.294967296 	 * 	 * The range of th_adjustment is +/- 5000PPM so inside a 64bit int 	 * we can only multiply by about 850 without overflowing, but that 	 * leaves suitably precise fractions for multiply before divide. 	 * 	 * Divide before multiply with a fraction of 2199/512 results in a 	 * systematic undercompensation of 10PPM of th_adjustment.  On a 	 * 5000PPM adjustment this is a 0.05PPM error.  This is acceptable.  	 * 	 * We happily sacrifice the lowest of the 64 bits of our result 	 * to the goddess of code clarity. 	 * 	 */
 name|scale
 operator|=
-literal|1ULL
+operator|(
+name|u_int64_t
+operator|)
+literal|1
 operator|<<
 literal|63
 expr_stmt|;
@@ -1892,7 +1920,7 @@ operator|->
 name|th_nanotime
 argument_list|)
 expr_stmt|;
-comment|/*- 	 * Now that the struct timehands is against consistent, set the new 	 * generation number, making sure to not make it zero. 	 */
+comment|/* 	 * Now that the struct timehands is again consistent, set the new 	 * generation number, making sure to not make it zero. 	 */
 if|if
 condition|(
 operator|++
@@ -1901,7 +1929,8 @@ operator|==
 literal|0
 condition|)
 name|ogen
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 name|th
 operator|->
@@ -1909,7 +1938,7 @@ name|th_generation
 operator|=
 name|ogen
 expr_stmt|;
-comment|/* Go live on the new struct timehands */
+comment|/* Go live with the new struct timehands. */
 name|time_second
 operator|=
 name|th
@@ -1926,7 +1955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Report or change active timecounter hardware. */
+comment|/* Report or change the active timecounter hardware. */
 end_comment
 
 begin_function
@@ -1972,6 +2001,18 @@ name|newname
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|newname
+index|[
+sizeof|sizeof
+argument_list|(
+name|newname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|error
 operator|=
 name|sysctl_handle_string
@@ -1997,14 +2038,13 @@ condition|(
 name|error
 operator|!=
 literal|0
-operator|&&
+operator|||
 name|req
 operator|->
 name|newptr
 operator|==
 name|NULL
-operator|&&
-operator|!
+operator|||
 name|strcmp
 argument_list|(
 name|newname
@@ -2013,6 +2053,8 @@ name|tc
 operator|->
 name|tc_name
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -2046,6 +2088,8 @@ name|newtc
 operator|->
 name|tc_name
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 comment|/* Warm up new timecounter. */
@@ -2114,7 +2158,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * RFC 2783 PPS-API implementation.  */
+comment|/*  * RFC 2783 PPS-API implementation.  */
 end_comment
 
 begin_function
@@ -2555,6 +2599,10 @@ name|event
 parameter_list|)
 block|{
 name|struct
+name|bintime
+name|bt
+decl_stmt|;
+name|struct
 name|timespec
 name|ts
 decl_stmt|,
@@ -2570,10 +2618,6 @@ decl_stmt|,
 modifier|*
 name|pcount
 decl_stmt|;
-name|struct
-name|bintime
-name|bt
-decl_stmt|;
 name|int
 name|foff
 decl_stmt|,
@@ -2583,13 +2627,14 @@ name|pps_seq_t
 modifier|*
 name|pseq
 decl_stmt|;
-comment|/* If the timecounter were wound up, bail. */
+comment|/* If the timecounter was wound up underneath us, bail out. */
 if|if
 condition|(
-operator|!
 name|pps
 operator|->
 name|capgen
+operator|==
+literal|0
 operator|||
 name|pps
 operator|->
@@ -2602,7 +2647,7 @@ operator|->
 name|th_generation
 condition|)
 return|return;
-comment|/* Things would be easier with arrays... */
+comment|/* Things would be easier with arrays. */
 if|if
 condition|(
 name|event
@@ -2724,7 +2769,7 @@ operator|.
 name|clear_sequence
 expr_stmt|;
 block|}
-comment|/*- 	 * If the timecounter changed, we cannot compare the count values, so 	 * we have to drop the rest of the PPS-stuff until the next event. 	 */
+comment|/* 	 * If the timecounter changed, we cannot compare the count values, so 	 * we have to drop the rest of the PPS-stuff until the next event. 	 */
 if|if
 condition|(
 name|pps
@@ -2768,7 +2813,7 @@ name|capcount
 expr_stmt|;
 return|return;
 block|}
-comment|/* Nothing really happened */
+comment|/* Return if nothing really happened. */
 if|if
 condition|(
 operator|*
@@ -2779,7 +2824,7 @@ operator|->
 name|capcount
 condition|)
 return|return;
-comment|/* Convert the count to timespec */
+comment|/* Convert the count to a timespec. */
 name|tcount
 operator|=
 name|pps
@@ -2833,7 +2878,7 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-comment|/* If the timecounter were wound up, bail. */
+comment|/* If the timecounter was wound up underneath us, bail out. */
 if|if
 condition|(
 name|pps
@@ -2908,7 +2953,7 @@ condition|(
 name|fhard
 condition|)
 block|{
-comment|/*- 		 * Feed the NTP PLL/FLL. 		 * The FLL wants to know how many nanoseconds elapsed since 		 * the previous event. 		 * I have never been able to convince myself that this code 		 * is actually correct:  Using th_scale is bound to contain 		 * a phase correction component from userland, when running 		 * as FLL, so the number hardpps() gets is not meaningful IMO. 		 */
+comment|/* 		 * Feed the NTP PLL/FLL. 		 * The FLL wants to know how many nanoseconds elapsed since 		 * the previous event. 		 * I have never been able to convince myself that this code 		 * is actually correct:  Using th_scale is bound to contain 		 * a phase correction component from userland, when running 		 * as FLL, so the number hardpps() gets is not meaningful IMO. 		 */
 name|tcount
 operator|=
 name|pps
@@ -3000,7 +3045,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Timecounters need to be updated every so often to prevent the hardware  * counter from overflowing.  Updating also recalculates the cached values  * used by the get*() family of functions, so their precision depends on  * the update frequency.  * Don't update faster than approx once per millisecond, if people want  * better timestamps they should use the non-"get" functions.  */
+comment|/*  * Timecounters need to be updated every so often to prevent the hardware  * counter from overflowing.  Updating also recalculates the cached values  * used by the get*() family of functions, so their precision depends on  * the update frequency.  */
 end_comment
 
 begin_decl_stmt
@@ -3069,6 +3114,7 @@ block|{
 name|u_int
 name|p
 decl_stmt|;
+comment|/* 	 * Set the initial timeout to 	 * max(1,<approx. number of hardclock ticks in a millisecond>). 	 * People should probably not use the sysctl to set the timeout 	 * to smaller than its inital value, since that value is the 	 * smallest reasonable one.  If they want better timestamps they 	 * should use the non-"get"* functions. 	 */
 if|if
 condition|(
 name|hz
@@ -3111,6 +3157,27 @@ argument_list|,
 name|p
 operator|%
 literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* warm up new timecounter (again) and get rolling */
+operator|(
+name|void
+operator|)
+name|timecounter
+operator|->
+name|tc_get_timecount
+argument_list|(
+name|timecounter
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|timecounter
+operator|->
+name|tc_get_timecount
+argument_list|(
+name|timecounter
 argument_list|)
 expr_stmt|;
 name|tc_ticktock
