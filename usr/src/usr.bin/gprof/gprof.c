@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.4 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1568,7 +1568,8 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|int
+name|unsigned
+name|long
 name|overlap
 decl_stmt|;
 name|unsigned
@@ -1841,24 +1842,21 @@ block|}
 block|}
 end_block
 
-begin_macro
-name|min
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
 name|unsigned
+name|long
+name|min
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+name|unsigned
+name|long
 name|a
 decl_stmt|,
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1877,26 +1875,23 @@ name|b
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
-name|max
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
 name|unsigned
+name|long
+name|max
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+name|unsigned
+name|long
 name|a
 decl_stmt|,
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1915,7 +1910,7 @@ name|b
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|done
