@@ -1728,6 +1728,15 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|smp_started
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
 for|for
 control|(
 name|i
