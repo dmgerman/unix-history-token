@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.80 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.81 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.80 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.81 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -6208,7 +6208,7 @@ name|int
 name|qfver
 decl_stmt|;
 name|char
-name|message
+name|statmsg
 index|[
 name|MAXLINE
 index|]
@@ -6336,7 +6336,7 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|message
+name|statmsg
 index|[
 literal|0
 index|]
@@ -6427,12 +6427,12 @@ argument_list|)
 operator|)
 operator|>=
 sizeof|sizeof
-name|message
+name|statmsg
 condition|)
 name|i
 operator|=
 sizeof|sizeof
-name|message
+name|statmsg
 operator|-
 literal|1
 expr_stmt|;
@@ -6444,12 +6444,12 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|message
+name|statmsg
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|message
+name|statmsg
 index|[
 name|i
 index|]
@@ -6573,7 +6573,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|message
+name|statmsg
 index|[
 literal|0
 index|]
@@ -6597,7 +6597,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|message
+name|statmsg
 index|[
 literal|0
 index|]
@@ -6608,7 +6608,7 @@ name|printf
 argument_list|(
 literal|"   (%.60s)"
 argument_list|,
-name|message
+name|statmsg
 argument_list|)
 expr_stmt|;
 block|}
