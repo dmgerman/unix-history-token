@@ -1230,6 +1230,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"ctau"
+block|,
+literal|"Cronyx/Tau multiport synchronous adapter"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"ed"
 block|,
 literal|"NE1000,NE2000,3C503,WD/SMC80xx Ethernet adapters"
