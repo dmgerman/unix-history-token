@@ -3747,17 +3747,6 @@ name|_udatasel
 expr_stmt|;
 name|regs
 operator|->
-name|tf_fs
-operator|=
-name|_udatasel
-expr_stmt|;
-name|load_gs
-argument_list|(
-name|_udatasel
-argument_list|)
-expr_stmt|;
-name|regs
-operator|->
 name|tf_ss
 operator|=
 name|_udatasel
