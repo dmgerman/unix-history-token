@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	5.7 (Berkeley) %G%"
+literal|"@(#)acu.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|acuabort
 parameter_list|()
 function_decl|;
@@ -766,7 +766,7 @@ end_block
 
 begin_function
 specifier|static
-name|int
+name|void
 name|acuabort
 parameter_list|(
 name|s

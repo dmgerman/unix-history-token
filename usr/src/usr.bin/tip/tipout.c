@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tipout.c	5.3 (Berkeley) %G%"
+literal|"@(#)tipout.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,10 @@ begin_comment
 comment|/*  * TIPOUT wait state routine --  *   sent by TIPIN when it wants to posses the remote host  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|intIOT
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|write
 argument_list|(
@@ -90,18 +88,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Scripting command interpreter --  *  accepts script file name over the pipe and acts accordingly  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|intEMT
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|c
@@ -267,14 +263,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|intTERM
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -301,14 +295,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|intSYS
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|boolean
 argument_list|(
@@ -335,7 +327,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ****TIPOUT   TIPOUT****  */

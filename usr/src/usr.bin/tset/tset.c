@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	5.14 (Berkeley) %G%"
+literal|"@(#)tset.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1620,7 +1620,7 @@ decl_stmt|;
 name|int
 name|settle
 decl_stmt|;
-name|int
+name|void
 name|setmode
 parameter_list|()
 function_decl|;
@@ -5914,24 +5914,16 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|setmode
-argument_list|(
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|flag
+parameter_list|)
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* flag serves several purposes:  *	if called as the result of a signal, flag will be> 0.  *	if called from terminal init, flag == -1 means reset "oldmode".  *	called with flag == 0 at end of normal mode processing.  */
-end_comment
-
-begin_block
 block|{
 ifndef|#
 directive|ifndef
@@ -6268,7 +6260,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|reportek

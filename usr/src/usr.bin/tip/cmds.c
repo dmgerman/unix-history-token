@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.13 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1547,6 +1547,9 @@ condition|(
 operator|!
 name|boolean
 argument_list|(
+operator|(
+name|int
+operator|)
 name|value
 argument_list|(
 name|RAWFTP
@@ -1612,6 +1615,9 @@ literal|0
 expr_stmt|;
 name|alarm
 argument_list|(
+operator|(
+name|int
+operator|)
 name|value
 argument_list|(
 name|ETIMEOUT
@@ -2116,6 +2122,9 @@ literal|0
 expr_stmt|;
 name|alarm
 argument_list|(
+operator|(
+name|int
+operator|)
 name|value
 argument_list|(
 name|ETIMEOUT
