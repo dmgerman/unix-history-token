@@ -13429,6 +13429,13 @@ index|[]
 init|=
 block|{
 block|{
+literal|0x030fd041
+block|,
+literal|"PS/2 mouse port"
+block|}
+block|,
+comment|/* PNP0F03 */
+block|{
 literal|0x130fd041
 block|,
 literal|"PS/2 mouse port"
