@@ -9053,15 +9053,13 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_REFERENCED
+name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
-block|}
 name|pmap_free_l2_bucket
 argument_list|(
 name|pv
