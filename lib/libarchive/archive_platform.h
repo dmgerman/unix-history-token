@@ -451,6 +451,42 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* FreeBSD 4 and earlier lack intmax_t/uintmax_t */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|<
+literal|5
+end_if
+
+begin_define
+define|#
+directive|define
+name|intmax_t
+value|int64_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|uintmax_t
+value|uint64_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* TODO: Test for the functions we use as well... */
 end_comment
 

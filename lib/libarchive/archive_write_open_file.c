@@ -158,6 +158,13 @@ condition|(
 name|filename
 operator|==
 name|NULL
+operator|||
+name|filename
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
 name|mine
@@ -200,8 +207,9 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
+comment|/* Record that we're using stdout. */
 block|}
 else|else
 block|{
@@ -327,12 +335,14 @@ name|O_TRUNC
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|mine
 operator|->
 name|filename
-operator|!=
+index|[
 literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|mine
@@ -666,9 +676,12 @@ if|if
 condition|(
 name|mine
 operator|->
-name|fd
-operator|>=
+name|filename
+index|[
 literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 name|close
 argument_list|(
