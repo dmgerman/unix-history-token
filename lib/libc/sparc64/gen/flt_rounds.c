@@ -43,11 +43,11 @@ comment|/* round to nearest */
 literal|0
 block|,
 comment|/* round to zero */
-literal|3
-block|,
-comment|/* round to negative infinity */
 literal|2
+block|,
 comment|/* round to positive infinity */
+literal|3
+comment|/* round to negative infinity */
 block|}
 decl_stmt|;
 end_decl_stmt
