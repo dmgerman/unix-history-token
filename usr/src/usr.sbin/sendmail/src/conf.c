@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.28 (Berkeley) %G%"
+literal|"@(#)conf.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +296,10 @@ block|,
 literal|"novrfy"
 block|,
 name|PRIV_NOVRFY
+block|,
+literal|"restrictmailq"
+block|,
+name|PRIV_RESTRMAILQ
 block|,
 literal|"goaway"
 block|,
