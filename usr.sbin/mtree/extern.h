@@ -98,18 +98,22 @@ end_function_decl
 begin_function_decl
 name|NODE
 modifier|*
-name|spec
+name|mtree_readspec
 parameter_list|(
-name|void
+name|FILE
+modifier|*
+name|fi
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|verify
+name|mtree_verifyspec
 parameter_list|(
-name|void
+name|FILE
+modifier|*
+name|fi
 parameter_list|)
 function_decl|;
 end_function_decl

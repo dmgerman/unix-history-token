@@ -163,9 +163,11 @@ end_function_decl
 begin_function
 name|NODE
 modifier|*
-name|spec
+name|mtree_readspec
 parameter_list|(
-name|void
+name|FILE
+modifier|*
+name|fi
 parameter_list|)
 block|{
 name|NODE
@@ -236,7 +238,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|stdin
+name|fi
 argument_list|)
 condition|;
 operator|++
@@ -893,7 +895,6 @@ name|ip
 operator|->
 name|md5digest
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -901,7 +902,6 @@ argument_list|,
 literal|"strdup"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|F_SHA1
@@ -922,7 +922,6 @@ name|ip
 operator|->
 name|sha1digest
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -930,7 +929,6 @@ argument_list|,
 literal|"strdup"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|F_RMD160
@@ -951,7 +949,6 @@ name|ip
 operator|->
 name|rmd160digest
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -959,7 +956,6 @@ argument_list|,
 literal|"strdup"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|F_FLAGS

@@ -579,8 +579,10 @@ expr_stmt|;
 block|}
 name|status
 operator|=
-name|verify
-argument_list|()
+name|mtree_verifyspec
+argument_list|(
+name|stdin
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

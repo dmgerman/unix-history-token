@@ -195,9 +195,11 @@ end_function_decl
 
 begin_function
 name|int
-name|verify
+name|mtree_verifyspec
 parameter_list|(
-name|void
+name|FILE
+modifier|*
+name|fi
 parameter_list|)
 block|{
 name|int
@@ -205,8 +207,10 @@ name|rval
 decl_stmt|;
 name|root
 operator|=
-name|spec
-argument_list|()
+name|mtree_readspec
+argument_list|(
+name|fi
+argument_list|)
 expr_stmt|;
 name|rval
 operator|=
