@@ -4,6 +4,17 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
+comment|/* FreeBSD isn't any form of AIX. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bin_dummy_emulation
+value|bin_vanilla_emulation
+end_define
+
+begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
@@ -90,6 +101,14 @@ end_comment
 
 begin_comment
 comment|/* #undef off_t */
+end_comment
+
+begin_comment
+comment|/* Define if you need to in order for stat and other things to work.  */
+end_comment
+
+begin_comment
+comment|/* #undef _POSIX_SOURCE */
 end_comment
 
 begin_comment
@@ -289,6 +308,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the strcoll function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCOLL
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the utimes function.  */
 end_comment
 
@@ -471,7 +501,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.12" */
+comment|/* #define VERSION "2.13" */
 end_comment
 
 begin_comment
@@ -633,7 +663,7 @@ comment|/* Configured target name. */
 end_comment
 
 begin_comment
-comment|/* #define TARGET "alpha-unknown-freebsd5.0" */
+comment|/* #define TARGET "alpha-obrien-freebsd5.0" */
 end_comment
 
 end_unit

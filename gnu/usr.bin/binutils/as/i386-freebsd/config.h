@@ -468,7 +468,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.12" */
+comment|/* #define VERSION "2.13" */
 end_comment
 
 begin_comment
@@ -501,14 +501,6 @@ end_comment
 
 begin_comment
 comment|/* #undef TARGET_BYTES_BIG_ENDIAN */
-end_comment
-
-begin_comment
-comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
-end_comment
-
-begin_comment
-comment|/* #undef MIPS_STABS_ELF */
 end_comment
 
 begin_comment
