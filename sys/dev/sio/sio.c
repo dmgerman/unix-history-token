@@ -4691,8 +4691,6 @@ condition|(
 name|com
 operator|->
 name|esp
-operator|!=
-name|NULL
 condition|)
 break|break;
 endif|#
@@ -4740,8 +4738,6 @@ condition|(
 name|com
 operator|->
 name|esp
-operator|!=
-name|NULL
 condition|)
 block|{
 comment|/* 		 * Set 16550 compatibility mode. 		 * We don't use the ESP_MODE_SCALE bit to increase the 		 * fifo trigger levels because we can't handle large 		 * bursts of input. 		 * XXX flow control should be set in comparam(), not here. 		 */
