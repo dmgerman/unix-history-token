@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.5 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.6 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.5 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.6 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1174,11 +1174,22 @@ argument_list|)
 operator|==
 literal|4
 condition|)
+block|{
+name|smtpquit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1186,11 +1197,22 @@ name|r
 operator|==
 literal|554
 condition|)
+block|{
+name|smtprset
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1198,11 +1220,22 @@ name|r
 operator|!=
 literal|354
 condition|)
+block|{
+name|smtprset
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_PROTOCOL
 operator|)
 return|;
+block|}
 comment|/* now output the actual message */
 call|(
 modifier|*
@@ -1318,11 +1351,22 @@ name|r
 operator|<
 literal|0
 condition|)
+block|{
+name|smtpquit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+block|}
 name|mci
 operator|->
 name|mci_state
