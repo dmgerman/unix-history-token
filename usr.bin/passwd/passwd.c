@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: passwd.c,v 1.12 1997/03/29 04:31:27 imp Exp $"
+literal|"$Id: passwd.c,v 1.13 1997/07/31 06:57:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +230,9 @@ name|char
 modifier|*
 name|uname
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
 name|char
 modifier|*
 name|iflag
@@ -246,6 +249,8 @@ name|uflag
 init|=
 literal|0
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|YP
