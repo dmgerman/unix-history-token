@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_output.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_output.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -327,11 +327,9 @@ name|lcp
 operator|->
 name|lcd_output_window
 operator|+
-name|pkp
+name|lcp
 operator|->
-name|pk_xcp
-operator|->
-name|xc_pwsize
+name|lcd_windowsize
 operator|)
 operator|%
 name|MODULUS
