@@ -80,7 +80,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.25 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.26 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,7 +101,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.25 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.26 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,7 +116,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.25 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.26 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -732,13 +732,15 @@ argument_list|)
 expr_stmt|;
 name|AliasDBptr
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|buf
 argument_list|,
 name|O_RDONLY
 argument_list|,
 name|DBMMODE
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
@@ -847,13 +849,15 @@ argument_list|)
 expr_stmt|;
 name|AliasDBptr
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|buf
 argument_list|,
 name|O_RDONLY
 argument_list|,
 name|DBMMODE
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
@@ -1497,7 +1501,7 @@ argument_list|)
 expr_stmt|;
 name|dbp
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|line
 argument_list|,
@@ -1508,6 +1512,8 @@ operator||
 name|O_TRUNC
 argument_list|,
 name|DBMMODE
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
@@ -2166,7 +2172,7 @@ argument_list|,
 operator|&
 name|content
 argument_list|,
-name|R_PUT
+literal|0
 argument_list|)
 operator|!=
 literal|0
@@ -2290,7 +2296,7 @@ argument_list|,
 operator|&
 name|key
 argument_list|,
-name|R_PUT
+literal|0
 argument_list|)
 operator|!=
 literal|0
