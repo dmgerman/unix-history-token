@@ -683,10 +683,12 @@ argument_list|(
 operator|&
 name|tmpbuf
 argument_list|,
-literal|"%sgroup::%s\t\t# "
+literal|"%sgroup:%s:%s\t\t# "
 literal|"effective: %s\n"
 argument_list|,
 name|buf
+argument_list|,
+name|name_buf
 argument_list|,
 name|perm_buf
 argument_list|,
