@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.52 (Berkeley) %G%"
+literal|"@(#)conf.c	6.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2935,6 +2935,53 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD4_4
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/exec.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|SETPROC_STATIC
+value|static
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SETPROC_STATIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SETPROC_STATIC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -3179,6 +3226,8 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
