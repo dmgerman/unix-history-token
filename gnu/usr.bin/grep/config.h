@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.4"
+value|"2.4d"
 end_define
 
 begin_comment
