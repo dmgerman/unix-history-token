@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	6.3	84/08/29	*/
+comment|/*	rk.c	6.4	85/03/12	*/
 end_comment
 
 begin_include
@@ -157,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_include
@@ -3640,8 +3646,10 @@ expr_stmt|;
 name|reg
 operator|--
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|KERN_RECOV
+argument_list|,
 literal|"rk%d%c: soft ecc sn%d\n"
 argument_list|,
 name|dkunit
