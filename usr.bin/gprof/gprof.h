@@ -204,6 +204,25 @@ name|hz
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF4
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|UNIT
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|u_short
@@ -214,6 +233,11 @@ end_typedef
 begin_comment
 comment|/* unit of profiling */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
