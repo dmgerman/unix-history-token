@@ -3242,29 +3242,14 @@ name|sc_txfifosz
 operator|=
 literal|16
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * XXX there are some issues related to hardware flow control and 	 * it's likely that uart(4) is the cause. This basicly needs more 	 * investigation, but we avoid using for hardware flow control 	 * until then. 	 */
 comment|/* 16650s or higher have automatic flow control. */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_rxfifosz
-operator|>
-literal|16
-condition|)
-block|{
-name|sc
-operator|->
-name|sc_hwiflow
-operator|=
-literal|1
-expr_stmt|;
-name|sc
-operator|->
-name|sc_hwoflow
-operator|=
-literal|1
-expr_stmt|;
-block|}
+block|if (sc->sc_rxfifosz> 16) { 		sc->sc_hwiflow = 1; 		sc->sc_hwoflow = 1; 	}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
