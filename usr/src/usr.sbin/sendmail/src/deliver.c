@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.44 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1379,7 +1379,7 @@ condition|)
 block|{
 name|expand
 argument_list|(
-literal|"\001w"
+literal|"\001j"
 argument_list|,
 name|buf
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.21 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1213,6 +1213,8 @@ operator|!
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QNOTREMOTE
 argument_list|,
 name|a
 operator|->
