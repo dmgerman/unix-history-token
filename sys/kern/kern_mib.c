@@ -1264,7 +1264,7 @@ name|td_ucred
 operator|->
 name|cr_prison
 expr_stmt|;
-comment|/* 	 * If the process is in jail, return the maximum of the global and 	 * local levels; otherwise, return the global level.  Perform a 	 * lockless read since the securelevel is an interger. 	 */
+comment|/* 	 * If the process is in jail, return the maximum of the global and 	 * local levels; otherwise, return the global level.  Perform a 	 * lockless read since the securelevel is an integer. 	 */
 if|if
 condition|(
 name|pr
