@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.11 1997/12/05 19:55:52 bde Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.12 1997/12/14 05:17:41 dyson Exp $  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_map.h>
 end_include
 
 begin_include
@@ -1072,7 +1078,49 @@ name|zalloc
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 		 * We can wait, so just do normal kernel map allocation 		 */
+comment|/* 		 * Check to see if the kernel map is already locked.  We could allow 		 * for recursive locks, but that eliminates a valuable debugging 		 * mechanism, and opens up the kernel map for potential corruption 		 * by inconsistent data structure manipulation.  We could also use 		 * the interrupt allocation mechanism, but that has size limitations. 		 * Luckily, we have kmem_map that is a submap of kernel map available 		 * for memory allocation, and manipulation of that map doesn't affect 		 * the kernel map structures themselves. 		 * 		 * We can wait, so just do normal map allocation in the appropriate 		 * map. 		 */
+if|if
+condition|(
+name|lockstatus
+argument_list|(
+operator|&
+name|kernel_map
+operator|->
+name|lock
+argument_list|)
+condition|)
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+name|item
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|kmem_malloc
+argument_list|(
+name|kmem_map
+argument_list|,
+name|nbytes
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|item
 operator|=
 operator|(
@@ -1086,12 +1134,7 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (z->zname) 			printf("zalloc: %s, %d (0x%x --> 0x%x)\n", 				z->zname, z->zalloc, item, 				(char *)item + nbytes); 		else 			printf("zalloc: XXX(%d), %d (0x%x --> 0x%x)\n", 				z->zsize, z->zalloc, item, 				(char *)item + nbytes);  		for (i = 0; i< nbytes; i += PAGE_SIZE) 			printf("(%x, %x)", (char *) item + i, 			       pmap_kextract((char *) item + i)); 		printf("\n");
-endif|#
-directive|endif
+block|}
 name|nitems
 operator|=
 name|nbytes
