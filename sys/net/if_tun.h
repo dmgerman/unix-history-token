@@ -87,14 +87,14 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Maximum packet size */
+comment|/* Default maximum packet size */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TUNMTU
-value|1600
+value|1500
 end_define
 
 begin_struct
