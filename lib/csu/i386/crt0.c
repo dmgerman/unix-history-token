@@ -36,7 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<link.h>
 end_include
 
 begin_include
@@ -48,13 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<link.h>
+file|"libc_private.h"
 end_include
 
 begin_comment
@@ -286,21 +292,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|char
-name|empty
-index|[
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|__progname
 init|=
-name|empty
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -598,6 +595,12 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
 specifier|extern
 name|void
 name|_mcleanup
@@ -678,11 +681,6 @@ literal|0
 index|]
 condition|)
 block|{
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|;
 name|__progname
 operator|=
 name|argv

@@ -117,18 +117,6 @@ directive|include
 file|"httperr.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX not portable */
-end_comment
-
 begin_comment
 comment|/* Maximum number of redirects to follow */
 end_comment
@@ -4193,7 +4181,8 @@ argument_list|,
 literal|"User-Agent: %s "
 name|_LIBFETCH_VER
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if

@@ -83,6 +83,12 @@ directive|include
 file|"setlocale.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|__collate_load_error
@@ -822,12 +828,6 @@ modifier|*
 name|f
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-comment|/* Program name, from crt0. */
 specifier|const
 name|char
 modifier|*
@@ -840,7 +840,8 @@ name|errno
 decl_stmt|;
 name|s
 operator|=
-name|__progname
+name|_getprogname
+argument_list|()
 expr_stmt|;
 name|_write
 argument_list|(

@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -167,6 +173,12 @@ begin_include
 include|#
 directive|include
 file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_decl_stmt
@@ -257,18 +269,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* mask of priorities to be logged */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Program name, from crt0. */
 end_comment
 
 begin_function_decl
@@ -760,7 +760,8 @@ name|NULL
 condition|)
 name|LogTag
 operator|=
-name|__progname
+name|_getprogname
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

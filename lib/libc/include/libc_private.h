@@ -90,6 +90,19 @@ parameter_list|)
 value|if (__isthreaded) _funlockfile(fp)
 end_define
 
+begin_comment
+comment|/*  * This is a pointer in the C run-time startup code. It is used  * by getprogname() and setprogname().  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

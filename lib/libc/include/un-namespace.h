@@ -156,6 +156,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|getprogname
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|getsockname
 end_undef
 

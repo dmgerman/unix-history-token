@@ -25,14 +25,11 @@ directive|include
 file|<string.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
 
 begin_function
 name|void

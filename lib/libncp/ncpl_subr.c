@@ -112,14 +112,6 @@ file|"ncp_mod.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|sysentoffset
 decl_stmt|;
@@ -1458,7 +1450,8 @@ name|stderr
 argument_list|,
 literal|"%s: illegal option -- %c\n"
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|,
 name|ncp_optopt
 argument_list|)
@@ -1545,7 +1538,8 @@ name|stderr
 argument_list|,
 literal|"%s: option requires an argument -- %c\n"
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|,
 name|ncp_optopt
 argument_list|)
@@ -2131,7 +2125,8 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|va_start

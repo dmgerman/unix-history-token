@@ -202,6 +202,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|getprogname
+value|_getprogname
+end_define
+
+begin_define
+define|#
+directive|define
 name|getsockname
 value|_getsockname
 end_define

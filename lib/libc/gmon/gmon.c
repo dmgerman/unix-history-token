@@ -80,19 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"un-namespace.h"
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -104,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -123,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_if
@@ -179,14 +179,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -839,7 +831,8 @@ argument_list|)
 argument_list|,
 literal|"%s.gmon"
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|fd

@@ -54,6 +54,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -67,6 +73,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_decl_stmt
@@ -153,11 +171,6 @@ modifier|*
 name|ostr
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
 specifier|static
 name|char
 modifier|*
@@ -324,7 +337,8 @@ name|stderr
 argument_list|,
 literal|"%s: illegal option -- %c\n"
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|,
 name|optopt
 argument_list|)
@@ -411,7 +425,8 @@ name|stderr
 argument_list|,
 literal|"%s: option requires an argument -- %c\n"
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|,
 name|optopt
 argument_list|)

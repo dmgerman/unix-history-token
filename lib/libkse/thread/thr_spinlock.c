@@ -6,25 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sched.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pthread.h>
 end_include
 
 begin_include
@@ -36,16 +24,32 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pthread_private.h"
+file|<sched.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libc_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pthread_private.h"
+end_include
 
 begin_comment
 comment|/*  * Lock a location for the running thread. Yield to allow other  * threads to run if this thread is blocked because the lock is  * not available. Note that this function does not sleep. It  * assumes that the lock will be available very soon.  */
@@ -184,7 +188,8 @@ argument_list|)
 argument_list|,
 literal|"%s - Warning: Thread %p attempted to lock %p from %s (%d) was left locked from %s (%d)\n"
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|,
 name|curthread
 argument_list|,

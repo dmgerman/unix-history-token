@@ -66,13 +66,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"un-namespace.h"
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdarg.h>
 end_include
 
 begin_include
@@ -96,20 +96,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|"un-namespace.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Program name, from crt0. */
-end_comment
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -371,7 +365,8 @@ name|err_file
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -512,7 +507,8 @@ name|err_file
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -717,7 +713,8 @@ name|err_file
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -834,7 +831,8 @@ name|err_file
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if

@@ -1305,14 +1305,6 @@ name|wrtmessage
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -1329,7 +1321,8 @@ literal|1
 expr_stmt|;
 name|_malloc_message
 argument_list|(
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|,
 name|malloc_func
 argument_list|,
@@ -1365,7 +1358,8 @@ argument_list|)
 expr_stmt|;
 name|_malloc_message
 argument_list|(
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|,
 name|malloc_func
 argument_list|,

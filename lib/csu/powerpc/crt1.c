@@ -29,6 +29,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"crtbrand.c"
 end_include
 
@@ -154,6 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|__progname
@@ -254,6 +261,11 @@ name|char
 modifier|*
 name|namep
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|s
+decl_stmt|;
 name|environ
 operator|=
 name|envp
@@ -272,10 +284,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
 name|__progname
 operator|=
 name|argv

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -83,6 +89,18 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_comment
 comment|/*  * Older FreeBSD 2.0, 2.1 and 2.2 had different ps_strings structures and  * in different locations.  * 1: old_ps_strings at the very top of the stack.  * 2: old_ps_strings at SPARE_USRSPACE below the top of the stack.  * 3: ps_strings at the very top of the stack.  * This attempts to support a kernel built in the #2 and #3 era.  */
 end_comment
@@ -131,18 +149,6 @@ end_define
 
 begin_comment
 comment|/* from other parts of sendmail */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* is this defined in a .h anywhere? */
 end_comment
 
 begin_function
@@ -294,7 +300,8 @@ argument_list|)
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|__progname
+name|_getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|len
