@@ -1028,6 +1028,7 @@ comment|/*  * we_check --  *	Check that the string contains none of the followin
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|we_check
 parameter_list|(
