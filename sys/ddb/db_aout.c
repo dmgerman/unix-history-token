@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_aout.c,v 1.7 1994/08/13 03:49:14 wollman Exp $  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_aout.c,v 1.8 1994/09/05 14:04:56 bde Exp $  */
 end_comment
 
 begin_comment
@@ -597,8 +597,10 @@ condition|(
 name|diff
 operator|==
 literal|0
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|strategy
 operator|==
 name|DB_STGY_PROC
@@ -612,7 +614,10 @@ name|N_TEXT
 operator||
 name|N_EXT
 operator|)
-operator|||
+condition|)
+break|break;
+if|if
+condition|(
 name|strategy
 operator|==
 name|DB_STGY_ANY
@@ -624,9 +629,9 @@ name|n_type
 operator|&
 name|N_EXT
 operator|)
-operator|)
 condition|)
 break|break;
+block|}
 block|}
 elseif|else
 if|if
@@ -824,19 +829,6 @@ name|sp
 decl_stmt|,
 modifier|*
 name|ep
-decl_stmt|;
-specifier|register
-name|struct
-name|nlist
-modifier|*
-name|sym
-init|=
-operator|(
-expr|struct
-name|nlist
-operator|*
-operator|)
-name|cursym
 decl_stmt|;
 name|unsigned
 name|long
