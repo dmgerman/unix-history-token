@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -2317,6 +2323,26 @@ argument_list|,
 name|eh
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+comment|/* First chunk of an mbuf contains good junk */
+if|if
+condition|(
+name|harvest
+operator|.
+name|ethernet
+condition|)
+name|random_harvest
+argument_list|(
+name|m
+argument_list|,
+literal|16
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+name|RANDOM_NET
 argument_list|)
 expr_stmt|;
 block|}
