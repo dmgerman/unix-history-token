@@ -576,7 +576,8 @@ name|list
 parameter_list|,
 name|hint
 parameter_list|)
-value|if ((list) != NULL) knote(list, hint)
+define|\
+value|do { if ((list) != NULL) knote(list, hint); } while (0)
 end_define
 
 begin_comment
