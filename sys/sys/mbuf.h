@@ -1199,11 +1199,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_EXT_WRITABLE
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|((m)->m_ext.ext_free == NULL&& mclrefcnt[mtocl((m)->m_ext.ext_buf)] == 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|M_WRITABLE
 parameter_list|(
 name|m
 parameter_list|)
-value|(!((m)->m_flags& M_EXT) || \     ((m)->m_ext.ext_free == NULL&& mclrefcnt[mtocl((m)->m_ext.ext_buf)] == 1))
+value|(!((m)->m_flags& M_EXT) || \     M_EXT_WRITABLE(m) )
 end_define
 
 begin_comment
@@ -1218,9 +1229,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|((m)->m_flags& M_EXT ?						\
-comment|/* (m)->m_data - (m)->m_ext.ext_buf */
-value|0 :			\ 	    (m)->m_flags& M_PKTHDR ? (m)->m_data - (m)->m_pktdat :	\ 	    (m)->m_data - (m)->m_dat)
+value|((m)->m_flags& M_EXT ?						\ 	    (M_EXT_WRITABLE(m) ? (m)->m_data - (m)->m_ext.ext_buf : 0):	\ 	    (m)->m_flags& M_PKTHDR ? (m)->m_data - (m)->m_pktdat :	\ 	    (m)->m_data - (m)->m_dat)
 end_define
 
 begin_comment
