@@ -445,7 +445,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|__builtin_memset(tp, 0, sizeof(*tp))
+value|memset(tp, 0, sizeof(*tp))
 end_define
 
 begin_struct_decl
