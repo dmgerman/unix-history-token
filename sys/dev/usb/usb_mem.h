@@ -80,7 +80,7 @@ name|dma
 parameter_list|,
 name|o
 parameter_list|)
-value|((uint32_t)(uintptr_t)(((char *)(dma)->block->segs[0].ds_addr) + (dma)->offs + (o)))
+value|((dma)->block->segs[0].ds_addr + (dma)->offs + (o))
 end_define
 
 begin_else
