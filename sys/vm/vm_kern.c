@@ -1261,6 +1261,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -1269,6 +1272,9 @@ name|PG_WRITEABLE
 operator||
 name|PG_REFERENCED
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 name|vm_map_unlock

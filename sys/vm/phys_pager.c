@@ -496,6 +496,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Switch off pv_entries */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -505,10 +509,6 @@ index|]
 argument_list|,
 name|PG_ZERO
 argument_list|)
-expr_stmt|;
-comment|/* Switch off pv_entries */
-name|vm_page_lock_queues
-argument_list|()
 expr_stmt|;
 name|vm_page_unmanage
 argument_list|(
