@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)acct.h	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)acct.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -9,7 +9,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_short
+name|u_int16_t
 name|comp_t
 typedef|;
 end_typedef
@@ -49,7 +49,7 @@ name|gid_t
 name|ac_gid
 decl_stmt|;
 comment|/* group id */
-name|short
+name|u_int16_t
 name|ac_mem
 decl_stmt|;
 comment|/* average memory usage */
@@ -65,7 +65,7 @@ define|#
 directive|define
 name|AFORK
 value|0x01
-comment|/* forked but not execed */
+comment|/* fork'd but not exec'd */
 define|#
 directive|define
 name|ASU
@@ -86,7 +86,7 @@ directive|define
 name|AXSIG
 value|0x10
 comment|/* killed by a signal */
-name|char
+name|u_int8_t
 name|ac_flag
 decl_stmt|;
 comment|/* accounting flags */
