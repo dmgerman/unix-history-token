@@ -154,10 +154,6 @@ modifier|*
 name|cn_tp
 decl_stmt|;
 comment|/* tty structure for console device */
-name|dev_t
-name|cn_dev
-decl_stmt|;
-comment|/* major/minor of device */
 name|short
 name|cn_pri
 decl_stmt|;
