@@ -2539,6 +2539,11 @@ name|old
 index|[
 literal|0
 index|]
+operator|&&
+name|new
+index|[
+literal|0
+index|]
 condition|)
 name|old
 index|[
