@@ -673,6 +673,24 @@ comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
 block|,
+block|{
+comment|/* 		 * The CISS RAID controllers do not support SYNC_CACHE 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"COMPAQ"
+block|,
+literal|"RAID*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
 comment|/* XXX USB floppy quirks temporarily enabled for 4.9R */
 comment|/* USB floppy devices supported by umass(4) */
 block|{
