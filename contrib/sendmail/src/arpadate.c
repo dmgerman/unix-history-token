@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)arpadate.c	8.14 (Berkeley) 2/2/1999"
+literal|"@(#)$Id: arpadate.c,v 8.23 1999/09/23 19:59:18 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,17 +25,17 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_comment
-comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		ud -- unix style date string.  if NULL, one is created. ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. ** **	Bugs: **		Timezone is computed from local time, rather than **		from whereever (and whenever) the message was sent. **		To do better is very hard. ** **		Some sites are now inserting the timezone into the **		local date.  This routine should figure out what **		the format is and work appropriately. */
+comment|/* **  ARPADATE -- Create date in ARPANET format ** **	Parameters: **		ud -- unix style date string.  if NULL, one is created. ** **	Returns: **		pointer to an ARPANET date field ** **	Side Effects: **		none ** **	WARNING: **		date is stored in a local buffer -- subsequent **		calls will overwrite. ** **	Bugs: **		Timezone is computed from local time, rather than **		from wherever (and whenever) the message was sent. **		To do better is very hard. ** **		Some sites are now inserting the timezone into the **		local date.  This routine should figure out what **		the format is and work appropriately. */
 end_comment
 
 begin_ifndef
@@ -59,6 +59,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! TZNAME_MAX */
+end_comment
 
 begin_comment
 comment|/* values for TZ_TYPE */
@@ -563,6 +567,7 @@ name|tm_name
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* TZ_TYPE == TZ_TM_NAME */
 if|#
 directive|if
 name|TZ_TYPE
@@ -576,6 +581,7 @@ name|tm_zone
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* TZ_TYPE == TZ_TM_ZONE */
 if|#
 directive|if
 name|TZ_TYPE
@@ -627,6 +633,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* TZ_TYPE == TZ_TZNAME */
 if|#
 directive|if
 name|TZ_TYPE
@@ -653,6 +660,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* TZ_TYPE == TZ_TIMEZONE */
 if|if
 condition|(
 name|off
@@ -815,9 +823,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-operator|(
 name|b
-operator|)
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)macro.c	8.26 (Berkeley) 11/8/1998"
+literal|"@(#)$Id: macro.c,v 8.40.16.1 2000/05/25 18:56:15 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,13 +25,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_decl_stmt
@@ -148,7 +148,7 @@ literal|24
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"expand("
 argument_list|)
@@ -158,7 +158,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|")\n"
 argument_list|)
@@ -242,7 +242,12 @@ name|skiplev
 operator|++
 expr_stmt|;
 else|else
-name|skipping
+block|{
+name|char
+modifier|*
+name|mv
+decl_stmt|;
+name|mv
 operator|=
 name|macvalue
 argument_list|(
@@ -250,9 +255,21 @@ name|c
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+name|skipping
+operator|=
+operator|(
+name|mv
 operator|==
 name|NULL
+operator|||
+operator|*
+name|mv
+operator|==
+literal|'\0'
+operator|)
 expr_stmt|;
+block|}
 continue|continue;
 case|case
 name|CONDELSE
@@ -450,7 +467,7 @@ literal|24
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"expand ==> "
 argument_list|)
@@ -460,7 +477,7 @@ argument_list|(
 name|xbuf
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -515,6 +532,9 @@ name|xbuf
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|i
 operator|>=
 name|bufsize
@@ -525,11 +545,11 @@ name|bufsize
 operator|-
 literal|1
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|xbuf
-argument_list|,
 name|buf
+argument_list|,
+name|xbuf
 argument_list|,
 name|i
 argument_list|)
@@ -574,6 +594,15 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+name|int
+name|m
+decl_stmt|;
+name|m
+operator|=
+name|n
+operator|&
+literal|0377
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -584,7 +613,7 @@ literal|9
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"%sdefine(%s as "
 argument_list|,
@@ -593,9 +622,7 @@ name|e
 operator|->
 name|e_macro
 index|[
-name|n
-operator|&
-literal|0377
+name|m
 index|]
 operator|==
 name|NULL
@@ -616,7 +643,7 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|")\n"
 argument_list|)
@@ -626,13 +653,31 @@ name|e
 operator|->
 name|e_macro
 index|[
-name|n
-operator|&
-literal|0377
+name|m
 index|]
 operator|=
 name|v
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_RESET_MACRO_GLOBALS
+switch|switch
+condition|(
+name|m
+condition|)
+block|{
+case|case
+literal|'j'
+case|:
+name|MyHostName
+operator|=
+name|v
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_RESET_MACRO_GLOBALS */
 block|}
 end_function
 
@@ -691,9 +736,7 @@ operator|!=
 name|NULL
 condition|)
 return|return
-operator|(
 name|p
-operator|)
 return|;
 name|e
 operator|=
@@ -703,9 +746,7 @@ name|e_parent
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 end_function
@@ -843,7 +884,7 @@ literal|14
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"macid("
 argument_list|)
@@ -853,7 +894,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|") => "
 argument_list|)
@@ -908,7 +949,7 @@ argument_list|,
 literal|14
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"NULL\n"
 argument_list|)
@@ -948,7 +989,7 @@ argument_list|,
 literal|14
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"%c\n"
 argument_list|,
@@ -1138,7 +1179,7 @@ if|if
 condition|(
 name|NextMacroId
 operator|>
-literal|0377
+name|MAXMACROID
 condition|)
 block|{
 name|syserr
@@ -1202,7 +1243,7 @@ argument_list|,
 literal|14
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"0x%x\n"
 argument_list|,

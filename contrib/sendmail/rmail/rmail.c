@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_ifndef
@@ -37,10 +37,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)rmail.c	8.18 (Berkeley) 10/23/1998"
+literal|"@(#)$Id: rmail.c,v 8.39.4.5 2000/07/18 05:55:29 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,12 +50,18 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_comment
-comment|/*  * RMAIL -- UUCP mail server.  *  * This program reads the>From ... remote from ... lines that UUCP is so  * fond of and turns them into something reasonable.  It then execs sendmail  * with various options built from these lines.   *  * The expected syntax is:  *  *<user> := [-a-z0-9]+  *<date> := ctime format  *<site> := [-a-z0-9!]+  *<blank line> := "^\n$"  *<from> := "From"<space><user><space><date>  *		  [<space> "remote from"<space><site>]  *<forward> := ">"<from>  *	    msg :=<from><forward>*<blank-line><body>  *  * The output of rmail(8) compresses the<forward> lines into a single  * from path.  *  * The err(3) routine is included here deliberately to make this code  * a bit more portable.  */
+comment|/*  * RMAIL -- UUCP mail server.  *  * This program reads the>From ... remote from ... lines that UUCP is so  * fond of and turns them into something reasonable.  It then execs sendmail  * with various options built from these lines.  *  * The expected syntax is:  *  *<user> := [-a-z0-9]+  *<date> := ctime format  *<site> := [-a-z0-9!]+  *<blank line> := "^\n$"  *<from> := "From"<space><user><space><date>  *		  [<space> "remote from"<space><site>]  *<forward> := ">"<from>  *	    msg :=<from><forward>*<blank-line><body>  *  * The output of rmail(8) compresses the<forward> lines into a single  * from path.  *  * The err(3) routine is included here deliberately to make this code  * a bit more portable.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -111,6 +117,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* BSD4_4 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -136,10 +146,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! _PATH_SENDMAIL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* BSD4_4 */
+end_comment
 
 begin_include
 include|#
@@ -186,6 +204,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* EX_OK */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -215,6 +237,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! MAX */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -242,6 +268,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -263,10 +293,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! __P */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|STDIN_FILENO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|STDIN_FILENO
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! STDIN_FILENO */
+end_comment
 
 begin_if
 if|#
@@ -294,6 +354,10 @@ name|SOLARIS
 operator|>=
 literal|206
 operator|)
+operator|||
+name|_AIX4
+operator|>=
+literal|40300
 end_if
 
 begin_define
@@ -308,93 +372,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IRIX64
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IRIX5
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IRIX6
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|BSD4_4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__osf__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__GNU_LIBRARY__
-argument_list|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HASSTRERROR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HASSTRERROR
-value|1
-end_define
-
 begin_comment
-comment|/* has strerror(3) */
+comment|/* defined(BSD4_4) || defined(linux) || SOLARIS>= 20600 || (SOLARIS< 10000&& SOLARIS>= 206) || _AIX4>= 40300 */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|HASSTRERROR
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|strerror
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -448,6 +428,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(sun)&& !defined(BSD)&& !defined(SOLARIS)&& !defined(__svr4__)&& !defined(__SVR4) */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -486,16 +470,222 @@ begin_comment
 comment|/* !HASSNPRINTF */
 end_comment
 
-begin_decl_stmt
-name|u_char
-name|tTdvect
-index|[
-literal|100
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BSD4_4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__osf__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GNU_LIBRARY__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IRIX64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IRIX5
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IRIX6
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASSTRERROR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASSTRERROR
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! HASSTRERROR */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(BSD4_4) || defined(__osf__) || defined(__GNU_LIBRARY__) || 	  defined(IRIX64) || defined(IRIX5) || defined(IRIX6) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SUNOS403
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NeXT
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|MACH
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNU__
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|oldBSD43
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MORE_BSD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|umipsbsd
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ALTOS_SYSTEM_V
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|RISCOS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AUX_SOURCE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|UMAXV
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|titan
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|UNIXWARE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sony_news
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|luna
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|nec_ews_svr4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_nec_ews_svr4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__MAXION__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WIFEXITED
+parameter_list|(
+name|st
+parameter_list|)
+value|(((st)& 0377) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WEXITSTATUS
+parameter_list|(
+name|st
+parameter_list|)
+value|(((st)>> 8)& 0377)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(SUNOS403) || defined(NeXT) || (defined(MACH)&& defined(i386)&& !defined(__GNU__)) || defined(oldBSD43) || defined(MORE_BSD) || defined(umipsbsd) || defined(ALTOS_SYSTEM_V) || defined(RISCOS) || defined(_AUX_SOURCE) || defined(UMAXV) || defined(titan) || defined(UNIXWARE) || defined(sony_news) || defined(luna) || defined(nec_ews_svr4) || defined(_nec_ews_svr4) || defined(__MAXION__) */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"sendmail/errstring.h"
+end_include
 
 begin_decl_stmt
+specifier|static
 name|void
 name|err
 name|__P
@@ -514,6 +704,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -526,6 +717,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|xalloc
@@ -549,6 +741,7 @@ value|strcpy(xalloc(strlen(s) + 1), s)
 end_define
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|xalloc
@@ -624,39 +817,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|optind
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-name|struct
-name|stat
-name|sb
-decl_stmt|;
-name|size_t
-name|fplen
-init|=
-literal|0
-decl_stmt|,
-name|fptlen
-init|=
-literal|0
-decl_stmt|,
-name|len
-decl_stmt|;
-name|off_t
-name|offset
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -672,6 +832,24 @@ decl_stmt|,
 name|pid
 decl_stmt|,
 name|status
+decl_stmt|;
+name|size_t
+name|fplen
+init|=
+literal|0
+decl_stmt|,
+name|fptlen
+init|=
+literal|0
+decl_stmt|,
+name|len
+decl_stmt|;
+name|off_t
+name|offset
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 name|char
 modifier|*
@@ -715,6 +893,19 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
 name|debug
 operator|=
 literal|0
@@ -739,8 +930,10 @@ literal|"D:T"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
+block|{
 switch|switch
 condition|(
 name|ch
@@ -769,6 +962,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|argc
 operator|-=
@@ -918,6 +1112,10 @@ break|break;
 block|}
 if|if
 condition|(
+name|addrp
+operator|==
+name|NULL
+operator|||
 operator|*
 name|addrp
 operator|==
@@ -955,6 +1153,7 @@ operator|!=
 name|NULL
 condition|;
 control|)
+block|{
 if|if
 condition|(
 operator|!
@@ -978,9 +1177,15 @@ literal|12
 init|;
 operator|*
 name|t
-operator|&&
-operator|!
-operator|(
+operator|!=
+literal|'\0'
+condition|;
+operator|++
+name|t
+control|)
+block|{
+if|if
+condition|(
 name|isascii
 argument_list|(
 operator|*
@@ -992,12 +1197,9 @@ argument_list|(
 operator|*
 name|t
 argument_list|)
-operator|)
-condition|;
-operator|++
-name|t
-control|)
-empty_stmt|;
+condition|)
+break|break;
+block|}
 operator|*
 name|t
 operator|=
@@ -1007,9 +1209,6 @@ if|if
 condition|(
 name|debug
 condition|)
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1020,6 +1219,7 @@ name|p
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 comment|/* Else use the string up to the last bang. */
 if|if
@@ -1097,9 +1297,6 @@ if|if
 condition|(
 name|debug
 condition|)
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1128,9 +1325,15 @@ name|p
 init|;
 operator|*
 name|t
-operator|&&
-operator|!
-operator|(
+operator|!=
+literal|'\0'
+condition|;
+operator|++
+name|t
+control|)
+block|{
+if|if
+condition|(
 name|isascii
 argument_list|(
 operator|*
@@ -1142,12 +1345,9 @@ argument_list|(
 operator|*
 name|t
 argument_list|)
-operator|)
-condition|;
-operator|++
-name|t
-control|)
-empty_stmt|;
+condition|)
+break|break;
+block|}
 operator|*
 name|t
 operator|=
@@ -1172,9 +1372,6 @@ if|if
 condition|(
 name|debug
 condition|)
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1313,9 +1510,15 @@ name|addrp
 init|;
 operator|*
 name|p
-operator|&&
-operator|!
-operator|(
+operator|!=
+literal|'\0'
+condition|;
+operator|++
+name|p
+control|)
+block|{
+if|if
+condition|(
 name|isascii
 argument_list|(
 operator|*
@@ -1327,12 +1530,9 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
-operator|)
-condition|;
-operator|++
-name|p
-control|)
-empty_stmt|;
+condition|)
+break|break;
+block|}
 operator|*
 name|p
 operator|=
@@ -1378,9 +1578,6 @@ name|from_path
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1390,9 +1587,6 @@ argument_list|,
 name|from_path
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1468,9 +1662,6 @@ name|from_sys
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -1497,9 +1688,6 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -1519,9 +1707,6 @@ name|domain
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -1550,9 +1735,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* Set name of ``from'' person. */
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -1584,7 +1766,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't copy arguments beginning with - as they will be 	 * passed to sendmail and could be interpreted as flags. 	 * To prevent confusion of sendmail wrap< and> around 	 * the address (helps to pass addrs like @gw1,@gw2:aa@bb) 	 */
+comment|/* 	**  Don't copy arguments beginning with - as they will be 	**  passed to sendmail and could be interpreted as flags. 	**  To prevent confusion of sendmail wrap< and> around 	**  the address (helps to pass addrs like @gw1,@gw2:aa@bb) 	*/
 while|while
 condition|(
 operator|*
@@ -1642,6 +1824,16 @@ name|argv
 expr_stmt|;
 else|else
 block|{
+name|len
+operator|=
+name|strlen
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+operator|+
+literal|3
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1652,13 +1844,7 @@ index|]
 operator|=
 name|malloc
 argument_list|(
-name|strlen
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-operator|+
-literal|3
+name|len
 argument_list|)
 operator|)
 operator|==
@@ -1671,13 +1857,15 @@ argument_list|,
 literal|"Cannot malloc"
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|args
 index|[
 name|i
 operator|++
 index|]
+argument_list|,
+name|len
 argument_list|,
 literal|"<%s>"
 argument_list|,
@@ -1702,9 +1890,6 @@ condition|(
 name|debug
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1726,9 +1911,6 @@ condition|;
 name|i
 operator|++
 control|)
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1742,7 +1924,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If called with a regular file as standard input, seek to the right 	 * position in the file and just exec sendmail.  Could probably skip 	 * skip the stat, but it's not unreasonable to believe that a failed 	 * seek will cause future reads to fail. 	 */
+comment|/* 	**  If called with a regular file as standard input, seek to the right 	**  position in the file and just exec sendmail.  Could probably skip 	**  skip the stat, but it's not unreasonable to believe that a failed 	**  seek will cause future reads to fail. 	*/
 if|if
 condition|(
 operator|!
@@ -1782,6 +1964,9 @@ argument_list|,
 literal|"stdin seek"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|execv
 argument_list|(
 name|_PATH_SENDMAIL
@@ -1835,6 +2020,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 literal|0
 case|:
@@ -1885,6 +2071,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|execv
 argument_list|(
 name|_PATH_SENDMAIL
@@ -1981,7 +2170,7 @@ name|EX_TEMPFAIL
 argument_list|,
 literal|"stdin: %s"
 argument_list|,
-name|strerror
+name|errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -2070,10 +2259,15 @@ argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+return|return
+name|EX_OK
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -2113,6 +2307,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -2124,7 +2322,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
 begin_function
+specifier|static
 name|void
 ifdef|#
 directive|ifdef
@@ -2143,6 +2346,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
+comment|/* __STDC__ */
 function|err
 parameter_list|(
 name|eval
@@ -2162,12 +2366,13 @@ decl_stmt|;
 function|va_dcl
 endif|#
 directive|endif
+comment|/* __STDC__ */
 block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -2178,6 +2383,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* __STDC__ */
 name|va_start
 argument_list|(
 name|ap
@@ -2185,6 +2391,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __STDC__ */
 operator|(
 name|void
 operator|)
@@ -2229,84 +2436,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-operator|!
-name|HASSTRERROR
-end_if
-
-begin_function
-name|char
-modifier|*
-name|strerror
-parameter_list|(
-name|eno
-parameter_list|)
-name|int
-name|eno
-decl_stmt|;
-block|{
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-specifier|static
-name|char
-name|ebuf
-index|[
-literal|60
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|eno
-operator|>=
-literal|0
-operator|&&
-name|eno
-operator|<
-name|sys_nerr
-condition|)
-return|return
-name|sys_errlist
-index|[
-name|eno
-index|]
-return|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|ebuf
-argument_list|,
-literal|"Error %d"
-argument_list|,
-name|eno
-argument_list|)
-expr_stmt|;
-return|return
-name|ebuf
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !HASSTRERROR */
-end_comment
 
 end_unit
 

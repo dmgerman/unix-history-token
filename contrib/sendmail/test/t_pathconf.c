@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -18,14 +18,45 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<stdio.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EX_OK
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|EX_OK
+end_undef
+
+begin_comment
+comment|/* unistd.h may have another use for this */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EX_OK */
+end_comment
 
 begin_include
 include|#
@@ -33,9 +64,47 @@ directive|include
 file|<sysexits.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|id
+index|[]
+init|=
+literal|"@(#)$Id: t_pathconf.c,v 8.5 1999/08/28 00:25:28 gshapiro Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! lint */
+end_comment
+
 begin_function
+name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
 block|{
 name|int
 name|fd
@@ -251,6 +320,9 @@ literal|"*** but in fact it is safe ***\n"
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|tbuf

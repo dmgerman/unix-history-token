@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * By John G. Myers, jgm+@cmu.edu  * Version 1.2  *  * Process a BITNET "internet.listing" file, producing output  * suitable for input to makemap.  *  * The input file can be obtained via anonymous FTP to bitnic.educom.edu.  * Change directory to "netinfo" and get the file internet.listing  * The file is updated monthly.  *  * Feed the output of this program to "makemap hash /etc/bitdomain.db"  * to create the table used by the "FEATURE(bitdomain)" config file macro.  * If your sendmail does not have the db library compiled in, you can instead  * use "makemap dbm /etc/bitdomain" and  * "FEATURE(bitdomain,`dbm -o /etc/bitdomain')"  *  * The bitdomain table should be rebuilt monthly.  */
+comment|/*  * By John G. Myers, jgm+@cmu.edu  * Version 1.2  *  * Process a BITNET "internet.listing" file, producing output  * suitable for input to makemap.  *  * The input file can be obtained via anonymous FTP to bitnic.educom.edu.  * Change directory to "netinfo" and get the file internet.listing  * The file is updated monthly.  *  * Feed the output of this program to "makemap hash /etc/mail/bitdomain.db"  * to create the table used by the "FEATURE(bitdomain)" config file macro.  * If your sendmail does not have the db library compiled in, you can instead  * use "makemap dbm /etc/mail/bitdomain" and  * "FEATURE(bitdomain,`dbm -o /etc/mail/bitdomain')"  *  * The bitdomain table should be rebuilt monthly.  */
 end_comment
 
 begin_include
@@ -174,7 +174,8 @@ literal|"o:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)mci.c	8.83 (Berkeley) 10/13/1998"
+literal|"@(#)$Id: mci.c,v 8.133.10.3 2000/06/23 16:17:06 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,14 +25,22 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
+end_if
 
 begin_include
 include|#
@@ -40,30 +48,23 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET || NETINET6 */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<dirent.h>
 end_include
 
-begin_comment
-comment|/* **  Mail Connection Information (MCI) Caching Module. ** **	There are actually two separate things cached.  The first is **	the set of all open connections -- these are stored in a **	(small) list.  The second is stored in the symbol table; it **	has the overall status for all hosts, whether or not there **	is a connection open currently. ** **	There should never be too many connections open (since this **	could flood the socket table), nor should a connection be **	allowed to sit idly for too long. ** **	MaxMciCache is the maximum number of open connections that **	will be supported. ** **	MciCacheTimeout is the time (in seconds) that a connection **	is permitted to survive without activity. ** **	We actually try any cached connections by sending a NOOP **	before we use them; if the NOOP fails we close down the **	connection and reopen it.  Note that this means that a **	server SMTP that doesn't support NOOP will hose the **	algorithm -- but that doesn't seem too likely. ** **	The persistent MCI code is donated by Mark Lovell and Paul **	Vixie.  It is based on the long term host status code in KJS **	written by Paul but has been adapted by Mark to fit into the **	MCI structure. */
-end_comment
-
 begin_decl_stmt
-name|MCI
-modifier|*
-modifier|*
-name|MciCache
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the open connection cache */
-end_comment
-
-begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|mci_generate_persistent_path
 name|__P
@@ -85,7 +86,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|bool
 name|mci_load_persistent
 name|__P
@@ -99,7 +100,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|mci_uncache
 name|__P
@@ -114,6 +115,54 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mci_lock_host_statfile
+name|__P
+argument_list|(
+operator|(
+name|MCI
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mci_read_persistent
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|MCI
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* **  Mail Connection Information (MCI) Caching Module. ** **	There are actually two separate things cached.  The first is **	the set of all open connections -- these are stored in a **	(small) list.  The second is stored in the symbol table; it **	has the overall status for all hosts, whether or not there **	is a connection open currently. ** **	There should never be too many connections open (since this **	could flood the socket table), nor should a connection be **	allowed to sit idly for too long. ** **	MaxMciCache is the maximum number of open connections that **	will be supported. ** **	MciCacheTimeout is the time (in seconds) that a connection **	is permitted to survive without activity. ** **	We actually try any cached connections by sending a NOOP **	before we use them; if the NOOP fails we close down the **	connection and reopen it.  Note that this means that a **	server SMTP that doesn't support NOOP will hose the **	algorithm -- but that doesn't seem too likely. ** **	The persistent MCI code is donated by Mark Lovell and Paul **	Vixie.  It is based on the long term host status code in KJS **	written by Paul but has been adapted by Mark to fit into the **	MCI structure. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|MCI
+modifier|*
+modifier|*
+name|MciCache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the open connection cache */
+end_comment
 
 begin_escape
 end_escape
@@ -204,7 +253,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_cache: caching %lx (%s) in slot %d\n"
 argument_list|,
@@ -244,8 +293,11 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"mci_cache: caching %x (%.100s) in slot %d"
+literal|"mci_cache: caching %lx (%.100s) in slot %d"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mci
 argument_list|,
 name|mci
@@ -345,13 +397,15 @@ expr|*
 name|MciCache
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|MciCache
+argument_list|,
+literal|'\0'
 argument_list|,
 name|MaxMciCache
 operator|*
@@ -361,13 +415,11 @@ name|MciCache
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|&
 name|MciCache
 index|[
 literal|0
 index|]
-operator|)
 return|;
 block|}
 name|now
@@ -429,6 +481,7 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|(
 name|mci
 operator|->
 name|mci_lastuse
@@ -436,13 +489,42 @@ operator|+
 name|MciCacheTimeout
 operator|<
 name|now
+operator|||
+operator|(
+name|mci
+operator|->
+name|mci_mailer
+operator|!=
+name|NULL
+operator|&&
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_maxdeliveries
+operator|>
+literal|0
+operator|&&
+name|mci
+operator|->
+name|mci_deliveries
+operator|+
+literal|1
+operator|>=
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_maxdeliveries
+operator|)
+operator|)
 operator|&&
 name|mci
 operator|!=
 name|savemci
 condition|)
 block|{
-comment|/* connection idle too long -- close it */
+comment|/* connection idle too long or too many deliveries */
 name|bestmci
 operator|=
 operator|&
@@ -451,6 +533,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* close it */
 name|mci_uncache
 argument_list|(
 name|bestmci
@@ -504,6 +587,7 @@ comment|/* **  MCI_UNCACHE -- remove a connection from a slot. ** **	May close a
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|mci_uncache
 parameter_list|(
@@ -570,7 +654,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_uncache: uncaching %lx (%s) from slot %d (%d)\n"
 argument_list|,
@@ -612,8 +696,11 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"mci_uncache: uncaching %x (%.100s) from slot %d (%d)"
+literal|"mci_uncache: uncaching %lx (%.100s) from slot %d (%d)"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mci
 argument_list|,
 name|mci
@@ -626,6 +713,12 @@ name|MciCache
 argument_list|,
 name|doquit
 argument_list|)
+expr_stmt|;
+name|mci
+operator|->
+name|mci_deliveries
+operator|=
+literal|0
 expr_stmt|;
 if|#
 directive|if
@@ -684,10 +777,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* XLA */
 block|}
 else|else
 endif|#
 directive|endif
+comment|/* SMTP */
 block|{
 if|if
 condition|(
@@ -697,15 +792,14 @@ name|mci_in
 operator|!=
 name|NULL
 condition|)
-name|xfclose
+operator|(
+name|void
+operator|)
+name|fclose
 argument_list|(
 name|mci
 operator|->
 name|mci_in
-argument_list|,
-literal|"mci_uncache"
-argument_list|,
-literal|"mci_in"
 argument_list|)
 expr_stmt|;
 if|if
@@ -716,15 +810,14 @@ name|mci_out
 operator|!=
 name|NULL
 condition|)
-name|xfclose
+operator|(
+name|void
+operator|)
+name|fclose
 argument_list|(
 name|mci
 operator|->
 name|mci_out
-argument_list|,
-literal|"mci_uncache"
-argument_list|,
-literal|"mci_out"
 argument_list|)
 expr_stmt|;
 name|mci
@@ -878,10 +971,12 @@ name|SOCKADDR
 name|CurHostAddr
 decl_stmt|;
 comment|/* clear CurHostAddr so we don't get a bogus address with this name */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|CurHostAddr
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|CurHostAddr
@@ -889,6 +984,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DAEMON */
 comment|/* clear out any expired connections */
 operator|(
 name|void
@@ -941,6 +1037,16 @@ name|s
 operator|->
 name|s_mci
 expr_stmt|;
+comment|/* 	**  We don't need to load the peristent data if we have data 	**  already loaded in the cache. 	*/
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_host
+operator|==
+name|NULL
+operator|&&
+operator|(
 name|mci
 operator|->
 name|mci_host
@@ -948,9 +1054,10 @@ operator|=
 name|s
 operator|->
 name|s_name
-expr_stmt|;
-if|if
-condition|(
+operator|)
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|mci_load_persistent
 argument_list|(
@@ -967,7 +1074,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_get(%s %s): lock failed\n"
 argument_list|,
@@ -1010,9 +1117,9 @@ literal|2
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
-literal|"mci_get(%s %s): mci_state=%d, _flags=%x, _exitstat=%d, _errno=%d\n"
+literal|"mci_get(%s %s): mci_state=%d, _flags=%lx, _exitstat=%d, _errno=%d\n"
 argument_list|,
 name|host
 argument_list|,
@@ -1050,17 +1157,6 @@ operator|==
 name|MCIS_OPEN
 condition|)
 block|{
-specifier|extern
-name|int
-name|smtpprobe
-name|__P
-argument_list|(
-operator|(
-name|MCI
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 comment|/* poke the connection to see if it's still alive */
 operator|(
 name|void
@@ -1139,9 +1235,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* DAEMON */
 block|}
 endif|#
 directive|endif
+comment|/* SMTP */
 if|if
 condition|(
 name|mci
@@ -1191,6 +1289,99 @@ block|}
 block|}
 return|return
 name|mci
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  MCI_MATCH -- check connection cache for a particular host */
+end_comment
+
+begin_function
+name|bool
+name|mci_match
+parameter_list|(
+name|host
+parameter_list|,
+name|m
+parameter_list|)
+name|char
+modifier|*
+name|host
+decl_stmt|;
+name|MAILER
+modifier|*
+name|m
+decl_stmt|;
+block|{
+specifier|register
+name|MCI
+modifier|*
+name|mci
+decl_stmt|;
+specifier|register
+name|STAB
+modifier|*
+name|s
+decl_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_mno
+operator|<
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+name|s
+operator|=
+name|stab
+argument_list|(
+name|host
+argument_list|,
+name|ST_MCI
+operator|+
+name|m
+operator|->
+name|m_mno
+argument_list|,
+name|ST_FIND
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+return|return
+name|FALSE
+return|;
+name|mci
+operator|=
+operator|&
+name|s
+operator|->
+name|s_mci
+expr_stmt|;
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|==
+name|MCIS_OPEN
+condition|)
+return|return
+name|TRUE
+return|;
+return|return
+name|FALSE
 return|;
 block|}
 end_function
@@ -1315,6 +1506,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mcifbits
 name|MciFlags
@@ -1452,12 +1644,6 @@ index|[
 literal|4000
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
 name|sep
 operator|=
 name|logit
@@ -1481,8 +1667,11 @@ argument_list|,
 name|p
 argument_list|)
 argument_list|,
-literal|"MCI@%x: "
+literal|"MCI@%lx: "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mci
 argument_list|)
 expr_stmt|;
@@ -1529,7 +1718,7 @@ argument_list|,
 name|p
 argument_list|)
 argument_list|,
-literal|"flags=%x"
+literal|"flags=%lx"
 argument_list|,
 name|mci
 operator|->
@@ -1660,6 +1849,9 @@ name|mci
 operator|->
 name|mci_state
 argument_list|,
+operator|(
+name|int
+operator|)
 name|mci
 operator|->
 name|mci_pid
@@ -1896,7 +2088,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_LOCK_HOST -- Lock host while sending. ** **	If we are contacting a host, we'll need to **	update the status information in the host status **	file, and if we want to do that, we ought to have **	locked it. This has the (according to some) **	desirable effect of serializing connectivity with **	remote hosts -- i.e.: one connection to a give **	host at a time. ** **	Parameters: **		mci -- containing the host we want to lock. ** **	Returns: **		EX_OK	   -- got the lock. **		EX_TEMPFAIL -- didn't get the lock. */
+comment|/* **  MCI_LOCK_HOST -- Lock host while sending. ** **	If we are contacting a host, we'll need to **	update the status information in the host status **	file, and if we want to do that, we ought to have **	locked it. This has the (according to some) **	desirable effect of serializing connectivity with **	remote hosts -- i.e.: one connection to a give **	host at a time. ** **	Parameters: **		mci -- containing the host we want to lock. ** **	Returns: **		EX_OK	    -- got the lock. **		EX_TEMPFAIL -- didn't get the lock. */
 end_comment
 
 begin_function
@@ -1926,7 +2118,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_lock_host: NULL mci\n"
 argument_list|)
@@ -1953,6 +2145,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mci_lock_host_statfile
 parameter_list|(
@@ -1964,7 +2157,7 @@ name|mci
 decl_stmt|;
 block|{
 name|int
-name|savedErrno
+name|save_errno
 init|=
 name|errno
 decl_stmt|;
@@ -2005,7 +2198,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_lock_host: attempting to lock %s\n"
 argument_list|,
@@ -2043,7 +2236,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_lock_host: Failed to generate host path for %s\n"
 argument_list|,
@@ -2136,13 +2329,16 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_lock_host: couldn't get lock on %s\n"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|mci
@@ -2179,7 +2375,7 @@ name|mci_statfile
 operator|!=
 name|NULL
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_lock_host: Sanity check -- lock is good\n"
 argument_list|)
@@ -2188,7 +2384,7 @@ name|cleanup
 label|:
 name|errno
 operator|=
-name|savedErrno
+name|save_errno
 expr_stmt|;
 return|return
 name|retVal
@@ -2215,7 +2411,7 @@ name|mci
 decl_stmt|;
 block|{
 name|int
-name|saveErrno
+name|save_errno
 init|=
 name|errno
 decl_stmt|;
@@ -2235,7 +2431,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_unlock_host: NULL mci\n"
 argument_list|)
@@ -2277,7 +2473,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_unlock_host: stat file already locked\n"
 argument_list|)
@@ -2294,7 +2490,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_unlock_host: store prior to unlock\n"
 argument_list|)
@@ -2314,6 +2510,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|mci
@@ -2330,7 +2529,7 @@ expr_stmt|;
 block|}
 name|errno
 operator|=
-name|saveErrno
+name|save_errno
 expr_stmt|;
 block|}
 end_function
@@ -2343,6 +2542,7 @@ comment|/* **  MCI_LOAD_PERSISTENT -- load persistent host info ** **	Load infor
 end_comment
 
 begin_function
+specifier|static
 name|bool
 name|mci_load_persistent
 parameter_list|(
@@ -2354,7 +2554,7 @@ name|mci
 decl_stmt|;
 block|{
 name|int
-name|saveErrno
+name|save_errno
 init|=
 name|errno
 decl_stmt|;
@@ -2391,7 +2591,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_load_persistent: NULL mci\n"
 argument_list|)
@@ -2440,7 +2640,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_load_persistent: Attempting to load persistent information for %s\n"
 argument_list|,
@@ -2478,7 +2678,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_load_persistent: Couldn't generate host path\n"
 argument_list|)
@@ -2525,7 +2725,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_load_persistent: open(%s): %s\n"
 argument_list|,
@@ -2563,6 +2763,11 @@ operator||
 name|LOCK_NB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -2573,14 +2778,9 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
-name|FileName
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|locked
-condition|)
+operator|(
+name|void
+operator|)
 name|lockfile
 argument_list|(
 name|fileno
@@ -2595,6 +2795,14 @@ argument_list|,
 name|LOCK_UN
 argument_list|)
 expr_stmt|;
+block|}
+name|FileName
+operator|=
+name|NULL
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -2604,7 +2812,7 @@ name|cleanup
 label|:
 name|errno
 operator|=
-name|saveErrno
+name|save_errno
 expr_stmt|;
 return|return
 name|locked
@@ -2620,6 +2828,7 @@ comment|/* **  MCI_READ_PERSISTENT -- read persistent host status file ** **	Par
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mci_read_persistent
 parameter_list|(
@@ -2688,7 +2897,7 @@ literal|93
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_read_persistent: fp=%lx, mci="
 argument_list|,
@@ -3016,7 +3225,7 @@ name|mci
 decl_stmt|;
 block|{
 name|int
-name|saveErrno
+name|save_errno
 init|=
 name|errno
 decl_stmt|;
@@ -3036,7 +3245,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_store_persistent: NULL mci\n"
 argument_list|)
@@ -3065,7 +3274,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_store_persistent: Storing information for %s\n"
 argument_list|,
@@ -3092,7 +3301,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_store_persistent: no statfile\n"
 argument_list|)
@@ -3130,6 +3339,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* !NOFTRUNCATE */
 name|fprintf
 argument_list|(
 name|mci
@@ -3261,6 +3471,9 @@ argument_list|,
 literal|".\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|mci
@@ -3270,7 +3483,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|saveErrno
+name|save_errno
 expr_stmt|;
 return|return;
 block|}
@@ -3280,7 +3493,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_TRAVERSE_PERSISTENT -- walk persistent status tree ** **	Recursively find all the mci host files in `pathname'.  Default to **		main host status directory if no path is provided. **	Call (*action)(pathname, host) for each file found. ** **	Note: all information is collected in a list before it is processed. **	This may not be the best way to do it, but it seems safest, since **	the file system would be touched while we are attempting to traverse **	the directory tree otherwise (during purges). ** **	Parameters: **		action -- function to call on each node.  If returns< 0, **			return immediately. **		pathname -- root of tree.  If null, use main host status **			directory. ** **	Returns: **< 0 -- if any action routine returns a negative value, that **			value is returned. **		0 -- if we successfully went to completion. */
+comment|/* **  MCI_TRAVERSE_PERSISTENT -- walk persistent status tree ** **	Recursively find all the mci host files in `pathname'.  Default to **		main host status directory if no path is provided. **	Call (*action)(pathname, host) for each file found. ** **	Note: all information is collected in a list before it is processed. **	This may not be the best way to do it, but it seems safest, since **	the file system would be touched while we are attempting to traverse **	the directory tree otherwise (during purges). ** **	Parameters: **		action -- function to call on each node.  If returns< 0, **			return immediately. **		pathname -- root of tree.  If null, use main host status **			directory. ** **	Returns: **< 0 -- if any action routine returns a negative value, that **			value is returned. **		0 -- if we successfully went to completion. **> 0 -- return status from action() */
 end_comment
 
 begin_decl_stmt
@@ -3349,7 +3562,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_traverse: pathname is %s\n"
 argument_list|,
@@ -3382,7 +3595,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_traverse: Failed to stat %s: %s\n"
 argument_list|,
@@ -3425,6 +3638,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|bool
+name|leftone
+decl_stmt|,
+name|removedone
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -3448,7 +3666,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_traverse: opendir %s: %s\n"
 argument_list|,
@@ -3489,7 +3707,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_traverse: path \"%s\" too long"
 argument_list|,
@@ -3501,11 +3719,17 @@ operator|-
 literal|1
 return|;
 block|}
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|newpath
 argument_list|,
 name|pathname
+argument_list|,
+sizeof|sizeof
+name|newpath
 argument_list|)
 expr_stmt|;
 name|newptr
@@ -3522,6 +3746,15 @@ name|newptr
 operator|++
 operator|=
 literal|'/'
+expr_stmt|;
+comment|/* 		**  repeat until no file has been removed 		**  this may become ugly when several files "expire" 		**  during these loops, but it's better than doing 		**  a rewinddir() inside the inner loop 		*/
+do|do
+block|{
+name|leftone
+operator|=
+name|removedone
+operator|=
+name|FALSE
 expr_stmt|;
 while|while
 condition|(
@@ -3549,7 +3782,10 @@ operator|==
 literal|'.'
 condition|)
 continue|continue;
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|newptr
 argument_list|,
@@ -3565,19 +3801,7 @@ name|newptr
 operator|-
 name|newpath
 operator|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|newpath
-index|[
-sizeof|sizeof
-name|newpath
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|ret
 operator|=
@@ -3595,20 +3819,86 @@ operator|<
 literal|0
 condition|)
 break|break;
-comment|/* 			**  The following appears to be 			**  necessary during purges, since 			**  we modify the directory structure 			*/
 if|if
 condition|(
+name|ret
+operator|==
+literal|1
+condition|)
+name|leftone
+operator|=
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|removedone
+operator|&&
+name|ret
+operator|==
+literal|0
+operator|&&
 name|action
 operator|==
 name|mci_purge_persistent
+condition|)
+name|removedone
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+condition|)
+break|break;
+comment|/* 			**  The following appears to be 			**  necessary during purges, since 			**  we modify the directory structure 			*/
+if|if
+condition|(
+name|removedone
 condition|)
 name|rewinddir
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|56
+argument_list|,
+literal|40
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"mci_traverse: path %s: ret %d removed %d left %d\n"
+argument_list|,
+name|pathname
+argument_list|,
+name|ret
+argument_list|,
+name|removedone
+argument_list|,
+name|leftone
+argument_list|)
+expr_stmt|;
 block|}
+do|while
+condition|(
+name|removedone
+condition|)
+do|;
 comment|/* purge (or whatever) the directory proper */
+if|if
+condition|(
+operator|!
+name|leftone
+condition|)
+block|{
 operator|*
 operator|--
 name|newptr
@@ -3627,6 +3917,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
 name|closedir
 argument_list|(
 name|d
@@ -3788,7 +4082,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_PRINT_PERSISTENT -- print persisten info ** **	Dump the persistent information in the file 'pathname' ** **	Parameters: **		pathname -- the pathname to the status file. **		hostname -- the corresponding host name. ** **	Returns: **		0 */
+comment|/* **  MCI_PRINT_PERSISTENT -- print persistent info ** **	Dump the persistent information in the file 'pathname' ** **	Parameters: **		pathname -- the pathname to the status file. **		hostname -- the corresponding host name. ** **	Returns: **		0 */
 end_comment
 
 begin_function
@@ -3896,7 +4190,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_print_persistent: cannot open %s: %s\n"
 argument_list|,
@@ -3916,10 +4210,12 @@ name|FileName
 operator|=
 name|pathname
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|mcib
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|mcib
@@ -3945,6 +4241,9 @@ argument_list|,
 name|pathname
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -3977,6 +4276,9 @@ operator||
 name|LOCK_NB
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -4192,7 +4494,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MCI_PURGE_PERSISTENT -- Remove a persistence status file. ** **	Parameters: **		pathname -- path to the status file. **		hostname -- name of host corresponding to that file. **			NULL if this is a directory (domain). ** **	Returns: **		0 */
+comment|/* **  MCI_PURGE_PERSISTENT -- Remove a persistence status file. ** **	Parameters: **		pathname -- path to the status file. **		hostname -- name of host corresponding to that file. **			NULL if this is a directory (domain). ** **	Returns: **		0 -- ok **		1 -- file not deleted (too young, incorrect format) **< 0 -- some error occurred */
 end_comment
 
 begin_function
@@ -4212,6 +4514,10 @@ modifier|*
 name|hostname
 decl_stmt|;
 block|{
+name|struct
+name|stat
+name|statbuf
+decl_stmt|;
 name|char
 modifier|*
 name|end
@@ -4225,6 +4531,9 @@ argument_list|)
 operator|-
 literal|1
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -4234,13 +4543,69 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_purge_persistent: purging %s\n"
 argument_list|,
 name|pathname
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|stat
+argument_list|(
+name|pathname
+argument_list|,
+operator|&
+name|statbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|56
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"mci_purge_persistent: Failed to stat %s: %s\n"
+argument_list|,
+name|pathname
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+if|if
+condition|(
+name|curtime
+argument_list|()
+operator|-
+name|statbuf
+operator|.
+name|st_mtime
+operator|<
+name|MciInfoTimeout
+condition|)
+return|return
+literal|1
+return|;
 if|if
 condition|(
 name|hostname
@@ -4268,7 +4633,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_purge_persistent: failed to unlink %s: %s\n"
 argument_list|,
@@ -4293,7 +4658,7 @@ operator|!=
 literal|'.'
 condition|)
 return|return
-literal|0
+literal|1
 return|;
 if|if
 condition|(
@@ -4304,7 +4669,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_purge_persistent: dpurge %s\n"
 argument_list|,
@@ -4330,7 +4695,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_purge_persistent: rmdir %s: %s\n"
 argument_list|,
@@ -4358,6 +4723,7 @@ comment|/* **  MCI_GENERATE_PERSISTENT_PATH -- generate path from hostname ** **
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mci_generate_persistent_path
 parameter_list|(
@@ -4411,6 +4777,16 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|NETINET6
+name|struct
+name|in6_addr
+name|in6_addr
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 comment|/* 	**  Rationality check the arguments. 	*/
 if|if
 condition|(
@@ -4455,7 +4831,7 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mci_generate_persistent_path(%s): "
 argument_list|,
@@ -4504,21 +4880,33 @@ index|]
 operator|==
 literal|'['
 condition|)
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|t_host
 argument_list|,
 name|host
 operator|+
 literal|1
+argument_list|,
+sizeof|sizeof
+name|t_host
 argument_list|)
 expr_stmt|;
 else|else
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|t_host
 argument_list|,
 name|host
+argument_list|,
+sizeof|sizeof
+name|t_host
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Delete any trailing dots from the hostname. 	**  Leave 'elem' pointing at the \0. 	*/
@@ -4570,6 +4958,11 @@ name|elem
 operator|=
 literal|'\0'
 expr_stmt|;
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
 comment|/* check for bogus bracketed address */
 if|if
 condition|(
@@ -4580,17 +4973,44 @@ index|]
 operator|==
 literal|'['
 operator|&&
+if|#
+directive|if
+name|NETINET6
+name|inet_pton
+argument_list|(
+name|AF_INET6
+argument_list|,
+name|t_host
+argument_list|,
+operator|&
+name|in6_addr
+argument_list|)
+operator|!=
+literal|1
+operator|&&
+endif|#
+directive|endif
+comment|/* NETINET6 */
+if|#
+directive|if
+name|NETINET
 name|inet_addr
 argument_list|(
 name|t_host
 argument_list|)
 operator|==
 name|INADDR_NONE
+endif|#
+directive|endif
+comment|/* NETINET */
 condition|)
 return|return
 operator|-
 literal|1
 return|;
+endif|#
+directive|endif
+comment|/* NETINET || NETINET6 */
 comment|/* check for what will be the final length of the path */
 name|len
 operator|=
@@ -4668,11 +5088,16 @@ return|return
 operator|-
 literal|1
 return|;
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|path
 argument_list|,
 name|HostStatDir
+argument_list|,
+name|pathlen
 argument_list|)
 expr_stmt|;
 name|p
@@ -4826,7 +5251,7 @@ name|ret
 operator|<
 literal|0
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"FAILURE %d\n"
 argument_list|,
@@ -4834,7 +5259,7 @@ name|ret
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|dprintf
 argument_list|(
 literal|"SUCCESS %s\n"
 argument_list|,
@@ -4843,9 +5268,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function

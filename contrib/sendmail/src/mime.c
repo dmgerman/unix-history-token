@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_include
@@ -24,10 +24,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)mime.c	8.71 (Berkeley) 1/18/1999"
+literal|"@(#)$Id: mime.c,v 8.94 1999/10/17 17:35:58 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,8 +37,108 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|isboundary
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mimeboundary
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mime_fromqp
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mime_getchar
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mime_getchar_crlf
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  MIME support. ** **	I am indebted to John Beck of Hewlett-Packard, who contributed **	his code to me for inclusion.  As it turns out, I did not use **	his code since he used a "minimum change" approach that used **	several temp files, and I wanted a "minimum impact" approach **	that would avoid copying.  However, looking over his code **	helped me cement my understanding of the problem. ** **	I also looked at, but did not directly use, Nathaniel **	Borenstein's "code.c" module.  Again, it functioned as **	a file-to-file translator, which did not fit within my **	design bounds, but it was a useful base for understanding **	the problem. */
@@ -55,6 +155,7 @@ comment|/* character set for hex and base64 encoding */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|Base16Code
 index|[]
@@ -64,6 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|Base64Code
 index|[]
@@ -140,26 +242,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|MapNLtoCRLF
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mimeboundary
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -176,12 +261,12 @@ name|args
 block|{
 name|char
 modifier|*
-name|field
+name|a_field
 decl_stmt|;
 comment|/* name of field */
 name|char
 modifier|*
-name|value
+name|a_value
 decl_stmt|;
 comment|/* value of that field */
 block|}
@@ -310,42 +395,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-specifier|extern
-name|int
-name|mime_getchar
-name|__P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|int
-name|mime_getchar_crlf
-name|__P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -356,7 +405,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"mime8to7: flags = %x, boundaries ="
 argument_list|,
@@ -372,7 +421,7 @@ index|]
 operator|==
 name|NULL
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"<none>"
 argument_list|)
@@ -395,7 +444,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|dprintf
 argument_list|(
 literal|" %s"
 argument_list|,
@@ -406,7 +455,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -593,7 +642,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"pvp[%d] = \"%s\"\n"
 argument_list|,
@@ -691,13 +740,41 @@ operator|==
 name|NULL
 condition|)
 break|break;
+comment|/* complain about empty values */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|pvp
+argument_list|,
+literal|";"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"mime8to7: Empty parameter in Content-Type header"
+argument_list|)
+expr_stmt|;
+comment|/* avoid bounce loops */
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_DONT_MIME
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* extract field name */
 name|argv
 index|[
 name|argc
 index|]
 operator|.
-name|field
+name|a_field
 operator|=
 operator|*
 name|pvp
@@ -745,7 +822,7 @@ index|[
 name|argc
 index|]
 operator|.
-name|value
+name|a_value
 operator|=
 operator|*
 name|pvp
@@ -850,6 +927,7 @@ name|FALSE
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* USE_B_CLASS */
 if|if
 condition|(
 name|wordinclass
@@ -900,9 +978,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|int
-name|blen
-decl_stmt|;
 if|if
 condition|(
 name|strcasecmp
@@ -941,7 +1016,7 @@ index|[
 name|i
 index|]
 operator|.
-name|field
+name|a_field
 argument_list|,
 literal|"boundary"
 argument_list|)
@@ -961,12 +1036,12 @@ index|[
 name|i
 index|]
 operator|.
-name|value
+name|a_value
 operator|==
 name|NULL
 condition|)
 block|{
-name|syserr
+name|usrerr
 argument_list|(
 literal|"mime8to7: Content-Type: \"%s\": %s boundary"
 argument_list|,
@@ -1002,7 +1077,7 @@ index|[
 name|i
 index|]
 operator|.
-name|value
+name|a_value
 expr_stmt|;
 name|stripquotes
 argument_list|(
@@ -1010,36 +1085,28 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|blen
-operator|=
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|blen
-operator|>
+name|strlcpy
+argument_list|(
+name|bbuf
+argument_list|,
+name|p
+argument_list|,
 sizeof|sizeof
 name|bbuf
-operator|-
-literal|1
+argument_list|)
+operator|>=
+sizeof|sizeof
+name|bbuf
 condition|)
 block|{
-name|syserr
+name|usrerr
 argument_list|(
 literal|"mime8to7: multipart boundary \"%s\" too long"
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-name|blen
-operator|=
-sizeof|sizeof
-name|bbuf
-operator|-
-literal|1
 expr_stmt|;
 comment|/* avoid bounce loops */
 name|e
@@ -1049,22 +1116,6 @@ operator||=
 name|EF_DONT_MIME
 expr_stmt|;
 block|}
-name|strncpy
-argument_list|(
-name|bbuf
-argument_list|,
-name|p
-argument_list|,
-name|blen
-argument_list|)
-expr_stmt|;
-name|bbuf
-index|[
-name|blen
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1074,7 +1125,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mime8to7: multipart boundary \"%s\"\n"
 argument_list|,
@@ -1111,7 +1162,7 @@ operator|>=
 name|MAXMIMENESTING
 condition|)
 block|{
-name|syserr
+name|usrerr
 argument_list|(
 literal|"mime8to7: multipart nesting boundary too deep"
 argument_list|)
@@ -1163,6 +1214,10 @@ name|mci_flags
 operator|&=
 operator|~
 name|MCIF_INHEADER
+expr_stmt|;
+name|bt
+operator|=
+name|MBT_FINAL
 expr_stmt|;
 while|while
 condition|(
@@ -1222,7 +1277,7 @@ argument_list|,
 literal|99
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ...%s"
 argument_list|,
@@ -1285,7 +1340,7 @@ argument_list|,
 literal|35
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ...%s\n"
 argument_list|,
@@ -1393,7 +1448,7 @@ argument_list|,
 literal|35
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ...%s\n"
 argument_list|,
@@ -1473,7 +1528,7 @@ argument_list|,
 literal|99
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ...%s"
 argument_list|,
@@ -1503,7 +1558,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\t\t\tmime8to7=>%s (multipart)\n"
 argument_list|,
@@ -1840,7 +1895,7 @@ literal|8
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"mime8to7: %ld high bit(s) in %ld byte(s), cte=%s, type=%s/%s\n"
 argument_list|,
@@ -1923,6 +1978,10 @@ name|NULL
 operator|&&
 name|bitset
 argument_list|(
+name|MCIF_CVT8TO7
+operator||
+name|MCIF_CVT7TO8
+operator||
 name|MCIF_INMIME
 argument_list|,
 name|mci
@@ -1968,7 +2027,7 @@ argument_list|,
 literal|36
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ...%s\n"
 argument_list|,
@@ -2078,7 +2137,7 @@ argument_list|,
 literal|36
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ...Content-Transfer-Encoding: base64\n"
 argument_list|)
@@ -2369,7 +2428,7 @@ decl_stmt|;
 name|int
 name|fromstate
 decl_stmt|;
-name|BITMAP
+name|BITMAP256
 name|badchars
 decl_stmt|;
 comment|/* set up map of characters that must be mapped */
@@ -2476,7 +2535,7 @@ argument_list|,
 literal|36
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ...Content-Transfer-Encoding: quoted-printable\n"
 argument_list|)
@@ -3025,7 +3084,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\t\t\tmime8to7=>%s (basic)\n"
 argument_list|,
@@ -3049,6 +3108,7 @@ comment|/* **  MIME_GETCHAR -- get a character for MIME processing ** **	Treats 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mime_getchar
 parameter_list|(
@@ -3201,6 +3261,9 @@ operator|==
 literal|'\n'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|ungetc
 argument_list|(
 name|c
@@ -3446,6 +3509,7 @@ comment|/* **  MIME_GETCHAR_CRLF -- do mime_getchar, but translate NL => CRLF **
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mime_getchar_crlf
 parameter_list|(
@@ -3534,6 +3598,7 @@ comment|/* **  MIMEBOUNDARY -- determine if this line is a MIME boundary& its ty
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mimeboundary
 parameter_list|(
@@ -3562,21 +3627,6 @@ name|i
 decl_stmt|;
 name|int
 name|savec
-decl_stmt|;
-specifier|extern
-name|int
-name|isboundary
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -3669,7 +3719,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"mimeboundary: line=\"%s\"... "
 argument_list|,
@@ -3776,7 +3826,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -3868,6 +3918,7 @@ comment|/* **  ISBOUNDARY -- is a given string a currently valid boundary? ** **
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|isboundary
 parameter_list|(
@@ -3952,28 +4003,6 @@ end_if
 begin_comment
 comment|/* **  MIME7TO8 -- output 7 bit encoded MIME body in 8 bit format ** **  This is a hack. Supports translating the two 7-bit body-encodings **  (quoted-printable and base64) to 8-bit coded bodies. ** **  There is not much point in supporting multipart here, as the UA **  will be able to deal with encoded MIME bodies if it can parse MIME **  multipart messages. ** **  Note also that we wont be called unless it is a text/plain MIME **  message, encoded base64 or QP and mailer flag '9' has been defined **  on mailer. ** **  Contributed by Marius Olaffson<marius@rhi.hi.is>. ** **	Parameters: **		mci -- mailer connection information. **		header -- the header for this body part. **		e -- envelope. ** **	Returns: **		none. */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mime_fromqp
-name|__P
-argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|,
-name|u_char
-operator|*
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -5166,7 +5195,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\t\t\tmime7to8 => %s to 8bit done\n"
 argument_list|,
@@ -5568,6 +5597,7 @@ value|(((c)< 0 || (c)> 127) ? -1 : index_hex[(c)])
 end_define
 
 begin_function
+specifier|static
 name|int
 name|mime_fromqp
 parameter_list|(

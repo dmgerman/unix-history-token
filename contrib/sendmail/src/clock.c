@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)clock.c	8.35 (Berkeley) 2/2/1999"
+literal|"@(#)$Id: clock.c,v 8.52.18.2 2000/05/25 23:33:30 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,13 +25,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_ifndef
@@ -56,6 +56,23 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* ! sigmask */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|endsleep
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* **  SETEVENT -- set an event to happen at a specific time. ** **	Events are stored in a sorted list for fast processing. **	An event only applies to the process that set it. ** **	Parameters: **		intvl -- intvl until next event occurs. **		func -- function to call on event. **		arg -- argument to func on event. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
@@ -69,19 +86,6 @@ end_decl_stmt
 begin_comment
 comment|/* list of free events */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|SIGFUNC_DECL
-name|tick
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|EVENT
@@ -144,15 +148,13 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"554 setevent: intvl=%ld\n"
+literal|"554 5.3.0 setevent: intvl=%ld\n"
 argument_list|,
 name|intvl
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 name|wasblocked
@@ -283,7 +285,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"setevent: intvl=%ld, for=%ld, func=%lx, arg=%d, ev=%lx\n"
 argument_list|,
@@ -314,6 +316,9 @@ operator|)
 name|ev
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setsignal
 argument_list|(
 name|SIGALRM
@@ -361,9 +366,7 @@ name|SIGALRM
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ev
-operator|)
 return|;
 block|}
 end_block
@@ -405,7 +408,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"clrevent: ev=%lx\n"
 argument_list|,
@@ -496,6 +499,9 @@ name|wasblocked
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|releasesignal
 argument_list|(
 name|SIGALRM
@@ -507,11 +513,140 @@ name|EventQueue
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|kill
 argument_list|(
 name|getpid
 argument_list|()
 argument_list|,
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* nothing left in event queue, no need for an alarm */
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  CLEAR_EVENTS -- remove all events from the event queue. ** **	Parameters: **		none. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|clear_events
+parameter_list|()
+block|{
+specifier|register
+name|EVENT
+modifier|*
+name|ev
+decl_stmt|;
+name|int
+name|wasblocked
+decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|5
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"clear_events: EventQueue=%lx\n"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|EventQueue
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|EventQueue
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* nothing will be left in event queue, no need for an alarm */
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|wasblocked
+operator|=
+name|blocksignal
+argument_list|(
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+comment|/* find the end of the EventQueue */
+for|for
+control|(
+name|ev
+operator|=
+name|EventQueue
+init|;
+name|ev
+operator|->
+name|ev_link
+operator|!=
+name|NULL
+condition|;
+name|ev
+operator|=
+name|ev
+operator|->
+name|ev_link
+control|)
+continue|continue;
+name|ev
+operator|->
+name|ev_link
+operator|=
+name|FreeEventList
+expr_stmt|;
+name|FreeEventList
+operator|=
+name|EventQueue
+expr_stmt|;
+name|EventQueue
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* restore clocks and pick up anything spare */
+if|if
+condition|(
+name|wasblocked
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
 name|SIGALRM
 argument_list|)
 expr_stmt|;
@@ -530,7 +665,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|SIGFUNC_DECL
 name|tick
 parameter_list|(
@@ -556,7 +690,7 @@ name|getpid
 argument_list|()
 decl_stmt|;
 name|int
-name|olderrno
+name|save_errno
 init|=
 name|errno
 decl_stmt|;
@@ -582,7 +716,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"tick: now=%ld\n"
 argument_list|,
@@ -661,7 +795,7 @@ argument_list|,
 literal|6
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"tick: ev=%lx, func=%lx, arg=%d, pid=%d\n"
 argument_list|,
@@ -768,7 +902,7 @@ block|}
 comment|/* call ev_func */
 name|errno
 operator|=
-name|olderrno
+name|save_errno
 expr_stmt|;
 call|(
 modifier|*
@@ -817,7 +951,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|olderrno
+name|save_errno
 expr_stmt|;
 return|return
 name|SIGFUNC_RETURN
@@ -839,19 +973,6 @@ name|SleepDone
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|endsleep
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -869,6 +990,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! SLEEP_T */
+end_comment
 
 begin_function
 name|SLEEP_T
@@ -927,6 +1052,9 @@ condition|(
 operator|!
 name|SleepDone
 condition|)
+operator|(
+name|void
+operator|)
 name|pause
 argument_list|()
 expr_stmt|;
@@ -936,6 +1064,9 @@ name|was_held
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|blocksignal
 argument_list|(
 name|SIGALRM

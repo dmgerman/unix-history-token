@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_ifndef
@@ -18,10 +18,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)alias.c	8.96 (Berkeley) 12/18/1998"
+literal|"@(#)$Id: alias.c,v 8.142.4.1 2000/05/25 18:56:12 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,10 +31,25 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SEPARATOR
+value|':'
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALIAS_SPEC_SEPARATORS
+value|" ,/:"
+end_define
+
 begin_decl_stmt
+specifier|static
 name|MAP
 modifier|*
 name|AliasFileMap
@@ -48,6 +63,7 @@ comment|/* the actual aliases.files map */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|NAliasFileMaps
 decl_stmt|;
@@ -56,6 +72,24 @@ end_decl_stmt
 begin_comment
 comment|/* the number of entries in AliasFileMap */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|aliaslookup
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -106,7 +140,7 @@ name|owner
 decl_stmt|;
 specifier|auto
 name|int
-name|stat
+name|status
 init|=
 name|EX_OK
 decl_stmt|;
@@ -118,24 +152,6 @@ operator|+
 literal|7
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|aliaslookup
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|*
-operator|,
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -145,7 +161,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"alias(%s)\n"
 argument_list|,
@@ -157,17 +173,12 @@ expr_stmt|;
 comment|/* don't realias already aliased names */
 if|if
 condition|(
-name|bitset
+operator|!
+name|QS_IS_OK
 argument_list|(
-name|QDONTSEND
-operator||
-name|QBADADDR
-operator||
-name|QVERIFIED
-argument_list|,
 name|a
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
 condition|)
 return|return;
@@ -185,6 +196,101 @@ operator|->
 name|q_paddr
 expr_stmt|;
 comment|/* 	**  Look up this name. 	** 	**	If the map was unavailable, we will queue this message 	**	until the map becomes available; otherwise, we could 	**	bounce messages inappropriately. 	*/
+if|#
+directive|if
+name|_FFR_REDIRECTEMPTY
+comment|/* 	**  envelope<> can't be sent to mailing lists, only owner- 	**  send spam of this type to owner- of the list 	**  ----  to stop spam from going to mailing lists! 	*/
+if|if
+condition|(
+name|e
+operator|->
+name|e_sender
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|e
+operator|->
+name|e_sender
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* Look for owner of alias */
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|obuf
+argument_list|,
+literal|"owner-"
+argument_list|,
+sizeof|sizeof
+name|obuf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcat
+argument_list|(
+name|obuf
+argument_list|,
+name|a
+operator|->
+name|q_user
+argument_list|,
+sizeof|sizeof
+name|obuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|aliaslookup
+argument_list|(
+name|obuf
+argument_list|,
+operator|&
+name|status
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"possible spam from<> to list: %s, redirected to %s\n"
+argument_list|,
+name|a
+operator|->
+name|q_user
+argument_list|,
+name|obuf
+argument_list|)
+expr_stmt|;
+name|a
+operator|->
+name|q_user
+operator|=
+name|newstr
+argument_list|(
+name|obuf
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_REDIRECTEMPTY */
 name|p
 operator|=
 name|aliaslookup
@@ -194,27 +300,25 @@ operator|->
 name|q_user
 argument_list|,
 operator|&
-name|stat
-argument_list|,
-name|e
+name|status
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|stat
+name|status
 operator|==
 name|EX_TEMPFAIL
 operator|||
-name|stat
+name|status
 operator|==
 name|EX_UNAVAILABLE
 condition|)
 block|{
 name|a
 operator|->
-name|q_flags
-operator||=
-name|QQUEUEUP
+name|q_state
+operator|=
+name|QS_QUEUEUP
 expr_stmt|;
 if|if
 condition|(
@@ -252,7 +356,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s (%s, %s) aliased to %s\n"
 argument_list|,
@@ -285,9 +389,9 @@ condition|)
 block|{
 name|a
 operator|->
-name|q_flags
-operator||=
-name|QVERIFIED
+name|q_state
+operator|=
+name|QS_VERIFIED
 expr_stmt|;
 return|return;
 block|}
@@ -307,7 +411,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|9
+literal|10
 condition|)
 name|sm_syslog
 argument_list|(
@@ -348,9 +452,9 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
-literal|"alias: QDONTSEND "
+literal|"alias: QS_EXPANDED "
 argument_list|)
 expr_stmt|;
 name|printaddr
@@ -363,9 +467,36 @@ expr_stmt|;
 block|}
 name|a
 operator|->
+name|q_state
+operator|=
+name|QS_EXPANDED
+expr_stmt|;
+comment|/* 	**  Always deliver aliased items as the default user. 	**  Setting q_gid to 0 forces deliver() to use DefUser 	**  instead of the alias name for the call to initgroups(). 	*/
+name|a
+operator|->
+name|q_uid
+operator|=
+name|DefUid
+expr_stmt|;
+name|a
+operator|->
+name|q_gid
+operator|=
+literal|0
+expr_stmt|;
+name|a
+operator|->
+name|q_fullname
+operator|=
+name|NULL
+expr_stmt|;
+name|a
+operator|->
 name|q_flags
 operator||=
-name|QDONTSEND
+name|QGOODUID
+operator||
+name|QALIAS
 expr_stmt|;
 operator|(
 name|void
@@ -395,23 +526,32 @@ name|a
 operator|->
 name|q_flags
 argument_list|)
+operator|&&
+name|QS_IS_EXPANDED
+argument_list|(
+name|a
+operator|->
+name|q_state
+argument_list|)
 condition|)
 name|a
 operator|->
-name|q_flags
-operator|&=
-operator|~
-name|QDONTSEND
+name|q_state
+operator|=
+name|QS_OK
 expr_stmt|;
 comment|/* 	**  Look for owner of alias 	*/
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|obuf
 argument_list|,
 literal|"owner-"
+argument_list|,
+sizeof|sizeof
+name|obuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -447,24 +587,30 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strcat
+name|strlcat
 argument_list|(
 name|obuf
 argument_list|,
 literal|"owner"
+argument_list|,
+sizeof|sizeof
+name|obuf
 argument_list|)
 expr_stmt|;
 else|else
 operator|(
 name|void
 operator|)
-name|strcat
+name|strlcat
 argument_list|(
 name|obuf
 argument_list|,
 name|a
 operator|->
 name|q_user
+argument_list|,
+sizeof|sizeof
+name|obuf
 argument_list|)
 expr_stmt|;
 name|owner
@@ -474,9 +620,7 @@ argument_list|(
 name|obuf
 argument_list|,
 operator|&
-name|stat
-argument_list|,
-name|e
+name|status
 argument_list|)
 expr_stmt|;
 if|if
@@ -554,10 +698,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ALIASLOOKUP -- look up a name in the alias file. ** **	Parameters: **		name -- the name to look up. **		pstat -- a pointer to a place to put the status. **		e -- the current envelope. ** **	Returns: **		the value of name. **		NULL if unknown. ** **	Side Effects: **		none. ** **	Warnings: **		The return value will be trashed across calls. */
+comment|/* **  ALIASLOOKUP -- look up a name in the alias file. ** **	Parameters: **		name -- the name to look up. **		pstat -- a pointer to a place to put the status. ** **	Returns: **		the value of name. **		NULL if unknown. ** **	Side Effects: **		none. ** **	Warnings: **		The return value will be trashed across calls. */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|aliaslookup
@@ -565,8 +710,6 @@ parameter_list|(
 name|name
 parameter_list|,
 name|pstat
-parameter_list|,
-name|e
 parameter_list|)
 name|char
 modifier|*
@@ -575,10 +718,6 @@ decl_stmt|;
 name|int
 modifier|*
 name|pstat
-decl_stmt|;
-name|ENVELOPE
-modifier|*
-name|e
 decl_stmt|;
 block|{
 specifier|static
@@ -625,21 +764,11 @@ operator|->
 name|s_map
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|bitset
+name|DYNOPENMAP
 argument_list|(
-name|MF_OPEN
-argument_list|,
 name|map
-operator|->
-name|map_mflags
 argument_list|)
-condition|)
-return|return
-name|NULL
-return|;
+expr_stmt|;
 comment|/* special case POstMastER -- always use lower case */
 if|if
 condition|(
@@ -723,7 +852,7 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"setalias(%s)\n"
 argument_list|,
@@ -800,11 +929,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"aliases.files sequence"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 name|AliasFileMap
@@ -862,9 +997,11 @@ name|s
 operator|->
 name|s_map
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|map
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 expr|*
@@ -885,7 +1022,7 @@ name|strpbrk
 argument_list|(
 name|p
 argument_list|,
-literal|" ,/:"
+name|ALIAS_SPEC_SEPARATORS
 argument_list|)
 expr_stmt|;
 if|if
@@ -897,7 +1034,7 @@ operator|&&
 operator|*
 name|p
 operator|==
-literal|':'
+name|SEPARATOR
 condition|)
 block|{
 comment|/* map name */
@@ -936,15 +1073,63 @@ name|p
 operator|!=
 name|NULL
 condition|)
+block|{
+name|bool
+name|quoted
+init|=
+name|FALSE
+decl_stmt|;
+for|for
+control|(
+init|;
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
+block|{
+comment|/* 				**  Don't break into a quoted string. 				**  Needed for ldap maps which use 				**  commas in their specifications. 				*/
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'"'
+condition|)
+name|quoted
+operator|=
+operator|!
+name|quoted
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|','
+operator|&&
+operator|!
+name|quoted
+condition|)
+break|break;
+block|}
+comment|/* No more alias specifications follow */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
 name|p
 operator|=
-name|strchr
-argument_list|(
-name|p
-argument_list|,
-literal|','
-argument_list|)
+name|NULL
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|p
@@ -966,7 +1151,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  map %s:%s %s\n"
 argument_list|,
@@ -1104,7 +1289,7 @@ name|char
 modifier|*
 name|ext
 decl_stmt|;
-name|int
+name|bool
 name|isopen
 decl_stmt|;
 block|{
@@ -1137,7 +1322,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"aliaswait(%s:%s)\n"
 argument_list|,
@@ -1245,9 +1430,9 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|"aliaswait: sleeping for %d seconds\n"
+literal|"aliaswait: sleeping for %u seconds\n"
 argument_list|,
 name|sleeptime
 argument_list|)
@@ -1272,6 +1457,9 @@ operator||
 name|MF_WRITABLE
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sleep
 argument_list|(
 name|sleeptime
@@ -1331,7 +1519,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"aliaswait: not rebuildable\n"
 argument_list|)
@@ -1371,7 +1559,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"aliaswait: no source file\n"
 argument_list|)
@@ -1436,6 +1624,10 @@ operator|||
 name|attimeout
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|_FFR_REMOVE_AUTOREBUILD
 comment|/* database is out of date */
 if|if
 condition|(
@@ -1569,6 +1761,36 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* !_FFR_REMOVE_AUTOREBUILD */
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|3
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"alias database %s out of date"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"Warning: alias database %s out of date"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !_FFR_REMOVE_AUTOREBUILD */
 block|}
 name|map
 operator|->
@@ -1621,7 +1843,7 @@ name|success
 init|=
 name|FALSE
 decl_stmt|;
-name|int
+name|long
 name|sff
 init|=
 name|SFF_OPENASROOT
@@ -1643,6 +1865,7 @@ name|oldsigtstp
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* SIGTSTP */
 if|if
 condition|(
 operator|!
@@ -1663,7 +1886,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|DBS_LINKEDALIASFILEINWRITABLEDIR
 argument_list|,
@@ -1677,7 +1900,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|DBS_GROUPWRITABLEALIASFILE
 argument_list|,
@@ -1691,7 +1914,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|DBS_WORLDWRITABLEALIASFILE
 argument_list|,
@@ -1777,7 +2000,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"Can't open %s: %s\n"
 argument_list|,
@@ -1949,15 +2172,9 @@ block|}
 operator|(
 name|void
 operator|)
-name|xfclose
+name|fclose
 argument_list|(
 name|af
-argument_list|,
-literal|"rebuildaliases1"
-argument_list|,
-name|map
-operator|->
-name|map_file
 argument_list|)
 expr_stmt|;
 name|errno
@@ -2000,6 +2217,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SIGTSTP */
 if|if
 condition|(
 name|map
@@ -2087,7 +2305,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"Can't create database for %s: %s\n"
 argument_list|,
@@ -2117,15 +2335,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* close the file, thus releasing locks */
-name|xfclose
+operator|(
+name|void
+operator|)
+name|fclose
 argument_list|(
 name|af
-argument_list|,
-literal|"rebuildaliases2"
-argument_list|,
-name|map
-operator|->
-name|map_file
 argument_list|)
 expr_stmt|;
 comment|/* add distinguished entries and close the database */
@@ -2198,6 +2413,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SIGTSTP */
 return|return
 name|success
 return|;
@@ -2208,7 +2424,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		map -- the alias database descriptor. **		af -- file to read the aliases from. **		announcestats -- anounce statistics regarding number of **			aliases, longest alias, etc. **		logstats -- lot the same info. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
+comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		map -- the alias database descriptor. **		af -- file to read the aliases from. **		announcestats -- announce statistics regarding number of **			aliases, longest alias, etc. **		logstats -- lot the same info. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
 end_comment
 
 begin_function
@@ -2299,9 +2515,7 @@ argument_list|(
 name|line
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|line
-argument_list|)
 argument_list|,
 name|af
 argument_list|)
@@ -2329,9 +2543,6 @@ argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_BACKSLASH_IN_ALIASES
 while|while
 condition|(
 name|p
@@ -2386,8 +2597,6 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|p
@@ -2409,9 +2618,13 @@ name|af
 argument_list|)
 condition|)
 block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|syserr
 argument_list|(
-literal|"554 alias line too long"
+literal|"554 5.3.0 alias line too long"
 argument_list|)
 expr_stmt|;
 comment|/* flush to end of line */
@@ -2472,7 +2685,7 @@ name|skipping
 condition|)
 name|syserr
 argument_list|(
-literal|"554 Non-continuation line starts with space"
+literal|"554 5.3.5 Non-continuation line starts with space"
 argument_list|)
 expr_stmt|;
 name|skipping
@@ -2522,7 +2735,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"554 missing colon"
+literal|"554 5.3.5 missing colon"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2550,7 +2763,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"554 %.40s... illegal alias name"
+literal|"554 5.3.5 %.40s... illegal alias name"
 argument_list|,
 name|line
 argument_list|)
@@ -2691,7 +2904,7 @@ name|NULL
 condition|)
 name|usrerr
 argument_list|(
-literal|"553 %s... bad address"
+literal|"553 5.3.5 %s... bad address"
 argument_list|,
 name|p
 argument_list|)
@@ -2792,7 +3005,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"554 alias too long"
+literal|"554 5.3.5 alias too long"
 argument_list|)
 expr_stmt|;
 while|while
@@ -2842,7 +3055,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"554 %s... cannot alias non-local names"
+literal|"554 5.3.5 %s... cannot alias non-local names"
 argument_list|,
 name|al
 operator|.
@@ -2888,6 +3101,58 @@ argument_list|(
 name|rhs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rhssize
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* is RHS empty (just spaces)? */
+name|p
+operator|=
+name|rhs
+expr_stmt|;
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rhssize
+operator|==
+literal|0
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"554 5.3.5 %.40s... missing value for alias"
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|map
 operator|->
 name|map_class
@@ -2901,51 +3166,6 @@ operator|.
 name|q_user
 argument_list|,
 name|rhs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|al
-operator|.
-name|q_paddr
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|al
-operator|.
-name|q_paddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|al
-operator|.
-name|q_host
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|al
-operator|.
-name|q_host
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|al
-operator|.
-name|q_user
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-name|al
-operator|.
-name|q_user
 argument_list|)
 expr_stmt|;
 comment|/* statistics */
@@ -2967,6 +3187,52 @@ condition|)
 name|longest
 operator|=
 name|rhssize
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|al
+operator|.
+name|q_paddr
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|al
+operator|.
+name|q_paddr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|al
+operator|.
+name|q_host
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|al
+operator|.
+name|q_host
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|al
+operator|.
+name|q_user
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|al
+operator|.
+name|q_user
+argument_list|)
 expr_stmt|;
 block|}
 name|CurEnv
@@ -3087,7 +3353,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"forward(%s)\n"
 argument_list|,
@@ -3110,13 +3376,12 @@ operator|->
 name|m_flags
 argument_list|)
 operator|||
-name|bitset
+operator|!
+name|QS_IS_OK
 argument_list|(
-name|QBADADDR
-argument_list|,
 name|user
 operator|->
-name|q_flags
+name|q_state
 argument_list|)
 condition|)
 return|return;
@@ -3131,7 +3396,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"554 forward: no home"
+literal|"554 5.3.0 forward: no home"
 argument_list|)
 expr_stmt|;
 name|user
@@ -3218,13 +3483,17 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
 name|ep
 operator|=
 name|strchr
 argument_list|(
 name|pp
 argument_list|,
-literal|':'
+name|SEPARATOR
 argument_list|)
 expr_stmt|;
 if|if
@@ -3260,7 +3529,7 @@ operator|*
 name|ep
 operator|++
 operator|=
-literal|':'
+name|SEPARATOR
 expr_stmt|;
 if|if
 condition|(
@@ -3281,7 +3550,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"forward: trying %s\n"
 argument_list|,
@@ -3335,7 +3604,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"forward: transient error on %s\n"
 argument_list|,
@@ -3348,6 +3617,17 @@ name|LogLevel
 operator|>
 literal|2
 condition|)
+block|{
+name|char
+modifier|*
+name|curhost
+init|=
+name|CurHostName
+decl_stmt|;
+name|CurHostName
+operator|=
+name|NULL
+expr_stmt|;
 name|sm_syslog
 argument_list|(
 name|LOG_ERR
@@ -3366,6 +3646,11 @@ name|err
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|CurHostName
+operator|=
+name|curhost
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -3378,6 +3663,42 @@ case|case
 name|ENOENT
 case|:
 break|break;
+case|case
+name|E_SM_WWDIR
+case|:
+case|case
+name|E_SM_GWDIR
+case|:
+comment|/* check if it even exists */
+if|if
+condition|(
+name|stat
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|ENOENT
+condition|)
+block|{
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|DBS_DONTWARNFORWARDFILEINUNSAFEDIRPATH
+argument_list|,
+name|DontBlameSendmail
+argument_list|)
+condition|)
+break|break;
+block|}
+comment|/* FALLTHROUGH */
 if|#
 directive|if
 name|_FFR_FORWARD_SYSERR
@@ -3392,12 +3713,6 @@ name|E_SM_REGONLY
 case|:
 case|case
 name|E_SM_ISEXEC
-case|:
-case|case
-name|E_SM_WWDIR
-case|:
-case|case
-name|E_SM_GWDIR
 case|:
 case|case
 name|E_SM_WWFILE
@@ -3420,6 +3735,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* _FFR_FORWARD_SYSERR */
 default|default:
 if|if
 condition|(
@@ -3490,9 +3806,9 @@ argument_list|)
 expr_stmt|;
 name|user
 operator|->
-name|q_flags
-operator||=
-name|QQUEUEUP
+name|q_state
+operator|=
+name|QS_QUEUEUP
 expr_stmt|;
 return|return;
 block|}
