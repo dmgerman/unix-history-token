@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.18 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -672,13 +672,13 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KERBEROS
 name|sp
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERBEROS
 if|if
 condition|(
 name|use_kerberos
