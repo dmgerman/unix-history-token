@@ -8265,7 +8265,6 @@ operator|(
 operator|*
 name|map
 operator|&
-operator|~
 operator|(
 literal|1
 operator|<<
