@@ -2040,7 +2040,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|sysctl_sysctl_debug_dump_node
 argument_list|(
@@ -2051,7 +2053,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -2459,7 +2463,9 @@ operator|!=
 name|CTLTYPE_NODE
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -2469,7 +2475,9 @@ name|oid_handler
 condition|)
 comment|/* We really should call the handler here...*/
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|lsp
 operator|=
@@ -2507,7 +2515,9 @@ name|oidpp
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 goto|goto
 name|emptynode
@@ -2546,7 +2556,9 @@ operator|!=
 name|CTLTYPE_NODE
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -2555,7 +2567,9 @@ operator|->
 name|oid_handler
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|lsp
 operator|=
@@ -2684,7 +2698,9 @@ name|level
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -2764,7 +2780,9 @@ condition|(
 name|i
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 name|error
 operator|=
@@ -2859,7 +2877,9 @@ operator|*
 name|name
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 name|p
 operator|=
@@ -3078,7 +3098,9 @@ literal|'\0'
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -3120,7 +3142,9 @@ operator|->
 name|newlen
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 if|if
 condition|(
@@ -4215,7 +4239,9 @@ operator|->
 name|newptr
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -4850,7 +4876,9 @@ operator|->
 name|newptr
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -5472,7 +5500,9 @@ operator|->
 name|oid_handler
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
