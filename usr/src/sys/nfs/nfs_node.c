@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -736,6 +736,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_inactive_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -875,6 +876,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_reclaim_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -884,15 +886,23 @@ begin_block
 block|{
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+specifier|register
+name|struct
 name|nfsnode
 modifier|*
 name|np
 init|=
 name|VTONFS
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -903,9 +913,7 @@ name|nmp
 init|=
 name|VFSTONFS
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_mount
 argument_list|)
@@ -918,9 +926,7 @@ if|if
 condition|(
 name|prtactive
 operator|&&
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_usecount
 operator|!=
@@ -930,9 +936,7 @@ name|vprint
 argument_list|(
 literal|"nfs_reclaim: pushing active"
 argument_list|,
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the nfsnode from its hash chain. 	 */
@@ -1024,25 +1028,19 @@ expr_stmt|;
 block|}
 name|cache_purge
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_data
 argument_list|,
 name|M_NFSNODE
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_data
 operator|=
@@ -1074,6 +1072,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1103,6 +1102,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_unlock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1132,6 +1132,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_islocked_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1163,6 +1164,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_abortop_args
+comment|/* { 		struct vnode *a_dvp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
