@@ -1774,13 +1774,25 @@ block|,
 block|{
 name|USB_VENDOR_FTDI
 block|,
-name|USB_PRODUCT_FTDI_SERIAL
+name|USB_PRODUCT_FTDI_SERIAL_8U100AX
 block|,
 literal|0
 block|,
 literal|"Future Technology Devices"
 block|,
-literal|"Serial converter"
+literal|"8U100AX Serial converter"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_FTDI
+block|,
+name|USB_PRODUCT_FTDI_SERIAL_8U232AM
+block|,
+literal|0
+block|,
+literal|"Future Technology Devices"
+block|,
+literal|"8U232AM Serial converter"
 block|, 	}
 block|,
 block|{

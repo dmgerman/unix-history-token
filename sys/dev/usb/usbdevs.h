@@ -4877,12 +4877,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_FTDI_SERIAL
+name|USB_PRODUCT_FTDI_SERIAL_8U100AX
 value|0x8372
 end_define
 
 begin_comment
-comment|/* Serial converter */
+comment|/* 8U100AX Serial converter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_FTDI_SERIAL_8U232AM
+value|0x6001
+end_define
+
+begin_comment
+comment|/* 8U232AM Serial converter */
 end_comment
 
 begin_comment
