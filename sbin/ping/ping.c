@@ -8325,6 +8325,44 @@ block|}
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPSEC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|IPSEC_POLICY_IPSEC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SECOPT
+value|" [-P policy]"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SECOPT
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -8343,17 +8381,7 @@ argument_list|,
 literal|"usage: ping [-AaDdfnoQqRrv] [-c count] [-i wait] [-l preload] [-M mask | time]"
 argument_list|,
 literal|"            [-m ttl]"
-ifdef|#
-directive|ifdef
-name|IPSEC
-ifdef|#
-directive|ifdef
-name|IPSEC_POLICY_IPSEC
-literal|" [-P policy]"
-endif|#
-directive|endif
-endif|#
-directive|endif
+name|SECOPT
 literal|" [-p pattern] [-S src_addr] [-s packetsize]"
 argument_list|,
 literal|"            [-t timeout] [-z tos] host"
@@ -8361,17 +8389,7 @@ argument_list|,
 literal|"       ping [-AaDdfLnoQqRrv] [-c count] [-I iface] [-i wait] [-l preload]"
 argument_list|,
 literal|"            [-M mask | time] [-m ttl]"
-ifdef|#
-directive|ifdef
-name|IPSEC
-ifdef|#
-directive|ifdef
-name|IPSEC_POLICY_IPSEC
-literal|" [-P policy]"
-endif|#
-directive|endif
-endif|#
-directive|endif
+name|SECOPT
 literal|" [-p pattern] [-S src_addr]"
 argument_list|,
 literal|"            [-s packetsize] [-T ttl] [-t timeout] [-z tos] mcast-group"
