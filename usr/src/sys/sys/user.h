@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)user.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -114,54 +114,6 @@ modifier|*
 name|u_ar0
 decl_stmt|;
 comment|/* address of users saved R0 */
-comment|/* syscall parameters, results and catches */
-name|int
-name|u_arg
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* arguments to current system call */
-name|int
-modifier|*
-name|u_ap
-decl_stmt|;
-comment|/* pointer to arglist */
-union|union
-block|{
-comment|/* syscall return values */
-struct|struct
-block|{
-name|int
-name|R_val1
-decl_stmt|;
-name|int
-name|R_val2
-decl_stmt|;
-block|}
-name|u_rv
-struct|;
-define|#
-directive|define
-name|r_val1
-value|u_rv.R_val1
-define|#
-directive|define
-name|r_val2
-value|u_rv.R_val2
-name|off_t
-name|r_off
-decl_stmt|;
-name|time_t
-name|r_time
-decl_stmt|;
-block|}
-name|u_r
-union|;
-name|int
-name|u_error
-decl_stmt|;
-comment|/* return error code */
 comment|/* 1.1 - processes and protection */
 define|#
 directive|define
@@ -270,15 +222,13 @@ define|#
 directive|define
 name|u_sigsp
 value|u_sigstack.ss_sp
-define|#
-directive|define
+name|int
 name|u_sig
-value|u_arg[0]
+decl_stmt|;
 comment|/* for core dump/debugger XXX */
-define|#
-directive|define
+name|int
 name|u_code
-value|u_arg[1]
+decl_stmt|;
 comment|/* for core dump/debugger XXX */
 comment|/* 1.4 - descriptor management */
 name|struct
