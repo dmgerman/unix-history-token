@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_types.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_types.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/* interface types for benefit of parsing media address headers */
+comment|/*  * Interface types for benefit of parsing media address headers.  * This list is derived from the SNMP list of ifTypes, currently  * documented in RFC1123.  */
 end_comment
 
 begin_define
@@ -59,7 +59,7 @@ value|0x5
 end_define
 
 begin_comment
-comment|/* PDN X25 interface */
+comment|/* PDN X25 interface (RFC877) */
 end_comment
 
 begin_define
@@ -70,7 +70,7 @@ value|0x6
 end_define
 
 begin_comment
-comment|/* Ethernet I or II */
+comment|/* Ethernet CSMACD */
 end_comment
 
 begin_define
@@ -192,6 +192,10 @@ name|IFT_CEPT
 value|0x13
 end_define
 
+begin_comment
+comment|/* E1 - european T1 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -212,6 +216,21 @@ directive|define
 name|IFT_PTPSERIAL
 value|0x16
 end_define
+
+begin_comment
+comment|/* Proprietary PTP serial */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_PPP
+value|0x17
+end_define
+
+begin_comment
+comment|/* RFC 1331 */
+end_comment
 
 begin_define
 define|#
@@ -310,6 +329,17 @@ end_define
 
 begin_comment
 comment|/* Frame Relay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_RS232
+value|0x21
+end_define
+
+begin_comment
+comment|/* Used elsewhere by SNMP as index */
 end_comment
 
 end_unit
