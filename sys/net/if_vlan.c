@@ -1513,11 +1513,7 @@ name|char
 operator|*
 argument_list|)
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 name|evl
@@ -1928,11 +1924,7 @@ argument_list|)
 operator|+
 name|ETHER_VLAN_ENCAP_LEN
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 name|m_adj

@@ -1800,11 +1800,7 @@ name|m_adj
 argument_list|(
 name|m
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fddi_header
-argument_list|)
+name|FDDI_HDR_LEN
 argument_list|)
 expr_stmt|;
 name|m
@@ -1813,11 +1809,7 @@ name|m_pullup
 argument_list|(
 name|m
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|llc
-argument_list|)
+name|LLC_SNAPFRAMELEN
 argument_list|)
 expr_stmt|;
 if|if

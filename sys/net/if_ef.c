@@ -1699,11 +1699,7 @@ name|m0
 operator|.
 name|m_len
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_HDR_LEN
 expr_stmt|;
 name|m0
 operator|.

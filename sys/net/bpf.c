@@ -707,11 +707,7 @@ expr_stmt|;
 comment|/* XXX Would MAXLINKHDR be better? */
 name|hlen
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ether_header
-argument_list|)
+name|ETHER_HDR_LEN
 expr_stmt|;
 break|break;
 case|case
