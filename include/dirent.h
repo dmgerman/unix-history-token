@@ -25,6 +25,12 @@ directive|include
 file|<sys/dirent.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -65,6 +71,12 @@ directive|define
 name|DIRBLKSIZ
 value|1024
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|_ddloc
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* structure describing an open directory. */
@@ -108,6 +120,18 @@ name|int
 name|dd_flags
 decl_stmt|;
 comment|/* flags for readdir */
+name|long
+name|dd_loccnt
+decl_stmt|;
+comment|/* Index of entry for sequential readdir's */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|_ddloc
+argument_list|)
+name|dd_locq
+expr_stmt|;
+comment|/* telldir position recording */
 block|}
 name|DIR
 typedef|;
@@ -296,7 +320,6 @@ name|telldir
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|DIR
 operator|*
 operator|)
