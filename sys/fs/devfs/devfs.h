@@ -111,10 +111,6 @@ define|#
 directive|define
 name|DRC_PATHPTRN
 value|0x002
-define|#
-directive|define
-name|DRC_MAJOR
-value|0x004
 name|int
 name|dr_dswflags
 decl_stmt|;
@@ -130,10 +126,6 @@ name|DEVFS_MAXPTRNLEN
 index|]
 decl_stmt|;
 comment|/* Pattern to match path. */
-name|int
-name|dr_major
-decl_stmt|;
-comment|/* Device major number. */
 comment|/* 	 * Things to change.  dr_iacts determines which of the other 	 * variables we should process. 	 */
 name|int
 name|dr_iacts
