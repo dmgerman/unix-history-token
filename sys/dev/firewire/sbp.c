@@ -11120,7 +11120,7 @@ endif|#
 directive|endif
 argument|END_DEBUG 	prev = STAILQ_LAST(&sdev->ocbs, sbp_ocb, ocb); 	STAILQ_INSERT_TAIL(&sdev->ocbs, ocb, ocb);  	if (ocb->ccb != NULL) 		ocb->ccb->ccb_h.timeout_ch = timeout(sbp_timeout, (caddr_t)ocb, 					(ocb->ccb->ccb_h.timeout * hz) /
 literal|1000
-argument|);  	if (prev != NULL&& ((prev->flags& OCB_ACT_MASK) == OCB_ACT_CMD)&& ((ocb->flags& OCB_ACT_MASK) == OCB_ACT_CMD)) { SBP_DEBUG(
+argument|);  	if (prev != NULL ) { SBP_DEBUG(
 literal|1
 argument|)
 if|#
@@ -11152,7 +11152,7 @@ argument|])); 		prev->orb[
 literal|0
 argument|] =
 literal|0
-argument|; 	} else { 		prev = NULL; 	} 	splx(s);  	return prev; }  static struct sbp_ocb * sbp_get_ocb(struct sbp_softc *sbp) { 	struct sbp_ocb *ocb; 	int s = splfw(); 	ocb = STAILQ_FIRST(&sbp->free_ocbs); 	if (ocb == NULL) { 		printf(
+argument|; 	} 	splx(s);  	return prev; }  static struct sbp_ocb * sbp_get_ocb(struct sbp_softc *sbp) { 	struct sbp_ocb *ocb; 	int s = splfw(); 	ocb = STAILQ_FIRST(&sbp->free_ocbs); 	if (ocb == NULL) { 		printf(
 literal|"ocb shortage!!!\n"
 argument|); 		return NULL; 	} 	STAILQ_REMOVE(&sbp->free_ocbs, ocb, sbp_ocb, ocb); 	splx(s); 	ocb->ccb = NULL; 	return (ocb); }  static void sbp_free_ocb(struct sbp_softc *sbp, struct sbp_ocb *ocb) {
 if|#
