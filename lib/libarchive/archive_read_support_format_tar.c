@@ -1176,7 +1176,7 @@ name|header
 operator|=
 name|h
 expr_stmt|;
-comment|/* This distinguishes POSIX formats from GNU tar formats. */
+comment|/* Recognize POSIX formats. */
 if|if
 condition|(
 operator|(
@@ -1213,7 +1213,7 @@ name|bid
 operator|+=
 literal|56
 expr_stmt|;
-comment|/* Recognize GNU tar format as well. */
+comment|/* Recognize GNU tar format. */
 if|if
 condition|(
 operator|(
@@ -3129,6 +3129,28 @@ operator|->
 name|st_mode
 operator||=
 name|S_IFREG
+expr_stmt|;
+comment|/* 		 * A tricky point: Traditionally, tar programs have 		 * ignored the size field when reading hardlink 		 * entries.  As a result, some programs write non-zero 		 * sizes, even though the body is empty and expect the 		 * reader to ignore that.  POSIX.1-2001 broke this by 		 * permitting hardlink entries to store valid bodies 		 * in pax interchange format.  Since there is no hard 		 * and fast way to distinguish pax interchange from 		 * earlier archives (the 'x' and 'g' entries are 		 * optional, after all), we need a heuristic.  Here, I 		 * use the bid function to test whether or not there's 		 * a valid header following. 		 */
+if|if
+condition|(
+name|st
+operator|->
+name|st_size
+operator|>
+literal|0
+operator|&&
+name|archive_read_format_tar_bid
+argument_list|(
+name|a
+argument_list|)
+operator|>
+literal|50
+condition|)
+name|st
+operator|->
+name|st_size
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
