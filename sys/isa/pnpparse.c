@@ -81,7 +81,7 @@ name|I32
 parameter_list|(
 name|p
 parameter_list|)
-value|(I16(p) + (I16(p+2)<< 16))
+value|(I16(p) + (I16((p)+2)<< 16))
 end_define
 
 begin_function
