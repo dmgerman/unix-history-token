@@ -6460,19 +6460,6 @@ decl_stmt|;
 comment|/* 	 * Allocate object for the kstack. 	 */
 name|ksobj
 operator|=
-name|td
-operator|->
-name|td_kstack_obj
-expr_stmt|;
-if|if
-condition|(
-name|ksobj
-operator|==
-name|NULL
-condition|)
-block|{
-name|ksobj
-operator|=
 name|vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
@@ -6486,21 +6473,7 @@ name|td_kstack_obj
 operator|=
 name|ksobj
 expr_stmt|;
-block|}
 comment|/* 	 * Get a kernel virtual address for the kstack for this thread. 	 */
-name|ks
-operator|=
-name|td
-operator|->
-name|td_kstack
-expr_stmt|;
-if|if
-condition|(
-name|ks
-operator|==
-literal|0
-condition|)
-block|{
 name|ks
 operator|=
 name|kmem_alloc_nofault
@@ -6544,7 +6517,6 @@ name|td_kstack
 operator|=
 name|ks
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
