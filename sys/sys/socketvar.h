@@ -74,7 +74,8 @@ name|short
 name|so_state
 decl_stmt|;
 comment|/* internal state flags SS_*, below */
-name|caddr_t
+name|void
+modifier|*
 name|so_pcb
 decl_stmt|;
 comment|/* protocol control block */
