@@ -2135,13 +2135,6 @@ decl_stmt|;
 name|int
 name|passthrough
 decl_stmt|;
-name|m_dev
-operator|=
-name|device_get_ivars
-argument_list|(
-name|child
-argument_list|)
-expr_stmt|;
 name|isdefault
 operator|=
 operator|(
