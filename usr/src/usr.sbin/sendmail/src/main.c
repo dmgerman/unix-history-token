@@ -1091,7 +1091,7 @@ index|[]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Version %s\nCompiled with:\t"
+literal|"Version %s\n Compiled with:"
 argument_list|,
 name|Version
 argument_list|)
@@ -1153,6 +1153,7 @@ literal|'\t'
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|putchar
 argument_list|(
 literal|' '
@@ -1205,7 +1206,7 @@ index|[]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"OS Defines:\t"
+literal|"    OS Defines:"
 argument_list|,
 name|Version
 argument_list|)
@@ -1267,6 +1268,7 @@ literal|'\t'
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|putchar
 argument_list|(
 literal|' '
@@ -1302,7 +1304,7 @@ directive|ifdef
 name|_PATH_UNIX
 name|printf
 argument_list|(
-literal|"Unix path:\t  %s\n"
+literal|"     Unix path:\t%s\n"
 argument_list|,
 name|_PATH_UNIX
 argument_list|)
@@ -1311,7 +1313,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"Config file:\t  %s\n"
+literal|"   Config file:\t%s\n"
 argument_list|,
 name|getcfname
 argument_list|()
@@ -1319,7 +1321,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Proc Id file:\t  %s\n"
+literal|"  Proc Id file:\t%s\n"
 argument_list|,
 name|PidFile
 argument_list|)
@@ -2981,12 +2983,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SYSTEM IDENTITY (after readcf):"
+literal|"\n============ SYSTEM IDENTITY (after readcf) ============"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t    (short domain name) $w = "
+literal|"\n      (short domain name) $w = "
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -3001,7 +3003,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t(canonical domain name) $j = "
+literal|"\n  (canonical domain name) $j = "
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -3016,7 +3018,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t       (subdomain name) $m = "
+literal|"\n         (subdomain name) $m = "
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -3031,7 +3033,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\t            (node name) $k = "
+literal|"\n              (node name) $k = "
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -3046,7 +3048,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n"
+literal|"\n========================================================\n\n"
 argument_list|)
 expr_stmt|;
 block|}
