@@ -108,7 +108,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|(((bus)<< 23) | ((slot)<< 11) | ((func)<< 8) | (reg))
+value|(((bus)<< 16) | ((slot)<< 11) | ((func)<< 8) | (reg))
 end_define
 
 begin_function
