@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* terminal.c -- controlling the terminal with termcap. */
 end_comment
 
 begin_comment
 comment|/* Copyright (C) 1996 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
 end_comment
 
 begin_define
@@ -1517,9 +1517,6 @@ condition|;
 name|i
 operator|++
 control|)
-ifdef|#
-directive|ifdef
-name|__LCC__
 operator|*
 operator|(
 name|tc_strings
@@ -1546,32 +1543,6 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|*
-operator|(
-name|tc_strings
-index|[
-name|i
-index|]
-operator|.
-name|tc_value
-operator|)
-operator|=
-name|tgetstr
-argument_list|(
-name|tc_strings
-index|[
-name|i
-index|]
-operator|.
-name|tc_var
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|tcap_initialized
@@ -2094,35 +2065,35 @@ name|_rl_keymap
 operator|=
 name|map
 expr_stmt|;
-name|_rl_bind_if_unbound
+name|rl_bind_keyseq_if_unbound
 argument_list|(
 name|_rl_term_ku
 argument_list|,
 name|rl_get_previous_history
 argument_list|)
 expr_stmt|;
-name|_rl_bind_if_unbound
+name|rl_bind_keyseq_if_unbound
 argument_list|(
 name|_rl_term_kd
 argument_list|,
 name|rl_get_next_history
 argument_list|)
 expr_stmt|;
-name|_rl_bind_if_unbound
+name|rl_bind_keyseq_if_unbound
 argument_list|(
 name|_rl_term_kr
 argument_list|,
-name|rl_forward
+name|rl_forward_char
 argument_list|)
 expr_stmt|;
-name|_rl_bind_if_unbound
+name|rl_bind_keyseq_if_unbound
 argument_list|(
 name|_rl_term_kl
 argument_list|,
-name|rl_backward
+name|rl_backward_char
 argument_list|)
 expr_stmt|;
-name|_rl_bind_if_unbound
+name|rl_bind_keyseq_if_unbound
 argument_list|(
 name|_rl_term_kh
 argument_list|,
@@ -2130,7 +2101,7 @@ name|rl_beg_of_line
 argument_list|)
 expr_stmt|;
 comment|/* Home */
-name|_rl_bind_if_unbound
+name|rl_bind_keyseq_if_unbound
 argument_list|(
 name|_rl_term_at7
 argument_list|,
