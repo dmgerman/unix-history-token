@@ -1866,14 +1866,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
