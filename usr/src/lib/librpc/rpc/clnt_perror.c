@@ -65,15 +65,6 @@ directive|include
 file|<rpc/clnt.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|char
@@ -301,12 +292,12 @@ name|str
 argument_list|,
 literal|"; errno = %s"
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|e
 operator|.
 name|re_errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|str
@@ -802,12 +793,6 @@ specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 name|char
 modifier|*
 name|str
@@ -929,14 +914,14 @@ name|strcat
 argument_list|(
 name|str
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|rpc_createerr
 operator|.
 name|cf_error
 operator|.
 name|re_errno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
