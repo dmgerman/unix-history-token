@@ -676,7 +676,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\033[1m---> %s:%d\033[m\n"
+literal|"---> %s:%d\n"
 argument_list|,
 name|host
 argument_list|,
@@ -1286,7 +1286,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\033[1m<<< %.*s\033[m"
+literal|"<<< %.*s"
 argument_list|,
 operator|(
 name|int
@@ -1420,7 +1420,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\033[1m>>> %s\n\033[m"
+literal|">>> %s\n"
 argument_list|,
 name|str
 argument_list|)

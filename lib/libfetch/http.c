@@ -448,8 +448,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\033[1m_http_fillbuf(): "
-literal|"end of last chunk\033[m\n"
+literal|"_http_fillbuf(): "
+literal|"end of last chunk\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -457,8 +457,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\033[1m_http_fillbuf(): "
-literal|"new chunk: %lu (%lu)\033[m\n"
+literal|"_http_fillbuf(): "
+literal|"new chunk: %lu (%lu)\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -1804,8 +1804,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"last modified: [\033[1m%04d-%02d-%02d "
-literal|"%02d:%02d:%02d\033[m]\n"
+literal|"last modified: [%04d-%02d-%02d "
+literal|"%02d:%02d:%02d]\n"
 argument_list|,
 name|tm
 operator|.
@@ -1920,7 +1920,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"content length: [\033[1m%lld\033[m]\n"
+literal|"content length: [%lld]\n"
 argument_list|,
 operator|(
 name|long
@@ -2138,7 +2138,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"content range: [\033[1m%lld-%lld/%lld\033[m]\n"
+literal|"content range: [%lld-%lld/%lld]\n"
 argument_list|,
 operator|(
 name|long
@@ -2603,7 +2603,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usr: [\033[1m%s\033[m]\n"
+literal|"usr: [%s]\n"
 argument_list|,
 name|usr
 argument_list|)
@@ -2615,7 +2615,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"pwd: [\033[1m%s\033[m]\n"
+literal|"pwd: [%s]\n"
 argument_list|,
 name|pwd
 argument_list|)

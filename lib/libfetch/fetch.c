@@ -1884,12 +1884,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"scheme:   [\033[1m%s\033[m]\n"
-literal|"user:     [\033[1m%s\033[m]\n"
-literal|"password: [\033[1m%s\033[m]\n"
-literal|"host:     [\033[1m%s\033[m]\n"
-literal|"port:     [\033[1m%d\033[m]\n"
-literal|"document: [\033[1m%s\033[m]\n"
+literal|"scheme:   [%s]\n"
+literal|"user:     [%s]\n"
+literal|"password: [%s]\n"
+literal|"host:     [%s]\n"
+literal|"port:     [%d]\n"
+literal|"document: [%s]\n"
 argument_list|,
 name|u
 operator|->
