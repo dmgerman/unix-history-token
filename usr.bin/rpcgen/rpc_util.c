@@ -13,13 +13,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rpc_util.c 1.11 89/02/22 (C) 1987 SMI";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rpc_util.c 1.11 89/02/22 (C) 1987 SMI"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +48,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -42,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -1135,22 +1154,13 @@ block|{
 name|printwhere
 argument_list|()
 expr_stmt|;
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s, line %d: "
+literal|"%s, line %d: %s"
 argument_list|,
 name|infilename
 argument_list|,
 name|linenum
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
 argument_list|,
 name|msg
 argument_list|)
@@ -1236,11 +1246,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"too many files!\n"
+literal|"too many files"
 argument_list|)
 expr_stmt|;
 name|crash
@@ -1930,20 +1938,13 @@ condition|(
 operator|!
 name|name
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
 literal|"failed in malloc"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|sprintf
 argument_list|(
 name|name
@@ -2026,20 +2027,13 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
 literal|"failed in malloc"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|ptr
 operator|->
 name|name

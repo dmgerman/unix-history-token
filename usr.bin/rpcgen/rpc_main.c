@@ -13,13 +13,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rpc_main.c 1.30 89/03/30 (C) 1987 SMI";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rpc_main.c 1.30 89/03/30 (C) 1987 SMI"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +44,18 @@ end_endif
 begin_comment
 comment|/*  * rpc_main.c, Top level of the RPC protocol compiler.  * Copyright (C) 1987, Sun Microsystems, Inc.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -48,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -497,14 +516,6 @@ end_decl_stmt
 begin_comment
 comment|/* explicit path for C preprocessor */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|cmdname
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1717,13 +1728,9 @@ name|infile
 argument_list|)
 condition|)
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s already exists.  No output generated.\n"
-argument_list|,
-name|cmdname
+literal|"%s already exists. No output generated"
 argument_list|,
 name|infile
 argument_list|)
@@ -1748,17 +1755,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|f_print
+name|warn
 argument_list|(
-name|stderr
+literal|"unable to open %s"
 argument_list|,
-literal|"%s: unable to open "
-argument_list|,
-name|cmdname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|outfile
 argument_list|)
 expr_stmt|;
@@ -1885,11 +1885,9 @@ condition|(
 name|cppDefined
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot find C preprocessor: %s \n"
+literal|"cannot find C preprocessor: %s"
 argument_list|,
 name|CPP
 argument_list|)
@@ -1919,11 +1917,9 @@ literal|0
 condition|)
 block|{
 comment|/* can't find any cpp */
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot find any C preprocessor (cpp)\n"
+literal|"cannot find any C preprocessor (cpp)"
 argument_list|)
 expr_stmt|;
 name|crash
@@ -2076,7 +2072,7 @@ argument_list|,
 name|arglist
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
 literal|"execv"
 argument_list|)
@@ -2090,7 +2086,7 @@ case|case
 operator|-
 literal|1
 case|:
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -2131,17 +2127,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|f_print
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|cmdname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|infilename
 argument_list|)
 expr_stmt|;
@@ -2269,11 +2258,9 @@ operator|)
 return|;
 block|}
 block|}
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"illegal nettype :\'%s\'\n"
+literal|"illegal nettype :\'%s\'"
 argument_list|,
 name|name
 argument_list|)
@@ -5040,11 +5027,9 @@ operator|>=
 name|ARGLISTLEN
 condition|)
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rpcgen: too many defines\n"
+literal|"too many defines"
 argument_list|)
 expr_stmt|;
 name|crash
@@ -5087,11 +5072,9 @@ operator|>=
 name|ARGLISTLEN
 condition|)
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"rpcgen: arglist coding error\n"
+literal|"arglist coding error"
 argument_list|)
 expr_stmt|;
 name|crash
@@ -5153,8 +5136,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|infile
 argument_list|)
 expr_stmt|;
@@ -5184,11 +5169,9 @@ return|return;
 comment|/* file does not exist */
 else|else
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"file '%s' already exists and may be overwritten\n"
+literal|"file '%s' already exists and may be overwritten"
 argument_list|,
 name|outfile
 argument_list|)
@@ -5259,13 +5242,6 @@ decl_stmt|;
 name|int
 name|nflags
 decl_stmt|;
-name|cmdname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|cmd
 operator|->
 name|infile
@@ -5404,11 +5380,9 @@ operator|->
 name|infile
 condition|)
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot specify more than one input file.\n"
+literal|"cannot specify more than one input file"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6064,11 +6038,9 @@ operator|)
 condition|)
 block|{
 comment|/* netid not allowed with inetdflag */
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot use netid flag with inetd flag.\n"
+literal|"cannot use netid flag with inetd flag"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6104,11 +6076,9 @@ name|nflag
 condition|)
 block|{
 comment|/* netid needs TIRPC */
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot use netid flag without TIRPC.\n"
+literal|"cannot use netid flag without TIRPC"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6131,11 +6101,9 @@ name|tflag
 operator|)
 condition|)
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot use table flags with newstyle.\n"
+literal|"cannot use table flags with newstyle"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6240,11 +6208,9 @@ name|makefileflag
 operator|)
 condition|)
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"\"infile\" is required for template generation flags.\n"
+literal|"\"infile\" is required for template generation flags"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6260,11 +6226,9 @@ operator|>
 literal|1
 condition|)
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot have more than one file generation flag.\n"
+literal|"cannot have more than one file generation flag"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6291,45 +6255,17 @@ name|f_print
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:  %s infile\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-name|cmdname
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|stderr
+literal|"usage: rpcgen infile"
 argument_list|,
-literal|"\t%s [-abCLNTM] [-Dname[=value]] [-i size]\ [-I [-K seconds]] [-Y path] infile\n"
+literal|"       rpcgen [-abCLNTM] [-Dname[=value]] [-i size]\ [-I [-K seconds]] [-Y path] infile"
 argument_list|,
-name|cmdname
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|stderr
+literal|"       rpcgen [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm]\ [-o outfile] [infile]"
 argument_list|,
-literal|"\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm]\ [-o outfile] [infile]\n"
+literal|"       rpcgen [-s nettype]* [-o outfile] [infile]"
 argument_list|,
-name|cmdname
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t%s [-s nettype]* [-o outfile] [infile]\n"
-argument_list|,
-name|cmdname
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t%s [-n netid]* [-o outfile] [infile]\n"
-argument_list|,
-name|cmdname
+literal|"       rpcgen [-n netid]* [-o outfile] [infile]"
 argument_list|)
 expr_stmt|;
 name|options_usage

@@ -13,13 +13,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rpc_tblout.c 1.4 89/02/22 (C) 1988 SMI";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rpc_tblout.c 1.4 89/02/22 (C) 1988 SMI"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +44,12 @@ end_endif
 begin_comment
 comment|/*  * rpc_tblout.c, Dispatch table outputter for the RPC protocol compiler  * Copyright (C) 1989, Sun Microsystems, Inc.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -411,11 +430,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|f_print
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING %s table is out of order\n"
+literal|"WARNING %s table is out of order"
 argument_list|,
 name|progvers
 argument_list|)
