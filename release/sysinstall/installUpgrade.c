@@ -921,6 +921,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|systemDisplayHelp
 argument_list|(
 literal|"UPGRADE"
@@ -1081,6 +1084,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -1142,6 +1147,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 comment|/* Don't write out MBR info */
@@ -1180,6 +1187,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 name|msgNotify
@@ -1224,6 +1233,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 name|chdir
@@ -1493,6 +1504,8 @@ return|return
 name|DITEM_FAILURE
 operator||
 name|DITEM_REDRAW
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 name|msgNotify
@@ -1642,6 +1655,8 @@ return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_REDRAW
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
