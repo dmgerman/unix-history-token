@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.6 (Berkeley) %G%"
+literal|"@(#)login.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1985,6 +1985,8 @@ argument_list|,
 name|pwd
 operator|->
 name|pw_dir
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|setenv
@@ -1994,6 +1996,8 @@ argument_list|,
 name|pwd
 operator|->
 name|pw_shell
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2025,6 +2029,8 @@ argument_list|(
 literal|"TERM="
 argument_list|,
 name|term
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|setenv
@@ -2034,6 +2040,8 @@ argument_list|,
 name|pwd
 operator|->
 name|pw_name
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|setenv
@@ -2041,6 +2049,8 @@ argument_list|(
 literal|"PATH="
 argument_list|,
 literal|":/usr/ucb:/bin:/usr/bin"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3232,6 +3242,8 @@ argument_list|(
 argument|var
 argument_list|,
 argument|value
+argument_list|,
+argument|clobber
 argument_list|)
 end_macro
 
@@ -3309,6 +3321,12 @@ literal|0
 condition|)
 block|{
 comment|/* found it */
+if|if
+condition|(
+operator|!
+name|clobber
+condition|)
+return|return;
 name|environ
 index|[
 name|index
