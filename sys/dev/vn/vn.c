@@ -124,6 +124,12 @@ directive|include
 file|<sys/diskslice.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -323,13 +329,24 @@ comment|/*  * XXX these decls should be static (without __P(())) or elsewhere.  
 end_comment
 
 begin_decl_stmt
-name|void
-name|vnattach
+name|int
+name|vnclose
 name|__P
 argument_list|(
 operator|(
+name|dev_t
+name|dev
+operator|,
 name|int
-name|num
+name|flags
+operator|,
+name|int
+name|mode
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -874,14 +891,11 @@ operator|&
 name|VNF_INITED
 condition|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|disklabel
 name|label
 decl_stmt|;
-comment|/* Build label for whole disk.  */
+comment|/* Build label for whole disk. */
 name|bzero
 argument_list|(
 operator|&
@@ -942,8 +956,8 @@ name|label
 operator|.
 name|d_nsectors
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|dsopen
 argument_list|(
 literal|"vn"
@@ -968,15 +982,34 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX temporary */
-block|return (error);
-endif|#
-directive|endif
+operator|)
+return|;
 block|}
+if|if
+condition|(
+name|dkslice
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|WHOLE_DISK_SLICE
+operator|||
+name|dkpart
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|RAW_PART
+operator|||
+name|mode
+operator|!=
+name|S_IFCHR
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 endif|#
 directive|endif
 comment|/* TEST_LABELLING */
@@ -2229,6 +2262,8 @@ condition|(
 name|vn
 operator|->
 name|sc_slices
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
@@ -2269,6 +2304,27 @@ name|error
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|dkslice
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|WHOLE_DISK_SLICE
+operator|||
+name|dkpart
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|RAW_PART
+condition|)
+return|return
+operator|(
+name|ENOTTY
+operator|)
+return|;
 endif|#
 directive|endif
 name|error
@@ -2532,6 +2588,34 @@ name|VNF_INITED
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|TEST_LABELLING
+comment|/* 		 * Reopen so that `ds' knows which devices are open.  If 		 * this is the first VNIOCSET, then we've guaranteed that 		 * the device is the cdev and that no other slices or 		 * labels are open.  Otherwise, we rely on VNIOCCLR not 		 * being abused. 		 */
+name|error
+operator|=
+name|vnopen
+argument_list|(
+name|dev
+argument_list|,
+name|flag
+argument_list|,
+name|S_IFCHR
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|vnclear
+argument_list|(
+name|vn
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|DEBUG
 if|if
 condition|(
@@ -2575,6 +2659,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* 		 * XXX handle i/o in progress.  Return EBUSY, or wait, or 		 * flush the i/o. 		 * XXX handle multiple opens of the device.  Return EBUSY, 		 * or revoke the fd's. 		 * How are these problems handled for removable and failing 		 * hardware devices? 		 */
 name|vnclear
 argument_list|(
 name|vn
@@ -2600,7 +2685,7 @@ break|break;
 default|default:
 return|return
 operator|(
-name|ENXIO
+name|ENOTTY
 operator|)
 return|;
 block|}
@@ -2933,7 +3018,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"vnioctl: null vp"
+literal|"vnclear: null vp"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2992,13 +3077,22 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TEST_LABELLING
+if|if
+condition|(
 name|vn
 operator|->
 name|sc_slices
-operator|=
+operator|!=
 name|NULL
+condition|)
+name|dsgone
+argument_list|(
+operator|&
+name|vn
+operator|->
+name|sc_slices
+argument_list|)
 expr_stmt|;
-comment|/* XXX temportary; leaks memory, maybe worse */
 endif|#
 directive|endif
 block|}
@@ -3071,7 +3165,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|ENXIO
+name|ENODEV
 operator|)
 return|;
 block|}
