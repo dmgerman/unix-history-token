@@ -4244,6 +4244,10 @@ name|busy
 operator|||
 name|m
 operator|->
+name|hold_count
+operator|||
+name|m
+operator|->
 name|wire_count
 condition|)
 block|{
