@@ -158,6 +158,10 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'?'
+case|:
+comment|/* fall through */
 default|default:
 name|usage
 argument_list|()
