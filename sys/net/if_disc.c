@@ -785,6 +785,11 @@ modifier|*
 name|info
 parameter_list|)
 block|{
+name|RT_LOCK_ASSERT
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt

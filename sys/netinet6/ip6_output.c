@@ -2690,6 +2690,13 @@ operator|->
 name|rt_use
 operator|++
 expr_stmt|;
+name|RT_UNLOCK
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -8353,7 +8360,7 @@ name|ro_rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-name|rtfree
+name|RTFREE
 argument_list|(
 name|ro
 operator|.

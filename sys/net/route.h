@@ -258,12 +258,17 @@ modifier|*
 name|rt_parent
 decl_stmt|;
 comment|/* cloning parent of this route */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+comment|/* XXX ugly, user apps use this definition but don't have a mtx def */
 name|struct
 name|mtx
-modifier|*
 name|rt_mtx
 decl_stmt|;
 comment|/* mutex for routing entry */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1187,10 +1192,10 @@ define|#
 directive|define
 name|RT_LOCK_INIT
 parameter_list|(
-name|rt
+name|_rt
 parameter_list|)
 define|\
-value|mtx_init((rt)->rt_mtx, "rtentry", NULL, MTX_DEF | MTX_DUPOK)
+value|mtx_init(&(_rt)->rt_mtx, "rtentry", NULL, MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define
@@ -1198,9 +1203,9 @@ define|#
 directive|define
 name|RT_LOCK
 parameter_list|(
-name|rt
+name|_rt
 parameter_list|)
-value|mtx_lock((rt)->rt_mtx)
+value|mtx_lock(&(_rt)->rt_mtx)
 end_define
 
 begin_define
@@ -1208,9 +1213,9 @@ define|#
 directive|define
 name|RT_UNLOCK
 parameter_list|(
-name|rt
+name|_rt
 parameter_list|)
-value|mtx_unlock((rt)->rt_mtx)
+value|mtx_unlock(&(_rt)->rt_mtx)
 end_define
 
 begin_define
@@ -1218,9 +1223,31 @@ define|#
 directive|define
 name|RT_LOCK_DESTROY
 parameter_list|(
-name|rt
+name|_rt
 parameter_list|)
-value|mtx_destroy((rt)->rt_mtx)
+value|mtx_destroy(&(_rt)->rt_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT_LOCK_ASSERT
+parameter_list|(
+name|_rt
+parameter_list|)
+value|mtx_assert(&(_rt)->rt_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTFREE_LOCKED
+parameter_list|(
+name|_rt
+parameter_list|)
+value|do {				\ 		if ((_rt)->rt_refcnt<= 1)		\ 			rtfree(_rt);			\ 		else {					\ 			(_rt)->rt_refcnt--;		\ 			RT_UNLOCK(_rt);			\ 		}					\
+comment|/* guard against invalid refs */
+value|\ 		_rt = 0;				\ 	} while (0)
 end_define
 
 begin_define
@@ -1228,10 +1255,9 @@ define|#
 directive|define
 name|RTFREE
 parameter_list|(
-name|rt
+name|_rt
 parameter_list|)
-define|\
-value|do { \ 		if ((rt)->rt_refcnt<= 1) \ 			rtfree(rt); \ 		else \ 			(rt)->rt_refcnt--; \ 	} while (0)
+value|do {				\ 		RT_LOCK(_rt);				\ 		RTFREE_LOCKED(_rt);			\ 	} while (0)
 end_define
 
 begin_decl_stmt
@@ -1348,6 +1374,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|rtalloc
+parameter_list|(
+name|struct
+name|route
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|rt_setgate
 parameter_list|(
@@ -1368,17 +1405,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|rtalloc
-parameter_list|(
-name|struct
-name|route
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|rtalloc_ign
 parameter_list|(
 name|struct
@@ -1389,6 +1415,10 @@ name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* NB: the rtentry is returned locked */
+end_comment
 
 begin_function_decl
 name|struct
@@ -1464,11 +1494,6 @@ name|int
 parameter_list|,
 name|struct
 name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1877,7 +1877,7 @@ if|if
 condition|(
 name|rt
 condition|)
-name|RTFREE
+name|rtfree
 argument_list|(
 name|rt
 argument_list|)
@@ -2638,14 +2638,6 @@ operator|*
 operator|)
 operator|&
 name|icmpgw
-argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 name|pfctlinput

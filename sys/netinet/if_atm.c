@@ -1418,10 +1418,20 @@ operator|!=
 name|AF_LINK
 condition|)
 block|{
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
 block|}
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * note that rt_gateway is a sockaddr_dl which contains the  	 * atm_pseudohdr data structure for this route.   we currently 	 * don't need any rt_llinfo info (but will if we want to support 	 * ATM ARP [c.f. if_ether.c]). 	 */
 name|sdl

@@ -3137,7 +3137,10 @@ expr_stmt|;
 if|if
 condition|(
 name|rt
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|rt
 operator|->
@@ -3147,15 +3150,12 @@ name|RTF_LLINFO
 operator|)
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* 		 * This is the case for the default route. 		 * If we want to create a neighbor cache for the address, we 		 * should free the route for the destination and allocate an 		 * interface route. 		 */
-if|if
-condition|(
+operator|&&
 name|create
 condition|)
 block|{
-name|RTFREE
+comment|/* 			 * This is the case for the default route. 			 * If we want to create a neighbor cache for the 			 * address, we should free the route for the 			 * destination and allocate an interface route. 			 */
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -3165,6 +3165,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4117,6 +4122,11 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|RT_LOCK_ASSERT
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7293,9 +7303,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|rt0
 operator|=
 name|rt
@@ -7313,7 +7320,10 @@ literal|1
 argument_list|,
 literal|0UL
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rt
 operator|!=
 name|NULL
 condition|)
@@ -7322,6 +7332,11 @@ name|rt
 operator|->
 name|rt_refcnt
 operator|--
+expr_stmt|;
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7491,6 +7506,11 @@ condition|)
 name|senderr
 argument_list|(
 name|EHOSTUNREACH
+argument_list|)
+expr_stmt|;
+name|RT_UNLOCK
+argument_list|(
+name|rt
 argument_list|)
 expr_stmt|;
 block|}

@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/callout.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -392,6 +398,12 @@ operator|==
 name|AF_LINK
 condition|)
 block|{
+comment|/* NB: must unlock to avoid recursion */
+name|RT_UNLOCK
+argument_list|(
+name|rt2
+argument_list|)
+expr_stmt|;
 name|rtrequest
 argument_list|(
 name|RTM_DELETE
@@ -435,8 +447,13 @@ argument_list|,
 name|treenodes
 argument_list|)
 expr_stmt|;
+name|RT_LOCK
+argument_list|(
+name|rt2
+argument_list|)
+expr_stmt|;
 block|}
-name|RTFREE
+name|RTFREE_LOCKED
 argument_list|(
 name|rt2
 argument_list|)
@@ -522,6 +539,7 @@ operator|*
 operator|)
 name|rn
 decl_stmt|;
+comment|/*XXX locking? */
 if|if
 condition|(
 name|rt
@@ -702,6 +720,11 @@ operator|*
 operator|)
 name|rn
 decl_stmt|;
+name|RT_LOCK_ASSERT
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -776,6 +799,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* NB: must unlock to avoid recursion */
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|rtrequest
 argument_list|(
 name|RTM_DELETE
@@ -804,6 +833,11 @@ operator|->
 name|rt_flags
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|RT_LOCK
+argument_list|(
+name|rt
 argument_list|)
 expr_stmt|;
 block|}
@@ -1054,6 +1088,14 @@ name|RTQ_TIMEOUT
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|callout
+name|rtq_timer
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -1084,9 +1126,6 @@ name|time_t
 name|last_adjusted_timeout
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|arg
 operator|.
@@ -1122,11 +1161,6 @@ name|updating
 operator|=
 literal|0
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rnh
@@ -1147,11 +1181,6 @@ expr_stmt|;
 name|RADIX_NODE_HEAD_UNLOCK
 argument_list|(
 name|rnh
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attempt to be somewhat dynamic about this: 	 * If there are ``too many'' routes sitting around taking up space, 	 * then crank down the timeout, and see if we can't make some more 	 * go away.  However, we make sure that we will never adjust more 	 * than once in rtq_timeout seconds, to keep from cranking down too 	 * hard. 	 */
@@ -1236,11 +1265,6 @@ name|updating
 operator|=
 literal|1
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rnh
@@ -1263,11 +1287,6 @@ argument_list|(
 name|rnh
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 name|atv
 operator|.
@@ -1285,17 +1304,20 @@ name|nextstop
 operator|-
 name|time_second
 expr_stmt|;
-name|timeout
+name|callout_reset
 argument_list|(
-name|in_rtqtimo
-argument_list|,
-name|rock
+operator|&
+name|rtq_timer
 argument_list|,
 name|tvtohz
 argument_list|(
 operator|&
 name|atv
 argument_list|)
+argument_list|,
+name|in_rtqtimo
+argument_list|,
+name|rock
 argument_list|)
 expr_stmt|;
 block|}
@@ -1321,9 +1343,6 @@ decl_stmt|;
 name|struct
 name|rtqk_arg
 name|arg
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|arg
 operator|.
@@ -1359,11 +1378,6 @@ name|updating
 operator|=
 literal|0
 expr_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|RADIX_NODE_HEAD_LOCK
 argument_list|(
 name|rnh
@@ -1384,11 +1398,6 @@ expr_stmt|;
 name|RADIX_NODE_HEAD_UNLOCK
 argument_list|(
 name|rnh
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -1471,6 +1480,14 @@ operator|->
 name|rnh_close
 operator|=
 name|in_clsroute
+expr_stmt|;
+name|callout_init
+argument_list|(
+operator|&
+name|rtq_timer
+argument_list|,
+name|CALLOUT_MPSAFE
+argument_list|)
 expr_stmt|;
 name|in_rtqtimo
 argument_list|(
@@ -1573,6 +1590,11 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * We need to disable the automatic prune that happens 		 * in this case in rtrequest() because it will blow 		 * away the pointers that rn_walktree() needs in order 		 * continue our descent.  We will end up deleting all 		 * the routes that rtrequest() would have in any case, 		 * so that behavior is not needed there. 		 */
+name|RT_LOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|rt
 operator|->
 name|rt_flags
@@ -1583,6 +1605,11 @@ name|RTF_CLONING
 operator||
 name|RTF_PRCLONING
 operator|)
+expr_stmt|;
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
 expr_stmt|;
 name|err
 operator|=
@@ -1725,6 +1752,7 @@ operator|&=
 operator|~
 name|IFA_ROUTE
 expr_stmt|;
+comment|/* XXXlocking? */
 return|return
 literal|0
 return|;

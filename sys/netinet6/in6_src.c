@@ -854,6 +854,13 @@ argument_list|,
 literal|0UL
 argument_list|)
 expr_stmt|;
+name|RT_UNLOCK
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

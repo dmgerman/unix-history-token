@@ -607,14 +607,22 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make sure rt_ifa be equal to IFA, the second argument of the 	 * function. 	 * We need this because when we refer to rt_ifa->ia6_flags in 	 * ip6_input, we assume that the rt_ifa points to the address instead 	 * of the loopback address. 	 */
+if|if
+condition|(
+name|nrt
+condition|)
+block|{
+name|RT_LOCK
+argument_list|(
+name|nrt
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Make sure rt_ifa be equal to IFA, the second argument of 		 * the function.  We need this because when we refer to 		 * rt_ifa->ia6_flags in ip6_input, we assume that the rt_ifa 		 * points to the address instead of the loopback address. 		 */
 if|if
 condition|(
 name|cmd
 operator|==
 name|RTM_ADD
-operator|&&
-name|nrt
 operator|&&
 name|ifa
 operator|!=
@@ -642,12 +650,7 @@ operator|=
 name|ifa
 expr_stmt|;
 block|}
-comment|/* 	 * Report the addition/removal of the address to the routing socket. 	 * XXX: since we called rtinit for a p2p interface with a destination, 	 *      we end up reporting twice in such a case.  Should we rather 	 *      omit the second report? 	 */
-if|if
-condition|(
-name|nrt
-condition|)
-block|{
+comment|/* 		 * Report the addition/removal of the address to the routing 		 * socket. 		 * 		 * XXX: since we called rtinit for a p2p interface with a 		 *      destination, we end up reporting twice in such a case. 		 *      Should we rather omit the second report? 		 */
 name|rt_newaddrmsg
 argument_list|(
 name|cmd
@@ -666,7 +669,7 @@ operator|==
 name|RTM_DELETE
 condition|)
 block|{
-name|RTFREE
+name|rtfree
 argument_list|(
 name|nrt
 argument_list|)
@@ -679,6 +682,11 @@ name|nrt
 operator|->
 name|rt_refcnt
 operator|--
+expr_stmt|;
+name|RT_UNLOCK
+argument_list|(
+name|nrt
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -758,10 +766,10 @@ if|if
 condition|(
 name|rt
 condition|)
+name|rtfree
+argument_list|(
 name|rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -869,7 +877,10 @@ condition|(
 name|rt
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|rt
 operator|->
@@ -893,16 +904,23 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|rtfree
+argument_list|(
 name|rt
-operator|->
-name|rt_refcnt
-operator|--
+argument_list|)
 expr_stmt|;
 name|in6_ifloop_request
 argument_list|(
 name|RTM_DELETE
 argument_list|,
 name|ifa
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|RT_UNLOCK
+argument_list|(
+name|rt
 argument_list|)
 expr_stmt|;
 block|}

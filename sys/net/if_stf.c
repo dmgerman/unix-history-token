@@ -3123,6 +3123,11 @@ modifier|*
 name|info
 decl_stmt|;
 block|{
+name|RT_LOCK_ASSERT
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt

@@ -1852,7 +1852,7 @@ comment|/* No route yet, so try to acquire one */
 end_comment
 
 begin_comment
-unit|bzero(&ro->ro_dst, sizeof(struct sockaddr_in6)); 			dst6 = (struct sockaddr_in6 *)&ro->ro_dst; 			dst6->sin6_family = AF_INET6; 			dst6->sin6_len = sizeof(struct sockaddr_in6); 			dst6->sin6_addr = *dst; 			if (IN6_IS_ADDR_MULTICAST(dst)) { 				ro->ro_rt = rtalloc1(&((struct route *)ro) 						     ->ro_dst, 0, 0UL); 			} else { 				rtalloc((struct route *)ro); 			} 		}
+unit|bzero(&ro->ro_dst, sizeof(struct sockaddr_in6)); 			dst6 = (struct sockaddr_in6 *)&ro->ro_dst; 			dst6->sin6_family = AF_INET6; 			dst6->sin6_len = sizeof(struct sockaddr_in6); 			dst6->sin6_addr = *dst; 			if (IN6_IS_ADDR_MULTICAST(dst)) { 				ro->ro_rt = rtalloc1(&((struct route *)ro) 						     ->ro_dst, 0, 0UL); 				RT_UNLOCK(ro->ro_rt); 			} else { 				rtalloc((struct route *)ro); 			} 		}
 comment|/* 		 * in_pcbconnect() checks out IFF_LOOPBACK to skip using 		 * the address. But we don't know why it does so. 		 * It is necessary to ensure the scope even for lo0 		 * so doesn't check out IFF_LOOPBACK. 		 */
 end_comment
 
@@ -2059,7 +2059,7 @@ name|in6p_route
 operator|.
 name|ro_rt
 condition|)
-name|rtfree
+name|RTFREE
 argument_list|(
 name|inp
 operator|->
@@ -3692,6 +3692,19 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|RT_LOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+name|in6p
+operator|->
+name|in6p_route
+operator|.
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -3771,6 +3784,13 @@ name|rt_flags
 operator|&
 name|RTF_DYNAMIC
 condition|)
+block|{
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+comment|/* XXX refcnt? */
 operator|(
 name|void
 operator|)
@@ -3784,14 +3804,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|in6p
-operator|->
-name|in6p_route
-operator|.
-name|ro_rt
-operator|=
-name|NULL
-expr_stmt|;
+block|}
+else|else
 name|rtfree
 argument_list|(
 name|rt
@@ -3834,7 +3848,7 @@ operator|.
 name|ro_rt
 condition|)
 block|{
-name|rtfree
+name|RTFREE
 argument_list|(
 name|inp
 operator|->

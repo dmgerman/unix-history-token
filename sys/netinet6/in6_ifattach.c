@@ -4377,7 +4377,10 @@ expr_stmt|;
 if|if
 condition|(
 name|rt
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|rt
 operator|->
 name|rt_ifp
@@ -4385,6 +4388,11 @@ operator|==
 name|ifp
 condition|)
 block|{
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 name|rtrequest
 argument_list|(
 name|RTM_DELETE
@@ -4415,6 +4423,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|RTFREE
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|rtfree
 argument_list|(
 name|rt

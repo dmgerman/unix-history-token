@@ -5180,14 +5180,11 @@ if|if
 condition|(
 name|rt
 condition|)
-block|{
-comment|/* XXX: need braces to avoid conflict with else in RTFREE. */
-name|RTFREE
+name|rtfree
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -10350,7 +10347,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|RTFREE
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -10424,7 +10421,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|RTFREE
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -10462,7 +10459,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|RTFREE
+name|RTFREE_LOCKED
 argument_list|(
 name|rt
 argument_list|)
@@ -10961,14 +10958,6 @@ operator|*
 operator|)
 operator|&
 name|ssrc
-argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}

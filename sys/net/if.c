@@ -3925,8 +3925,7 @@ name|a1
 parameter_list|,
 name|a2
 parameter_list|)
-define|\
-value|(bcmp((caddr_t)(a1), (caddr_t)(a2), ((struct sockaddr *)(a1))->sa_len) == 0)
+value|(bcmp((a1), (a2), ((a1))->sa_len) == 0)
 end_define
 
 begin_comment
@@ -4245,7 +4244,6 @@ operator|==
 name|AF_LINK
 condition|)
 block|{
-specifier|register
 name|struct
 name|sockaddr_dl
 modifier|*
@@ -4810,6 +4808,9 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa
+decl_stmt|,
+modifier|*
+name|oifa
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -4821,6 +4822,11 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|RT_LOCK_ASSERT
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -4879,24 +4885,28 @@ condition|(
 name|ifa
 condition|)
 block|{
-name|IFAFREE
-argument_list|(
-name|rt
-operator|->
-name|rt_ifa
-argument_list|)
-expr_stmt|;
 name|IFAREF
 argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+name|oifa
+operator|=
+name|rt
+operator|->
+name|rt_ifa
+expr_stmt|;
 name|rt
 operator|->
 name|rt_ifa
 operator|=
 name|ifa
+expr_stmt|;
+name|IFAFREE
+argument_list|(
+name|oifa
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -8100,7 +8100,7 @@ name|ro_rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-name|rtfree
+name|RTFREE
 argument_list|(
 name|ro
 operator|.
