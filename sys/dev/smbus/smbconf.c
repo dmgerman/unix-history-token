@@ -422,7 +422,7 @@ block|}
 do|while
 condition|(
 name|error
-operator|!=
+operator|==
 name|EWOULDBLOCK
 condition|)
 do|;
