@@ -85,5 +85,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|format_k2
+parameter_list|()
+function_decl|;
+end_function_decl
+
 end_unit
 

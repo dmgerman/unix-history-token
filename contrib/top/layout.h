@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|x_mem
-value|8
+value|5
 end_define
 
 begin_define
@@ -83,8 +83,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|y_message
+name|x_swap
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|y_swap
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|y_message
+value|5
 end_define
 
 begin_define
@@ -98,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|y_header
-value|5
+value|6
 end_define
 
 begin_define
@@ -112,14 +126,14 @@ begin_define
 define|#
 directive|define
 name|y_idlecursor
-value|4
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|y_procs
-value|6
+value|7
 end_define
 
 begin_define

@@ -447,6 +447,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|i_swap
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|u_swap
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|i_message
 parameter_list|()
 function_decl|;
@@ -536,6 +550,18 @@ function_decl|)
 parameter_list|()
 init|=
 name|i_memory
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|d_swap
+function_decl|)
+parameter_list|()
+init|=
+name|i_swap
 function_decl|;
 end_function_decl
 
@@ -2016,6 +2042,17 @@ operator|.
 name|memory
 argument_list|)
 expr_stmt|;
+comment|/* display swap stats */
+call|(
+modifier|*
+name|d_swap
+call|)
+argument_list|(
+name|system_info
+operator|.
+name|swap
+argument_list|)
+expr_stmt|;
 comment|/* handle message area */
 call|(
 modifier|*
@@ -2160,6 +2197,10 @@ expr_stmt|;
 name|d_memory
 operator|=
 name|u_memory
+expr_stmt|;
+name|d_swap
+operator|=
+name|u_swap
 expr_stmt|;
 name|d_message
 operator|=
@@ -2322,6 +2363,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|ch
+operator|!=
+literal|'\r'
+operator|&&
+name|ch
+operator|!=
+literal|'\n'
+condition|)
+block|{
 comment|/* illegal command */
 name|new_message
 argument_list|(
@@ -2330,6 +2382,7 @@ argument_list|,
 literal|" Command not understood"
 argument_list|)
 expr_stmt|;
+block|}
 name|putchar
 argument_list|(
 literal|'\r'
@@ -3161,6 +3214,10 @@ block|;
 name|d_memory
 operator|=
 name|i_memory
+block|;
+name|d_swap
+operator|=
+name|i_swap
 block|;
 name|d_message
 operator|=

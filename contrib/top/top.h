@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|Header_lines
-value|6
+value|7
 end_define
 
 begin_comment

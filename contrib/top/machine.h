@@ -26,6 +26,11 @@ modifier|*
 modifier|*
 name|memory_names
 decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|swap_names
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ORDER
@@ -75,6 +80,10 @@ decl_stmt|;
 name|int
 modifier|*
 name|memory
+decl_stmt|;
+name|int
+modifier|*
+name|swap
 decl_stmt|;
 block|}
 struct|;
