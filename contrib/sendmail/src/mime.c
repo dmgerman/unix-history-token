@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1994, 1996-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mime.c,v 8.125 2001/09/11 04:05:15 gshapiro Exp $"
+literal|"@(#)$Id: mime.c,v 8.129 2002/03/13 07:28:05 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -4031,15 +4031,13 @@ operator|*
 operator|*
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  MIME7TO8 -- output 7 bit encoded MIME body in 8 bit format ** **  This is a hack. Supports translating the two 7-bit body-encodings **  (quoted-printable and base64) to 8-bit coded bodies. ** **  There is not much point in supporting multipart here, as the UA **  will be able to deal with encoded MIME bodies if it can parse MIME **  multipart messages. ** **  Note also that we wont be called unless it is a text/plain MIME **  message, encoded base64 or QP and mailer flag '9' has been defined **  on mailer. ** **  Contributed by Marius Olaffson<marius@rhi.hi.is>. ** **	Parameters: **		mci -- mailer connection information. **		header -- the header for this body part. **		e -- envelope. ** **	Returns: **		none. */
+comment|/* **  MIME7TO8 -- output 7 bit encoded MIME body in 8 bit format ** **  This is a hack. Supports translating the two 7-bit body-encodings **  (quoted-printable and base64) to 8-bit coded bodies. ** **  There is not much point in supporting multipart here, as the UA **  will be able to deal with encoded MIME bodies if it can parse MIME **  multipart messages. ** **  Note also that we won't be called unless it is a text/plain MIME **  message, encoded base64 or QP and mailer flag '9' has been defined **  on mailer. ** **  Contributed by Marius Olaffson<marius@rhi.hi.is>. ** **	Parameters: **		mci -- mailer connection information. **		header -- the header for this body part. **		e -- envelope. ** **	Returns: **		none. */
 end_comment
 
 begin_decl_stmt
@@ -4409,6 +4407,9 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+name|int
+name|pxflags
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -4676,6 +4677,10 @@ operator|~
 name|MCIF_INHEADER
 expr_stmt|;
 comment|/* 	**  Translate body encoding to 8-bit.  Supports two types of 	**  encodings; "base64" and "quoted-printable". Assume qp if 	**  it is not base64. 	*/
+name|pxflags
+operator|=
+name|PXLF_MAPFROM
+expr_stmt|;
 if|if
 condition|(
 name|sm_strcasecmp
@@ -4915,9 +4920,15 @@ operator|!=
 literal|'\r'
 operator|)
 condition|)
+block|{
+name|pxflags
+operator||=
+name|PXLF_NOADDEOL
+expr_stmt|;
 name|fbufp
 operator|++
 expr_stmt|;
+block|}
 name|putxline
 argument_list|(
 operator|(
@@ -4932,8 +4943,13 @@ name|fbuf
 argument_list|,
 name|mci
 argument_list|,
-name|PXLF_MAPFROM
+name|pxflags
 argument_list|)
+expr_stmt|;
+name|pxflags
+operator|&=
+operator|~
+name|PXLF_NOADDEOL
 expr_stmt|;
 name|fbufp
 operator|=
@@ -5014,9 +5030,15 @@ operator|!=
 literal|'\r'
 operator|)
 condition|)
+block|{
+name|pxflags
+operator||=
+name|PXLF_NOADDEOL
+expr_stmt|;
 name|fbufp
 operator|++
 expr_stmt|;
+block|}
 name|putxline
 argument_list|(
 operator|(
@@ -5031,8 +5053,13 @@ name|fbuf
 argument_list|,
 name|mci
 argument_list|,
-name|PXLF_MAPFROM
+name|pxflags
 argument_list|)
+expr_stmt|;
+name|pxflags
+operator|&=
+operator|~
+name|PXLF_NOADDEOL
 expr_stmt|;
 name|fbufp
 operator|=
@@ -5105,9 +5132,15 @@ operator|!=
 literal|'\r'
 operator|)
 condition|)
+block|{
+name|pxflags
+operator||=
+name|PXLF_NOADDEOL
+expr_stmt|;
 name|fbufp
 operator|++
 expr_stmt|;
+block|}
 name|putxline
 argument_list|(
 operator|(
@@ -5122,8 +5155,13 @@ name|fbuf
 argument_list|,
 name|mci
 argument_list|,
-name|PXLF_MAPFROM
+name|pxflags
 argument_list|)
+expr_stmt|;
+name|pxflags
+operator|&=
+operator|~
+name|PXLF_NOADDEOL
 expr_stmt|;
 name|fbufp
 operator|=
@@ -5134,7 +5172,14 @@ block|}
 block|}
 else|else
 block|{
+name|int
+name|off
+decl_stmt|;
 comment|/* quoted-printable */
+name|pxflags
+operator||=
+name|PXLF_NOADDEOL
+expr_stmt|;
 name|fbufp
 operator|=
 name|fbuf
@@ -5158,8 +5203,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|off
+operator|=
 name|mime_fromqp
 argument_list|(
 operator|(
@@ -5172,8 +5217,6 @@ argument_list|,
 operator|&
 name|fbufp
 argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|fbuf
 index|[
@@ -5182,8 +5225,15 @@ index|]
 operator|-
 name|fbufp
 argument_list|)
-operator|==
-literal|0
+expr_stmt|;
+name|again
+label|:
+if|if
+condition|(
+name|off
+operator|<
+operator|-
+literal|1
 condition|)
 continue|continue;
 if|if
@@ -5210,13 +5260,58 @@ literal|1
 argument_list|,
 name|mci
 argument_list|,
-name|PXLF_MAPFROM
+name|pxflags
 argument_list|)
 expr_stmt|;
 name|fbufp
 operator|=
 name|fbuf
 expr_stmt|;
+if|if
+condition|(
+name|off
+operator|>=
+literal|0
+operator|&&
+name|buf
+index|[
+name|off
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|off
+operator|=
+name|mime_fromqp
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|(
+name|buf
+operator|+
+name|off
+operator|)
+argument_list|,
+operator|&
+name|fbufp
+argument_list|,
+operator|&
+name|fbuf
+index|[
+name|MAXLINE
+index|]
+operator|-
+name|fbufp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 block|}
 block|}
 comment|/* force out partial last line */
@@ -5246,10 +5341,18 @@ name|fbuf
 argument_list|,
 name|mci
 argument_list|,
-name|PXLF_MAPFROM
+name|pxflags
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	**  The decoded text may end without an EOL.  Since this function 	**  is only called for text/plain MIME messages, it is safe to 	**  add an extra one at the end just in case.  This is a hack, 	**  but so is auto-converting MIME in the first place. 	*/
+name|putline
+argument_list|(
+literal|""
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -5657,6 +5760,10 @@ parameter_list|)
 value|(((c)< 0 || (c)> 127) ? -1 : index_hex[(c)])
 end_define
 
+begin_comment
+comment|/* **  MIME_FROMQP -- decode quoted printable string ** **	Parameters: **		infile -- input (encoded) string **		outfile -- output string **		maxlen -- size of output buffer ** **	Returns: **		-2 if decoding failure **		-1 if infile completely decoded into outfile **>= 0 is the position in infile decoding **			reached before maxlen was reached */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -5665,8 +5772,6 @@ parameter_list|(
 name|infile
 parameter_list|,
 name|outfile
-parameter_list|,
-name|state
 parameter_list|,
 name|maxlen
 parameter_list|)
@@ -5682,10 +5787,6 @@ modifier|*
 name|outfile
 decl_stmt|;
 name|int
-name|state
-decl_stmt|;
-comment|/* Decoding body (0) or header (1) */
-name|int
 name|maxlen
 decl_stmt|;
 comment|/* Max # of chars allowed in outfile */
@@ -5700,15 +5801,26 @@ name|nchar
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|b
+decl_stmt|;
+comment|/* decrement by one for trailing '\0', at least one other char */
 if|if
 condition|(
+operator|--
 name|maxlen
 operator|<
-literal|0
+literal|1
 condition|)
 return|return
 literal|0
 return|;
+name|b
+operator|=
+name|infile
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -5720,6 +5832,10 @@ operator|++
 operator|)
 operator|!=
 literal|'\0'
+operator|&&
+name|nchar
+operator|<
+name|maxlen
 condition|)
 block|{
 if|if
@@ -5739,7 +5855,7 @@ name|infile
 operator|++
 operator|)
 operator|==
-literal|0
+literal|'\0'
 condition|)
 break|break;
 if|if
@@ -5761,15 +5877,10 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* ignore it */
-if|if
-condition|(
-name|state
-operator|==
-literal|0
-condition|)
+comment|/* ignore it and the rest of the buffer */
 return|return
-literal|0
+operator|-
+literal|2
 return|;
 block|}
 else|else
@@ -5818,13 +5929,11 @@ name|c2
 operator|==
 operator|-
 literal|1
-operator|||
-operator|++
-name|nchar
-operator|>
-name|maxlen
 condition|)
 break|break;
+name|nchar
+operator|++
+expr_stmt|;
 operator|*
 operator|(
 operator|*
@@ -5842,28 +5951,9 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|state
-operator|==
-literal|1
-operator|&&
-name|c1
-operator|==
-literal|'_'
-condition|)
-name|c1
-operator|=
-literal|' '
-expr_stmt|;
-if|if
-condition|(
-operator|++
 name|nchar
-operator|>
-name|maxlen
-condition|)
-break|break;
+operator|++
+expr_stmt|;
 operator|*
 operator|(
 operator|*
@@ -5891,7 +5981,23 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|nchar
+operator|>=
+name|maxlen
+condition|)
 return|return
+operator|(
+name|infile
+operator|-
+name|b
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|-
 literal|1
 return|;
 block|}

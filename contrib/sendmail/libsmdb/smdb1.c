@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb1.c,v 8.55 2001/09/12 21:19:12 gshapiro Exp $"
+literal|"@(#)$Id: smdb1.c,v 8.56 2002/01/21 04:10:44 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1644,6 +1644,11 @@ modifier|*
 name|db_params
 decl_stmt|;
 block|{
+name|bool
+name|lockcreated
+init|=
+name|false
+decl_stmt|;
 name|int
 name|db_fd
 decl_stmt|;
@@ -1770,21 +1775,30 @@ condition|)
 return|return
 name|result
 return|;
+if|if
+condition|(
+name|stat_info
+operator|.
+name|st_mode
+operator|==
+name|ST_MODE_NOFILE
+operator|&&
+name|bitset
+argument_list|(
+name|mode
+argument_list|,
+name|O_CREAT
+argument_list|)
+condition|)
+name|lockcreated
+operator|=
+name|true
+expr_stmt|;
 name|lock_fd
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|O_EXLOCK
-name|mode
-operator||=
-name|O_EXLOCK
-expr_stmt|;
-else|#
-directive|else
-comment|/* O_EXLOCK */
 name|result
 operator|=
 name|smdb_lock_file
@@ -1810,9 +1824,25 @@ condition|)
 return|return
 name|result
 return|;
-endif|#
-directive|endif
-comment|/* O_EXLOCK */
+if|if
+condition|(
+name|lockcreated
+condition|)
+block|{
+name|mode
+operator||=
+name|O_TRUNC
+expr_stmt|;
+name|mode
+operator|&=
+operator|~
+operator|(
+name|O_CREAT
+operator||
+name|O_EXCL
+operator|)
+expr_stmt|;
+block|}
 operator|*
 name|database
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: strio.c,v 1.40 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: strio.c,v 1.42 2002/02/11 23:05:50 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -102,6 +102,11 @@ name|strio_offset
 decl_stmt|;
 name|int
 name|strio_flags
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|strio_rpool
 decl_stmt|;
 block|}
 struct|;
@@ -330,7 +335,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SM_STRWRITE -- write a portion of the string ** **	Parameters: **		fp -- the file pointer **		buf -- location of data for writting **		n -- number of bytes to write ** **	Returns: **		Failure: -1 and sets errno **		Success:>=0, number of bytes written */
+comment|/* **  SM_STRWRITE -- write a portion of the string ** **	Parameters: **		fp -- the file pointer **		buf -- location of data for writing **		n -- number of bytes to write ** **	Returns: **		Failure: -1 and sets errno **		Success:>=0, number of bytes written */
 end_comment
 
 begin_function
@@ -614,7 +619,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SM_STROPEN -- open a string file type ** **	Parameters: **		fp -- file pointer open to be associated with **		info -- flags for methods of access (was mode) **		flags -- ignored **		rpool -- resource pool to use memory from (if applicable) ** **	Results: **		Success: 0 (zero) **		Failure: -1 and sets errno */
+comment|/* **  SM_STROPEN -- open a string file type ** **	Parameters: **		fp -- file pointer open to be associated with **		info -- initial contents (NULL for none) **		flags -- flags for methods of access (was mode) **		rpool -- resource pool to use memory from (if applicable) ** **	Results: **		Success: 0 (zero) **		Failure: -1 and sets errno */
 end_comment
 
 begin_function
@@ -652,16 +657,6 @@ name|SM_STR_OBJ_T
 modifier|*
 name|s
 decl_stmt|;
-name|int
-modifier|*
-name|strmode
-init|=
-operator|(
-name|int
-operator|*
-operator|)
-name|info
-decl_stmt|;
 if|#
 directive|if
 name|SM_RPOOL
@@ -696,16 +691,10 @@ name|s
 operator|==
 name|NULL
 condition|)
-block|{
-name|errno
-operator|=
-name|ENOMEM
-expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
-block|}
 endif|#
 directive|endif
 comment|/* SM_RPOOL */
@@ -717,7 +706,19 @@ name|s
 expr_stmt|;
 name|s
 operator|->
+name|strio_rpool
+operator|=
+name|rpool
+expr_stmt|;
+name|s
+operator|->
 name|strio_offset
+operator|=
+literal|0
+expr_stmt|;
+name|s
+operator|->
+name|strio_size
 operator|=
 literal|0
 expr_stmt|;
@@ -725,7 +726,7 @@ name|s
 operator|->
 name|strio_base
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|s
 operator|->
@@ -735,8 +736,7 @@ literal|0
 expr_stmt|;
 switch|switch
 condition|(
-operator|*
-name|strmode
+name|flags
 condition|)
 block|{
 case|case
@@ -772,11 +772,19 @@ break|break;
 case|case
 name|SM_IO_APPEND
 case|:
-return|return
-operator|-
-literal|1
-return|;
-default|default:
+if|if
+condition|(
+name|s
+operator|->
+name|strio_rpool
+operator|==
+name|NULL
+condition|)
+name|sm_free
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|EINVAL
@@ -785,6 +793,102 @@ return|return
 operator|-
 literal|1
 return|;
+default|default:
+if|if
+condition|(
+name|s
+operator|->
+name|strio_rpool
+operator|==
+name|NULL
+condition|)
+name|sm_free
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|info
+operator|!=
+name|NULL
+condition|)
+block|{
+name|s
+operator|->
+name|strio_base
+operator|=
+name|sm_strdup_x
+argument_list|(
+name|info
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|strio_base
+operator|==
+name|NULL
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|strio_rpool
+operator|==
+name|NULL
+condition|)
+name|sm_free
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|s
+operator|->
+name|strio_size
+operator|=
+name|strlen
+argument_list|(
+name|info
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|strio_end
+operator|=
+name|s
+operator|->
+name|strio_base
+operator|+
+name|s
+operator|->
+name|strio_size
+expr_stmt|;
 block|}
 return|return
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Donn Seeley at UUNET Technologies, Inc.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Donn Seeley at UUNET Technologies, Inc.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: vsscanf.c,v 1.22 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: vsscanf.c,v 1.23 2002/02/01 02:28:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -189,14 +189,6 @@ expr_stmt|;
 name|fake
 operator|.
 name|f_ub
-operator|.
-name|smb_base
-operator|=
-name|NULL
-expr_stmt|;
-name|fake
-operator|.
-name|f_lb
 operator|.
 name|smb_base
 operator|=

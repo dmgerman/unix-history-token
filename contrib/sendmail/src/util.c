@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: util.c,v 8.357 2001/11/28 19:19:27 gshapiro Exp $"
+literal|"@(#)$Id: util.c,v 8.360 2002/04/04 21:32:15 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2717,7 +2717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  PUTXLINE -- putline with flags bits. ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		len -- the length of the line. **		mci -- the mailer connection information. **		pxflags -- flag bits: **		    PXLF_MAPFROM -- map From_ to>From_. **		    PXLF_STRIP8BIT -- strip 8th bit. **		    PXLF_HEADER -- map bare newline in header to newline space. ** **	Returns: **		none ** **	Side Effects: **		output of l to mci->mci_out. */
+comment|/* **  PUTXLINE -- putline with flags bits. ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		len -- the length of the line. **		mci -- the mailer connection information. **		pxflags -- flag bits: **		    PXLF_MAPFROM -- map From_ to>From_. **		    PXLF_STRIP8BIT -- strip 8th bit. **		    PXLF_HEADER -- map bare newline in header to newline space. **		    PXLF_NOADDEOL -- don't add an EOL if one wasn't present. ** **	Returns: **		none ** **	Side Effects: **		output of l to mci->mci_out. */
 end_comment
 
 begin_function
@@ -2835,6 +2835,11 @@ name|len
 expr_stmt|;
 do|do
 block|{
+name|bool
+name|noeol
+init|=
+name|false
+decl_stmt|;
 comment|/* find the end of the line */
 name|p
 operator|=
@@ -2855,10 +2860,16 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
 name|p
 operator|=
 name|end
 expr_stmt|;
+name|noeol
+operator|=
+name|true
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -3524,6 +3535,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|!
+name|bitset
+argument_list|(
+name|PXLF_NOADDEOL
+argument_list|,
+name|pxflags
+argument_list|)
+operator|||
+operator|!
+name|noeol
+operator|)
+operator|&&
 name|sm_io_fputs
 argument_list|(
 name|mci
@@ -5469,7 +5493,7 @@ name|fd
 argument_list|,
 name|F_GETFL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

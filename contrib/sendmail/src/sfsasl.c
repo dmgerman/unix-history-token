@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.86 2001/09/11 04:05:16 gshapiro Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.89 2002/02/22 04:41:28 ca Exp $"
 argument_list|)
 end_macro
 
@@ -867,6 +867,7 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* XXX result == 0? */
 name|ret
 operator|=
 name|sm_io_write
@@ -1781,19 +1782,24 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|again
+name|int
+name|save_errno
+decl_stmt|;
+name|save_errno
 operator|=
-name|MAX_TLS_IOS
-expr_stmt|;
-if|if
-condition|(
+operator|(
 name|errno
 operator|==
 literal|0
-condition|)
-name|errno
-operator|=
+operator|)
+condition|?
 name|EIO
+else|:
+name|errno
+expr_stmt|;
+name|again
+operator|=
+name|MAX_TLS_IOS
 expr_stmt|;
 if|if
 condition|(
@@ -1813,6 +1819,10 @@ name|err
 argument_list|,
 name|r
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 block|}
 return|return
@@ -2052,19 +2062,24 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|again
+name|int
+name|save_errno
+decl_stmt|;
+name|save_errno
 operator|=
-name|MAX_TLS_IOS
-expr_stmt|;
-if|if
-condition|(
+operator|(
 name|errno
 operator|==
 literal|0
-condition|)
-name|errno
-operator|=
+operator|)
+condition|?
 name|EIO
+else|:
+name|errno
+expr_stmt|;
+name|again
+operator|=
+name|MAX_TLS_IOS
 expr_stmt|;
 if|if
 condition|(
@@ -2084,6 +2099,10 @@ name|err
 argument_list|,
 name|r
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 block|}
 return|return

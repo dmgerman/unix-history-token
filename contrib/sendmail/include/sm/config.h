@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: config.h,v 1.42 2001/06/17 21:31:11 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: config.h,v 1.44 2002/01/23 17:47:15 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -497,6 +497,71 @@ end_endif
 
 begin_comment
 comment|/* !SM_CONF_TEST_LLONG */
+end_comment
+
+begin_comment
+comment|/* Does LDAP library have ldap_memfree()? */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SM_CONF_LDAP_MEMFREE
+end_ifndef
+
+begin_comment
+comment|/* **  The new LDAP C API (draft-ietf-ldapext-ldap-c-api-04.txt) includes **  ldap_memfree() in the API.  That draft states to use LDAP_API_VERSION **  of 2004 to identify the API. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|USING_NETSCAPE_LDAP
+operator|||
+name|LDAP_API_VERSION
+operator|>=
+literal|2004
+end_if
+
+begin_define
+define|#
+directive|define
+name|SM_CONF_LDAP_MEMFREE
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* USING_NETSCAPE_LDAP || LDAP_API_VERSION>= 2004 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_CONF_LDAP_MEMFREE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USING_NETSCAPE_LDAP || LDAP_API_VERSION>= 2004 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! SM_CONF_LDAP_MEMFREE */
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.349 2001/12/12 02:50:22 gshapiro Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.359 2002/03/29 16:20:47 ca Exp $"
 argument_list|)
 end_macro
 
@@ -122,10 +122,23 @@ name|char
 operator|*
 operator|,
 name|bool
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* replacement for illegal characters in addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BAD_CHAR_REPLACEMENT
+value|'?'
+end_define
 
 begin_comment
 comment|/* **  PARSEADDR -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, an address will be created. **		flags -- describe detail for parsing.  See RF_ definitions **			in sendmail.h. **		delim -- the character to terminate the address, passed **			to prescan. **		delimptr -- if non-NULL, set to the location of the **			delim character that was found. **		e -- the envelope that will contain this address. **		isrcpt -- true if the address denotes a recipient; false **			indicates a sender. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		e->e_to = addr */
@@ -451,6 +464,8 @@ operator|->
 name|q_user
 argument_list|,
 name|isrcpt
+argument_list|,
+name|true
 argument_list|)
 condition|)
 block|{
@@ -468,9 +483,13 @@ argument_list|(
 literal|"parseaddr-->bad q_user\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
+comment|/* 		**  Just mark the address as bad so DSNs work. 		**  hasctrlchar() has to make sure that the address 		**  has been sanitized, e.g., shortened. 		*/
+name|a
+operator|->
+name|q_state
+operator|=
+name|QS_BADADDR
+expr_stmt|;
 block|}
 comment|/* 	**  Make local copies of the host& user and then 	**  transport them out. 	*/
 name|allocaddr
@@ -493,9 +512,26 @@ operator|->
 name|q_state
 argument_list|)
 condition|)
+block|{
+comment|/* weed out bad characters in the printable address too */
+operator|(
+name|void
+operator|)
+name|hasctrlchar
+argument_list|(
+name|a
+operator|->
+name|q_paddr
+argument_list|,
+name|isrcpt
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
 return|return
 name|a
 return|;
+block|}
 comment|/* 	**  Select a queue directory for recipient addresses. 	**	This is done here and in split_across_queue_groups(), 	**	but the latter applies to addresses after aliasing, 	**	and only if splitting is done. 	*/
 if|if
 condition|(
@@ -837,6 +873,12 @@ name|savedelim
 init|=
 literal|'\0'
 decl_stmt|;
+name|char
+modifier|*
+name|b
+init|=
+name|addr
+decl_stmt|;
 name|int
 name|len
 init|=
@@ -902,7 +944,11 @@ name|result
 operator|=
 name|true
 expr_stmt|;
-break|break;
+operator|*
+name|addr
+operator|=
+name|BAD_CHAR_REPLACEMENT
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -914,14 +960,32 @@ operator|-
 literal|1
 condition|)
 block|{
+name|char
+name|saved
+init|=
+operator|*
+name|addr
+decl_stmt|;
+operator|*
+name|addr
+operator|=
+literal|'\0'
+expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"553 5.1.0 Address too long (%d bytes max)"
+literal|"553 5.1.0 Address \"%s\" too long (%d bytes max)"
+argument_list|,
+name|b
 argument_list|,
 name|MAXNAME
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+operator|*
+name|addr
+operator|=
+name|saved
 expr_stmt|;
 name|result
 operator|=
@@ -943,13 +1007,17 @@ name|isrcpt
 condition|)
 name|usrerr
 argument_list|(
-literal|"501 5.1.3 Syntax error in mailbox address"
+literal|"501 5.1.3 8-bit character in mailbox address \"%s\""
+argument_list|,
+name|b
 argument_list|)
 expr_stmt|;
 else|else
 name|usrerr
 argument_list|(
-literal|"501 5.1.7 Syntax error in mailbox address"
+literal|"501 5.1.7 8-bit character in mailbox address \"%s\""
+argument_list|,
+name|b
 argument_list|)
 expr_stmt|;
 block|}
@@ -978,7 +1046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  HASCTRLCHAR -- check for address containing meta-characters ** **  Checks that the address contains no meta-characters, and contains **  no "non-printable" characters unless they are quoted or escaped. **  Quoted or escaped characters are literals. ** **	Parameters: **		addr -- the address to check. **		isrcpt -- true if the address is for a recipient; false **			indicates a from. ** **	Returns: **		true -- if the address has any "wierd" characters or **			non-printable characters or if a quote is unbalanced. **		false -- otherwise. */
+comment|/* **  HASCTRLCHAR -- check for address containing meta-characters ** **  Checks that the address contains no meta-characters, and contains **  no "non-printable" characters unless they are quoted or escaped. **  Quoted or escaped characters are literals. ** **	Parameters: **		addr -- the address to check. **		isrcpt -- true if the address is for a recipient; false **			indicates a from. **		complain -- true if an error should issued if the address **			is invalid and should be "repaired". ** **	Returns: **		true -- if the address has any "wierd" characters or **			non-printable characters or if a quote is unbalanced. **		false -- otherwise. */
 end_comment
 
 begin_function
@@ -989,6 +1057,8 @@ parameter_list|(
 name|addr
 parameter_list|,
 name|isrcpt
+parameter_list|,
+name|complain
 parameter_list|)
 specifier|register
 name|char
@@ -997,10 +1067,12 @@ name|addr
 decl_stmt|;
 name|bool
 name|isrcpt
+decl_stmt|,
+name|complain
 decl_stmt|;
 block|{
 name|bool
-name|result
+name|quoted
 init|=
 name|false
 decl_stmt|;
@@ -1009,10 +1081,17 @@ name|len
 init|=
 literal|0
 decl_stmt|;
-name|bool
-name|quoted
+name|char
+modifier|*
+name|result
 init|=
-name|false
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|b
+init|=
+name|addr
 decl_stmt|;
 if|if
 condition|(
@@ -1037,6 +1116,53 @@ control|)
 block|{
 if|if
 condition|(
+operator|++
+name|len
+operator|>
+name|MAXNAME
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|complain
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|shorten_rfc822_string
+argument_list|(
+name|b
+argument_list|,
+name|MAXNAME
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|usrerr
+argument_list|(
+literal|"553 5.1.0 Address \"%s\" too long (%d bytes max)"
+argument_list|,
+name|b
+argument_list|,
+name|MAXNAME
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+name|result
+operator|=
+literal|"too long"
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|!
 name|quoted
 operator|&&
@@ -1055,10 +1181,14 @@ condition|)
 block|{
 name|result
 operator|=
-name|true
+literal|"non-printable character"
 expr_stmt|;
-comment|/* a non-printable */
-break|break;
+operator|*
+name|addr
+operator|=
+name|BAD_CHAR_REPLACEMENT
+expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -1093,7 +1223,13 @@ condition|)
 block|{
 name|result
 operator|=
-name|true
+literal|"trailing \\ character"
+expr_stmt|;
+operator|*
+operator|--
+name|addr
+operator|=
+name|BAD_CHAR_REPLACEMENT
 expr_stmt|;
 break|break;
 block|}
@@ -1117,32 +1253,14 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|true
+literal|"8-bit character"
 expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-operator|++
-name|len
-operator|>
-name|MAXNAME
-operator|-
-literal|1
-condition|)
-block|{
-name|usrerr
-argument_list|(
-literal|"553 5.1.0 Address too long (%d bytes max)"
-argument_list|,
-name|MAXNAME
-operator|-
-literal|1
-argument_list|)
+operator|*
+name|addr
+operator|=
+name|BAD_CHAR_REPLACEMENT
 expr_stmt|;
-return|return
-name|true
-return|;
+continue|continue;
 block|}
 block|}
 if|if
@@ -1151,12 +1269,16 @@ name|quoted
 condition|)
 name|result
 operator|=
-name|true
+literal|"unbalanced quote"
 expr_stmt|;
 comment|/* unbalanced quote */
 if|if
 condition|(
 name|result
+operator|!=
+name|NULL
+operator|&&
+name|complain
 condition|)
 block|{
 if|if
@@ -1165,18 +1287,28 @@ name|isrcpt
 condition|)
 name|usrerr
 argument_list|(
-literal|"501 5.1.3 Syntax error in mailbox address"
+literal|"501 5.1.3 Syntax error in mailbox address \"%s\" (%s)"
+argument_list|,
+name|b
+argument_list|,
+name|result
 argument_list|)
 expr_stmt|;
 else|else
 name|usrerr
 argument_list|(
-literal|"501 5.1.7 Syntax error in mailbox address"
+literal|"501 5.1.7 Syntax error in mailbox address \"%s\" (%s)"
+argument_list|,
+name|b
+argument_list|,
+name|result
 argument_list|)
 expr_stmt|;
 block|}
 return|return
 name|result
+operator|!=
+name|NULL
 return|;
 block|}
 end_function
@@ -8054,6 +8186,11 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+name|bool
+name|tempfail
+init|=
+name|false
+decl_stmt|;
 name|struct
 name|mailer
 modifier|*
@@ -8198,11 +8335,20 @@ argument_list|)
 expr_stmt|;
 name|badaddr
 label|:
+if|#
+directive|if
+name|_FFR_ALLOW_S0_ERROR_4XX
+comment|/* 		**  ExitStat may have been set by an earlier map open 		**  failure (to a permanent error (EX_OSERR) in syserr()) 		**  so we also need to check if this particular $#error 		**  return wanted a 4XX failure. 		** 		**  XXX the real fix is probably to set ExitStat correctly, 		**  i.e., to EX_TEMPFAIL if the map open is just a temporary 		**  error. 		** 		**  tempfail is tested here even if _FFR_ALLOW_S0_ERROR_4XX 		**  is not set; that's ok because it is initialized to false. 		*/
+endif|#
+directive|endif
+comment|/* _FFR_ALLOW_S0_ERROR_4XX */
 if|if
 condition|(
 name|ExitStat
 operator|==
 name|EX_TEMPFAIL
+operator|||
+name|tempfail
 condition|)
 name|a
 operator|->
@@ -8669,6 +8815,25 @@ name|off
 argument_list|)
 expr_stmt|;
 comment|/* XXX ubuf[off - 1] = ' '; */
+if|#
+directive|if
+name|_FFR_ALLOW_S0_ERROR_4XX
+if|if
+condition|(
+name|ubuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'4'
+condition|)
+name|tempfail
+operator|=
+name|true
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_ALLOW_S0_ERROR_4XX */
 block|}
 else|else
 block|{
@@ -9327,6 +9492,25 @@ name|evp
 condition|)
 break|break;
 block|}
+if|#
+directive|if
+name|_FFR_CATCH_LONG_STRINGS
+comment|/* Don't silently truncate long strings */
+if|if
+condition|(
+operator|*
+name|pvp
+operator|!=
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"cataddr: string too long"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_CATCH_LONG_STRINGS */
 operator|*
 name|p
 operator|=

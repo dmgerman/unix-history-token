@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.35 2001/10/09 19:05:24 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.41 2002/03/22 21:36:12 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -38,12 +44,6 @@ directive|define
 name|LIBMILTER_API
 value|extern
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_ifndef
 ifndef|#
@@ -465,6 +465,19 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|LIBMILTER_API
+name|int
+name|smfi_setbacklog
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1000,6 +1013,39 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_SMFI_PROGRESS
+end_if
+
+begin_comment
+comment|/* **  Send a "no-op" up to the MTA to tell it we're still alive, so long **  milter-side operations don't time out. ** **	SMFICTX *ctx; Opaque context structure */
+end_comment
+
+begin_decl_stmt
+name|LIBMILTER_API
+name|int
+name|smfi_progress
+name|__P
+argument_list|(
+operator|(
+name|SMFICTX
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SMFI_PROGRESS */
+end_comment
 
 begin_comment
 comment|/* **  Delete a recipient from the envelope ** **	SMFICTX *ctx; Opaque context structure **	char *rcpt; Envelope recipient to be deleted. This should be in **		exactly the form passed to xxfi_envrcpt or the address may **		not be deleted. */
