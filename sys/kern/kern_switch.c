@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_full_preemption.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_sched.h"
 end_include
 
@@ -150,6 +144,34 @@ include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FULL_PREEMPTION
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PREEMPTION
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The FULL_PREEMPTION option requires the PREEMPTION option"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
