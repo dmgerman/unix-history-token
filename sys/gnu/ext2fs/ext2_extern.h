@@ -540,11 +540,11 @@ name|unsigned
 name|long
 name|goal
 operator|,
-name|long
+name|int
 operator|*
 name|prealloc_count
 operator|,
-name|long
+name|int
 operator|*
 name|prealloc_block
 operator|)

@@ -1086,11 +1086,11 @@ name|unsigned
 name|long
 name|goal
 parameter_list|,
-name|long
+name|int
 modifier|*
 name|prealloc_count
 parameter_list|,
-name|long
+name|int
 modifier|*
 name|prealloc_block
 parameter_list|)
