@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	3.2	%H%	*/
+comment|/*	param.h	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -951,21 +951,6 @@ name|b
 parameter_list|)
 value|((b)/CLSIZE)
 end_define
-
-begin_comment
-comment|/* BSLOP can be 0 unless you have a TIU/Spider */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSLOP
-value|0
-end_define
-
-begin_comment
-comment|/* In case some device needs bigger buffers */
-end_comment
 
 begin_define
 define|#
