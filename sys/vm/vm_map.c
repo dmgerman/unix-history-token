@@ -8710,7 +8710,7 @@ block|{
 name|vm_map_entry_t
 name|next
 decl_stmt|;
-comment|/* 		 * Wait for wiring or unwiring of an entry to complete. 		 */
+comment|/* 		 * Wait for wiring or unwiring of an entry to complete. 		 * Also wait for any system wirings to disappear on 		 * user maps. 		 */
 if|if
 condition|(
 operator|(
@@ -8722,6 +8722,22 @@ name|MAP_ENTRY_IN_TRANSITION
 operator|)
 operator|!=
 literal|0
+operator|||
+operator|(
+name|vm_map_pmap
+argument_list|(
+name|map
+argument_list|)
+operator|!=
+name|kernel_pmap
+operator|&&
+name|vm_map_entry_system_wired_count
+argument_list|(
+name|entry
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|unsigned
