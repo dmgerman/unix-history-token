@@ -692,28 +692,23 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
+modifier|*
 name|pthread_getspecific
 parameter_list|(
 name|pthread_key_t
 name|key
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-name|p_data
 parameter_list|)
 block|{
 name|pthread_t
 name|pthread
 decl_stmt|;
 name|int
-name|rval
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|status
+decl_stmt|;
+name|void
+modifier|*
+name|data
 decl_stmt|;
 comment|/* Block signals: */
 name|_thread_kern_sig_block
@@ -751,10 +746,6 @@ condition|(
 name|pthread
 operator|==
 name|NULL
-operator|||
-name|p_data
-operator|==
-name|NULL
 condition|)
 block|{
 comment|/* Return an invalid argument error: */
@@ -765,10 +756,9 @@ argument_list|,
 name|EINVAL
 argument_list|)
 expr_stmt|;
-name|rval
+name|data
 operator|=
-operator|-
-literal|1
+name|NULL
 expr_stmt|;
 block|}
 comment|/* Check if there is specific data: */
@@ -804,8 +794,7 @@ name|count
 condition|)
 block|{
 comment|/* Return the value: */
-operator|*
-name|p_data
+name|data
 operator|=
 operator|(
 name|void
@@ -822,8 +811,7 @@ block|}
 else|else
 block|{
 comment|/* 			 * This key has not been used before, so return NULL 			 * instead:  			 */
-operator|*
-name|p_data
+name|data
 operator|=
 name|NULL
 expr_stmt|;
@@ -832,8 +820,7 @@ block|}
 else|else
 block|{
 comment|/* No specific data has been created, so just return NULL: */
-operator|*
-name|p_data
+name|data
 operator|=
 name|NULL
 expr_stmt|;
@@ -846,7 +833,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|rval
+name|data
 operator|)
 return|;
 block|}
