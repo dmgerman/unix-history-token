@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/* $NetBSD: setjmp.h,v 1.3 1998/09/16 23:51:27 thorpej Exp $ */
+comment|/*-  *	$NetBSD: setjmp.h,v 1.3 1998/09/16 23:51:27 thorpej Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -89,7 +85,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_SETJMP_H_ */
+comment|/* !_MACHINE_SETJMP_H_ */
 end_comment
 
 end_unit
