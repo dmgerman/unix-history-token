@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mk-amd-map.c,v 1.1.1.1 1998/08/23 22:07:21 obrien Exp $  */
+comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mk-amd-map.c,v 1.2 1998/08/23 22:52:09 obrien Exp $  */
 end_comment
 
 begin_comment
@@ -37,13 +37,6 @@ end_include
 begin_comment
 comment|/* dummy variables */
 end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -786,28 +779,14 @@ init|=
 literal|"dbmXXXXXX"
 decl_stmt|;
 name|char
-name|maptpag
-index|[
-literal|16
-index|]
-decl_stmt|,
-name|maptdir
+name|maptdb
 index|[
 literal|16
 index|]
 decl_stmt|;
 name|char
 modifier|*
-name|mappag
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-decl_stmt|,
-modifier|*
-name|mapdir
+name|mapdb
 init|=
 operator|(
 name|char
@@ -978,7 +957,7 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|mappag
+name|mapdb
 operator|=
 operator|(
 name|char
@@ -988,29 +967,13 @@ name|malloc
 argument_list|(
 name|len
 operator|+
-literal|5
-argument_list|)
-expr_stmt|;
-name|mapdir
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-name|len
-operator|+
-literal|5
+literal|4
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mappag
-operator|||
-operator|!
-name|mapdir
+name|mapdb
 condition|)
 block|{
 name|perror
@@ -1078,18 +1041,9 @@ comment|/* not HAVE_MKSTEMP */
 comment|/* open DBM files */
 name|sprintf
 argument_list|(
-name|maptpag
+name|maptdb
 argument_list|,
-literal|"%s.pag"
-argument_list|,
-name|maptmp
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|maptdir
-argument_list|,
-literal|"%s.dir"
+literal|"%s.db"
 argument_list|,
 name|maptmp
 argument_list|)
@@ -1098,14 +1052,7 @@ if|if
 condition|(
 name|remove_file
 argument_list|(
-name|maptpag
-argument_list|)
-operator|<
-literal|0
-operator|||
-name|remove_file
-argument_list|(
-name|maptdir
+name|maptdb
 argument_list|)
 operator|<
 literal|0
@@ -1115,14 +1062,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't remove existing temporary files; %s and"
-argument_list|,
-name|maptpag
+literal|"Can't remove existing temporary files;"
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-name|maptdir
+name|maptdb
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1271,18 +1216,27 @@ else|else
 block|{
 name|sprintf
 argument_list|(
-name|mappag
+name|mapdb
 argument_list|,
-literal|"%s.pag"
+literal|"%s.db"
 argument_list|,
 name|map
 argument_list|)
 expr_stmt|;
-name|sprintf
+if|if
+condition|(
+name|unlink
 argument_list|(
-name|mapdir
+name|mapdb
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
-literal|"%s.dir"
+literal|"WARNING: existing map \"%s.db\" destroyed\n"
 argument_list|,
 name|map
 argument_list|)
@@ -1291,9 +1245,9 @@ if|if
 condition|(
 name|rename
 argument_list|(
-name|maptpag
+name|maptdb
 argument_list|,
-name|mappag
+name|mapdb
 argument_list|)
 operator|<
 literal|0
@@ -1305,78 +1259,18 @@ name|stderr
 argument_list|,
 literal|"Couldn't rename %s to "
 argument_list|,
-name|maptpag
+name|maptdb
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-name|mappag
+name|mapdb
 argument_list|)
 expr_stmt|;
 comment|/* Throw away the temporary map */
 name|unlink
 argument_list|(
-name|maptpag
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|maptdir
-argument_list|)
-expr_stmt|;
-name|rc
-operator|=
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|rename
-argument_list|(
-name|maptdir
-argument_list|,
-name|mapdir
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Couldn't rename %s to "
-argument_list|,
-name|maptdir
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-name|mapdir
-argument_list|)
-expr_stmt|;
-comment|/* Put the .pag file back */
-name|rename
-argument_list|(
-name|mappag
-argument_list|,
-name|maptpag
-argument_list|)
-expr_stmt|;
-comment|/* Throw away remaining part of original map */
-name|unlink
-argument_list|(
-name|mapdir
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: existing map \"%s.{dir,pag}\" destroyed\n"
-argument_list|,
-name|map
+name|maptdb
 argument_list|)
 expr_stmt|;
 name|rc
@@ -1393,7 +1287,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't open \"%s.{dir,pag}\" for "
+literal|"Can't open \"%s.db\" for "
 argument_list|,
 name|map
 argument_list|)
