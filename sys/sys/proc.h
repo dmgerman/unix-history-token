@@ -625,6 +625,9 @@ block|,
 name|TDS_SURPLUS
 block|,
 name|TDS_SWAPPED
+block|,
+name|TDS_SUSP_SLP
+comment|/* on sleep queue AND suspend queue */
 block|}
 name|td_state
 enum|;
