@@ -1880,13 +1880,13 @@ expr_stmt|;
 comment|/* 	 * XXX 	 */
 block|{
 name|struct
-name|id_softc
+name|idad_softc
 modifier|*
 name|drv
 init|=
 operator|(
 expr|struct
-name|id_softc
+name|idad_softc
 operator|*
 operator|)
 name|bp
@@ -2481,7 +2481,7 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
-name|id_intr
+name|idad_intr
 argument_list|(
 name|qcb
 operator|->

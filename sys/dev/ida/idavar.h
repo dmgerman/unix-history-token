@@ -542,7 +542,7 @@ end_define
 
 begin_struct
 struct|struct
-name|id_softc
+name|idad_softc
 block|{
 name|device_t
 name|dev
@@ -744,7 +744,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|id_intr
+name|idad_intr
 parameter_list|(
 name|struct
 name|buf
