@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.35 1998/06/25 19:39:19 guido Exp $"
+literal|"$Id: syslogd.c,v 1.36 1998/06/27 21:45:59 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2321,6 +2321,8 @@ operator|=
 name|select
 argument_list|(
 name|nfds
+operator|+
+literal|1
 argument_list|,
 operator|&
 name|readfds
