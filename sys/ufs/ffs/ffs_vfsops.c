@@ -1,16 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.31 (Berkeley) 5/20/95  * $Id: ffs_vfsops.c,v 1.85 1998/08/17 19:09:36 bde Exp $  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
-
-begin_comment
-comment|/* for SLICE */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.31 (Berkeley) 5/20/95  * $Id: ffs_vfsops.c,v 1.86 1998/09/07 13:17:06 bde Exp $  */
 end_comment
 
 begin_include
@@ -310,26 +300,6 @@ begin_comment
 comment|/*  * ffs_mount  *  * Called when mounting local physical media  *  * PARAMETERS:  *		mountroot  *			mp	mount point structure  *			path	NULL (flag for root mount!!!)  *			data<unused>  *			ndp<unused>  *			p	process (user credentials check [statfs])  *  *		mount  *			mp	mount point structure  *			path	path to mount point  *			data	pointer to argument struct in user space  *			ndp	mount point namei() return (used for  *				credentials on reload), reused to look  *				up block device.  *			p	process (user credentials check)  *  * RETURNS:	0	Success  *		!0	error number (errno.h)  *  * LOCK STATE:  *  *		ENTRY  *			mount point is locked  *		EXIT  *			mount point is locked  *  * NOTES:  *		A NULL path can be used for a flag since the mount  *		system call will fail with EFAULT in copyinstr in  *		namei() if it is a genuine NULL from the user.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SLICE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vnode
-modifier|*
-name|root_device_vnode
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -425,34 +395,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 *** 		 * Mounting root file system 		 *** 		 */
-ifdef|#
-directive|ifdef
-name|SLICE
-name|rootvp
-operator|=
-name|root_device_vnode
-expr_stmt|;
-if|if
-condition|(
-name|rootvp
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ffs_mountroot: rootvp not set"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
-else|#
-directive|else
-comment|/* !SLICE */
 if|if
 condition|(
 operator|(
@@ -519,9 +461,6 @@ name|mnt_flag
 operator||=
 name|MNT_NOCLUSTERW
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !SLICE */
 if|if
 condition|(
 operator|(

@@ -8,7 +8,7 @@ comment|/*  *  *  dpt.h:	Definitions and constants used by the SCSI side of the 
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt.h,v 1.3 1998/06/02 00:32:37 eivind Exp $"
+empty|#ident "$Id: dpt.h,v 1.4 1998/08/05 00:54:37 eivind Exp $"
 end_empty
 
 begin_ifndef
@@ -40,33 +40,6 @@ include|#
 directive|include
 file|<sys/devfsext.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SLICE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/slice/slice.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SLICE */
-end_comment
 
 begin_endif
 endif|#
