@@ -527,23 +527,7 @@ name|CHN_F_ABORTING
 operator|)
 operator|)
 condition|)
-name|device_printf
-argument_list|(
-name|c
-operator|->
-name|parent
-operator|->
-name|dev
-argument_list|,
-literal|"hwptr went backwards %d -> %d\n"
-argument_list|,
-name|b
-operator|->
-name|hp
-argument_list|,
-name|hwptr
-argument_list|)
-expr_stmt|;
+comment|/* device_printf(c->parent->dev, "hwptr went backwards %d -> %d\n", b->hp, hwptr); */
 block|}
 if|if
 condition|(
