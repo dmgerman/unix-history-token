@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.7 (Berkeley) 83/02/23"
+literal|"@(#)iostat.c	4.8 (Berkeley) 83/05/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,13 +52,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/ubavar.h>
+file|<vaxuba/ubavar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mbavar.h>
+file|<vaxmba/mbavar.h>
 end_include
 
 begin_endif
@@ -565,7 +565,7 @@ literal|0.0
 condition|)
 name|printf
 argument_list|(
-literal|" sps tps msps "
+literal|" bps tps msps "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1215,12 +1215,9 @@ name|printf
 argument_list|(
 literal|"%4.0f"
 argument_list|,
-name|s
-operator|.
-name|dk_seek
-index|[
-name|dn
-index|]
+name|words
+operator|/
+literal|512
 operator|/
 name|etime
 argument_list|)
