@@ -841,15 +841,6 @@ operator|->
 name|v_type
 operator|==
 name|VBLK
-operator|&&
-operator|!
-operator|(
-name|dev
-operator|->
-name|si_flags
-operator|&
-name|SI_WHINED
-operator|)
 condition|)
 block|{
 if|if
@@ -888,15 +879,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"opened in block mode, convert to char mode with /dev/MAKEDEV before 2000-07-01\n"
+literal|"failed attempt to open in block mode\n"
 argument_list|)
 expr_stmt|;
-name|dev
-operator|->
-name|si_flags
-operator||=
-name|SI_WHINED
-expr_stmt|;
+return|return
+name|ENXIO
+return|;
 block|}
 name|dsw
 operator|=
