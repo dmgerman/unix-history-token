@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.77 1996/07/02 01:03:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.78 1996/07/02 10:57:54 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -6072,7 +6072,7 @@ literal|"gated"
 block|}
 block|,
 block|{
-literal|"Novell"
+literal|"Netcon"
 block|,
 literal|"Install the Novell client/server demo package"
 block|,
@@ -6108,7 +6108,7 @@ block|,
 operator|(
 name|int
 operator|)
-literal|"ntpdate"
+name|VAR_NTPDATE
 block|}
 block|,
 block|{
@@ -6246,9 +6246,13 @@ literal|"Other"
 block|,
 literal|"Select a site not on this list"
 block|,
-name|NULL
+name|dmenuVarCheck
 block|,
 name|configNTP
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -6262,7 +6266,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=ntp.syd.dms.csiro.au"
+name|VAR_NTPDATE
+literal|"=ntp.syd.dms.csiro.au"
 block|}
 block|,
 block|{
@@ -6276,7 +6281,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=tick.usask.ca"
+name|VAR_NTPDATE
+literal|"=tick.usask.ca"
 block|}
 block|,
 block|{
@@ -6290,7 +6296,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=canon.inria.fr"
+name|VAR_NTPDATE
+literal|"=canon.inria.fr"
 block|}
 block|,
 block|{
@@ -6304,7 +6311,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=ntps1-0.uni-erlangen.de"
+name|VAR_NTPDATE
+literal|"=ntps1-0.uni-erlangen.de"
 block|}
 block|,
 block|{
@@ -6318,7 +6326,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=ntps1-0.cs.tu-berlin.de"
+name|VAR_NTPDATE
+literal|"=ntps1-0.cs.tu-berlin.de"
 block|}
 block|,
 block|{
@@ -6332,7 +6341,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=clock.nc.fukuoka-u.ac.jp"
+name|VAR_NTPDATE
+literal|"=clock.nc.fukuoka-u.ac.jp"
 block|}
 block|,
 block|{
@@ -6346,7 +6356,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=clock.tl.fukuoka-u.ac.jp"
+name|VAR_NTPDATE
+literal|"=clock.tl.fukuoka-u.ac.jp"
 block|}
 block|,
 block|{
@@ -6360,7 +6371,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=ntp0.nl.net"
+name|VAR_NTPDATE
+literal|"=ntp0.nl.net"
 block|}
 block|,
 block|{
@@ -6374,7 +6386,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=timer.unik.no"
+name|VAR_NTPDATE
+literal|"=timer.unik.no"
 block|}
 block|,
 block|{
@@ -6388,7 +6401,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=Time1.Stupi.SE"
+name|VAR_NTPDATE
+literal|"=Time1.Stupi.SE"
 block|}
 block|,
 block|{
@@ -6402,7 +6416,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=swisstime.ethz.ch"
+name|VAR_NTPDATE
+literal|"=swisstime.ethz.ch"
 block|}
 block|,
 block|{
@@ -6416,7 +6431,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=bitsy.mit.edu"
+name|VAR_NTPDATE
+literal|"=bitsy.mit.edu"
 block|}
 block|,
 block|{
@@ -6430,7 +6446,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=otc1.psu.edu"
+name|VAR_NTPDATE
+literal|"=otc1.psu.edu"
 block|}
 block|,
 block|{
@@ -6444,7 +6461,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=apple.com"
+name|VAR_NTPDATE
+literal|"=apple.com"
 block|}
 block|,
 block|{
@@ -6458,7 +6476,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=clepsydra.dec.com"
+name|VAR_NTPDATE
+literal|"=clepsydra.dec.com"
 block|}
 block|,
 block|{
@@ -6472,7 +6491,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=clock.llnl.gov"
+name|VAR_NTPDATE
+literal|"=clock.llnl.gov"
 block|}
 block|,
 block|{
@@ -6486,7 +6506,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=ncar.ucar.edu"
+name|VAR_NTPDATE
+literal|"=ncar.ucar.edu"
 block|}
 block|,
 block|{
@@ -6500,7 +6521,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=chantry.hawaii.net"
+name|VAR_NTPDATE
+literal|"=chantry.hawaii.net"
 block|}
 block|,
 block|{
@@ -6514,7 +6536,8 @@ name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ntpdate=shorty.chpc.utexas.edu"
+name|VAR_NTPDATE
+literal|"=shorty.chpc.utexas.edu"
 block|}
 block|,
 block|{
