@@ -1474,15 +1474,10 @@ name|llc
 init|=
 name|NULL
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__NETBSD_SYSCALLS
 name|struct
 name|rtprio
 name|rtp
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|error
 decl_stmt|;
@@ -1581,9 +1576,6 @@ operator|>
 name|PRIO_MAX
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|__NETBSD_SYSCALLS
 name|rtp
 operator|.
 name|type
@@ -1645,8 +1637,6 @@ else|:
 name|LOGIN_DEFCLASS
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if
@@ -1656,9 +1646,6 @@ operator|<
 name|PRIO_MIN
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|__NETBSD_SYSCALLS
 name|rtp
 operator|.
 name|type
@@ -1723,8 +1710,6 @@ else|:
 name|LOGIN_DEFCLASS
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
