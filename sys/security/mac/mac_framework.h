@@ -297,6 +297,22 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mac_prepare_type
+parameter_list|(
+name|mac_t
+modifier|*
+name|_label
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mac_set_fd
 parameter_list|(
 name|int
