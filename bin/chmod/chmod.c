@@ -259,7 +259,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRXfghorstuvwx"
+literal|"HLPRXfgorstuvwx"
 argument_list|)
 operator|)
 operator|!=
@@ -858,7 +858,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chmod [-fhv] [-R [-H | -L | -P]] mode file ...\n"
+literal|"usage: chmod [-fv] [-R [-H | -L | -P]] mode file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
