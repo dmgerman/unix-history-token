@@ -2193,7 +2193,7 @@ name|reg
 operator||=
 name|PCIC_VCC_5V_KING
 expr_stmt|;
-comment|/* 		 * For either of the two variant power schemes for 3.3V 		 * go ahead and turn off the 3.3V magic.  For all 		 * bridges, the setting the Vcc on bit does the rest. 		 */
+comment|/* 		 * For all of the variant power schemes for 3.3V go 		 * ahead and turn off the 3.3V enable bit.  For all 		 * bridges, the setting the Vcc on bit does the rest. 		 * Note that we don't have to turn off the 3.3V bit 		 * for the '365 step D since with the reg assigments 		 * to this point it doesn't get turned on. 		 */
 if|if
 condition|(
 name|sc
@@ -2211,7 +2211,6 @@ argument_list|,
 name|PCIC_CVSR_VS
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|sc
@@ -2229,7 +2228,6 @@ argument_list|,
 name|PCIC_MISC1_VCC_33
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|sc
@@ -2299,7 +2297,7 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Some chips are smarter than us it seems, so if we weren't 	 * allowed to use 5V, try 3.3 instead 	 */
+comment|/* 	 * Some chipsets will attempt to preclude us from supplying 	 * 5.0V to cards that only handle 3.3V.  We seem to need to 	 * try 3.3V to paper over some power handling issues in other 	 * parts of the system.  I suspect they are in the pccard bus 	 * driver, but may be in pccardd as well. 	 */
 if|if
 condition|(
 operator|!
