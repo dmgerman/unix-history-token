@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.4 (Berkeley) %G%"
+literal|"@(#)move.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1801,7 +1801,7 @@ directive|endif
 do|do
 block|{
 comment|/* compare moves */
-name|bcopy
+name|boardcopy
 argument_list|(
 name|checkq
 argument_list|)
@@ -1832,7 +1832,7 @@ operator|!=
 literal|0
 condition|)
 do|;
-name|bcopy
+name|boardcopy
 argument_list|(
 name|now
 argument_list|)
@@ -1844,7 +1844,7 @@ begin_escape
 end_escape
 
 begin_expr_stmt
-name|bcopy
+name|boardcopy
 argument_list|(
 name|s
 argument_list|)
