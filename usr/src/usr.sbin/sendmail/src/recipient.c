@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -261,7 +261,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|p
+operator|=
+name|DelimChar
+expr_stmt|;
 continue|continue;
+block|}
 name|p
 operator|=
 name|DelimChar
