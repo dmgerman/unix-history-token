@@ -2394,11 +2394,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"nfsv4 renewd exiting\n"
-argument_list|)
-expr_stmt|;
+comment|/*printf("nfsv4 renewd exiting\n");*/
 name|kthread_exit
 argument_list|(
 literal|0
