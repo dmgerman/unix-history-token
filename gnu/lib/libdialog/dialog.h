@@ -234,7 +234,7 @@ name|mark
 decl_stmt|,
 name|rbra
 decl_stmt|;
-name|int
+name|long
 name|aux
 decl_stmt|;
 block|}
