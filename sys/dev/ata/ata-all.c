@@ -257,6 +257,16 @@ name|ATA_BMADDR_RID
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATA_MASTERDEV
+parameter_list|(
+name|dev
+parameter_list|)
+value|((pci_get_progif(dev)& 0x8f) == 0x8a)
+end_define
+
 begin_comment
 comment|/* prototypes */
 end_comment
@@ -1286,6 +1296,18 @@ return|return
 literal|"SiS 5591 ATA33 controller"
 return|;
 case|case
+literal|0x06491095
+case|:
+return|return
+literal|"CMD 649 ATA100 controller"
+return|;
+case|case
+literal|0x06481095
+case|:
+return|return
+literal|"CMD 648 ATA66 controller"
+return|;
+case|case
 literal|0x06461095
 case|:
 return|return
@@ -1318,6 +1340,12 @@ literal|0x74091022
 case|:
 return|return
 literal|"AMD 756 ATA66 controller"
+return|;
+case|case
+literal|0x02111166
+case|:
+return|return
+literal|"ServerWorks ROSB4 ATA33 controller"
 return|;
 case|case
 literal|0x4d33105a
@@ -1486,12 +1514,10 @@ decl_stmt|;
 comment|/* check if this is located at one of the std addresses */
 if|if
 condition|(
-name|pci_get_progif
+name|ATA_MASTERDEV
 argument_list|(
 name|dev
 argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
 condition|)
 block|{
 if|if
@@ -1621,18 +1647,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* is this controller busmaster DMA capable ? */
-if|if
-condition|(
-name|pci_get_progif
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
-condition|)
-block|{
-comment|/* is busmastering support turned on ? */
+comment|/* is busmastering supported ? */
 if|if
 condition|(
 operator|(
@@ -1680,91 +1695,19 @@ argument_list|,
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Busmastering DMA %s\n"
+argument_list|,
 name|sc
 operator|->
 name|bmio
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Busmastering DMA not configured\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Busmastering DMA not enabled\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|type
-operator|==
-literal|0x4d33105a
-operator|||
-name|type
-operator|==
-literal|0x4d38105a
-operator|||
-name|type
-operator|==
-literal|0x4d30105a
-operator|||
-name|type
-operator|==
-literal|0x0d30105a
-operator|||
-name|type
-operator|==
-literal|0x00041103
-condition|)
-block|{
-comment|/* Promise and HighPoint controllers support busmastering DMA */
-name|rid
-operator|=
-literal|0x20
-expr_stmt|;
-name|sc
-operator|->
-name|bmio
-operator|=
-name|bus_alloc_resource
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|,
-operator|&
-name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
-argument_list|,
-name|RF_ACTIVE
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-comment|/* we dont know this controller, no busmastering DMA */
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Busmastering DMA not supported\n"
+condition|?
+literal|"enabled"
+else|:
+literal|"not supported"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2193,12 +2136,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_get_progif
+name|ATA_MASTERDEV
 argument_list|(
 name|dev
 argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
 operator|||
 name|pci_read_config
 argument_list|(
@@ -2287,12 +2228,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_get_progif
+name|ATA_MASTERDEV
 argument_list|(
 name|dev
 argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
 condition|)
 name|retval
 operator|+=
@@ -2364,16 +2303,6 @@ name|dev
 argument_list|)
 decl_stmt|;
 name|int
-name|masterdev
-init|=
-name|pci_get_progif
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
-decl_stmt|;
-name|int
 name|unit
 init|=
 operator|(
@@ -2405,7 +2334,10 @@ name|ATA_IOADDR_RID
 case|:
 if|if
 condition|(
-name|masterdev
+name|ATA_MASTERDEV
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 name|myrid
@@ -2452,7 +2384,10 @@ name|ATA_ALTADDR_RID
 case|:
 if|if
 condition|(
-name|masterdev
+name|ATA_MASTERDEV
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 name|myrid
@@ -2599,7 +2534,10 @@ return|;
 block|}
 if|if
 condition|(
-name|masterdev
+name|ATA_MASTERDEV
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 comment|/* make the parent just pass through the allocation. */
 return|return
@@ -2672,7 +2610,10 @@ literal|0
 return|;
 if|if
 condition|(
-name|masterdev
+name|ATA_MASTERDEV
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 ifdef|#
@@ -2828,16 +2769,6 @@ name|child
 argument_list|)
 decl_stmt|;
 name|int
-name|masterdev
-init|=
-name|pci_get_progif
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
-decl_stmt|;
-name|int
 name|myrid
 init|=
 literal|0
@@ -2859,7 +2790,10 @@ name|ATA_IOADDR_RID
 case|:
 if|if
 condition|(
-name|masterdev
+name|ATA_MASTERDEV
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 name|myrid
 operator|=
@@ -2880,7 +2814,10 @@ name|ATA_ALTADDR_RID
 case|:
 if|if
 condition|(
-name|masterdev
+name|ATA_MASTERDEV
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 name|myrid
 operator|=
@@ -2909,7 +2846,10 @@ return|;
 block|}
 if|if
 condition|(
-name|masterdev
+name|ATA_MASTERDEV
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 comment|/* make the parent just pass through the allocation. */
 return|return
@@ -2967,7 +2907,10 @@ name|ENOENT
 return|;
 if|if
 condition|(
-name|masterdev
+name|ATA_MASTERDEV
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 ifdef|#
@@ -3075,12 +3018,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|pci_get_progif
+name|ATA_MASTERDEV
 argument_list|(
 name|dev
 argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
 condition|)
 block|{
 ifdef|#
@@ -3172,12 +3113,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|pci_get_progif
+name|ATA_MASTERDEV
 argument_list|(
 name|dev
 argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
 condition|)
 block|{
 ifdef|#
@@ -3674,15 +3613,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|pci_get_progif
+name|ATA_MASTERDEV
 argument_list|(
 name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
 argument_list|)
-operator|&
-name|PCIP_STORAGE_IDE_MASTERDEV
 condition|)
 name|altioaddr
 operator|=
@@ -5551,6 +5488,51 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x06461095
+case|:
+comment|/* CMD 646 */
+case|case
+literal|0x06481095
+case|:
+comment|/* CMD 648 */
+case|case
+literal|0x06491095
+case|:
+comment|/* CMD 649 */
+if|if
+condition|(
+operator|!
+operator|(
+name|pci_read_config
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|scp
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+literal|0x71
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+operator|(
+name|scp
+operator|->
+name|unit
+condition|?
+literal|0x08
+else|:
+literal|0x04
+operator|)
+operator|)
+condition|)
+return|return;
+goto|goto
+name|out
+goto|;
+case|case
 literal|0x4d33105a
 case|:
 comment|/* Promise Ultra/Fasttrak 33 */
@@ -5599,11 +5581,9 @@ literal|0x1c
 argument_list|)
 operator|&
 operator|(
-operator|(
 name|scp
 operator|->
 name|unit
-operator|)
 condition|?
 literal|0x00004000
 else|:
@@ -5613,6 +5593,8 @@ operator|)
 condition|)
 return|return;
 block|}
+name|out
+label|:
 endif|#
 directive|endif
 default|default:
