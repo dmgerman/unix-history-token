@@ -38,12 +38,12 @@ init|=
 literal|1048576
 block|,
 comment|/* minimum size of a slice */
-name|CDEV_MAJOR
+name|VINUM_CDEV_MAJOR
 init|=
 literal|91
 block|,
 comment|/* major number for character device */
-name|BDEV_MAJOR
+name|VINUM_BDEV_MAJOR
 init|=
 literal|25
 block|,
@@ -192,21 +192,21 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|makedev (CDEV_MAJOR, VINUMMINOR (v, p, s, t))
+value|makedev (VINUM_CDEV_MAJOR, VINUMMINOR (v, p, s, t))
 define|#
 directive|define
 name|VINUM_PLEX
 parameter_list|(
 name|p
 parameter_list|)
-value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
+value|makedev (VINUM_CDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
 define|#
 directive|define
 name|VINUM_SD
 parameter_list|(
 name|s
 parameter_list|)
-value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
+value|makedev (VINUM_CDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
 comment|/* Create a bit mask for x bits */
 define|#
 directive|define
@@ -233,7 +233,7 @@ name|d
 parameter_list|,
 name|t
 parameter_list|)
-value|makedev (BDEV_MAJOR, VINUMRMINOR (d, t))
+value|makedev (VINUM_BDEV_MAJOR, VINUMRMINOR (d, t))
 comment|/* extract device type */
 define|#
 directive|define
@@ -665,7 +665,7 @@ decl_stmt|;
 define|#
 directive|define
 name|VINUM_MAXACTIVE
-value|256
+value|30000
 comment|/* maximum number of active requests */
 name|int
 name|active
@@ -956,17 +956,10 @@ name|MAXDRIVENAME
 index|]
 decl_stmt|;
 comment|/* name of the slice it's on */
-name|struct
-name|vnode
-modifier|*
-name|vp
+name|dev_t
+name|dev
 decl_stmt|;
-comment|/* vnode pointer */
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
+comment|/* device information */
 name|struct
 name|vinum_label
 name|label
@@ -1004,7 +997,7 @@ struct|;
 define|#
 directive|define
 name|DRIVE_MAXACTIVE
-value|10
+value|30000
 comment|/* maximum number of active requests */
 name|int
 name|active
@@ -1059,7 +1052,7 @@ name|int64_t
 name|driveoffset
 decl_stmt|;
 comment|/* offset on drive */
-comment|/*      * plexoffset is the offset from the beginning of the      * plex to the very first part of the subdisk, in      * sectors.  For striped and RAID-5 plexes, only      * the first stripe is located at this offset      */
+comment|/*      * plexoffset is the offset from the beginning      * of the plex to the very first part of the      * subdisk, in sectors.  For striped, RAID-4 and      * RAID-5 plexes, only the first stripe is      * located at this offset      */
 name|int64_t
 name|plexoffset
 decl_stmt|;
@@ -1169,11 +1162,46 @@ comment|/* concatenated plex */
 name|plex_striped
 block|,
 comment|/* striped plex */
+name|plex_raid4
+block|,
+comment|/* RAID4 plex */
 name|plex_raid5
 comment|/* RAID5 plex */
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* Recognize plex organizations */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isstriped
+parameter_list|(
+name|p
+parameter_list|)
+value|(p->organization>= plex_striped)
+end_define
+
+begin_comment
+comment|/* RAID 1, 4 or 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isparity
+parameter_list|(
+name|p
+parameter_list|)
+value|(p->organization>= plex_raid4)
+end_define
+
+begin_comment
+comment|/* RAID 4 or 5 */
+end_comment
 
 begin_struct
 struct|struct
