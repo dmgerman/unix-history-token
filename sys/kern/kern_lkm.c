@@ -2057,13 +2057,6 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-specifier|extern
-name|int
-name|nblkdev
-decl_stmt|,
-name|nchrdev
-decl_stmt|;
-comment|/* from conf.c */
 switch|switch
 condition|(
 name|cmd

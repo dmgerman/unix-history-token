@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.1 1994/08/12 06:51:10 davidg Exp $  *  * $Log: if_le.c,v $  * Revision 1.1  1994/08/12  06:51:10  davidg  * New ethernet device driver from Matt Thomas:  *  * This driver supports all the DEC EtherWORKS III NICs (DE203, DE204,  * and DE205) and the later DEC EtherWORKS II NICs (DE200, DE201, DE202,  * DE422).  DEPCA-style boards prior to the DE200 have not been tested  * and may not work.  *  * Submitted by:	Matt Thomas (thomas@lkg.dec.com)  *  * Revision 1.8  1994/08/05  20:20:54  thomas  * Enable change log  *  * Revision 1.7  1994/08/05  20:20:14  thomas  * *** empty log message ***  *  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.2 1994/08/12 11:42:37 davidg Exp $  *  * $Log: if_le.c,v $  * Revision 1.2  1994/08/12  11:42:37  davidg  * Added conditionals to make this compile cleanly in FreeBSD 2.0.  *  * Revision 1.1  1994/08/12  06:51:10  davidg  * New ethernet device driver from Matt Thomas:  *  * This driver supports all the DEC EtherWORKS III NICs (DE203, DE204,  * and DE205) and the later DEC EtherWORKS II NICs (DE200, DE201, DE202,  * DE422).  DEPCA-style boards prior to the DE200 have not been tested  * and may not work.  *  * Submitted by:	Matt Thomas (thomas@lkg.dec.com)  *  * Revision 1.8  1994/08/05  20:20:54  thomas  * Enable change log  *  * Revision 1.7  1994/08/05  20:20:14  thomas  * *** empty log message ***  *  */
 end_comment
 
 begin_comment
@@ -3650,27 +3650,6 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
-name|lemac_probe
-parameter_list|(
-name|le_softc_t
-modifier|*
-name|sc
-parameter_list|,
-specifier|const
-name|le_board_t
-modifier|*
-name|bd
-parameter_list|,
-name|int
-modifier|*
-name|msize
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|lemac_init
 parameter_list|(
@@ -3836,37 +3815,37 @@ literal|16
 index|]
 init|=
 block|{
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|,
-literal|0xFFFFFFFFU
+literal|0xFFFFU
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -6109,27 +6088,6 @@ end_if
 begin_comment
 comment|/*  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  *  * Start of DEPCA (DE200/DE201/DE202/DE422 etal) support.  *  */
 end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|depca_probe
-parameter_list|(
-name|le_softc_t
-modifier|*
-name|sc
-parameter_list|,
-specifier|const
-name|le_board_t
-modifier|*
-name|bd
-parameter_list|,
-name|int
-modifier|*
-name|msize
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static

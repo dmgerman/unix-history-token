@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.8 1994/05/19 22:21:05 jkh Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.9 1994/05/25 09:13:20 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -203,21 +203,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|void
-name|sc_print_addr
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|scsi_link
-operator|*
-name|sc_link
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
