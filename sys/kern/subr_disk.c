@@ -1029,7 +1029,7 @@ name|dp
 operator|->
 name|d_slice
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
