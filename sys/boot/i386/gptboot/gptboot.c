@@ -94,6 +94,31 @@ end_include
 begin_define
 define|#
 directive|define
+name|IO_KEYBOARD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IO_SERIAL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECOND
+value|18
+end_define
+
+begin_comment
+comment|/* Circa that many ticks in a second. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RBX_ASKNAME
 value|0x0
 end_define
@@ -710,7 +735,7 @@ specifier|static
 name|uint8_t
 name|ioctrl
 init|=
-literal|0x1
+name|IO_KEYBOARD
 decl_stmt|;
 end_decl_stmt
 
@@ -1591,9 +1616,10 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* Process configuration file */
 name|autoboot
 operator|=
-literal|2
+literal|1
 expr_stmt|;
 name|readfile
 argument_list|(
@@ -1633,12 +1659,14 @@ name|autoboot
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Do not process this command twice */
 operator|*
 name|cmd
 operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/*      * Try to exec stage 3 boot loader. If interrupted by a keypress,      * or in case of failure, try to load a kernel directly instead.      */
 if|if
 condition|(
 name|autoboot
@@ -1646,13 +1674,6 @@ operator|&&
 operator|!
 operator|*
 name|kname
-condition|)
-block|{
-if|if
-condition|(
-name|autoboot
-operator|==
-literal|2
 condition|)
 block|{
 name|memcpy
@@ -1672,7 +1693,9 @@ condition|(
 operator|!
 name|keyhit
 argument_list|(
-literal|0x37
+literal|3
+operator|*
+name|SECOND
 argument_list|)
 condition|)
 block|{
@@ -1681,18 +1704,6 @@ argument_list|(
 name|kname
 argument_list|)
 expr_stmt|;
-name|autoboot
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|autoboot
-operator|==
-literal|1
-condition|)
 name|memcpy
 argument_list|(
 name|kname
@@ -1706,6 +1717,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* Present the user with the boot2 prompt. */
 for|for
 control|(
 init|;
@@ -1748,7 +1761,7 @@ if|if
 condition|(
 name|ioctrl
 operator|&
-literal|0x2
+name|IO_SERIAL
 condition|)
 name|sio_flush
 argument_list|()
@@ -1760,7 +1773,9 @@ name|autoboot
 operator|||
 name|keyhit
 argument_list|(
-literal|0x5a
+literal|5
+operator|*
+name|SECOND
 argument_list|)
 condition|)
 name|getstr
@@ -2773,7 +2788,11 @@ literal|1
 operator|<<
 name|RBX_DUAL
 condition|?
-literal|0x3
+operator|(
+name|IO_SERIAL
+operator||
+name|IO_KEYBOARD
+operator|)
 else|:
 name|opts
 operator|&
@@ -2781,15 +2800,15 @@ literal|1
 operator|<<
 name|RBX_SERIAL
 condition|?
-literal|0x2
+name|IO_SERIAL
 else|:
-literal|0x1
+name|IO_KEYBOARD
 expr_stmt|;
 if|if
 condition|(
 name|ioctrl
 operator|&
-literal|0x2
+name|IO_SERIAL
 condition|)
 name|sio_init
 argument_list|()
@@ -4820,7 +4839,7 @@ if|if
 condition|(
 name|ioctrl
 operator|&
-literal|0x1
+name|IO_KEYBOARD
 condition|)
 name|putc
 argument_list|(
@@ -4831,7 +4850,7 @@ if|if
 condition|(
 name|ioctrl
 operator|&
-literal|0x2
+name|IO_SERIAL
 condition|)
 name|sio_putc
 argument_list|(
@@ -4874,7 +4893,7 @@ if|if
 condition|(
 name|ioctrl
 operator|&
-literal|0x1
+name|IO_KEYBOARD
 operator|&&
 name|getc
 argument_list|(
@@ -4895,7 +4914,7 @@ if|if
 condition|(
 name|ioctrl
 operator|&
-literal|0x2
+name|IO_SERIAL
 operator|&&
 name|sio_ischar
 argument_list|()
