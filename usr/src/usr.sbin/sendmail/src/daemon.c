@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.28
+literal|3.29
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.28
+literal|3.29
 operator|%
 name|G
 operator|%
@@ -400,7 +400,6 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-block|{
 name|syserr
 argument_list|(
 literal|"getconnection: accept"
@@ -411,7 +410,6 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
