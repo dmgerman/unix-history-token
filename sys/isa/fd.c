@@ -11830,20 +11830,19 @@ case|case
 name|FD_STYPE
 case|:
 comment|/* set drive type */
+comment|/* 		 * Allow setting drive type temporarily iff 		 * currently unset.  Used for fdformat so any 		 * user can set it, and then start formatting. 		 */
 if|if
 condition|(
-name|suser
-argument_list|(
-name|td
-argument_list|)
-operator|!=
-literal|0
+name|fd
+operator|->
+name|ft
 condition|)
 return|return
 operator|(
-name|EPERM
+name|EINVAL
 operator|)
 return|;
+comment|/* already set */
 name|fd
 operator|->
 name|fts
@@ -11858,6 +11857,24 @@ name|fd_type
 operator|*
 operator|)
 name|addr
+expr_stmt|;
+name|fd
+operator|->
+name|ft
+operator|=
+operator|&
+name|fd
+operator|->
+name|fts
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|fd
+operator|->
+name|flags
+operator||=
+name|FD_UA
 expr_stmt|;
 return|return
 operator|(
