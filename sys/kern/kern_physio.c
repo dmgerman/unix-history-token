@@ -721,7 +721,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s maxphys = 0 ??"
+literal|"WARNING: %s maxphys = 0 ??\n"
 argument_list|,
 name|devtoname
 argument_list|(
