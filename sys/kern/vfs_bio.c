@@ -12866,8 +12866,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -12897,6 +12895,13 @@ argument_list|,
 operator|(
 literal|"vfs_clean_pages: no buffer offset"
 operator|)
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|bp
+operator|->
+name|b_object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -12990,6 +12995,13 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_object
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -13049,6 +13061,13 @@ name|base
 operator|&
 name|PAGE_MASK
 operator|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|bp
+operator|->
+name|b_object
+argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
@@ -13121,6 +13140,13 @@ expr_stmt|;
 block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_object
+argument_list|)
 expr_stmt|;
 block|}
 block|}
