@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)convtime.c	5.4 (Berkeley) 6/1/90"
+literal|"@(#)convtime.c	8.1 (Berkeley) 6/7/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|"useful.h"
 end_include
 
 begin_comment
-comment|/* **  CONVTIME -- convert time ** **	Takes a time as an ascii string with a trailing character **	giving units: **	  s -- seconds **	  m -- minutes **	  h -- hours **	  d -- days (default) **	  w -- weeks **	For example, "3d12h" is three and a half days. ** **	Parameters: **		p -- pointer to ascii time. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
+comment|/* **  CONVTIME -- convert time ** **	Takes a time as an ascii string with a trailing character **	giving units: **	  s -- seconds **	  m -- minutes **	  h -- hours **	  d -- days (default) **	  w -- weeks **	For example, "3d12h" is three and a half days. ** **	Parameters: **		p -- pointer to ascii time. **		units -- default units if none specified. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -49,10 +49,15 @@ name|time_t
 name|convtime
 parameter_list|(
 name|p
+parameter_list|,
+name|units
 parameter_list|)
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|char
+name|units
 decl_stmt|;
 block|{
 specifier|register
@@ -83,13 +88,24 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|isdigit
-argument_list|(
+operator|(
 name|c
 operator|=
 operator|*
 name|p
 operator|++
+operator|)
+operator|!=
+literal|'\0'
+operator|&&
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|&&
+name|isdigit
+argument_list|(
+name|c
 argument_list|)
 condition|)
 name|t
@@ -110,9 +126,15 @@ name|c
 operator|==
 literal|'\0'
 condition|)
+block|{
+name|c
+operator|=
+name|units
+expr_stmt|;
 name|p
 operator|--
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|c

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.9 (Berkeley) 6/1/90"
+literal|"@(#)collect.c	8.1 (Berkeley) 6/7/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,19 +41,37 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		sayok -- if set, give an ARPANET style message **			to say we are ready to collect input. ** **	Returns: **		none. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
+comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		smtpmode -- if set, we are running SMTP: give an RFC821 **			style message to say we are ready to collect **			input, and never ignore a single dot to mean **			end of message. **		requeueflag -- this message will be requeued later, so **			don't do final processing on it. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
 end_comment
 
 begin_macro
 name|collect
 argument_list|(
-argument|sayok
+argument|smtpmode
+argument_list|,
+argument|requeueflag
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|bool
-name|sayok
+name|smtpmode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|requeueflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -64,15 +82,24 @@ name|FILE
 modifier|*
 name|tf
 decl_stmt|;
+name|bool
+name|ignrdot
+init|=
+name|smtpmode
+condition|?
+name|FALSE
+else|:
+name|IgnrDot
+decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXFIELD
+name|MAXLINE
 index|]
 decl_stmt|,
 name|buf2
 index|[
-name|MAXFIELD
+name|MAXLINE
 index|]
 decl_stmt|;
 specifier|register
@@ -82,10 +109,6 @@ name|workbuf
 decl_stmt|,
 modifier|*
 name|freebuf
-decl_stmt|;
-specifier|register
-name|int
-name|workbuflen
 decl_stmt|;
 specifier|extern
 name|char
@@ -102,7 +125,7 @@ name|flusheol
 argument_list|()
 decl_stmt|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
-name|CurEnv
+name|e
 operator|->
 name|e_df
 operator|=
@@ -110,7 +133,7 @@ name|newstr
 argument_list|(
 name|queuename
 argument_list|(
-name|CurEnv
+name|e
 argument_list|,
 literal|'d'
 argument_list|)
@@ -123,11 +146,15 @@ name|tf
 operator|=
 name|dfopen
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|,
-literal|"w"
+name|O_WRONLY
+operator||
+name|O_CREAT
+argument_list|,
+name|FileMode
 argument_list|)
 operator|)
 operator|==
@@ -138,7 +165,7 @@ name|syserr
 argument_list|(
 literal|"Cannot create %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|)
@@ -151,28 +178,14 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|chmod
-argument_list|(
-name|CurEnv
-operator|->
-name|e_df
-argument_list|,
-name|FileMode
-argument_list|)
-expr_stmt|;
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
 condition|(
-name|sayok
+name|smtpmode
 condition|)
 name|message
 argument_list|(
-literal|"354"
-argument_list|,
-literal|"Enter mail, end with \".\" on a line by itself"
+literal|"354 Enter mail, end with \".\" on a line by itself"
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Try to read a UNIX-style From line 	*/
@@ -182,9 +195,15 @@ name|sfgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|TimeOuts
+operator|.
+name|to_datablock
+argument_list|,
+literal|"initial message read"
 argument_list|)
 operator|==
 name|NULL
@@ -235,6 +254,8 @@ goto|;
 name|eatfrom
 argument_list|(
 name|buf
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -243,9 +264,15 @@ name|sfgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|TimeOuts
+operator|.
+name|to_datablock
+argument_list|,
+literal|"message header read"
 argument_list|)
 operator|==
 name|NULL
@@ -263,7 +290,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|NOTUNIX
+comment|/* NOTUNIX */
 comment|/* 	**  Copy InChannel to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header. 	*/
 name|workbuf
 operator|=
@@ -281,6 +308,21 @@ init|;
 condition|;
 control|)
 block|{
+name|char
+modifier|*
+name|curbuf
+decl_stmt|;
+name|int
+name|curbuffree
+decl_stmt|;
+specifier|register
+name|int
+name|curbuflen
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
 comment|/* first, see if the header is over */
 if|if
 condition|(
@@ -322,12 +364,28 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|workbuflen
+name|curbuf
+operator|=
+name|workbuf
+expr_stmt|;
+name|curbuflen
 operator|=
 name|strlen
 argument_list|(
-name|workbuf
+name|curbuf
 argument_list|)
+expr_stmt|;
+name|curbuffree
+operator|=
+name|MAXLINE
+operator|-
+name|curbuflen
+expr_stmt|;
+name|p
+operator|=
+name|curbuf
+operator|+
+name|curbuflen
 expr_stmt|;
 comment|/* get the rest of this field */
 for|for
@@ -336,15 +394,24 @@ init|;
 condition|;
 control|)
 block|{
+name|int
+name|clen
+decl_stmt|;
 if|if
 condition|(
 name|sfgets
 argument_list|(
 name|freebuf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|TimeOuts
+operator|.
+name|to_datablock
+argument_list|,
+literal|"message header read"
 argument_list|)
 operator|==
 name|NULL
@@ -379,33 +446,6 @@ condition|)
 goto|goto
 name|readerr
 goto|;
-comment|/* yes; append line to `workbuf' if there's room */
-if|if
-condition|(
-name|workbuflen
-operator|<
-name|MAXFIELD
-operator|-
-literal|3
-condition|)
-block|{
-specifier|register
-name|char
-modifier|*
-name|p
-init|=
-name|workbuf
-operator|+
-name|workbuflen
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|q
-init|=
-name|freebuf
-decl_stmt|;
-comment|/* we have room for more of this field */
 name|fixcrlf
 argument_list|(
 name|freebuf
@@ -413,53 +453,132 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+name|clen
+operator|=
+name|strlen
+argument_list|(
+name|freebuf
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+comment|/* if insufficient room, dynamically allocate buffer */
+if|if
+condition|(
+name|clen
+operator|>=
+name|curbuffree
+condition|)
+block|{
+comment|/* reallocate buffer */
+name|int
+name|nbuflen
+init|=
+operator|(
+operator|(
+name|p
+operator|-
+name|curbuf
+operator|)
+operator|+
+name|clen
+operator|)
+operator|*
+literal|2
+decl_stmt|;
+name|char
+modifier|*
+name|nbuf
+init|=
+name|xalloc
+argument_list|(
+name|nbuflen
+argument_list|)
+decl_stmt|;
+name|p
+operator|=
+name|nbuf
+operator|+
+name|curbuflen
+expr_stmt|;
+name|curbuffree
+operator|=
+name|nbuflen
+operator|-
+name|curbuflen
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|curbuf
+argument_list|,
+name|nbuf
+argument_list|,
+name|curbuflen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|curbuf
+operator|!=
+name|buf
+operator|&&
+name|curbuf
+operator|!=
+name|buf2
+condition|)
+name|free
+argument_list|(
+name|curbuf
+argument_list|)
+expr_stmt|;
+name|curbuf
+operator|=
+name|nbuf
+expr_stmt|;
+block|}
 operator|*
 name|p
 operator|++
 operator|=
 literal|'\n'
 expr_stmt|;
-name|workbuflen
-operator|++
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|q
-operator|!=
-literal|'\0'
-operator|&&
-name|workbuflen
-operator|<
-name|MAXFIELD
+name|bcopy
+argument_list|(
+name|freebuf
+argument_list|,
+name|p
+argument_list|,
+name|clen
 operator|-
 literal|1
-condition|)
-block|{
-operator|*
-name|p
-operator|++
-operator|=
-operator|*
-name|q
-operator|++
+argument_list|)
 expr_stmt|;
-name|workbuflen
-operator|++
+name|p
+operator|+=
+name|clen
+operator|-
+literal|1
+expr_stmt|;
+name|curbuffree
+operator|-=
+name|clen
+expr_stmt|;
+name|curbuflen
+operator|+=
+name|clen
 expr_stmt|;
 block|}
 operator|*
 name|p
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
-block|}
-name|CurEnv
+name|e
 operator|->
 name|e_msgsize
 operator|+=
-name|workbuflen
+name|curbuflen
 expr_stmt|;
 comment|/* 		**  The working buffer now becomes the free buffer, since 		**  the free buffer contains a new header field. 		** 		**  This is premature, since we still havent called 		**  chompheader() to process the field we just created 		**  (so the call to chompheader() will use `freebuf'). 		**  This convolution is necessary so that if we break out 		**  of the loop due to H_EOH, `workbuf' will always be 		**  the next unprocessed buffer. 		*/
 block|{
@@ -488,13 +607,31 @@ name|H_EOH
 argument_list|,
 name|chompheader
 argument_list|(
-name|freebuf
+name|curbuf
 argument_list|,
 name|FALSE
+argument_list|,
+name|e
 argument_list|)
 argument_list|)
 condition|)
 break|break;
+comment|/* 		**  If the buffer was dynamically allocated, free it. 		*/
+if|if
+condition|(
+name|curbuf
+operator|!=
+name|buf
+operator|&&
+name|curbuf
+operator|!=
+name|buf2
+condition|)
+name|free
+argument_list|(
+name|curbuf
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -525,9 +662,15 @@ name|sfgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|TimeOuts
+operator|.
+name|to_datablock
+argument_list|,
+literal|"message separator read"
 argument_list|)
 operator|==
 name|NULL
@@ -575,7 +718,7 @@ comment|/* check for end-of-message */
 if|if
 condition|(
 operator|!
-name|IgnrDot
+name|ignrdot
 operator|&&
 name|buf
 index|[
@@ -608,9 +751,6 @@ name|OpMode
 operator|==
 name|MD_SMTP
 operator|&&
-operator|!
-name|IgnrDot
-operator|&&
 name|bp
 index|[
 literal|0
@@ -629,7 +769,7 @@ name|bp
 operator|++
 expr_stmt|;
 comment|/* 		**  Figure message length, output the line to the temp 		**  file, and insert a newline if missing. 		*/
-name|CurEnv
+name|e
 operator|->
 name|e_msgsize
 operator|+=
@@ -664,6 +804,8 @@ condition|)
 name|tferror
 argument_list|(
 name|tf
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -673,9 +815,15 @@ name|sfgets
 argument_list|(
 name|buf
 argument_list|,
-name|MAXFIELD
+name|MAXLINE
 argument_list|,
 name|InChannel
+argument_list|,
+name|TimeOuts
+operator|.
+name|to_datablock
+argument_list|,
+literal|"message body read"
 argument_list|)
 operator|!=
 name|NULL
@@ -695,6 +843,19 @@ condition|)
 name|tferror
 argument_list|(
 name|tf
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fsync
+argument_list|(
+name|fileno
+argument_list|(
+name|tf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -725,39 +886,51 @@ operator|==
 name|MD_SMTP
 condition|)
 block|{
-name|int
-name|usrerr
-argument_list|()
-decl_stmt|,
-name|syserr
-argument_list|()
+name|char
+modifier|*
+name|host
 decl_stmt|;
+name|host
+operator|=
+name|RealHostName
+expr_stmt|;
+if|if
+condition|(
+name|host
+operator|==
+name|NULL
+condition|)
+name|host
+operator|=
+literal|"localhost"
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
 if|if
 condition|(
-name|RealHostName
-operator|!=
-name|NULL
-operator|&&
 name|LogLevel
 operator|>
 literal|0
+operator|&&
+name|feof
+argument_list|(
+name|InChannel
+argument_list|)
 condition|)
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"collect: unexpected close on connection from %s: %m\n"
+literal|"collect: unexpected close on connection from %s, sender=%s: %m\n"
 argument_list|,
-name|CurEnv
+name|host
+argument_list|,
+name|e
 operator|->
 name|e_from
 operator|.
 name|q_paddr
-argument_list|,
-name|RealHostName
 argument_list|)
 expr_stmt|;
 endif|#
@@ -773,9 +946,11 @@ else|:
 name|syserr
 operator|)
 operator|(
-literal|"collect: unexpected close, from=%s"
+literal|"451 collect: unexpected close on connection from %s, from=%s"
 operator|,
-name|CurEnv
+name|host
+operator|,
+name|e
 operator|->
 name|e_from
 operator|.
@@ -783,13 +958,13 @@ name|q_paddr
 operator|)
 expr_stmt|;
 comment|/* don't return an error indication */
-name|CurEnv
+name|e
 operator|->
 name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_flags
 operator|&=
@@ -804,7 +979,10 @@ block|}
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
 name|eatheader
 argument_list|(
-name|CurEnv
+name|e
+argument_list|,
+operator|!
+name|requeueflag
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Add an Apparently-To: line if we have no recipient lines. 	*/
@@ -813,6 +991,8 @@ condition|(
 name|hvalue
 argument_list|(
 literal|"to"
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -820,6 +1000,8 @@ operator|&&
 name|hvalue
 argument_list|(
 literal|"cc"
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -827,6 +1009,8 @@ operator|&&
 name|hvalue
 argument_list|(
 literal|"bcc"
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -834,6 +1018,8 @@ operator|&&
 name|hvalue
 argument_list|(
 literal|"apparently-to"
+argument_list|,
+name|e
 argument_list|)
 operator|==
 name|NULL
@@ -850,7 +1036,7 @@ for|for
 control|(
 name|q
 operator|=
-name|CurEnv
+name|e
 operator|->
 name|e_sendqueue
 init|;
@@ -894,27 +1080,49 @@ argument_list|)
 expr_stmt|;
 name|addheader
 argument_list|(
-literal|"apparently-to"
+literal|"Apparently-To"
 argument_list|,
 name|q
 operator|->
 name|q_paddr
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* check for message too large */
+if|if
+condition|(
+name|MaxMessageSize
+operator|>
+literal|0
+operator|&&
+name|e
+operator|->
+name|e_msgsize
+operator|>
+name|MaxMessageSize
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"552 Message exceeds maximum fixed size (%ld)"
+argument_list|,
+name|MaxMessageSize
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
-name|CurEnv
+name|e
 operator|->
 name|e_dfp
 operator|=
 name|fopen
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|,
@@ -924,15 +1132,21 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* we haven't acked receipt yet, so just chuck this */
 name|syserr
 argument_list|(
 literal|"Cannot reopen %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -960,16 +1174,6 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-name|char
-name|junkbuf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|,
-modifier|*
-name|sfgets
-argument_list|()
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -977,9 +1181,20 @@ name|p
 init|=
 name|buf
 decl_stmt|;
+name|bool
+name|printmsg
+init|=
+name|TRUE
+decl_stmt|;
+name|char
+name|junkbuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
 while|while
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -991,6 +1206,19 @@ condition|)
 block|{
 if|if
 condition|(
+name|printmsg
+condition|)
+name|usrerr
+argument_list|(
+literal|"553 header line too long"
+argument_list|)
+expr_stmt|;
+name|printmsg
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
 name|sfgets
 argument_list|(
 name|junkbuf
@@ -998,6 +1226,12 @@ argument_list|,
 name|MAXLINE
 argument_list|,
 name|fp
+argument_list|,
+name|TimeOuts
+operator|.
+name|to_datablock
+argument_list|,
+literal|"long line flush"
 argument_list|)
 operator|==
 name|NULL
@@ -1031,6 +1265,8 @@ begin_macro
 name|tferror
 argument_list|(
 argument|tf
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -1038,6 +1274,14 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|tf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1055,7 +1299,7 @@ name|void
 operator|)
 name|freopen
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|,
@@ -1082,7 +1326,7 @@ name|syserr
 argument_list|(
 literal|"collect: Cannot write %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|)
@@ -1181,6 +1425,8 @@ begin_macro
 name|eatfrom
 argument_list|(
 argument|fm
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -1188,6 +1434,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|fm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1262,11 +1516,19 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isupper
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 operator|||
 name|p
 index|[
@@ -1375,7 +1637,7 @@ condition|(
 operator|*
 name|p
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 block|{
 name|char
@@ -1415,15 +1677,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|define
-argument_list|(
-literal|'d'
-argument_list|,
-name|q
-argument_list|,
-name|CurEnv
-argument_list|)
-expr_stmt|;
 name|q
 operator|=
 name|arpadate
@@ -1440,7 +1693,7 @@ argument_list|(
 name|q
 argument_list|)
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1450,8 +1703,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|NOTUNIX
 end_endif
+
+begin_comment
+comment|/* NOTUNIX */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	5.17 (Berkeley) 3/12/91  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.1 (Berkeley) 6/7/93  */
 end_comment
 
 begin_comment
@@ -31,21 +31,23 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.17		3/12/91"
+literal|"@(#)sendmail.h	8.1		6/7/93"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
 
 begin_else
 else|#
 directive|else
-else|_DEFINE
 end_else
+
+begin_comment
+comment|/*  _DEFINE */
+end_comment
 
 begin_define
 define|#
@@ -57,8 +59,29 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|_DEFINE
 end_endif
+
+begin_comment
+comment|/* _DEFINE */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -76,6 +99,30 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -99,14 +146,17 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
+file|<syslog.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
-endif|LOG
 end_endif
+
+begin_comment
+comment|/* LOG */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -114,17 +164,22 @@ directive|ifdef
 name|DAEMON
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETINET
+end_ifdef
 
 begin_include
 include|#
@@ -135,25 +190,58 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|VMUNIX
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETISO
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netiso/iso.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
-endif|DAEMON
 end_endif
 
-begin_define
-define|#
-directive|define
-name|PSBUFSIZE
-value|(MAXNAME + MAXATOM)
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETNS
+end_ifdef
 
-begin_comment
-comment|/* size of prescan buffer */
-end_comment
+begin_include
+include|#
+directive|include
+file|<netns/ns.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETX25
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netccitt/x25.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  Data structure for bit maps. ** **	Each bit in this map can be referenced by an ascii character. **	This is 128 possible bits, or 12 8-bit bytes. */
@@ -323,11 +411,11 @@ name|u_short
 name|q_flags
 decl_stmt|;
 comment|/* status flags, see below */
-name|short
+name|uid_t
 name|q_uid
 decl_stmt|;
 comment|/* user-id of receiver (if known) */
-name|short
+name|gid_t
 name|q_gid
 decl_stmt|;
 comment|/* group-id of receiver (if known) */
@@ -353,6 +441,11 @@ modifier|*
 name|q_alias
 decl_stmt|;
 comment|/* address this results from */
+name|char
+modifier|*
+name|q_owner
+decl_stmt|;
+comment|/* owner of q_alias */
 name|struct
 name|address
 modifier|*
@@ -441,6 +534,39 @@ begin_comment
 comment|/* has been successfully delivered */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|QNOTREMOTE
+value|000100
+end_define
+
+begin_comment
+comment|/* not an address for remote forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QSELFREF
+value|000200
+end_define
+
+begin_comment
+comment|/* this address references itself */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QVERIFIED
+value|000400
+end_define
+
+begin_comment
+comment|/* verified, but not expanded */
+end_comment
+
 begin_escape
 end_escape
 
@@ -477,13 +603,21 @@ name|m_argv
 decl_stmt|;
 comment|/* template argument vector */
 name|short
-name|m_s_rwset
+name|m_sh_rwset
 decl_stmt|;
-comment|/* rewriting set for sender addresses */
+comment|/* rewrite set: sender header addresses */
 name|short
-name|m_r_rwset
+name|m_se_rwset
 decl_stmt|;
-comment|/* rewriting set for recipient addresses */
+comment|/* rewrite set: sender envelope addresses */
+name|short
+name|m_rh_rwset
+decl_stmt|;
+comment|/* rewrite set: recipient header addresses */
+name|short
+name|m_re_rwset
+decl_stmt|;
+comment|/* rewrite set: recipient envelope addresses */
 name|char
 modifier|*
 name|m_eol
@@ -493,6 +627,15 @@ name|long
 name|m_maxsize
 decl_stmt|;
 comment|/* size limit on message to this mailer */
+name|int
+name|m_linelimit
+decl_stmt|;
+comment|/* max # characters per line */
+name|char
+modifier|*
+name|m_execdir
+decl_stmt|;
+comment|/* directory to chdir to before execv */
 block|}
 struct|;
 end_struct
@@ -512,12 +655,49 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_ESMTP
+value|'a'
+end_define
+
+begin_comment
+comment|/* run Extended SMTP protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_BLANKEND
+value|'b'
+end_define
+
+begin_comment
+comment|/* ensure blank line at end of message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NOCOMMENT
+value|'c'
+end_define
+
+begin_comment
+comment|/* don't include comment part of address */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_CANONICAL
 value|'C'
 end_define
 
 begin_comment
 comment|/* make addresses canonical "u@dom" */
+end_comment
+
+begin_comment
+comment|/*	'D'	/* CF: include Date: */
 end_comment
 
 begin_define
@@ -553,6 +733,21 @@ begin_comment
 comment|/* mailer takes picky -f flag */
 end_comment
 
+begin_comment
+comment|/*	'F'	/* CF: include From: or Resent-From: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NO_NULL_FROM
+value|'g'
+end_define
+
+begin_comment
+comment|/* sender of errors should be $g */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -562,6 +757,10 @@ end_define
 
 begin_comment
 comment|/* preserve host case distinction */
+end_comment
+
+begin_comment
+comment|/*	'H'	/* UIUC: MAIL11V3: preview headers */
 end_comment
 
 begin_define
@@ -578,7 +777,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LOCAL
+name|M_LOCALMAILER
 value|'l'
 end_define
 
@@ -608,6 +807,10 @@ begin_comment
 comment|/* can handle multiple users at once */
 end_comment
 
+begin_comment
+comment|/*	'M'	/* CF: include Message-Id: */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -619,6 +822,10 @@ begin_comment
 comment|/* don't insert From line */
 end_comment
 
+begin_comment
+comment|/*	'N'	/* UIUC: MAIL11V3: DATA returns multi-status */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -628,6 +835,10 @@ end_define
 
 begin_comment
 comment|/* use reverse-path in MAIL FROM: */
+end_comment
+
+begin_comment
+comment|/*	'P'	/* CF: include Return-Path: */
 end_comment
 
 begin_define
@@ -696,6 +907,14 @@ begin_comment
 comment|/* this wants an ugly UUCP from line */
 end_comment
 
+begin_comment
+comment|/*	'V'	/* UIUC: !-relativize all addresses */
+end_comment
+
+begin_comment
+comment|/*	'x'	/* CF: include Full-Name: */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -705,6 +924,17 @@ end_define
 
 begin_comment
 comment|/* use hidden-dot algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_7BITS
+value|'7'
+end_define
+
+begin_comment
+comment|/* use 7-bit path */
 end_comment
 
 begin_decl_stmt
@@ -742,6 +972,30 @@ end_decl_stmt
 
 begin_comment
 comment|/* ptr to program mailer */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|FileMailer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ptr to *file* mailer */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|MAILER
+modifier|*
+name|InclMailer
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ptr to *include* mailer */
 end_comment
 
 begin_escape
@@ -935,6 +1189,28 @@ begin_comment
 comment|/* this field has a validated value */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|H_RECEIPTTO
+value|02000
+end_define
+
+begin_comment
+comment|/* this field has return receipt info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_ERRORSTO
+value|04000
+end_define
+
+begin_comment
+comment|/* this field has error address info */
+end_comment
+
 begin_escape
 end_escape
 
@@ -942,9 +1218,18 @@ begin_comment
 comment|/* **  Envelope structure. **	This structure defines the message itself.  There is usually **	only one of these -- for the message that we originally read **	and which is our primary interest -- but other envelopes can **	be generated during processing.  For example, error messages **	will have their own envelope. */
 end_comment
 
-begin_struct
-struct|struct
-name|envelope
+begin_define
+define|#
+directive|define
+name|ENVELOPE
+value|struct envelope
+end_define
+
+begin_macro
+name|ENVELOPE
+end_macro
+
+begin_block
 block|{
 name|HDR
 modifier|*
@@ -973,6 +1258,11 @@ name|ADDRESS
 name|e_from
 decl_stmt|;
 comment|/* the person it is from */
+name|char
+modifier|*
+name|e_sender
+decl_stmt|;
+comment|/* e_from.q_paddr w comments stripped */
 name|char
 modifier|*
 modifier|*
@@ -1009,21 +1299,58 @@ name|short
 name|e_hopcount
 decl_stmt|;
 comment|/* number of times processed */
+name|short
+name|e_nsent
+decl_stmt|;
+comment|/* number of sends since checkpoint */
+name|short
+name|e_sendmode
+decl_stmt|;
+comment|/* message send mode */
+name|short
+name|e_errormode
+decl_stmt|;
+comment|/* error return mode */
 name|int
-function_decl|(
-modifier|*
-name|e_puthdr
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*e_puthdr
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|MAILER
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* function to put header of message */
 name|int
-function_decl|(
-modifier|*
-name|e_putbody
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*e_putbody
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|MAILER
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* function to put body of message */
 name|struct
 name|envelope
@@ -1037,6 +1364,11 @@ modifier|*
 name|e_sibling
 decl_stmt|;
 comment|/* the next envelope of interest */
+name|char
+modifier|*
+name|e_bodytype
+decl_stmt|;
+comment|/* type of message body */
 name|char
 modifier|*
 name|e_df
@@ -1057,11 +1389,26 @@ modifier|*
 name|e_xfp
 decl_stmt|;
 comment|/* transcript file */
+name|FILE
+modifier|*
+name|e_lockfp
+decl_stmt|;
+comment|/* the lock file for this message */
 name|char
 modifier|*
 name|e_message
 decl_stmt|;
 comment|/* error message */
+name|char
+modifier|*
+name|e_statmsg
+decl_stmt|;
+comment|/* stat msg (changes per delivery) */
+name|char
+modifier|*
+name|e_msgboundary
+decl_stmt|;
+comment|/* MIME-style message part boundary */
 name|char
 modifier|*
 name|e_macro
@@ -1071,16 +1418,11 @@ index|]
 decl_stmt|;
 comment|/* macro definitions */
 block|}
-struct|;
-end_struct
+end_block
 
-begin_typedef
-typedef|typedef
-name|struct
-name|envelope
-name|ENVELOPE
-typedef|;
-end_typedef
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* values for e_flags */
@@ -1183,6 +1525,39 @@ end_define
 
 begin_comment
 comment|/* this message is being forwarded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_VRFYONLY
+value|001000
+end_define
+
+begin_comment
+comment|/* verify only (don't expand aliases) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_WARNING
+value|002000
+end_define
+
+begin_comment
+comment|/* warning message has been sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_QUEUERUN
+value|004000
+end_define
+
+begin_comment
+comment|/* this envelope is from queue */
 end_comment
 
 begin_decl_stmt
@@ -1300,7 +1675,7 @@ begin_define
 define|#
 directive|define
 name|MATCHZANY
-value|'\020'
+value|0220
 end_define
 
 begin_comment
@@ -1311,7 +1686,7 @@ begin_define
 define|#
 directive|define
 name|MATCHANY
-value|'\021'
+value|0221
 end_define
 
 begin_comment
@@ -1322,7 +1697,7 @@ begin_define
 define|#
 directive|define
 name|MATCHONE
-value|'\022'
+value|0222
 end_define
 
 begin_comment
@@ -1333,7 +1708,7 @@ begin_define
 define|#
 directive|define
 name|MATCHCLASS
-value|'\023'
+value|0223
 end_define
 
 begin_comment
@@ -1344,7 +1719,7 @@ begin_define
 define|#
 directive|define
 name|MATCHNCLASS
-value|'\024'
+value|0224
 end_define
 
 begin_comment
@@ -1355,7 +1730,7 @@ begin_define
 define|#
 directive|define
 name|MATCHREPL
-value|'\025'
+value|0225
 end_define
 
 begin_comment
@@ -1370,7 +1745,7 @@ begin_define
 define|#
 directive|define
 name|CANONNET
-value|'\026'
+value|0226
 end_define
 
 begin_comment
@@ -1381,7 +1756,7 @@ begin_define
 define|#
 directive|define
 name|CANONHOST
-value|'\027'
+value|0227
 end_define
 
 begin_comment
@@ -1392,7 +1767,7 @@ begin_define
 define|#
 directive|define
 name|CANONUSER
-value|'\030'
+value|0230
 end_define
 
 begin_comment
@@ -1403,7 +1778,7 @@ begin_define
 define|#
 directive|define
 name|CALLSUBR
-value|'\031'
+value|0231
 end_define
 
 begin_comment
@@ -1418,7 +1793,7 @@ begin_define
 define|#
 directive|define
 name|CONDIF
-value|'\032'
+value|0232
 end_define
 
 begin_comment
@@ -1429,7 +1804,7 @@ begin_define
 define|#
 directive|define
 name|CONDELSE
-value|'\033'
+value|0233
 end_define
 
 begin_comment
@@ -1440,7 +1815,7 @@ begin_define
 define|#
 directive|define
 name|CONDFI
-value|'\034'
+value|0234
 end_define
 
 begin_comment
@@ -1455,7 +1830,7 @@ begin_define
 define|#
 directive|define
 name|HOSTBEGIN
-value|'\035'
+value|0235
 end_define
 
 begin_comment
@@ -1466,7 +1841,7 @@ begin_define
 define|#
 directive|define
 name|HOSTEND
-value|'\036'
+value|0236
 end_define
 
 begin_comment
@@ -1474,63 +1849,162 @@ comment|/* hostname lookup end */
 end_comment
 
 begin_comment
-comment|/* \001 is also reserved as the macro expansion character */
+comment|/* bracket characters for generalized lookup */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOKUPBEGIN
+value|0205
+end_define
+
+begin_comment
+comment|/* generalized lookup begin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOKUPEND
+value|0206
+end_define
+
+begin_comment
+comment|/* generalized lookup end */
+end_comment
+
+begin_comment
+comment|/* macro substitution character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MACROEXPAND
+value|0201
+end_define
+
+begin_comment
+comment|/* macro expansion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MACRODEXPAND
+value|0202
+end_define
+
+begin_comment
+comment|/* deferred macro expansion */
+end_comment
+
+begin_comment
+comment|/* to make the code clearer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCHZERO
+value|CANONHOST
+end_define
+
+begin_comment
+comment|/* external<==> internal mapping table */
+end_comment
+
+begin_struct
+struct|struct
+name|metamac
+block|{
+name|char
+name|metaname
+decl_stmt|;
+comment|/* external code (after $) */
+name|char
+name|metaval
+decl_stmt|;
+comment|/* internal code (as above) */
+block|}
+struct|;
+end_struct
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* **  Information about hosts that we have looked up recently. ** **	This stuff is 4.2/3bsd specific. */
+comment|/* **  Information about currently open connections to mailers, or to **  hosts that we have looked up recently. */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DAEMON
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMUNIX
-end_ifdef
 
 begin_define
 define|#
 directive|define
-name|HOSTINFO
-value|struct hostinfo
+name|MCI
+value|struct mailer_con_info
 end_define
 
 begin_macro
-name|HOSTINFO
+name|MCI
 end_macro
 
 begin_block
 block|{
-name|char
-modifier|*
-name|ho_name
-decl_stmt|;
-comment|/* name of this host */
-name|struct
-name|in_addr
-name|ho_inaddr
-decl_stmt|;
-comment|/* internet address */
 name|short
-name|ho_flags
+name|mci_flags
 decl_stmt|;
 comment|/* flag bits, see below */
 name|short
-name|ho_errno
+name|mci_errno
 decl_stmt|;
 comment|/* error number on last connection */
 name|short
-name|ho_exitstat
+name|mci_exitstat
 decl_stmt|;
 comment|/* exit status from last connection */
+name|short
+name|mci_state
+decl_stmt|;
+comment|/* SMTP state */
+name|long
+name|mci_maxsize
+decl_stmt|;
+comment|/* max size this server will accept */
+name|FILE
+modifier|*
+name|mci_in
+decl_stmt|;
+comment|/* input side of connection */
+name|FILE
+modifier|*
+name|mci_out
+decl_stmt|;
+comment|/* output side of connection */
+name|int
+name|mci_pid
+decl_stmt|;
+comment|/* process id of subordinate proc */
+name|char
+modifier|*
+name|mci_phase
+decl_stmt|;
+comment|/* SMTP phase string */
+name|struct
+name|mailer
+modifier|*
+name|mci_mailer
+decl_stmt|;
+comment|/* ptr to the mailer for this conn */
+name|char
+modifier|*
+name|mci_host
+decl_stmt|;
+comment|/* host name */
+name|time_t
+name|mci_lastuse
+decl_stmt|;
+comment|/* last usage time */
 block|}
 end_block
 
@@ -1545,25 +2019,575 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HOF_VALID
-value|00001
+name|MCIF_VALID
+value|000001
 end_define
 
 begin_comment
 comment|/* this entry is valid */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-endif|VMUNIX
-end_endif
+begin_define
+define|#
+directive|define
+name|MCIF_TEMP
+value|000002
+end_define
 
-begin_endif
-endif|#
-directive|endif
-endif|DAEMON
-end_endif
+begin_comment
+comment|/* don't cache this connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_CACHED
+value|000004
+end_define
+
+begin_comment
+comment|/* currently in open cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_ESMTP
+value|000010
+end_define
+
+begin_comment
+comment|/* this host speaks ESMTP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_EXPN
+value|000020
+end_define
+
+begin_comment
+comment|/* EXPN command supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_SIZE
+value|000040
+end_define
+
+begin_comment
+comment|/* SIZE option supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_8BITMIME
+value|000100
+end_define
+
+begin_comment
+comment|/* BODY=8BITMIME supported */
+end_comment
+
+begin_comment
+comment|/* states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_CLOSED
+value|0
+end_define
+
+begin_comment
+comment|/* no traffic on this connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_OPENING
+value|1
+end_define
+
+begin_comment
+comment|/* sending initial protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_OPEN
+value|2
+end_define
+
+begin_comment
+comment|/* open, initial protocol sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_ACTIVE
+value|3
+end_define
+
+begin_comment
+comment|/* message being sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_QUITING
+value|4
+end_define
+
+begin_comment
+comment|/* running quit protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_SSD
+value|5
+end_define
+
+begin_comment
+comment|/* service shutting down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_ERROR
+value|6
+end_define
+
+begin_comment
+comment|/* I/O error on connection */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  Name canonification short circuit. ** **	If the name server for a host is down, the process of trying to **	canonify the name can hang.  This is similar to (but alas, not **	identical to) looking up the name for delivery.  This stab type **	caches the result of the name server lookup so we don't hang **	multiple times. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NAMECANON
+value|struct _namecanon
+end_define
+
+begin_macro
+name|NAMECANON
+end_macro
+
+begin_block
+block|{
+name|short
+name|nc_errno
+decl_stmt|;
+comment|/* cached errno */
+name|short
+name|nc_herrno
+decl_stmt|;
+comment|/* cached h_errno */
+name|short
+name|nc_stat
+decl_stmt|;
+comment|/* cached exit status code */
+name|short
+name|nc_flags
+decl_stmt|;
+comment|/* flag bits */
+name|char
+modifier|*
+name|nc_cname
+decl_stmt|;
+comment|/* the canonical name */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* values for nc_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCF_VALID
+value|0x0001
+end_define
+
+begin_comment
+comment|/* entry valid */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  Mapping functions ** **	These allow arbitrary mappings in the config file.  The idea **	(albeit not the implementation) comes from IDA sendmail. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAPCLASS
+value|struct _mapclass
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP
+value|struct _map
+end_define
+
+begin_comment
+comment|/* **  An actual map. */
+end_comment
+
+begin_macro
+name|MAP
+end_macro
+
+begin_block
+block|{
+name|MAPCLASS
+modifier|*
+name|map_class
+decl_stmt|;
+comment|/* the class of this map */
+name|char
+modifier|*
+name|map_mname
+decl_stmt|;
+comment|/* name of this map */
+name|int
+name|map_mflags
+decl_stmt|;
+comment|/* flags, see below */
+name|char
+modifier|*
+name|map_file
+decl_stmt|;
+comment|/* the (nominal) filename */
+name|void
+modifier|*
+name|map_db1
+decl_stmt|;
+comment|/* the open database ptr */
+name|void
+modifier|*
+name|map_db2
+decl_stmt|;
+comment|/* an "extra" database pointer */
+name|char
+modifier|*
+name|map_app
+decl_stmt|;
+comment|/* to append to successful matches */
+name|char
+modifier|*
+name|map_domain
+decl_stmt|;
+comment|/* the (nominal) NIS domain */
+name|char
+modifier|*
+name|map_rebuild
+decl_stmt|;
+comment|/* program to run to do auto-rebuild */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* bit values for map_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_VALID
+value|0x0001
+end_define
+
+begin_comment
+comment|/* this entry is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_INCLNULL
+value|0x0002
+end_define
+
+begin_comment
+comment|/* include null byte in key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_OPTIONAL
+value|0x0004
+end_define
+
+begin_comment
+comment|/* don't complain if map not found */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_NOFOLDCASE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* don't fold case in keys */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_MATCHONLY
+value|0x0010
+end_define
+
+begin_comment
+comment|/* don't use the map value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_OPEN
+value|0x0020
+end_define
+
+begin_comment
+comment|/* this entry is open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_WRITABLE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* open for writing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_ALIAS
+value|0x0080
+end_define
+
+begin_comment
+comment|/* this is an alias file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_IMPL_HASH
+value|0x1000
+end_define
+
+begin_comment
+comment|/* implicit: underlying hash database */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_IMPL_NDBM
+value|0x2000
+end_define
+
+begin_comment
+comment|/* implicit: underlying NDBM database */
+end_comment
+
+begin_comment
+comment|/* **  The class of a map -- essentially the functions to call */
+end_comment
+
+begin_macro
+name|MAPCLASS
+end_macro
+
+begin_block
+block|{
+name|char
+modifier|*
+name|map_cname
+decl_stmt|;
+comment|/* name of this map class */
+name|char
+modifier|*
+name|map_ext
+decl_stmt|;
+comment|/* extension for database file */
+name|short
+name|map_cflags
+decl_stmt|;
+comment|/* flag bits, see below */
+name|bool
+argument_list|(
+argument|*map_parse
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* argument parsing function */
+name|char
+operator|*
+operator|(
+operator|*
+name|map_lookup
+operator|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* lookup function */
+name|void
+argument_list|(
+argument|*map_store
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* store function */
+name|bool
+argument_list|(
+argument|*map_open
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* open function */
+name|void
+argument_list|(
+argument|*map_close
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* close function */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* bit values for map_cflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCF_ALIASOK
+value|0x0001
+end_define
+
+begin_comment
+comment|/* can be used for aliases */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCF_ALIASONLY
+value|0x0002
+end_define
+
+begin_comment
+comment|/* usable only for aliases */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCF_REBUILDABLE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* can rebuild alias files */
+end_comment
 
 begin_escape
 end_escape
@@ -1612,16 +2636,27 @@ modifier|*
 name|sv_alias
 decl_stmt|;
 comment|/* alias */
-ifdef|#
-directive|ifdef
-name|HOSTINFO
-name|HOSTINFO
-name|sv_host
+name|MAPCLASS
+name|sv_mapclass
 decl_stmt|;
-comment|/* host information */
-endif|#
-directive|endif
-endif|HOSTINFO
+comment|/* mapping function class */
+name|MAP
+name|sv_map
+decl_stmt|;
+comment|/* mapping function */
+name|char
+modifier|*
+name|sv_hostsig
+decl_stmt|;
+comment|/* host signature */
+name|MCI
+name|sv_mci
+decl_stmt|;
+comment|/* mailer connection info */
+name|NAMECANON
+name|sv_namecanon
+decl_stmt|;
+comment|/* canonical name cache */
 block|}
 name|s_value
 union|;
@@ -1699,12 +2734,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ST_HOST
+name|ST_MAPCLASS
 value|5
 end_define
 
 begin_comment
-comment|/* host information */
+comment|/* mapping function class */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_MAP
+value|6
+end_define
+
+begin_comment
+comment|/* mapping function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_HOSTSIG
+value|7
+end_define
+
+begin_comment
+comment|/* host signature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_NAMECANON
+value|8
+end_define
+
+begin_comment
+comment|/* cached canonical name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_MCI
+value|16
+end_define
+
+begin_comment
+comment|/* mailer connection info (offset) */
 end_comment
 
 begin_define
@@ -1738,18 +2817,80 @@ end_define
 begin_define
 define|#
 directive|define
-name|s_host
-value|s_value.sv_host
+name|s_mci
+value|s_value.sv_mci
 end_define
 
-begin_function_decl
+begin_define
+define|#
+directive|define
+name|s_mapclass
+value|s_value.sv_mapclass
+end_define
+
+begin_define
+define|#
+directive|define
+name|s_hostsig
+value|s_value.sv_hostsig
+end_define
+
+begin_define
+define|#
+directive|define
+name|s_map
+value|s_value.sv_map
+end_define
+
+begin_define
+define|#
+directive|define
+name|s_namecanon
+value|s_value.sv_namecanon
+end_define
+
+begin_decl_stmt
 specifier|extern
 name|STAB
 modifier|*
 name|stab
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|stabapply
+name|__P
+argument_list|(
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|STAB
+operator|*
+argument_list|,
+name|int
+argument_list|)
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* opcodes to stab */
@@ -1793,12 +2934,16 @@ name|ev_time
 decl_stmt|;
 comment|/* time of the function call */
 name|int
-function_decl|(
-modifier|*
-name|ev_func
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*ev_func
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* function to call */
 name|int
 name|ev_arg
@@ -1865,17 +3010,6 @@ end_define
 
 begin_comment
 comment|/* be a mail sender */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD_ARPAFTP
-value|'a'
-end_define
-
-begin_comment
-comment|/* old-style arpanet protocols */
 end_comment
 
 begin_define
@@ -1955,15 +3089,8 @@ begin_comment
 comment|/* freeze the configuration file */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|char
-name|SendMode
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* send mode, see below */
+comment|/* values for e_sendmode -- send modes */
 end_comment
 
 begin_define
@@ -2036,15 +3163,8 @@ begin_comment
 comment|/* unspecified, use SendMode */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|char
-name|ErrorMode
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* error mode, see below */
+comment|/* values for e_errormode -- error handling modes */
 end_comment
 
 begin_define
@@ -2102,8 +3222,15 @@ begin_comment
 comment|/* don't print messages (stat only) */
 end_comment
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/* offset used to issure that the error messages for name server error  * codes are unique.  */
+comment|/* **  Additional definitions */
+end_comment
+
+begin_comment
+comment|/* Offset used to ensure that name server error * codes are unique */
 end_comment
 
 begin_define
@@ -2111,6 +3238,242 @@ define|#
 directive|define
 name|MAX_ERRNO
 value|100
+end_define
+
+begin_comment
+comment|/* **  Privacy flags **	These are bit values for the PrivacyFlags word. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_PUBLIC
+value|0
+end_define
+
+begin_comment
+comment|/* what have I got to hide? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NEEDMAILHELO
+value|00001
+end_define
+
+begin_comment
+comment|/* insist on HELO for MAIL, at least */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NEEDEXPNHELO
+value|00002
+end_define
+
+begin_comment
+comment|/* insist on HELO for EXPN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NEEDVRFYHELO
+value|00004
+end_define
+
+begin_comment
+comment|/* insist on HELO for VRFY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NOEXPN
+value|00010
+end_define
+
+begin_comment
+comment|/* disallow EXPN command entirely */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_NOVRFY
+value|00020
+end_define
+
+begin_comment
+comment|/* disallow VRFY command entirely */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_AUTHWARNINGS
+value|00040
+end_define
+
+begin_comment
+comment|/* flag possible authorization probs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_RESTRMAILQ
+value|01000
+end_define
+
+begin_comment
+comment|/* restrict mailq command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_GOAWAY
+value|00777
+end_define
+
+begin_comment
+comment|/* don't give no info, anyway, anyhow */
+end_comment
+
+begin_comment
+comment|/* struct defining such things */
+end_comment
+
+begin_struct
+struct|struct
+name|prival
+block|{
+name|char
+modifier|*
+name|pv_name
+decl_stmt|;
+comment|/* name of privacy flag */
+name|int
+name|pv_flag
+decl_stmt|;
+comment|/* numeric level */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* **  Flags passed to remotename */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_SENDERADDR
+value|0001
+end_define
+
+begin_comment
+comment|/* this is a sender address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_HEADERADDR
+value|0002
+end_define
+
+begin_comment
+comment|/* this is a header address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_CANONICAL
+value|0004
+end_define
+
+begin_comment
+comment|/* strip comment information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_ADDDOMAIN
+value|0010
+end_define
+
+begin_comment
+comment|/* OK to do domain extension */
+end_comment
+
+begin_comment
+comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
+end_comment
+
+begin_union
+union|union
+name|bigsockaddr
+block|{
+name|struct
+name|sockaddr
+name|sa
+decl_stmt|;
+comment|/* general version */
+ifdef|#
+directive|ifdef
+name|NETINET
+name|struct
+name|sockaddr_in
+name|sin
+decl_stmt|;
+comment|/* INET family */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NETISO
+name|struct
+name|sockaddr_iso
+name|siso
+decl_stmt|;
+comment|/* ISO family */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NETNS
+name|struct
+name|sockaddr_ns
+name|sns
+decl_stmt|;
+comment|/* XNS family */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NETX25
+name|struct
+name|sockaddr_x25
+name|sx25
+decl_stmt|;
+comment|/* X.25 family */
+endif|#
+directive|endif
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|SOCKADDR
+value|union bigsockaddr
 end_define
 
 begin_escape
@@ -2129,28 +3492,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* if set, "From" person is explicit */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|NoAlias
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if set, don't do any aliasing */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|ForceMail
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if set, mail even if already got a copy */
 end_comment
 
 begin_decl_stmt
@@ -2233,17 +3574,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|QueueRun
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* currently running message from the queue */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|HoldErrs
 decl_stmt|;
 end_decl_stmt
@@ -2310,12 +3640,34 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
+name|NoAlias
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* suppress aliasing */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
 name|UseNameServer
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* use internet domain name server */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|SevenBit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force 7-bit data */
 end_comment
 
 begin_decl_stmt
@@ -2327,17 +3679,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* minutes to wait until @:@ in alias file */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|TimeOut
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time until timeout */
 end_comment
 
 begin_decl_stmt
@@ -2366,7 +3707,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|uid_t
 name|RealUid
 decl_stmt|;
 end_decl_stmt
@@ -2377,7 +3718,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|gid_t
 name|RealGid
 decl_stmt|;
 end_decl_stmt
@@ -2388,13 +3729,24 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|uid_t
 name|DefUid
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* default uid to run as */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|gid_t
+name|DefGid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default gid to run as */
 end_comment
 
 begin_decl_stmt
@@ -2407,17 +3759,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* default user to run as (from DefUid) */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|DefGid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default gid to run as */
 end_comment
 
 begin_decl_stmt
@@ -2467,34 +3808,12 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|MotherPid
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* proc id of parent process */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
 name|LineNumber
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* line number in current input */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|time_t
-name|ReadTimeout
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* timeout on reads */
 end_comment
 
 begin_decl_stmt
@@ -2544,6 +3863,17 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
+name|CurrentLA
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current load average */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
 name|QueueFactor
 decl_stmt|;
 end_decl_stmt
@@ -2567,24 +3897,24 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|AliasFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* location of alias file */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
 name|HelpFile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* location of SMTP help file */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|ErrMsgFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file to prepend to all error messages */
 end_comment
 
 begin_decl_stmt
@@ -2661,8 +3991,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|struct
-name|sockaddr_in
+name|SOCKADDR
 name|RealHostAddr
 decl_stmt|;
 end_decl_stmt
@@ -2706,6 +4035,72 @@ comment|/*  .... but only if we want a quick abort */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
+name|bool
+name|LogUsrErrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* syslog user errors (e.g., SMTP RCPT cmd) */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|SendMIMEErrors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* send error messages in MIME format */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|MatchGecos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* look for user names in gecos field */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|UseErrorsTo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use Errors-To: header (back compat) */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+name|SpaceSub
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* substitution for<lwsp> */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|PrivacyFlags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* privacy flags */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
@@ -2732,13 +4127,13 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-name|Arpa_Info
-index|[]
+modifier|*
+name|PidFile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the reply code for Arpanet info [conf.c] */
+comment|/* location of proc id file [conf.c] */
 end_comment
 
 begin_decl_stmt
@@ -2754,18 +4149,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|char
-name|SpaceSub
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* substitution for<lwsp> */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
+name|long
 name|WkClassFact
 decl_stmt|;
 end_decl_stmt
@@ -2776,7 +4160,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|long
 name|WkRecipFact
 decl_stmt|;
 end_decl_stmt
@@ -2787,7 +4171,7 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
+name|long
 name|WkTimeFact
 decl_stmt|;
 end_decl_stmt
@@ -2798,24 +4182,94 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
-name|CheckPointLimit
+name|char
+modifier|*
+name|UdbSpec
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* deliveries before checkpointing */
+comment|/* user database source spec */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Nmx
+name|MaxHopCount
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of MX RRs */
+comment|/* max # of hops until bounce */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|ConfigLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* config file level */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|TimeZoneSpec
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* override time zone specification */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|ForwardPath
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* path to search for .forward files */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|MinBlocksFree
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* min # of blocks free on queue fs */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|FallBackMX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fall back MX host */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|long
+name|MaxMessageSize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* advertised max size we will accept */
 end_comment
 
 begin_decl_stmt
@@ -2832,57 +4286,6 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|char
-modifier|*
-name|MxHosts
-index|[
-name|MAXMXHOSTS
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* for MX RRs */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|TrustedUsers
-index|[
-name|MAXTRUST
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list of trusted users */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|UserEnviron
-index|[
-name|MAXUSERENVIRON
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* saved user environment */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
 name|int
 name|CheckpointInterval
 decl_stmt|;
@@ -2892,8 +4295,144 @@ begin_comment
 comment|/* queue file checkpoint interval */
 end_comment
 
-begin_escape
-end_escape
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|DontPruneRoutes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't prune source routes */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxMciCache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum entries in MCI cache */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|MciCacheTimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum idle time on connections */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|QueueLimitRecipient
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit queue runs to this recipient */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|QueueLimitSender
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit queue runs to this sender */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|QueueLimitId
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit queue runs to this id */
+end_comment
+
+begin_comment
+comment|/* **  Timeouts ** **	Indicated values are the MINIMUM per RFC 1123 section 5.3.2. */
+end_comment
+
+begin_macro
+name|EXTERN
+end_macro
+
+begin_struct
+struct|struct
+block|{
+name|time_t
+name|to_initial
+decl_stmt|;
+comment|/* initial greeting timeout [5m] */
+name|time_t
+name|to_mail
+decl_stmt|;
+comment|/* MAIL command [5m] */
+name|time_t
+name|to_rcpt
+decl_stmt|;
+comment|/* RCPT command [5m] */
+name|time_t
+name|to_datainit
+decl_stmt|;
+comment|/* DATA initiation [2m] */
+name|time_t
+name|to_datablock
+decl_stmt|;
+comment|/* DATA block [3m] */
+name|time_t
+name|to_datafinal
+decl_stmt|;
+comment|/* DATA completion [10m] */
+name|time_t
+name|to_nextcommand
+decl_stmt|;
+comment|/* next command [5m] */
+comment|/* following timeouts are not mentioned in RFC 1123 */
+name|time_t
+name|to_rset
+decl_stmt|;
+comment|/* RSET command */
+name|time_t
+name|to_helo
+decl_stmt|;
+comment|/* HELO command */
+name|time_t
+name|to_quit
+decl_stmt|;
+comment|/* QUIT command */
+name|time_t
+name|to_miscshort
+decl_stmt|;
+comment|/* misc short commands (NOOP, VERB, etc) */
+comment|/* following are per message */
+name|time_t
+name|to_q_return
+decl_stmt|;
+comment|/* queue return timeout */
+name|time_t
+name|to_q_warning
+decl_stmt|;
+comment|/* queue warning timeout */
+block|}
+name|TimeOuts
+struct|;
+end_struct
 
 begin_comment
 comment|/* **  Trace information */
@@ -2941,12 +4480,6 @@ end_escape
 begin_comment
 comment|/* **  Miscellaneous information. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
-end_include
 
 begin_comment
 comment|/* **  Some in-line functions */
@@ -2996,75 +4529,704 @@ begin_comment
 comment|/* **  Declarations of useful functions */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|ADDRESS
 modifier|*
 name|parseaddr
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|xalloc
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|bool
 name|sameaddr
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|ADDRESS
+operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|FILE
 modifier|*
 name|dfopen
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|EVENT
 modifier|*
 name|setevent
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|time_t
+operator|,
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|sfgets
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|FILE
+operator|*
+operator|,
+name|time_t
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|queuename
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|time_t
+name|curtime
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|transienterror
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|errstring
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|define
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|macvalue
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|prescan
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+index|[]
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|fgetfolded
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ADDRESS
+modifier|*
+name|recipient
+name|__P
+argument_list|(
+operator|(
+name|ADDRESS
+operator|*
+operator|,
+name|ADDRESS
+operator|*
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ENVELOPE
+modifier|*
+name|newenvelope
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dropenvelope
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|clearenvelope
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|username
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|MCI
+modifier|*
+name|mci_get
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|MAILER
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|pintvl
+name|__P
+argument_list|(
+operator|(
+name|time_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|map_rewrite
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ADDRESS
+modifier|*
+name|getctladdr
+name|__P
+argument_list|(
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|anynet_ntoa
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|remotename
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|MAILER
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|shouldqueue
+name|__P
+argument_list|(
+operator|(
+name|long
+operator|,
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|lockfile
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|hostsignature
+name|__P
+argument_list|(
+operator|(
+name|MAILER
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|openxscript
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|closexscript
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ellipsis is a different case though */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|auth_warning
+parameter_list|(
+name|ENVELOPE
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|syserr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|usrerr
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|message
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|nmessage
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|void
+name|auth_warning
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|time_t
-name|curtime
+name|void
+name|syserr
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|usrerr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|message
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|nmessage
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
