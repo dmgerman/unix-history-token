@@ -3505,11 +3505,16 @@ operator|*
 name|TT
 condition|)
 block|{
-name|strcat
+name|strlcat
 argument_list|(
 name|termbuf
 argument_list|,
 name|TT
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|termbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
