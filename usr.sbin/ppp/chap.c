@@ -3216,8 +3216,6 @@ name|strlen
 argument_list|(
 name|msg
 argument_list|)
-operator|+
-literal|1
 argument_list|,
 name|NULL
 argument_list|)
