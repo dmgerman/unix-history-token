@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.43 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1597,7 +1597,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -1689,7 +1689,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -2471,7 +2471,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -2969,7 +2969,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -5960,7 +5960,7 @@ if|if
 condition|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cbuf
 argument_list|,
@@ -7007,7 +7007,7 @@ name|cp
 decl_stmt|;
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|local
 argument_list|,
