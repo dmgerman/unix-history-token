@@ -3504,11 +3504,6 @@ name|int
 name|waitfor
 parameter_list|,
 name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -3615,8 +3610,6 @@ operator|=
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|cred
 argument_list|,
 name|waitfor
 argument_list|,

@@ -2086,11 +2086,6 @@ name|int
 name|waitfor
 parameter_list|,
 name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td
@@ -2463,11 +2458,9 @@ name|MP
 parameter_list|,
 name|WAIT
 parameter_list|,
-name|C
-parameter_list|,
 name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT, C, P)
+value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT, P)
 end_define
 
 begin_define

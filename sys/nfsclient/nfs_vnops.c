@@ -317,10 +317,6 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|struct
-name|ucred
-modifier|*
-parameter_list|,
 name|int
 parameter_list|,
 name|struct
@@ -2410,10 +2406,6 @@ operator|=
 name|nfs_flush
 argument_list|(
 name|vp
-argument_list|,
-name|ap
-operator|->
-name|a_cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
@@ -8407,10 +8399,6 @@ name|VOP_FSYNC
 argument_list|(
 name|fvp
 argument_list|,
-name|fcnp
-operator|->
-name|cn_cred
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|fcnp
@@ -8441,10 +8429,6 @@ operator|=
 name|VOP_FSYNC
 argument_list|(
 name|tvp
-argument_list|,
-name|tcnp
-operator|->
-name|cn_cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
@@ -9050,10 +9034,6 @@ comment|/* 	 * Push all writes to the server, so that the attribute cache 	 * do
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|cnp
-operator|->
-name|cn_cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
@@ -14285,10 +14265,6 @@ name|a_vp
 argument_list|,
 name|ap
 operator|->
-name|a_cred
-argument_list|,
-name|ap
-operator|->
 name|a_waitfor
 argument_list|,
 name|ap
@@ -14315,11 +14291,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|cred
 parameter_list|,
 name|int
 name|waitfor

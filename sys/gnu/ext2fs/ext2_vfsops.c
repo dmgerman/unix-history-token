@@ -697,10 +697,6 @@ argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4249,8 +4245,6 @@ name|mp
 parameter_list|,
 name|waitfor
 parameter_list|,
-name|cred
-parameter_list|,
 name|td
 parameter_list|)
 name|struct
@@ -4260,11 +4254,6 @@ name|mp
 decl_stmt|;
 name|int
 name|waitfor
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
 decl_stmt|;
 name|struct
 name|thread
@@ -4496,8 +4485,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|cred
-argument_list|,
 name|waitfor
 argument_list|,
 name|td
@@ -4566,8 +4553,6 @@ argument_list|(
 name|ump
 operator|->
 name|um_devvp
-argument_list|,
-name|cred
 argument_list|,
 name|waitfor
 argument_list|,

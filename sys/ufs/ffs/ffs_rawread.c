@@ -698,8 +698,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|NOCRED
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td

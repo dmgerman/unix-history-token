@@ -2945,7 +2945,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|VOP_FSYNC(vp, NULL, (pagerflags& VM_PAGER_PUT_SYNC)?MNT_WAIT:0, curproc);
+block|VOP_FSYNC(vp, (pagerflags& VM_PAGER_PUT_SYNC)?MNT_WAIT:0, curproc);
 endif|#
 directive|endif
 name|vm_object_clear_flag

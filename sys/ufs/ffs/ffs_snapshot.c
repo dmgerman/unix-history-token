@@ -1762,8 +1762,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|KERNCRED
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -4092,8 +4090,6 @@ operator|)
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|KERNCRED
 argument_list|,
 name|MNT_WAIT
 argument_list|,
@@ -10266,8 +10262,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|KERNCRED
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -10327,8 +10321,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|KERNCRED
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -10377,8 +10369,6 @@ operator|)
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|KERNCRED
 argument_list|,
 name|MNT_WAIT
 argument_list|,
@@ -10680,8 +10670,6 @@ operator|)
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|KERNCRED
 argument_list|,
 name|MNT_WAIT
 argument_list|,
@@ -12158,8 +12146,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|KERNCRED
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -12219,8 +12205,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|KERNCRED
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -12269,8 +12253,6 @@ operator|)
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|KERNCRED
 argument_list|,
 name|MNT_WAIT
 argument_list|,

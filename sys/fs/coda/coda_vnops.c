@@ -3246,15 +3246,6 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|ap
-operator|->
-name|a_cred
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td
@@ -3325,8 +3316,6 @@ name|VOP_FSYNC
 argument_list|(
 name|convp
 argument_list|,
-name|cred
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -3367,8 +3356,6 @@ operator|&
 name|cp
 operator|->
 name|c_fid
-argument_list|,
-name|cred
 argument_list|,
 name|td
 operator|->

@@ -4392,10 +4392,6 @@ name|targetvp
 argument_list|,
 name|ap
 operator|->
-name|a_cred
-argument_list|,
-name|ap
-operator|->
 name|a_waitfor
 argument_list|,
 name|td

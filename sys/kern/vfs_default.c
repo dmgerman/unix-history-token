@@ -2194,8 +2194,6 @@ name|mp
 parameter_list|,
 name|waitfor
 parameter_list|,
-name|cred
-parameter_list|,
 name|td
 parameter_list|)
 name|struct
@@ -2205,11 +2203,6 @@ name|mp
 decl_stmt|;
 name|int
 name|waitfor
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
 decl_stmt|;
 name|struct
 name|thread
@@ -2337,8 +2330,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|cred
-argument_list|,
 name|waitfor
 argument_list|,
 name|td
@@ -2393,8 +2384,6 @@ name|mp
 parameter_list|,
 name|waitfor
 parameter_list|,
-name|cred
-parameter_list|,
 name|td
 parameter_list|)
 name|struct
@@ -2404,11 +2393,6 @@ name|mp
 decl_stmt|;
 name|int
 name|waitfor
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
 decl_stmt|;
 name|struct
 name|thread

@@ -4273,10 +4273,6 @@ name|VOP_FSYNC
 argument_list|(
 name|devvp
 argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -22527,10 +22523,6 @@ name|VOP_FSYNC
 argument_list|(
 name|pvp
 argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -24388,10 +24380,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
 name|MNT_NOWAIT
 argument_list|,
 name|td
@@ -24404,10 +24392,6 @@ operator|=
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|MNT_NOWAIT
 argument_list|,
@@ -25435,10 +25419,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
 name|MNT_NOWAIT
 argument_list|,
 name|td
@@ -25806,10 +25786,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -25834,10 +25810,6 @@ operator|=
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|MNT_NOWAIT
 argument_list|,

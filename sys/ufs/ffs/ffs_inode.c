@@ -904,8 +904,6 @@ name|VOP_FSYNC
 argument_list|(
 name|ovp
 argument_list|,
-name|cred
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -1364,8 +1362,6 @@ name|VOP_FSYNC
 argument_list|(
 name|ovp
 argument_list|,
-name|cred
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -1704,8 +1700,6 @@ operator|=
 name|VOP_FSYNC
 argument_list|(
 name|ovp
-argument_list|,
-name|cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,

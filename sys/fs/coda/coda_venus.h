@@ -285,11 +285,6 @@ modifier|*
 name|fid
 parameter_list|,
 name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
 name|proc
 modifier|*
 name|p

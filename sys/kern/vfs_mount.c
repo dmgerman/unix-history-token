@@ -4504,10 +4504,6 @@ argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
 argument_list|)
 operator|)
 operator|==

@@ -4062,8 +4062,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|cred
-argument_list|,
 name|MNT_WAIT
 argument_list|,
 name|td
@@ -6732,10 +6730,6 @@ operator|)
 name|VOP_FSYNC
 argument_list|(
 name|vp
-argument_list|,
-name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|MNT_LAZY
 argument_list|,
@@ -13077,10 +13071,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|MNT_LAZY
-argument_list|,
-name|ap
-operator|->
-name|a_cred
 argument_list|,
 name|td
 argument_list|)

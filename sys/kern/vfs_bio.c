@@ -4088,10 +4088,6 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|td
-operator|->
-name|td_ucred
-argument_list|,
 name|MNT_NOWAIT
 argument_list|,
 name|td

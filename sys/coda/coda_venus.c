@@ -1435,11 +1435,6 @@ modifier|*
 name|fid
 parameter_list|,
 name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
 name|proc
 modifier|*
 name|p
@@ -1467,11 +1462,12 @@ name|ih
 argument_list|,
 name|CODA_FSYNC
 argument_list|,
-name|cred
+name|NOCRED
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* XXX: should be cached mount cred */
 name|inp
 operator|->
 name|Fid
