@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_pcl.c	4.3	83/06/13	*/
+comment|/*	if_pcl.c	4.4	83/07/06	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * DEC CSS PCL-11B Parallel Communications Interface  *  * Written by Mike Muuss.  */
+comment|/*  * DEC CSS PCL-11B Parallel Communications Interface  *  * Written by Mike Muuss and Jeff Schwab.  */
 end_comment
 
 begin_include
@@ -174,6 +174,17 @@ begin_comment
 comment|/* Max transmission unit (bytes) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCLMAXTDM
+value|7
+end_define
+
+begin_comment
+comment|/* Max unit number on TDM bus */
+end_comment
+
 begin_decl_stmt
 name|int
 name|pclprobe
@@ -295,6 +306,10 @@ name|short
 name|sc_odest
 decl_stmt|;
 comment|/* current xmit destination */
+name|short
+name|sc_bdest
+decl_stmt|;
+comment|/* buffer's stated destination */
 name|short
 name|sc_pattern
 decl_stmt|;
@@ -972,6 +987,8 @@ name|AF_INET
 case|:
 name|dest
 operator|=
+name|in_lnaof
+argument_list|(
 operator|(
 operator|(
 expr|struct
@@ -982,26 +999,23 @@ name|dst
 operator|)
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
-expr_stmt|;
-name|dest
-operator|=
-name|ntohl
-argument_list|(
-operator|(
-name|u_long
-operator|)
-name|dest
 argument_list|)
 expr_stmt|;
-comment|/* ??? */
+if|if
+condition|(
 name|dest
+operator|>
+name|PCLMAXTDM
+condition|)
+block|{
+name|error
 operator|=
-name|dest
-operator|&
-literal|0xff
+name|EHOSTUNREACH
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 break|break;
 endif|#
 directive|endif
@@ -1335,7 +1349,7 @@ block|}
 comment|/* 	 * Pull destination node out of pseudo-local net header. 	 * remove it from outbound data. 	 * Note that if_wubaput calls m_bcopy, which is prepared for 	 * m_len to be 0 in the first mbuf in the chain. 	 */
 name|sc
 operator|->
-name|sc_odest
+name|sc_bdest
 operator|=
 name|mtod
 argument_list|(
@@ -1347,6 +1361,20 @@ operator|*
 argument_list|)
 operator|->
 name|pcl_dest
+expr_stmt|;
+name|sc
+operator|->
+name|sc_odest
+operator|=
+name|sc
+operator|->
+name|sc_bdest
+condition|?
+name|sc
+operator|->
+name|sc_bdest
+else|:
+literal|1
 expr_stmt|;
 name|m
 operator|->
@@ -1385,7 +1413,7 @@ argument_list|)
 expr_stmt|;
 name|restart
 label|:
-comment|/* 	 * Have request mapped to UNIBUS for transmission. 	 * Purge any stale data from this BDP, and start the otput. 	 */
+comment|/* 	 * Have request mapped to UNIBUS for transmission. 	 * Purge any stale data from this BDP, and start the output. 	 */
 if|if
 condition|(
 name|sc
@@ -1654,15 +1682,40 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifndef|#
+directive|ifndef
+name|PCL_TESTING
 if|if
 condition|(
+operator|(
 name|addr
 operator|->
 name|pcl_tsr
 operator|&
+operator|(
+name|PCL_ERR
+operator||
 name|PCL_RESPB
+operator|)
+operator|)
+operator|==
+operator|(
+name|PCL_ERR
+operator||
+literal|0
+operator|)
 condition|)
 block|{
+empty_stmt|;
+comment|/* Receiver Offline -- not exactly an error */
+block|}
+else|else
+block|{
+else|#
+directive|else
+block|{
+endif|#
+directive|endif
 comment|/* Log as an error */
 name|printf
 argument_list|(
@@ -1700,6 +1753,30 @@ operator|.
 name|if_opackets
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_bdest
+operator|==
+literal|0
+operator|&&
+name|sc
+operator|->
+name|sc_odest
+operator|<
+name|PCLMAXTDM
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_odest
+operator|++
+expr_stmt|;
+comment|/* do next host (broadcast) */
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|sc_oactive
@@ -1733,32 +1810,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
 name|pclstart
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * PCL interface receiver interrupt.  * If input error just drop packet.  */
-end_comment
-
-begin_macro
 name|pclrint
 argument_list|(
 argument|unit
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|unit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2056,13 +2122,7 @@ operator||
 name|PCL_IE
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * Process an ioctl request.  */
-end_comment
-
-begin_expr_stmt
 name|pclioctl
 argument_list|(
 name|ifp
@@ -2077,21 +2137,12 @@ name|ifnet
 operator|*
 name|ifp
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ifreq
@@ -2193,6 +2244,49 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_broadaddr
+operator|=
+operator|*
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+name|sin
+expr_stmt|;
+name|sin
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|ifp
+operator|->
+name|if_broadaddr
+expr_stmt|;
+name|sin
+operator|->
+name|sin_addr
+operator|=
+name|if_makeaddr
+argument_list|(
+name|ifp
+operator|->
+name|if_net
+argument_list|,
+name|INADDR_ANY
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_BROADCAST
 expr_stmt|;
 if|if
 condition|(
