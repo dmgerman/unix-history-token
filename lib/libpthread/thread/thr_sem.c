@@ -675,6 +675,10 @@ argument_list|(
 name|sem
 argument_list|)
 expr_stmt|;
+comment|/* 	 * sem_post() is required to be safe to call from within signal 	 * handlers.  Thus, we must defer signals. 	 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
 name|pthread_mutex_lock
 argument_list|(
 operator|&
@@ -729,6 +733,9 @@ operator|)
 operator|->
 name|lock
 argument_list|)
+expr_stmt|;
+name|_thread_kern_sig_defer
+argument_list|()
 expr_stmt|;
 name|retval
 operator|=
