@@ -1401,7 +1401,6 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-empty_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -1429,7 +1428,6 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-empty_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -5863,7 +5861,11 @@ argument_list|,
 literal|"not waiting for boot\n"
 argument_list|)
 expr_stmt|;
-comment|/*return(ENXIO);*/
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 name|WRITE_REG
 argument_list|(
