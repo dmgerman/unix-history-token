@@ -3538,7 +3538,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\n           [-G group] ... "
+literal|"\n	   [-G group] ... "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3588,7 +3588,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"           [-p string] ... [-s replstr] ... "
+literal|"	   [-p string] ... [-s replstr] ... "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3598,7 +3598,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"[-U user] ... [-G group] ...\n           "
+literal|"[-U user] ... [-G group] ...\n	   "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3648,7 +3648,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"           [-B bytes] [-s replstr] ... "
+literal|"	   [-B bytes] [-s replstr] ... "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3668,7 +3668,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\n           [-G group] ... "
+literal|"\n	   [-G group] ... "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3718,7 +3718,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\n           [-U user] ... [-G group] ... "
+literal|"\n	   [-U user] ... [-G group] ... "
 argument_list|,
 name|stderr
 argument_list|)
@@ -3738,7 +3738,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\n           [file ...] directory\n"
+literal|"\n	   [file ...] directory\n"
 argument_list|,
 name|stderr
 argument_list|)

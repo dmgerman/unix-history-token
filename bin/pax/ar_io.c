@@ -1593,7 +1593,7 @@ directive|else
 argument|int ar_rdsync()
 endif|#
 directive|endif
-argument|{ 	long fsbz; 	off_t cpos; 	off_t mpos;         struct mtop mb;
+argument|{ 	long fsbz; 	off_t cpos; 	off_t mpos; 	struct mtop mb;
 comment|/* 	 * Fail resync attempts at user request (done) or this is going to be 	 * an update/append to a existing archive. if last i/o hit media end, 	 * we need to go to the next volume not try a resync 	 */
 argument|if ((done>
 literal|0
@@ -1709,7 +1709,7 @@ directive|else
 argument|int ar_rev(sksz) 	off_t sksz;
 endif|#
 directive|endif
-argument|{ 	off_t cpos;         struct mtop mb; 	register int phyblk;
+argument|{ 	off_t cpos; 	struct mtop mb; 	register int phyblk;
 comment|/* 	 * make sure we do not have try to reverse on a flawed archive 	 */
 argument|if (lstrval<
 literal|0
@@ -2049,11 +2049,11 @@ argument|] ==
 literal|'\0'
 argument|) { 			tty_prnt(
 literal|"Empty file name, try again\n"
-argument|); 			continue; 		}                 if (!strcmp(buf,
+argument|); 			continue; 		} 		if (!strcmp(buf,
 literal|".."
-argument|)) {                         tty_prnt(
+argument|)) { 			tty_prnt(
 literal|"Illegal file name: .. try again\n"
-argument|);                         continue;                 } 		if (strlen(buf)> PAXPATHLEN) { 			tty_prnt(
+argument|); 			continue; 		} 		if (strlen(buf)> PAXPATHLEN) { 			tty_prnt(
 literal|"File name too long, try again\n"
 argument|); 			continue; 		}
 comment|/* 		 * try to open new archive 		 */
