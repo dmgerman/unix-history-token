@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)worm.c	5.7 (Berkeley) %G%"
+literal|"@(#)worm.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,20 +253,8 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-block|{
-name|int
+begin_decl_stmt
+name|void
 name|leave
 argument_list|()
 decl_stmt|,
@@ -276,6 +264,24 @@ decl_stmt|,
 name|suspend
 argument_list|()
 decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|main
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
 name|char
 name|ch
 decl_stmt|;
@@ -696,12 +702,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|leave
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|endwin
 argument_list|()
@@ -712,14 +716,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|wake
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -739,7 +741,7 @@ name|lastch
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|rnd
@@ -1324,12 +1326,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|suspend
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -1380,7 +1380,7 @@ name|setup
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|setup

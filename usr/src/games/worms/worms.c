@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)worms.c	5.8 (Berkeley) %G%"
+literal|"@(#)worms.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1259,7 +1259,7 @@ name|trail
 decl_stmt|,
 name|Wrap
 decl_stmt|;
-name|int
+name|void
 name|onsig
 parameter_list|()
 function_decl|;
@@ -2954,12 +2954,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|onsig
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|tputs
 argument_list|(
@@ -2997,7 +2995,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|fputchar
