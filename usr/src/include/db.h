@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -409,20 +409,6 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*fd
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|__db
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-name|int
-argument_list|(
 argument|*get
 argument_list|)
 name|__P
@@ -509,7 +495,21 @@ name|void
 modifier|*
 name|internal
 decl_stmt|;
-comment|/* access method private */
+comment|/* Access method private. */
+name|int
+argument_list|(
+argument|*fd
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|__db
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|DB
 typedef|;
