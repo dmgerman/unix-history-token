@@ -97,6 +97,9 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|char
+name|dummy
+decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
@@ -127,6 +130,24 @@ name|n
 operator|=
 name|INT_MAX
 expr_stmt|;
+comment|/* Stdio internals do not deal correctly with zero length buffer */
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+block|{
+name|str
+operator|=
+operator|&
+name|dummy
+expr_stmt|;
+name|n
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|f
 operator|.
 name|_file
