@@ -314,30 +314,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|ssize_t
-name|kvm_uread
-name|__P
-argument_list|(
-operator|(
-name|kvm_t
-operator|*
-operator|,
-expr|struct
-name|proc
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|,
-name|char
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Comment this out until it can be fixed correctly. ssize_t	  kvm_uread 	    __P((kvm_t *, struct proc *, unsigned long, char *, size_t)); */
+end_comment
 
 begin_macro
 name|__END_DECLS
