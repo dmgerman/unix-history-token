@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netstat.c	5.10 (Berkeley) %G%"
+literal|"@(#)netstat.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,7 +290,7 @@ name|YMAX
 parameter_list|(
 name|w
 parameter_list|)
-value|((w)->_maxy-1)
+value|((w)->maxy-1)
 end_define
 
 begin_function

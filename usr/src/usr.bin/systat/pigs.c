@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	5.12 (Berkeley) %G%"
+literal|"@(#)pigs.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -367,7 +367,7 @@ name|i
 operator|>
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 operator|-
 literal|1
 condition|)
@@ -375,7 +375,7 @@ name|i
 operator|=
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 operator|-
 literal|1
 expr_stmt|;

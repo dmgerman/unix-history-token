@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.10 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -787,7 +787,7 @@ value|14
 define|#
 directive|define
 name|DRIVESPERLINE
-value|((wnd->_maxx - INSET) / COLWIDTH)
+value|((wnd->maxx - INSET) / COLWIDTH)
 for|for
 control|(
 name|ndrives
@@ -830,7 +830,7 @@ operator|=
 operator|(
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 operator|-
 name|row
 operator|-
@@ -890,7 +890,7 @@ name|COLWIDTH
 operator|>=
 name|wnd
 operator|->
-name|_maxx
+name|maxx
 operator|-
 name|INSET
 condition|)
@@ -911,7 +911,7 @@ name|row
 operator|>
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 operator|-
 operator|(
 name|linesperregion
@@ -1039,7 +1039,7 @@ name|row
 operator|>
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 operator|-
 name|linesperregion
 condition|)
@@ -1291,7 +1291,7 @@ name|row
 operator|>
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 operator|-
 name|linesperregion
 condition|)
@@ -1382,7 +1382,7 @@ name|COLWIDTH
 operator|>=
 name|wnd
 operator|->
-name|_maxx
+name|maxx
 condition|)
 block|{
 name|col
@@ -1401,7 +1401,7 @@ name|row
 operator|>
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 operator|-
 operator|(
 name|linesperregion

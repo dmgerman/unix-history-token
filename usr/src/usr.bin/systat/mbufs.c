@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbufs.c	5.7 (Berkeley) %G%"
+literal|"@(#)mbufs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,7 +272,7 @@ name|j
 operator|<
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 condition|;
 name|j
 operator|++
@@ -297,7 +297,7 @@ name|i
 operator|<
 name|wnd
 operator|->
-name|_maxy
+name|maxy
 condition|;
 name|i
 operator|++
