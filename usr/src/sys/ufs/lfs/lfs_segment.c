@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1434,6 +1434,8 @@ operator|->
 name|lfs_doifile
 condition|)
 block|{
+name|redo
+label|:
 name|vp
 operator|=
 name|fs
@@ -1489,7 +1491,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This should never happen because we just guaranteed 		 * that all the segment usage table blocks are dirty, so 		 * no new ones should get written. 		 */
 if|if
 condition|(
 name|lfs_writeseg
@@ -1501,11 +1502,18 @@ argument_list|)
 operator|&&
 name|do_ckp
 condition|)
-name|panic
+block|{
+name|lfs_initseg
 argument_list|(
-literal|"lfs_segwrite: created dirty blocks on ckp"
+name|fs
+argument_list|,
+name|sp
 argument_list|)
 expr_stmt|;
+goto|goto
+name|redo
+goto|;
+block|}
 block|}
 else|else
 operator|(
