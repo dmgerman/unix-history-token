@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.4 %G%"
+literal|"@(#)process.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1752,7 +1752,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * These routines are used to access the debuggee process from  * outside this module.  *  * They invoke "pio" which eventually leads to a call to "ptrace".  * The system generates an I/O error when a ptrace fails, we catch  * that here and assume its due to a misguided address.  */
+comment|/*  * These routines are used to access the debuggee process from  * outside this module.  *  * They invoke "pio" which eventually leads to a call to "ptrace".  * The system generates an I/O error when a ptrace fails, we assume  * during a read/write to the process that such an error is due to  * a misguided address and ignore it.  */
 end_comment
 
 begin_function_decl
@@ -2112,13 +2112,7 @@ name|private
 name|rwerr
 parameter_list|()
 block|{
-name|error
-argument_list|(
-literal|"bad read/write process address 0x%x"
-argument_list|,
-name|badaddr
-argument_list|)
-expr_stmt|;
+comment|/*      * Current response is to ignore the error and let the result      * (-1) ripple back up to the process.      *     error("bad read/write process address 0x%x", badaddr);      */
 block|}
 end_function
 
