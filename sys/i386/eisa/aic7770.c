@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7770.c,v 1.33 1996/10/25 06:35:38 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7770.c,v 1.34 1996/10/28 06:06:42 gibbs Exp $  */
 end_comment
 
 begin_if
@@ -398,11 +398,14 @@ block|{
 name|u_int32_t
 name|iobase
 decl_stmt|;
-name|char
-name|intdef
-decl_stmt|;
 name|u_int32_t
 name|irq
+decl_stmt|;
+name|u_int8_t
+name|intdef
+decl_stmt|;
+name|u_int8_t
+name|hcntrl
 decl_stmt|;
 name|struct
 name|eisa_device
@@ -446,9 +449,27 @@ operator|)
 operator|+
 name|AHC_EISA_SLOT_OFFSET
 expr_stmt|;
-name|ahc_reset
+comment|/* Pause the card preseving the IRQ type */
+name|hcntrl
+operator|=
+name|inb
 argument_list|(
 name|iobase
+operator|+
+name|HCNTRL
+argument_list|)
+operator|&
+name|IRQMS
+expr_stmt|;
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|HCNTRL
+argument_list|,
+name|hcntrl
+operator||
+name|PAUSE
 argument_list|)
 expr_stmt|;
 name|eisa_add_iospace
@@ -1096,6 +1117,11 @@ operator|-
 literal|1
 return|;
 block|}
+name|ahc_reset
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The IRQMS bit enables level sensitive interrupts. Only allow 	 * IRQ sharing if it's set. 	 */
 if|if
 condition|(
@@ -1441,10 +1467,10 @@ case|case
 name|AHC_274
 case|:
 block|{
-name|u_char
+name|u_int8_t
 name|biosctrl
 init|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1490,7 +1516,7 @@ block|}
 default|default:
 break|break;
 block|}
-comment|/*       	 * See if we have a Rev E or higher aic7770. Anything below a 	 * Rev E will have a R/O autoflush disable configuration bit. 	 * It's still not clear exactly what is differenent about the Rev E. 	 * We think it allows 8 bit entries in the QOUTFIFO to support 	 * "paging" SCBs so you can have more than 4 commands active at 	 * once. 	 */
+comment|/* 	 * See if we have a Rev E or higher aic7770. Anything below a 	 * Rev E will have a R/O autoflush disable configuration bit. 	 * The Rev E. cards allow 8 bit entries in the QOUTFIFO to support 	 * "paging" SCBs so you can have more than 4 commands active at 	 * once. 	 */
 block|{
 name|char
 modifier|*
@@ -1504,7 +1530,7 @@ name|sblkctl_orig
 decl_stmt|;
 name|sblkctl_orig
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1517,7 +1543,7 @@ name|sblkctl_orig
 operator|^
 name|AUTOFLUSHDIS
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1528,7 +1554,7 @@ argument_list|)
 expr_stmt|;
 name|sblkctl
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1552,7 +1578,7 @@ operator|&=
 operator|~
 name|AUTOFLUSHDIS
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1592,14 +1618,14 @@ block|{
 name|u_int8_t
 name|hostconf
 init|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|HOSTCONF
 argument_list|)
 decl_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1610,7 +1636,7 @@ operator|&
 name|DFTHRSH
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1676,7 +1702,7 @@ endif|#
 directive|endif
 block|}
 comment|/* 	 * Enable the board's BUS drivers 	 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,

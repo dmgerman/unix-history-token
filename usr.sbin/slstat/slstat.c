@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slstat.c,v 1.7 1996/11/04 17:14:43 bde Exp $"
+literal|"$Id: slstat.c,v 1.6.2.1 1996/11/05 20:17:27 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.84 1996/11/07 06:39:44 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870, aic7860,  *			and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.81.2.1 1996/11/09 13:52:25 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -616,7 +616,7 @@ modifier|*
 name|ahc
 decl_stmt|;
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -631,7 +631,7 @@ comment|/* 	 * Since the sequencer can disable pausing in a critical section, we
 while|while
 condition|(
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -671,7 +671,7 @@ condition|(
 name|unpause_always
 operator|||
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -689,7 +689,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -723,7 +723,7 @@ decl_stmt|;
 block|{
 do|do
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -738,7 +738,7 @@ block|}
 do|while
 condition|(
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -749,7 +749,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1370,25 +1370,34 @@ modifier|*
 name|scb
 decl_stmt|;
 block|{
+name|struct
+name|hardware_scb
+modifier|*
+name|hscb
+init|=
+name|scb
+operator|->
+name|hscb
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"scb:%p control:0x%x tcl:0x%x cmdlen:%d cmdpointer:0x%lx\n"
 argument_list|,
 name|scb
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|control
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|tcl
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|cmdlen
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|cmdpointer
 argument_list|)
@@ -1397,19 +1406,19 @@ name|printf
 argument_list|(
 literal|"        datlen:%d data:0x%lx segs:0x%x segp:0x%lx\n"
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|datalen
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|data
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|SG_segment_count
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|SG_list_pointer
 argument_list|)
@@ -1418,7 +1427,7 @@ name|printf
 argument_list|(
 literal|"	sg_addr:%lx sg_len:%ld\n"
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|ahc_dma
 index|[
@@ -1427,7 +1436,7 @@ index|]
 operator|.
 name|addr
 argument_list|,
-name|scb
+name|hscb
 operator|->
 name|ahc_dma
 index|[
@@ -1629,7 +1638,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Allocate a controller structures for a new device and initialize it.  * ahc_reset should be called before now since we assume that the card  * is paused.  */
+comment|/*  * Allocate a controller structures for a new device and initialize it.  */
 end_comment
 
 begin_if
@@ -1928,7 +1937,7 @@ operator|->
 name|unpause
 operator|=
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -1999,45 +2008,15 @@ end_function
 
 begin_function
 name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|ahc_reset
 parameter_list|(
-name|iobase
+name|ahc
 parameter_list|)
-name|u_int32_t
-name|iobase
-decl_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-function|ahc_reset
-parameter_list|(
-name|devname
-parameter_list|,
-name|bc
-parameter_list|,
-name|ioh
-parameter_list|)
-name|char
+name|struct
+name|ahc_softc
 modifier|*
-name|devname
+name|ahc
 decl_stmt|;
-name|bus_chipset_tag_t
-name|bc
-decl_stmt|;
-name|bus_io_handle_t
-name|ioh
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|u_int8_t
 name|hcntrl
@@ -2046,52 +2025,12 @@ name|int
 name|wait
 decl_stmt|;
 comment|/* Retain the IRQ type accross the chip reset */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|hcntrl
 operator|=
 operator|(
-name|inb
+name|ahc_inb
 argument_list|(
-name|HCNTRL
-operator|+
-name|iobase
-argument_list|)
-operator|&
-name|IRQMS
-operator|)
-operator||
-name|INTEN
-expr_stmt|;
-name|outb
-argument_list|(
-name|HCNTRL
-operator|+
-name|iobase
-argument_list|,
-name|CHIPRST
-operator||
-name|PAUSE
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|hcntrl
-operator|=
-operator|(
-name|bus_io_read_1
-argument_list|(
-name|bc
-argument_list|,
-name|ioh
+name|ahc
 argument_list|,
 name|HCNTRL
 argument_list|)
@@ -2101,11 +2040,9 @@ operator|)
 operator||
 name|INTEN
 expr_stmt|;
-name|bus_io_write_1
+name|ahc_outb
 argument_list|(
-name|bc
-argument_list|,
-name|ioh
+name|ahc
 argument_list|,
 name|HCNTRL
 argument_list|,
@@ -2114,19 +2051,11 @@ operator||
 name|PAUSE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Ensure that the reset has finished 	 */
 name|wait
 operator|=
 literal|1000
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 while|while
 condition|(
 operator|--
@@ -2134,34 +2063,9 @@ name|wait
 operator|&&
 operator|!
 operator|(
-name|inb
+name|ahc_inb
 argument_list|(
-name|HCNTRL
-operator|+
-name|iobase
-argument_list|)
-operator|&
-name|CHIPRSTACK
-operator|)
-condition|)
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-while|while
-condition|(
-operator|--
-name|wait
-operator|&&
-operator|!
-operator|(
-name|bus_io_read_1
-argument_list|(
-name|bc
-argument_list|,
-name|ioh
+name|ahc
 argument_list|,
 name|HCNTRL
 argument_list|)
@@ -2169,8 +2073,6 @@ operator|&
 name|CHIPRSTACK
 operator|)
 condition|)
-endif|#
-directive|endif
 name|DELAY
 argument_list|(
 literal|1000
@@ -2183,65 +2085,21 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|printf
-argument_list|(
-literal|"ahc at 0x%lx: WARNING - Failed chip reset!  "
-literal|"Trying to initialize anyway.\n"
-argument_list|,
-name|iobase
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|printf
 argument_list|(
 literal|"%s: WARNING - Failed chip reset!  "
 literal|"Trying to initialize anyway.\n"
 argument_list|,
-name|devname
+name|ahc_name
+argument_list|(
+name|ahc
+argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
-if|#
-directive|if
-name|defined
+name|ahc_outb
 argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|outb
-argument_list|(
-name|HCNTRL
-operator|+
-name|iobase
-argument_list|,
-name|hcntrl
-operator||
-name|PAUSE
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|bus_io_write_1
-argument_list|(
-name|bc
-argument_list|,
-name|ioh
+name|ahc
 argument_list|,
 name|HCNTRL
 argument_list|,
@@ -2250,8 +2108,6 @@ operator||
 name|PAUSE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2513,7 +2369,7 @@ operator|++
 expr_stmt|;
 name|ultra_enb
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -2522,7 +2378,7 @@ argument_list|)
 expr_stmt|;
 name|sxfrctl0
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -2582,7 +2438,7 @@ operator|~
 name|ULTRAEN
 expr_stmt|;
 block|}
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -2591,7 +2447,7 @@ argument_list|,
 name|ultra_enb
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3262,7 +3118,7 @@ name|arg
 expr_stmt|;
 name|intstat
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3314,7 +3170,7 @@ name|num_errors
 decl_stmt|;
 name|error
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3374,7 +3230,7 @@ operator|.
 name|errmesg
 argument_list|,
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3384,7 +3240,7 @@ operator|<<
 literal|8
 operator|)
 operator||
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3449,7 +3305,7 @@ condition|(
 name|qoutcnt
 operator|=
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3475,7 +3331,7 @@ control|)
 block|{
 name|scb_index
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3552,6 +3408,16 @@ argument_list|(
 name|scb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scb
+operator|->
+name|hscb
+operator|->
+name|status
+operator|!=
+name|SCSI_QUEUE_FULL
+condition|)
 name|ahc_done
 argument_list|(
 name|ahc
@@ -3560,7 +3426,7 @@ name|scb
 argument_list|)
 expr_stmt|;
 block|}
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3575,11 +3441,71 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_PAGESCBS
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_AIC78X0
+operator|)
+operator|==
+literal|0
+condition|)
+name|pause_sequencer
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
+comment|/* We've emptied the Queue */
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|QOUTQCNT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_AIC78X0
+operator|)
+operator|==
+literal|0
+condition|)
+name|unpause_sequencer
+argument_list|(
+name|ahc
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|int_cleared
 operator|==
 literal|0
 condition|)
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3648,7 +3574,7 @@ name|u_int8_t
 name|target
 init|=
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3668,7 +3594,7 @@ decl_stmt|;
 name|char
 name|channel
 init|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3730,7 +3656,7 @@ argument_list|)
 expr_stmt|;
 name|scb_index
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3817,7 +3743,7 @@ name|printf
 argument_list|(
 literal|"SAVED_TCL == 0x%x\n"
 argument_list|,
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3847,7 +3773,7 @@ name|NULL
 decl_stmt|;
 name|scb_index
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -3981,7 +3907,7 @@ literal|0
 condition|)
 block|{
 comment|/* We didn't want to abort this one too */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4013,7 +3939,7 @@ block|{
 name|u_int8_t
 name|rejbyte
 init|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4056,7 +3982,7 @@ name|channel
 argument_list|,
 name|target
 argument_list|,
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4096,7 +4022,7 @@ name|message_code
 decl_stmt|;
 name|message_length
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4105,7 +4031,7 @@ argument_list|)
 expr_stmt|;
 name|message_code
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4146,7 +4072,7 @@ operator|!=
 name|MSG_EXT_SDTR_LEN
 condition|)
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4166,7 +4092,7 @@ break|break;
 block|}
 name|period
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4175,7 +4101,7 @@ argument_list|)
 expr_stmt|;
 name|saved_offset
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4184,7 +4110,7 @@ argument_list|)
 expr_stmt|;
 name|targ_scratch
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4247,7 +4173,7 @@ name|WIDEXFER
 operator|)
 expr_stmt|;
 comment|/* 			 * Update both the target scratch area and the 			 * current SCSIRATE. 			 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4258,7 +4184,7 @@ argument_list|,
 name|targ_scratch
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4289,7 +4215,7 @@ name|offset
 condition|)
 block|{
 comment|/* 					 * Don't send an SDTR back to 					 * the target 					 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4300,7 +4226,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|AHC_OUTB
+comment|/* Went too low - force async */
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4330,7 +4257,7 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4372,7 +4299,7 @@ operator|!=
 name|MSG_EXT_WDTR_LEN
 condition|)
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4392,7 +4319,7 @@ break|break;
 block|}
 name|bus_width
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4401,7 +4328,7 @@ argument_list|)
 expr_stmt|;
 name|scratch
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4420,7 +4347,7 @@ name|targ_mask
 condition|)
 block|{
 comment|/* 				 * Don't send a WDTR back to the 				 * target, since we asked first. 				 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4471,7 +4398,7 @@ case|case
 name|BUS_32_BIT
 case|:
 comment|/* 					 * How can we do 32bit transfers 					 * on a 16bit bus? 					 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4576,7 +4503,7 @@ argument_list|,
 name|bus_width
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4600,7 +4527,7 @@ operator|&=
 operator|~
 name|targ_mask
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4611,7 +4538,7 @@ argument_list|,
 name|scratch
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4624,7 +4551,7 @@ break|break;
 block|}
 default|default:
 comment|/* Unknown extended message.  Reject it. */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4646,7 +4573,7 @@ name|targ_scratch
 decl_stmt|;
 name|targ_scratch
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4774,7 +4701,7 @@ endif|#
 directive|endif
 break|break;
 block|}
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4785,7 +4712,7 @@ argument_list|,
 name|targ_scratch
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4816,7 +4743,7 @@ decl_stmt|;
 comment|/* 		 * The sequencer will notify us when a command 		 * has an error that would be of interest to 		 * the kernel.  This allows us to leave the sequencer 		 * running in the common case of command completes 		 * without error.  The sequencer will already have 		 * dma'd the SCB back up to us, so we can reference 		 * the in kernel copy directly. 		 */
 name|scb_index
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -4841,7 +4768,7 @@ operator|->
 name|hscb
 expr_stmt|;
 comment|/* 		 * Set the default return value to 0 (don't 		 * send sense).  The sense code will change 		 * this if needed and this reduces code 		 * duplication. 		 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5184,7 +5111,7 @@ name|flags
 operator||=
 name|SCB_SENSE
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5249,11 +5176,18 @@ argument_list|(
 literal|"Queue Full\n"
 argument_list|)
 expr_stmt|;
-name|xs
+comment|/* 			 * XXX requeue this unconditionally. 			 */
+name|STAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|ahc
 operator|->
-name|error
-operator|=
-name|XS_BUSY
+name|waiting_scbs
+argument_list|,
+name|scb
+argument_list|,
+name|links
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -5297,7 +5231,7 @@ name|xs
 decl_stmt|;
 name|scb_index
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5368,7 +5302,7 @@ name|scb_index
 decl_stmt|;
 name|scb_index
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5396,7 +5330,7 @@ operator|&
 name|SCB_DEVICE_RESET
 condition|)
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5405,7 +5339,7 @@ argument_list|,
 name|MSG_BUS_DEV_RESET
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5434,7 +5368,7 @@ name|ahc_construct_wdtr
 argument_list|(
 name|ahc
 argument_list|,
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5470,7 +5404,7 @@ decl_stmt|;
 comment|/* Pull the user defined setting */
 name|target_scratch
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5493,7 +5427,7 @@ literal|8
 condition|)
 name|ultraenable
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5503,7 +5437,7 @@ expr_stmt|;
 else|else
 name|ultraenable
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5552,7 +5486,7 @@ name|ahc_construct_sdtr
 argument_list|(
 name|ahc
 argument_list|,
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5595,7 +5529,7 @@ comment|/* 		 * Take care of device reset messages 		 */
 name|u_int8_t
 name|scbindex
 init|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5674,7 +5608,7 @@ name|targ_mask
 expr_stmt|;
 name|targ_scratch
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5687,7 +5621,7 @@ name|targ_scratch
 operator|&=
 name|SXFR
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5759,7 +5693,7 @@ comment|/* 		 * When the sequencer detects an overrun, it 		 * sets STCNT to 0x0
 name|u_int8_t
 name|scbindex
 init|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5782,7 +5716,7 @@ index|]
 expr_stmt|;
 name|overrun
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5790,7 +5724,7 @@ name|STCNT0
 argument_list|)
 operator||
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5801,7 +5735,7 @@ literal|8
 operator|)
 operator||
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5867,7 +5801,7 @@ literal|"intstat == 0x%x, scsisigi = 0x%x\n"
 argument_list|,
 name|intstat
 argument_list|,
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5880,7 +5814,7 @@ block|}
 name|clear
 label|:
 comment|/* 	 * Clear the upper byte that holds SEQINT status 	 * codes and clear the SEQINT bit. 	 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5932,7 +5866,7 @@ name|scb
 decl_stmt|;
 name|scb_index
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5941,7 +5875,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -5972,7 +5906,7 @@ decl_stmt|;
 name|channel
 operator|=
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6049,7 +5983,7 @@ argument_list|,
 name|scb_index
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6066,7 +6000,7 @@ comment|/*unpause_always*/
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6101,7 +6035,7 @@ decl_stmt|;
 name|u_int8_t
 name|lastphase
 init|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6213,7 +6147,7 @@ operator|!=
 name|MSG_NOOP
 condition|)
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6222,7 +6156,7 @@ argument_list|,
 name|mesg_out
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6278,14 +6212,14 @@ expr_stmt|;
 comment|/* 		 * Clear any pending messages for the timed out 		 * target, and mark the target as free 		 */
 name|flags
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|FLAGS
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6319,7 +6253,7 @@ literal|'A'
 argument_list|)
 expr_stmt|;
 comment|/* Stop the selection */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6328,7 +6262,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6337,7 +6271,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6346,7 +6280,7 @@ argument_list|,
 name|CLRSELTIMEO
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6358,14 +6292,14 @@ expr_stmt|;
 comment|/* Shift the waiting Q forward. */
 name|scbptr
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|WAITING_SCBH
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6376,14 +6310,14 @@ argument_list|)
 expr_stmt|;
 name|nextscb
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|SCB_NEXT
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6395,14 +6329,14 @@ expr_stmt|;
 comment|/* Put this SCB back on the free list */
 name|nextscb
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|FREE_SCBH
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6411,7 +6345,7 @@ argument_list|,
 name|nextscb
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6453,7 +6387,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6470,7 +6404,7 @@ comment|/*unpause_always*/
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6891,7 +6825,7 @@ condition|(
 operator|(
 name|sblkctl
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6910,7 +6844,7 @@ operator|->
 name|our_id
 operator|=
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -6995,7 +6929,7 @@ operator|->
 name|our_id
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7021,7 +6955,7 @@ operator|->
 name|our_id
 operator|=
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7114,7 +7048,7 @@ name|type
 operator||=
 name|AHC_WIDE
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7140,7 +7074,7 @@ operator|->
 name|our_id
 operator|=
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7155,7 +7089,7 @@ operator|->
 name|our_id_b
 operator|=
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7186,7 +7120,7 @@ name|type
 operator||=
 name|AHC_TWIN
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7230,7 +7164,7 @@ literal|0
 condition|)
 block|{
 comment|/* SCB 0 heads the free list */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7253,7 +7187,7 @@ name|i
 operator|++
 control|)
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7262,7 +7196,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7273,7 +7207,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7283,7 +7217,7 @@ operator|!=
 name|i
 condition|)
 break|break;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7294,7 +7228,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7304,7 +7238,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7314,7 +7248,7 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* Clear the control byte. */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7324,7 +7258,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Set the next pointer */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7336,7 +7270,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* No Busy non-tagged targets yet */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7345,7 +7279,7 @@ argument_list|,
 name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7354,7 +7288,7 @@ argument_list|,
 name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7363,7 +7297,7 @@ argument_list|,
 name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7374,7 +7308,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Make that the last SCB terminates the free list */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7385,7 +7319,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7395,7 +7329,7 @@ name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
 comment|/* Ensure we clear the 0 SCB's control byte. */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7404,7 +7338,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7556,7 +7490,7 @@ name|AHC_TWIN
 condition|)
 block|{
 comment|/* 		 * The device is gated to channel B after a chip reset, 		 * so set those values first 		 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7569,7 +7503,7 @@ argument_list|)
 expr_stmt|;
 name|scsi_conf
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7578,7 +7512,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7597,11 +7531,9 @@ operator||
 name|ENSTIMER
 operator||
 name|ACTNEGEN
-operator||
-name|STPWEN
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7622,7 +7554,7 @@ name|type
 operator|&
 name|AHC_ULTRA
 condition|)
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7636,7 +7568,7 @@ name|ULTRAEN
 argument_list|)
 expr_stmt|;
 else|else
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7669,7 +7601,7 @@ name|ahc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7683,7 +7615,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7693,7 +7625,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Ensure we don't get a RSTI interrupt from this */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7702,7 +7634,7 @@ argument_list|,
 name|CLRSCSIRSTI
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7713,7 +7645,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Select Channel A */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7723,7 +7655,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7736,14 +7668,14 @@ argument_list|)
 expr_stmt|;
 name|scsi_conf
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|SCSICONF
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7762,11 +7694,9 @@ operator||
 name|ENSTIMER
 operator||
 name|ACTNEGEN
-operator||
-name|STPWEN
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7787,7 +7717,7 @@ name|type
 operator|&
 name|AHC_ULTRA
 condition|)
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7801,7 +7731,7 @@ name|ULTRAEN
 argument_list|)
 expr_stmt|;
 else|else
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7834,7 +7764,7 @@ name|ahc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7848,7 +7778,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7858,7 +7788,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Ensure we don't get a RSTI interrupt from this */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7867,7 +7797,7 @@ argument_list|,
 name|CLRSCSIRSTI
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7926,7 +7856,7 @@ operator|=
 operator|~
 operator|(
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -7938,7 +7868,7 @@ operator|<<
 literal|8
 operator|)
 operator||
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8022,7 +7952,7 @@ block|{
 comment|/* Take the settings leftover in scratch RAM. */
 name|target_settings
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8139,7 +8069,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8210,7 +8140,7 @@ name|orderedtag
 operator|=
 literal|0
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8221,7 +8151,7 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8269,7 +8199,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Set the number of availible hardware SCBs 	 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8291,7 +8221,7 @@ name|scb_data
 operator|->
 name|maxscbs
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8442,7 +8372,7 @@ operator|->
 name|hscbs
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8453,7 +8383,7 @@ operator|&
 literal|0xFF
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8468,7 +8398,7 @@ operator|&
 literal|0xFF
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8483,7 +8413,7 @@ operator|&
 literal|0xFF
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8587,8 +8517,8 @@ operator|=
 literal|0x1f
 expr_stmt|;
 block|}
-comment|/* 	 * QCount mask to deal with broken aic7850s that 	 * sporatically get garbage in the upper bits of 	 * their QCount registers. 	 * 	 * QFullCount to guard against overflowing the 	 * QINFIFO or QOUTFIFO when we are paging SCBs. 	 */
-name|AHC_OUTB
+comment|/* 	 * QCount mask to deal with broken aic7850s that 	 * sporatically get garbage in the upper bits of 	 * their QCount registers. 	 * 	 * QFullCount to guard against overflowing the 	 * QINFIFO or QOUTFIFO when we are paging SCBs. 	 * 	 * QOUTQCNT is a scratch ram variable that counts 	 * up as the sequencer fills the QOUTFIFO so it 	 * can guard against overflowing the FIFO.  Since 	 * the fifo starts empty, clear it. 	 */
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8599,7 +8529,7 @@ operator|->
 name|qcntmask
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8610,8 +8540,17 @@ operator|->
 name|qfullcount
 argument_list|)
 expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|QOUTQCNT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* We don't have any waiting selections */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8621,7 +8560,7 @@ name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
 comment|/* Our disconnection list is empty too */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8631,7 +8570,7 @@ name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
 comment|/* Message out buffer starts empty */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -8669,7 +8608,7 @@ argument_list|(
 literal|"Done\n"
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -9717,7 +9656,7 @@ name|ahc
 operator|->
 name|curqincnt
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -9751,7 +9690,7 @@ argument_list|,
 name|links
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -10448,7 +10387,7 @@ directive|include
 file|"aic7xxx_seq.h"
 block|}
 decl_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -10461,7 +10400,7 @@ operator||
 name|LOADRAM
 argument_list|)
 expr_stmt|;
-name|AHC_OUTSB
+name|ahc_outsb
 argument_list|(
 name|ahc
 argument_list|,
@@ -10477,7 +10416,7 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -10492,7 +10431,7 @@ block|}
 do|while
 condition|(
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -10503,7 +10442,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -10553,7 +10492,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -10797,7 +10736,7 @@ expr_stmt|;
 comment|/* 	 * Take a snapshot of the bus state and print out 	 * some information so we can track down driver bugs. 	 */
 name|bus_state
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -10884,12 +10823,35 @@ name|printf
 argument_list|(
 literal|", SCSISIGI == 0x%x\n"
 argument_list|,
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|SCSISIGI
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SEQADDR == 0x%x\n"
+argument_list|,
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|SEQADDR0
+argument_list|)
+operator||
+operator|(
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|SEQADDR1
+argument_list|)
+operator|<<
+literal|8
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Decide our course of action */
@@ -11043,7 +11005,7 @@ name|active_scb
 decl_stmt|;
 name|saved_scbptr
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11052,7 +11014,7 @@ argument_list|)
 expr_stmt|;
 name|active_scb_index
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11078,7 +11040,7 @@ literal|0
 condition|)
 block|{
 comment|/* Send the abort to the active SCB */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11087,7 +11049,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11110,7 +11072,7 @@ else|:
 name|MSG_ABORT_TAG
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11240,7 +11202,7 @@ name|TRUE
 expr_stmt|;
 else|else
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11251,7 +11213,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11291,7 +11253,7 @@ name|hscb_index
 operator|!=
 name|SCB_LIST_NULL
 condition|)
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11317,7 +11279,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11396,7 +11358,7 @@ name|curindex
 decl_stmt|;
 name|saved_scbptr
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11425,7 +11387,7 @@ name|curindex
 operator|++
 control|)
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11436,7 +11398,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11451,7 +11413,7 @@ name|tag
 condition|)
 break|break;
 block|}
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11540,7 +11502,7 @@ decl_stmt|;
 comment|/* restore this when we're done */
 name|active_scb
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11558,7 +11520,7 @@ decl_stmt|;
 name|u_int8_t
 name|queued
 init|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11592,7 +11554,7 @@ index|[
 name|i
 index|]
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11681,7 +11643,7 @@ name|queued
 operator|++
 control|)
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11704,7 +11666,7 @@ name|prev
 decl_stmt|;
 name|next
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11723,7 +11685,7 @@ operator|!=
 name|SCB_LIST_NULL
 condition|)
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11740,7 +11702,7 @@ name|scb_data
 operator|->
 name|scbarray
 index|[
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11789,7 +11751,7 @@ name|next
 expr_stmt|;
 name|next
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11896,7 +11858,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -11999,14 +11961,14 @@ decl_stmt|;
 comment|/* 	 * Select the SCB we want to abort and 	 * pull the next pointer out of it. 	 */
 name|curscb
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|SCBPTR
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12017,7 +11979,7 @@ argument_list|)
 expr_stmt|;
 name|next
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12025,7 +11987,7 @@ name|SCB_NEXT
 argument_list|)
 expr_stmt|;
 comment|/* Clear the necessary fields */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12034,7 +11996,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12060,7 +12022,7 @@ operator|==
 name|SCB_LIST_NULL
 condition|)
 comment|/* First in the list */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12072,7 +12034,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 		 * Select the scb that pointed to us  		 * and update its next pointer. 		 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12081,7 +12043,7 @@ argument_list|,
 name|prev
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12092,7 +12054,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Point us back at the original scb position 	 * and inform the SCSI system that the command 	 * has been aborted. 	 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12192,14 +12154,14 @@ literal|2
 expr_stmt|;
 name|active_scb
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|SCBPTR
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12220,14 +12182,14 @@ operator|)
 expr_stmt|;
 name|busy_scbid
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
 name|scb_offset
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12236,7 +12198,7 @@ argument_list|,
 name|SCB_LIST_NULL
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12264,7 +12226,7 @@ modifier|*
 name|ahc
 decl_stmt|;
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12278,7 +12240,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12526,7 +12488,7 @@ name|targ_scratch
 decl_stmt|;
 name|targ_scratch
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12537,7 +12499,7 @@ name|targ_scratch
 operator|&=
 name|SXFR
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12550,7 +12512,7 @@ block|}
 comment|/* 	 * Reset the bus if we are initiating this reset and 	 * restart/unpause the sequencer 	 */
 name|sblkctl
 operator|=
-name|AHC_INB
+name|ahc_inb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12577,7 +12539,7 @@ name|channel
 condition|)
 block|{
 comment|/* Case 1: Command for another bus is active 		 * Stealthily reset the other bus without 		 * upsetting the current bus. 		 */
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12597,7 +12559,7 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12608,7 +12570,7 @@ operator||
 name|CLRSELTIMEO
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12617,7 +12579,7 @@ argument_list|,
 name|CLRSCSIINT
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12647,7 +12609,7 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12658,7 +12620,7 @@ operator||
 name|CLRSELTIMEO
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12867,7 +12829,7 @@ name|u_int8_t
 name|offset
 decl_stmt|;
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12878,7 +12840,7 @@ argument_list|,
 name|MSG_EXTENDED
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12889,7 +12851,7 @@ argument_list|,
 name|MSG_EXT_SDTR_LEN
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12900,7 +12862,7 @@ argument_list|,
 name|MSG_EXT_SDTR
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12911,7 +12873,7 @@ argument_list|,
 name|period
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12922,7 +12884,7 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12959,7 +12921,7 @@ name|u_int8_t
 name|bus_width
 decl_stmt|;
 block|{
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12970,7 +12932,7 @@ argument_list|,
 name|MSG_EXTENDED
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12981,7 +12943,7 @@ argument_list|,
 name|MSG_EXT_WDTR_LEN
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -12992,7 +12954,7 @@ argument_list|,
 name|MSG_EXT_WDTR
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,
@@ -13003,7 +12965,7 @@ argument_list|,
 name|bus_width
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
+name|ahc_outb
 argument_list|(
 name|ahc
 argument_list|,

@@ -4,7 +4,7 @@ comment|/* Copyright 1988,1990,1993,1994 by Paul Vixie  * All rights reserved  *
 end_comment
 
 begin_comment
-comment|/* config.h - configurables for Vixie Cron  *  * $Id: config.h,v 1.3 1995/04/14 21:54:16 ache Exp $  */
+comment|/* config.h - configurables for Vixie Cron  *  * $Id: config.h,v 1.4 1995/05/09 12:48:05 rgrimes Exp $  */
 end_comment
 
 begin_if
@@ -78,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|MAILARGS
-value|"%s -FCronDaemon -odi -oem -t"
+value|"%s -FCronDaemon -odi -oem -oi -t"
 end_define
 
 begin_comment
@@ -86,7 +86,7 @@ comment|/*-*/
 end_comment
 
 begin_comment
-comment|/* -Fx	 = set full-name of sender 			 * -odi	 = Option Deliverymode Interactive 			 * -oem	 = Option Errors Mailedtosender 			 * -t    = read recipients from header of message 			 */
+comment|/* -Fx	 = set full-name of sender 			 * -odi	 = Option Deliverymode Interactive 			 * -oem	 = Option Errors Mailedtosender 			 * -oi   = Option dot message terminator 			 * -t    = read recipients from header of message 			 */
 end_comment
 
 begin_comment

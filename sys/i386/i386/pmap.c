@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.128.2.1 1996/11/06 10:23:40 phk Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.128.2.2 1996/11/07 14:45:41 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -157,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/specialreg.h>
 end_include
 
 begin_define
@@ -462,6 +468,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|pgeflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PG_G or-in */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|nkpt
 decl_stmt|;
 end_decl_stmt
@@ -523,6 +540,10 @@ end_macro
 
 begin_expr_stmt
 name|pv_freelist
+operator|=
+block|{
+literal|0
+block|}
 expr_stmt|;
 end_expr_stmt
 
@@ -548,6 +569,8 @@ begin_decl_stmt
 name|pt_entry_t
 modifier|*
 name|CMAP1
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -573,8 +596,12 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|CADDR1
+init|=
+literal|0
 decl_stmt|,
 name|ptvmmap
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -598,6 +625,8 @@ name|struct
 name|msgbuf
 modifier|*
 name|msgbufp
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -605,6 +634,8 @@ begin_decl_stmt
 name|pt_entry_t
 modifier|*
 name|PMAP1
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -612,6 +643,8 @@ begin_decl_stmt
 name|unsigned
 modifier|*
 name|PADDR1
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1268,6 +1301,21 @@ literal|0
 expr_stmt|;
 name|invltlb
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cpu_feature
+operator|&
+name|CPUID_PGE
+condition|)
+name|pgeflag
+operator|=
+name|PG_G
+expr_stmt|;
+else|else
+name|pgeflag
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -2222,6 +2270,8 @@ operator||
 name|PG_RW
 operator||
 name|PG_V
+operator||
+name|pgeflag
 decl_stmt|;
 name|unsigned
 name|opte
@@ -2368,6 +2418,8 @@ operator||
 name|PG_RW
 operator||
 name|PG_V
+operator||
+name|pgeflag
 expr_stmt|;
 name|pte
 operator|=
@@ -3522,7 +3574,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pmap_unwire_pte_hold
+name|_pmap_unwire_pte_hold
 parameter_list|(
 name|pmap_t
 name|pmap
@@ -3534,11 +3586,15 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|vm_page_unhold
-argument_list|(
+if|if
+condition|(
 name|m
-argument_list|)
-expr_stmt|;
+operator|->
+name|flags
+operator|&
+name|PG_BUSY
+condition|)
+block|{
 name|s
 operator|=
 name|splvm
@@ -3576,6 +3632,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|m
@@ -3729,6 +3786,47 @@ return|return
 literal|1
 return|;
 block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|__inline
+specifier|static
+name|int
+name|pmap_unwire_pte_hold
+parameter_list|(
+name|pmap_t
+name|pmap
+parameter_list|,
+name|vm_page_t
+name|m
+parameter_list|)
+block|{
+name|vm_page_unhold
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|hold_count
+operator|==
+literal|0
+condition|)
+return|return
+name|_pmap_unwire_pte_hold
+argument_list|(
+name|pmap
+argument_list|,
+name|m
+argument_list|)
+return|;
+else|else
 return|return
 literal|0
 return|;
@@ -6115,6 +6213,18 @@ name|wired_count
 operator|-=
 literal|1
 expr_stmt|;
+comment|/* 	 * Machines that don't support invlpg, also don't support 	 * PG_G. 	 */
+if|if
+condition|(
+name|oldpte
+operator|&
+name|PG_G
+condition|)
+name|invlpg
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
 name|pmap
 operator|->
 name|pm_stats
@@ -7590,6 +7700,16 @@ condition|)
 name|newpte
 operator||=
 name|PG_U
+expr_stmt|;
+if|if
+condition|(
+name|pmap
+operator|==
+name|kernel_pmap
+condition|)
+name|newpte
+operator||=
+name|pgeflag
 expr_stmt|;
 comment|/* 	 * if the mapping or permission bits are different, we need 	 * to update the pte. 	 */
 if|if
