@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.43 1995/09/18 16:52:35 peter Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.44 1995/12/07 10:34:14 peter Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -116,6 +116,10 @@ begin_comment
 comment|/* Multiple choice menu		*/
 end_comment
 
+begin_comment
+comment|/* XXX This goes away soon XXX */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -124,18 +128,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* Select item then exit	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMENU_CALL_FIRST
-value|0x10
-end_define
-
-begin_comment
-comment|/* In multiple, use one handler */
+comment|/* Immediate return on item selection */
 end_comment
 
 begin_comment
@@ -606,17 +599,6 @@ value|2048
 end_define
 
 begin_comment
-comment|/* The help file for the TCP/IP setup screen */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_HELPFILE
-value|"tcp"
-end_define
-
-begin_comment
 comment|/*** Types ***/
 end_comment
 
@@ -940,7 +922,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 name|Boolean
@@ -1955,7 +1937,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2342,7 +2324,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 parameter_list|,
 name|Boolean
@@ -2403,7 +2385,7 @@ modifier|*
 name|dist
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2764,7 +2746,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2821,7 +2803,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2883,7 +2865,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4144,7 +4126,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4449,7 +4431,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4572,7 +4554,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
