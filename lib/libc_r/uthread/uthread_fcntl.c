@@ -424,7 +424,7 @@ name|F_SETFL
 case|:
 name|ret
 operator|=
-name|fcntl
+name|_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -447,7 +447,7 @@ name|F_GETFL
 case|:
 name|ret
 operator|=
-name|fcntl
+name|_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -458,7 +458,7 @@ break|break;
 default|default:
 name|ret
 operator|=
-name|fcntl
+name|_fcntl
 argument_list|(
 name|fd
 argument_list|,
