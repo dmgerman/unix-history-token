@@ -3940,6 +3940,10 @@ literal|"imen"
 block|,
 endif|#
 directive|endif
+literal|"ng_node"
+block|,
+literal|"ng_worklist"
+block|,
 literal|"smp rendezvous"
 block|,
 endif|#

@@ -2449,7 +2449,7 @@ name|nd_input_queue
 operator|.
 name|q_mtx
 argument_list|,
-literal|"netgraph node mutex"
+literal|"ng_node"
 argument_list|,
 name|MTX_SPIN
 argument_list|)
@@ -10852,7 +10852,7 @@ argument_list|(
 operator|&
 name|ng_worklist_mtx
 argument_list|,
-literal|"netgraph worklist mutex"
+literal|"ng_worklist"
 argument_list|,
 name|MTX_SPIN
 argument_list|)
@@ -12277,6 +12277,13 @@ operator|&
 name|NG_WORKQ
 condition|)
 block|{
+name|node
+operator|->
+name|nd_flags
+operator|&=
+operator|~
+name|NG_WORKQ
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -12287,19 +12294,20 @@ argument_list|,
 name|nd_work
 argument_list|)
 expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|ng_worklist_mtx
+argument_list|)
+expr_stmt|;
 name|NG_NODE_UNREF
 argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
 block|}
-name|node
-operator|->
-name|nd_flags
-operator|&=
-operator|~
-name|NG_WORKQ
-expr_stmt|;
+else|else
+block|{
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -12307,7 +12315,12 @@ name|ng_worklist_mtx
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
+
+begin_comment
+comment|/*  * XXX  * It's posible that a debugging NG_NODE_REF may need  * to be outside the mutex zone  */
+end_comment
 
 begin_function
 specifier|static
@@ -12359,6 +12372,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+comment|/* XXX fafe in mutex? */
 block|}
 name|mtx_unlock_spin
 argument_list|(
