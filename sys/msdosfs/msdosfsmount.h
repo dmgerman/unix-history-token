@@ -94,6 +94,10 @@ name|pm_bpb
 decl_stmt|;
 comment|/* BIOS parameter blk for this fs */
 name|u_long
+name|pm_BlkPerSec
+decl_stmt|;
+comment|/* How many DEV_BSIZE blocks fit inside a physical sector */
+name|u_long
 name|pm_FATsecs
 decl_stmt|;
 comment|/* actual number of fat sectors */
@@ -534,6 +538,21 @@ name|dirofs
 parameter_list|)
 define|\
 value|((dirclu) == MSDOSFSROOT \ 	 ? roottobn((pmp), (dirofs)) \ 	 : cntobn((pmp), (dirclu)))
+end_define
+
+begin_comment
+comment|/*  * Calculate fsinfo block size  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|fsi_size
+parameter_list|(
+name|pmp
+parameter_list|)
+define|\
+value|(1024<< ((pmp)->pm_BlkPerSec>> 2))
 end_define
 
 begin_decl_stmt

@@ -1044,9 +1044,7 @@ name|pmp
 operator|->
 name|pm_rootdirsize
 operator|*
-name|pmp
-operator|->
-name|pm_BytesPerSec
+name|DEV_BSIZE
 expr_stmt|;
 block|}
 comment|/* 		 * fill in time and date so that dos2unixtime() doesn't 		 * spit up when called from msdosfs_getattr() with root 		 * denode 		 */
