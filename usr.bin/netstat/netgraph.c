@@ -545,11 +545,13 @@ argument_list|)
 expr_stmt|;
 name|next
 operator|=
+name|LIST_NEXT
+argument_list|(
+operator|&
 name|ngpcb
-operator|.
+argument_list|,
 name|socks
-operator|.
-name|le_next
+argument_list|)
 expr_stmt|;
 comment|/* Read in socket structure */
 name|kread
