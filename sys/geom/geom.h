@@ -518,6 +518,9 @@ expr_stmt|;
 name|int
 name|index
 decl_stmt|;
+name|off_t
+name|mediasize
+decl_stmt|;
 block|}
 struct|;
 end_struct
