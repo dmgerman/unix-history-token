@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.5 (Berkeley) %G%"
+literal|"@(#)local2.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2149,19 +2149,6 @@ expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
-argument_list|)
-expr_stmt|;
-name|werror
-argument_list|(
-literal|"optimized structure assignment (size %d alignment %d)"
-argument_list|,
-name|size
-argument_list|,
-name|p
-operator|->
-name|stn
-operator|.
-name|stalign
 argument_list|)
 expr_stmt|;
 break|break;
