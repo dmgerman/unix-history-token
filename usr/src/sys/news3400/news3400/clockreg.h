@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.14 91/01/18$  *  *	@(#)clockreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.14 91/01/18$  *  *	@(#)clockreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -64,61 +64,6 @@ parameter_list|)
 value|(((year) % 4) == 0)
 end_define
 
-begin_comment
-comment|/*  * Definitions for real time clock  */
-end_comment
-
-begin_struct
-struct|struct
-name|chiptime
-block|{
-name|u_char
-name|sec
-decl_stmt|;
-comment|/* current seconds */
-name|u_char
-name|min
-decl_stmt|;
-comment|/* current minutes */
-name|u_char
-name|hour
-decl_stmt|;
-comment|/* current hours */
-name|u_char
-name|dayw
-decl_stmt|;
-comment|/* day of the week */
-name|u_char
-name|day
-decl_stmt|;
-comment|/* day of the month */
-name|u_char
-name|mon
-decl_stmt|;
-comment|/* month */
-name|u_char
-name|year
-decl_stmt|;
-comment|/* year */
-block|}
-struct|;
-end_struct
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_SINGLE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|news700
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -138,15 +83,6 @@ directive|define
 name|READ_CLOCK
 value|0x40
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_SINGLE&& !news700 */
-end_comment
 
 end_unit
 
