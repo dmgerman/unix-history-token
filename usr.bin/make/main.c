@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.18 1997/07/24 06:58:06 charnier Exp $"
+literal|"$Id: main.c,v 1.1 1997/08/13 23:36:11 smp Exp smp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,6 +338,17 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|Boolean
+name|forceJobs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -j argument given */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|int
 name|maxLocal
 decl_stmt|;
@@ -587,11 +598,6 @@ name|optarg
 decl_stmt|;
 name|int
 name|c
-decl_stmt|;
-name|int
-name|forceJobs
-init|=
-literal|0
 decl_stmt|;
 name|optind
 operator|=
@@ -1332,19 +1338,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Be compatible if user did not specify -j and did not explicitly 	 * turned compatibility on 	 */
-if|if
-condition|(
-operator|!
-name|compatMake
-operator|&&
-operator|!
-name|forceJobs
-condition|)
-name|compatMake
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 end_function
 
@@ -2120,6 +2113,11 @@ name|maxLocal
 expr_stmt|;
 endif|#
 directive|endif
+name|forceJobs
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* No -j flag */
 name|compatMake
 operator|=
 name|FALSE
@@ -2256,6 +2254,19 @@ name|argc
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Be compatible if user did not specify -j and did not explicitly 	 * turned compatibility on 	 */
+if|if
+condition|(
+operator|!
+name|compatMake
+operator|&&
+operator|!
+name|forceJobs
+condition|)
+name|compatMake
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* 	 * Initialize archive, target and suffix modules in preparation for 	 * parsing the makefile(s) 	 */
 name|Arch_Init
