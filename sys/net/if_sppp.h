@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.7, Wed Jun  7 22:12:02 MSD 1995  */
+comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.7, Wed Jun  7 22:12:02 MSD 1995  *  * $Id$  */
 end_comment
 
 begin_ifndef
@@ -16,50 +16,135 @@ name|_NET_IF_HDLC_H_
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|IDX_LCP
+value|0
+end_define
+
+begin_comment
+comment|/* idx into state table */
+end_comment
+
 begin_struct
 struct|struct
 name|slcp
 block|{
-name|u_short
-name|state
+name|u_long
+name|opts
 decl_stmt|;
-comment|/* state machine */
+comment|/* LCP options to send (bitfield) */
 name|u_long
 name|magic
 decl_stmt|;
 comment|/* local magic number */
+name|u_long
+name|mru
+decl_stmt|;
+comment|/* our max receive unit */
+name|u_long
+name|their_mru
+decl_stmt|;
+comment|/* their max receive unit */
+name|u_long
+name|protos
+decl_stmt|;
+comment|/* bitmask of protos that are started */
 name|u_char
 name|echoid
 decl_stmt|;
 comment|/* id of last keepalive echo request */
-name|u_char
-name|confid
+comment|/* restart max values, see RFC 1661 */
+name|int
+name|timeout
 decl_stmt|;
-comment|/* id of last configuration request */
+name|int
+name|max_terminate
+decl_stmt|;
+name|int
+name|max_configure
+decl_stmt|;
+name|int
+name|max_failure
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IDX_IPCP
+value|1
+end_define
+
+begin_comment
+comment|/* idx into state table */
+end_comment
 
 begin_struct
 struct|struct
 name|sipcp
 block|{
-name|u_short
-name|state
+name|u_long
+name|opts
 decl_stmt|;
-comment|/* state machine */
-name|u_char
-name|confid
+comment|/* IPCP options to send (bitfield) */
+name|u_int
+name|flags
 decl_stmt|;
-comment|/* id of last configuration request */
+define|#
+directive|define
+name|IPCP_HISADDR_SEEN
+value|1
+comment|/* have seen his address already */
+define|#
+directive|define
+name|IPCP_MYADDR_DYN
+value|2
+comment|/* my address is dynamically assigned */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|IDX_COUNT
+value|(IDX_IPCP + 1)
+end_define
+
+begin_comment
+comment|/* bump this when adding cp's! */
+end_comment
+
+begin_comment
+comment|/*  * Don't change the order of this.  Ordering the phases this way allows  * for a comparision of ``pp_phase>= PHASE_AUTHENTICATE'' in order to  * know whether LCP is up.  */
+end_comment
+
+begin_enum
+enum|enum
+name|ppp_phase
+block|{
+name|PHASE_DEAD
+block|,
+name|PHASE_ESTABLISH
+block|,
+name|PHASE_TERMINATE
+block|,
+name|PHASE_AUTHENTICATE
+block|,
+name|PHASE_NETWORK
+block|}
+enum|;
+end_enum
 
 begin_struct
 struct|struct
 name|sppp
 block|{
+comment|/* NB: pp_if _must_ be first */
 name|struct
 name|ifnet
 name|pp_if
@@ -96,6 +181,39 @@ name|u_long
 name|pp_rseq
 decl_stmt|;
 comment|/* remote sequence number */
+name|enum
+name|ppp_phase
+name|pp_phase
+decl_stmt|;
+comment|/* phase we're currently in */
+name|int
+name|state
+index|[
+name|IDX_COUNT
+index|]
+decl_stmt|;
+comment|/* state machine */
+name|u_char
+name|confid
+index|[
+name|IDX_COUNT
+index|]
+decl_stmt|;
+comment|/* id of last configuration request */
+name|int
+name|rst_counter
+index|[
+name|IDX_COUNT
+index|]
+decl_stmt|;
+comment|/* restart counter */
+name|int
+name|fail_counter
+index|[
+name|IDX_COUNT
+index|]
+decl_stmt|;
+comment|/* negotiation failure counter */
 name|struct
 name|slcp
 name|lcp
@@ -106,6 +224,56 @@ name|sipcp
 name|ipcp
 decl_stmt|;
 comment|/* IPCP params */
+comment|/* 	 * These functions are filled in by sppp_attach(), and are 	 * expected to be used by the lower layer (hardware) drivers 	 * in order to communicate the (un)availability of the 	 * communication link.  Lower layer drivers that are always 	 * ready to communicate (like hardware HDLC) can shortcut 	 * pp_up from pp_tls, and pp_down from pp_tlf. 	 */
+name|void
+function_decl|(
+modifier|*
+name|pp_up
+function_decl|)
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|pp_down
+function_decl|)
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+function_decl|;
+comment|/* 	 * These functions need to be filled in by the lower layer 	 * (hardware) drivers if they request notification from the 	 * PPP layer whether the link is actually required.  They 	 * correspond to the tls and tlf actions. 	 */
+name|void
+function_decl|(
+modifier|*
+name|pp_tls
+function_decl|)
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|pp_tlf
+function_decl|)
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -135,111 +303,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PP_TIMO
-value|0x04
-end_define
-
-begin_comment
-comment|/* cp_timeout routine active */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PP_MTU
 value|1500
 end_define
 
 begin_comment
-comment|/* max. transmit unit */
+comment|/* default/minimal MRU */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LCP_STATE_CLOSED
-value|0
+name|PP_MAX_MRU
+value|2048
 end_define
 
 begin_comment
-comment|/* LCP state: closed (conf-req sent) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCP_STATE_ACK_RCVD
-value|1
-end_define
-
-begin_comment
-comment|/* LCP state: conf-ack received */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCP_STATE_ACK_SENT
-value|2
-end_define
-
-begin_comment
-comment|/* LCP state: conf-ack sent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LCP_STATE_OPENED
-value|3
-end_define
-
-begin_comment
-comment|/* LCP state: opened */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPCP_STATE_CLOSED
-value|0
-end_define
-
-begin_comment
-comment|/* IPCP state: closed (conf-req sent) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPCP_STATE_ACK_RCVD
-value|1
-end_define
-
-begin_comment
-comment|/* IPCP state: conf-ack received */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPCP_STATE_ACK_SENT
-value|2
-end_define
-
-begin_comment
-comment|/* IPCP state: conf-ack sent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPCP_STATE_OPENED
-value|3
-end_define
-
-begin_comment
-comment|/* IPCP state: opened */
+comment|/* maximal MRU we want to negotiate */
 end_comment
 
 begin_ifdef

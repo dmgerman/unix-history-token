@@ -1207,6 +1207,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|sppp
+modifier|*
+name|sp
+decl_stmt|;
 comment|/* Initialize the board structure. */
 name|cx_init
 argument_list|(
@@ -1548,6 +1553,34 @@ name|c
 operator|->
 name|ifp
 argument_list|)
+expr_stmt|;
+comment|/* 			 * Shortcut the sppp tls/tlf actions to up/down 			 * events since our lower layer is always ready. 			 */
+name|sp
+operator|=
+operator|(
+expr|struct
+name|sppp
+operator|*
+operator|)
+name|c
+operator|->
+name|ifp
+expr_stmt|;
+name|sp
+operator|->
+name|pp_tls
+operator|=
+name|sp
+operator|->
+name|pp_up
+expr_stmt|;
+name|sp
+operator|->
+name|pp_tlf
+operator|=
+name|sp
+operator|->
+name|pp_down
 expr_stmt|;
 if|#
 directive|if
