@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.282 (Berkeley) 6/11/97"
+literal|"@(#)deliver.c	8.285 (Berkeley) 8/2/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -2181,8 +2181,6 @@ expr_stmt|;
 block|}
 comment|/* be sure to give error messages in child */
 name|QuickAbort
-operator|=
-name|OnlyOneError
 operator|=
 name|FALSE
 expr_stmt|;
@@ -13054,6 +13052,8 @@ literal|1
 decl_stmt|;
 name|int
 name|mode
+init|=
+name|ST_MODE_NOFILE
 decl_stmt|;
 name|bool
 name|suidwarn
@@ -13232,11 +13232,6 @@ directive|ifdef
 name|HASLSTAT
 if|if
 condition|(
-operator|(
-name|SafeFileEnv
-operator|!=
-name|NULL
-condition|?
 name|lstat
 argument_list|(
 name|filename
@@ -13244,15 +13239,6 @@ argument_list|,
 operator|&
 name|stb
 argument_list|)
-else|:
-name|stat
-argument_list|(
-name|filename
-argument_list|,
-operator|&
-name|stb
-argument_list|)
-operator|)
 operator|<
 literal|0
 condition|)
@@ -13276,6 +13262,10 @@ block|{
 name|stb
 operator|.
 name|st_mode
+operator|=
+name|ST_MODE_NOFILE
+expr_stmt|;
+name|mode
 operator|=
 name|FileMode
 expr_stmt|;
@@ -13323,6 +13313,12 @@ argument_list|(
 name|EX_CANTCREAT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|==
+name|ST_MODE_NOFILE
+condition|)
 name|mode
 operator|=
 name|stb
@@ -13826,6 +13822,35 @@ name|errstring
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_CANTCREAT
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|filechanged
+argument_list|(
+name|filename
+argument_list|,
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+operator|&
+name|stb
+argument_list|,
+name|sfflags
+argument_list|)
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"554 file changed after open"
 argument_list|)
 expr_stmt|;
 name|exit

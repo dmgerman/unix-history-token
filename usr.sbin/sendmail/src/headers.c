@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.110 (Berkeley) 6/14/97"
+literal|"@(#)headers.c	8.111 (Berkeley) 7/9/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -615,6 +615,14 @@ name|hi
 operator|->
 name|hi_flags
 argument_list|,
+name|hi
+operator|->
+name|hi_ruleset
+operator|==
+name|NULL
+condition|?
+literal|"<NULL>"
+else|:
 name|hi
 operator|->
 name|hi_ruleset

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.67 (Berkeley) 4/9/97 (with name server)"
+literal|"@(#)domain.c	8.68 (Berkeley) 8/2/97 (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.67 (Berkeley) 4/9/97 (without name server)"
+literal|"@(#)domain.c	8.68 (Berkeley) 8/2/97 (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3042,6 +3042,11 @@ name|p
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|sff
+init|=
+name|SFF_REGONLY
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -3055,6 +3060,14 @@ index|[
 name|MAXDNAME
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|DontLockReadFiles
+condition|)
+name|sff
+operator||=
+name|SFF_NOLOCK
+expr_stmt|;
 name|fname
 operator|=
 name|getenv
@@ -3079,7 +3092,7 @@ name|O_RDONLY
 argument_list|,
 literal|0
 argument_list|,
-name|SFF_REGONLY
+name|sff
 argument_list|)
 operator|)
 operator|==
