@@ -128,10 +128,11 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+name|size_t
+name|n
+decl_stmt|;
 name|int
 name|signum
-decl_stmt|,
-name|n
 decl_stmt|;
 name|char
 modifier|*
@@ -176,6 +177,8 @@ operator|<
 name|sys_nsig
 condition|)
 block|{
+name|n
+operator|=
 name|strlcpy
 argument_list|(
 name|ebuf
