@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	6.6	84/07/08	*/
+comment|/*	param.c	6.7	84/08/23	*/
 end_comment
 
 begin_include
@@ -273,6 +273,8 @@ begin_decl_stmt
 name|int
 name|ndquot
 init|=
+name|NINODE
+operator|+
 operator|(
 name|MAXUSERS
 operator|*
@@ -280,8 +282,6 @@ name|NMOUNT
 operator|)
 operator|/
 literal|4
-operator|+
-name|NPROC
 decl_stmt|;
 end_decl_stmt
 
