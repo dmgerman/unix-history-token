@@ -92,7 +92,7 @@ literal|"/usr/bin"
 block|,
 literal|"/usr/games"
 block|,
-literal|"/usr/gnu"
+literal|"/usr/gnu/bin"
 block|,
 literal|"/usr/include"
 block|,
@@ -210,7 +210,11 @@ literal|"/usr/src/etc"
 block|,
 literal|"/usr/src/games"
 block|,
-literal|"/usr/src/gnu"
+literal|"/usr/src/gnu/lib"
+block|,
+literal|"/usr/src/gnu/libexec"
+block|,
+literal|"/usr/src/gnu/usr.bin"
 block|,
 literal|"/usr/src/include"
 block|,
