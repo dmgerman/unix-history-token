@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signal.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -29,23 +29,35 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_POSIX_SOURCE
+name|KERNEL
 end_ifndef
 
 begin_include
 include|#
 directive|include
-file|<machine/trap.h>
+file|<sys/types.h>
 end_include
 
-begin_comment
-comment|/* codes for SIGILL, SIGFPE */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/signal.h>
+end_include
+
+begin_comment
+comment|/* sigcontext; codes for SIGILL, SIGFPE */
+end_comment
 
 begin_define
 define|#
@@ -465,48 +477,26 @@ begin_comment
 comment|/* user defined signal 2 */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
+begin_define
+define|#
+directive|define
+name|SIG_DFL
+value|(void (*)())0
+end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_define
+define|#
+directive|define
+name|SIG_IGN
+value|(void (*)())1
+end_define
 
-begin_typedef
-typedef|typedef
-name|void
-argument_list|(
-argument|*sig_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_typedef
-typedef|typedef
-name|int
-name|sig_atomic_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* XXX should be machine dependent. */
-end_comment
+begin_define
+define|#
+directive|define
+name|SIG_ERR
+value|(void (*)())-1
+end_define
 
 begin_typedef
 typedef|typedef
@@ -515,139 +505,6 @@ name|int
 name|sigset_t
 typedef|;
 end_typedef
-
-begin_decl_stmt
-name|__BEGIN_DECLS
-name|int
-name|sigaddset
-name|__P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sigdelset
-name|__P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sigemptyset
-name|__P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sigfillset
-name|__P
-argument_list|(
-operator|(
-name|sigset_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|sigismember
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|sigset_t
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|__END_DECLS
-end_macro
-
-begin_define
-define|#
-directive|define
-name|sigemptyset
-parameter_list|(
-name|set
-parameter_list|)
-value|( *(set) = 0 )
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigfillset
-parameter_list|(
-name|set
-parameter_list|)
-value|( *(set) = ~(sigset_t)0, 0 )
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigaddset
-parameter_list|(
-name|set
-parameter_list|,
-name|signo
-parameter_list|)
-value|( *(set) |= 1<< ((signo) - 1), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigdelset
-parameter_list|(
-name|set
-parameter_list|,
-name|signo
-parameter_list|)
-value|( *(set)&= ~(1<< ((signo) - 1)), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigismember
-parameter_list|(
-name|set
-parameter_list|,
-name|signo
-parameter_list|)
-value|( (*(set)& (1<< ((signo) - 1))) != 0)
-end_define
 
 begin_comment
 comment|/*  * Signal vector "template" used in sigaction call.  */
@@ -764,6 +621,25 @@ directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
 
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*sig_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/* type of signal function */
+end_comment
+
 begin_comment
 comment|/*  * 4.3 compatibility:  * Signal vector "template" used in sigvec call.  */
 end_comment
@@ -868,111 +744,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  */
-end_comment
-
-begin_struct
-struct|struct
-name|sigcontext
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|hp300
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|i386
-argument_list|)
-name|int
-name|sc_onstack
-decl_stmt|;
-comment|/* sigstack state to restore */
-name|int
-name|sc_mask
-decl_stmt|;
-comment|/* signal mask to restore */
-name|int
-name|sc_sp
-decl_stmt|;
-comment|/* sp to restore */
-name|int
-name|sc_fp
-decl_stmt|;
-comment|/* fp to restore */
-name|int
-name|sc_ap
-decl_stmt|;
-comment|/* ap to restore */
-name|int
-name|sc_pc
-decl_stmt|;
-comment|/* pc to restore */
-name|int
-name|sc_ps
-decl_stmt|;
-comment|/* psl to restore */
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|mips
-argument_list|)
-name|int
-name|sc_onstack
-decl_stmt|;
-comment|/* sigstack state to restore */
-name|int
-name|sc_mask
-decl_stmt|;
-comment|/* signal mask to restore */
-name|int
-name|sc_pc
-decl_stmt|;
-comment|/* pc at time of signal */
-name|int
-name|sc_regs
-index|[
-literal|34
-index|]
-decl_stmt|;
-comment|/* processor regs 0 to 31, mullo, mullhi */
-name|int
-name|sc_fpused
-decl_stmt|;
-comment|/* fp has been used */
-name|int
-name|sc_fpregs
-index|[
-literal|33
-index|]
-decl_stmt|;
-comment|/* fp regs 0 to 31 and csr */
-name|int
-name|sc_fpc_eir
-decl_stmt|;
-comment|/* floating point exception instruction reg */
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Macro for converting signal number to a mask suitable for  * sigblock().  */
 end_comment
 
@@ -1002,38 +773,11 @@ begin_comment
 comment|/* !_POSIX_SOURCE */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SIG_DFL
-value|(void (*)())0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_IGN
-value|(void (*)())1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SIG_ERR
-value|(void (*)())-1
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|KERNEL
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
@@ -1335,6 +1079,78 @@ begin_comment
 comment|/* !_ANSI_SOURCE&& !_POSIX_SOURCE */
 end_comment
 
+begin_decl_stmt
+name|int
+name|sigaddset
+name|__P
+argument_list|(
+operator|(
+name|sigset_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sigdelset
+name|__P
+argument_list|(
+operator|(
+name|sigset_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sigemptyset
+name|__P
+argument_list|(
+operator|(
+name|sigset_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sigfillset
+name|__P
+argument_list|(
+operator|(
+name|sigset_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sigismember
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|sigset_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro
@@ -1347,6 +1163,62 @@ end_endif
 begin_comment
 comment|/* !KERNEL */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|sigemptyset
+parameter_list|(
+name|set
+parameter_list|)
+value|( *(set) = 0 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigfillset
+parameter_list|(
+name|set
+parameter_list|)
+value|( *(set) = ~(sigset_t)0, 0 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigaddset
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|( *(set) |= 1<< ((signo) - 1), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigdelset
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|( *(set)&= ~(1<< ((signo) - 1)), 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigismember
+parameter_list|(
+name|set
+parameter_list|,
+name|signo
+parameter_list|)
+value|( (*(set)& (1<< ((signo) - 1))) != 0)
+end_define
 
 begin_endif
 endif|#
