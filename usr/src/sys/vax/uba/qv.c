@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qv.c	1.5  Berkeley  %G%  *  *	derived from: @(#)qv.c	1.8 (ULTRIX) 8/21/85  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qv.c	1.6  Berkeley  %G%  *  *	derived from: @(#)qv.c	1.8 (ULTRIX) 8/21/85  */
 end_comment
 
 begin_comment
@@ -120,25 +120,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"../machine/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../machine/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubareg.h"
+file|"ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxuba/ubavar.h"
+file|"ubavar.h"
 end_include
 
 begin_define

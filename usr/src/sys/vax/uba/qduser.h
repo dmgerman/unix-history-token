@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qduser.h	1.3  Berkeley  %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qduser.h	1.4  Berkeley  %G%  */
+end_comment
+
+begin_comment
+comment|/* derived from: @(#)qduser.h	6.1	(ULTRIX)	11/24/87       */
 end_comment
 
 begin_comment
@@ -12,7 +16,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*************************************************************************** *	revision history: (belongs in sccs) **************************************************************************** * * 21 jul 86  ram    fixed define of CURSOR_MIN_Y * 25 nov 85  longo  added macro and bit defines for DMA error flags * 11 nov 85  longo  renamed _vs_eventqueue to "qdinput" struct * 23 oct 85  longo  added more defines to the DMA stuff * 17 oct 85  longo  changed "struct rgb" chars to be unsigned * 16 oct 85  longo  added new TABLET support definitions * 15 oct 85  longo  re-wrote DMA queue access macros * 08 oct 85  longo  added status flag manipulation macros to DMA stuff * 02 oct 85  longo  added support for color map write buffer loading * 26 sep 85  longo  removed adder sertup params from DMA request struct * 23 sep 85  longo  added DMA queue access macros * 30 aug 85  longo  fixed crock in "qdiobuf" struct compile-time sizing. Also *		    removed DMAcontrol struct from DMA buffer for field test * 26 aug 85  longo  put in conditional include of "qevent.h" for user prg's * 18 jul 85  longo  changed semantics so that head is tail and tail is head * 12 jul 85  longo  moved "mouse_report" struct and defs over to qd_data.c * 11 jul 85  longo  added device coordinate to gate array cursor coordinate *		    transformation macros * 03 jul 85  longo  changed kernel typdef's for data types to long-hand * 10 may 85  longo  created * ***************************************************************************/
+comment|/*************************************************************************** *	revision history: **************************************************************************** * * 21 jul 86  ram    fixed define of CURSOR_MIN_Y * 25 nov 85  longo  added macro and bit defines for DMA error flags * 11 nov 85  longo  renamed _vs_eventqueue to "qdinput" struct * 23 oct 85  longo  added more defines to the DMA stuff * 17 oct 85  longo  changed "struct rgb" chars to be unsigned * 16 oct 85  longo  added new TABLET support definitions * 15 oct 85  longo  re-wrote DMA queue access macros * 08 oct 85  longo  added status flag manipulation macros to DMA stuff * 02 oct 85  longo  added support for color map write buffer loading * 26 sep 85  longo  removed adder sertup params from DMA request struct * 23 sep 85  longo  added DMA queue access macros * 30 aug 85  longo  fixed crock in "qdiobuf" struct compile-time sizing. Also *		    removed DMAcontrol struct from DMA buffer for field test * 26 aug 85  longo  put in conditional include of "qevent.h" for user prg's * 18 jul 85  longo  changed semantics so that head is tail and tail is head * 12 jul 85  longo  moved "mouse_report" struct and defs over to qd_data.c * 11 jul 85  longo  added device coordinate to gate array cursor coordinate *		    transformation macros * 03 jul 85  longo  changed kernel typdef's for data types to long-hand * 10 may 85  longo  created * ***************************************************************************/
 end_comment
 
 begin_ifdef
