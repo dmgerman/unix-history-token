@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	8.2 (Berkeley) %G%"
+literal|"@(#)rcmd.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1826,20 +1826,23 @@ name|int
 name|ch
 decl_stmt|;
 name|char
-name|ahost
+name|buf
 index|[
 name|MAXHOSTNAMELEN
+operator|+
+literal|128
 index|]
 decl_stmt|;
+comment|/* host + login */
 while|while
 condition|(
 name|fgets
 argument_list|(
-name|ahost
+name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ahost
+name|buf
 argument_list|)
 argument_list|,
 name|hostf
@@ -1848,7 +1851,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|ahost
+name|buf
 expr_stmt|;
 comment|/* Skip lines that are too long. */
 if|if
@@ -2008,7 +2011,7 @@ name|__icheckhost
 argument_list|(
 name|raddr
 argument_list|,
-name|ahost
+name|buf
 argument_list|)
 operator|&&
 name|strcmp
