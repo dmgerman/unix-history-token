@@ -166,6 +166,36 @@ name|f_pc
 value|f_in[7]
 end_define
 
+begin_comment
+comment|/*  * Frame used for pcb_wscratch.  */
+end_comment
+
+begin_struct
+struct|struct
+name|wsframe
+block|{
+name|u_long
+name|wsf_local
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_long
+name|wsf_in
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_long
+name|wsf_sp
+decl_stmt|;
+name|u_long
+name|wsf_inuse
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 name|int
 name|kdb_trap

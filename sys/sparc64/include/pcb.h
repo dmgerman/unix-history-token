@@ -24,8 +24,30 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pstate.h>
+file|<machine/frame.h>
 end_include
+
+begin_comment
+comment|/*  * XXX: MAXWIN should probably be done dynamically, pcb_wscratch is therefore  * at the end of the pcb.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXWIN
+value|8
+end_define
+
+begin_comment
+comment|/* Used in pcb_fcwp to mark the wscratch stack as empty. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCB_CWP_EMPTY
+value|0xff
+end_define
 
 begin_comment
 comment|/* NOTE: pcb_fpstate must be aligned on a 64 byte boundary. */
@@ -45,8 +67,27 @@ decl_stmt|;
 name|u_long
 name|pcb_pc
 decl_stmt|;
+name|u_long
+name|pcb_y
+decl_stmt|;
 name|caddr_t
 name|pcb_onfault
+decl_stmt|;
+name|u_long
+name|pcb_inwinop
+decl_stmt|;
+name|u_long
+name|pcb_cwp
+decl_stmt|;
+name|u_long
+name|pcb_ws_inuse
+decl_stmt|;
+name|struct
+name|wsframe
+name|pcb_wscratch
+index|[
+name|MAXWIN
+index|]
 decl_stmt|;
 block|}
 struct|;
