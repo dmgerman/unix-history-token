@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwpty.c	3.6 84/01/16"
+literal|"@(#)wwpty.c	3.7 84/03/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,10 @@ name|int
 operator|)
 name|TIOCPKT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|on
 argument_list|)
