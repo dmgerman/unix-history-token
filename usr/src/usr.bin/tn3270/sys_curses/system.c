@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	3.4 (Berkeley) %G%"
+literal|"@(#)system.c	3.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -795,11 +795,34 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|43
+operator|)
 specifier|extern
 name|uid_t
 name|geteuid
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
+comment|/* (!defined(sun)) || defined(BSD)&& (BSD>= 43) */
 if|if
 condition|(
 operator|(
