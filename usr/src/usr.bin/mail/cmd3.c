@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	1.12 %G%"
+literal|"@(#)cmd3.c	1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ operator|-
 literal|2
 index|]
 operator|=
-name|signal
+name|sigset
 argument_list|(
 name|t
 argument_list|,
@@ -180,7 +180,7 @@ index|]
 operator|!=
 name|SIG_IGN
 condition|)
-name|signal
+name|sigsys
 argument_list|(
 name|t
 argument_list|,
@@ -246,7 +246,7 @@ condition|;
 name|t
 operator|++
 control|)
-name|signal
+name|sigset
 argument_list|(
 name|t
 argument_list|,
@@ -351,7 +351,7 @@ operator|-
 literal|2
 index|]
 operator|=
-name|signal
+name|sigset
 argument_list|(
 name|t
 argument_list|,
@@ -394,7 +394,7 @@ index|]
 operator|!=
 name|SIG_IGN
 condition|)
-name|signal
+name|sigsys
 argument_list|(
 name|t
 argument_list|,
@@ -456,7 +456,7 @@ condition|;
 name|t
 operator|++
 control|)
-name|signal
+name|sigsys
 argument_list|(
 name|t
 argument_list|,
