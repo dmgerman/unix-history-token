@@ -883,6 +883,17 @@ name|fetchRestartCalls
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Extra verbosity */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fetchDebug
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

@@ -100,6 +100,12 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|fetchDebug
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*** Local data **************************************************************/
 end_comment

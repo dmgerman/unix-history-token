@@ -253,7 +253,7 @@ name|DEBUG
 parameter_list|(
 name|x
 parameter_list|)
-value|do x; while (0)
+value|do { if (fetchDebug) { x; } } while (0)
 end_define
 
 begin_else
