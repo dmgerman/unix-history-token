@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhci.c,v 1.22 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: uhci.c,v 1.6 1999/01/07 23:31:33 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -4657,12 +4657,6 @@ name|n
 decl_stmt|,
 name|running
 decl_stmt|;
-name|run
-operator|=
-name|run
-operator|!=
-literal|0
-expr_stmt|;
 name|s
 operator|=
 name|splusb
@@ -4670,7 +4664,7 @@ argument_list|()
 expr_stmt|;
 name|running
 operator|=
-operator|!
+operator|(
 operator|(
 name|UREAD2
 argument_list|(
@@ -4681,6 +4675,24 @@ argument_list|)
 operator|&
 name|UHCI_STS_HCH
 operator|)
+operator|==
+literal|0
+operator|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"sc->sc_iobase=0x%x run=0x%x, running=0x%x\n"
+operator|,
+name|sc
+operator|->
+name|sc_iobase
+operator|,
+name|run
+operator|,
+name|running
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4729,7 +4741,7 @@ control|)
 block|{
 name|running
 operator|=
-operator|!
+operator|(
 operator|(
 name|UREAD2
 argument_list|(
@@ -4740,6 +4752,20 @@ argument_list|)
 operator|&
 name|UHCI_STS_HCH
 operator|)
+operator|==
+literal|0
+operator|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"run=0x%x, running=0x%x\n"
+operator|,
+name|run
+operator|,
+name|running
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* return when we've entered the state we want */
 if|if
@@ -4796,6 +4822,16 @@ else|:
 literal|"stop"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|uhci_dumpregs
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|USBD_IOERROR
