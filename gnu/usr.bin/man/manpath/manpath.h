@@ -20,12 +20,56 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|int
-name|mandatory
+name|type
 decl_stmt|;
 block|}
 name|DIRLIST
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* manpath types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MANPATH_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MANPATH_MANDATORY
+value|1
+end_define
+
+begin_comment
+comment|/* manpath is mandatory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MANPATH_OPTIONAL
+value|2
+end_define
+
+begin_comment
+comment|/* manpath is optional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MANPATH_MAP
+value|3
+end_define
+
+begin_comment
+comment|/* maps path to manpath */
+end_comment
 
 begin_decl_stmt
 name|DIRLIST
