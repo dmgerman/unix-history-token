@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dumpon.c,v 1.2 1995/05/30 06:08:58 rgrimes Exp $"
+literal|"$Id: dumpon.c,v 1.2.6.1 1997/08/26 13:15:01 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,9 +405,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: crash dumps disabled\n"
-argument_list|,
-name|whoami
+literal|"dumpon: crash dumps disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -415,9 +413,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s: crash dumps to %s (%lu, %lu)\n"
-argument_list|,
-name|whoami
+literal|"dumpon: crash dumps to %s (%lu, %lu)\n"
 argument_list|,
 name|argv
 index|[
@@ -464,12 +460,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-v] special_file\n"
-literal|"       %s [-v] off\n"
-argument_list|,
-name|whoami
-argument_list|,
-name|whoami
+literal|"usage: dumpon [-v] special_file\n"
+literal|"       dumpon [-v] off\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -3,34 +3,36 @@ begin_comment
 comment|/*  * Mach Operating System  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -42,13 +44,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -198,13 +230,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|disklabel
 name|disklabel
@@ -240,7 +265,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* force the longs to be long alligned */
+comment|/* force the longs to be long aligned */
 name|unsigned
 name|char
 name|bootinst
@@ -1939,6 +1964,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
@@ -1967,37 +2002,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|name
-operator|=
-operator|*
-name|argv
-expr_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-init|=
-name|name
-decl_stmt|;
-while|while
-condition|(
-operator|*
-name|cp
-condition|)
-if|if
-condition|(
-operator|*
-name|cp
-operator|++
-operator|==
-literal|'/'
-condition|)
-name|name
-operator|=
-name|cp
-expr_stmt|;
-block|}
 for|for
 control|(
 name|argv
@@ -2121,11 +2125,9 @@ name|argc
 operator|==
 literal|1
 condition|)
-block|{
-goto|goto
 name|usage
-goto|;
-block|}
+argument_list|()
+expr_stmt|;
 operator|--
 name|argc
 expr_stmt|;
@@ -2173,9 +2175,9 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -2247,27 +2249,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot open disk %s (%s)\n"
-argument_list|,
-name|disk
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot open disk %s"
+argument_list|,
+name|disk
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2322,25 +2312,13 @@ name|rv
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot open any disk (%s)\n"
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot open any disk"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|printf
 argument_list|(
@@ -2552,18 +2530,27 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|usage
-label|:
-name|printf
+parameter_list|()
+block|{
+name|fprintf
 argument_list|(
-literal|"fdisk {-a|-i|-u} [-f<config file> [-t] [-v]] [-{1,2,3,4}] [disk]\n"
+name|stderr
+argument_list|,
+literal|"usage: fdisk {-a|-i|-u} [-f<config file> [-t] [-v]] [-{1,2,3,4}] [disk]\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|exit
+argument_list|(
 literal|1
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2737,12 +2724,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    start %ld, size %ld (%qd Meg), flag %x%s\n"
+literal|"    start %lu, size %lu (%qd Meg), flag %x%s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|partp
 operator|->
 name|dp_start
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|partp
 operator|->
 name|dp_size
@@ -3834,13 +3827,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't get file status of %s\n"
-argument_list|,
-name|name
+literal|"can't get file status of %s"
 argument_list|,
 name|disk
 argument_list|)
@@ -3861,13 +3850,9 @@ operator|&
 name|S_IFCHR
 operator|)
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Device %s is not character special\n"
-argument_list|,
-name|name
+literal|"device %s is not character special"
 argument_list|,
 name|disk
 argument_list|)
@@ -3905,13 +3890,9 @@ return|return
 operator|-
 literal|2
 return|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't open device %s\n"
-argument_list|,
-name|name
+literal|"can't open device %s"
 argument_list|,
 name|disk
 argument_list|)
@@ -3932,13 +3913,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't get disk parameters on %s\n"
-argument_list|,
-name|name
+literal|"can't get disk parameters on %s"
 argument_list|,
 name|disk
 argument_list|)
@@ -4106,13 +4083,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't get disk parameters on %s; supplying dummy ones\n"
-argument_list|,
-name|name
+literal|"can't get disk parameters on %s; supplying dummy ones"
 argument_list|,
 name|disk
 argument_list|)
@@ -4231,13 +4204,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't read fdisk partition table\n"
-argument_list|,
-name|name
+literal|"can't read fdisk partition table"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4254,13 +4223,9 @@ operator|!=
 name|BOOT_MAGIC
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Invalid fdisk partition table found\n"
-argument_list|,
-name|name
+literal|"invalid fdisk partition table found"
 argument_list|)
 expr_stmt|;
 comment|/* So should we initialize things */
@@ -4321,7 +4286,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl DIOCWLABEL"
 argument_list|)
@@ -4347,13 +4312,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't write fdisk partition table\n"
-argument_list|,
-name|name
+literal|"can't write fdisk partition table"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4999,13 +4960,9 @@ condition|(
 name|part_processed
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: the geometry specification line must occur before\n\     all partition specifications.\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: the geometry specification line must occur before\n\     all partition specifications"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5025,13 +4982,9 @@ operator|!=
 literal|3
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: incorrect number of geometry args\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: incorrect number of geometry args"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5129,13 +5082,9 @@ name|arg_val
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: unknown geometry arg type: '%c' (0x%02x)\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: unknown geometry arg type: '%c' (0x%02x)"
 argument_list|,
 name|current_line_number
 argument_list|,
@@ -5188,13 +5137,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: number of cylinders not specified\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: number of cylinders not specified"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5215,13 +5160,9 @@ operator|>
 literal|1024
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: WARNING line %d: number of cylinders (%d) may be out-of-range\n\     (must be within 1-1024 for normal BIOS operation, unless the entire disk\n\     is dedicated to FreeBSD).\n"
-argument_list|,
-name|name
+literal|"WARNING line %d: number of cylinders (%d) may be out-of-range\n\     (must be within 1-1024 for normal BIOS operation, unless the entire disk\n\     is dedicated to FreeBSD)"
 argument_list|,
 name|current_line_number
 argument_list|,
@@ -5236,13 +5177,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: number of heads not specified\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: number of heads not specified"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5264,13 +5201,9 @@ operator|>
 literal|256
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: number of heads must be within (1-256)\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: number of heads must be within (1-256)"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5287,13 +5220,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: number of sectors not specified\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: number of sectors not specified"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5315,13 +5244,9 @@ operator|>
 literal|63
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: number of sectors must be within (1-63)\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: number of sectors must be within (1-63)"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5391,13 +5316,9 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: incorrect number of partition args\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: incorrect number of partition args"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5426,13 +5347,9 @@ operator|>
 literal|4
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: invalid partition number %d\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: invalid partition number %d"
 argument_list|,
 name|current_line_number
 argument_list|,
@@ -5589,13 +5506,9 @@ name|max_end
 condition|)
 block|{
 comment|/* 		 * Can't go past end of partition 		 */
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: unable to adjust start of partition %d to fall on\n\     a cylinder boundary.\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: unable to adjust start of partition %d to fall on\n\     a cylinder boundary"
 argument_list|,
 name|current_line_number
 argument_list|,
@@ -5604,16 +5517,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: WARNING: adjusting start offset of partition '%d' from %d\n\     to %d, to round to an head boundary.\n"
-argument_list|,
-name|name
+literal|"WARNING: adjusting start offset of partition '%d' from %lu\n\     to %lu, to round to an head boundary"
 argument_list|,
 name|partition
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|partp
 operator|->
 name|dp_start
@@ -5664,16 +5576,15 @@ operator|->
 name|dp_size
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: WARNING: adjusting size of partition '%d' from %d to %d,\n\     to round to a cylinder boundary.\n"
-argument_list|,
-name|name
+literal|"WARNING: adjusting size of partition '%d' from %lu to %lu,\n\     to round to a cylinder boundary"
 argument_list|,
 name|partition
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|partp
 operator|->
 name|dp_size
@@ -5714,13 +5625,9 @@ operator|<
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: size for partition '%d' is zero.\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: size for partition '%d' is zero"
 argument_list|,
 name|current_line_number
 argument_list|,
@@ -5845,13 +5752,9 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: incorrect number of active args\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: incorrect number of active args"
 argument_list|,
 name|current_line_number
 argument_list|)
@@ -5884,13 +5787,9 @@ operator|>
 literal|4
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ERROR line %d: invalid partition number %d\n"
-argument_list|,
-name|name
+literal|"ERROR line %d: invalid partition number %d"
 argument_list|,
 name|current_line_number
 argument_list|,

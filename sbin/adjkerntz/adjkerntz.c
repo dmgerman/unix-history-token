@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1996 by Andrey A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *		$Id: adjkerntz.c,v 1.21 1998/02/25 09:40:21 ache Exp $  */
+comment|/*  * Copyright (C) 1993-1998 by Andrey A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *		$Id: adjkerntz.c,v 1.18.2.3 1998/02/25 09:43:47 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -59,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -169,8 +163,6 @@ block|{
 name|struct
 name|tm
 name|local
-decl_stmt|,
-name|utc
 decl_stmt|;
 name|struct
 name|timeval
@@ -205,8 +197,6 @@ decl_stmt|;
 comment|/* Avoid time_t here, can be unsigned long or worse */
 name|long
 name|offset
-decl_stmt|,
-name|utcsec
 decl_stmt|,
 name|localsec
 decl_stmt|,
@@ -332,6 +322,20 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+name|_PATH_CLOCK
+argument_list|,
+name|F_OK
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|init
@@ -589,34 +593,13 @@ name|local
 operator|.
 name|tm_isdst
 expr_stmt|;
-name|utc
-operator|=
-operator|*
-name|gmtime
-argument_list|(
-operator|&
-name|initial_sec
-argument_list|)
-expr_stmt|;
 name|local
-operator|.
-name|tm_isdst
-operator|=
-name|utc
 operator|.
 name|tm_isdst
 operator|=
 name|initial_isdst
 expr_stmt|;
 comment|/* calculate local CMOS diff from GMT */
-name|utcsec
-operator|=
-name|mktime
-argument_list|(
-operator|&
-name|utc
-argument_list|)
-expr_stmt|;
 name|localsec
 operator|=
 name|mktime
@@ -627,11 +610,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|utcsec
-operator|==
-operator|-
-literal|1
-operator|||
 name|localsec
 operator|==
 operator|-
@@ -639,40 +617,19 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * XXX user can only control local time, and it is 		 * unacceptable to fail here for init.  2:30 am in the 		 * middle of the nonexistent hour means 3:30 am. 		 */
-name|syslog
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"Warning: nonexistent %s time."
-argument_list|,
-name|utcsec
-operator|==
-operator|-
-literal|1
-operator|&&
-name|localsec
-operator|==
-operator|-
-literal|1
-condition|?
-literal|"UTC time and local"
-else|:
-name|utcsec
-operator|==
-operator|-
-literal|1
-condition|?
-literal|"UTC"
-else|:
-literal|"local"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|sleep_mode
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Warning: nonexistent local time, try to run later."
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -684,6 +641,13 @@ return|return
 literal|1
 return|;
 block|}
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Warning: nonexistent local time."
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -732,9 +696,10 @@ goto|;
 block|}
 name|offset
 operator|=
-name|utcsec
 operator|-
-name|localsec
+name|local
+operator|.
+name|tm_gmtoff
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -844,32 +809,11 @@ goto|goto
 name|recalculate
 goto|;
 block|}
-name|utc
-operator|=
-operator|*
-name|gmtime
-argument_list|(
-operator|&
-name|final_sec
-argument_list|)
-expr_stmt|;
 name|local
 operator|.
 name|tm_isdst
 operator|=
-name|utc
-operator|.
-name|tm_isdst
-operator|=
 name|final_isdst
-expr_stmt|;
-name|utcsec
-operator|=
-name|mktime
-argument_list|(
-operator|&
-name|utc
-argument_list|)
 expr_stmt|;
 name|localsec
 operator|=
@@ -881,11 +825,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|utcsec
-operator|==
-operator|-
-literal|1
-operator|||
 name|localsec
 operator|==
 operator|-
@@ -895,40 +834,19 @@ block|{
 name|bad_final
 label|:
 comment|/* 			 * XXX as above.  The user has even less control, 			 * but perhaps we never get here. 			 */
-name|syslog
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"Warning: nonexistent final %s time."
-argument_list|,
-name|utcsec
-operator|==
-operator|-
-literal|1
-operator|&&
-name|localsec
-operator|==
-operator|-
-literal|1
-condition|?
-literal|"UTC time and local"
-else|:
-name|utcsec
-operator|==
-operator|-
-literal|1
-condition|?
-literal|"UTC"
-else|:
-literal|"local"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|sleep_mode
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Warning: nonexistent final local time, try to run later."
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -940,6 +858,13 @@ return|return
 literal|1
 return|;
 block|}
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Warning: nonexistent final local time."
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -988,9 +913,10 @@ goto|;
 block|}
 name|offset
 operator|=
-name|utcsec
 operator|-
-name|localsec
+name|local
+operator|.
+name|tm_gmtoff
 expr_stmt|;
 ifdef|#
 directive|ifdef

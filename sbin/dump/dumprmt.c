@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)dumprmt.c	8.3 (Berkeley) 4/28/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	8.3 (Berkeley) 4/28/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mtio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -131,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -144,12 +145,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -702,7 +697,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -728,7 +723,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -768,7 +763,7 @@ argument_list|)
 condition|)
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 name|rmtpeer

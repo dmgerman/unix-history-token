@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * (julian@tfs.com julian@dialix.oz.au)  *  * User SCSI hooks added by Peter Dufault:  *  * Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of HD Associates  *    may not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi.c,v 1.12.2.1 1997/06/19 14:25:07 charnier Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * (julian@tfs.com julian@dialix.oz.au)  *  * User SCSI hooks added by Peter Dufault:  *  * Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of HD Associates  *    may not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi.c,v 1.12.2.2 1997/09/14 19:48:28 jkh Exp $  */
 end_comment
 
 begin_include
@@ -1302,14 +1302,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"read"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|errno
 argument_list|)
 expr_stmt|;
 block|}
@@ -1507,14 +1504,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"write"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|errno
 argument_list|)
 expr_stmt|;
 block|}
@@ -1529,14 +1523,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: wrote only %d bytes out of %d.\n"
+literal|"Warning: wrote only %lu bytes out of %lu.\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|scsireq
 operator|->
 name|datalen
 operator|-
 name|count
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|scsireq
 operator|->
 name|datalen
@@ -1603,24 +1603,19 @@ name|errno
 operator|==
 name|ENODEV
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Your kernel must be configured with option SCSI_FREEZE.\n"
+literal|"your kernel must be configured with option SCSI_FREEZE"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-name|perror
+name|err
 argument_list|(
-literal|"SCIOCFREEZE"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|errno
+literal|1
+argument_list|,
+literal|"ioctl [SCIOCFREEZE]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1849,7 +1844,6 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1953,7 +1947,6 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -2189,23 +2182,15 @@ argument_list|)
 operator|!=
 name|START_ENTRY
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Expected %c.\n"
+literal|"expected %c"
 argument_list|,
 name|START_ENTRY
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|match
 operator|=
 literal|1
@@ -2231,11 +2216,9 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Expected %c.\n"
+literal|"expected %c"
 argument_list|,
 name|END_ENTRY
 argument_list|)
@@ -2288,20 +2271,13 @@ argument_list|(
 name|fmt
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Stupid program: Buffer overflow.\n"
+literal|"buffer overflow"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ENOMEM
-argument_list|)
-expr_stmt|;
-block|}
 name|fmt
 index|[
 name|next
@@ -2481,8 +2457,10 @@ argument_list|(
 name|edit_file
 argument_list|)
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|edit_name
 argument_list|)
 expr_stmt|;
@@ -2493,8 +2471,10 @@ argument_list|(
 name|edit_name
 argument_list|)
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|edit_name
 argument_list|)
 expr_stmt|;
@@ -2522,18 +2502,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|perror
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"tmpnam failed"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2549,18 +2524,15 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|edit_name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
 name|edit_opened
 operator|=
 literal|1
@@ -2607,23 +2579,15 @@ name|letter
 operator|!=
 literal|'b'
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Can't edit format %c.\n"
+literal|"can't edit format %c"
 argument_list|,
 name|letter
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|editind
@@ -2641,20 +2605,13 @@ literal|0
 index|]
 argument_list|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"edit table overflow\n"
+literal|"edit table overflow"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ENOMEM
-argument_list|)
-expr_stmt|;
-block|}
 name|editinfo
 index|[
 name|editind
@@ -2711,23 +2668,15 @@ name|letter
 operator|!=
 literal|'b'
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Can't edit format %c.\n"
+literal|"can't edit format %c"
 argument_list|,
 name|letter
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|editinfo
 index|[
 name|editind
@@ -2792,23 +2741,15 @@ name|letter
 operator|!=
 literal|'b'
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Can't report format %c.\n"
+literal|"can't report format %c"
 argument_list|,
 name|letter
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|edit_file
@@ -2886,18 +2827,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"fgets"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
 name|line
 index|[
 name|strlen
@@ -2926,25 +2862,17 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Expected \"%s\" and read \"%s\"\n"
+literal|"expected \"%s\" and read \"%s\""
 argument_list|,
 name|name
 argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|arg
 operator|=
 name|strtoul
@@ -3061,18 +2989,15 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|edit_name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3199,21 +3124,13 @@ condition|(
 operator|!
 name|fmt
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sorry: can't edit without a format.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"can't edit without a format"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pagectl
@@ -3224,21 +3141,13 @@ name|pagectl
 operator|!=
 literal|3
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"It only makes sense to edit page 0 (current) or page 3 (saved values)\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"it only makes sense to edit page 0 (current) or page 3 (saved values)"
 argument_list|)
 expr_stmt|;
-block|}
 name|verbose
 operator|=
 literal|1
@@ -4065,9 +3974,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"ioctl"
+literal|"ioctl [SCIOCREPROBE]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4092,18 +4001,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl [SCIODEBUG]"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -4122,11 +4026,9 @@ operator|<
 literal|1
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Need the command format string.\n"
+literal|"need the command format string"
 argument_list|)
 expr_stmt|;
 name|usage

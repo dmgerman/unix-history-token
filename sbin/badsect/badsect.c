@@ -35,14 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)badsect.c	8.1 (Berkeley) 6/5/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)badsect.c	8.1 (Berkeley) 6/5/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -240,6 +258,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: badsect bbdir blkno ...\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -296,20 +337,9 @@ name|argc
 operator|<
 literal|3
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: badsect bbdir blkno [ blkno ]\n"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|chdir
@@ -332,21 +362,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|2
+argument_list|,
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 name|name
@@ -367,18 +394,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|3
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|3
-argument_list|)
-expr_stmt|;
-block|}
 name|name_dir_end
 operator|=
 name|name
@@ -423,18 +447,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|4
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|4
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|stbuf
@@ -473,6 +494,9 @@ name|printf
 argument_list|(
 literal|"Cannot find dev 0%lo corresponding to %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|stbuf
 operator|.
 name|st_rdev
@@ -526,18 +550,15 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|6
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|6
-argument_list|)
-expr_stmt|;
-block|}
 name|fs
 operator|=
 operator|&
@@ -632,6 +653,9 @@ name|printf
 argument_list|(
 literal|"sector %ld cannot be represented as a dev_t\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|number
 argument_list|)
 expr_stmt|;
@@ -660,8 +684,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 operator|*
 name|argv
 argument_list|)
@@ -738,6 +764,9 @@ name|printf
 argument_list|(
 literal|"block %ld out of range of file system\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -792,6 +821,9 @@ name|printf
 argument_list|(
 literal|"block %ld in non-data area: cannot attach\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -826,6 +858,9 @@ name|printf
 argument_list|(
 literal|"block %ld in non-data area: cannot attach\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -919,6 +954,9 @@ name|printf
 argument_list|(
 literal|"Warning: sector %ld is in use\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -981,17 +1019,17 @@ name|printf
 argument_list|(
 literal|"seek error: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bno
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"rdfs"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"rdfs"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1017,17 +1055,17 @@ name|printf
 argument_list|(
 literal|"read error: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bno
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"rdfs"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"rdfs"
 argument_list|)
 expr_stmt|;
 block|}

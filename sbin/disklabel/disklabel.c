@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Symmetric Computer Systems.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *		$Id: disklabel.c,v 1.9.2.2 1997/06/11 07:02:16 charnier Exp $  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Symmetric Computer Systems.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *		$Id: disklabel.c,v 1.9.2.3 1997/08/25 21:28:37 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -589,13 +589,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|namebuf
 index|[
@@ -806,15 +799,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|register
 name|struct
 name|disklabel
@@ -1715,22 +1699,15 @@ name|dp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unknown disk type\n"
+literal|"%s: unknown disk type"
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|lp
 operator|=
@@ -2040,7 +2017,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl DIOCWLABEL"
 argument_list|)
@@ -2063,7 +2040,7 @@ operator|->
 name|d_bbsize
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"write"
 argument_list|)
@@ -2096,7 +2073,7 @@ operator|!=
 name|bootsize
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"write"
 argument_list|)
@@ -2251,33 +2228,15 @@ name|lp
 operator|->
 name|d_secsize
 condition|)
-block|{
-name|int
-name|oerrno
-init|=
-name|errno
-decl_stmt|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"alternate label %d "
+literal|"alternate label %d write"
 argument_list|,
 name|i
 operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-name|oerrno
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"write"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 endif|#
@@ -2301,33 +2260,19 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|int
-name|saverrno
-init|=
-name|errno
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"disklabel: %s: "
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
-name|saverrno
+name|errno
 condition|)
 block|{
 case|case
 name|ESRCH
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s: no disk label on disk;"
 argument_list|,
-literal|"No disk label on disk;\n"
+name|s
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2341,11 +2286,11 @@ break|break;
 case|case
 name|EINVAL
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s: label magic number or checksum is wrong!"
 argument_list|,
-literal|"Label magic number or checksum is wrong!\n"
+name|s
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2359,31 +2304,27 @@ break|break;
 case|case
 name|EBUSY
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s: open partition would move or shrink"
 argument_list|,
-literal|"Open partition would move or shrink\n"
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|EXDEV
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s: labeled partition or 'a' partition must start at beginning of disk"
 argument_list|,
-literal|"Labeled partition or 'a' partition must start at beginning of disk\n"
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errno
-operator|=
-name|saverrno
-expr_stmt|;
-name|perror
+name|warn
 argument_list|(
 operator|(
 name|char
@@ -2548,21 +2489,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad pack magic number (label is damaged, or pack is unlabeled)\n"
-argument_list|)
-expr_stmt|;
-comment|/* lp = (struct disklabel *)(bootarea + LABELOFFSET); */
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad pack magic number (label is damaged, or pack is unlabeled)"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -3486,20 +3419,13 @@ condition|(
 operator|*
 name|p
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bootstrap doesn't leave room for disk label\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"bootstrap doesn't leave room for disk label"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|lp
@@ -3578,7 +3504,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"type: %d\n"
+literal|"type: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3690,8 +3616,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"bytes/sector: %ld\n"
+literal|"bytes/sector: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_secsize
@@ -3701,8 +3630,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"sectors/track: %ld\n"
+literal|"sectors/track: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_nsectors
@@ -3712,8 +3644,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"tracks/cylinder: %ld\n"
+literal|"tracks/cylinder: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_ntracks
@@ -3723,8 +3658,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"sectors/cylinder: %ld\n"
+literal|"sectors/cylinder: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_secpercyl
@@ -3734,8 +3672,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"cylinders: %ld\n"
+literal|"cylinders: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_ncylinders
@@ -3745,8 +3686,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"sectors/unit: %ld\n"
+literal|"sectors/unit: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_secperunit
@@ -3756,7 +3700,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"rpm: %d\n"
+literal|"rpm: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3767,7 +3711,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"interleave: %d\n"
+literal|"interleave: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3778,7 +3722,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"trackskew: %d\n"
+literal|"trackskew: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3789,7 +3733,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"cylinderskew: %d\n"
+literal|"cylinderskew: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3800,8 +3744,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"headswitch: %ld\t\t# milliseconds\n"
+literal|"headswitch: %lu\t\t# milliseconds\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_headswitch
@@ -3813,6 +3760,9 @@ name|f
 argument_list|,
 literal|"track-to-track seek: %ld\t# milliseconds\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_trkseek
@@ -3877,8 +3827,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%ld "
+literal|"%lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_drivedata
@@ -3891,7 +3844,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\n\n%d partitions:\n"
+literal|"\n\n%u partitions:\n"
 argument_list|,
 name|lp
 operator|->
@@ -3941,16 +3894,22 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"  %c: %8ld %8ld  "
+literal|"  %c: %8lu %8lu  "
 argument_list|,
 literal|'a'
 operator|+
 name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_size
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_offset
@@ -4008,12 +3967,19 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"    %5ld %5ld %5.5s "
+literal|"    %5lu %5lu %5.5s "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_fsize
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|pp
 operator|->
 name|p_fsize
@@ -4021,6 +3987,7 @@ operator|*
 name|pp
 operator|->
 name|p_frag
+argument_list|)
 argument_list|,
 literal|""
 argument_list|)
@@ -4033,12 +4000,19 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"    %5ld %5ld %5d "
+literal|"    %5lu %5lu %5u "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_fsize
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|pp
 operator|->
 name|p_fsize
@@ -4046,6 +4020,7 @@ operator|*
 name|pp
 operator|->
 name|p_frag
+argument_list|)
 argument_list|,
 name|pp
 operator|->
@@ -4060,12 +4035,19 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"    %5ld %5ld %5d"
+literal|"    %5lu %5lu %5d"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_fsize
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|pp
 operator|->
 name|p_fsize
@@ -4073,6 +4055,7 @@ operator|*
 name|pp
 operator|->
 name|p_frag
+argument_list|)
 argument_list|,
 name|pp
 operator|->
@@ -4096,8 +4079,12 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t# (Cyl. %4ld"
+literal|"\t# (Cyl. %4lu"
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|pp
 operator|->
 name|p_offset
@@ -4105,6 +4092,7 @@ operator|/
 name|lp
 operator|->
 name|d_secpercyl
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4136,8 +4124,12 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"- %ld"
+literal|"- %lu"
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 operator|(
 name|pp
 operator|->
@@ -4159,6 +4151,7 @@ operator|->
 name|d_secpercyl
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4254,11 +4247,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't create\n"
+literal|"can't create %s"
 argument_list|,
 name|tmpfil
 argument_list|)
@@ -4310,11 +4301,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Can't reopen for reading\n"
+literal|"can't reopen %s for reading"
 argument_list|,
 name|tmpfil
 argument_list|)
@@ -4522,11 +4511,9 @@ operator|==
 name|EPROCLIM
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"You have too many processes\n"
+literal|"you have too many processes"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4542,7 +4529,7 @@ operator|!=
 name|EAGAIN
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -4620,14 +4607,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|ed
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|ed
 argument_list|)
 expr_stmt|;
 block|}
@@ -6439,11 +6425,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sector size %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_secsize
+literal|"sector size 0\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6465,11 +6447,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sectors/track %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_nsectors
+literal|"sectors/track 0\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6491,11 +6469,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tracks/cylinder %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_ntracks
+literal|"tracks/cylinder 0\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6517,11 +6491,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cylinders/unit %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_ncylinders
+literal|"cylinders/unit 0\n"
 argument_list|)
 expr_stmt|;
 name|errors
@@ -6538,11 +6508,7 @@ literal|0
 condition|)
 name|Warning
 argument_list|(
-literal|"revolutions/minute %d"
-argument_list|,
-name|lp
-operator|->
-name|d_rpm
+literal|"revolutions/minute 0"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6598,11 +6564,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"boot block size %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_bbsize
+literal|"boot block size 0\n"
 argument_list|)
 expr_stmt|;
 name|errors
@@ -6638,11 +6600,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"super block size %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_sbsize
+literal|"super block size 0\n"
 argument_list|)
 expr_stmt|;
 name|errors
@@ -6675,8 +6633,11 @@ name|MAXPARTITIONS
 condition|)
 name|Warning
 argument_list|(
-literal|"number of partitions (%d)> MAXPARTITIONS (%d)"
+literal|"number of partitions (%lu)> MAXPARTITIONS (%d)"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_npartitions
@@ -6732,10 +6693,13 @@ literal|0
 condition|)
 name|Warning
 argument_list|(
-literal|"partition %c: size 0, but offset %d"
+literal|"partition %c: size 0, but offset %lu"
 argument_list|,
 name|part
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_offset
@@ -6872,7 +6836,7 @@ name|p_offset
 condition|)
 name|Warning
 argument_list|(
-literal|"unused partition %c: size %d offset %d"
+literal|"unused partition %c: size %d offset %lu"
 argument_list|,
 literal|'a'
 operator|+
@@ -6882,6 +6846,9 @@ name|pp
 operator|->
 name|p_size
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_offset
@@ -7213,20 +7180,13 @@ if|if
 condition|(
 name|errors
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot install boot program\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|4
+argument_list|,
+literal|"cannot install boot program"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

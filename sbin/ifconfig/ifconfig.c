@@ -35,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)ifconfig.c	8.2 (Berkeley) 2/16/94"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)ifconfig.c	8.2 (Berkeley) 2/16/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -46,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.30 1997/05/10 17:14:52 peter Exp $"
+literal|"$Id: ifconfig.c,v 1.19.2.1 1997/06/30 11:02:00 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,12 +441,6 @@ name|int
 name|newaddr
 init|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|allmedia
 decl_stmt|;
 end_decl_stmt
 
@@ -1166,10 +1168,10 @@ name|af_getaddr
 modifier|*
 name|af_getaddr
 decl_stmt|;
-name|int
+name|u_long
 name|af_difaddr
 decl_stmt|;
-name|int
+name|u_long
 name|af_aifaddr
 decl_stmt|;
 name|caddr_t
@@ -1500,102 +1502,21 @@ name|void
 name|usage
 parameter_list|()
 block|{
-name|fputs
+name|fprintf
 argument_list|(
-literal|"usage: ifconfig -a [ -m ] [ -d ] [ -u ] [ af ]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: ifconfig interface address_family [address [dest_address]]"
+argument_list|,
+literal|"                [parameters]"
+argument_list|,
+literal|"       ifconfig -a [-d] [-u] [address_family]"
+argument_list|,
+literal|"       ifconfig -l [-d] [-u] [address_family]"
 argument_list|)
 expr_stmt|;
-name|fputs
-argument_list|(
-literal|"       ifconfig -l [ -d ] [ -u ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"       ifconfig [ -m ] interface\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"        [ af [ address [ dest_addr ] ] [ netmask mask ] [ broadcast addr ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"             [ alias ] [ delete ] ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"        [ up ] [ down ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"        [ metric n ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"        [ mtu n ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"        [ arp | -arp ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"        [ link0 | -link0 ] [ link1 | -link1 ] [ link2 | -link2 ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_IF_MEDIA
-name|fputs
-argument_list|(
-literal|"        [ media mtype ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"        [ mediaopt mopts ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"        [ -mediaopt mopts ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 literal|1
@@ -1694,8 +1615,6 @@ decl_stmt|;
 comment|/* Parse leading line options */
 name|all
 operator|=
-name|allmedia
-operator|=
 name|downonly
 operator|=
 name|uponly
@@ -1755,7 +1674,7 @@ break|break;
 case|case
 literal|'u'
 case|:
-comment|/* restrict scan to "down" interfaces */
+comment|/* restrict scan to "up" interfaces */
 name|uponly
 operator|++
 expr_stmt|;
@@ -1764,26 +1683,7 @@ case|case
 literal|'m'
 case|:
 comment|/* show media choices in status */
-ifdef|#
-directive|ifdef
-name|USE_IF_MEDIA
-name|allmedia
-operator|++
-expr_stmt|;
-else|#
-directive|else
-name|fputs
-argument_list|(
-literal|"WARNING: if_media not compiled in!\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
+comment|/* ignored for compatibility */
 break|break;
 default|default:
 name|usage
@@ -1805,11 +1705,7 @@ if|if
 condition|(
 name|namesonly
 operator|&&
-operator|(
 name|all
-operator|||
-name|allmedia
-operator|)
 condition|)
 name|usage
 argument_list|()
@@ -1900,7 +1796,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* not listsing, need an argument */
+comment|/* not listing, need an argument */
 if|if
 condition|(
 name|argc
@@ -2354,6 +2250,25 @@ condition|)
 block|{
 if|if
 condition|(
+name|afp
+operator|==
+name|NULL
+operator|||
+name|afp
+operator|->
+name|af_status
+operator|!=
+name|ether_status
+operator|||
+name|sdl
+operator|->
+name|sdl_type
+operator|==
+name|IFT_ETHER
+condition|)
+block|{
+if|if
+condition|(
 name|need_nl
 condition|)
 name|putchar
@@ -2371,6 +2286,7 @@ expr_stmt|;
 name|need_nl
 operator|++
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 block|}
@@ -2593,18 +2509,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"ifconfig: socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
-block|}
 while|while
 condition|(
 name|argc
@@ -3726,7 +3637,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl (set metric)"
 argument_list|)
@@ -3807,7 +3718,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl (set mtu)"
 argument_list|)
@@ -3993,18 +3904,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"ifconfig: socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * XXX is it we are doing a SIOCGIFMETRIC etc for one family. 	 * is it possible that the metric and mtu can be different for 	 * each family?  If so, we have a format problem, because the 	 * metric and mtu is printed on the global the flags line. 	 */
 if|if
 condition|(
@@ -4023,7 +3929,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl (SIOCGIFMETRIC)"
 argument_list|)
@@ -4052,7 +3958,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl (SIOCGIFMTU)"
 argument_list|)
@@ -5521,9 +5427,19 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5910,7 +5826,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"AppleTalk does not use netmasks\n"
+literal|"AppleTalk does not use netmasks"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6608,7 +6524,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Negative NSEL length is absurd"
+literal|"negative NSEL length is absurd"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6627,7 +6543,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Setting NSEL length valid only for iso"
+literal|"setting NSEL length valid only for iso"
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)dumpfs.c	8.5 (Berkeley) 4/29/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)dumpfs.c	8.5 (Berkeley) 4/29/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ffs/fs.h>
 end_include
 
@@ -81,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -111,12 +113,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -379,6 +375,9 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+name|ssize_t
+name|n
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -437,6 +436,9 @@ name|err
 goto|;
 if|if
 condition|(
+operator|(
+name|n
+operator|=
 name|read
 argument_list|(
 name|fd
@@ -446,12 +448,42 @@ name|afs
 argument_list|,
 name|SBSIZE
 argument_list|)
-operator|!=
-name|SBSIZE
+operator|)
+operator|==
+operator|-
+literal|1
 condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+name|n
+operator|!=
+name|SBSIZE
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: non-existent or truncated superblock, skipped"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|afs

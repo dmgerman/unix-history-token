@@ -15,11 +15,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: fsirand.c,v 1.9 1997/02/28 00:46:33 millert Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -119,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -135,7 +124,7 @@ name|usage
 name|__P
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -245,9 +234,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -260,9 +247,7 @@ operator|<
 literal|1
 condition|)
 name|usage
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|srandomdev
 argument_list|()
@@ -303,14 +288,14 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"Can't get resource limit to max data size"
+literal|"can't get resource limit to max data size"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|warn
 argument_list|(
-literal|"Can't get resource limit for data size"
+literal|"can't get resource limit for data size"
 argument_list|)
 expr_stmt|;
 for|for
@@ -464,7 +449,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't open %s"
+literal|"can't open %s"
 argument_list|,
 name|device
 argument_list|)
@@ -498,7 +483,7 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"Can't read disklabel, using sector size of %d"
+literal|"can't read disklabel, using sector size of %d"
 argument_list|,
 name|bsize
 argument_list|)
@@ -555,7 +540,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't seek to superblock (%qd) on %s"
+literal|"can't seek to superblock (%qd) on %s"
 argument_list|,
 name|SBOFF
 argument_list|,
@@ -592,7 +577,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Can't read superblock on %s: %s"
+literal|"can't read superblock on %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -638,7 +623,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Bad magic number in superblock"
+literal|"bad magic number in superblock"
 argument_list|)
 expr_stmt|;
 return|return
@@ -658,7 +643,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Superblock size is preposterous"
+literal|"superblock size is preposterous"
 argument_list|)
 expr_stmt|;
 return|return
@@ -678,7 +663,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Filesystem format is too old, sorry"
+literal|"filesystem format is too old, sorry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -704,7 +689,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Filesystem is not clean, fsck %s first."
+literal|"filesystem is not clean, fsck %s first"
 argument_list|,
 name|device
 argument_list|)
@@ -777,7 +762,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't seek to %qd"
+literal|"can't seek to %qd"
 argument_list|,
 operator|(
 name|off_t
@@ -818,7 +803,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't read backup superblock %d on %s: %s"
+literal|"can't read backup superblock %d on %s: %s"
 argument_list|,
 name|cg
 operator|+
@@ -857,7 +842,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Bad magic number in backup superblock %d on %s"
+literal|"bad magic number in backup superblock %d on %s"
 argument_list|,
 name|cg
 operator|+
@@ -883,7 +868,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Size of backup superblock %d on %s is preposterous"
+literal|"size of backup superblock %d on %s is preposterous"
 argument_list|,
 name|cg
 operator|+
@@ -948,7 +933,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Can't allocate memory for inode buffer"
+literal|"can't allocate memory for inode buffer"
 argument_list|)
 expr_stmt|;
 name|oldibufsize
@@ -1101,7 +1086,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't seek to superblock (%qd) on %s"
+literal|"can't seek to superblock (%qd) on %s"
 argument_list|,
 name|SBOFF
 argument_list|,
@@ -1138,7 +1123,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't read superblock on %s: %s"
+literal|"can't read superblock on %s: %s"
 argument_list|,
 name|device
 argument_list|,
@@ -1234,7 +1219,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't seek to %qd"
+literal|"can't seek to %qd"
 argument_list|,
 operator|(
 name|off_t
@@ -1275,7 +1260,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't read backup superblock %d on %s: %s"
+literal|"can't read backup superblock %d on %s: %s"
 argument_list|,
 name|cg
 operator|+
@@ -1340,7 +1325,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't seek to %qd"
+literal|"can't seek to %qd"
 argument_list|,
 operator|(
 name|off_t
@@ -1377,7 +1362,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Can't read inodes: %s"
+literal|"can't read inodes: %s"
 argument_list|,
 operator|(
 name|n
@@ -1487,7 +1472,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Can't seek to %qd"
+literal|"can't seek to %qd"
 argument_list|,
 operator|(
 name|off_t
@@ -1524,7 +1509,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Can't write inodes: %s"
+literal|"can't write inodes: %s"
 argument_list|,
 operator|(
 name|n
@@ -1568,12 +1553,7 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|ex
-parameter_list|)
-name|int
-name|ex
-decl_stmt|;
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -1582,12 +1562,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: fsirand [ -b ] [ -f ] [ -p ] special [special ...]\n"
+literal|"usage: fsirand [-b] [-f] [-p] special [special ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|ex
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -35,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)ping.c	8.1 (Berkeley) 6/5/93"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)ping.c	8.1 (Berkeley) 6/5/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -46,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.8.2.15 1998/03/06 13:07:12 jkh Exp $"
+literal|"$Id: ping.c,v 1.8.2.16 1998/05/25 20:21:34 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  *			P I N G . C  *  * Using the InterNet Control Message Protocol (ICMP) "ECHO" facility,  * measure round-trip-delays and packet loss across network paths.  *  * Author -  *	Mike Muuss  *	U. S. Army Ballistic Research Laboratory  *	December, 1983  *  * Status -  *	Public Domain.  Distribution Unlimited.  * Bugs -  *	More statistics could always be gathered.  *	This program has to run SUID to ROOT to access the ICMP socket.  */
+comment|/*  *			P I N G . C  *  * Using the Internet Control Message Protocol (ICMP) "ECHO" facility,  * measure round-trip-delays and packet loss across network paths.  *  * Author -  *	Mike Muuss  *	U. S. Army Ballistic Research Laboratory  *	December, 1983  *  * Status -  *	Public Domain.  Distribution Unlimited.  * Bugs -  *	More statistics could always be gathered.  *	This program has to run SUID to ROOT to access the ICMP socket.  */
 end_comment
 
 begin_include
@@ -154,12 +162,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
@@ -208,8 +210,15 @@ end_include
 begin_define
 define|#
 directive|define
+name|PHDR_LEN
+value|sizeof(struct timeval)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFDATALEN
-value|(64 - 8)
+value|(64 - PHDR_LEN)
 end_define
 
 begin_comment
@@ -869,9 +878,7 @@ specifier|static
 name|void
 name|usage
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|void
 argument_list|)
 name|__dead2
 decl_stmt|;
@@ -1055,11 +1062,7 @@ name|outpack
 index|[
 literal|8
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
+name|PHDR_LEN
 index|]
 expr_stmt|;
 while|while
@@ -1511,12 +1514,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -1529,12 +1527,7 @@ operator|!=
 literal|1
 condition|)
 name|usage
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|target
 operator|=
@@ -1787,11 +1780,7 @@ if|if
 condition|(
 name|datalen
 operator|>=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
+name|PHDR_LEN
 condition|)
 comment|/* can we time transfer */
 name|timing
@@ -1845,7 +1834,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|8
+name|PHDR_LEN
 init|;
 name|i
 operator|<
@@ -2618,7 +2607,7 @@ condition|(
 name|timeout
 operator|.
 name|tv_usec
-operator|>
+operator|>=
 literal|1000000
 condition|)
 block|{
@@ -2747,9 +2736,9 @@ operator|==
 name|EINTR
 condition|)
 continue|continue;
-name|perror
+name|warn
 argument_list|(
-literal|"ping: recvmsg"
+literal|"recvmsg"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2785,18 +2774,30 @@ expr|*
 name|t
 operator|)
 condition|)
-name|t
-operator|=
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
+block|{
+comment|/* Copy to avoid alignment problems: */
+name|memcpy
+argument_list|(
+operator|&
+name|now
+argument_list|,
 name|CMSG_DATA
 argument_list|(
 name|cmsg
 argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|now
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|t
+operator|=
+operator|&
+name|now
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if
@@ -3069,7 +3070,7 @@ name|cc
 operator|=
 name|datalen
 operator|+
-literal|8
+name|PHDR_LEN
 expr_stmt|;
 comment|/* skips ICMP portion */
 comment|/* compute ICMP checksum here */
@@ -3164,9 +3165,9 @@ literal|"%s: partial write: %d of %d bytes"
 argument_list|,
 name|hostname
 argument_list|,
-name|cc
-argument_list|,
 name|i
+argument_list|,
+name|cc
 argument_list|)
 expr_stmt|;
 block|}
@@ -3389,6 +3390,10 @@ condition|(
 name|timing
 condition|)
 block|{
+name|struct
+name|timeval
+name|tv1
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|icmp_data
@@ -3419,11 +3424,26 @@ name|icmp_data
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Avoid unaligned data: */
+name|memcpy
+argument_list|(
+operator|&
+name|tv1
+argument_list|,
+name|tp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tv1
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|tvsub
 argument_list|(
 name|tv
 argument_list|,
-name|tp
+operator|&
+name|tv1
 argument_list|)
 expr_stmt|;
 name|triptime
@@ -3642,7 +3662,7 @@ name|icp
 operator|->
 name|icmp_data
 index|[
-literal|8
+name|PHDR_LEN
 index|]
 expr_stmt|;
 name|dp
@@ -3652,18 +3672,14 @@ name|outpack
 index|[
 literal|8
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
+name|PHDR_LEN
 index|]
 expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|8
+name|PHDR_LEN
 init|;
 name|i
 operator|<
@@ -3704,6 +3720,11 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\ncp:"
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 operator|(
@@ -3722,7 +3743,67 @@ for|for
 control|(
 name|i
 operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|datalen
+condition|;
+operator|++
+name|i
+operator|,
+operator|++
+name|cp
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|i
+operator|%
+literal|32
+operator|)
+operator|==
 literal|8
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n\t"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%x "
+argument_list|,
+operator|*
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\ndp:"
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|&
+name|outpack
+index|[
+literal|8
+index|]
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
 init|;
 name|i
 operator|<
@@ -4225,6 +4306,13 @@ name|i
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|i
+operator|<
+name|MAX_IPOPTLEN
+condition|)
+block|{
 name|old_rrlen
 operator|=
 name|i
@@ -4242,6 +4330,12 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|old_rrlen
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4249,6 +4343,10 @@ name|printf
 argument_list|(
 literal|"\nRR: "
 argument_list|)
+expr_stmt|;
+name|j
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -4345,6 +4443,10 @@ name|i
 operator|-=
 literal|4
 expr_stmt|;
+name|j
+operator|+=
+literal|4
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -4352,6 +4454,23 @@ operator|<=
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|j
+operator|>=
+name|MAX_IPOPTLEN
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\t(truncated route)"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 operator|(
 name|void
 operator|)
@@ -5684,7 +5803,10 @@ name|printf
 argument_list|(
 literal|"   %1lx %04lx"
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|ip
@@ -5693,10 +5815,13 @@ name|ip_off
 argument_list|)
 operator|&
 literal|0xe000
-operator|)
+argument_list|)
 operator|>>
 literal|13
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -6249,11 +6374,7 @@ operator|-
 operator|(
 literal|8
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
+name|PHDR_LEN
 operator|+
 name|ii
 operator|)
@@ -6349,44 +6470,17 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|(
-name|argv0
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|argv0
-decl_stmt|;
+parameter_list|()
 block|{
-if|if
-condition|(
-name|strrchr
-argument_list|(
-name|argv0
-argument_list|,
-literal|'/'
-argument_list|)
-condition|)
-name|argv0
-operator|=
-name|strrchr
-argument_list|(
-name|argv0
-argument_list|,
-literal|'/'
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-QRadfnqrv] [-c count] [-i wait] [-l preload] "
-literal|"[-p pattern]\n       [-s packetsize] "
-literal|"[host | [-L] [-I iface] [-T ttl] mcast-group]\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|argv0
+literal|"usage: ping [-QRadfnqrv] [-c count] [-i wait] [-l preload] [-p pattern]"
+argument_list|,
+literal|"            [-s packetsize] [host | [-L] [-I iface] [-T ttl] mcast-group]"
 argument_list|)
 expr_stmt|;
 name|exit

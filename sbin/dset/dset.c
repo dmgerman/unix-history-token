@@ -3,28 +3,36 @@ begin_comment
 comment|/*  * Copyright (c) 1995 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * Device configuration to kernel image saving utility.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -36,13 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<a.out.h>
+file|<kvm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<kvm.h>
+file|<a.out.h>
 end_include
 
 begin_include
@@ -54,13 +62,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -78,19 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
 end_include
 
 begin_include
@@ -140,13 +148,6 @@ value|0
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|nlist
 name|nl
@@ -185,7 +186,9 @@ block|{
 literal|"_isa_devtab_null"
 block|}
 block|,
+block|{
 literal|""
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -208,7 +211,9 @@ block|{
 literal|"_isa_devlist"
 block|}
 block|,
+block|{
 literal|""
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -307,11 +312,11 @@ if|if
 condition|(
 name|str
 condition|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s : %s\n"
+literal|"%s: %s"
 argument_list|,
 name|name
 argument_list|,
@@ -319,14 +324,13 @@ name|str
 argument_list|)
 expr_stmt|;
 else|else
-name|perror
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -360,11 +364,9 @@ if|if
 condition|(
 name|str
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s : %s\n"
+literal|"%s: %s"
 argument_list|,
 name|name
 argument_list|,
@@ -372,8 +374,10 @@ name|str
 argument_list|)
 expr_stmt|;
 else|else
-name|perror
+name|warnx
 argument_list|(
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -383,25 +387,25 @@ end_block
 begin_function
 name|void
 name|usage
-parameter_list|(
-name|char
-modifier|*
-name|title
-parameter_list|)
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-qtv]\n"
-argument_list|,
-name|title
+literal|"usage: dset [-qtv]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|ac
@@ -488,11 +492,6 @@ name|kernel
 init|=
 name|NULL
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
@@ -558,17 +557,7 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|(
-name|av
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|kernel
@@ -1131,7 +1120,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"kernel: id=%u io=%X irq=%d drq=%d maddr=%X msize=%d flags=%X enabled=%X \n"
+literal|"kernel: id=%u io=%X irq=%d drq=%d maddr=%p msize=%d flags=%X enabled=%X \n"
 argument_list|,
 name|buf1
 operator|.
@@ -1180,7 +1169,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"file: id=%u io=%X irq=%d drq=%d maddr=%X msize=%d flags=%X enabled=%X \n"
+literal|"file: id=%u io=%X irq=%d drq=%d maddr=%p msize=%d flags=%X enabled=%X \n"
 argument_list|,
 name|buf
 operator|.
@@ -2319,7 +2308,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|" flags 0x%08x"
+literal|" flags 0x%08lx"
 argument_list|,
 name|new_ov
 index|[
@@ -2395,7 +2384,7 @@ name|j
 decl_stmt|;
 name|printf
 argument_list|(
-literal|" mem 0x%x"
+literal|" mem 0x%lx"
 argument_list|,
 name|new_ov
 index|[
@@ -2425,7 +2414,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" 0x%x"
+literal|" 0x%lx"
 argument_list|,
 name|new_ov
 index|[
@@ -2528,6 +2517,11 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
