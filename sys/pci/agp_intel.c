@@ -263,6 +263,14 @@ literal|"Intel 82850 host to AGP bridge"
 operator|)
 return|;
 case|case
+literal|0x33408086
+case|:
+return|return
+operator|(
+literal|"Intel 82855 host to AGP bridge"
+operator|)
+return|;
+case|case
 literal|0x25318086
 case|:
 return|return
@@ -276,6 +284,14 @@ case|:
 return|return
 operator|(
 literal|"Intel 82865 host to AGP bridge"
+operator|)
+return|;
+case|case
+literal|0x25788086
+case|:
+return|return
+operator|(
+literal|"Intel 82875P host to AGP bridge"
 operator|)
 return|;
 block|}
@@ -672,9 +688,17 @@ literal|0x1a308086
 case|:
 comment|/* i845 */
 case|case
+literal|0x33408086
+case|:
+comment|/* i855 */
+case|case
 literal|0x25708086
 case|:
 comment|/* i865 */
+case|case
+literal|0x25788086
+case|:
+comment|/* i875P */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -776,6 +800,10 @@ literal|0x25308086
 case|:
 comment|/* i850 */
 case|case
+literal|0x33408086
+case|:
+comment|/* i855 */
+case|case
 literal|0x25318086
 case|:
 comment|/* i860 */
@@ -783,6 +811,10 @@ case|case
 literal|0x25708086
 case|:
 comment|/* i865 */
+case|case
+literal|0x25788086
+case|:
+comment|/* i875P */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -1001,9 +1033,17 @@ literal|0x1a308086
 case|:
 comment|/* i845 */
 case|case
+literal|0x33408086
+case|:
+comment|/* i855 */
+case|case
 literal|0x25708086
 case|:
 comment|/* i865 */
+case|case
+literal|0x25788086
+case|:
+comment|/* i875P */
 name|printf
 argument_list|(
 literal|"%s: set MCHCFG to %x\n"
