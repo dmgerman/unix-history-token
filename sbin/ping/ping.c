@@ -7467,7 +7467,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ping [-QRadfnqrv] [-c count] [-i wait] [-l preload] [-m ttl]"
+literal|"usage: ping [-AQRadfnqrv] [-c count] [-i wait] [-l preload] [-m ttl]"
 argument_list|,
 literal|"            [-p pattern] "
 ifdef|#
