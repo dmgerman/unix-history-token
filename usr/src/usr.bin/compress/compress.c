@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.7 (Berkeley) %G%"
+literal|"@(#)compress.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1360,6 +1360,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|precious
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Don't unlink output file on interrupt */
+end_comment
+
+begin_decl_stmt
+name|int
 name|quiet
 init|=
 literal|1
@@ -2669,6 +2681,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|precious
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2744,6 +2760,10 @@ name|ofname
 argument_list|)
 expr_stmt|;
 comment|/* Copy stats */
+name|precious
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5863,7 +5883,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|zcat_flg
+name|precious
 condition|)
 name|unlink
 argument_list|(
@@ -6496,7 +6516,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, Berkeley 5.7 %G%\n"
+literal|"%s, Berkeley 5.8 %G%\n"
 argument_list|,
 name|rcs_ident
 argument_list|)
