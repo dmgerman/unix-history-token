@@ -973,6 +973,11 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -987,11 +992,6 @@ operator|)
 name|fflush
 argument_list|(
 name|stderr
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
 argument_list|)
 expr_stmt|;
 name|va_start
