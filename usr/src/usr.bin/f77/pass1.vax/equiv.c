@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -12,19 +12,21 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
 index|[]
 init|=
-literal|"@(#)equiv.c	5.2 (Berkeley) %G%"
+literal|"@(#)equiv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * equiv.c  *  * Routines related to equivalence class processing, f77 compiler, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *   * Revision 3.2  85/01/14  00:14:12  donn  * Fixed bug in eqvcommon that was causing the calculations of multilevel  * equivalences to be screwed up.  *   * Revision 3.1  84/10/13  01:16:08  donn  * Installed Jerry Berkman's version; added UofU comment header.  *   */

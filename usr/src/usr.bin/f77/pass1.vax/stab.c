@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	5.3 (Berkeley) %G%"
+literal|"@(#)stab.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * stab.c  *  * Symbolic debugging info interface for the f77 compiler.  *  * Here we generate pseudo-ops that cause the assembler to put  * symbolic debugging information into the object file.  *  * University of Utah CS Dept modification history:  *  * $Log:	stab.c,v $  * Revision 5.3  86/01/10  17:12:58  donn  * Add junk to handle PARAMETER variables.  *   * Revision 5.2  86/01/10  13:51:31  donn  * Changes to produce correct stab information for logical and logical*2 types  * (from Jerry Berkman) plus changes for dummy procedures.  *   * Revision 5.1  85/08/10  03:50:06  donn  * 4.3 alpha  *   * Revision 1.2  85/02/02  01:30:09  donn  * Don't put the 'program' name into the file; it only confuses dbx, sigh.  *   */

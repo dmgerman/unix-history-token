@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.2 (Berkeley) %G%"
+literal|"@(#)misc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * misc.c  *  * Miscellaneous routines for the f77 compiler, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	misc.c,v $  * Revision 5.2  85/12/18  00:35:08  donn  * Prevent core dumps for peculiar statement numbers.  *   * Revision 5.1  85/08/10  03:48:29  donn  * 4.3 alpha  *   * Revision 3.1  84/10/13  01:53:26  donn  * Installed Jerry Berkman's version; added UofU comment header.  *   */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vax.c	5.3 (Berkeley) %G%"
+literal|"@(#)vax.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * vax.c  *  * VAX specific routines for the F77 compiler, pass 1  *  * University of Utah CS Dept modification history:  *  * $Log:	vax.c,v $  * Revision 5.2  85/08/10  05:06:30  donn  * Deleted intcon[] and realcon[], since they are now made redundant by  * changes in intr.c.  From Jerry Berkman.  *   * Revision 5.1  85/08/10  03:50:38  donn  * 4.3 alpha  *   * Revision 3.1  85/02/27  19:14:58  donn  * Changed to use pcc.h instead of pccdefs.h.  *   * Revision 2.3  85/02/22  01:09:22  donn  * memname() didn't know about intrinsic functions...  *   * Revision 2.2  85/02/12  17:56:44  donn  * Put the argument to the profiling routine in data space instead of  * constant space.  From Jerry Berkman.  *   * Revision 2.1  84/07/19  12:05:08  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/02/26  06:41:04  donn  * Added Berkeley changes to move data around to produce shorter offsets.  *   */

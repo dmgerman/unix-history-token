@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c	5.2 (Berkeley) %G%"
+literal|"@(#)conv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * conv.c  *  * Routines for type conversions, f77 compiler pass 1.  *  * University of Utah CS Dept modification history:  *  * $Log:	conv.c,v $  * Revision 2.2  85/06/07  21:09:29  root  * Add copyright  *   * Revision 2.1  84/07/19  12:02:29  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/04/13  01:07:02  donn  * Fixed value of dminreal to be -1.7e38 + epsilon instead of -2.59e33, per  * Bob Corbett's approval.  *   */

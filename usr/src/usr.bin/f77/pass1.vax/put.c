@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c	5.2 (Berkeley) %G%"
+literal|"@(#)put.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * put.c  *  * Intermediate code generation procedures common to both  * Johnson (Portable) and Ritchie families of second passes  *  * University of Utah CS Dept modification history:  *  * $Log:	put.c,v $  * Revision 3.2  85/05/04  15:41:24  mckusick  * Fix alignment problem -- change code to match comment...  *   * Revision 3.2  85/04/29  21:36:07  donn  * Fix alignment problem -- change code to match comment...  *   * Revision 3.1  85/02/27  19:12:04  donn  * Changed to use pcc.h instead of pccdefs.h.  *   * Revision 2.1  84/07/19  12:04:21  donn  * Changed comment headers for UofU.  *   * Revision 1.2  84/04/02  14:40:21  donn  * Added fixes from Conrad Huang at UCSF for calculating the length of a  * concatenation of strings correctly.  *   */

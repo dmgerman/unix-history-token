@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optloop.c	5.2 (Berkeley) %G%"
+literal|"@(#)optloop.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * optloop.c  *  * Loop optimizations, f77 compiler pass 1, 4.2 BSD.  *  * University of Utah CS Dept. modification history:  *  * $Log:	optloop.c,v $  * Revision 1.4  84/10/25  01:27:29  donn  * Fixed a subtle bug in removesafe().  When the moved code is an assignment  * into a temporary, we use the lhs to substitute for the expression inside  * the loop.  Previously the data structure for the temporary was not copied,  * so later on when the lhs was freed, the substitute was too, turning it  * into garbage.  *   * Revision 1.3  84/08/05  17:04:03  donn  * Changed worthcost() so that it skips variable length strings -- we can't  * make temporaries for these...  *   * Revision 1.2  84/07/19  11:50:39  donn  * Installed changes to force non-intrinsic subroutines and functions to define  * their arguments (make them ineligible for optimization), function setsuses.  * Fix from A.F.  *   */

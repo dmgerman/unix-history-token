@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)init.c	5.4 (Berkeley) %G%"
+literal|"@(#)init.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * init.c  *  * Initializations for f77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *  * $Header: init.c,v 5.2 85/08/10 04:30:57 donn Exp $  * $Log:	init.c,v $  * Revision 5.2  85/08/10  04:30:57  donn  * Jerry Berkman's changes to ifdef 66 code and handle -r8/double flag.  *   * Revision 5.1  85/08/10  03:47:33  donn  * 4.3 alpha  *   * Revision 2.1  84/07/19  12:03:26  donn  * Changed comment headers for UofU.  *   * Revision 1.3  84/02/28  21:07:53  donn  * Added Berkeley changes for call argument temporaries fix.  *   * Fixed incorrect check of 'cdatafile' when 'cchkfile' is opened. -- Donn  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optim.c	5.4 (Berkeley) %G%"
+literal|"@(#)optim.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * optim.c  *  * Miscellaneous optimizer routines, f77 compiler pass 1.  *  * UCSD Chemistry modification history:  *  * $Log:	optim.c,v $  * Revision 5.2  86/03/04  17:47:08  donn  * Change buffcat() and buffct1() analogously to putcat and putct1() --  * ensure that memoffset is evaluated before vleng.  Take care not to  * screw up and return something other than an expression.  *   * Revision 5.1  85/08/10  03:48:42  donn  * 4.3 alpha  *   * Revision 2.12  85/06/08  22:57:01  donn  * Prevent core dumps -- bug in optinsert was causing lastslot to be wrong  * when a slot was inserted at the end of the buffer.  *   * Revision 2.11  85/03/18  08:05:05  donn  * Prevent warnings about implicit conversions.  *   * Revision 2.10  85/02/12  20:13:00  donn  * Resurrected the hack in 2.6.1.1 to avoid creating a temporary when  * there is a concatenation on the rhs of an assignment, and threw out  * all the code dealing with starcat().  It seems that we can't use a  * temporary because the lhs as well as the rhs may have nonconstant length.  *   * Revision 2.9  85/01/18  00:53:52  donn  * Missed a call to free() in the last change...  *   * Revision 2.8  85/01/18  00:50:03  donn  * Fixed goof made when modifying buffmnmx() to explicitly call expand().  *   * Revision 2.7  85/01/15  18:47:35  donn  * Changes to allow character*(*) variables to appear in concatenations in  * the rhs of an assignment statement.  *   * Revision 2.6  84/12/16  21:46:27  donn  * Fixed bug that prevented concatenations from being run together.  Changed  * buffpower() to not touch exponents greater than 64 -- let putpower do them.  *   * Revision 2.5  84/10/29  08:41:45  donn  * Added hack to flushopt() to prevent the compiler from trying to generate  * intermediate code after an error.  *   * Revision 2.4  84/08/07  21:28:00  donn  * Removed call to p2flush() in putopt() -- this allows us to make better use  * of the buffering on the intermediate code file.  *   * Revision 2.3  84/08/01  16:06:24  donn  * Forced expand() to expand subscripts.  *   * Revision 2.2  84/07/19  20:21:55  donn  * Decided I liked the expression tree algorithm after all.  The algorithm  * which repeatedly squares temporaries is now checked in as rev. 2.1.  *   * Revision 1.3.1.1  84/07/10  14:18:18  donn  * I'm taking this branch off the trunk -- it works but it's not as good as  * the old version would be if it worked right.  *   * Revision 1.5  84/07/09  22:28:50  donn  * Added fix to buffpower() to prevent it chasing after huge exponents.  *   * Revision 1.4  84/07/09  20:13:59  donn  * Replaced buffpower() routine with a new one that generates trees which can  * be handled by CSE later on.    *   * Revision 1.3  84/05/04  21:02:07  donn  * Added fix for a bug in buffpower() that caused func(x)**2 to turn into  * func(x) * func(x).  This bug had already been fixed in putpower()...  *   * Revision 1.2  84/03/23  22:47:21  donn  * The subroutine argument temporary fixes from Bob Corbett didn't take into  * account the fact that the code generator collects all the assignments to  * temporaries at the start of a statement -- hence the temporaries need to  * be initialized once per statement instead of once per call.  *   */

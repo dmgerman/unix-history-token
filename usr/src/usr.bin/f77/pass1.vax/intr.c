@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)intr.c	5.3 (Berkeley) %G%"
+literal|"@(#)intr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * intr.c  *  * Routines for handling intrinsic functions, f77 compiler pass 1, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	intr.c,v $  * Revision 5.2  85/08/10  04:39:23  donn  * Various changes from Jerry Berkman.  We now call the new builtin log10()  * instead of the f77 library emulations; we figure out that builtins will  * return type double instead of type float; we get rid of lots of  * undocumented material; we ifdef 66 code and handle -r8/double flag.  *   * Revision 5.1  85/08/10  03:47:37  donn  * 4.3 alpha  *   * Revision 1.4  85/02/22  00:54:59  donn  * Mark intrinsic functions as having storage class STGINTR.  builtin()  * always returns STGEXT nodes.  Notice that the reference to the function  * in the external symbol table still uses STGEXT...  I hope this is right.  *   * Revision 1.3  85/01/15  21:05:40  donn  * Changes to distinguish explicit from implicit conversions with intrconv().  *   * Revision 1.2  84/12/15  01:02:33  donn  * Added a case for an integer*4 result from len() in Inline().  Previously  * only -i2 provoked len() inline, sigh.  *   */
