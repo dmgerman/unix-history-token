@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  *  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information,  * please see the file<mit-copyright.h>.  *  * sample_server:  * A sample Kerberos server, which reads a ticket from a TCP socket,  * decodes it, and writes back the results (in ASCII) to the client.  *  * Usage:  * sample_server  *  * file descriptor 0 (zero) should be a socket connected to the requesting  * client (this will be correct if this server is started by inetd).  */
 end_comment
 
@@ -12,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sample_server.c,v 1.14 1999/11/13 06:28:49 assar Exp $"
+literal|"$Id: sample_server.c,v 1.14.2.1 2000/06/28 19:08:00 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -401,6 +405,8 @@ expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|retbuf
 argument_list|)
