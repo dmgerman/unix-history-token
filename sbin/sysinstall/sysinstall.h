@@ -27,6 +27,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|BOOT1
+value|"/stand/sdboot"
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOOT2
+value|"/stand/bootsd"
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAXFS
 value|25
 end_define
@@ -163,6 +177,16 @@ begin_decl_stmt
 name|EXTERN
 name|int
 name|dialog_active
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|avail_disknames
 decl_stmt|;
 end_decl_stmt
 
