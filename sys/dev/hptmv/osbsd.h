@@ -919,14 +919,6 @@ name|VERIFY
 value|3
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|char
-name|DRIVER_VERSION
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/**********************************************************/
 end_comment
