@@ -30,25 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -163,6 +151,12 @@ begin_include
 include|#
 directive|include
 file|<netatm/ipatm/ipatm_serv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
 end_include
 
 begin_decl_stmt
