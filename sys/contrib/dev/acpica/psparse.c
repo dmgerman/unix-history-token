@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 60 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Parse the AML and build an operation tree as most interpreters,  * like Perl, do.  Parsing is done by hand rather than with a YACC  * generated parser to tightly constrain stack and dynamic memory  * usage.  At the same time, parsing is kept flexible and the code  * fairly compact by parsing based on a list of AML opcode  * templates in AcpiGbl_AmlOpInfo[]  */
+comment|/*  * Parse the AML and build an operation tree as most interpreters,  * like Perl, do.  Parsing is done by hand rather than with a YACC  * generated parser to tightly constrain stack and dynamic memory  * usage.  At the same time, parsing is kept flexible and the code  * fairly compact by parsing based on a list of AML opcode  * templates in AmlOpInfo[]  */
 end_comment
 
 begin_include
@@ -77,191 +77,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDeleteCompletedOp  *  * PARAMETERS:  State           - Walk state  *              Op              - Completed op  *  * RETURN:      AE_OK  *  * DESCRIPTION: Callback function for AcpiPsGetNextWalkOp().  Used during  *              AcpiPsDeleteParse tree to delete Op objects when all sub-objects  *              have been visited (and deleted.)  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiPsDeleteCompletedOp
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|State
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|)
-block|{
-name|AcpiPsFreeOp
-argument_list|(
-name|Op
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-block|}
-end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PARSER_ONLY
-end_ifndef
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsDeleteParseTree  *  * PARAMETERS:  SubtreeRoot         - Root of tree (or subtree) to delete  *  * RETURN:      None  *  * DESCRIPTION: Delete a portion of or an entire parse tree.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiPsDeleteParseTree
-parameter_list|(
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|SubtreeRoot
-parameter_list|)
-block|{
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-decl_stmt|;
-name|ACPI_WALK_LIST
-name|WalkList
-decl_stmt|;
-name|FUNCTION_TRACE_PTR
-argument_list|(
-literal|"PsDeleteParseTree"
-argument_list|,
-name|SubtreeRoot
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|SubtreeRoot
-condition|)
-block|{
-name|return_VOID
-expr_stmt|;
-block|}
-comment|/* Create and initialize a new walk list */
-name|WalkList
-operator|.
-name|WalkState
-operator|=
-name|NULL
-expr_stmt|;
-name|WalkState
-operator|=
-name|AcpiDsCreateWalkState
-argument_list|(
-name|TABLE_ID_DSDT
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-operator|&
-name|WalkList
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|WalkState
-condition|)
-block|{
-name|return_VOID
-expr_stmt|;
-block|}
-name|WalkState
-operator|->
-name|ParserState
-operator|=
-name|NULL
-expr_stmt|;
-name|WalkState
-operator|->
-name|ParseFlags
-operator|=
-literal|0
-expr_stmt|;
-name|WalkState
-operator|->
-name|DescendingCallback
-operator|=
-name|NULL
-expr_stmt|;
-name|WalkState
-operator|->
-name|AscendingCallback
-operator|=
-name|NULL
-expr_stmt|;
-name|WalkState
-operator|->
-name|Origin
-operator|=
-name|SubtreeRoot
-expr_stmt|;
-name|WalkState
-operator|->
-name|NextOp
-operator|=
-name|SubtreeRoot
-expr_stmt|;
-comment|/* Head downward in the tree */
-name|WalkState
-operator|->
-name|NextOpInfo
-operator|=
-name|NEXT_OP_DOWNWARD
-expr_stmt|;
-comment|/* Visit all nodes in the subtree */
-while|while
-condition|(
-name|WalkState
-operator|->
-name|NextOp
-condition|)
-block|{
-name|AcpiPsGetNextWalkOp
-argument_list|(
-name|WalkState
-argument_list|,
-name|WalkState
-operator|->
-name|NextOp
-argument_list|,
-name|AcpiPsDeleteCompletedOp
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* We are done with this walk */
-name|AcpiDsDeleteWalkState
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsPeekOpcode  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Get next AML opcode (without incrementing AML pointer)  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|AcpiPsGetOpcodeSize
 parameter_list|(
@@ -573,6 +393,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|BOOLEAN
 name|AcpiPsCompleteThisOp
 parameter_list|(
@@ -940,6 +761,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiPsNextParseState
 parameter_list|(
@@ -1230,6 +1052,9 @@ name|WalkState
 operator|->
 name|ParserState
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PARSER_ONLY
 if|if
 condition|(
 name|WalkState
@@ -1310,7 +1135,7 @@ name|CONTROL_PREDICATE_EXECUTING
 operator|)
 condition|)
 block|{
-comment|/*                  * A predicate was just completed, get the value of the                   * predicate and branch based on that value                  */
+comment|/*                  * A predicate was just completed, get the value of the                  * predicate and branch based on that value                  */
 name|Status
 operator|=
 name|AcpiDsGetPredicateValue
@@ -1322,6 +1147,28 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_AML_NO_OPERAND
+condition|)
+block|{
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"PsParseLoop: Invoked method did not return a value, %s\n"
+operator|,
+name|AcpiCmFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiPsNextParseState
@@ -1383,6 +1230,8 @@ name|PrevArgTypes
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/*      * Iterative parsing loop, while there is more aml to process:      */
 while|while
 condition|(

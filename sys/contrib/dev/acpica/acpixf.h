@@ -114,8 +114,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiFindRootPointer
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 modifier|*
 name|RsdpPhysicalAddress
 parameter_list|)
@@ -126,8 +125,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiLoadTables
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|RsdpPhysicalAddress
 parameter_list|)
 function_decl|;
@@ -648,8 +646,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiSetFirmwareWakingVector
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|)
 function_decl|;
@@ -659,8 +656,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiGetFirmwareWakingVector
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 modifier|*
 name|PhysicalAddress
 parameter_list|)
