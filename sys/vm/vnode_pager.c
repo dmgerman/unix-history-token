@@ -341,6 +341,13 @@ operator|*
 operator|)
 name|handle
 expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"vnode_pager_alloc"
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -705,9 +712,9 @@ condition|)
 return|return
 name|FALSE
 return|;
-name|mp_fixme
+name|VI_LOCK
 argument_list|(
-literal|"Unlocked iflags access"
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -718,9 +725,21 @@ name|v_iflag
 operator|&
 name|VI_DOOMED
 condition|)
+block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If filesystem no longer mounted or offset beyond end of file we do 	 * not have the page. 	 */
 if|if
 condition|(
