@@ -2369,7 +2369,7 @@ name|PRUS_OOB
 operator|)
 condition|)
 block|{
-name|sbappend
+name|sbappendstream
 argument_list|(
 operator|&
 name|so
@@ -2538,7 +2538,7 @@ name|out
 goto|;
 block|}
 comment|/* 		 * According to RFC961 (Assigned Protocols), 		 * the urgent pointer points to the last octet 		 * of urgent data.  We continue, however, 		 * to consider it to indicate the first octet 		 * of data past the urgent section. 		 * Otherwise, snd_up should be one lower. 		 */
-name|sbappend
+name|sbappendstream
 argument_list|(
 operator|&
 name|so

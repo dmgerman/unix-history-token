@@ -1392,7 +1392,7 @@ name|tqe_m
 argument_list|)
 expr_stmt|;
 else|else
-name|sbappend
+name|sbappendstream
 argument_list|(
 operator|&
 name|so
@@ -4642,7 +4642,7 @@ name|drop_hdrlen
 argument_list|)
 expr_stmt|;
 comment|/* delayed header drop */
-name|sbappend
+name|sbappendstream
 argument_list|(
 operator|&
 name|so
@@ -8054,7 +8054,7 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-name|sbappend
+name|sbappendstream
 argument_list|(
 operator|&
 name|so
