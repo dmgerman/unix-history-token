@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ieeefp.h,v 1.4 1998/01/09 08:03:43 perry Exp $	*/
 end_comment
 
 begin_comment
-comment|/*   * Written by J.T. Conklin, Apr 6, 1995  * Public domain.  */
+comment|/*   * Written by J.T. Conklin, Apr 6, 1995  * Public domain.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -34,7 +34,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|i386
+name|__i386__
 end_ifdef
 
 begin_include
@@ -47,6 +47,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !__i386__ */
+end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
@@ -137,7 +141,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* i386 */
+comment|/* __i386__ */
 end_comment
 
 begin_endif
