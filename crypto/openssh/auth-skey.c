@@ -538,6 +538,17 @@ argument_list|(
 name|boottime
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|boottime
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|boottime
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sysctl
