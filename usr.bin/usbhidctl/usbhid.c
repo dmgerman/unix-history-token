@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libusbhid.h>
+file|<usbhid.h>
 end_include
 
 begin_include
@@ -110,6 +110,13 @@ name|int
 name|noname
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|reportid
 decl_stmt|;
 end_decl_stmt
 
@@ -561,6 +568,8 @@ name|r
 argument_list|,
 operator|~
 literal|0
+argument_list|,
+name|reportid
 argument_list|)
 init|;
 name|hid_get_item
@@ -953,6 +962,8 @@ argument_list|,
 literal|1
 operator|<<
 name|hid_input
+argument_list|,
+name|reportid
 argument_list|)
 init|;
 name|hid_get_item

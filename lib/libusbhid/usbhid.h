@@ -231,6 +231,9 @@ name|d
 parameter_list|,
 name|int
 name|kindset
+parameter_list|,
+name|int
+name|id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,13 +269,12 @@ parameter_list|(
 name|report_desc_t
 name|d
 parameter_list|,
-name|unsigned
-name|int
-name|id
-parameter_list|,
 name|enum
 name|hid_kind
 name|k
+parameter_list|,
+name|int
+name|id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -295,6 +297,9 @@ parameter_list|,
 name|hid_item_t
 modifier|*
 name|h
+parameter_list|,
+name|int
+name|id
 parameter_list|)
 function_decl|;
 end_function_decl

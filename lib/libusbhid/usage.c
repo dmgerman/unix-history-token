@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -54,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libusbhid.h"
+file|"usbhid.h"
 end_include
 
 begin_define
