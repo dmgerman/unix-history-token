@@ -1759,7 +1759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert an expression of the following forms to a uintmax_t.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1<< 10).  *	4) A positive decimal number followed by a m (mult by 1<< 20).  *	5) A positive decimal number followed by a g (mult by 1<< 30).  *	5) A positive decimal number followed by a w (mult by sizeof int).  *	6) Two or more positive decimal numbers (with/without [bkmgw])  *	   separated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  */
+comment|/*  * Convert an expression of the following forms to a uintmax_t.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a 'b' or 'B' (mult by 512).  *	3) A positive decimal number followed by a 'k' or 'K' (mult by 1<< 10).  *	4) A positive decimal number followed by a 'm' or 'M' (mult by 1<< 20).  *	5) A positive decimal number followed by a 'g' or 'G' (mult by 1<< 30).  *	5) A positive decimal number followed by a 'w' or 'W' (mult by sizeof int).  *	6) Two or more positive decimal numbers (with/without [BbKkMmGgWw])  *	   separated by 'x' or 'X' (also '*' for backwards compatibility),  *	   specifying the product of the indicated values.  */
 end_comment
 
 begin_function
@@ -1843,6 +1843,9 @@ name|expr
 condition|)
 block|{
 case|case
+literal|'B'
+case|:
+case|case
 literal|'b'
 case|:
 name|mult
@@ -1850,6 +1853,9 @@ operator|=
 literal|512
 expr_stmt|;
 break|break;
+case|case
+literal|'K'
+case|:
 case|case
 literal|'k'
 case|:
@@ -1861,6 +1867,9 @@ literal|10
 expr_stmt|;
 break|break;
 case|case
+literal|'M'
+case|:
+case|case
 literal|'m'
 case|:
 name|mult
@@ -1871,6 +1880,9 @@ literal|20
 expr_stmt|;
 break|break;
 case|case
+literal|'G'
+case|:
+case|case
 literal|'g'
 case|:
 name|mult
@@ -1880,6 +1892,9 @@ operator|<<
 literal|30
 expr_stmt|;
 break|break;
+case|case
+literal|'W'
+case|:
 case|case
 literal|'w'
 case|:
@@ -1939,6 +1954,9 @@ case|case
 literal|'*'
 case|:
 comment|/* Backward compatible. */
+case|case
+literal|'X'
+case|:
 case|case
 literal|'x'
 case|:
@@ -2088,6 +2106,9 @@ name|expr
 condition|)
 block|{
 case|case
+literal|'B'
+case|:
+case|case
 literal|'b'
 case|:
 name|mult
@@ -2095,6 +2116,9 @@ operator|=
 literal|512
 expr_stmt|;
 break|break;
+case|case
+literal|'K'
+case|:
 case|case
 literal|'k'
 case|:
@@ -2106,6 +2130,9 @@ literal|10
 expr_stmt|;
 break|break;
 case|case
+literal|'M'
+case|:
+case|case
 literal|'m'
 case|:
 name|mult
@@ -2116,6 +2143,9 @@ literal|20
 expr_stmt|;
 break|break;
 case|case
+literal|'G'
+case|:
+case|case
 literal|'g'
 case|:
 name|mult
@@ -2125,6 +2155,9 @@ operator|<<
 literal|30
 expr_stmt|;
 break|break;
+case|case
+literal|'W'
+case|:
 case|case
 literal|'w'
 case|:
@@ -2194,6 +2227,9 @@ case|case
 literal|'*'
 case|:
 comment|/* Backward compatible. */
+case|case
+literal|'X'
+case|:
 case|case
 literal|'x'
 case|:
