@@ -847,6 +847,12 @@ name|block
 operator|->
 name|lf_id
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|wproc
@@ -925,6 +931,12 @@ operator|->
 name|lf_id
 condition|)
 block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|lock
@@ -939,6 +951,12 @@ operator|)
 return|;
 block|}
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 		 * For flock type locks, we must first remove 		 * any shared locks that we hold before we sleep 		 * waiting for an exclusive lock. 		 */
 if|if
