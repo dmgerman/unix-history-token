@@ -895,14 +895,8 @@ block|}
 comment|/* 	 * add to the end of the list 	 */
 name|rbl
 operator|=
-operator|(
-name|rpcblist_ptr
-operator|)
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|RPCBLIST
@@ -913,18 +907,13 @@ if|if
 condition|(
 name|rbl
 operator|==
-operator|(
-name|rpcblist_ptr
-operator|)
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
 name|a
 operator|=
 operator|&
@@ -2715,16 +2704,8 @@ return|;
 block|}
 name|rmt
 operator|=
-operator|(
-expr|struct
-name|rmtcallfd_list
-operator|*
-operator|)
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7004,16 +6985,8 @@ expr_stmt|;
 comment|/* 	 * add to END of list 	 */
 name|pml
 operator|=
-operator|(
-expr|struct
-name|pmaplist
-operator|*
-operator|)
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct

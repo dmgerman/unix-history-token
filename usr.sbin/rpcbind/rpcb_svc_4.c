@@ -1584,14 +1584,8 @@ directive|endif
 comment|/* 		 * Add it to rlist. 		 */
 name|rp
 operator|=
-operator|(
-name|rpcb_entry_list_ptr
-operator|)
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 sizeof|sizeof
 argument_list|(
 name|rpcb_entry_list
