@@ -427,7 +427,7 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|buf
+name|args
 argument_list|)
 operator|+
 literal|1
