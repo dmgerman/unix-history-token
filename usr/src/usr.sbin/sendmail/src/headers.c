@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -276,9 +276,6 @@ condition|(
 operator|!
 name|def
 operator|&&
-operator|!
-name|QueueRun
-operator|&&
 name|strcmp
 argument_list|(
 name|fname
@@ -411,31 +408,6 @@ operator|(
 name|hi
 operator|->
 name|hi_flags
-operator|)
-return|;
-comment|/* don't put timestamps in every queue run */
-if|if
-condition|(
-name|QueueRun
-operator|&&
-name|h
-operator|!=
-name|NULL
-operator|&&
-name|bitset
-argument_list|(
-name|H_FORCE
-argument_list|,
-name|h
-operator|->
-name|h_flags
-argument_list|)
-condition|)
-return|return
-operator|(
-name|h
-operator|->
-name|h_flags
 operator|)
 return|;
 comment|/* count Mail-From: lines to avoid loops (simulate hop counts) */
