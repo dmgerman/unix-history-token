@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.12 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +201,15 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 name|nlistpath
 operator|=
