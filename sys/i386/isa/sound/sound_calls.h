@@ -217,7 +217,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|DMAbuf_select
+name|DMAbuf_poll
 parameter_list|(
 name|int
 name|dev
@@ -228,7 +228,7 @@ modifier|*
 name|file
 parameter_list|,
 name|int
-name|sel_type
+name|events
 parameter_list|,
 name|select_table
 modifier|*
@@ -382,7 +382,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|audio_select
+name|audio_poll
 parameter_list|(
 name|int
 name|dev
@@ -393,7 +393,7 @@ modifier|*
 name|file
 parameter_list|,
 name|int
-name|sel_type
+name|events
 parameter_list|,
 name|select_table
 modifier|*
@@ -616,7 +616,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|sequencer_select
+name|sequencer_poll
 parameter_list|(
 name|int
 name|dev
@@ -627,7 +627,7 @@ modifier|*
 name|file
 parameter_list|,
 name|int
-name|sel_type
+name|events
 parameter_list|,
 name|select_table
 modifier|*
@@ -799,7 +799,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|MIDIbuf_select
+name|MIDIbuf_poll
 parameter_list|(
 name|int
 name|dev
@@ -810,7 +810,7 @@ modifier|*
 name|file
 parameter_list|,
 name|int
-name|sel_type
+name|events
 parameter_list|,
 name|select_table
 modifier|*

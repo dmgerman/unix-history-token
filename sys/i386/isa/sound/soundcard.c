@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/386bsd/soundcard.c  *   * Soundcard driver for FreeBSD.  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: soundcard.c,v 1.51 1997/06/08 12:55:26 ache Exp $  */
+comment|/*  * sound/386bsd/soundcard.c  *   * Soundcard driver for FreeBSD.  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: soundcard.c,v 1.52 1997/07/20 11:58:40 bde Exp $  */
 end_comment
 
 begin_include
@@ -221,8 +221,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|sndselect
+name|d_poll_t
+name|sndpoll
 decl_stmt|;
 end_decl_stmt
 
@@ -258,7 +258,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* sound */
-name|sndselect
+name|sndpoll
 block|,
 name|nommap
 block|,
@@ -1016,13 +1016,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|sndselect
+name|sndpoll
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
 name|int
-name|rw
+name|events
 parameter_list|,
 name|struct
 name|proc
@@ -1041,7 +1041,7 @@ name|DEB
 argument_list|(
 name|printk
 argument_list|(
-literal|"snd_select(dev=%d, rw=%d, pid=%d)\n"
+literal|"snd_poll(dev=%d, rw=%d, pid=%d)\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -1073,7 +1073,7 @@ case|case
 name|SND_DEV_SEQ2
 case|:
 return|return
-name|sequencer_select
+name|sequencer_poll
 argument_list|(
 name|dev
 argument_list|,
@@ -1083,7 +1083,7 @@ index|[
 name|dev
 index|]
 argument_list|,
-name|rw
+name|events
 argument_list|,
 name|p
 argument_list|)
@@ -1098,7 +1098,7 @@ case|case
 name|SND_DEV_MIDIN
 case|:
 return|return
-name|MIDIbuf_select
+name|MIDIbuf_poll
 argument_list|(
 name|dev
 argument_list|,
@@ -1108,7 +1108,7 @@ index|[
 name|dev
 index|]
 argument_list|,
-name|rw
+name|events
 argument_list|,
 name|p
 argument_list|)
@@ -1129,7 +1129,7 @@ case|case
 name|SND_DEV_AUDIO
 case|:
 return|return
-name|audio_select
+name|audio_poll
 argument_list|(
 name|dev
 argument_list|,
@@ -1139,7 +1139,7 @@ index|[
 name|dev
 index|]
 argument_list|,
-name|rw
+name|events
 argument_list|,
 name|p
 argument_list|)
