@@ -36,7 +36,7 @@ name|int
 name|extattr_namespace_to_string
 parameter_list|(
 name|int
-name|namespace
+name|attrnamespace
 parameter_list|,
 name|char
 modifier|*
@@ -46,7 +46,7 @@ parameter_list|)
 block|{
 switch|switch
 condition|(
-name|namespace
+name|attrnamespace
 condition|)
 block|{
 case|case
@@ -121,7 +121,7 @@ name|string
 parameter_list|,
 name|int
 modifier|*
-name|namespace
+name|attrnamespace
 parameter_list|)
 block|{
 if|if
@@ -137,12 +137,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|namespace
+name|attrnamespace
 operator|!=
 name|NULL
 condition|)
 operator|*
-name|namespace
+name|attrnamespace
 operator|=
 name|EXTATTR_NAMESPACE_USER
 expr_stmt|;
@@ -166,12 +166,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|namespace
+name|attrnamespace
 operator|!=
 name|NULL
 condition|)
 operator|*
-name|namespace
+name|attrnamespace
 operator|=
 name|EXTATTR_NAMESPACE_SYSTEM
 expr_stmt|;
