@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1985, 1986, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -299,7 +299,7 @@ comment|/* option on/off */
 name|int
 name|l_linger
 decl_stmt|;
-comment|/* linger time */
+comment|/* linger time in seconds */
 block|}
 struct|;
 end_struct
