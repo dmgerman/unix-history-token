@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tsort.c	5.5 (Berkeley) %G%"
+literal|"@(#)tsort.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,7 +101,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  *  Topological sort.  Input is a list of pairs of strings seperated by  *  white space (spaces, tabs, and/or newlines); strings are written to  *  standard output in sorted order, one per line.  *  *  usage:  *     tsort [inputfile]  *  If no input file is specified, standard input is read.  *  *  Should be compatable with AT&T tsort HOWEVER the output is not identical  *  (i.e. for most graphs there is more than one sorted order, and this tsort  *  usually generates a different one then the AT&T tsort).  Also, cycle  *  reporting seems to be more accurate in this version (the AT&T tsort  *  sometimes says a node is in a cycle when it isn't).  *  *  Michael Rendell, michael@stretch.cs.mun.ca - Feb 26, '90  */
+comment|/*  *  Topological sort.  Input is a list of pairs of strings separated by  *  white space (spaces, tabs, and/or newlines); strings are written to  *  standard output in sorted order, one per line.  *  *  usage:  *     tsort [inputfile]  *  If no input file is specified, standard input is read.  *  *  Should be compatable with AT&T tsort HOWEVER the output is not identical  *  (i.e. for most graphs there is more than one sorted order, and this tsort  *  usually generates a different one then the AT&T tsort).  Also, cycle  *  reporting seems to be more accurate in this version (the AT&T tsort  *  sometimes says a node is in a cycle when it isn't).  *  *  Michael Rendell, michael@stretch.cs.mun.ca - Feb 26, '90  */
 end_comment
 
 begin_define
@@ -1240,7 +1240,7 @@ condition|(
 name|graph
 condition|)
 block|{
-comment|/* 		 * keep getting rid of simple cases until there are none left, 		 * if there are any nodes still in the graph, then there is 		 * a cycle in it. 		 */
+comment|/* 		 * Keep getting rid of simple cases until there are none left, 		 * if there are any nodes still in the graph, then there is 		 * a cycle in it. 		 */
 do|do
 block|{
 for|for
@@ -1329,11 +1329,6 @@ name|cnt
 expr_stmt|;
 name|cycle_buf
 operator|=
-operator|(
-name|NODE
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1350,11 +1345,6 @@ argument_list|)
 expr_stmt|;
 name|longest_cycle
 operator|=
-operator|(
-name|NODE
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -1371,11 +1361,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|cycle_buf
+operator|==
+name|NULL
 operator|||
-operator|!
 name|longest_cycle
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
