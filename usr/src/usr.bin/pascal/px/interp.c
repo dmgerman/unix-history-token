@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.13 %G%"
+literal|"@(#)interp.c 1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"machdep.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h01errs.h"
 end_include
 
 begin_include
@@ -1703,7 +1697,9 @@ index|]
 condition|)
 name|ERROR
 argument_list|(
-name|EGOTO
+literal|"Active frame not found in non-local goto\n"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* exiting prog ??? */
@@ -5986,7 +5982,7 @@ condition|)
 comment|/* default case => error */
 name|ERROR
 argument_list|(
-name|ECASE
+literal|"Label of %D not found in case\n"
 argument_list|,
 name|tl1
 argument_list|)
@@ -6082,7 +6078,7 @@ condition|)
 comment|/* default case => error */
 name|ERROR
 argument_list|(
-name|ECASE
+literal|"Label of %D not found in case\n"
 argument_list|,
 name|tl1
 argument_list|)
@@ -6178,7 +6174,7 @@ condition|)
 comment|/* default case => error */
 name|ERROR
 argument_list|(
-name|ECASE
+literal|"Label of %D not found in case\n"
 argument_list|,
 name|tl1
 argument_list|)
