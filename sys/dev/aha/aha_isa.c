@@ -911,7 +911,8 @@ comment|/*maxsize*/
 name|BUS_SPACE_MAXSIZE_24BIT
 argument_list|,
 comment|/*nsegments*/
-name|BUS_SPACE_UNRESTRICTED
+operator|~
+literal|0
 argument_list|,
 comment|/*maxsegsz*/
 name|BUS_SPACE_MAXSIZE_24BIT
