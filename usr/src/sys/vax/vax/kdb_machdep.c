@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)kdb_machdep.c	7.4 (Berkeley) %G%	*/
+comment|/*	@(#)kdb_machdep.c	7.5 (Berkeley) %G%	*/
 end_comment
 
 begin_include
@@ -751,7 +751,10 @@ name|locr0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Mark debugger active and initiate input 	 * polling in the console device driver. 	 */
-name|cnpoll
+call|(
+modifier|*
+name|v_poll
+call|)
 argument_list|(
 name|kdbactive
 operator|=
@@ -780,7 +783,10 @@ operator|.
 name|u_procp
 argument_list|)
 expr_stmt|;
-name|cnpoll
+call|(
+modifier|*
+name|v_poll
+call|)
 argument_list|(
 name|kdbactive
 operator|=
@@ -975,7 +981,10 @@ block|{
 operator|*
 name|cp
 operator|=
-name|cngetc
+call|(
+modifier|*
+name|v_getc
+call|)
 argument_list|()
 expr_stmt|;
 return|return
@@ -1020,7 +1029,10 @@ operator|--
 operator|>
 literal|0
 condition|)
-name|cnputc
+call|(
+modifier|*
+name|v_putc
+call|)
 argument_list|(
 operator|*
 name|cp
