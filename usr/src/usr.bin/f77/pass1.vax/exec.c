@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.4 (Berkeley) %G%"
+literal|"@(#)exec.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * exec.c  *  * Routines for handling the semantics of control structures.  * F77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *   * $Log:	exec.c,v $  * Revision 5.2  85/08/10  04:07:36  donn  * Changed an error message to correct spelling and be more accurate.  * From Jerry Berkman.  *   * Revision 2.3  85/03/18  08:03:31  donn  * Hacks for conversions from type address to numeric type -- prevent addresses  * from being stored in shorts and prevent warnings about implicit conversions.  *   * Revision 2.2  84/09/03  23:18:30  donn  * When a DO loop had the same variable as its loop variable and its limit,  * the limit temporary was assigned to AFTER the original value of the variable  * was destroyed by assigning the initial value to the loop variable.  I  * swapped the operands of a comparison and changed the direction of the  * operator...  This only affected programs when optimizing.  (This may not  * be enough if something alters the order of evaluation of side effects  * later on... sigh.)  *   * Revision 2.1  84/07/19  12:02:53  donn  * Changed comment headers for UofU.  *   * Revision 1.3  84/07/12  18:35:12  donn  * Added change to enddo() to detect open 'if' blocks at the ends of loops.  *   * Revision 1.2  84/06/08  11:22:53  donn  * Fixed bug in exdo() -- if a loop parameter contained an instance of the loop  * variable and the optimizer was off, the loop variable got converted to  * register before the parameters were processed and so the loop parameters  * were initialized from garbage in the register instead of the memory version  * of the loop variable.  *   */
+comment|/*  * exec.c  *  * Routines for handling the semantics of control structures.  * F77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *   * $Log:	exec.c,v $  * Revision 5.6  85/12/20  19:42:46  donn  * Change style of error reporting in last fix.  *   * Revision 5.5  85/12/20  18:54:10  donn  * Complain about calls to things which aren't subroutines.  *   * Revision 5.4  85/12/18  19:57:58  donn  * Assignment statements are executable statements -- advance the magic  * parser state to forbid DATA statements and statement functions.  *   * Revision 5.3  85/11/25  00:23:49  donn  * 4.3 beta  *   * Revision 5.2  85/08/10  04:07:36  donn  * Changed an error message to correct spelling and be more accurate.  * From Jerry Berkman.  *   * Revision 2.3  85/03/18  08:03:31  donn  * Hacks for conversions from type address to numeric type -- prevent addresses  * from being stored in shorts and prevent warnings about implicit conversions.  *   * Revision 2.2  84/09/03  23:18:30  donn  * When a DO loop had the same variable as its loop variable and its limit,  * the limit temporary was assigned to AFTER the original value of the variable  * was destroyed by assigning the initial value to the loop variable.  I  * swapped the operands of a comparison and changed the direction of the  * operator...  This only affected programs when optimizing.  (This may not  * be enough if something alters the order of evaluation of side effects  * later on... sigh.)  *   * Revision 2.1  84/07/19  12:02:53  donn  * Changed comment headers for UofU.  *   * Revision 1.3  84/07/12  18:35:12  donn  * Added change to enddo() to detect open 'if' blocks at the ends of loops.  *   * Revision 1.2  84/06/08  11:22:53  donn  * Fixed bug in exdo() -- if a loop parameter contained an instance of the loop  * variable and the optimizer was off, the loop variable got converted to  * register before the parameters were processed and so the loop parameters  * were initialized from garbage in the register instead of the memory version  * of the loop variable.  *   */
 end_comment
 
 begin_include
@@ -894,6 +894,10 @@ condition|)
 name|enddcl
 argument_list|()
 expr_stmt|;
+name|parstate
+operator|=
+name|INEXEC
+expr_stmt|;
 if|if
 condition|(
 name|optimflag
@@ -1200,6 +1204,55 @@ specifier|register
 name|expptr
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|name
+operator|->
+name|vdcldone
+condition|)
+if|if
+condition|(
+name|name
+operator|->
+name|vclass
+operator|!=
+name|CLPROC
+operator|&&
+name|name
+operator|->
+name|vclass
+operator|!=
+name|CLENTRY
+condition|)
+block|{
+name|dclerr
+argument_list|(
+literal|"call to non-subroutine"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|name
+operator|->
+name|vtype
+operator|!=
+name|TYSUBR
+condition|)
+block|{
+name|dclerr
+argument_list|(
+literal|"subroutine invocation of function"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|settype
 argument_list|(
 name|name
