@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2000 Berkeley Software Design, Inc.  * Copyright (c)
 end_comment
 
 begin_comment
-comment|/*  * AMD Am79c972 fast ethernet PCI NIC driver. Datatheets are available  * from http://www.amd.com.  *  * Written by Bill Paul<wpaul@osd.bsdi.com>  */
+comment|/*  * AMD Am79c972 fast ethernet PCI NIC driver. Datasheets are available  * from http://www.amd.com.  *  * Written by Bill Paul<wpaul@osd.bsdi.com>  */
 end_comment
 
 begin_comment
@@ -2092,7 +2092,7 @@ argument_list|,
 name|PCN_BCR_PCISUBVENID
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Note III: the test for 0x10001000 is a hack to 			 * pacify VMware, who's pseudo-PCnet interface is 			 * broken. Reading the subsystem register from PCI 			 * config space yeilds 0x00000000 while reading the 			 * same value from I/O space yeilds 0x10001000. It's 			 * not supposed to be that way. 			 */
+comment|/* 			 * Note III: the test for 0x10001000 is a hack to 			 * pacify VMware, who's pseudo-PCnet interface is 			 * broken. Reading the subsystem register from PCI 			 * config space yields 0x00000000 while reading the 			 * same value from I/O space yields 0x10001000. It's 			 * not supposed to be that way. 			 */
 if|if
 condition|(
 name|chip_id
@@ -4461,7 +4461,7 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* Supress unwanted interrupts */
+comment|/* Suppress unwanted interrupts */
 if|if
 condition|(
 operator|!
