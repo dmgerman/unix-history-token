@@ -9647,6 +9647,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|verbose_mode
+operator|&&
 name|output_stream
 operator|!=
 name|stdout
