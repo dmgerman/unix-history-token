@@ -764,7 +764,7 @@ argument_list|)
 operator|)
 name|thread_start
 argument_list|,
-literal|4
+literal|3
 argument_list|,
 name|new_thread
 argument_list|,
