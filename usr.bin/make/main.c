@@ -4223,6 +4223,64 @@ block|}
 end_block
 
 begin_comment
+comment|/*-  * Debug --  *	Print a debugging message given its format.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  */
+end_comment
+
+begin_comment
+comment|/* VARARGS */
+end_comment
+
+begin_function
+name|void
+name|Debug
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*-  * Error --  *	Print an error message given its format.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  */
 end_comment
 

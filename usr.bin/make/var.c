@@ -1479,15 +1479,17 @@ name|DEBUGF
 argument_list|(
 name|VAR
 argument_list|,
+operator|(
 literal|"%s:%s = %s\n"
-argument_list|,
+operator|,
 name|ctxt
 operator|->
 name|name
-argument_list|,
+operator|,
 name|name
-argument_list|,
+operator|,
 name|val
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1571,13 +1573,15 @@ name|DEBUGF
 argument_list|(
 name|VAR
 argument_list|,
+operator|(
 literal|"%s:delete %s\n"
-argument_list|,
+operator|,
 name|ctxt
 operator|->
 name|name
-argument_list|,
+operator|,
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|ln
@@ -1770,15 +1774,17 @@ name|DEBUGF
 argument_list|(
 name|VAR
 argument_list|,
+operator|(
 literal|"%s:%s = %s\n"
-argument_list|,
+operator|,
 name|ctxt
 operator|->
 name|name
-argument_list|,
+operator|,
 name|name
-argument_list|,
+operator|,
 name|val
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1926,14 +1932,15 @@ name|DEBUGF
 argument_list|(
 name|VAR
 argument_list|,
+operator|(
 literal|"%s:%s = %s\n"
-argument_list|,
+operator|,
 name|ctxt
 operator|->
 name|name
-argument_list|,
+operator|,
 name|name
-argument_list|,
+operator|,
 operator|(
 name|char
 operator|*
@@ -1950,6 +1957,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6560,12 +6568,14 @@ name|DEBUGF
 argument_list|(
 name|VAR
 argument_list|,
+operator|(
 literal|"Applying :%c to \"%s\"\n"
-argument_list|,
+operator|,
 operator|*
 name|tstr
-argument_list|,
+operator|,
 name|str
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -8718,9 +8728,11 @@ name|DEBUGF
 argument_list|(
 name|VAR
 argument_list|,
+operator|(
 literal|"Result is \"%s\"\n"
-argument_list|,
+operator|,
 name|newStr
+operator|)
 argument_list|)
 expr_stmt|;
 if|if

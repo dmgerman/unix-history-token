@@ -1286,7 +1286,7 @@ name|PRINTDBIT
 parameter_list|(
 name|attr
 parameter_list|)
-value|case CONCAT(OP_,attr): DEBUGF(TARG, "." #attr " "); break
+value|case CONCAT(OP_,attr): DEBUGF(TARG, ("." #attr " ")); break
 name|type
 operator|&=
 operator|~
@@ -1383,7 +1383,9 @@ name|DEBUGF
 argument_list|(
 name|TARG
 argument_list|,
+operator|(
 literal|".MEMBER "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;

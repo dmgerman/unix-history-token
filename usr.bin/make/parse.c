@@ -5440,9 +5440,11 @@ name|DEBUGF
 argument_list|(
 name|FOR
 argument_list|,
+operator|(
 literal|"%s\n----\n"
-argument_list|,
+operator|,
 name|str
+operator|)
 argument_list|)
 expr_stmt|;
 name|oldFile

@@ -2196,13 +2196,15 @@ name|DEBUGF
 argument_list|(
 name|COND
 argument_list|,
+operator|(
 literal|"lhs = \"%s\", rhs = \"%s\", op = %.2s\n"
-argument_list|,
+operator|,
 name|lhs
-argument_list|,
+operator|,
 name|string
-argument_list|,
+operator|,
 name|op
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		     * Null-terminate rhs and perform the comparison. 		     * t is set to the result. 		     */
@@ -2474,13 +2476,15 @@ name|DEBUGF
 argument_list|(
 name|COND
 argument_list|,
+operator|(
 literal|"left = %f, right = %f, op = %.2s\n"
-argument_list|,
+operator|,
 name|left
-argument_list|,
+operator|,
 name|right
-argument_list|,
+operator|,
 name|op
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch

@@ -1203,15 +1203,17 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"inserting %s(%d)..."
-argument_list|,
+operator|,
 name|s
 operator|->
 name|name
-argument_list|,
+operator|,
 name|s
 operator|->
 name|sNum
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1225,7 +1227,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"at end of list\n"
+operator|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1280,15 +1284,17 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"before %s(%d)\n"
-argument_list|,
+operator|,
 name|s2
 operator|->
 name|name
-argument_list|,
+operator|,
 name|s2
 operator|->
 name|sNum
+operator|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1335,7 +1341,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"already there\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1842,15 +1850,17 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"defining transformation from `%s' to `%s'\n"
-argument_list|,
+operator|,
 name|s
 operator|->
 name|name
-argument_list|,
+operator|,
 name|t
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|SuffInsert
@@ -1964,15 +1974,17 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"deleting transformation from `%s' to `%s'\n"
-argument_list|,
+operator|,
 name|s
 operator|->
 name|name
-argument_list|,
+operator|,
 name|t
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the source from the target's children list. We check for a 	 * NULL return to handle a beanhead saying something like 	 *  .c.o .c.o: 	 * 	 * We'll be called twice when the next target is seen, but .c and .o 	 * are only linked once... 	 */
@@ -2010,11 +2022,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"transformation %s complete\n"
-argument_list|,
+operator|,
 name|gn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3720,11 +3734,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"\ttrying %s..."
-argument_list|,
+operator|,
 name|s
 operator|->
 name|file
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * A file is considered to exist if either a node exists in the 	 * graph for it or the file actually exists. 	 */
@@ -3813,7 +3829,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"not there\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|SuffAddLevel
@@ -3844,7 +3862,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"got it\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4192,11 +4212,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"\tusing existing source %s\n"
-argument_list|,
+operator|,
 name|s
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4328,11 +4350,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"Expanding \"%s\"..."
-argument_list|,
+operator|,
 name|cgn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -4661,11 +4685,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"%s..."
-argument_list|,
+operator|,
 name|gn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4786,7 +4812,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4842,11 +4870,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"Wildcard expanding \"%s\"..."
-argument_list|,
+operator|,
 name|cgn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4873,11 +4903,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"suffix is \"%s\"..."
-argument_list|,
+operator|,
 name|s
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|path
@@ -4939,9 +4971,11 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"%s..."
-argument_list|,
+operator|,
 name|cp
+operator|)
 argument_list|)
 expr_stmt|;
 name|gn
@@ -5062,7 +5096,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5357,19 +5393,21 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"\tapplying %s -> %s to \"%s\"\n"
-argument_list|,
+operator|,
 name|s
 operator|->
 name|name
-argument_list|,
+operator|,
 name|t
 operator|->
 name|name
-argument_list|,
+operator|,
 name|tGn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Record last child for expansion purposes      */
@@ -5713,7 +5751,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"using null suffix\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ms
@@ -5801,12 +5841,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"\tNo transformation from %s -> %s\n"
-argument_list|,
+operator|,
 name|ms
 operator|->
 name|name
-argument_list|,
+operator|,
 operator|(
 operator|(
 name|Suff
@@ -5819,6 +5860,7 @@ argument_list|)
 operator|)
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6183,11 +6225,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"\tNo known suffix on %s. Using .NULL suffix\n"
-argument_list|,
+operator|,
 name|gn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|targ
@@ -6303,7 +6347,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"not "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6311,7 +6357,9 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"adding suffix rules\n"
+operator|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6474,11 +6522,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"\tNo valid suffix on %s\n"
-argument_list|,
+operator|,
 name|gn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|sfnd_abort
@@ -7292,11 +7342,13 @@ name|DEBUGF
 argument_list|(
 name|SUFF
 argument_list|,
+operator|(
 literal|"SuffFindDeps (%s)\n"
-argument_list|,
+operator|,
 name|gn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 if|if

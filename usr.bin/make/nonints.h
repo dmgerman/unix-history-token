@@ -193,6 +193,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|Debug
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|Error
 parameter_list|(
 specifier|const

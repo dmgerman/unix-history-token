@@ -1214,13 +1214,15 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"%s "
-argument_list|,
+operator|,
 operator|(
 name|char
 operator|*
 operator|)
 name|word
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1271,9 +1273,11 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"expanding \"%s\"..."
-argument_list|,
+operator|,
 name|word
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -1601,7 +1605,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1713,9 +1719,11 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"Searching for %s..."
-argument_list|,
+operator|,
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * No matter what, we always look for the file in the current directory      * before anywhere else and we *do not* add the ./ to it if it exists.      * This is so there are no conflicts between what the user specifies      * (fish.c) and what pmake finds (./fish.c).      */
@@ -1762,7 +1770,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"in '.'\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|hits
@@ -1798,7 +1808,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"couldn't open path, file not found\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|misses
@@ -1845,11 +1857,13 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"%s..."
-argument_list|,
+operator|,
 name|p
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1875,7 +1889,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"here..."
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1957,7 +1973,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"component mismatch -- continuing..."
+operator|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1980,9 +1998,11 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"returning %s\n"
-argument_list|,
+operator|,
 name|file
+operator|)
 argument_list|)
 expr_stmt|;
 name|Lst_Close
@@ -2061,7 +2081,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"must be here but isn't -- returing NULL\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|Lst_Close
@@ -2092,7 +2114,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"failed.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|misses
@@ -2126,7 +2150,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"failed. Trying subdirectories..."
+operator|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2202,9 +2228,11 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"checking %s..."
-argument_list|,
+operator|,
 name|file
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2224,7 +2252,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"got it.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|Lst_Close
@@ -2264,16 +2294,18 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"Caching %s for %s\n"
-argument_list|,
+operator|,
 name|Targ_FmtTime
 argument_list|(
 name|stb
 operator|.
 name|st_mtime
 argument_list|)
-argument_list|,
+operator|,
 name|file
+operator|)
 argument_list|)
 expr_stmt|;
 name|entry
@@ -2331,7 +2363,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"failed. "
+operator|)
 argument_list|)
 expr_stmt|;
 name|Lst_Close
@@ -2349,7 +2383,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"Checked . already, returning NULL\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2475,9 +2511,11 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"Looking for \"%s\"..."
-argument_list|,
+operator|,
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|bigmisses
@@ -2509,7 +2547,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"got it (in mtime cache)\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2555,16 +2595,18 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"Caching %s for %s\n"
-argument_list|,
+operator|,
 name|Targ_FmtTime
 argument_list|(
 name|stb
 operator|.
 name|st_mtime
 argument_list|)
-argument_list|,
+operator|,
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|Hash_SetValue
@@ -2594,7 +2636,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"failed. Returning NULL\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2741,8 +2785,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"Using cached time %s for %s\n"
-argument_list|,
+operator|,
 name|Targ_FmtTime
 argument_list|(
 operator|(
@@ -2756,8 +2801,9 @@ argument_list|(
 name|entry
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|fullName
+operator|)
 argument_list|)
 expr_stmt|;
 name|stb
@@ -2996,9 +3042,11 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"Caching %s..."
-argument_list|,
+operator|,
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3192,7 +3240,9 @@ name|DEBUGF
 argument_list|(
 name|DIR
 argument_list|,
+operator|(
 literal|"done\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

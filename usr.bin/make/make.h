@@ -1093,13 +1093,10 @@ name|DEBUGF
 parameter_list|(
 name|module
 parameter_list|,
-name|fmt
-parameter_list|,
 name|args
-modifier|...
 parameter_list|)
 define|\
-value|do {						\ 	if (DEBUG(module)) {			\ 		fprintf(stderr, fmt, ##args);	\ 		fflush(stderr);			\ 	}					\ } while (0)
+value|do {						\ 	if (DEBUG(module)) {			\ 		Debug args ;			\ 	}					\ } while (0)
 end_define
 
 begin_define

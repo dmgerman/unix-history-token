@@ -300,14 +300,16 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"modified %s..."
-argument_list|,
+operator|,
 name|Targ_FmtTime
 argument_list|(
 name|gn
 operator|->
 name|mtime
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -317,7 +319,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"non-existent..."
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -337,7 +341,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|".USE node..."
+operator|)
 argument_list|)
 expr_stmt|;
 name|oodate
@@ -359,7 +365,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"library..."
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * always out of date if no children and :: target 	 */
@@ -404,7 +412,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|".JOIN node..."
+operator|)
 argument_list|)
 expr_stmt|;
 name|oodate
@@ -444,7 +454,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"! operator..."
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -462,7 +474,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|".PHONY node..."
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -472,7 +486,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|".EXEC node..."
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -539,7 +555,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"modified before source..."
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -557,7 +575,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"non-existent and no sources..."
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -567,7 +587,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|":: operator and no sources..."
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -582,7 +604,7 @@ if|#
 directive|if
 literal|0
 comment|/* WHY? */
-block|DEBUGF(MAKE, "source %smade...", gn->childMade ? "" : "not "); 	oodate = gn->childMade;
+block|DEBUGF(MAKE, ("source %smade...", gn->childMade ? "" : "not ")); 	oodate = gn->childMade;
 else|#
 directive|else
 name|oodate
@@ -1095,14 +1117,16 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"update time: %s\n"
-argument_list|,
+operator|,
 name|Targ_FmtTime
 argument_list|(
 name|cgn
 operator|->
 name|mtime
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1833,11 +1857,13 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"Examining %s..."
-argument_list|,
+operator|,
 name|gn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure any and all predecessors that are going to be made, 	 * have been. 	 */
@@ -1908,11 +1934,13 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"predecessor %s not made yet.\n"
-argument_list|,
+operator|,
 name|pgn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1944,7 +1972,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"out-of-date\n"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1975,7 +2005,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"up-to-date\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|gn

@@ -2333,7 +2333,9 @@ name|DEBUGF
 argument_list|(
 name|ARCH
 argument_list|,
+operator|(
 literal|"Attempted to redefine an SVR4 name table\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2379,7 +2381,9 @@ name|DEBUGF
 argument_list|(
 name|ARCH
 argument_list|,
+operator|(
 literal|"Reading an SVR4 name table failed\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2443,9 +2447,11 @@ name|DEBUGF
 argument_list|(
 name|ARCH
 argument_list|,
+operator|(
 literal|"Found svr4 archive name table with %zu entries\n"
-argument_list|,
+operator|,
 name|entry
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2517,9 +2523,11 @@ name|DEBUGF
 argument_list|(
 name|ARCH
 argument_list|,
+operator|(
 literal|"Could not parse SVR4 name %s\n"
-argument_list|,
+operator|,
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2539,13 +2547,15 @@ name|DEBUGF
 argument_list|(
 name|ARCH
 argument_list|,
+operator|(
 literal|"SVR4 entry offset %s is greater than %zu\n"
-argument_list|,
+operator|,
 name|name
-argument_list|,
+operator|,
 name|ar
 operator|->
 name|fnamesize
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2556,10 +2566,11 @@ name|DEBUGF
 argument_list|(
 name|ARCH
 argument_list|,
+operator|(
 literal|"Replaced %s with %s\n"
-argument_list|,
+operator|,
 name|name
-argument_list|,
+operator|,
 operator|&
 name|ar
 operator|->
@@ -2567,6 +2578,7 @@ name|fnametab
 index|[
 name|entry
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 operator|(

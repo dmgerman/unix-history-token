@@ -1535,11 +1535,13 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"Examining %s..."
-argument_list|,
+operator|,
 name|gn
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1561,7 +1563,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"up-to-date.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1576,7 +1580,9 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"out-of-date.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1784,14 +1790,16 @@ name|DEBUGF
 argument_list|(
 name|MAKE
 argument_list|,
+operator|(
 literal|"update time: %s\n"
-argument_list|,
+operator|,
 name|Targ_FmtTime
 argument_list|(
 name|gn
 operator|->
 name|mtime
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#

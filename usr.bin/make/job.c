@@ -1215,13 +1215,15 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"JobCondPassSig passing signal %d to child %d.\n"
-argument_list|,
+operator|,
 name|signo
-argument_list|,
+operator|,
 name|job
 operator|->
 name|pid
+operator|)
 argument_list|)
 expr_stmt|;
 name|KILL
@@ -1270,9 +1272,11 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"JobPassSig(%d) called.\n"
-argument_list|,
+operator|,
 name|signo
+operator|)
 argument_list|)
 expr_stmt|;
 name|Lst_ForEach
@@ -1408,8 +1412,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"JobPassSig passing signal to self, mask = %x.\n"
-argument_list|,
+operator|,
 operator|~
 literal|0
 operator|&
@@ -1421,6 +1426,7 @@ operator|(
 name|signo
 operator|-
 literal|1
+operator|)
 operator|)
 operator|)
 argument_list|)
@@ -1771,7 +1777,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|DEBUGF(JOB, fmt, arg);			\    (void) fprintf(job->cmdFILE, fmt, arg);	\    (void) fflush(job->cmdFILE);
+value|DEBUGF(JOB, (fmt, arg));			\    (void) fprintf(job->cmdFILE, fmt, arg);	\    (void) fflush(job->cmdFILE);
 name|numCommands
 operator|+=
 literal|1
@@ -2673,11 +2679,13 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Process %d exited.\n"
-argument_list|,
+operator|,
 name|job
 operator|->
 name|pid
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2824,11 +2832,13 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Process %d stopped.\n"
-argument_list|,
+operator|,
 name|job
 operator|->
 name|pid
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3017,11 +3027,13 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Warning: process %d was not continuing.\n"
-argument_list|,
+operator|,
 name|job
 operator|->
 name|pid
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3074,11 +3086,13 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Process %d is continuing locally.\n"
-argument_list|,
+operator|,
 name|job
 operator|->
 name|pid
+operator|)
 argument_list|)
 expr_stmt|;
 name|nLocal
@@ -3101,7 +3115,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Job queue is full.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4026,14 +4042,15 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Running %s %sly\n"
-argument_list|,
+operator|,
 name|job
 operator|->
 name|node
 operator|->
 name|name
-argument_list|,
+operator|,
 name|job
 operator|->
 name|flags
@@ -4043,13 +4060,16 @@ condition|?
 literal|"remote"
 else|:
 literal|"local"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"\tCommand: "
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -4073,12 +4093,14 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"%s "
-argument_list|,
+operator|,
 name|argv
 index|[
 name|i
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4086,7 +4108,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5135,7 +5159,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Job queue is full.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5206,7 +5232,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Job queue is full.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5240,13 +5268,15 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Restarting %s..."
-argument_list|,
+operator|,
 name|job
 operator|->
 name|node
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5326,7 +5356,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"holding\n"
+operator|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5351,7 +5383,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Job queue is full.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5363,7 +5397,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"running locally\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|job
@@ -5385,7 +5421,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"exporting\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|job
@@ -5412,13 +5450,15 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Resuming %s..."
-argument_list|,
+operator|,
 name|job
 operator|->
 name|node
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5591,7 +5631,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"done\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5642,7 +5684,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"table full\n"
+operator|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5667,7 +5711,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Job queue is full.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6690,7 +6736,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Can only run job locally.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|job
@@ -6736,7 +6784,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Local job queue is full.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7060,7 +7110,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"JobDoOutput(piperead)"
+operator|)
 argument_list|)
 expr_stmt|;
 name|nr
@@ -7686,9 +7738,11 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Process %d exited or stopped.\n"
-argument_list|,
+operator|,
 name|pid
+operator|)
 argument_list|)
 expr_stmt|;
 name|jnode
@@ -7828,7 +7882,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Job queue is no longer full.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|jobFull
@@ -7854,7 +7910,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Job queue has one fewer local process.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|nLocal
@@ -9685,11 +9743,13 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"JobInterrupt passing signal to child %d.\n"
-argument_list|,
+operator|,
 name|job
 operator|->
 name|pid
+operator|)
 argument_list|)
 expr_stmt|;
 name|KILL
@@ -9822,11 +9882,13 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"JobInterrupt passing CONT to stopped child %d.\n"
-argument_list|,
+operator|,
 name|job
 operator|->
 name|pid
+operator|)
 argument_list|)
 expr_stmt|;
 name|KILL
@@ -10311,9 +10373,11 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"JobFlagForMigration(%d) called.\n"
-argument_list|,
+operator|,
 name|hostID
+operator|)
 argument_list|)
 expr_stmt|;
 name|jnode
@@ -10394,15 +10458,17 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"JobFlagForMigration(%d) found job '%s'.\n"
-argument_list|,
+operator|,
 name|hostID
-argument_list|,
+operator|,
 name|job
 operator|->
 name|node
 operator|->
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|KILL
@@ -10457,7 +10523,9 @@ name|DEBUGF
 argument_list|(
 name|JOB
 argument_list|,
+operator|(
 literal|"Job queue is not full. Restarting a stopped job.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|JobRestart

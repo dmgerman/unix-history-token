@@ -575,11 +575,13 @@ name|DEBUGF
 argument_list|(
 name|FOR
 argument_list|,
+operator|(
 literal|"For: Iterator %s List %s\n"
-argument_list|,
+operator|,
 name|forVar
-argument_list|,
+operator|,
 name|sub
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -689,9 +691,11 @@ name|DEBUGF
 argument_list|(
 name|FOR
 argument_list|,
+operator|(
 literal|"For: end for %d\n"
-argument_list|,
+operator|,
 name|forLevel
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -748,9 +752,11 @@ name|DEBUGF
 argument_list|(
 name|FOR
 argument_list|,
+operator|(
 literal|"For: new loop %d\n"
-argument_list|,
+operator|,
 name|forLevel
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -861,13 +867,15 @@ name|DEBUGF
 argument_list|(
 name|FOR
 argument_list|,
+operator|(
 literal|"--- %s = %s\n"
-argument_list|,
+operator|,
 name|arg
 operator|->
 name|var
-argument_list|,
+operator|,
 name|name
+operator|)
 argument_list|)
 expr_stmt|;
 name|Parse_FromString
