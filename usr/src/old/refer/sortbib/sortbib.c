@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sortbib.c	4.1 (Berkeley) %G%"
+literal|"@(#)sortbib.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -869,10 +869,6 @@ name|cmd
 index|[
 literal|80
 index|]
-decl_stmt|,
-modifier|*
-name|sprintf
-argument_list|()
 decl_stmt|;
 comment|/* for using system sort command */
 name|long

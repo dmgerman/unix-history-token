@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)string.c	3.8 %G%"
+literal|"@(#)string.c	3.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,14 +34,6 @@ begin_function_decl
 name|char
 modifier|*
 name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c	5.1 (Berkeley) %G%"
+literal|"@(#)lookup.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -505,6 +505,9 @@ operator|!=
 name|CONST
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -536,8 +539,9 @@ operator|==
 name|LOOKUP
 condition|)
 block|{
-name|yyerror
-argument_list|(
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -546,6 +550,10 @@ literal|"%s undefined"
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+name|yyerror
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 return|return

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	3.18 %G%"
+literal|"@(#)startup.c	3.19 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,9 +95,6 @@ name|home
 operator|=
 literal|"."
 expr_stmt|;
-return|return
-name|dosource
-argument_list|(
 name|sprintf
 argument_list|(
 name|buf
@@ -123,6 +120,11 @@ name|home
 argument_list|,
 name|runcom
 argument_list|)
+expr_stmt|;
+return|return
+name|dosource
+argument_list|(
+name|buf
 argument_list|)
 return|;
 block|}

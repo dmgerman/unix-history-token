@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	refer..c	4.3	86/04/23	*/
+comment|/*	refer..c	4.4	87/10/22	*/
 end_comment
 
 begin_include
@@ -338,10 +338,6 @@ specifier|extern
 name|char
 modifier|*
 name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
 argument_list|()
 decl_stmt|,
 modifier|*

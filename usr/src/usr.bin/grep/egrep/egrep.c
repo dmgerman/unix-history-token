@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.8 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -681,10 +681,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|strpbrk
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
 argument_list|()
 decl_stmt|,
 modifier|*
@@ -3145,6 +3141,9 @@ name|file
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|preamble
@@ -3203,6 +3202,9 @@ name|prevnline
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|preamble
@@ -4120,6 +4122,9 @@ operator|+
 literal|5
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dummyexpr
