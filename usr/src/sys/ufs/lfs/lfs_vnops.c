@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.36	82/09/04	*/
+comment|/*	lfs_vnops.c	4.37	82/09/06	*/
 end_comment
 
 begin_include
@@ -3362,7 +3362,7 @@ comment|/*  * Set IUPD and IACC times on file.  * Can't set ICHG.  */
 end_comment
 
 begin_macro
-name|utime
+name|outime
 argument_list|()
 end_macro
 
