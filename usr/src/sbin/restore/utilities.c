@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.2 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +390,9 @@ begin_block
 block|{
 if|if
 condition|(
+operator|!
+name|Nflag
+operator|&&
 name|rename
 argument_list|(
 name|from
@@ -489,6 +492,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Nflag
+operator|&&
 name|mkdir
 argument_list|(
 name|cp
@@ -614,6 +620,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Nflag
+operator|&&
 name|rmdir
 argument_list|(
 name|cp
@@ -716,6 +725,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Nflag
+operator|&&
 name|unlink
 argument_list|(
 name|cp
@@ -800,6 +812,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|Nflag
+operator|&&
 name|symlink
 argument_list|(
 name|existing
@@ -851,6 +866,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|Nflag
+operator|&&
 name|link
 argument_list|(
 name|existing

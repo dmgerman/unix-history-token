@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.13 (Berkeley) %G%"
+literal|"@(#)tape.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2260,6 +2260,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|Nflag
+condition|)
+block|{
+name|skipfile
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|GOOD
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|mknod
 argument_list|(
 name|name
@@ -2367,6 +2381,20 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Nflag
+condition|)
+block|{
+name|skipfile
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|GOOD
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2965,6 +2993,11 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|Nflag
+condition|)
+return|return;
 if|if
 condition|(
 name|write

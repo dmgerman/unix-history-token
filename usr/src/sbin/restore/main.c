@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,10 @@ decl_stmt|,
 name|mflag
 init|=
 literal|1
+decl_stmt|,
+name|Nflag
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -371,6 +375,13 @@ case|:
 name|mflag
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|Nflag
+operator|++
 expr_stmt|;
 break|break;
 case|case

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.4 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2684,6 +2684,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|Nflag
+operator|&&
 name|write
 argument_list|(
 name|ofile

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	5.1 (Berkeley) %G%"
+literal|"@(#)symtab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1927,6 +1927,11 @@ argument_list|,
 literal|"Check pointing the restore\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Nflag
+condition|)
+return|return;
 if|if
 condition|(
 operator|(
