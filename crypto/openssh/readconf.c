@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: readconf.c,v 1.31 2000/05/08 17:12:15 markus Exp $"
+literal|"$Id: readconf.c,v 1.33 2000/05/29 20:20:46 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1910,6 +1910,20 @@ argument_list|,
 name|WHITESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+name|fatal
+argument_list|(
+literal|"%.200s line %d: Missing argument."
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 name|value
 operator|=
 name|cipher_number
@@ -1966,6 +1980,20 @@ argument_list|(
 name|NULL
 argument_list|,
 name|WHITESPACE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+name|fatal
+argument_list|(
+literal|"%.200s line %d: Missing argument."
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
 argument_list|)
 expr_stmt|;
 if|if
@@ -2029,6 +2057,20 @@ argument_list|(
 name|NULL
 argument_list|,
 name|WHITESPACE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+name|fatal
+argument_list|(
+literal|"%.200s line %d: Missing argument."
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
 argument_list|)
 expr_stmt|;
 name|value
@@ -3139,7 +3181,7 @@ name|options
 operator|->
 name|forward_agent
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
