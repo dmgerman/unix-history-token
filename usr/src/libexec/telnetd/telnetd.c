@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.30 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1694,9 +1694,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"/bin/login: %m\n"
+argument_list|)
+expr_stmt|;
 name|fatalperror
 argument_list|(
-name|f
+literal|2
 argument_list|,
 literal|"/bin/login"
 argument_list|)
