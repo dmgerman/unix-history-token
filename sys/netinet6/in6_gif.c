@@ -967,7 +967,6 @@ name|IPV6_MINMTU
 comment|/* 	 * force fragmentation to minimum MTU, to avoid path MTU discovery. 	 * it is too painful to ask for resend of inner packet, to achieve 	 * path MTU discovery for encapsulated packets. 	 */
 name|error
 operator|=
-operator|(
 name|ip6_output
 argument_list|(
 name|m
@@ -987,13 +986,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
 expr_stmt|;
 else|#
 directive|else
 name|error
 operator|=
-operator|(
 name|ip6_output
 argument_list|(
 name|m
@@ -1013,7 +1010,6 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
 expr_stmt|;
 endif|#
 directive|endif
