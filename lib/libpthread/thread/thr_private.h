@@ -1290,6 +1290,13 @@ name|CLOCK_RES_USEC
 value|10000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CLOCK_RES_USEC_MIN
+value|1000
+end_define
+
 begin_comment
 comment|/*  * Time slice period in microseconds.  */
 end_comment
