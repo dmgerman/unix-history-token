@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vadj.c	7.4	%G%"
+literal|"@(#)ex_vadj.c	7.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1749,6 +1749,25 @@ condition|(
 name|SF
 condition|)
 block|{
+name|destline
+operator|=
+name|WECHO
+expr_stmt|;
+name|destcol
+operator|=
+operator|(
+name|NONL
+condition|?
+literal|0
+else|:
+name|outcol
+operator|%
+name|WCOLS
+operator|)
+expr_stmt|;
+name|fgoto
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|cnt
