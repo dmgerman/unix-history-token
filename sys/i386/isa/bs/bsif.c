@@ -318,6 +318,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_adapter
 name|pc98texa55bs
