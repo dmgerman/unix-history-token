@@ -656,6 +656,7 @@ function_decl|;
 name|int
 name|sscanf
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
