@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: logwtmp.c,v 1.9 1999/04/07 08:27:04 brian Exp $"
+literal|"$Id: logwtmp.c,v 1.10 1999/04/07 14:03:31 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,13 +192,13 @@ literal|'.'
 argument_list|)
 operator|)
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
+name|domain
+argument_list|,
 name|s
 operator|+
 literal|1
-argument_list|,
-name|domain
 argument_list|,
 name|strlen
 argument_list|(
