@@ -212,6 +212,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_EHCI_VENDORID_VIA
+value|0x1106
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_EHCI_DEVICEID_NEC
 value|0x00e01033
 end_define
@@ -224,6 +231,24 @@ modifier|*
 name|ehci_device_nec
 init|=
 literal|"NEC uPD 720100 USB 2.0 controller"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCI_EHCI_DEVICEID_VIA
+value|0x31041106
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ehci_device_via
+init|=
+literal|"VIA VT6202 USB 2.0 controller"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,6 +322,14 @@ case|:
 return|return
 operator|(
 name|ehci_device_nec
+operator|)
+return|;
+case|case
+name|PCI_EHCI_DEVICEID_VIA
+case|:
+return|return
+operator|(
+name|ehci_device_via
 operator|)
 return|;
 default|default:
@@ -809,6 +842,19 @@ operator|->
 name|sc_vendor
 argument_list|,
 literal|"nVidia"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PCI_EHCI_VENDORID_VIA
+case|:
+name|sprintf
+argument_list|(
+name|sc
+operator|->
+name|sc_vendor
+argument_list|,
+literal|"VIA"
 argument_list|)
 expr_stmt|;
 break|break;
