@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfontedpr.c,v 1.6.2.2 1997/08/26 06:28:51 charnier Exp $"
+literal|"$Id: vfontedpr.c,v 1.6.2.3 1998/03/08 14:23:47 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1992,7 +1992,7 @@ modifier|*
 name|nocomptr
 decl_stmt|;
 comment|/* end of a non-comment delimiter */
-name|_start
+name|s_start
 operator|=
 name|os
 expr_stmt|;
@@ -3105,7 +3105,7 @@ name|i
 operator|=
 name|tabs
 argument_list|(
-name|_start
+name|s_start
 argument_list|,
 name|start
 argument_list|)
@@ -3157,7 +3157,7 @@ operator|&&
 operator|(
 name|start
 operator|==
-name|_start
+name|s_start
 operator|||
 operator|!
 name|isidchr

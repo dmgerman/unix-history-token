@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unexpand.c,v 1.1.1.1.8.1 1997/08/21 06:45:17 charnier Exp $"
+literal|"$Id: unexpand.c,v 1.1.1.1.8.2 1997/08/26 06:20:11 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)get_names.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)get_names.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +44,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -49,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"talk.h"
 end_include
 
@@ -64,6 +77,29 @@ name|CTL_MSG
 name|msg
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: talk person [ttyname]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Determine the local and remote user, tty, and machines  */
@@ -124,19 +160,9 @@ name|argc
 operator|<
 literal|2
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Usage: talk user [ttyname]\n"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -145,19 +171,13 @@ argument_list|(
 literal|0
 argument_list|)
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"Standard input must be a tty, not a pipe or a file\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"standard input must be a tty, not a pipe or a file"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -189,19 +209,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
-literal|"You don't exist. Go away.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"you don't exist. Go away"
 argument_list|)
 expr_stmt|;
-block|}
 name|my_name
 operator|=
 name|pw

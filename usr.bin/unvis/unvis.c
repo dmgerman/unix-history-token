@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unvis.c,v 1.1.1.1.8.3 1997/08/29 05:30:07 imp Exp $"
+literal|"$Id: unvis.c,v 1.1.1.1.8.4 1998/03/08 14:29:17 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include

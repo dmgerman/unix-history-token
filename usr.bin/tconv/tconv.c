@@ -126,7 +126,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tconv.c,v 1.2.6.1 1997/08/14 06:37:58 charnier Exp $"
+literal|"$Id: tconv.c,v 1.2.6.2 1998/03/08 13:35:30 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 

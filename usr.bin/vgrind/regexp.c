@@ -124,7 +124,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|_start
+name|s_start
 decl_stmt|;
 end_decl_stmt
 
@@ -1649,12 +1649,6 @@ name|s1
 operator|==
 literal|'~'
 operator|||
-comment|/* Tcl procedure */
-operator|*
-name|s1
-operator|==
-literal|'.'
-operator|||
 comment|/* C++ scope operator */
 operator|(
 name|strlen
@@ -1888,7 +1882,7 @@ name|ptr
 operator|||
 name|s
 operator|==
-name|_start
+name|s_start
 condition|)
 block|{
 comment|/* match, be happy */
@@ -2076,7 +2070,7 @@ if|if
 condition|(
 name|s
 operator|==
-name|_start
+name|s_start
 condition|)
 block|{
 comment|/* match, be happy */

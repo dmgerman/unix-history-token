@@ -181,7 +181,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"amnrsv"
+literal|"amnprsv"
 argument_list|)
 operator|)
 operator|!=
@@ -211,6 +211,9 @@ name|VFLAG
 operator|)
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
 case|case
 literal|'m'
 case|:
@@ -353,6 +356,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf
@@ -429,6 +435,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf
@@ -505,6 +514,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf
@@ -614,6 +626,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf
@@ -690,6 +705,9 @@ literal|"%s%.*s"
 argument_list|,
 name|prefix
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|buf

@@ -37,8 +37,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_comment
+comment|/* System string definitions. */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"string.h"
 end_include
+
+begin_comment
+comment|/* Local string definitions. */
+end_comment
 
 begin_include
 include|#

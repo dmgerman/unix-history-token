@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.18.2.3 1997/10/30 21:01:18 ache Exp $"
+literal|"$Id: xinstall.c,v 1.18.2.4 1998/03/08 14:55:04 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|MAP_FAILED
-value|((caddr_t)-1)
+value|((void *)-1)
 end_define
 
 begin_comment
@@ -224,6 +224,8 @@ decl_stmt|,
 name|dopreserve
 decl_stmt|,
 name|dostrip
+decl_stmt|,
+name|nommap
 decl_stmt|,
 name|verbose
 decl_stmt|;
@@ -605,7 +607,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CcdDf:g:m:o:psv"
+literal|"CcdDf:g:m:Mo:psv"
 argument_list|)
 operator|)
 operator|!=
@@ -727,6 +729,14 @@ name|set
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|nommap
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1923,6 +1933,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|verbose
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"install: %s -> %s\n"
+argument_list|,
+name|from_name
+argument_list|,
+name|old_to_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|dopreserve
 operator|&&
 name|stat
@@ -1966,21 +1991,6 @@ expr_stmt|;
 block|}
 name|moveit
 label|:
-if|if
-condition|(
-name|verbose
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"install: %s -> %s\n"
-argument_list|,
-name|from_name
-argument_list|,
-name|old_to_name
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|rename
@@ -2241,7 +2251,7 @@ name|to_name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If provided a set of flags, set them, otherwise, preserve the 	 * flags, except for the dump flag. 	 */
+comment|/* 	 * If provided a set of flags, set them, otherwise, preserve the 	 * flags, except for the dump flag. 	 * NFS does not support flags.  Ignore EOPNOTSUPP flags if we're just 	 * trying to turn off UF_NODUMP.  If we're trying to set real flags, 	 * then warn if the the fs doesn't support it, otherwise fail. 	 */
 if|if
 condition|(
 name|fchflags
@@ -2262,6 +2272,28 @@ operator|~
 name|UF_NODUMP
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|SETFLAGS
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EOPNOTSUPP
+condition|)
+name|warn
+argument_list|(
+literal|"%s: chflags"
+argument_list|,
+name|to_name
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 name|serrno
 operator|=
@@ -2288,6 +2320,8 @@ argument_list|,
 name|to_name
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 operator|(
 name|void
@@ -3328,6 +3362,8 @@ name|stfs
 decl_stmt|;
 if|if
 condition|(
+name|nommap
+operator|||
 name|fstatfs
 argument_list|(
 name|fd

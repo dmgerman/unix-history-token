@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.3.2.3 1997/12/29 07:09:39 charnier Exp $"
+literal|"$Id: vacation.c,v 1.3.2.4 1998/03/08 14:22:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2048,9 +2048,12 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|fclose
+name|close
+argument_list|(
+name|fileno
 argument_list|(
 name|mfp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|execl
@@ -2084,7 +2087,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
