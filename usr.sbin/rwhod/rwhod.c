@@ -199,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|UNPRIV_USER
-value|"nobody"
+value|"daemon"
 end_define
 
 begin_define
