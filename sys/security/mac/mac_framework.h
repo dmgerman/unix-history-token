@@ -2930,7 +2930,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_getsockopt_label_get
+name|mac_getsockopt_label
 parameter_list|(
 name|struct
 name|ucred
@@ -2952,7 +2952,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_getsockopt_peerlabel_get
+name|mac_getsockopt_peerlabel
 parameter_list|(
 name|struct
 name|ucred
@@ -3018,7 +3018,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_setsockopt_label_set
+name|mac_setsockopt_label
 parameter_list|(
 name|struct
 name|ucred

@@ -7024,7 +7024,7 @@ name|bad
 goto|;
 name|error
 operator|=
-name|mac_setsockopt_label_set
+name|mac_setsockopt_label
 argument_list|(
 name|sopt
 operator|->
@@ -7709,7 +7709,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|mac_getsockopt_label_get
+name|mac_getsockopt_label
 argument_list|(
 name|sopt
 operator|->
@@ -7791,7 +7791,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|mac_getsockopt_peerlabel_get
+name|mac_getsockopt_peerlabel
 argument_list|(
 name|sopt
 operator|->
