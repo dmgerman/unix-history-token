@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -69,122 +69,6 @@ begin_comment
 comment|/* Sys V compatibility */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_NOQUAD
-end_ifdef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_uquad
-block|{
-name|u_long
-name|val
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|u_quad_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_quad
-block|{
-name|long
-name|val
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|quad_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|long
-modifier|*
-name|qaddr_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|QUADNE
-parameter_list|(
-name|q1
-parameter_list|,
-name|q2
-parameter_list|)
-define|\
-value|((q1).val[_QUAD_LOWWORD] != (q2).val[_QUAD_LOWWORD] || \ 	(q1).val[_QUAD_HIGHWORD] != (q2).val[_QUAD_HIGHWORD])
-end_define
-
-begin_define
-define|#
-directive|define
-name|QUADEQ
-parameter_list|(
-name|q1
-parameter_list|,
-name|q2
-parameter_list|)
-define|\
-value|((q1).val[_QUAD_LOWWORD] == (q2).val[_QUAD_LOWWORD]&& \ 	(q1).val[_QUAD_HIGHWORD] == (q2).val[_QUAD_HIGHWORD])
-end_define
-
-begin_define
-define|#
-directive|define
-name|QUADGT
-parameter_list|(
-name|q1
-parameter_list|,
-name|q2
-parameter_list|)
-define|\
-value|(((q1).val[_QUAD_HIGHWORD] == (q2).val[_QUAD_HIGHWORD]) ? \ 	 ((q1).val[_QUAD_LOWWORD]> (q2).val[_QUAD_LOWWORD]) : \ 	 ((q1).val[_QUAD_HIGHWORD]> (q2).val[_QUAD_HIGHWORD]))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCRQUAD
-parameter_list|(
-name|q
-parameter_list|)
-define|\
-value|((++((q).val[_QUAD_LOWWORD]) == 0) ? ++((q).val[_QUAD_HIGHWORD]) : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZEROQUAD
-parameter_list|(
-name|q
-parameter_list|)
-define|\
-value|(q).val[0] = (q).val[1] = 0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* QUAD support */
-end_comment
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -209,71 +93,6 @@ modifier|*
 name|qaddr_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|QUADNE
-parameter_list|(
-name|q1
-parameter_list|,
-name|q2
-parameter_list|)
-value|(q1) != (q2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|QUADEQ
-parameter_list|(
-name|q1
-parameter_list|,
-name|q2
-parameter_list|)
-value|(q1) == (q2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|QUADGT
-parameter_list|(
-name|q1
-parameter_list|,
-name|q2
-parameter_list|)
-value|(q1)> (q2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCRQUAD
-parameter_list|(
-name|q
-parameter_list|)
-value|(q)++
-end_define
-
-begin_define
-define|#
-directive|define
-name|ZEROQUAD
-parameter_list|(
-name|q
-parameter_list|)
-value|(q) = 0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* QUAD */
-end_comment
 
 begin_typedef
 typedef|typedef
