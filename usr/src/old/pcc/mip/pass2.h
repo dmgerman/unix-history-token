@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pass2.h	4.3	87/12/10	*/
+comment|/*	pass2.h	4.4	87/12/10	*/
 end_comment
 
 begin_ifndef
@@ -1097,6 +1097,27 @@ end_define
 begin_comment
 comment|/* register temporarily busy (during alloc) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PBUSY
+value|02000
+end_define
+
+begin_comment
+comment|/* this reg and next one are used as a pair */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISBUSY
+parameter_list|(
+name|r
+parameter_list|)
+value|(((busy[r])&(PBUSY-1))> 1)
+end_define
 
 begin_define
 define|#
