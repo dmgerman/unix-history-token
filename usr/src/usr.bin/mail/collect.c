@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.3 %G%"
+literal|"@(#)collect.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -573,12 +573,21 @@ argument_list|,
 name|linebuf
 argument_list|)
 operator|&&
+operator|(
 name|value
 argument_list|(
 literal|"dot"
 argument_list|)
 operator|!=
 name|NOSTR
+operator|||
+name|value
+argument_list|(
+literal|"ignoreeof"
+argument_list|)
+operator|!=
+name|NOSTR
+operator|)
 condition|)
 break|break;
 if|if
