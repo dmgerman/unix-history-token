@@ -5029,6 +5029,7 @@ name|ki_tdev
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* PID's and TID's (threads) are sorted in ascending order. */
 name|DIFF_RETURN
 argument_list|(
 name|ka
@@ -5038,6 +5039,17 @@ argument_list|,
 name|ki_p
 operator|->
 name|ki_pid
+argument_list|)
+expr_stmt|;
+name|DIFF_RETURN
+argument_list|(
+name|ka
+argument_list|,
+name|kb
+argument_list|,
+name|ki_p
+operator|->
+name|ki_tid
 argument_list|)
 expr_stmt|;
 return|return
