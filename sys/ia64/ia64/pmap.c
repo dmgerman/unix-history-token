@@ -6071,7 +6071,11 @@ name|m
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|==
 literal|0
@@ -6202,6 +6206,9 @@ decl_stmt|;
 name|pmap_t
 name|oldpmap
 decl_stmt|;
+name|int
+name|managed
+decl_stmt|;
 name|oldpmap
 operator|=
 name|pmap_install
@@ -6225,7 +6232,30 @@ condition|)
 goto|goto
 name|reinstall
 goto|;
+name|managed
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Enter on the PV list since its part of our managed memory. 	 */
+if|if
+condition|(
+name|pmap_initialized
+operator|&&
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+operator|(
+name|PG_FICTITIOUS
+operator||
+name|PG_UNMANAGED
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|pmap_insert_entry
 argument_list|(
 name|pmap
@@ -6235,6 +6265,11 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|managed
+operator||=
+name|PTE_IG_MANAGED
+expr_stmt|;
+block|}
 comment|/* 	 * Increment counters 	 */
 name|pmap
 operator|->
@@ -6255,7 +6290,7 @@ argument_list|(
 name|m
 argument_list|)
 argument_list|,
-name|PTE_IG_MANAGED
+name|managed
 argument_list|,
 name|PTE_PL_USER
 argument_list|,
