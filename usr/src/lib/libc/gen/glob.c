@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.10 (Berkeley) %G%"
+literal|"@(#)glob.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -577,6 +577,8 @@ modifier|*
 name|patnext
 decl_stmt|;
 name|int
+name|c
+decl_stmt|,
 name|err
 decl_stmt|,
 name|oldpathc
@@ -600,9 +602,6 @@ name|MAXPATHLEN
 operator|+
 literal|1
 index|]
-decl_stmt|;
-name|char
-name|c
 decl_stmt|;
 name|patnext
 operator|=
