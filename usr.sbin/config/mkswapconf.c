@@ -431,7 +431,21 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"};\n"
+literal|"};\n\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"/* Stub for when generic swap config is not used. */\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"void setconf(void) {};\n"
 argument_list|)
 expr_stmt|;
 name|fclose
