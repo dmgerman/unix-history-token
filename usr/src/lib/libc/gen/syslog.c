@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.24 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,16 +308,6 @@ expr_stmt|;
 comment|/* see if we should just throw out this message */
 if|if
 condition|(
-operator|(
-name|u_int
-operator|)
-name|LOG_FAC
-argument_list|(
-name|pri
-argument_list|)
-operator|>=
-name|LOG_NFACILITIES
-operator|||
 operator|!
 name|LOG_MASK
 argument_list|(
