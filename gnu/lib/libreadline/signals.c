@@ -1019,7 +1019,7 @@ operator|*
 operator|)
 name|SIG_IGN
 condition|)
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -1049,7 +1049,7 @@ operator|*
 operator|)
 name|SIG_IGN
 condition|)
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGALRM
 argument_list|,
@@ -1092,7 +1092,7 @@ operator|*
 operator|)
 name|SIG_IGN
 condition|)
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGTSTP
 argument_list|,
@@ -1145,14 +1145,14 @@ operator|)
 name|SIG_IGN
 condition|)
 block|{
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGTTOU
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|signal
+name|rl_set_sighandler
 argument_list|(
 name|SIGTTIN
 argument_list|,
