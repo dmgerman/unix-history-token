@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"socketvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tsleep.h"
 end_include
 
 begin_comment
@@ -766,7 +772,7 @@ name|so_state
 operator|&
 name|SS_ISCONNECTED
 condition|)
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -779,6 +785,10 @@ argument_list|,
 name|PZERO
 operator|+
 literal|1
+argument_list|,
+name|SLP_SO_LINGER
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1391,8 +1401,6 @@ name|uio
 argument_list|,
 name|flags
 argument_list|,
-name|rights
-argument_list|,
 name|control
 argument_list|)
 specifier|register
@@ -1429,9 +1437,6 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|mbuf
-modifier|*
-name|rights
-decl_stmt|,
 modifier|*
 name|control
 decl_stmt|;
@@ -1545,11 +1550,11 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|rights
+name|control
 condition|)
 name|rlen
 operator|=
-name|rights
+name|control
 operator|->
 name|m_len
 expr_stmt|;
@@ -2129,8 +2134,6 @@ name|caddr_t
 operator|)
 name|nam
 argument_list|,
-name|rights
-argument_list|,
 name|control
 argument_list|)
 expr_stmt|;
@@ -2149,10 +2152,6 @@ name|so_options
 operator|&=
 operator|~
 name|SO_DONTROUTE
-expr_stmt|;
-name|rights
-operator|=
-literal|0
 expr_stmt|;
 name|rlen
 operator|=
@@ -2340,6 +2339,9 @@ name|struct
 name|mbuf
 modifier|*
 name|nextrecord
+decl_stmt|,
+modifier|*
+name|m_with_eor
 decl_stmt|;
 name|int
 name|moff
@@ -3148,6 +3150,10 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
+name|m_with_eor
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|m
@@ -3203,9 +3209,9 @@ name|m_flags
 operator|&
 name|M_EOR
 condition|)
-name|flags
-operator||=
-name|MSG_EOR
+name|m_with_eor
+operator|=
+name|m
 expr_stmt|;
 name|len
 operator|=
@@ -3453,39 +3459,28 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|m_with_eor
+condition|)
+break|break;
 block|}
 if|if
 condition|(
-name|m
-operator|&&
-operator|(
-name|flags
-operator|&
-name|MSG_EOR
-operator|)
+name|m_with_eor
 condition|)
 block|{
-name|flags
-operator|&=
-operator|~
-name|MSG_EOR
-expr_stmt|;
 if|if
 condition|(
-operator|(
-name|flags
-operator|&
-name|MSG_PEEK
-operator|)
-operator|==
-literal|0
-condition|)
 name|m
-operator|->
-name|m_flags
+operator|!=
+name|m_with_eor
+condition|)
+name|flags
 operator||=
-name|M_EOR
+name|MSG_EOR
 expr_stmt|;
+comment|/* else data not consumed from mbuf */
 block|}
 if|if
 condition|(
