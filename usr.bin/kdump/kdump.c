@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kdump.c,v 1.11 1997/07/16 06:49:49 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -903,11 +903,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6d %-8s "
+literal|"%6d %-8.*s "
 argument_list|,
 name|kth
 operator|->
 name|ktr_pid
+argument_list|,
+name|MAXCOMLEN
 argument_list|,
 name|kth
 operator|->
