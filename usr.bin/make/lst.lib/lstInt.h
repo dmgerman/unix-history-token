@@ -48,7 +48,7 @@ modifier|*
 name|nextPtr
 decl_stmt|;
 comment|/* next in list */
-name|short
+name|int
 name|useCount
 range|:
 literal|8
