@@ -8813,8 +8813,12 @@ name|MINCORE_MODIFIED
 operator||
 name|MINCORE_MODIFIED_OTHER
 expr_stmt|;
-comment|/* 		 * Modified by someone 		 */
-elseif|else
+else|else
+block|{
+comment|/* 			 * Modified by someone 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|pmap_is_modified
@@ -8826,6 +8830,10 @@ name|val
 operator||=
 name|MINCORE_MODIFIED_OTHER
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* 		 * Referenced by us 		 */
 if|if
 condition|(
@@ -8839,8 +8847,12 @@ name|MINCORE_REFERENCED
 operator||
 name|MINCORE_REFERENCED_OTHER
 expr_stmt|;
-comment|/* 		 * Referenced by someone 		 */
-elseif|else
+else|else
+block|{
+comment|/* 			 * Referenced by someone 			 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|pmap_ts_referenced
@@ -8859,6 +8871,10 @@ name|m
 argument_list|,
 name|PG_REFERENCED
 argument_list|)
+expr_stmt|;
+block|}
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 block|}
