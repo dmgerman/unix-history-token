@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	7.3 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	7.4 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -1196,34 +1196,6 @@ name|scsicmd
 operator|->
 name|buf
 expr_stmt|;
-if|if
-condition|(
-name|state
-operator|->
-name|buflen
-operator|>
-name|SII_MAX_DMA_XFER_LENGTH
-operator|&&
-operator|(
-name|scsicmd
-operator|->
-name|flags
-operator|&
-name|SCSICMD_DATA_TO_DEVICE
-operator|)
-condition|)
-name|printf
-argument_list|(
-literal|"sii_StartCmd: target %d dma %d\n"
-argument_list|,
-name|target
-argument_list|,
-name|state
-operator|->
-name|buflen
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 block|}
 ifdef|#
 directive|ifdef
@@ -1607,7 +1579,7 @@ operator|)
 argument_list|,
 name|SII_WAIT_COUNT
 operator|/
-literal|2
+literal|4
 argument_list|,
 name|retval
 argument_list|)
@@ -2014,7 +1986,7 @@ if|if
 condition|(
 name|sii_debug
 operator|>
-literal|0
+literal|1
 condition|)
 name|printf
 argument_list|(
