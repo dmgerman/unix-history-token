@@ -4108,6 +4108,14 @@ comment|/* Exempt from stopping. */
 block|}
 if|if
 condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_SINGLE_EXIT
+operator|)
+operator|&&
 name|return_instead
 condition|)
 return|return
