@@ -198,18 +198,16 @@ empty_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|int
 name|addbuf
-argument_list|(
+parameter_list|(
 name|c
-argument_list|)
+parameter_list|)
 specifier|register
-name|char
+name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|buffnum
 operator|++
@@ -251,8 +249,13 @@ index|]
 operator|=
 name|c
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|buflush
