@@ -346,7 +346,14 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|||
+condition|)
+name|lang
+operator|=
+literal|"C"
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|strchr
 argument_list|(
 name|lang
@@ -360,7 +367,6 @@ name|lang
 operator|=
 literal|"C"
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
