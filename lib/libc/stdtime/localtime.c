@@ -7561,34 +7561,17 @@ name|tm_isdst
 condition|)
 break|break;
 comment|/* 		** Right time, wrong type. 		** Hunt for right time, right type. 		** It's okay to guess wrong since the guess 		** gets checked. 		*/
-comment|/* 		** The (void *) casts are the benefit of SunOS 3.3 on Sun 2's. 		*/
 name|sp
 operator|=
 operator|(
-specifier|const
-expr|struct
-name|state
-operator|*
-operator|)
-operator|(
-operator|(
-operator|(
-name|void
-operator|*
-operator|)
 name|funcp
 operator|==
-operator|(
-name|void
-operator|*
-operator|)
 name|localsub
 operator|)
 condition|?
 name|lclptr
 else|:
 name|gmtptr
-operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7944,34 +7927,17 @@ endif|#
 directive|endif
 comment|/* !defined PCTS */
 comment|/* 	** We're supposed to assume that somebody took a time of one type 	** and did some math on it that yielded a "struct tm" that's bad. 	** We try to divine the type they started from and adjust to the 	** type they need. 	*/
-comment|/* 	** The (void *) casts are the benefit of SunOS 3.3 on Sun 2's. 	*/
 name|sp
 operator|=
 operator|(
-specifier|const
-expr|struct
-name|state
-operator|*
-operator|)
-operator|(
-operator|(
-operator|(
-name|void
-operator|*
-operator|)
 name|funcp
 operator|==
-operator|(
-name|void
-operator|*
-operator|)
 name|localsub
 operator|)
 condition|?
 name|lclptr
 else|:
 name|gmtptr
-operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
