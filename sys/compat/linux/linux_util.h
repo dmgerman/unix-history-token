@@ -281,7 +281,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|int									\ linux_ ## s(struct thread *p, struct linux_ ## s ## _args *args)		\ {									\ 	return (unsupported_msg(p, #s));				\ }									\ struct __hack
+value|int									\ linux_ ## s(struct thread *p, struct linux_ ## s ## _args *args)	\ {									\ 	return (unsupported_msg(p, #s));				\ }									\ struct __hack
 end_define
 
 begin_function
