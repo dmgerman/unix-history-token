@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.5	83/01/29	*/
+comment|/*	hp.c	4.6	83/01/29	*/
 end_comment
 
 begin_comment
@@ -1088,7 +1088,8 @@ name|i_cc
 operator|=
 sizeof|sizeof
 argument_list|(
-name|hpbad
+expr|struct
+name|dkbad
 argument_list|)
 expr_stmt|;
 name|tio
@@ -1123,7 +1124,8 @@ argument_list|)
 operator|==
 sizeof|sizeof
 argument_list|(
-name|hpbad
+expr|struct
+name|dkbad
 argument_list|)
 condition|)
 break|break;
