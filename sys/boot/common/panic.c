@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: panic.c,v 1.2 1998/09/17 23:52:02 msmith Exp $  * From: $NetBSD: panic.c,v 1.2 1997/03/22 01:48:36 thorpej Exp $  */
+comment|/*  * $Id: panic.c,v 1.3 1998/09/18 02:01:38 msmith Exp $  * From: $NetBSD: panic.c,v 1.2 1997/03/22 01:48:36 thorpej Exp $  */
 end_comment
 
 begin_comment
@@ -46,21 +46,21 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|printf
+name|vprintf
 argument_list|(
 name|fmt
 argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 name|va_end
 argument_list|(
 name|ap
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: console.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  */
 end_comment
 
 begin_include
@@ -74,7 +74,11 @@ decl_stmt|;
 name|int
 name|active
 decl_stmt|;
-comment|/* Do all console probes, make the fist fully functional console active */
+name|char
+modifier|*
+name|prefconsole
+decl_stmt|;
+comment|/* Do all console probes */
 for|for
 control|(
 name|cons
@@ -143,10 +147,96 @@ operator|-
 literal|1
 operator|)
 condition|)
+name|active
+operator|=
+name|cons
+expr_stmt|;
+comment|/* first candidate */
+block|}
+comment|/* Check to see if a console preference has already been registered */
+name|prefconsole
+operator|=
+name|strdup
+argument_list|(
+name|getenv
+argument_list|(
+literal|"console"
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prefconsole
+operator|!=
+name|NULL
+condition|)
 block|{
+name|unsetenv
+argument_list|(
+literal|"console"
+argument_list|)
+expr_stmt|;
+comment|/* we want to replace this */
+for|for
+control|(
+name|cons
+operator|=
+literal|0
+init|;
 name|consoles
 index|[
 name|cons
+index|]
+operator|!=
+name|NULL
+condition|;
+name|cons
+operator|++
+control|)
+comment|/* look for the nominated console, use it if it's functional */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|prefconsole
+argument_list|,
+name|consoles
+index|[
+name|cons
+index|]
+operator|->
+name|c_name
+argument_list|)
+operator|&&
+operator|(
+name|consoles
+index|[
+name|cons
+index|]
+operator|->
+name|c_flags
+operator|==
+operator|(
+name|C_PRESENTIN
+operator||
+name|C_PRESENTOUT
+operator|)
+operator|)
+condition|)
+name|active
+operator|=
+name|cons
+expr_stmt|;
+name|free
+argument_list|(
+name|prefconsole
+argument_list|)
+expr_stmt|;
+block|}
+name|consoles
+index|[
+name|active
 index|]
 operator|->
 name|c_flags
@@ -157,12 +247,6 @@ operator||
 name|C_ACTIVEOUT
 operator|)
 expr_stmt|;
-name|active
-operator|=
-name|cons
-expr_stmt|;
-block|}
-block|}
 name|printf
 argument_list|(
 literal|"Console: %s\n"

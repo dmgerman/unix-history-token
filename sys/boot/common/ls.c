@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: ls.c,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  * From: $NetBSD: ls.c,v 1.3 1997/06/13 13:48:47 drochner Exp $  */
+comment|/*  * $Id: ls.c,v 1.2 1998/09/03 02:10:07 msmith Exp $  * From: $NetBSD: ls.c,v 1.3 1997/06/13 13:48:47 drochner Exp $  */
 end_comment
 
 begin_comment
@@ -326,6 +326,26 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|VERBOSE_LS
+comment|/* fixup path for stat()ing files */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|path
+argument_list|,
+literal|"/"
+argument_list|)
+condition|)
+name|path
+operator|=
+literal|""
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(

@@ -484,7 +484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The PnP configuration database consists of a flat text file with   * entries one per line.  Valid lines are:  *  * #<text>  *  * 	This line is a comment, and ignored.  *  * [<name>]  *  *	Entries following this line are for devices connected to the  *	bus<name>, At least one such entry must be encountered  *	before identifiers are recognised.  *  * ident=<identifier> rev=<revision> module=<module> args=<arguments>  *  *	This line describes an identifier:module mapping.  The 'ident'  *	and 'module' fields are required; the 'rev' field is currently  *	ignored (but should be used), and the 'args' field must come  *	last.  */
+comment|/*  * The PnP configuration database consists of a flat text file with   * entries one per line.  Valid lines are:  *  * #<text>  *  * 	This line is a comment, and ignored.  *  * [<name>]  *  *	Entries following this line are for devices connected to the  *	bus<name>, At least one such entry must be encountered  *	before identifiers are recognised.  *  * ident=<identifier> rev=<revision> module=<module> args=<arguments>  *  *	This line describes an identifier:module mapping.  The 'ident'  *	and 'module' fields are required; the 'rev' field is currently  *	ignored (but should be used), and the 'args' field must come  *	last.  *  * Comments may be appended to lines; any character including or following  * '#' on a line is ignored.  */
 end_comment
 
 begin_function
@@ -633,6 +633,27 @@ literal|'#'
 operator|)
 condition|)
 continue|continue;
+comment|/* cut trailing comment? */
+if|if
+condition|(
+operator|(
+name|ep
+operator|=
+name|strchr
+argument_list|(
+name|cp
+argument_list|,
+literal|'#'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|ep
+operator|=
+literal|0
+expr_stmt|;
 comment|/* bus declaration? */
 if|if
 condition|(
@@ -940,7 +961,7 @@ operator|=
 name|ep
 expr_stmt|;
 block|}
-comment|/* we must have at least ident and module set */
+comment|/* we must have at least ident and module set to be interesting */
 if|if
 condition|(
 operator|(
@@ -955,18 +976,7 @@ operator|==
 name|NULL
 operator|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s line %d: bad mapping\n"
-argument_list|,
-name|path
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 comment|/* 	     * Loop looking for module/bus that might match this, but aren't already 	     * assigned. 	     * XXX no revision parse/test here yet. 	     */
 for|for
 control|(
