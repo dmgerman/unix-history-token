@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	1.10 (Berkeley) %G%"
+literal|"@(#)tset.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1219,7 +1219,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|256
+name|CAPBUFSIZ
 index|]
 decl_stmt|;
 name|char
@@ -3334,6 +3334,8 @@ condition|(
 name|Ask
 condition|)
 block|{
+name|ask
+label|:
 name|prs
 argument_list|(
 literal|"TERM = ("
@@ -3491,13 +3493,16 @@ name|TtyType
 operator|=
 name|DEFTYPE
 expr_stmt|;
-name|tgetent
-argument_list|(
-name|Capbuf
-argument_list|,
-name|TtyType
-argument_list|)
+name|Alias
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
+goto|goto
+name|ask
+goto|;
 block|}
 else|else
 name|exit
