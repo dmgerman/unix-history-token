@@ -281,7 +281,7 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"%-5.5s %-5.5s %-11.11s %-15.15s %8.8s %5.5s %8.8s %5.5s"
+literal|"%-5.5s %-5.5s %-11.11s %-15.15s %8.8s %5.5s"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -294,10 +294,37 @@ argument_list|,
 literal|"Ipkts"
 argument_list|,
 literal|"Ierrs"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|" %10.10s"
+argument_list|,
+literal|"Ibytes"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %8.8s %5.5s"
 argument_list|,
 literal|"Opkts"
 argument_list|,
 literal|"Oerrs"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|" %10.10s"
+argument_list|,
+literal|"Obytes"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -954,7 +981,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%8d %5d %8d %5d %5d"
+literal|"%8d %5d "
 argument_list|,
 name|ifnet
 operator|.
@@ -963,6 +990,24 @@ argument_list|,
 name|ifnet
 operator|.
 name|if_ierrors
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|"%10d "
+argument_list|,
+name|ifnet
+operator|.
+name|if_ibytes
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8d %5d "
 argument_list|,
 name|ifnet
 operator|.
@@ -971,6 +1016,24 @@ argument_list|,
 name|ifnet
 operator|.
 name|if_oerrors
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|"%10d "
+argument_list|,
+name|ifnet
+operator|.
+name|if_obytes
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%5d"
 argument_list|,
 name|ifnet
 operator|.
@@ -1032,30 +1095,38 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* interface name */
-name|int
+name|u_int
 name|ift_ip
 decl_stmt|;
 comment|/* input packets */
-name|int
+name|u_int
 name|ift_ie
 decl_stmt|;
 comment|/* input errors */
-name|int
+name|u_int
 name|ift_op
 decl_stmt|;
 comment|/* output packets */
-name|int
+name|u_int
 name|ift_oe
 decl_stmt|;
 comment|/* output errors */
-name|int
+name|u_int
 name|ift_co
 decl_stmt|;
 comment|/* collisions */
-name|int
+name|u_int
 name|ift_dr
 decl_stmt|;
 comment|/* drops */
+name|u_int
+name|ift_ib
+decl_stmt|;
+comment|/* input bytes */
+name|u_int
+name|ift_ob
+decl_stmt|;
+comment|/* output bytes */
 block|}
 name|iftot
 index|[
@@ -1348,11 +1419,23 @@ name|banner
 label|:
 name|printf
 argument_list|(
-literal|"   input    %-6.6s    output       "
+literal|"     input   %s%-6.6s  %soutput       "
+argument_list|,
+name|bflag
+condition|?
+literal|"          "
+else|:
+literal|""
 argument_list|,
 name|interesting
 operator|->
 name|ift_name
+argument_list|,
+name|bflag
+condition|?
+literal|"          "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1375,7 +1458,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"     input   (Total)    output"
+literal|"          input  %s(Total)  %soutput"
+argument_list|,
+name|bflag
+condition|?
+literal|"          "
+else|:
+literal|""
+argument_list|,
+name|bflag
+condition|?
+literal|"          "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -1431,6 +1526,18 @@ name|ift_dr
 operator|=
 literal|0
 expr_stmt|;
+name|ip
+operator|->
+name|ift_ib
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|ift_ob
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|putchar
 argument_list|(
@@ -1439,15 +1546,47 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8.8s %5.5s %8.8s %5.5s %5.5s "
+literal|"%8.8s %5.5s "
 argument_list|,
 literal|"packets"
 argument_list|,
 literal|"errs"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|"%10.10s "
+argument_list|,
+literal|"bytes"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8.8s %5.5s "
 argument_list|,
 literal|"packets"
 argument_list|,
 literal|"errs"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|"%10.10s "
+argument_list|,
+literal|"bytes"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%5.5s "
 argument_list|,
 literal|"colls"
 argument_list|)
@@ -1471,17 +1610,50 @@ name|iftot
 operator|>
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|" %8.8s %5.5s %8.8s %5.5s %5.5s"
+literal|" %8.8s %5.5s"
 argument_list|,
 literal|"packets"
 argument_list|,
 literal|"errs"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|" %10.10s"
+argument_list|,
+literal|"bytes"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %8.8s %5.5s"
 argument_list|,
 literal|"packets"
 argument_list|,
 literal|"errs"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|" %10.10s"
+argument_list|,
+literal|"bytes"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %5.5s"
 argument_list|,
 literal|"colls"
 argument_list|)
@@ -1497,6 +1669,7 @@ argument_list|,
 literal|"drops"
 argument_list|)
 expr_stmt|;
+block|}
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1546,6 +1719,18 @@ expr_stmt|;
 name|sum
 operator|->
 name|ift_dr
+operator|=
+literal|0
+expr_stmt|;
+name|sum
+operator|->
+name|ift_ib
+operator|=
+literal|0
+expr_stmt|;
+name|sum
+operator|->
+name|ift_ob
 operator|=
 literal|0
 expr_stmt|;
@@ -1602,7 +1787,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%8d %5d %8d %5d %5d"
+literal|"%8d %5d "
 argument_list|,
 name|ifnet
 operator|.
@@ -1619,6 +1804,28 @@ operator|-
 name|ip
 operator|->
 name|ift_ie
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|"%10d "
+argument_list|,
+name|ifnet
+operator|.
+name|if_ibytes
+operator|-
+name|ip
+operator|->
+name|ift_ib
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%8d %5d "
 argument_list|,
 name|ifnet
 operator|.
@@ -1635,6 +1842,28 @@ operator|-
 name|ip
 operator|->
 name|ift_oe
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|"%10d "
+argument_list|,
+name|ifnet
+operator|.
+name|if_obytes
+operator|-
+name|ip
+operator|->
+name|ift_ob
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%5d"
 argument_list|,
 name|ifnet
 operator|.
@@ -1715,6 +1944,22 @@ name|if_snd
 operator|.
 name|ifq_drops
 expr_stmt|;
+name|ip
+operator|->
+name|ift_ib
+operator|=
+name|ifnet
+operator|.
+name|if_ibytes
+expr_stmt|;
+name|ip
+operator|->
+name|ift_ob
+operator|=
+name|ifnet
+operator|.
+name|if_obytes
+expr_stmt|;
 name|sum
 operator|->
 name|ift_ip
@@ -1762,6 +2007,22 @@ operator|+=
 name|ip
 operator|->
 name|ift_dr
+expr_stmt|;
+name|sum
+operator|->
+name|ift_ib
+operator|+=
+name|ip
+operator|->
+name|ift_ib
+expr_stmt|;
+name|sum
+operator|->
+name|ift_ob
+operator|+=
+name|ip
+operator|->
+name|ift_ob
 expr_stmt|;
 name|off
 operator|=
@@ -1784,7 +2045,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  %8d %5d %8d %5d %5d"
+literal|"  %8d %5d"
 argument_list|,
 name|sum
 operator|->
@@ -1801,6 +2062,28 @@ operator|-
 name|total
 operator|->
 name|ift_ie
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|" %10d"
+argument_list|,
+name|sum
+operator|->
+name|ift_ib
+operator|-
+name|total
+operator|->
+name|ift_ib
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %8d %5d"
 argument_list|,
 name|sum
 operator|->
@@ -1817,6 +2100,28 @@ operator|-
 name|total
 operator|->
 name|ift_oe
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bflag
+condition|)
+name|printf
+argument_list|(
+literal|" %10d"
+argument_list|,
+name|sum
+operator|->
+name|ift_ob
+operator|-
+name|total
+operator|->
+name|ift_ob
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %5d"
 argument_list|,
 name|sum
 operator|->

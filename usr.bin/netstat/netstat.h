@@ -31,6 +31,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|bflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show i/f total bytes in/out */
+end_comment
+
+begin_decl_stmt
+name|int
 name|dflag
 decl_stmt|;
 end_decl_stmt

@@ -897,7 +897,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aadf:ghI:iM:mN:np:rstuw:"
+literal|"Aabdf:ghI:iM:mN:np:rstuw:"
 argument_list|)
 operator|)
 operator|!=
@@ -920,6 +920,14 @@ case|case
 literal|'a'
 case|:
 name|aflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|bflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2228,7 +2236,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s [-ghimnrs] [-f address_family] [-M core] [-N system]\n"
+literal|"       %s [-bdghimnrs] [-f address_family] [-M core] [-N system]\n"
 argument_list|,
 name|prog
 argument_list|)
@@ -2240,7 +2248,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s [-n] [-I interface] [-M core] [-N system] [-w wait]\n"
+literal|"       %s [-bdn] [-I interface] [-M core] [-N system] [-w wait]\n"
 argument_list|,
 name|prog
 argument_list|)
