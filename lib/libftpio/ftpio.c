@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.1.1.1 1996/06/17 12:26:06 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.2 1996/06/17 12:42:33 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -345,6 +345,10 @@ parameter_list|,
 name|char
 modifier|*
 name|mode
+parameter_list|,
+name|int
+modifier|*
+name|seekto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -777,45 +781,6 @@ block|}
 end_function
 
 begin_function
-name|int
-name|ftpRestart
-parameter_list|(
-name|FILE
-modifier|*
-name|fp
-parameter_list|,
-name|int
-name|where
-parameter_list|)
-block|{
-name|FTP_t
-name|ftp
-init|=
-name|fcookie
-argument_list|(
-name|fp
-argument_list|)
-decl_stmt|;
-name|int
-name|old
-init|=
-name|ftp
-operator|->
-name|seek
-decl_stmt|;
-name|ftp
-operator|->
-name|seek
-operator|=
-name|where
-expr_stmt|;
-return|return
-name|old
-return|;
-block|}
-end_function
-
-begin_function
 name|size_t
 name|ftpGetSize
 parameter_list|(
@@ -1145,6 +1110,10 @@ parameter_list|,
 name|char
 modifier|*
 name|file
+parameter_list|,
+name|int
+modifier|*
+name|seekto
 parameter_list|)
 block|{
 name|FILE
@@ -1173,6 +1142,8 @@ operator|&
 name|fp2
 argument_list|,
 literal|"r"
+argument_list|,
+name|seekto
 argument_list|)
 operator|==
 name|SUCCESS
@@ -1226,6 +1197,8 @@ operator|&
 name|fp2
 argument_list|,
 literal|"w"
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 name|SUCCESS
@@ -1384,6 +1357,8 @@ argument_list|(
 name|fp
 argument_list|,
 name|name
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1750,12 +1725,6 @@ expr_stmt|;
 name|ftp
 operator|->
 name|errno
-operator|=
-literal|0
-expr_stmt|;
-name|ftp
-operator|->
-name|seek
 operator|=
 literal|0
 expr_stmt|;
@@ -2882,6 +2851,10 @@ parameter_list|,
 name|char
 modifier|*
 name|mode
+parameter_list|,
+name|int
+modifier|*
+name|seekto
 parameter_list|)
 block|{
 name|int
@@ -3194,17 +3167,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|operation
-argument_list|,
-literal|"RETR"
-argument_list|)
+name|seekto
 operator|&&
-name|ftp
-operator|->
-name|seek
+operator|*
+name|seekto
 condition|)
 block|{
 name|i
@@ -3215,9 +3181,8 @@ name|ftp
 argument_list|,
 literal|"RETR %d"
 argument_list|,
-name|ftp
-operator|->
-name|seek
+operator|*
+name|seekto
 argument_list|)
 expr_stmt|;
 if|if
@@ -3254,9 +3219,8 @@ name|i
 operator|!=
 literal|350
 condition|)
-name|ftp
-operator|->
-name|seek
+operator|*
+name|seekto
 operator|=
 literal|0
 expr_stmt|;
@@ -3509,17 +3473,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|operation
-argument_list|,
-literal|"RETR"
-argument_list|)
+name|seekto
 operator|&&
-name|ftp
-operator|->
-name|seek
+operator|*
+name|seekto
 condition|)
 block|{
 name|i
@@ -3530,9 +3487,8 @@ name|ftp
 argument_list|,
 literal|"RETR %d"
 argument_list|,
-name|ftp
-operator|->
-name|seek
+operator|*
+name|seekto
 argument_list|)
 expr_stmt|;
 if|if
@@ -3569,9 +3525,8 @@ name|i
 operator|!=
 literal|350
 condition|)
-name|ftp
-operator|->
-name|seek
+operator|*
+name|seekto
 operator|=
 literal|0
 expr_stmt|;
