@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whatis.c	8.2 (Berkeley) %G%"
+literal|"@(#)whatis.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,13 +119,6 @@ comment|/* max line handled */
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 modifier|*
@@ -136,6 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -147,8 +141,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -172,6 +166,9 @@ modifier|*
 name|beg
 decl_stmt|,
 modifier|*
+name|conffile
+decl_stmt|,
+modifier|*
 modifier|*
 name|p
 decl_stmt|,
@@ -180,15 +177,10 @@ name|p_augment
 decl_stmt|,
 modifier|*
 name|p_path
-decl_stmt|,
-modifier|*
-modifier|*
-name|getdb
-argument_list|()
 decl_stmt|;
-name|progname
+name|conffile
 operator|=
-literal|"whatis"
+name|NULL
 expr_stmt|;
 name|p_augment
 operator|=
@@ -207,7 +199,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"M:m:P:"
+literal|"C:M:m:P:"
 argument_list|)
 operator|)
 operator|!=
@@ -215,12 +207,17 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
+case|case
+literal|'C'
+case|:
+name|conffile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'M'
 case|:
@@ -373,7 +370,9 @@ expr_stmt|;
 else|else
 block|{
 name|config
-argument_list|()
+argument_list|(
+name|conffile
+argument_list|)
 expr_stmt|;
 name|ep
 operator|=
@@ -960,7 +959,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whatis [-M path] [-m path] command ...\n"
+literal|"usage: whatis [-C file] [-M path] [-m path] command ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
