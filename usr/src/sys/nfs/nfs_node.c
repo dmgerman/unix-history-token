@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1070,6 +1070,18 @@ block|}
 end_block
 
 begin_comment
+comment|/*  * In theory, NFS does not need locking, but we make provision  * for doing it just in case it is needed.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|donfslocking
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Lock an nfsnode  */
 end_comment
 
@@ -1101,6 +1113,12 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|donfslocking
+condition|)
+return|return;
 while|while
 condition|(
 name|np
@@ -1212,25 +1230,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|np
-operator|->
-name|n_flag
-operator|&
-name|NLOCKED
-operator|)
-operator|==
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"nfs_unlock: unlocked nfsnode"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 name|np
 operator|->
 name|n_lockholder
