@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.60	82/12/22	*/
+comment|/*	uba.c	4.61	83/03/25	*/
 end_comment
 
 begin_include
@@ -1695,8 +1695,10 @@ operator|=
 name|cdevsw
 init|;
 name|cdp
-operator|->
-name|d_open
+operator|<
+name|cdevsw
+operator|+
+name|nchrdev
 condition|;
 name|cdp
 operator|++
