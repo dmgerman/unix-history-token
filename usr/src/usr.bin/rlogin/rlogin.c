@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.29 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,13 +141,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<varargs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<varargs.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -300,8 +300,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|cmdchar
+name|int
+name|noescape
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+name|escapechar
+init|=
+literal|'~'
 decl_stmt|;
 end_decl_stmt
 
@@ -487,6 +495,10 @@ name|void
 name|lostpeer
 parameter_list|()
 function_decl|;
+name|u_char
+name|getescape
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|getenv
@@ -507,10 +519,6 @@ operator|=
 name|user
 operator|=
 name|NULL
-expr_stmt|;
-name|cmdchar
-operator|=
-literal|'~'
 expr_stmt|;
 if|if
 condition|(
@@ -589,13 +597,13 @@ name|KERBEROS
 define|#
 directive|define
 name|OPTIONS
-value|"8KLde:k:l:x"
+value|"8EKLde:k:l:x"
 else|#
 directive|else
 define|#
 directive|define
 name|OPTIONS
-value|"8KLde:l:"
+value|"8EKLde:l:"
 endif|#
 directive|endif
 while|while
@@ -633,6 +641,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'E'
+case|:
+name|noescape
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'K'
 case|:
 ifdef|#
@@ -664,12 +680,12 @@ break|break;
 case|case
 literal|'e'
 case|:
-name|cmdchar
+name|escapechar
 operator|=
+name|getescape
+argument_list|(
 name|optarg
-index|[
-literal|0
-index|]
+argument_list|)
 expr_stmt|;
 break|break;
 ifdef|#
@@ -2013,7 +2029,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * writer: write to remote: 0 -> line.  * ~.	terminate  * ~^Z	suspend rlogin process.  * ~^Y  suspend rlogin process, but leave reader alone.  */
+comment|/*  * writer: write to remote: 0 -> line.  * ~.				terminate  * ~^Z				suspend rlogin process.  * ~<delayed-suspend char>	suspend rlogin process, but leave reader alone.  */
 end_comment
 
 begin_macro
@@ -2023,9 +2039,6 @@ end_macro
 
 begin_block
 block|{
-name|char
-name|c
-decl_stmt|;
 specifier|register
 name|int
 name|bol
@@ -2033,6 +2046,9 @@ decl_stmt|,
 name|local
 decl_stmt|,
 name|n
+decl_stmt|;
+name|char
+name|c
 decl_stmt|;
 name|bol
 operator|=
@@ -2093,15 +2109,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|noescape
+operator|&&
 name|c
 operator|==
-name|cmdchar
+name|escapechar
 condition|)
 block|{
-name|bol
-operator|=
-literal|0
-expr_stmt|;
 name|local
 operator|=
 literal|1
@@ -2174,9 +2189,8 @@ if|if
 condition|(
 name|c
 operator|!=
-name|cmdchar
+name|escapechar
 condition|)
-block|{
 ifdef|#
 directive|ifdef
 name|KERBEROS
@@ -2184,7 +2198,6 @@ if|if
 condition|(
 name|encrypt
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -2193,12 +2206,11 @@ argument_list|(
 name|rem
 argument_list|,
 operator|&
-name|cmdchar
+name|escapechar
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 endif|#
 directive|endif
@@ -2210,12 +2222,11 @@ argument_list|(
 name|rem
 argument_list|,
 operator|&
-name|cmdchar
+name|escapechar
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -2345,7 +2356,7 @@ operator|*
 name|p
 operator|++
 operator|=
-name|cmdchar
+name|escapechar
 expr_stmt|;
 if|if
 condition|(
@@ -2414,7 +2425,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|buf
 argument_list|,
@@ -3345,7 +3356,7 @@ name|n
 operator|=
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|bufp
 argument_list|,
@@ -3926,14 +3937,14 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|KERBEROS
-literal|"8Lx"
+literal|"8ELx"
 argument_list|,
 literal|" [-k realm] "
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-literal|"8L"
+literal|"8EL"
 operator|,
 literal|" "
 block|)
@@ -3967,21 +3978,17 @@ directive|ifdef
 name|sun
 end_ifdef
 
-begin_macro
-unit|int
-name|get_window_size
-argument_list|(
-argument|fd
-argument_list|,
-argument|wp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|get_window_size
+operator|(
+name|fd
+operator|,
+name|wp
+operator|)
 name|int
 name|fd
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -4063,6 +4070,129 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|u_char
+name|getescape
+parameter_list|(
+name|p
+parameter_list|)
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+block|{
+name|long
+name|val
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+operator|)
+operator|==
+literal|1
+condition|)
+comment|/* use any single char, including '\' */
+return|return
+operator|(
+operator|(
+name|u_char
+operator|)
+operator|*
+name|p
+operator|)
+return|;
+comment|/* otherwise, \nnn */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\\'
+operator|&&
+name|len
+operator|>=
+literal|2
+operator|&&
+name|len
+operator|<=
+literal|4
+condition|)
+block|{
+name|val
+operator|=
+name|strtol
+argument_list|(
+operator|++
+name|p
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+operator|!
+operator|*
+operator|++
+name|p
+condition|)
+return|return
+operator|(
+operator|(
+name|u_char
+operator|)
+name|val
+operator|)
+return|;
+if|if
+condition|(
+operator|*
+name|p
+operator|<
+literal|'0'
+operator|||
+operator|*
+name|p
+operator|>
+literal|'8'
+condition|)
+break|break;
+block|}
+block|}
+name|msg
+argument_list|(
+literal|"illegal option value -- e"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+end_function
 
 end_unit
 
