@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.18	82/06/23	*/
+comment|/*	if.c	4.19	82/09/12	*/
 end_comment
 
 begin_include
@@ -128,6 +128,9 @@ operator|=
 name|ifqmaxlen
 expr_stmt|;
 block|}
+name|if_slowtimo
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
@@ -700,6 +703,17 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
+name|timeout
+argument_list|(
+name|if_slowtimo
+argument_list|,
+literal|0
+argument_list|,
+name|hz
+operator|/
+name|IFNET_SLOWHZ
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
