@@ -176,6 +176,8 @@ name|stderr
 argument_list|,
 literal|"usage: at [-V] [-q x] [-f file] [-m] time\n"
 literal|"       at [-V] -c job [job ...]\n"
+literal|"       at [-V] [-f file] -t [[CC]YY]MMDDhhmm[.SS]\n"
+literal|"       at [-V] -r job [job ...]\n"
 literal|"       atq [-V] [-q x] [-v]\n"
 literal|"       atrm [-V] job [job ...]\n"
 literal|"       batch [-V] [-f file] [-m]\n"
