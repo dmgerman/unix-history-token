@@ -2016,6 +2016,12 @@ name|header
 expr_stmt|;
 name|map
 operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+name|map
+operator|->
 name|root
 operator|=
 name|NULL
