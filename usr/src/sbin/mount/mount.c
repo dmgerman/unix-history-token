@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.3 (Berkeley) %G%"
+literal|"@(#)mount.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|fake
+decl_stmt|,
+name|rval
 decl_stmt|,
 name|verbose
 decl_stmt|;
@@ -380,7 +382,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
@@ -538,7 +540,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
@@ -568,6 +570,11 @@ condition|?
 name|type
 else|:
 literal|"rw"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
@@ -653,6 +660,10 @@ name|type
 argument_list|)
 condition|)
 block|{
+name|rval
+operator|=
+literal|1
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
