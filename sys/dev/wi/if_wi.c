@@ -2685,6 +2685,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|WI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
 name|dev
@@ -2701,11 +2706,6 @@ expr_stmt|;
 name|wi_free
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|WI_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 if|#
