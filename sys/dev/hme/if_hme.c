@@ -2594,6 +2594,12 @@ operator|->
 name|htx_dmamap
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|htx_flags
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* 	 * Initialize receive buffer descriptors 	 */
 for|for
@@ -3914,17 +3920,20 @@ name|ta
 operator|->
 name|hta_offs
 expr_stmt|;
+name|td
+operator|->
+name|htx_flags
+operator|=
+name|HTXF_MAPPED
+expr_stmt|;
 block|}
 else|else
-block|{
-comment|/* 			 * Do not touch this otherwise; it is set by 			 * hme_load_mbuf. 			 */
 name|td
 operator|->
 name|htx_flags
 operator|=
 literal|0
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|i
@@ -4253,6 +4262,26 @@ operator|=
 name|n
 control|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_rb
+operator|.
+name|rb_td_nbusy
+operator|==
+name|HME_NTXDESC
+condition|)
+block|{
+name|error
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|len
 operator|=
 name|m
@@ -4291,12 +4320,6 @@ name|sc_rb
 operator|.
 name|rb_tdhead
 index|]
-expr_stmt|;
-name|td
-operator|->
-name|htx_flags
-operator|=
-name|HTXF_MAPPED
 expr_stmt|;
 if|if
 condition|(
@@ -4466,7 +4489,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Turn decriptor ownership to the hme, back to forth. */
+comment|/* Turn descriptor ownership to the hme, back to forth. */
 name|ri
 operator|=
 name|sc
@@ -4604,8 +4627,11 @@ name|fail
 label|:
 for|for
 control|(
-init|;
+name|ri
+operator|=
 name|si
+init|;
+name|ri
 operator|!=
 name|sc
 operator|->
@@ -4613,10 +4639,10 @@ name|sc_rb
 operator|.
 name|rb_tdhead
 condition|;
-name|si
+name|ri
 operator|=
 operator|(
-name|si
+name|ri
 operator|+
 literal|1
 operator|)
@@ -4633,7 +4659,7 @@ name|sc_rb
 operator|.
 name|rb_txdesc
 index|[
-name|si
+name|ri
 index|]
 expr_stmt|;
 if|if
@@ -4690,7 +4716,7 @@ name|sc_rb
 operator|.
 name|rb_txd
 argument_list|,
-name|si
+name|ri
 argument_list|,
 literal|0
 argument_list|)
@@ -5086,6 +5112,10 @@ operator|!=
 name|IFF_RUNNING
 condition|)
 return|return;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -5141,6 +5171,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 else|else
 name|enq
@@ -5157,6 +5188,11 @@ operator|.
 name|rb_td_nbusy
 operator|==
 name|HME_NTXDESC
+operator|||
+name|error
+operator|==
+operator|-
+literal|1
 condition|)
 name|ifp
 operator|->
