@@ -4831,7 +4831,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* TCP_SIGNATURE */
 case|case
 name|TCP_NODELAY
 case|:

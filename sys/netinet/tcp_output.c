@@ -469,7 +469,6 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* TCP_SIGNATURE */
 name|struct
 name|mbuf
 modifier|*
@@ -3118,7 +3117,7 @@ name|t_flags
 operator|&
 name|TF_SIGNATURE
 condition|)
-name|tcpsignature_compute
+name|tcp_signature_compute
 argument_list|(
 name|m
 argument_list|,
@@ -3149,7 +3148,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TCP_SIGNATURE */
 comment|/* 	 * Put TCP length in extended header, and then 	 * checksum extended header and data. 	 */
 name|m
 operator|->

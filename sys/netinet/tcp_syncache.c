@@ -3136,7 +3136,6 @@ name|TF_SIGNATURE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TCP_SIGNATURE */
 comment|/* 	 * Set up MSS and get cached values from tcp_hostcache. 	 * This might overwrite some of the defaults we just set. 	 */
 name|tcp_mss
 argument_list|(
@@ -4220,7 +4219,6 @@ name|SCF_SIGNATURE
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TCP_SIGNATURE */
 comment|/* 	 * XXX 	 * We have the option here of not doing TAO (even if the segment 	 * qualifies) and instead fall back to a normal 3WHS via the syncache. 	 * This allows us to apply synflood protection to TAO-qualifying SYNs 	 * also. However, there should be a hueristic to determine when to 	 * do this, and is not present at the moment. 	 */
 comment|/* 	 * Perform TAO test on incoming CC (SEG.CC) option, if any. 	 * - compare SEG.CC against cached CC from the same host, if any. 	 * - if SEG.CC> chached value, SYN must be new and is accepted 	 *	immediately: save new CC in the cache, mark the socket 	 *	connected, enter ESTABLISHED state, turn on flag to 	 *	send a SYN in the next segment. 	 *	A virtual advertised window is set in rcv_adv to 	 *	initialize SWS prevention.  Then enter normal segment 	 *	processing: drop SYN, process data and FIN. 	 * - otherwise do a normal 3-way handshake. 	 */
 if|if
@@ -4687,7 +4685,6 @@ name|TCP_SIGNATURE
 name|optlen
 operator|+=
 operator|(
-operator|(
 name|sc
 operator|->
 name|sc_flags
@@ -4702,11 +4699,9 @@ literal|2
 operator|)
 else|:
 literal|0
-operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* TCP_SIGNATURE */
 block|}
 name|tlen
 operator|=
@@ -5406,7 +5401,7 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
-name|tcpsignature_compute
+name|tcp_signature_compute
 argument_list|(
 name|m
 argument_list|,

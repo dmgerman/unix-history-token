@@ -9900,7 +9900,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* TCP_SIGNATURE */
 default|default:
 continue|continue;
 block|}
