@@ -312,7 +312,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"WARNING: debug.mpsafenet forced to = as %s requires "
+literal|"WARNING: debug.mpsafenet forced to 0 as %s requires "
 literal|"Giant\n"
 argument_list|,
 name|component
