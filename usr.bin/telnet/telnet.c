@@ -7949,6 +7949,35 @@ end_function
 begin_escape
 end_escape
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX - this not being in is a bug */
+end_comment
+
+begin_comment
+comment|/*  * nextitem()  *  *	Return the address of the next "item" in the TELNET data  * stream.  This will be the address of the next character if  * the current address is a user data character, or it will  * be the address of the character following the TELNET command  * if the current address is a TELNET IAC ("I Am a Command")  * character.  */
+end_comment
+
+begin_comment
+unit|static char * nextitem(char *current) {     if ((*current&0xff) != IAC) { 	return current+1;     }     switch (*(current+1)&0xff) {     case DO:     case DONT:     case WILL:     case WONT: 	return current+3;     case SB:
+comment|/* loop forever looking for the SE */
+end_comment
+
+begin_endif
+unit|{ 	    char *look = current+2;  	    for (;;) { 		if ((*look++&0xff) == IAC) { 		    if ((*look++&0xff) == SE) { 			return look; 		    } 		} 	    } 	}     default: 	return current+2;     } }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
+
 begin_comment
 comment|/*  * netclear()  *  *	We are about to do a TELNET SYNCH operation.  Clear  * the path to the network.  *  *	Things are a bit tricky since we may have sent the first  * byte or so of a previous TELNET command into the network.  * So, we have to scan the network buffer from the beginning  * until we are up to where we want to be.  *  *	A side effect of what we do, just to keep things  * simple, is to clear the urgent data pointer.  The principal  * caller should be setting the urgent data pointer AFTER calling  * us in any case.  */
 end_comment
