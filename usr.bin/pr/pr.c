@@ -5901,6 +5901,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|err
+operator|=
+name|stderr
+expr_stmt|;
 operator|(
 name|void
 operator|)
