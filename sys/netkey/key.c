@@ -8941,7 +8941,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SADB_SPDDELETE processing  * receive  *<base, address(SD), policy(*)>  * from the user(?), and set SADB_SASTATE_DEAD,  * and send,  *<base, address(SD), policy(*)>  * to the ikmpd.  * policy(*) including direction of policy.  *  * m will always be freed.  */
+comment|/*  * SADB_SPDDELETE processing  * receive  *<base, address(SD), policy(*)>  * from the user(?), and set SADB_SASTATE_DEAD,  * and send,  *<base, address(SD), policy(*)>  * to the ikmpd.  * policy(*) including the direction of the policy.  *  * m will always be freed.  */
 end_comment
 
 begin_function
@@ -9278,7 +9278,7 @@ name|EINVAL
 argument_list|)
 return|;
 block|}
-comment|/* save policy id to buffer to be returned. */
+comment|/* save policy id to be returned. */
 name|xpl0
 operator|->
 name|sadb_x_policy_id
@@ -10176,7 +10176,7 @@ argument_list|(
 literal|"key_spdacquire: policy mismathed. IPsec is expected."
 argument_list|)
 expr_stmt|;
-comment|/* Get an entry to check whether sent message or not. */
+comment|/* get an entry to check whether sent message or not. */
 if|if
 condition|(
 operator|(
@@ -12056,7 +12056,7 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/* don't delete sah only if there are savs. */
+comment|/* delete sah only if there's no sav. */
 if|if
 condition|(
 name|zombie
@@ -26210,7 +26210,7 @@ ifndef|#
 directive|ifndef
 name|IPSEC_NONBLOCK_ACQUIRE
 comment|/* 	 * We never do anything about acquirng SA.  There is anather 	 * solution that kernel blocks to send SADB_ACQUIRE message until 	 * getting something message from IKEd.  In later case, to be 	 * managed with ACQUIRING list. 	 */
-comment|/* Get an entry to check whether sending message or not. */
+comment|/* get an entry to check whether sending message or not. */
 if|if
 condition|(
 operator|(
@@ -32356,7 +32356,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -32366,7 +32365,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -32386,7 +32384,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -32396,7 +32393,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 ifndef|#
 directive|ifndef
 name|IPSEC_NONBLOCK_ACQUIRE
