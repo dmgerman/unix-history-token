@@ -596,6 +596,17 @@ index|]
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|proto
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+literal|"none"
+return|;
 return|return
 name|HexStr
 argument_list|(
@@ -606,6 +617,7 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+block|}
 return|return
 name|cftypes
 index|[
