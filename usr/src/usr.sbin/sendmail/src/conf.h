@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.194 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.195 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1983,6 +1983,72 @@ end_define
 
 begin_comment
 comment|/* pre-4.4 TCP/IP implementation is broken */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  OSF/1 for KSR. ** **      Contributed by Todd C. Miller<Todd.Miller@cs.colorado.edu> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ksr__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__osf__
+value|1
+end_define
+
+begin_comment
+comment|/* get OSF/1 defines below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORK
+value|fork
+end_define
+
+begin_comment
+comment|/* no vfork primitive available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_VENDOR_CF
+value|"/var/adm/sendmail/sendmail.cf"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TZ_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TZ_TYPE
+value|TZ_TZNAME
+end_define
+
+begin_comment
+comment|/* use tzname[] vector */
 end_comment
 
 begin_endif
