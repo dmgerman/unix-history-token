@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.13 (Berkeley) %G%"
+literal|"@(#)map.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3788,10 +3788,33 @@ operator|!=
 name|O_RDONLY
 condition|)
 block|{
+comment|/* issue a pseudo-error message */
+ifdef|#
+directive|ifdef
+name|ENOSYS
 name|errno
 operator|=
-name|ENODEV
+name|ENOSYS
 expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|EFTYPE
+name|errno
+operator|=
+name|EFTYPE
+expr_stmt|;
+else|#
+directive|else
+name|errno
+operator|=
+name|ENXIO
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 return|return
 name|FALSE
 return|;
@@ -5003,13 +5026,11 @@ endif|#
 directive|endif
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|NEWDB
 argument_list|)
-operator|&&
-operator|!
+operator|||
 name|defined
 argument_list|(
 name|NDBM
