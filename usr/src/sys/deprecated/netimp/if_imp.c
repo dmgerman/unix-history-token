@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	6.4	85/03/19	*/
+comment|/*	if_imp.c	6.5	85/05/27	*/
 end_comment
 
 begin_include
@@ -1651,7 +1651,7 @@ name|in
 argument_list|)
 expr_stmt|;
 else|else
-name|ip_ctlinput
+name|pfctlinput
 argument_list|(
 name|what
 argument_list|,
