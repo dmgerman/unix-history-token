@@ -2020,7 +2020,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Shush, compiler. */
-comment|/* 				 * The number of bits in "rnd32" divided 				 * by the number of bits needed per iteration 				 * gives a more optimal way to reload the 				 * random number only when necessary. 				 * 				 * 32 bits from arc4random corrisponds to 				 * about 6 base-36 digits, so we reseed evey 6. 				 */
+comment|/* 				 * The number of bits in "rnd32" divided 				 * by the number of bits needed per iteration 				 * gives a more optimal way to reload the 				 * random number only when necessary. 				 * 				 * 32 bits from arc4random corresponds to 				 * about 6 base-36 digits, so we reseed evey 6. 				 */
 for|for
 control|(
 name|i
