@@ -791,16 +791,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|fflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* force check, ignore clean flag */
-end_comment
-
-begin_decl_stmt
-name|char
 name|nflag
 decl_stmt|;
 end_decl_stmt
@@ -2099,6 +2089,19 @@ operator|*
 name|fmt
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|readsb
+name|__P
+argument_list|(
+operator|(
+name|int
+name|listerr
 operator|)
 argument_list|)
 decl_stmt|;

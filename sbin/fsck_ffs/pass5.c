@@ -2465,6 +2465,35 @@ name|ustart
 decl_stmt|,
 name|uend
 decl_stmt|;
+name|void
+argument_list|(
+argument|*msg
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|fmt
+operator|,
+operator|...
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bkgrdflag
+condition|)
+name|msg
+operator|=
+name|pfatal
+expr_stmt|;
+else|else
+name|msg
+operator|=
+name|pwarn
+expr_stmt|;
 name|astart
 operator|=
 name|ustart
@@ -2604,7 +2633,10 @@ name|astart
 operator|==
 name|aend
 condition|)
-name|pfatal
+call|(
+modifier|*
+name|msg
+call|)
 argument_list|(
 literal|"ALLOCATED %s %d MARKED FREE\n"
 argument_list|,
@@ -2614,7 +2646,10 @@ name|astart
 argument_list|)
 expr_stmt|;
 else|else
-name|pfatal
+call|(
+modifier|*
+name|msg
+call|)
 argument_list|(
 literal|"%s %sS %d-%d MARKED FREE\n"
 argument_list|,
@@ -2862,7 +2897,10 @@ name|astart
 operator|==
 name|aend
 condition|)
-name|pfatal
+call|(
+modifier|*
+name|msg
+call|)
 argument_list|(
 literal|"ALLOCATED %s %d MARKED FREE\n"
 argument_list|,
@@ -2872,7 +2910,10 @@ name|astart
 argument_list|)
 expr_stmt|;
 else|else
-name|pfatal
+call|(
+modifier|*
+name|msg
+call|)
 argument_list|(
 literal|"ALLOCATED %sS %d-%d MARKED FREE\n"
 argument_list|,

@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -797,6 +803,9 @@ argument_list|(
 literal|"starting\n"
 argument_list|)
 expr_stmt|;
+name|sblock_init
+argument_list|()
+expr_stmt|;
 comment|/* 	 * If we are to do a background check: 	 *	Get the mount point information of the filesystem 	 *	create snapshot file 	 *	return created snapshot file 	 *	if not found, clear bkgrdflag and proceed with normal fsck 	 */
 name|mntp
 operator|=
@@ -821,7 +830,7 @@ name|bkgrdflag
 operator|=
 literal|0
 expr_stmt|;
-name|pwarn
+name|pfatal
 argument_list|(
 literal|"NOT MOUNTED, CANNOT RUN IN BACKGROUND\n"
 argument_list|)
@@ -845,9 +854,11 @@ name|bkgrdflag
 operator|=
 literal|0
 expr_stmt|;
-name|pwarn
+name|pfatal
 argument_list|(
-literal|"NOT USING SOFT UPDATES, CANNOT RUN IN BACKGROUND\n"
+literal|"NOT USING SOFT UPDATES, %s\n"
+argument_list|,
+literal|"CANNOT RUN IN BACKGROUND"
 argument_list|)
 expr_stmt|;
 block|}
@@ -869,13 +880,100 @@ name|bkgrdflag
 operator|=
 literal|0
 expr_stmt|;
-name|pwarn
+name|pfatal
 argument_list|(
 literal|"MOUNTED READ-ONLY, CANNOT RUN IN BACKGROUND\n"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|fsreadfd
+operator|=
+name|open
+argument_list|(
+name|filesys
+argument_list|,
+name|O_RDONLY
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|readsb
+argument_list|(
+literal|0
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_NEEDSFSCK
+condition|)
+block|{
+name|bkgrdflag
+operator|=
+literal|0
+expr_stmt|;
+name|pfatal
+argument_list|(
+literal|"UNEXPECTED INCONSISTENCY, %s\n"
+argument_list|,
+literal|"CANNOT RUN IN BACKGROUND\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|sblock
+operator|.
+name|fs_flags
+operator|&
+name|FS_UNCLEAN
+operator|)
+operator|==
+literal|0
+operator|&&
+name|skipclean
+operator|&&
+name|preen
+condition|)
+block|{
+comment|/* 					 * filesystem is clean; 					 * skip snapshot and report it clean 					 */
+name|pwarn
+argument_list|(
+literal|"FILESYSTEM CLEAN; %s\n"
+argument_list|,
+literal|"SKIPPING CHECKS"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|clean
+goto|;
+block|}
+block|}
+name|close
+argument_list|(
+name|fsreadfd
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bkgrdflag
+condition|)
 block|{
 name|snprintf
 argument_list|(
@@ -940,7 +1038,7 @@ name|bkgrdflag
 operator|=
 literal|0
 expr_stmt|;
-name|pwarn
+name|pfatal
 argument_list|(
 literal|"CANNOT CREATE SNAPSHOT %s: %s\n"
 argument_list|,
@@ -995,6 +1093,8 @@ case|case
 operator|-
 literal|1
 case|:
+name|clean
+label|:
 name|pwarn
 argument_list|(
 literal|"clean, %ld free "
