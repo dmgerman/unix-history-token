@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pm.c	7.4 (Berkeley) %G%  *  *  devGraphics.c --  *  *     	This file contains machine-dependent routines for the graphics device.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.    *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devGraphics.c,  *	v 9.2 90/02/13 22:16:24 shirriff Exp $ SPRITE (DECWRL)";  */
+comment|/*   * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pm.c	7.5 (Berkeley) %G%  *  *  devGraphics.c --  *  *     	This file contains machine-dependent routines for the graphics device.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.    *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devGraphics.c,  *	v 9.2 90/02/13 22:16:24 shirriff Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -2553,6 +2553,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2644,6 +2647,28 @@ operator|=
 name|TO_MS
 argument_list|(
 name|time
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+name|dcDivertXInput
+operator|=
+name|pmKbdEvent
+expr_stmt|;
+name|dcMouseEvent
+operator|=
+name|pmMouseEvent
+expr_stmt|;
+name|dcMouseButtons
+operator|=
+name|pmMouseButtons
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
