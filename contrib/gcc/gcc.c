@@ -8846,9 +8846,8 @@ argument_list|(
 name|program
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
