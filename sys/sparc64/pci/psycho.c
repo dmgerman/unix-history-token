@@ -1081,6 +1081,36 @@ begin_comment
 comment|/*  * "sabre" is the UltraSPARC IIi onboard UPA to PCI bridge.  It manages a  * single PCI bus and does not have a streaming buffer.  It often has an APB  * (advanced PCI bridge) connected to it, which was designed specifically for  * the IIi.  The APB let's the IIi handle two independednt PCI buses, and  * appears as two "simba"'s underneath the sabre.  *  * "psycho" and "psycho+" is a dual UPA to PCI bridge.  It sits on the UPA bus  * and manages two PCI buses.  "psycho" has two 64-bit 33MHz buses, while  * "psycho+" controls both a 64-bit 33Mhz and a 64-bit 66Mhz PCI bus.  You  * will usually find a "psycho+" since I don't think the original "psycho"  * ever shipped, and if it did it would be in the U30.  *  * Each "psycho" PCI bus appears as a separate OFW node, but since they are  * both part of the same IC, they only have a single register space.  As such,  * they need to be configured together, even though the autoconfiguration will  * attach them separately.  *  * On UltraIIi machines, "sabre" itself usually takes pci0, with "simba" often  * as pci1 and pci2, although they have been implemented with other PCI bus  * numbers on some machines.  *  * On UltraII machines, there can be any number of "psycho+" ICs, each  * providing two PCI buses.  *  *  * XXXX The psycho/sabre node has an `interrupts' attribute.  They contain  * the values of the following interrupts in this order:  *  * PCI Bus Error	(30)  * DMA UE		(2e)  * DMA CE		(2f)  * Power Fail		(25)  *  * We really should attach handlers for each.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUGGER_ON_POWERFAIL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PSYCHO_PWRFAIL_INT_FLAGS
+value|INTR_FAST
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PSYCHO_PWRFAIL_INT_FLAGS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2411,7 +2441,7 @@ name|dev
 argument_list|,
 name|PSR_POWER_INT_MAP
 argument_list|,
-name|INTR_FAST
+name|PSYCHO_PWRFAIL_INT_FLAGS
 argument_list|,
 name|psycho_powerfail
 argument_list|)
