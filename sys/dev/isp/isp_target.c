@@ -356,7 +356,7 @@ name|type
 decl_stmt|,
 name|rval
 init|=
-literal|0
+literal|1
 decl_stmt|;
 name|type
 operator|=
@@ -768,23 +768,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|IN_PORT_LOGOUT
+case|:
+case|case
 name|IN_ABORT_TASK
 case|:
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGWARN
-argument_list|,
-literal|"Abort Task from IID %d RX_ID 0x%x"
-argument_list|,
-name|inot_fcp
-operator|->
-name|in_iid
-argument_list|,
-name|seqid
-argument_list|)
-expr_stmt|;
+case|case
+name|IN_PORT_CHANGED
+case|:
+case|case
+name|IN_GLOBAL_LOGO
+case|:
 operator|(
 name|void
 operator|)
@@ -795,58 +789,7 @@ argument_list|,
 name|ISPASYNC_TARGET_ACTION
 argument_list|,
 operator|&
-name|bus
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IN_PORT_LOGOUT
-case|:
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGWARN
-argument_list|,
-literal|"Port Logout for Initiator %d RX_ID 0x%x"
-argument_list|,
-name|inot_fcp
-operator|->
-name|in_iid
-argument_list|,
-name|seqid
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IN_PORT_CHANGED
-case|:
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGWARN
-argument_list|,
-literal|"Port Changed for Initiator %d RX_ID 0x%x"
-argument_list|,
-name|inot_fcp
-operator|->
-name|in_iid
-argument_list|,
-name|seqid
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IN_GLOBAL_LOGO
-case|:
-name|isp_prt
-argument_list|(
-name|isp
-argument_list|,
-name|ISP_LOGWARN
-argument_list|,
-literal|"All ports logged out"
+name|local
 argument_list|)
 expr_stmt|;
 break|break;
@@ -976,8 +919,7 @@ argument_list|)
 expr_stmt|;
 name|rval
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 break|break;
 block|}
@@ -2273,7 +2215,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|isp_target_async
 parameter_list|(
 name|struct
@@ -2319,7 +2261,11 @@ case|case
 name|ASYNC_PTPMODE
 case|:
 comment|/* 		 * These don't require any immediate notify actions. We used 		 * treat them like SCSI Bus Resets, but that was just plain 		 * wrong. Let the normal CTIO completion report what occurred. 		 */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|ASYNC_BUS_RESET
 case|:
@@ -2334,7 +2280,11 @@ name|isp
 argument_list|)
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* we'll be getting an inotify instead */
 block|}
 name|evt
@@ -2468,6 +2418,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
