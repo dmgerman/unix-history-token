@@ -466,10 +466,6 @@ condition|)
 block|{
 name|int
 name|cpid
-decl_stmt|,
-name|off
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -607,12 +603,12 @@ name|fcntl
 argument_list|(
 name|fd
 argument_list|,
-name|O_NONBLOCK
+name|F_SETFL
 argument_list|,
-operator|&
-name|off
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* clear O_NONBLOCK */
 continue|continue;
 block|}
 comment|/* 		 * We get ENODEV on a slip line if we're running as root, 		 * and EIO if the line just went away. 		 */
