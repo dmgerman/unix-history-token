@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -409,6 +409,11 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|panicstr
+condition|)
 name|logwakeup
 argument_list|()
 expr_stmt|;
@@ -499,6 +504,9 @@ name|x1
 argument_list|,
 name|TOTTY
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|tp
 argument_list|)
 expr_stmt|;
@@ -543,6 +551,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
 name|int
 name|flags
 init|=
@@ -550,9 +561,6 @@ name|TOTTY
 operator||
 name|TOLOG
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 name|logpri
 argument_list|(
 name|LOG_INFO
@@ -732,9 +740,7 @@ argument_list|,
 name|TOLOG
 argument_list|,
 operator|(
-expr|struct
-name|tty
-operator|*
+name|caddr_t
 operator|)
 literal|0
 argument_list|)
@@ -751,9 +757,7 @@ argument_list|,
 name|TOLOG
 argument_list|,
 operator|(
-expr|struct
-name|tty
-operator|*
+name|caddr_t
 operator|)
 literal|0
 argument_list|)
@@ -765,9 +769,7 @@ argument_list|,
 name|TOLOG
 argument_list|,
 operator|(
-expr|struct
-name|tty
-operator|*
+name|caddr_t
 operator|)
 literal|0
 argument_list|)
