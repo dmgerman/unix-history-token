@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Diomidis Spinellis.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Diomidis Spinellis of Imperial College, University of London.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 Diomidis Spinellis.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Diomidis Spinellis of Imperial College, University of London.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ block|{
 name|int
 name|n
 decl_stmt|;
-comment|/* Occurrence to subst 0=g */
+comment|/* Occurrence to subst. */
 name|int
 name|p
 decl_stmt|;
@@ -81,6 +81,7 @@ name|wfd
 decl_stmt|;
 comment|/* Cached file descriptor */
 name|regex_t
+modifier|*
 name|re
 decl_stmt|;
 comment|/* Regular expression */
@@ -89,6 +90,14 @@ modifier|*
 name|pmatch
 decl_stmt|;
 comment|/* Array of match strucs */
+name|int
+name|maxbref
+decl_stmt|;
+comment|/* Largest backreference. */
+name|u_long
+name|linenum
+decl_stmt|;
+comment|/* Line number. */
 name|char
 modifier|*
 name|new
