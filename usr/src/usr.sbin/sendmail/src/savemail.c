@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.18 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,11 @@ function_decl|(
 modifier|*
 name|fnptr
 function_decl|)
+parameter_list|()
+function_decl|;
+specifier|extern
+name|bool
+name|writable
 parameter_list|()
 function_decl|;
 if|if
@@ -1121,11 +1126,33 @@ name|ESM_DONE
 expr_stmt|;
 break|break;
 block|}
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"/usr/tmp/dead.letter"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|writable
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+block|{
+name|state
+operator|=
+name|ESM_PANIC
+expr_stmt|;
+break|break;
+block|}
 name|fp
 operator|=
 name|dfopen
 argument_list|(
-literal|"/usr/tmp/dead.letter"
+name|buf
 argument_list|,
 name|O_WRONLY
 operator||
