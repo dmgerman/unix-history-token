@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.50 1999/02/23 18:51:13 wollman Exp $ */
+comment|/* $Id: main.c,v 1.49.2.1 1999/02/25 18:36:32 wollman Exp $ */
 end_comment
 
 begin_include
@@ -1538,7 +1538,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%qd bytes transfered in %.1f seconds"
+literal|"\n%qd bytes transferred in %.1f seconds"
 argument_list|,
 operator|(
 name|long
