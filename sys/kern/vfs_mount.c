@@ -2520,10 +2520,8 @@ if|if
 condition|(
 name|mp
 operator|->
-name|mnt_op
-operator|->
-name|vfs_mount
-operator|==
+name|mnt_opt
+operator|!=
 name|NULL
 condition|)
 name|vfs_freeopts
