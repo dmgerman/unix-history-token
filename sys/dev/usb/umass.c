@@ -2458,7 +2458,7 @@ name|UMATCH_VENDOR_PRODUCT
 operator|)
 return|;
 block|}
-comment|/* 	 * The Pentax Optio 230 requires RS_NO_CLEAR_UA 	 * PR: kern/46369 	 */
+comment|/* 	 * The Pentax Optio cameras require RS_NO_CLEAR_UA 	 * PR: kern/46369, kern/50271 	 */
 if|if
 condition|(
 name|UGETW
@@ -2469,15 +2469,6 @@ name|idVendor
 argument_list|)
 operator|==
 name|USB_VENDOR_ASAHIOPTICAL
-operator|&&
-name|UGETW
-argument_list|(
-name|dd
-operator|->
-name|idProduct
-argument_list|)
-operator|==
-name|USB_PRODUCT_ASAHIOPTICAL_OPTIO230
 condition|)
 block|{
 name|sc
