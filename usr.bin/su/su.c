@@ -1348,9 +1348,7 @@ name|SA_RESTART
 expr_stmt|;
 name|sa
 operator|.
-name|__sigaction_u
-operator|.
-name|__sa_handler
+name|sa_handler
 operator|=
 name|SIG_IGN
 expr_stmt|;
