@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	6.2	84/03/20	*/
+comment|/*	ioctl.h	6.3	84/04/13	*/
 end_comment
 
 begin_comment
@@ -1730,6 +1730,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCGIFBRDADDR
+value|_IOWR(i,18, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get broadcast addr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCGIFCONF
 value|_IOWR(i,20, struct ifconf)
 end_define
@@ -1753,7 +1764,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGARP
-value|_IOWR(i, 31, struct arpreq)
+value|_IOWR(i,31, struct arpreq)
 end_define
 
 begin_comment
