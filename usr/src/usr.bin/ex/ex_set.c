@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_set.c	6.1 %G%"
+literal|"@(#)ex_set.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,6 +507,25 @@ index|[
 name|WINDOW
 index|]
 condition|)
+block|{
+if|if
+condition|(
+name|value
+argument_list|(
+name|WINDOW
+argument_list|)
+operator|>=
+name|LINES
+condition|)
+name|value
+argument_list|(
+name|WINDOW
+argument_list|)
+operator|=
+name|LINES
+operator|-
+literal|1
+expr_stmt|;
 name|vsetsiz
 argument_list|(
 name|value
@@ -515,6 +534,7 @@ name|WINDOW
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|STRING

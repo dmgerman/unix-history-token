@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tune.h	6.1 %G%  */
+comment|/* sccs id:	@(#)ex_tune.h	6.2 %G%  */
 end_comment
 
 begin_comment
@@ -385,7 +385,7 @@ begin_define
 define|#
 directive|define
 name|TUBELINES
-value|40
+value|60
 end_define
 
 begin_comment
@@ -407,7 +407,7 @@ begin_define
 define|#
 directive|define
 name|TUBESIZE
-value|3400
+value|5000
 end_define
 
 begin_comment

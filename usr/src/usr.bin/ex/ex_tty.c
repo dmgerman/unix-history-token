@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tty.c	6.1 %G%"
+literal|"@(#)ex_tty.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -606,11 +606,11 @@ if|if
 condition|(
 name|LINES
 operator|>
-literal|48
+name|TUBELINES
 condition|)
 name|LINES
 operator|=
-literal|48
+name|TUBELINES
 expr_stmt|;
 name|l
 operator|=
@@ -637,6 +637,16 @@ condition|)
 name|l
 operator|=
 literal|17
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|>
+name|LINES
+condition|)
+name|l
+operator|=
+name|LINES
 expr_stmt|;
 name|aoftspace
 operator|=
