@@ -113,7 +113,7 @@ decl_stmt|;
 name|bus_space_handle_t
 name|mem_bh
 decl_stmt|;
-name|u_short
+name|u_int
 name|port
 decl_stmt|;
 comment|/* i/o base address for this interface */
