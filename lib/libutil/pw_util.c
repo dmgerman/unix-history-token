@@ -2106,6 +2106,17 @@ name|len
 argument_list|)
 operator|!=
 name|len
+operator|||
+name|write
+argument_list|(
+name|tfd
+argument_list|,
+literal|"\n"
+argument_list|,
+literal|1
+argument_list|)
+operator|!=
+literal|1
 condition|)
 goto|goto
 name|err
