@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** stub main for testing FICL **  */
+comment|/* ** stub main for testing FICL under Win32 ** $Id: testmain.c,v 1.6 2000-06-17 07:43:50-07 jsadler Exp jsadler $ */
 end_comment
 
 begin_comment

@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************* ** v m . c ** Forth Inspired Command Language - virtual machine methods ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 19 July 1997 **  *******************************************************************/
+comment|/******************************************************************* ** v m . c ** Forth Inspired Command Language - virtual machine methods ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 19 July 1997 ** $Id: vm.c,v 1.8 2001-04-26 21:41:23-07 jsadler Exp jsadler $ *******************************************************************/
 end_comment
 
 begin_comment
 comment|/* ** This file implements the virtual machine of FICL. Each virtual ** machine retains the state of an interpreter. A virtual machine ** owns a pair of stacks for parameters and return addresses, as ** well as a pile of state variables and the two dedicated registers ** of the interp. */
+end_comment
+
+begin_comment
+comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please send ** contact me by email at the address above. ** ** $Id: vm.c,v 1.8 2001-04-26 21:41:23-07 jsadler Exp jsadler $ */
 end_comment
 
 begin_comment
@@ -106,7 +110,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************                         v m C r e a t e **  **************************************************************************/
+comment|/**************************************************************************                         v m C r e a t e ** Creates a virtual machine either from scratch (if pVM is NULL on entry) ** or by resizing and reinitializing an existing VM to the specified stack ** sizes. **************************************************************************/
 end_comment
 
 begin_function
@@ -208,6 +212,33 @@ argument_list|(
 name|nRStack
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|FICL_WANT_FLOAT
+if|if
+condition|(
+name|pVM
+operator|->
+name|fStack
+condition|)
+name|stackDelete
+argument_list|(
+name|pVM
+operator|->
+name|fStack
+argument_list|)
+expr_stmt|;
+name|pVM
+operator|->
+name|fStack
+operator|=
+name|stackCreate
+argument_list|(
+name|nPStack
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pVM
 operator|->
 name|textOut
@@ -226,7 +257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************                         v m D e l e t e **  **************************************************************************/
+comment|/**************************************************************************                         v m D e l e t e ** Free all memory allocated to the specified VM and its subordinate  ** structures. **************************************************************************/
 end_comment
 
 begin_function
@@ -257,6 +288,18 @@ operator|->
 name|rStack
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|FICL_WANT_FLOAT
+name|ficlFree
+argument_list|(
+name|pVM
+operator|->
+name|fStack
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ficlFree
 argument_list|(
 name|pVM
@@ -613,7 +656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************                         v m G e t W o r d T o P a d ** Does vmGetWord0 and copies the result to the pad as a NULL terminated ** string. Returns the length of the string. If the string is too long  ** to fit in the pad, it is truncated. **************************************************************************/
+comment|/**************************************************************************                         v m G e t W o r d T o P a d ** Does vmGetWord and copies the result to the pad as a NULL terminated ** string. Returns the length of the string. If the string is too long  ** to fit in the pad, it is truncated. **************************************************************************/
 end_comment
 
 begin_function
@@ -642,7 +685,7 @@ name|pad
 decl_stmt|;
 name|si
 operator|=
-name|vmGetWord0
+name|vmGetWord
 argument_list|(
 name|pVM
 argument_list|)
@@ -1125,30 +1168,6 @@ modifier|*
 name|pVM
 parameter_list|)
 block|{
-specifier|static
-name|FICL_WORD
-modifier|*
-name|pInterp
-init|=
-name|NULL
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|pInterp
-condition|)
-name|pInterp
-operator|=
-name|ficlLookup
-argument_list|(
-literal|"interpret"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|pInterp
-argument_list|)
-expr_stmt|;
 name|stackReset
 argument_list|(
 name|pVM
@@ -1166,14 +1185,13 @@ name|pVM
 operator|->
 name|ip
 operator|=
-operator|&
-name|pInterp
+name|NULL
 expr_stmt|;
 name|pVM
 operator|->
 name|runningWord
 operator|=
-name|pInterp
+name|NULL
 expr_stmt|;
 name|pVM
 operator|->
@@ -1251,6 +1269,18 @@ operator|->
 name|pStack
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|FICL_WANT_FLOAT
+name|stackReset
+argument_list|(
+name|pVM
+operator|->
+name|fStack
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pVM
 operator|->
 name|base
@@ -2154,7 +2184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************                         s t r i n c m p **  **************************************************************************/
+comment|/**************************************************************************                         s t r i n c m p ** (jws) simplified the code a bit in hopes of appeasing Purify **************************************************************************/
 end_comment
 
 begin_function
@@ -2169,7 +2199,7 @@ name|char
 modifier|*
 name|cp2
 parameter_list|,
-name|FICL_COUNT
+name|FICL_UNS
 name|count
 parameter_list|)
 block|{
@@ -2178,68 +2208,60 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-name|char
-name|c1
-decl_stmt|,
-name|c2
-decl_stmt|;
 for|for
 control|(
-name|c1
-operator|=
-operator|*
-name|cp1
-operator|,
-name|c2
-operator|=
-operator|*
-name|cp2
 init|;
-operator|(
-operator|(
-name|i
-operator|==
 literal|0
-operator|)
-operator|&&
+operator|<
 name|count
-operator|&&
-name|c1
-operator|&&
-name|c2
-operator|)
 condition|;
-name|c1
-operator|=
-operator|*
 operator|++
 name|cp1
 operator|,
-name|c2
-operator|=
-operator|*
 operator|++
 name|cp2
 operator|,
-name|count
 operator|--
+name|count
 control|)
 block|{
 name|i
 operator|=
 name|tolower
 argument_list|(
-name|c1
+operator|*
+name|cp1
 argument_list|)
 operator|-
 name|tolower
 argument_list|(
-name|c2
+operator|*
+name|cp2
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|i
+operator|!=
+literal|0
+condition|)
 return|return
 name|i
+return|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|cp1
+operator|==
+literal|'\0'
+condition|)
+return|return
+literal|0
+return|;
+block|}
+return|return
+literal|0
 return|;
 block|}
 end_function
