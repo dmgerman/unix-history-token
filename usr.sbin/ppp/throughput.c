@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: throughput.c,v 1.1 1997/11/18 14:52:07 brian Exp $  */
+comment|/*  * $Id: throughput.c,v 1.2 1997/11/22 03:37:52 brian Exp $  */
 end_comment
 
 begin_include
@@ -161,6 +161,10 @@ name|secs_up
 decl_stmt|;
 name|secs_up
 operator|=
+name|t
+operator|->
+name|uptime
+condition|?
 name|time
 argument_list|(
 name|NULL
@@ -169,6 +173,8 @@ operator|-
 name|t
 operator|->
 name|uptime
+else|:
+literal|0
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -307,6 +313,10 @@ name|secs_up
 decl_stmt|;
 name|secs_up
 operator|=
+name|t
+operator|->
+name|uptime
+condition|?
 name|time
 argument_list|(
 name|NULL
@@ -315,6 +325,8 @@ operator|-
 name|t
 operator|->
 name|uptime
+else|:
+literal|0
 expr_stmt|;
 if|if
 condition|(
