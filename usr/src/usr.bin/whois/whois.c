@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	5.3 (Berkeley) %G%"
+literal|"@(#)whois.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -99,8 +105,14 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
 name|int
-name|s
+name|optind
 decl_stmt|;
 specifier|register
 name|FILE
@@ -111,14 +123,8 @@ modifier|*
 name|sfo
 decl_stmt|;
 specifier|register
-name|char
+name|int
 name|c
-decl_stmt|;
-name|char
-modifier|*
-name|host
-init|=
-name|NICHOST
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -134,65 +140,77 @@ name|servent
 modifier|*
 name|sp
 decl_stmt|;
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|2
-operator|&&
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-literal|"-h"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|argv
-operator|++
-operator|,
-name|argc
-operator|--
-expr_stmt|;
+name|int
+name|ch
+decl_stmt|,
+name|s
+decl_stmt|;
+name|char
+modifier|*
+name|host
+decl_stmt|;
 name|host
 operator|=
-operator|*
-name|argv
-operator|++
+name|NICHOST
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
 name|argc
-operator|--
+argument_list|,
+name|argv
+argument_list|,
+literal|"h"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+operator|(
+name|char
+operator|)
+name|ch
+condition|)
+block|{
+case|case
+literal|'h'
+case|:
+name|host
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 name|argc
 operator|!=
 literal|1
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: whois [ -h host ] name\n"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|hp
 operator|=
 name|gethostbyname
@@ -453,6 +471,9 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|sfo
@@ -478,6 +499,25 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+specifier|static
+name|usage
+argument_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: whois [-h host] name\n"
+argument_list|)
+block|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+block|; }
+end_expr_stmt
 
 end_unit
 
