@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc.c,v 1.3 1995/10/22 14:51:34 phk Exp $"
+literal|"$Id: svc.c,v 1.4 1996/06/10 00:49:18 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1599,12 +1599,14 @@ operator|*
 name|maskp
 operator|++
 init|;
+operator|(
 name|bit
 operator|=
 name|ffs
 argument_list|(
 name|mask
 argument_list|)
+operator|)
 condition|;
 name|mask
 operator|^=

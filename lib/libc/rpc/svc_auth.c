@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_auth.c,v 1.1 1994/08/07 18:36:07 wollman Exp $"
+literal|"$Id: svc_auth.c,v 1.2 1995/05/30 05:41:32 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,13 +108,19 @@ name|svcauthsw
 index|[]
 init|=
 block|{
+block|{
 name|_svcauth_null
+block|}
 block|,
 comment|/* AUTH_NULL */
+block|{
 name|_svcauth_unix
+block|}
 block|,
 comment|/* AUTH_UNIX */
+block|{
 name|_svcauth_short
+block|}
 block|,
 comment|/* AUTH_SHORT */
 block|}

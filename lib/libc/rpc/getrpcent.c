@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getrpcent.c,v 1.3 1995/10/22 14:51:24 phk Exp $"
+literal|"$Id: getrpcent.c,v 1.4 1996/06/10 20:13:04 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -818,14 +818,6 @@ modifier|*
 name|getrpcent
 parameter_list|()
 block|{
-name|struct
-name|rpcent
-modifier|*
-name|hp
-decl_stmt|;
-name|int
-name|reason
-decl_stmt|;
 specifier|register
 name|struct
 name|rpcdata
@@ -838,6 +830,14 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|YP
+name|struct
+name|rpcent
+modifier|*
+name|hp
+decl_stmt|;
+name|int
+name|reason
+decl_stmt|;
 name|char
 modifier|*
 name|val
