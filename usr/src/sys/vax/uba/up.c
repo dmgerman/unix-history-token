@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.34	81/03/10	*/
+comment|/*	up.c	4.35	81/04/01	*/
 end_comment
 
 begin_include
@@ -2269,12 +2269,6 @@ goto|goto
 name|doattn
 goto|;
 block|}
-comment|/* 	 * Release unibus resources and flush data paths. 	 */
-name|ubadone
-argument_list|(
-name|um
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Get device and block structures, and a pointer 	 * to the uba_device for the drive.  Select the drive. 	 */
 name|dp
 operator|=
@@ -2836,6 +2830,12 @@ operator|->
 name|ui_slave
 operator|)
 expr_stmt|;
+comment|/* 	 * Release unibus resources and flush data paths. 	 */
+name|ubadone
+argument_list|(
+name|um
+argument_list|)
+expr_stmt|;
 name|doattn
 label|:
 comment|/* 	 * Process other units which need attention. 	 * For each unit which needs attention, call 	 * the unit start routine to place the slave 	 * on the controller device queue. 	 */
@@ -3240,6 +3240,23 @@ name|up
 operator|->
 name|upec2
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"npf %d reg %x o %d mask %o pos %d\n"
+argument_list|,
+name|npf
+argument_list|,
+name|reg
+argument_list|,
+name|o
+argument_list|,
+name|mask
+argument_list|,
+name|up
+operator|->
+name|upec1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Flush the buffered data path, and compute the 	 * byte and bit position of the error.  The variable i 	 * is the byte offset in the transfer, the variable byte 	 * is the offset from a page boundary in main memory. 	 */
 name|ubapurge
 argument_list|(
@@ -3330,6 +3347,43 @@ operator|&
 name|PGOFSET
 operator|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"addr %x map reg %x\n"
+argument_list|,
+name|addr
+argument_list|,
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+operator|&
+name|ubp
+operator|->
+name|uba_map
+index|[
+name|reg
+operator|+
+name|btop
+argument_list|(
+name|byte
+argument_list|)
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"old: %x, "
+argument_list|,
+name|getmemc
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|putmemc
 argument_list|(
 name|addr
@@ -3344,6 +3398,16 @@ name|mask
 operator|<<
 name|bit
 operator|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"new: %x\n"
+argument_list|,
+name|getmemc
+argument_list|(
+name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|byte
