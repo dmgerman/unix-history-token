@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -57,9 +57,6 @@ name|dev_t
 name|i_dev
 decl_stmt|;
 comment|/* device where inode resides */
-name|short
-name|i_pad
-decl_stmt|;
 name|ino_t
 name|i_number
 decl_stmt|;
@@ -540,7 +537,7 @@ name|t1
 parameter_list|,
 name|t2
 parameter_list|)
-value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) { \ 			(ip)->i_mtime = (t2)->tv_sec; \ 			INCRQUAD((ip)->i_modrev); \ 		} \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
+value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime.tv_sec = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) { \ 			(ip)->i_mtime.tv_sec = (t2)->tv_sec; \ 			INCRQUAD((ip)->i_modrev); \ 		} \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime.tv_sec = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
 end_define
 
 begin_comment
