@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: dcmreg.h 1.3 89/08/23$  *  *	@(#)dcmreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: dcmreg.h 1.3 89/08/23$  *  *	@(#)dcmreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -38,7 +38,7 @@ index|[
 literal|0x7ffa
 index|]
 decl_stmt|;
-comment|/* Unaddressable   0006-7fff */
+comment|/* Unaddressable	0006-7fff */
 name|u_char
 name|dcm_pad4
 decl_stmt|;
@@ -61,8 +61,9 @@ index|[
 literal|0x3fc
 index|]
 decl_stmt|;
-comment|/* Card scratch    8004-83ff */
+comment|/* Card scratch		8004-83ff */
 struct|struct
+name|dcmrfifo
 block|{
 name|u_char
 name|ptr_pad1
@@ -261,8 +262,9 @@ index|[
 literal|0x98
 index|]
 decl_stmt|;
-comment|/* Undef SR regs   8e48-8edf */
+comment|/* Undef SR regs	8e48-8edf */
 struct|struct
+name|dcmtfifo
 block|{
 name|u_char
 name|ptr_pad1
@@ -284,6 +286,75 @@ comment|/* Transmit queues		8ee0 */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Overlay structure for port specific queue "registers".  * Starts at offset 0x8E00+(port*2).  */
+end_comment
+
+begin_struct
+struct|struct
+name|dcmpreg
+block|{
+name|u_char
+name|pad0
+decl_stmt|;
+comment|/* +00 */
+specifier|volatile
+name|u_char
+name|r_head
+decl_stmt|;
+comment|/* +01 */
+name|u_char
+name|pad1
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/* +02 */
+specifier|volatile
+name|u_char
+name|r_tail
+decl_stmt|;
+comment|/* +09 */
+name|u_char
+name|pad2
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/* +0A */
+specifier|volatile
+name|u_char
+name|t_head
+decl_stmt|;
+comment|/* +11 */
+name|u_char
+name|pad3
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/* +12 */
+specifier|volatile
+name|u_char
+name|t_tail
+decl_stmt|;
+comment|/* +19 */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|dcm_preg
+parameter_list|(
+name|d
+parameter_list|,
+name|p
+parameter_list|)
+value|((struct dcmpreg *)((u_int)(d)+0x8e00+(p)*2))
+end_define
 
 begin_comment
 comment|/* interface reset/id */
@@ -998,7 +1069,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/*  * WARNING: Serial console is assumed to be at SC13  * and CONUNIT must be 1, signeled by REMOTE/LOCAL switch on card  */
+comment|/*  * WARNING: Serial console is assumed to be at SC13  * and CONUNIT must be 1, signaled by REMOTE/LOCAL switch on card  */
 end_comment
 
 begin_define
