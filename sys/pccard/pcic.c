@@ -2183,7 +2183,7 @@ name|free_irqs
 expr_stmt|;
 name|cinfo
 operator|.
-name|pcic_imask
+name|imask
 operator|=
 operator|&
 name|pcic_imask
