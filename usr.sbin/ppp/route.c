@@ -2892,6 +2892,15 @@ name|sa
 index|[
 name|RTAX_DST
 index|]
+operator|&&
+name|sa
+index|[
+name|RTAX_DST
+index|]
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
 condition|)
 block|{
 name|log_Printf
