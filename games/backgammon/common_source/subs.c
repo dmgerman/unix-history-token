@@ -104,23 +104,23 @@ name|descr
 index|[]
 init|=
 block|{
-literal|"Usage:  backgammon [-] [n r w b pr pw pb t3a]\n"
+literal|"Usage:  backgammon [-h n r w b pr pw pb tterm sfile]\n"
 block|,
-literal|"\t-\tgets this list\n\tn\tdon't ask for rules or instructions"
+literal|"\t-h\tgets this list\n\t-n\tdon't ask for rules or instructions"
 block|,
-literal|"\tr\tplayer is red (implies n)\n\tw\tplayer is white (implies n)"
+literal|"\t-r\tplayer is red (implies -n)\n\t-w\tplayer is white (implies -n)"
 block|,
-literal|"\tb\ttwo players, red and white (implies n)"
+literal|"\t-b\ttwo players, red and white (implies -n)"
 block|,
-literal|"\tpr\tprint the board before red's turn"
+literal|"\t-pr\tprint the board before red's turn"
 block|,
-literal|"\tpw\tprint the board before white's turn"
+literal|"\t-pw\tprint the board before white's turn"
 block|,
-literal|"\tpb\tprint the board before both player's turn"
+literal|"\t-pb\tprint the board before both player's turn"
 block|,
-literal|"\tterm\tterminal is a term"
+literal|"\t-tterm\tterminal is a term"
 block|,
-literal|"\tsfile\trecover saved game from file"
+literal|"\t-sfile\trecover saved game from file"
 block|,
 literal|0
 block|}
@@ -1239,6 +1239,9 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/* process arguments here.  dashes are ignored, nbrw are ignored 	   if the game is being recovered */
 while|while
 condition|(
@@ -1251,7 +1254,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"nbrwp:t:s:"
+literal|"nbrwp:t:s:h"
 argument_list|)
 operator|)
 operator|!=
@@ -1491,6 +1494,36 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'h'
+case|:
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|descr
+index|[
+name|i
+index|]
+operator|!=
+literal|0
+condition|;
+name|i
+operator|++
+control|)
+name|puts
+argument_list|(
+name|descr
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|getout
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 name|argc
