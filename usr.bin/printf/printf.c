@@ -464,7 +464,7 @@ literal|"#-+ 0"
 expr_stmt|;
 name|skip2
 operator|=
-literal|"*0123456789"
+literal|"0123456789"
 expr_stmt|;
 name|escape
 argument_list|(
@@ -651,8 +651,12 @@ operator|(
 literal|1
 operator|)
 return|;
+operator|++
+name|fmt
+expr_stmt|;
 block|}
 else|else
+block|{
 name|fieldwidth
 operator|=
 literal|0
@@ -673,6 +677,7 @@ operator|++
 name|fmt
 control|)
 empty_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -680,6 +685,8 @@ name|fmt
 operator|==
 literal|'.'
 condition|)
+block|{
+comment|/* precision present? */
 operator|++
 name|fmt
 expr_stmt|;
@@ -704,8 +711,12 @@ operator|(
 literal|1
 operator|)
 return|;
+operator|++
+name|fmt
+expr_stmt|;
 block|}
 else|else
+block|{
 name|precision
 operator|=
 literal|0
@@ -726,6 +737,13 @@ operator|++
 name|fmt
 control|)
 empty_stmt|;
+block|}
+block|}
+else|else
+name|precision
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -916,9 +934,9 @@ block|}
 default|default:
 name|warnx
 argument_list|(
-literal|"illegal format character"
+literal|"illegal format character %c"
 argument_list|,
-name|NULL
+name|convch
 argument_list|,
 name|NULL
 argument_list|)
