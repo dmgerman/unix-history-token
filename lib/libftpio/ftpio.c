@@ -3133,7 +3133,15 @@ name|con_state
 operator|=
 name|quit
 expr_stmt|;
-comment|/* Debug("ftp_pkg: in ftp_close(), sending QUIT"); */
+comment|/* If last operation timed out, don't try to quit - just close */
+if|if
+condition|(
+name|ftp
+operator|->
+name|errno
+operator|!=
+name|FTP_TIMED_OUT
+condition|)
 name|i
 operator|=
 name|cmd
@@ -3142,6 +3150,11 @@ name|ftp
 argument_list|,
 literal|"QUIT"
 argument_list|)
+expr_stmt|;
+else|else
+name|i
+operator|=
+name|FTP_QUIT_HAPPY
 expr_stmt|;
 name|close
 argument_list|(
