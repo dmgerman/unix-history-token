@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: domainname.c,v 1.3 1994/09/21 22:30:55 bde Exp $"
+literal|"$Id: domainname.c,v 1.4 1994/09/26 02:14:27 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,9 +112,6 @@ index|[]
 decl_stmt|;
 block|{
 name|char
-modifier|*
-name|p
-decl_stmt|,
 name|domainname
 index|[
 name|MAXHOSTNAMELEN

@@ -4,7 +4,7 @@ comment|/* main.c: This file contains the main control and user-interface routin
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.3 1994/09/24 02:55:28 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -665,6 +665,7 @@ directive|ifdef
 name|_POSIX_SOURCE
 if|if
 condition|(
+operator|(
 name|status
 operator|=
 name|sigsetjmp
@@ -673,17 +674,20 @@ name|env
 argument_list|,
 literal|1
 argument_list|)
+operator|)
 condition|)
 else|#
 directive|else
 if|if
 condition|(
+operator|(
 name|status
 operator|=
 name|setjmp
 argument_list|(
 name|env
 argument_list|)
+operator|)
 condition|)
 endif|#
 directive|endif
@@ -1014,8 +1018,6 @@ condition|(
 operator|!
 name|status
 operator|||
-name|status
-operator|&&
 operator|(
 name|status
 operator|=
@@ -2389,6 +2391,7 @@ return|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 operator|(
@@ -2399,6 +2402,7 @@ operator|||
 name|c
 operator|==
 literal|'V'
+operator|)
 operator|)
 condition|)
 name|GET_COMMAND_SUFFIX
@@ -3937,7 +3941,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d\n"
+literal|"%ld\n"
 argument_list|,
 name|addr_cnt
 condition|?
@@ -4201,6 +4205,7 @@ do|do
 block|{
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|dir
@@ -4218,6 +4223,7 @@ name|n
 argument_list|,
 name|addr_last
 argument_list|)
+operator|)
 condition|)
 block|{
 name|lp
@@ -6466,6 +6472,7 @@ expr_stmt|;
 comment|/* assert: no trailing escape */
 while|while
 condition|(
+operator|(
 name|file
 index|[
 name|i
@@ -6485,6 +6492,7 @@ name|s
 else|:
 operator|*
 name|s
+operator|)
 condition|)
 name|s
 operator|++

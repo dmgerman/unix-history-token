@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: options.c,v 1.2 1994/09/24 02:56:22 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -348,6 +348,7 @@ index|[]
 init|=
 block|{
 comment|/* 0: OLD BINARY CPIO */
+block|{
 literal|"bcpio"
 block|,
 literal|5120
@@ -386,8 +387,10 @@ block|,
 name|wr_rdfile
 block|,
 name|bad_opt
+block|}
 block|,
 comment|/* 1: OLD OCTAL CHARACTER CPIO */
+block|{
 literal|"cpio"
 block|,
 literal|5120
@@ -426,8 +429,10 @@ block|,
 name|wr_rdfile
 block|,
 name|bad_opt
+block|}
 block|,
 comment|/* 2: SVR4 HEX CPIO */
+block|{
 literal|"sv4cpio"
 block|,
 literal|5120
@@ -466,8 +471,10 @@ block|,
 name|wr_rdfile
 block|,
 name|bad_opt
+block|}
 block|,
 comment|/* 3: SVR4 HEX CPIO WITH CRC */
+block|{
 literal|"sv4crc"
 block|,
 literal|5120
@@ -506,8 +513,10 @@ block|,
 name|wr_rdfile
 block|,
 name|bad_opt
+block|}
 block|,
 comment|/* 4: OLD TAR */
+block|{
 literal|"tar"
 block|,
 literal|10240
@@ -543,8 +552,10 @@ block|,
 name|wr_rdfile
 block|,
 name|tar_opt
+block|}
 block|,
 comment|/* 5: POSIX USTAR */
+block|{
 literal|"ustar"
 block|,
 literal|10240
@@ -580,6 +591,7 @@ block|,
 name|wr_rdfile
 block|,
 name|bad_opt
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1260,6 +1272,7 @@ name|optarg
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|frmt
 operator|=
 operator|(
@@ -1298,6 +1311,7 @@ argument_list|)
 argument_list|,
 name|c_frmt
 argument_list|)
+operator|)
 condition|)
 block|{
 name|flg
@@ -2652,12 +2666,14 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|nxt
 operator|=
 name|ffs
 argument_list|(
 name|flg
 argument_list|)
+operator|)
 condition|)
 block|{
 name|flg
