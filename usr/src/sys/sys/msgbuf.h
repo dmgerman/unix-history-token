@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	msgbuf.h	4.2	81/02/19	*/
+comment|/*	msgbuf.h	4.3	81/08/30	*/
 end_comment
 
 begin_define
@@ -14,7 +14,7 @@ begin_define
 define|#
 directive|define
 name|MSG_BSIZE
-value|(NBPG*CLSIZE - 2 * sizeof (long))
+value|(4096 - 2 * sizeof (long))
 end_define
 
 begin_struct
