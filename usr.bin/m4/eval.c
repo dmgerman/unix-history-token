@@ -1064,6 +1064,9 @@ case|case
 name|EXITTYPE
 case|:
 comment|/* 	 * doexit - immediate exit from m4. 	 */
+name|killdiv
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 operator|(
