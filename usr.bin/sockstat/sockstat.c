@@ -1037,6 +1037,10 @@ name|xinpgen
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 operator|(
 name|char
 operator|*
@@ -1118,6 +1122,10 @@ operator|=
 operator|(
 expr|struct
 name|xinpgen
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -1744,6 +1752,10 @@ name|xunpgen
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 operator|(
 name|char
 operator|*
@@ -1828,6 +1840,10 @@ operator|=
 operator|(
 expr|struct
 name|xunpgen
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -1985,6 +2001,10 @@ operator|*
 operator|(
 expr|struct
 name|sockaddr_storage
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
