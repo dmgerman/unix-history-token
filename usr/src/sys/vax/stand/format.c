@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	7.1 (Berkeley) %G%"
+literal|"@(#)format.c	7.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,31 +53,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dkbad.h"
+file|"dkbad.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vmmac.h"
+file|"vmmac.h"
 end_include
 
 begin_include
@@ -1057,7 +1057,7 @@ name|sn
 operator|*
 name|SECTSIZ
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -1166,7 +1166,7 @@ name|sn
 operator|*
 name|SECTSIZ
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|cc
@@ -1641,7 +1641,7 @@ operator|+
 name|i
 operator|)
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|write
@@ -2102,7 +2102,7 @@ name|bn
 operator|*
 name|SECTSIZ
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -2191,7 +2191,7 @@ name|bn
 operator|*
 name|SECTSIZ
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 name|ioctl
@@ -2717,17 +2717,13 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
-name|struct
-name|devsw
-modifier|*
-name|dp
-decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
 name|top
 label|:
+do|do
+block|{
 name|cp
 operator|=
 name|prompt
@@ -2735,7 +2731,8 @@ argument_list|(
 literal|"Device to format? "
 argument_list|)
 expr_stmt|;
-if|if
+block|}
+do|while
 condition|(
 operator|(
 name|fd
@@ -2750,43 +2747,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Known devices are: "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|dp
-operator|=
-name|devsw
-init|;
-name|dp
-operator|->
-name|dv_name
-condition|;
-name|dp
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"%s "
-argument_list|,
-name|dp
-operator|->
-name|dv_name
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|top
-goto|;
-block|}
+do|;
 name|printf
 argument_list|(
 literal|"Formatting drive %c%c%d on adaptor %d: "
