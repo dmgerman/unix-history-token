@@ -733,13 +733,6 @@ name|logical_cpus
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|u_int
-name|logical_cpus_mask
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* used to hold the AP's until we are ready to release them */
 end_comment
@@ -862,13 +855,6 @@ name|dummy
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|int
-name|hlt_cpus_mask
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
