@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.81 (Berkeley) %G%"
+literal|"@(#)conf.c	8.82 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2978,7 +2978,6 @@ name|int
 name|getla
 parameter_list|()
 block|{
-specifier|register
 name|double
 name|avenrun
 decl_stmt|;
@@ -2986,20 +2985,10 @@ specifier|register
 name|int
 name|result
 decl_stmt|;
-specifier|static
 name|FILE
 modifier|*
 name|fp
-init|=
-name|NULL
 decl_stmt|;
-if|if
-condition|(
-name|fp
-operator|==
-name|NULL
-condition|)
-block|{
 name|fp
 operator|=
 name|fopen
@@ -3042,15 +3031,6 @@ operator|-
 literal|1
 return|;
 block|}
-block|}
-operator|(
-name|void
-operator|)
-name|rewind
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 name|fscanf
@@ -3061,6 +3041,11 @@ literal|"%lf"
 argument_list|,
 operator|&
 name|avenrun
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
