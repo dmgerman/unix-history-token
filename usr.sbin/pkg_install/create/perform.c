@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.28 1995/10/25 15:38:01 jkh Exp $"
+literal|"$Id: perform.c,v 1.29 1996/02/06 22:49:11 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1084,6 +1084,14 @@ literal|0
 index|]
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|pipefds
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|close
