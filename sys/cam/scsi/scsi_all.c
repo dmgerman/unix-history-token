@@ -11257,7 +11257,7 @@ name|T_STORARRAY
 case|:
 name|dtype
 operator|=
-literal|"Storage Arrray"
+literal|"Storage Array"
 expr_stmt|;
 break|break;
 case|case
