@@ -3499,12 +3499,12 @@ argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
-name|pipeunlock
+name|pipeselwakeup
 argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
-name|pipeselwakeup
+name|pipeunlock
 argument_list|(
 name|wpipe
 argument_list|)
