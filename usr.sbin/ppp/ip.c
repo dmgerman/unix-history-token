@@ -563,6 +563,7 @@ return|;
 comment|/* permit fragments on in and out filter */
 return|return
 operator|(
+operator|!
 name|filter
 operator|->
 name|fragok
