@@ -37,6 +37,109 @@ name|_ANSI_SOURCE
 end_ifndef
 
 begin_comment
+comment|/* portable macros for SIGFPE/ARITHTRAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_INTOVF
+value|1
+end_define
+
+begin_comment
+comment|/* integer overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_INTDIV
+value|2
+end_define
+
+begin_comment
+comment|/* integer divide by zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTDIV
+value|3
+end_define
+
+begin_comment
+comment|/* floating point divide by zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTOVF
+value|4
+end_define
+
+begin_comment
+comment|/* floating point overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTUND
+value|5
+end_define
+
+begin_comment
+comment|/* floating point underflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTRES
+value|6
+end_define
+
+begin_comment
+comment|/* floating point inexact result */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTINV
+value|7
+end_define
+
+begin_comment
+comment|/* invalid floating point operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPE_FLTSUB
+value|8
+end_define
+
+begin_comment
+comment|/* subscript out of range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_SEGM_FAULT
+value|30
+end_define
+
+begin_comment
+comment|/* segment protection base */
+end_comment
+
+begin_comment
 comment|/*  * Minimum signal stack size. The current signal frame  * for IA-64 is 2656 bytes large.  */
 end_comment
 
