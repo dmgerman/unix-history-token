@@ -624,6 +624,17 @@ operator|->
 name|mediasize
 argument_list|)
 expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\t<sectorsize>%u</sectorsize>\n"
+argument_list|,
+name|pp
+operator|->
+name|sectorsize
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pp

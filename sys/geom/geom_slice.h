@@ -25,6 +25,9 @@ decl_stmt|;
 name|off_t
 name|length
 decl_stmt|;
+name|u_int
+name|sectorsize
+decl_stmt|;
 name|struct
 name|g_provider
 modifier|*
@@ -106,6 +109,9 @@ parameter_list|,
 name|off_t
 name|length
 parameter_list|,
+name|u_int
+name|sectorsize
+parameter_list|,
 name|char
 modifier|*
 name|fmt
@@ -135,6 +141,9 @@ name|offset
 parameter_list|,
 name|off_t
 name|length
+parameter_list|,
+name|u_int
+name|sectorsize
 parameter_list|,
 name|char
 modifier|*

@@ -1178,7 +1178,6 @@ argument_list|,
 name|i
 argument_list|,
 operator|(
-operator|(
 name|off_t
 operator|)
 name|dp
@@ -1187,11 +1186,9 @@ name|i
 index|]
 operator|.
 name|dp_start
-operator|)
 operator|<<
 literal|9ULL
 argument_list|,
-operator|(
 operator|(
 name|off_t
 operator|)
@@ -1201,9 +1198,10 @@ name|i
 index|]
 operator|.
 name|dp_size
-operator|)
 operator|<<
 literal|9ULL
+argument_list|,
+name|sectorsize
 argument_list|,
 literal|"%ss%d"
 argument_list|,
@@ -2036,6 +2034,8 @@ name|dp_size
 operator|)
 operator|<<
 literal|9ULL
+argument_list|,
+name|sectorsize
 argument_list|,
 literal|"%*.*s%d"
 argument_list|,

@@ -398,6 +398,14 @@ name|dp
 operator|->
 name|d_mediasize
 expr_stmt|;
+name|pp
+operator|->
+name|sectorsize
+operator|=
+name|dp
+operator|->
+name|d_sectorsize
+expr_stmt|;
 return|return
 operator|(
 name|error

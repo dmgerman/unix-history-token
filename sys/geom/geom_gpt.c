@@ -971,6 +971,8 @@ operator|)
 operator|*
 name|secsz
 argument_list|,
+name|secsz
+argument_list|,
 literal|"%s%c%d"
 argument_list|,
 name|gp

@@ -883,6 +883,8 @@ operator|)
 operator|<<
 literal|9ULL
 argument_list|,
+name|sectorsize
+argument_list|,
 literal|"%s%c"
 argument_list|,
 name|pp

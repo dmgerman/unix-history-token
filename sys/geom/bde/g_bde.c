@@ -1262,6 +1262,14 @@ name|sc
 operator|->
 name|mediasize
 expr_stmt|;
+name|pp
+operator|->
+name|sectorsize
+operator|=
+name|sc
+operator|->
+name|sectorsize
+expr_stmt|;
 name|g_error_provider
 argument_list|(
 name|pp

@@ -2006,6 +2006,10 @@ name|dl
 operator|->
 name|d_secsize
 argument_list|,
+name|dl
+operator|->
+name|d_secsize
+argument_list|,
 literal|"%s%c"
 argument_list|,
 name|gp
@@ -2085,6 +2089,10 @@ name|ppp
 operator|->
 name|p_size
 operator|*
+name|dl
+operator|->
+name|d_secsize
+argument_list|,
 name|dl
 operator|->
 name|d_secsize

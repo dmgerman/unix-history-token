@@ -767,6 +767,8 @@ name|start
 argument_list|,
 name|length
 argument_list|,
+name|sectorsize
+argument_list|,
 literal|"%ss%d"
 argument_list|,
 name|pp

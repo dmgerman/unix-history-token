@@ -552,6 +552,9 @@ decl_stmt|;
 name|off_t
 name|mediasize
 decl_stmt|;
+name|u_int
+name|sectorsize
+decl_stmt|;
 block|}
 struct|;
 end_struct
