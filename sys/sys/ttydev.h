@@ -151,6 +151,20 @@ name|B115200
 value|17
 end_define
 
+begin_define
+define|#
+directive|define
+name|B230400
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|B460800
+value|19
+end_define
+
 begin_endif
 endif|#
 directive|endif
