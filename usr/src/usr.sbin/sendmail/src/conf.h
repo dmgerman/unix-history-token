@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.181 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.182 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2656,17 +2656,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  386BSD / FreeBSD 1.0E / NetBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD ** **	See also BSD defines. */
+comment|/* **  FreeBSD / NetBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD	for FreeBSD 1.x and NetBSD 0.9x **  4.4BSD-Lite based			for FreeBSD 2.x and NetBSD 1.x ** **	See also BSD defines. */
 end_comment
 
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__386BSD__
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|__FreeBSD__
@@ -2711,12 +2706,6 @@ begin_comment
 comment|/* has useable seteuid(2) call */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -2727,11 +2716,6 @@ end_define
 begin_comment
 comment|/* has uname(2) syscall */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2768,6 +2752,13 @@ end_define
 begin_comment
 comment|/* supports AF_LINK */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
 
 begin_ifndef
 ifndef|#
