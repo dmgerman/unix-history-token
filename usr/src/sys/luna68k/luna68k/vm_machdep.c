@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  * OMRON: $Id: vm_machdep.c,v 1.2 92/06/14 06:24:23 moti Exp $  *  * from: hp300/hp300/vm_machdep.c	7.12 (Berkeley) 6/5/92  *  *	@(#)vm_machdep.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  * OMRON: $Id: vm_machdep.c,v 1.2 92/06/14 06:24:23 moti Exp $  *  * from: hp300/hp300/vm_machdep.c	7.12 (Berkeley) 6/5/92  *  *	@(#)vm_machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pte.h>
+file|<luna68k/luna68k/pte.h>
 end_include
 
 begin_comment
