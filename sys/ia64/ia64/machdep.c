@@ -4239,7 +4239,8 @@ name|tf_cr_ipsr
 operator|=
 operator|(
 name|IA64_PSR_IC
-comment|/* | IA64_PSR_I XXX not yet */
+operator||
+name|IA64_PSR_I
 operator||
 name|IA64_PSR_IT
 operator||

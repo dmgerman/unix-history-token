@@ -535,6 +535,12 @@ operator|/
 name|hz
 argument_list|)
 expr_stmt|;
+name|ia64_set_itv
+argument_list|(
+literal|240
+argument_list|)
+expr_stmt|;
+comment|/* highest priority class */
 name|freq
 operator|=
 name|cycles_per_sec

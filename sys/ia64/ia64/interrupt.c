@@ -213,68 +213,146 @@ begin_function
 name|void
 name|interrupt
 parameter_list|(
-name|a0
+name|u_int64_t
+name|vector
 parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|,
-name|framep
-parameter_list|)
-name|unsigned
-name|long
-name|a0
-decl_stmt|,
-name|a1
-decl_stmt|,
-name|a2
-decl_stmt|;
 name|struct
 name|trapframe
 modifier|*
 name|framep
-decl_stmt|;
+parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* 	 * Find our per-cpu globals. 	 */
-block|globalp = (struct globaldata *) alpha_pal_rdval();  	atomic_add_int(&PCPU_GET(intr_nesting_level), 1); 	{ 		struct proc* p = curproc; 		if (!p) p =&proc0; 		if ((caddr_t) framep< (caddr_t) p->p_addr + 1024) { 			mtx_enter(&Giant, MTX_DEF); 			panic("possible stack overflow\n"); 		} 	}  	framep->tf_regs[FRAME_TRAPARG_A0] = a0; 	framep->tf_regs[FRAME_TRAPARG_A1] = a1; 	framep->tf_regs[FRAME_TRAPARG_A2] = a2; 	switch (a0) { 	case ALPHA_INTR_XPROC:
-comment|/* interprocessor interrupt */
-block|CTR0(KTR_INTR|KTR_SMP, "interprocessor interrupt"); 		smp_handle_ipi(framep);
-comment|/* note: lock not taken */
-block|break; 		 	case ALPHA_INTR_CLOCK:
+name|atomic_add_int
+argument_list|(
+operator|&
+name|PCPU_GET
+argument_list|(
+name|intr_nesting_level
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|vector
+condition|)
+block|{
+case|case
+literal|240
+case|:
 comment|/* clock interrupt */
-block|CTR0(KTR_INTR, "clock interrupt"); 		if (PCPU_GET(cpuno) != hwrpb->rpb_primary_cpu_id) { 			CTR0(KTR_INTR, "ignoring clock on secondary"); 			return; 		} 			 		mtx_enter(&Giant, MTX_DEF); 		cnt.v_intr++;
+name|CTR0
+argument_list|(
+name|KTR_INTR
+argument_list|,
+literal|"clock interrupt"
+argument_list|)
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|cnt
+operator|.
+name|v_intr
+operator|++
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|EVCNT_COUNTERS
-block|clock_intr_evcnt.ev_count++;
+name|clock_intr_evcnt
+operator|.
+name|ev_count
+operator|++
+expr_stmt|;
 else|#
 directive|else
-block|intrcnt[INTRCNT_CLOCK]++;
+name|intrcnt
+index|[
+name|INTRCNT_CLOCK
+index|]
+operator|++
+expr_stmt|;
 endif|#
 directive|endif
-block|if (platform.clockintr){ 			(*platform.clockintr)(framep);
+name|hardclock
+argument_list|(
+operator|(
+expr|struct
+name|clockframe
+operator|*
+operator|)
+name|framep
+argument_list|)
+expr_stmt|;
+name|setdelayed
+argument_list|()
+expr_stmt|;
 comment|/* divide hz (1024) by 8 to get stathz (128) */
-block|if((++schedclk2& 0x7) == 0) 				statclock((struct clockframe *)framep); 		} 		mtx_exit(&Giant, MTX_DEF); 		break;  	case  ALPHA_INTR_ERROR:
-comment|/* Machine Check or Correctable Error */
-block|mtx_enter(&Giant, MTX_DEF); 		a0 = alpha_pal_rdmces(); 		if (platform.mcheck_handler) 			(*platform.mcheck_handler)(a0, framep, a1, a2); 		else 			machine_check(a0, framep, a1, a2); 		mtx_exit(&Giant, MTX_DEF); 		break;  	case ALPHA_INTR_DEVICE:
-comment|/* I/O device interrupt */
-block|mtx_enter(&Giant, MTX_DEF); 		cnt.v_intr++; 		if (platform.iointr) 			(*platform.iointr)(framep, a1); 		mtx_exit(&Giant, MTX_DEF); 		break;  	case ALPHA_INTR_PERF:
-comment|/* interprocessor interrupt */
-block|mtx_enter(&Giant, MTX_DEF); 		perf_irq(a1, framep); 		mtx_exit(&Giant, MTX_DEF); 		break;  	case ALPHA_INTR_PASSIVE:
-if|#
-directive|if
+if|if
+condition|(
+operator|(
+operator|++
+name|schedclk2
+operator|&
+literal|0x7
+operator|)
+operator|==
 literal|0
-block|printf("passive release interrupt vec 0x%lx (ignoring)\n", a1);
-endif|#
-directive|endif
-block|break;  	default: 		mtx_enter(&Giant, MTX_DEF); 		panic("unexpected interrupt: type 0x%lx vec 0x%lx a2 0x%lx\n", 		    a0, a1, a2);
+condition|)
+name|statclock
+argument_list|(
+operator|(
+expr|struct
+name|clockframe
+operator|*
+operator|)
+name|framep
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"unexpected interrupt: vec %ld\n"
+argument_list|,
+name|vector
+argument_list|)
+expr_stmt|;
 comment|/* NOTREACHED */
-block|} 	atomic_subtract_int(&PCPU_GET(intr_nesting_level), 1);
-endif|#
-directive|endif
+block|}
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|PCPU_GET
+argument_list|(
+name|intr_nesting_level
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

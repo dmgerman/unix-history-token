@@ -1240,6 +1240,24 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Write the value of ar.itv.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_itv
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov cr.itv=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
 comment|/*  * Write a region register.  */
 end_comment
 

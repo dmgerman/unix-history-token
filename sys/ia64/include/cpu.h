@@ -605,14 +605,7 @@ name|interrupt
 name|__P
 argument_list|(
 operator|(
-name|unsigned
-name|long
-operator|,
-name|unsigned
-name|long
-operator|,
-name|unsigned
-name|long
+name|u_int64_t
 operator|,
 expr|struct
 name|trapframe
