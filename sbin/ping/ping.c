@@ -535,6 +535,13 @@ name|F_MISSED
 value|0x10000
 end_define
 
+begin_define
+define|#
+directive|define
+name|F_ONCE
+value|0x20000
+end_define
+
 begin_comment
 comment|/*  * MAX_DUP_CHK is the number of bits in received table, i.e. the maximum  * number of received sequence numbers we can keep track of.  Change 128  * to 8192 for complete accuracy...  */
 end_comment
@@ -1226,7 +1233,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AI:LQRS:T:c:adfi:l:m:np:qrs:t:v"
+literal|"AI:LQRS:T:c:adfi:l:m:nop:qrs:t:v"
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -1585,6 +1592,14 @@ case|:
 name|options
 operator||=
 name|F_NUMERIC
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|options
+operator||=
+name|F_ONCE
 expr_stmt|;
 break|break;
 case|case
@@ -3742,6 +3757,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|options
+operator|&
+name|F_ONCE
+operator|&&
+name|nreceived
+operator|||
 name|npackets
 operator|&&
 name|nreceived
@@ -7401,7 +7422,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ping [-AQRadfnqrv] [-c count] [-i wait] [-l preload] [-m ttl]"
+literal|"usage: ping [-AQRadfnoqrv] [-c count] [-i wait] [-l preload] [-m ttl]"
 argument_list|,
 literal|"            [-p pattern] "
 ifdef|#
