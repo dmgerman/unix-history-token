@@ -19,50 +19,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Establish/disestablish interrupts for PCCARD functions.  */
-end_comment
-
-begin_function_decl
-name|void
-modifier|*
-name|pcic_isa_chip_intr_establish
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|struct
-name|pccard_function
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pcic_isa_chip_intr_disestablish
-parameter_list|(
-name|pccard_chipset_handle_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Figure out how wide the ISA bus is...  */
 end_comment
 
