@@ -5701,7 +5701,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* If we're debugging, probe/attach now rather than later */
+comment|/* If order was overridden, probe/attach now rather than later. */
 if|if
 condition|(
 name|probe_now
@@ -5709,14 +5709,6 @@ condition|)
 name|device_probe_and_attach
 argument_list|(
 name|child
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_EXEC
-argument_list|(
-name|device_probe_and_attach
-argument_list|(
-name|child
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
