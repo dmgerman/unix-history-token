@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -28,8 +28,19 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-return|return
-operator|(
+name|long
+name|long
+name|r
+decl_stmt|;
+name|int
+name|saverr
+decl_stmt|;
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
+name|r
+operator|=
 name|strtoll
 argument_list|(
 name|str
@@ -43,7 +54,13 @@ name|NULL
 argument_list|,
 literal|10
 argument_list|)
-operator|)
+expr_stmt|;
+name|errno
+operator|=
+name|saverr
+expr_stmt|;
+return|return
+name|r
 return|;
 block|}
 end_function
