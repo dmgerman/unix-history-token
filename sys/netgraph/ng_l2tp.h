@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_L2TP_COOKIE
-value|1011392401
+value|1091448040
 end_define
 
 begin_comment
@@ -84,6 +84,45 @@ end_define
 begin_comment
 comment|/* session data hook (format) */
 end_comment
+
+begin_comment
+comment|/* Set intial sequence numbers to not yet enabled node. */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_l2tp_seq_config
+block|{
+name|u_int16_t
+name|ns
+decl_stmt|;
+comment|/* sequence number to send next */
+name|u_int16_t
+name|nr
+decl_stmt|;
+comment|/* sequence number to be recved next */
+name|u_int16_t
+name|rack
+decl_stmt|;
+comment|/* last 'nr' received */
+name|u_int16_t
+name|xack
+decl_stmt|;
+comment|/* last 'nr' sent */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_L2TP_SEQ_CONFIG_TYPE_INFO
+value|{			\ 	  { "ns",&ng_parse_uint16_type	},	\ 	  { "nr",&ng_parse_uint16_type	},	\ 	  { NULL }						\ }
+end_define
 
 begin_comment
 comment|/* Configuration for a node */
@@ -315,6 +354,8 @@ comment|/* returns& clears stats */
 name|NGM_L2TP_ACK_FAILURE
 block|,
 comment|/* sent *from* node after ack timeout */
+name|NGM_L2TP_SET_SEQ
+comment|/* supply a struct ng_l2tp_seq_config */
 block|}
 enum|;
 end_enum
