@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.30 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -2325,6 +2325,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|u_int
+name|__hash
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|__id_subwins
 name|__P
@@ -2457,6 +2472,22 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__waddch
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|,
+name|__LDATA
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
