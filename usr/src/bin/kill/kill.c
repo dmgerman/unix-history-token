@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kill.c	5.6 (Berkeley) %G%"
+literal|"@(#)kill.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -80,12 +92,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_decl_stmt
@@ -127,6 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -138,8 +145,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -323,26 +330,16 @@ operator|||
 operator|*
 name|ep
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"kill: illegal signal number %s\n"
+literal|"illegal signal number: %s"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|numsig
@@ -416,21 +413,20 @@ operator|*
 name|ep
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"kill: illegal process id %s\n"
+literal|"illegal process id: %s"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|errors
+operator|=
+literal|1
+expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|kill
@@ -444,22 +440,12 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"kill: %s: %s\n"
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|errors
