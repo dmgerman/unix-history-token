@@ -815,6 +815,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|reset_fbtab
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -1091,6 +1105,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Read the FBTAB file and check if we have to reset perms/ownership */
+name|reset_fbtab
+argument_list|(
+name|ttyn
+argument_list|)
+expr_stmt|;
 name|gettable
 argument_list|(
 literal|"default"

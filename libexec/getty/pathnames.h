@@ -23,5 +23,19 @@ name|_PATH_LOGIN
 value|"/usr/bin/login"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_FBTAB
+value|"/etc/fbtab"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_LOGINDEVPERM
+value|"/etc/logindevperm"
+end_define
+
 end_unit
 
