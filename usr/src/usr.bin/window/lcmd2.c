@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.19 (Berkeley) %G%"
+literal|"@(#)lcmd2.c	3.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -431,7 +431,7 @@ name|w
 operator|=
 name|openiwin
 argument_list|(
-literal|6
+literal|8
 argument_list|,
 literal|"Timing and Resource Usage"
 argument_list|)
@@ -535,14 +535,20 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"time\t\tutime\t\tstime\t\tmaxrss\tixrss\tidrss\tisrss\n"
+literal|"%-15s %-15s %-15s\n"
+argument_list|,
+literal|"time"
+argument_list|,
+literal|"utime"
+argument_list|,
+literal|"stime"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%-16s"
+literal|"%-15s "
 argument_list|,
 name|strtime
 argument_list|(
@@ -555,7 +561,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%-16s"
+literal|"%-15s "
 argument_list|,
 name|strtime
 argument_list|(
@@ -570,7 +576,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%-16s"
+literal|"%-15s\n"
 argument_list|,
 name|strtime
 argument_list|(
@@ -585,7 +591,22 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%ld\t%ld\t%ld\t%ld\n"
+literal|"%-15s %-15s %-15s %-15s\n"
+argument_list|,
+literal|"maxrss"
+argument_list|,
+literal|"ixrss"
+argument_list|,
+literal|"idrss"
+argument_list|,
+literal|"isrss"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"%-15ld %-15ld %-15ld %-15ld\n"
 argument_list|,
 name|rusage
 operator|.
@@ -608,14 +629,34 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"minflt\tmajflt\tnswap\tinblk\toublk\tmsgsnd\tmsgrcv\tnsigs\tnvcsw\tnivcsw\n"
+literal|"%-7s %-7s %-7s %-7s %-7s %-7s %-7s %-7s %-7s %-7s\n"
+argument_list|,
+literal|"minflt"
+argument_list|,
+literal|"majflt"
+argument_list|,
+literal|"nswap"
+argument_list|,
+literal|"inblk"
+argument_list|,
+literal|"oublk"
+argument_list|,
+literal|"msgsnd"
+argument_list|,
+literal|"msgrcv"
+argument_list|,
+literal|"nsigs"
+argument_list|,
+literal|"nvcsw"
+argument_list|,
+literal|"nivcsw"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%ld\t%ld\t%ld\t%ld\t%ld\t%ld\t%ld\t%ld\t%ld\t%ld\n"
+literal|"%-7ld %-7ld %-7ld %-7ld %-7ld %-7ld %-7ld %-7ld %-7ld %-7ld\n"
 argument_list|,
 name|rusage
 operator|.
