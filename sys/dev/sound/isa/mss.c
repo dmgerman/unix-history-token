@@ -55,16 +55,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|abs
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)< 0) ? -(x) : (x))
-end_define
-
-begin_define
-define|#
-directive|define
 name|MSS_INDEXED_REGS
 value|0x20
 end_define

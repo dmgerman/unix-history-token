@@ -328,62 +328,6 @@ parameter_list|)
 value|(((unit)<< 1) | ((block) ? 0:1))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|max
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|max
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|((x)> (y) ? (x) : (y))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|min
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|((x)< (y) ? (x) : (y))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|abs
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)< 0) ? -(x) : (x))
-end_define
-
 begin_comment
 comment|/* ring buffer */
 end_comment
@@ -6468,9 +6412,9 @@ index|]
 expr_stmt|;
 name|i
 operator|=
-name|max
+name|imax
 argument_list|(
-name|min
+name|imin
 argument_list|(
 name|status
 operator|->
@@ -6505,9 +6449,9 @@ name|i
 expr_stmt|;
 name|i
 operator|=
-name|max
+name|imax
 argument_list|(
-name|min
+name|imin
 argument_list|(
 name|status
 operator|->
@@ -6574,9 +6518,9 @@ index|]
 expr_stmt|;
 name|i
 operator|=
-name|max
+name|imax
 argument_list|(
-name|min
+name|imin
 argument_list|(
 name|status
 operator|->
@@ -6612,9 +6556,9 @@ index|]
 expr_stmt|;
 name|i
 operator|=
-name|max
+name|imax
 argument_list|(
-name|min
+name|imin
 argument_list|(
 name|status
 operator|->
@@ -6650,9 +6594,9 @@ index|]
 expr_stmt|;
 name|i
 operator|=
-name|max
+name|imax
 argument_list|(
-name|min
+name|imin
 argument_list|(
 name|status
 operator|->
@@ -6926,7 +6870,7 @@ argument_list|()
 expr_stmt|;
 name|l
 operator|=
-name|min
+name|imin
 argument_list|(
 name|sc
 operator|->
@@ -11195,7 +11139,7 @@ condition|)
 block|{
 name|l
 operator|=
-name|min
+name|imin
 argument_list|(
 name|sc
 operator|->
