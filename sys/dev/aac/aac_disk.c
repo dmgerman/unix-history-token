@@ -337,6 +337,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|AAC_MAXIO
+value|65536
+end_define
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -365,7 +372,7 @@ name|unsigned
 name|int
 name|aac_iosize_max
 init|=
-literal|65536
+name|AAC_MAXIO
 decl_stmt|;
 end_decl_stmt
 
@@ -412,13 +419,6 @@ literal|"Max I/O size per transfer to an array"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|AAC_MAXIO
-value|65536
-end_define
 
 begin_comment
 comment|/*  * Handle open from generic layer.  *  * This is called by the diskslice code on first open in order to get the   * basic device geometry paramters.  */

@@ -222,6 +222,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|devclass_t
+name|aac_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
@@ -259,6 +265,9 @@ decl_stmt|;
 name|int
 name|hwif
 decl_stmt|;
+name|int
+name|quirks
+decl_stmt|;
 name|char
 modifier|*
 name|desc
@@ -279,6 +288,8 @@ literal|0x0001
 block|,
 name|AAC_HWIF_I960RX
 block|,
+name|AAC_QUIRK_NOCAM
+block|,
 literal|"Dell PERC 2/Si"
 block|}
 block|,
@@ -293,6 +304,8 @@ literal|0x0002
 block|,
 name|AAC_HWIF_I960RX
 block|,
+name|AAC_QUIRK_NOCAM
+block|,
 literal|"Dell PERC 3/Di"
 block|}
 block|,
@@ -306,6 +319,8 @@ block|,
 literal|0x0003
 block|,
 name|AAC_HWIF_I960RX
+block|,
+name|AAC_QUIRK_NOCAM
 block|,
 literal|"Dell PERC 3/Si"
 block|}
@@ -321,6 +336,8 @@ literal|0x00d0
 block|,
 name|AAC_HWIF_I960RX
 block|,
+name|AAC_QUIRK_NOCAM
+block|,
 literal|"Dell PERC 3/Si"
 block|}
 block|,
@@ -334,6 +351,8 @@ block|,
 literal|0x00d1
 block|,
 name|AAC_HWIF_I960RX
+block|,
+name|AAC_QUIRK_NOCAM
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -349,6 +368,8 @@ literal|0x00d9
 block|,
 name|AAC_HWIF_I960RX
 block|,
+name|AAC_QUIRK_NOCAM
+block|,
 literal|"Dell PERC 3/Di"
 block|}
 block|,
@@ -362,6 +383,8 @@ block|,
 literal|0x00cf
 block|,
 name|AAC_HWIF_I960RX
+block|,
+name|AAC_QUIRK_NOCAM
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -377,6 +400,8 @@ literal|0x0106
 block|,
 name|AAC_HWIF_I960RX
 block|,
+name|AAC_QUIRK_NOCAM
+block|,
 literal|"Dell PERC 3/Di"
 block|}
 block|,
@@ -390,6 +415,8 @@ block|,
 literal|0x011b
 block|,
 name|AAC_HWIF_I960RX
+block|,
+name|AAC_QUIRK_NOCAM
 block|,
 literal|"Dell PERC 3/Di"
 block|}
@@ -405,6 +432,8 @@ literal|0x0121
 block|,
 name|AAC_HWIF_I960RX
 block|,
+name|AAC_QUIRK_NOCAM
+block|,
 literal|"Dell PERC 3/Di"
 block|}
 block|,
@@ -418,6 +447,8 @@ block|,
 literal|0x0364
 block|,
 name|AAC_HWIF_STRONGARM
+block|,
+name|AAC_QUIRK_NOCAM
 block|,
 literal|"Adaptec AAC-364"
 block|}
@@ -433,6 +464,8 @@ literal|0x0365
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
+literal|0
+block|,
 literal|"Adaptec SCSI RAID 5400S"
 block|}
 block|,
@@ -446,6 +479,10 @@ block|,
 literal|0x1364
 block|,
 name|AAC_HWIF_STRONGARM
+block|,
+name|AAC_QUIRK_NOCAM
+operator||
+name|AAC_QUIRK_PERC2QC
 block|,
 literal|"Dell PERC 2/QC"
 block|}
@@ -461,6 +498,8 @@ literal|0x10c2
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
+name|AAC_QUIRK_CAM_NORESET
+block|,
 literal|"HP NetRaid-4M"
 block|}
 block|,
@@ -474,6 +513,8 @@ block|,
 literal|0x0285
 block|,
 name|AAC_HWIF_I960RX
+block|,
+literal|0
 block|,
 literal|"Adaptec SCSI RAID 2200S"
 block|}
@@ -489,6 +530,8 @@ literal|0x0287
 block|,
 name|AAC_HWIF_I960RX
 block|,
+literal|0
+block|,
 literal|"Adaptec SCSI RAID 2200S"
 block|}
 block|,
@@ -503,10 +546,14 @@ literal|0x0286
 block|,
 name|AAC_HWIF_I960RX
 block|,
+literal|0
+block|,
 literal|"Adaptec SCSI RAID 2120S"
 block|}
 block|,
 block|{
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -1002,7 +1049,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-literal|1
+name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|,
@@ -1166,6 +1213,7 @@ argument_list|,
 literal|"can't allocate FIB DMA tag\n"
 argument_list|)
 expr_stmt|;
+empty_stmt|;
 goto|goto
 name|out
 goto|;
@@ -1221,6 +1269,34 @@ operator|.
 name|device
 operator|==
 name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|aac_identifiers
+index|[
+name|i
+index|]
+operator|.
+name|subvendor
+operator|==
+name|pci_get_subvendor
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|aac_identifiers
+index|[
+name|i
+index|]
+operator|.
+name|subdevice
+operator|==
+name|pci_get_subdevice
 argument_list|(
 name|dev
 argument_list|)
@@ -1297,6 +1373,18 @@ name|aac_fa_interface
 expr_stmt|;
 break|break;
 block|}
+comment|/* Set up quirks */
+name|sc
+operator|->
+name|quirks
+operator|=
+name|aac_identifiers
+index|[
+name|i
+index|]
+operator|.
+name|quirks
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -1326,29 +1414,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Check for quirky hardware 	 */
-if|if
-condition|(
-name|pci_get_subdevice
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x1364
-operator|&&
-name|pci_get_subvendor
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0x9005
-condition|)
-name|sc
-operator|->
-name|quirks
-operator||=
-name|AAC_QUIRK_PERC2QC
-expr_stmt|;
 comment|/* 	 * Do bus-independent initialisation. 	 */
 name|error
 operator|=
