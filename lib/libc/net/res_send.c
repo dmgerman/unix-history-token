@@ -1816,7 +1816,7 @@ goto|;
 case|case
 name|res_done
 case|:
-name|close
+name|_close
 argument_list|(
 name|kq
 argument_list|)
@@ -1845,7 +1845,7 @@ name|res_error
 case|:
 comment|/*FALLTHROUGH*/
 default|default:
-name|close
+name|_close
 argument_list|(
 name|kq
 argument_list|)
@@ -3772,7 +3772,7 @@ name|res_error
 case|:
 comment|/*FALLTHROUGH*/
 default|default:
-name|close
+name|_close
 argument_list|(
 name|kq
 argument_list|)
@@ -3792,7 +3792,7 @@ name|done
 condition|)
 do|;
 block|}
-name|close
+name|_close
 argument_list|(
 name|kq
 argument_list|)
@@ -3812,7 +3812,7 @@ comment|/*foreach retry*/
 name|res_close
 argument_list|()
 expr_stmt|;
-name|close
+name|_close
 argument_list|(
 name|kq
 argument_list|)
