@@ -851,11 +851,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|aha_free
-argument_list|(
-name|aha
-argument_list|)
-expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -899,6 +894,11 @@ argument_list|,
 name|aha
 operator|->
 name|drq
+argument_list|)
+expr_stmt|;
+name|aha_free
+argument_list|(
+name|aha
 argument_list|)
 expr_stmt|;
 return|return
@@ -922,11 +922,6 @@ argument_list|,
 literal|"init failed\n"
 argument_list|)
 expr_stmt|;
-name|aha_free
-argument_list|(
-name|aha
-argument_list|)
-expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -970,6 +965,11 @@ argument_list|,
 name|aha
 operator|->
 name|drq
+argument_list|)
+expr_stmt|;
+name|aha_free
+argument_list|(
+name|aha
 argument_list|)
 expr_stmt|;
 return|return
@@ -997,11 +997,6 @@ argument_list|,
 literal|"attach failed\n"
 argument_list|)
 expr_stmt|;
-name|aha_free
-argument_list|(
-name|aha
-argument_list|)
-expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1045,6 +1040,11 @@ argument_list|,
 name|aha
 operator|->
 name|drq
+argument_list|)
+expr_stmt|;
+name|aha_free
+argument_list|(
+name|aha
 argument_list|)
 expr_stmt|;
 return|return
@@ -1087,11 +1087,6 @@ argument_list|,
 literal|"Unable to register interrupt handler\n"
 argument_list|)
 expr_stmt|;
-name|aha_free
-argument_list|(
-name|aha
-argument_list|)
-expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1135,6 +1130,11 @@ argument_list|,
 name|aha
 operator|->
 name|drq
+argument_list|)
+expr_stmt|;
+name|aha_free
+argument_list|(
+name|aha
 argument_list|)
 expr_stmt|;
 return|return
