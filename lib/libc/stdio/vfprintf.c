@@ -152,13 +152,19 @@ file|"fvwrite.h"
 end_include
 
 begin_comment
-comment|/* Define FLOATING_POINT to get floating point. */
+comment|/* Define FLOATING_POINT to get floating point, HEXFLOAT to get %a. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FLOATING_POINT
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEXFLOAT
 end_define
 
 begin_union
@@ -3216,7 +3222,6 @@ argument_list|(
 name|dtoaresult
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX We don't actually have a conversion 			 * XXX routine for this yet. 			 */
 if|if
 condition|(
 name|flags
