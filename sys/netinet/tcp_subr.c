@@ -3617,7 +3617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Notify a tcp user of an asynchronous error;  * store error as soft error, but wake up user  * (for now, won't do anything until can select for soft error).  */
+comment|/*  * Notify a tcp user of an asynchronous error;  * store error as soft error, but wake up user  * (for now, won't do anything until can select for soft error).  *  * Do not wake up user since there currently is no mechanism for  * reporting soft errors (yet - a kqueue filter may be added).  */
 end_comment
 
 begin_function
@@ -3638,7 +3638,6 @@ name|int
 name|error
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|tcpcb
 modifier|*
@@ -3652,16 +3651,6 @@ operator|)
 name|inp
 operator|->
 name|inp_ppcb
-decl_stmt|;
-specifier|register
-name|struct
-name|socket
-modifier|*
-name|so
-init|=
-name|inp
-operator|->
-name|inp_socket
 decl_stmt|;
 comment|/* 	 * Ignore some errors if we are hooked up. 	 * If connection hasn't completed, has retransmitted several times, 	 * and receives a second error, give up now.  This is better 	 * than waiting a long time to establish a connection that 	 * can never complete. 	 */
 if|if
@@ -3708,11 +3697,12 @@ name|tp
 operator|->
 name|t_softerror
 condition|)
-name|so
-operator|->
-name|so_error
-operator|=
+name|tcp_drop
+argument_list|(
+name|tp
+argument_list|,
 name|error
+argument_list|)
 expr_stmt|;
 else|else
 name|tp
@@ -3721,27 +3711,12 @@ name|t_softerror
 operator|=
 name|error
 expr_stmt|;
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|so
-operator|->
-name|so_timeo
-argument_list|)
-expr_stmt|;
-name|sorwakeup
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-name|sowwakeup
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|wakeup((caddr_t)&so->so_timeo); 	sorwakeup(so); 	sowwakeup(so);
+endif|#
+directive|endif
 block|}
 end_function
 
