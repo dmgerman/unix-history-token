@@ -4561,12 +4561,9 @@ name|vm_page_flag_clear
 argument_list|(
 name|ptdpg
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_BUSY
 argument_list|)
 expr_stmt|;
-comment|/* not usually mapped*/
 name|ptdpg
 operator|->
 name|valid
@@ -6129,8 +6126,6 @@ name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
@@ -7081,8 +7076,6 @@ name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
@@ -8677,13 +8670,6 @@ operator|+=
 literal|1
 expr_stmt|;
 block|}
-name|vm_page_flag_set
-argument_list|(
-name|p
-argument_list|,
-name|PG_MAPPED
-argument_list|)
-expr_stmt|;
 name|pmap_invalidate_all
 argument_list|(
 name|kernel_pmap
@@ -8955,13 +8941,6 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|p
-argument_list|,
-name|PG_MAPPED
-argument_list|)
-expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|p
@@ -9118,13 +9097,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|p
-argument_list|,
-name|PG_MAPPED
-argument_list|)
 expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
@@ -9584,13 +9556,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
-argument_list|(
-name|m
-argument_list|,
-name|PG_MAPPED
-argument_list|)
 expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
@@ -11212,8 +11177,6 @@ name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
