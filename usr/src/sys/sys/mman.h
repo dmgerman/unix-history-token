@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mman.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mman.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -290,6 +290,34 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|msync
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mlock
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|munlock
 name|__P
 argument_list|(
 operator|(
