@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c	5.3 (Berkeley) %G%"
+literal|"@(#)canfield.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3820,6 +3820,34 @@ condition|(
 name|stock
 operator|==
 name|NIL
+operator|&&
+name|cp
+operator|!=
+name|bottom
+index|[
+literal|0
+index|]
+operator|&&
+name|cp
+operator|!=
+name|bottom
+index|[
+literal|1
+index|]
+operator|&&
+name|cp
+operator|!=
+name|bottom
+index|[
+literal|2
+index|]
+operator|&&
+name|cp
+operator|!=
+name|bottom
+index|[
+literal|3
+index|]
 condition|)
 return|return
 operator|(
@@ -4992,6 +5020,12 @@ argument_list|(
 literal|"=---="
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cardsoff
+operator|==
+literal|52
+condition|)
 name|getcmd
 argument_list|(
 name|moverow
@@ -7696,20 +7730,6 @@ argument_list|(
 literal|"You won the game. That is a feat to be proud of.\n"
 argument_list|)
 expr_stmt|;
-name|move
-argument_list|(
-name|originrow
-operator|+
-literal|4
-argument_list|,
-name|origincol
-argument_list|)
-expr_stmt|;
-name|printw
-argument_list|(
-literal|"Wish to play again?     "
-argument_list|)
-expr_stmt|;
 name|row
 operator|=
 name|originrow
@@ -7753,25 +7773,11 @@ argument_list|(
 literal|" off    "
 argument_list|)
 expr_stmt|;
-name|getcmd
-argument_list|(
-name|moverow
-argument_list|,
-name|movecol
-argument_list|,
-literal|"Hit return to continue"
-argument_list|)
-expr_stmt|;
 name|move
 argument_list|(
 name|msgrow
 argument_list|,
 name|msgcol
-argument_list|)
-expr_stmt|;
-name|printw
-argument_list|(
-literal|"Wish to play again?     "
 argument_list|)
 expr_stmt|;
 name|row
@@ -7791,7 +7797,7 @@ name|row
 argument_list|,
 name|col
 argument_list|,
-literal|"y or n?"
+literal|"Play again (y or n)?"
 argument_list|)
 expr_stmt|;
 block|}
