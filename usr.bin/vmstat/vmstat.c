@@ -773,7 +773,7 @@ literal|0
 expr_stmt|;
 name|maxshowdevs
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 while|while
 condition|(
@@ -2519,10 +2519,23 @@ name|void
 name|printhdr
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|i
+decl_stmt|,
+name|num_shown
 decl_stmt|;
+name|num_shown
+operator|=
+operator|(
+name|num_selected
+operator|<
+name|maxshowdevs
+operator|)
+condition|?
+name|num_selected
+else|:
+name|maxshowdevs
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2537,7 +2550,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|num_selected
+name|num_shown
 operator|>
 literal|1
 condition|)
@@ -2546,19 +2559,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"disks %*s  faults      cpu\n"
+literal|" disks %*s"
 argument_list|,
-operator|(
-operator|(
-name|num_selected
-operator|<
-name|maxshowdevs
-operator|)
-condition|?
-name|num_selected
-else|:
-name|maxshowdevs
-operator|)
+name|num_shown
 operator|*
 literal|4
 operator|-
@@ -2570,7 +2573,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|num_selected
+name|num_shown
 operator|==
 literal|1
 condition|)
@@ -2579,22 +2582,15 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"disk faults      cpu\n"
+literal|"disk"
 argument_list|)
 expr_stmt|;
-else|else
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*s  faults      cpu\n"
-argument_list|,
-name|num_selected
-operator|*
-literal|4
-argument_list|,
-literal|""
+literal|"   faults      cpu\n"
 argument_list|)
 expr_stmt|;
 operator|(
