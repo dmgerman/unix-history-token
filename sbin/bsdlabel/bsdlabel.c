@@ -322,7 +322,7 @@ end_else
 begin_error
 error|#
 directive|error
-error|I do not know about this architecture.
+error|I do not know about this architecture, and shall probably not be compiled for it.
 end_error
 
 begin_endif
@@ -8412,7 +8412,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: disklabel [-r] disk"
 argument_list|,
@@ -8429,10 +8429,6 @@ argument_list|,
 literal|"       disklabel -R [-r] [-n] disk protofile"
 argument_list|,
 literal|"\t\t(to restore label)"
-argument_list|,
-literal|"       disklabel [-NW] disk"
-argument_list|,
-literal|"\t\t(to write disable/enable label)"
 argument_list|)
 expr_stmt|;
 endif|#
