@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ppt.c	5.4 (Berkeley) %G%"
+literal|"@(#)ppt.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,7 @@ file|<stdio.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|putppt
 parameter_list|()
