@@ -268,6 +268,13 @@ end_if
 
 begin_decl_stmt
 name|Static
+name|bus_driver_added_t
+name|uhub_driver_added
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Static
 name|bus_child_detached_t
 name|uhub_child_detached
 decl_stmt|;
@@ -344,6 +351,13 @@ begin_expr_stmt
 name|USB_DECLARE_DRIVER_INIT
 argument_list|(
 name|uhub
+argument_list|,
+name|DEVMETHOD
+argument_list|(
+name|bus_driver_added
+argument_list|,
+name|uhub_driver_added
+argument_list|)
 argument_list|,
 name|DEVMETHOD
 argument_list|(
@@ -2726,6 +2740,24 @@ block|}
 block|}
 block|}
 block|}
+block|}
+end_function
+
+begin_function
+name|Static
+name|void
+name|uhub_driver_added
+parameter_list|(
+name|device_t
+name|_dev
+parameter_list|,
+name|driver_t
+modifier|*
+name|_driver
+parameter_list|)
+block|{
+comment|/* Don't do anything, as reprobing does not work currently. We should 	 * really call through to usbd_new_device or a function along those 	 * lines that reinitialises the device if it is not owned by any 	 * driver. But this is complicated. Manual replugging by the user is 	 * easier. 	 */
+empty_stmt|;
 block|}
 end_function
 
