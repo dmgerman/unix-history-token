@@ -974,21 +974,9 @@ end_empty_stmt
 begin_define
 define|#
 directive|define
-name|PROBLEM
-parameter_list|(
-name|err
-parameter_list|,
-name|msg
-parameter_list|)
-value|{			\ 	fprintf(stderr, msg, _errowner);	\ 		free(cat);			\ 		NLRETERR(err);			\ 	}
-end_define
-
-begin_define
-define|#
-directive|define
 name|CORRUPT
 parameter_list|()
-value|PROBLEM(EINVAL, "%s: corrupt file.\n")
+value|{ 						\ 	fprintf(stderr, "%s: currupt file.", _errowner);	\ 		free(cat);					\ 		NLRETERR(EINVAL);				\ 	}
 end_define
 
 begin_define
@@ -996,7 +984,7 @@ define|#
 directive|define
 name|NOSPACE
 parameter_list|()
-value|PROBLEM(ENOMEM, "%s: no more memory.\n")
+value|{						\ 	fprintf(stderr, "%s: no more memory.", _errowner);	\ 		free(cat);					\ 		return(NLERR);					\ 	}
 end_define
 
 begin_function
