@@ -259,6 +259,8 @@ name|escape
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -526,6 +528,8 @@ name|format
 operator|=
 operator|*
 name|argv
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* backslash interpretation */
@@ -942,6 +946,8 @@ operator|=
 name|escape
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1392,11 +1398,16 @@ name|int
 name|escape
 parameter_list|(
 name|fmt
+parameter_list|,
+name|percent
 parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+name|int
+name|percent
 decl_stmt|;
 block|{
 specifier|register
@@ -1645,6 +1656,8 @@ name|fmt
 expr_stmt|;
 if|if
 condition|(
+name|percent
+operator|&&
 name|value
 operator|==
 literal|'%'
