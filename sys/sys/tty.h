@@ -1122,36 +1122,6 @@ parameter_list|)
 value|((void *)&(tp)->t_outq)
 end_define
 
-begin_define
-define|#
-directive|define
-name|TSA_PTC_READ
-parameter_list|(
-name|tp
-parameter_list|)
-value|((void *)&(tp)->t_outq.c_cf)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSA_PTC_WRITE
-parameter_list|(
-name|tp
-parameter_list|)
-value|((void *)&(tp)->t_rawq.c_cl)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSA_PTS_READ
-parameter_list|(
-name|tp
-parameter_list|)
-value|((void *)&(tp)->t_canq)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
