@@ -406,6 +406,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RFC1048_GATEWAY
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|RFC1048_HOSTNAME
 value|12
 end_define
