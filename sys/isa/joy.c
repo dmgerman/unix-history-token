@@ -304,6 +304,13 @@ block|}
 block|,
 comment|/* CSC0001 */
 block|{
+literal|0x0101630e
+block|,
+literal|"CSC0101 PnP Joystick"
+block|}
+block|,
+comment|/* CSC0101 */
+block|{
 literal|0x01100002
 block|,
 literal|"ALS0110 PnP Joystick"
