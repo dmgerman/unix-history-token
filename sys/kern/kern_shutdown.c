@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_hw_wdog.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mac.h"
 end_include
 
@@ -394,33 +388,6 @@ literal|"Shutdown environment"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HW_WDOG
-end_ifdef
-
-begin_comment
-comment|/*  * If there is a hardware watchdog, point this at the function needed to  * hold it off.  * It's needed when the kernel needs to do some lengthy operations.  * e.g. in wd.c when dumping core.. It's most annoying to have  * your precious core-dump only half written because the wdog kicked in.  */
-end_comment
-
-begin_decl_stmt
-name|watchdog_tickle_fn
-name|wdog_tickler
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HW_WDOG */
-end_comment
 
 begin_comment
 comment|/*  * Variable panicstr contains argument to first call to panic; used as flag  * to indicate that the kernel has already called panic.  */
