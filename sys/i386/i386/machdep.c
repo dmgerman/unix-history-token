@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.10 1993/10/10 06:01:44 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.11 1993/10/14 18:15:35 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -705,53 +705,57 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Determine how many buffers to allocate. 	 * Use 10% of memory for the first 2 Meg, 5% of the remaining 	 * memory. Insure a minimum of 16 buffers. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
+comment|/* 	 * Determine how many buffers to allocate. 	 * Use 20% of memory of memory beyond the first 2MB 	 * Insure a minimum of 16 fs buffers. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
 if|if
 condition|(
 name|bufpages
 operator|==
 literal|0
 condition|)
-if|if
-condition|(
-name|physmem
-operator|<
-name|btoc
-argument_list|(
-literal|2
-operator|*
-literal|1024
-operator|*
-literal|1024
-argument_list|)
-condition|)
-name|bufpages
-operator|=
-name|physmem
-operator|/
-literal|10
-operator|/
-name|CLSIZE
-expr_stmt|;
-else|else
 name|bufpages
 operator|=
 operator|(
-name|btoc
+name|ctob
 argument_list|(
-literal|2
-operator|*
-literal|1024
-operator|*
-literal|1024
-argument_list|)
-operator|+
 name|physmem
+argument_list|)
+operator|-
+literal|2048
+operator|*
+literal|1024
 operator|)
 operator|/
-literal|20
+name|NBPG
 operator|/
-name|CLSIZE
+literal|5
+expr_stmt|;
+if|if
+condition|(
+name|bufpages
+operator|<
+literal|32
+condition|)
+name|bufpages
+operator|=
+literal|32
+expr_stmt|;
+comment|/* 	 * We must still limit the maximum number of buffers to be no 	 * more than 2/5's of the size of the kernal malloc region, this 	 * will only take effect for machines with lots of memory 	 */
+name|bufpages
+operator|=
+name|min
+argument_list|(
+name|bufpages
+argument_list|,
+operator|(
+name|VM_KMEM_SIZE
+operator|/
+name|NBPG
+operator|)
+operator|*
+literal|2
+operator|/
+literal|5
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -902,7 +906,7 @@ argument_list|(
 literal|"startup: table size inconsistency"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate a submap for buffer space allocations. 	 */
+comment|/* 	 * Allocate a submap for buffer space allocations. 	 * XXX we are NOT using buffer_map, but due to 	 * the references to it we will just allocate 1 page of 	 * vm (not real memory) to make things happy... 	 */
 name|buffer_map
 operator|=
 name|kmem_suballoc
@@ -915,8 +919,7 @@ argument_list|,
 operator|&
 name|maxaddr
 argument_list|,
-name|bufpages
-operator|*
+comment|/* bufpages * */
 name|NBPG
 argument_list|,
 name|TRUE
@@ -3069,6 +3072,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NNPX> 0 */
 block|}
 end_function
 
