@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.6 (Berkeley) %G% (no MXDOMAIN)"
+literal|"@(#)domain.c	5.7 (Berkeley) %G% (no MXDOMAIN)"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.6 (Berkeley) %G%"
+literal|"@(#)domain.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -617,9 +617,11 @@ condition|)
 block|{
 name|cp
 operator|+=
-name|dn_skip
+name|dn_skipname
 argument_list|(
 name|cp
+argument_list|,
+name|eom
 argument_list|)
 operator|+
 name|QFIXEDSZ
@@ -633,9 +635,11 @@ literal|0
 condition|)
 name|cp
 operator|+=
-name|dn_skip
+name|dn_skipname
 argument_list|(
 name|cp
+argument_list|,
+name|eom
 argument_list|)
 operator|+
 name|QFIXEDSZ
@@ -1357,9 +1361,11 @@ condition|)
 block|{
 name|cp
 operator|+=
-name|dn_skip
+name|dn_skipname
 argument_list|(
 name|cp
+argument_list|,
+name|eom
 argument_list|)
 operator|+
 name|QFIXEDSZ
@@ -1373,9 +1379,11 @@ literal|0
 condition|)
 name|cp
 operator|+=
-name|dn_skip
+name|dn_skipname
 argument_list|(
 name|cp
+argument_list|,
+name|eom
 argument_list|)
 operator|+
 name|QFIXEDSZ
