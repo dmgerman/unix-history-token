@@ -8405,6 +8405,9 @@ case|case
 name|SCSI_DENSITY_QIC_150
 case|:
 case|case
+name|SCSI_DENSITY_QIC_525_320
+case|:
+case|case
 name|SCSI_DENSITY_QIC_1320
 case|:
 case|case
@@ -8437,9 +8440,6 @@ name|SCSI_DENSITY_QIC_4GB
 case|:
 case|case
 name|SCSI_DENSITY_QIC_2GB
-case|:
-case|case
-name|SCSI_DENSITY_QIC_525_320
 case|:
 name|softc
 operator|->
