@@ -388,26 +388,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
-name|string_to_flags
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|,
-name|u_long
-operator|*
-operator|,
-name|u_long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|strip
 name|__P
@@ -664,7 +644,7 @@ name|optarg
 expr_stmt|;
 if|if
 condition|(
-name|string_to_flags
+name|setflags
 argument_list|(
 operator|&
 name|flags

@@ -1001,7 +1001,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|string_to_flags
+name|setflags
 argument_list|(
 operator|&
 name|val

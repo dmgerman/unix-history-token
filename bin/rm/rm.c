@@ -151,23 +151,6 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|flags_to_string
-name|__P
-argument_list|(
-operator|(
-name|u_long
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dflag
 decl_stmt|,
@@ -1927,7 +1910,7 @@ name|strcpy
 argument_list|(
 name|flagsp
 argument_list|,
-name|flags_to_string
+name|getflags
 argument_list|(
 name|sp
 operator|->

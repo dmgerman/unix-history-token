@@ -1574,7 +1574,7 @@ name|offset
 argument_list|,
 literal|"flags=%s"
 argument_list|,
-name|flags_to_string
+name|getflags
 argument_list|(
 name|p
 operator|->
@@ -2313,7 +2313,7 @@ name|printf
 argument_list|(
 literal|" flags=%s"
 argument_list|,
-name|flags_to_string
+name|getflags
 argument_list|(
 name|saveflags
 argument_list|,

@@ -1108,7 +1108,7 @@ literal|"%sflags (\"%s\" is not "
 argument_list|,
 name|tab
 argument_list|,
-name|flags_to_string
+name|getflags
 argument_list|(
 name|s
 operator|->
@@ -1125,7 +1125,7 @@ name|printf
 argument_list|(
 literal|"\"%s\""
 argument_list|,
-name|flags_to_string
+name|getflags
 argument_list|(
 name|p
 operator|->

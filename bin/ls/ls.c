@@ -2421,7 +2421,7 @@ condition|)
 block|{
 name|flags
 operator|=
-name|flags_to_string
+name|getflags
 argument_list|(
 name|sp
 operator|->

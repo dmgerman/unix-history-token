@@ -205,13 +205,13 @@ value|(sizeof(mapping) / sizeof(mapping[0]))
 end_define
 
 begin_comment
-comment|/*  * flags_to_string --  *	Convert stat flags to a comma-separated string.  If no flags  *	are set, return the default string.  */
+comment|/*  * getflags --  *	Convert stat flags to a comma-separated string.  If no flags  *	are set, return the default string.  */
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|flags_to_string
+name|getflags
 parameter_list|(
 name|flags
 parameter_list|,
@@ -366,12 +366,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * string_to_flags --  *	Take string of arguments and return stat flags.  Return 0 on  *	success, 1 on failure.  On failure, stringp is set to point  *	to the offending token.  */
+comment|/*  * setflags --  *	Take string of arguments and return stat flags.  Return 0 on  *	success, 1 on failure.  On failure, stringp is set to point  *	to the offending token.  */
 end_comment
 
 begin_function
 name|int
-name|string_to_flags
+name|setflags
 parameter_list|(
 name|stringp
 parameter_list|,
