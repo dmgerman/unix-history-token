@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.16 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -599,13 +599,9 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * Historically, curses fails if rows<= 5, cols<= 4. 	 */
+comment|/* 	 * Want cols> 4, otherwise things will fail. 	 */
 if|if
 condition|(
-name|LINES
-operator|<=
-literal|5
-operator|||
 name|COLS
 operator|<=
 literal|4
