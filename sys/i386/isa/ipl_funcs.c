@@ -221,7 +221,7 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|unsigned NAME(void)				\ {						\ 	unsigned x;				\ 						\ 	x = cpl;				\ 	cpl OP MODIFIER;			\ 	return (x);				\ }
+value|unsigned NAME(void)					\ {							\ 	unsigned x;					\ 							\ 	x = cpl;					\ 	cpl OP MODIFIER;				\ 	return (x);					\ }							\ int							\ is_##NAME(void)						\ {							\ 	return ((cpl& (MODIFIER)) == (MODIFIER));	\ }
 end_define
 
 begin_function
@@ -530,7 +530,7 @@ value|\ 			SPIN_RESET;					\ 			while (cil& y)					\ 				SPIN_SPL				\ 			contin
 comment|/* try again */
 value|\ 		}							\ 		break;							\ 	}								\ 	cpl OP MODIFIER;
 comment|/* make the change */
-value|\ 	IFCPL_UNLOCK();							\ 									\ 	return (x);							\ }
+value|\ 	IFCPL_UNLOCK();							\ 									\ 	return (x);							\ }									\ int									\ is_##NAME(void)								\ {									\ 	return ((cpl& (MODIFIER)) == (MODIFIER));			\ }
 end_define
 
 begin_else
@@ -556,7 +556,7 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|unsigned NAME(void)				\ {						\ 	unsigned x;				\ 						\ 	IFCPL_LOCK();				\ 	x = cpl;				\ 	cpl OP MODIFIER;			\ 	IFCPL_UNLOCK();				\ 						\ 	return (x);				\ }
+value|unsigned NAME(void)					\ {							\ 	unsigned x;					\ 							\ 	IFCPL_LOCK();					\ 	x = cpl;					\ 	cpl OP MODIFIER;				\ 	IFCPL_UNLOCK();					\ 							\ 	return (x);					\ }							\ int							\ is_##NAME(void)						\ {							\ 	return ((cpl& (MODIFIER)) == (MODIFIER));	\ }
 end_define
 
 begin_endif

@@ -141,7 +141,7 @@ parameter_list|,
 name|pri
 parameter_list|)
 define|\ 							\
-value|static __inline int name(void)				\ {							\     int cpl = getcpl();					\     if (ALPHA_PSL_IPL_##pri> cpl) {			\ 	int s = alpha_pal_swpipl(ALPHA_PSL_IPL_##pri);	\ 	return s;					\     } else						\ 	return cpl;					\ }
+value|static __inline int name(void)				\ {							\     int cpl = getcpl();					\     if (ALPHA_PSL_IPL_##pri> cpl) {			\ 	int s = alpha_pal_swpipl(ALPHA_PSL_IPL_##pri);	\ 	return s;					\     } else						\ 	return cpl;					\ }							\ 							\ static __inline int					\ is_##name(void)					\ {							\     return (getcpl()>= ALPHA_PSL_IP_L##pri);		\ }
 end_define
 
 begin_macro
