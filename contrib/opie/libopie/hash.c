@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hash.c: The opiehash() library function.  %%% copyright-cmetz This software is Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:          Created by cmetz for OPIE 2.3 using the old hash.c as a guide. */
+comment|/* hash.c: The opiehash() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Updated by cmetz for OPIE 2.31. Added SHA support (which may               not be correct). Backed out previous optimizations as               they killed thread-safety.         Created by cmetz for OPIE 2.3 using the old hash.c as a guide. */
 end_comment
 
 begin_include
@@ -8,6 +8,27 @@ include|#
 directive|include
 file|"opie_cfg.h"
 end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|"sha.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0 */
+end_comment
 
 begin_include
 include|#
@@ -26,32 +47,6 @@ include|#
 directive|include
 file|<md5.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|UINT4
-name|mdx_tmp
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static SHA_INFO sha;
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_decl_stmt
 name|VOIDRET
@@ -89,7 +84,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|case 3:       sha_init(&sha);       sha_update(&sha, (BYTE *)x, 8);       sha_final(&sha);       results[0] = sha.digest[0] ^ sha.digest[2] ^ sha.digest[4];       results[1] = sha.digest[1] ^ sha.digest[3] ^ sha.digest[5];       break;
+block|case 3:       {       SHA_CTX sha;       SHAInit(&sha);       SHAUpdate(&sha, (unsigned char *)x, 8);       SHAFinal(&sha);       results[0] = sha.buffer[0] ^ sha.buffer[2] ^ sha.buffer[4];       results[1] = sha.buffer[1] ^ sha.buffer[3];       };       break;
 endif|#
 directive|endif
 comment|/* 0 */
@@ -99,6 +94,12 @@ case|:
 block|{
 name|MD4_CTX
 name|mdx
+decl_stmt|;
+name|UINT4
+name|mdx_tmp
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|MD4Init
 argument_list|(
@@ -164,14 +165,21 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-break|break;
 block|}
+empty_stmt|;
+break|break;
 case|case
 literal|5
 case|:
 block|{
 name|MD5_CTX
 name|mdx
+decl_stmt|;
+name|UINT4
+name|mdx_tmp
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|MD5Init
 argument_list|(
@@ -237,8 +245,9 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-break|break;
 block|}
+empty_stmt|;
+break|break;
 block|}
 block|}
 end_decl_stmt

@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* config.h.  Generated automatically by configure.  */
+end_comment
+
+begin_comment
+comment|/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+end_comment
+
+begin_comment
 comment|/* Define if on AIX 3.    System headers sometimes define this.    We just want to avoid a redefinition error message.  */
 end_comment
 
@@ -108,7 +116,7 @@ value|void
 end_define
 
 begin_comment
-comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time. 	STACK_DIRECTION> 0 => grows toward higher addresses 	STACK_DIRECTION< 0 => grows toward lower addresses 	STACK_DIRECTION = 0 => direction of growth unknown  */
+comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time.  STACK_DIRECTION> 0 => grows toward higher addresses  STACK_DIRECTION< 0 => grows toward lower addresses  STACK_DIRECTION = 0 => direction of growth unknown  */
 end_comment
 
 begin_comment
@@ -192,6 +200,36 @@ directive|define
 name|PATH_MAIL
 value|"/var/mail"
 end_define
+
+begin_comment
+comment|/* The path to the utmp file, if we know it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PATH_UTMP_AC
+value|"/var/run/utmp"
+end_define
+
+begin_comment
+comment|/* The path to the wtmp file, if we know it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PATH_WTMP_AC
+value|"/var/log/wtmp"
+end_define
+
+begin_comment
+comment|/* The path to the wtmpx file, if we know it */
+end_comment
+
+begin_comment
+comment|/* #undef PATH_WTMPX_AC */
+end_comment
 
 begin_comment
 comment|/* Defined if the system's profile (/etc/profile) displays    the motd file */
@@ -382,6 +420,98 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if the system has getutline() */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETUTLINE */
+end_comment
+
+begin_comment
+comment|/* Defined if the system has SunOS C2 security shadow passwords */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SUNOS_C2_SHADOW */
+end_comment
+
+begin_comment
+comment|/* Defined if you want to disable utmp support */
+end_comment
+
+begin_comment
+comment|/* #undef DISABLE_UTMP */
+end_comment
+
+begin_comment
+comment|/* Defined if you want to allow users to override the insecure checks */
+end_comment
+
+begin_comment
+comment|/* #undef INSECURE_OVERRIDE */
+end_comment
+
+begin_comment
+comment|/* Defined to the default hash value, always defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDX
+value|5
+end_define
+
+begin_comment
+comment|/* Defined if new-style prompts are to be used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEW_PROMPTS
+value|1
+end_define
+
+begin_comment
+comment|/* Defined to the path of the OPIE lock directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPIE_LOCK_DIR
+value|"/etc/opielocks"
+end_define
+
+begin_comment
+comment|/* Defined if users are to be asked to re-type secret pass phrases */
+end_comment
+
+begin_comment
+comment|/* #undef RETYPE */
+end_comment
+
+begin_comment
+comment|/* Defined if su should not switch to disabled accounts */
+end_comment
+
+begin_comment
+comment|/* #undef SU_STAR_CHECK */
+end_comment
+
+begin_comment
+comment|/* Defined if user locking is to be used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_LOCKING
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the bcopy function.  */
 end_comment
 
@@ -444,11 +574,11 @@ comment|/* #undef HAVE_GETHOSTNAME */
 end_comment
 
 begin_comment
-comment|/* Define if you have the getspent function.  */
+comment|/* Define if you have the getspnam function.  */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_GETSPENT */
+comment|/* #undef HAVE_GETSPNAM */
 end_comment
 
 begin_comment
@@ -470,6 +600,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETTTYNAM
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getusershell function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETUSERSHELL
 value|1
 end_define
 
@@ -509,6 +650,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the on_exit function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ON_EXIT */
+end_comment
+
+begin_comment
 comment|/* Define if you have the pututxline function.  */
 end_comment
 
@@ -523,28 +672,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_RINDEX */
 end_comment
-
-begin_comment
-comment|/* Define if you have the setegid function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETEGID
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the seteuid function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETEUID
-value|1
-end_define
 
 begin_comment
 comment|/* Define if you have the setgroups function.  */
@@ -583,12 +710,9 @@ begin_comment
 comment|/* Define if you have the setregid function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SETREGID
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SETREGID */
+end_comment
 
 begin_comment
 comment|/* Define if you have the setresgid function.  */
@@ -610,12 +734,9 @@ begin_comment
 comment|/* Define if you have the setreuid function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SETREUID
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SETREUID */
+end_comment
 
 begin_comment
 comment|/* Define if you have the setvbuf function.  */
@@ -629,12 +750,34 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the sigaddset function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGADDSET
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the sigblock function.  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_SIGBLOCK */
 end_comment
+
+begin_comment
+comment|/* Define if you have the sigemptyset function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGEMPTYSET
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the sigsetmask function.  */
@@ -656,6 +799,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the strerror function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRERROR
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the strftime function.  */
 end_comment
 
@@ -663,6 +817,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRFTIME
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strncasecmp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRNCASECMP
 value|1
 end_define
 
@@ -678,17 +843,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the sysconf function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYSCONF
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the ttyslot function.  */
 end_comment
 
@@ -696,6 +850,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_TTYSLOT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the usleep function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_USLEEP
 value|1
 end_define
 
@@ -865,6 +1030,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_PARAM_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/select.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SELECT_H
 value|1
 end_define
 
