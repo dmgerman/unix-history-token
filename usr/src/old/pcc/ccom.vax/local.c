@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local.c	1.13 (Berkeley) %G%"
+literal|"@(#)local.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2483,7 +2483,9 @@ name|USHORT
 case|:
 return|return
 operator|(
-literal|2
+name|SZSHORT
+operator|/
+name|SZCHAR
 operator|)
 return|;
 case|case
@@ -2491,13 +2493,17 @@ name|DOUBLE
 case|:
 return|return
 operator|(
-literal|8
+name|SZDOUBLE
+operator|/
+name|SZCHAR
 operator|)
 return|;
 default|default:
 return|return
 operator|(
-literal|4
+name|SZINT
+operator|/
+name|SZCHAR
 operator|)
 return|;
 block|}
