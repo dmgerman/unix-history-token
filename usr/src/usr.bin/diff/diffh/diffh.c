@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffh.c 4.3 %G%"
+literal|"@(#)diffh.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,11 +691,11 @@ name|s1
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+name|exit
+argument_list|(
 name|status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|s0
@@ -724,11 +724,11 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|exit
+argument_list|(
 literal|1
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
