@@ -9830,6 +9830,9 @@ name|p
 operator|=
 name|toupper
 argument_list|(
+operator|(
+name|uschar
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -9865,6 +9868,9 @@ name|p
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|uschar
+operator|)
 operator|*
 name|p
 argument_list|)
