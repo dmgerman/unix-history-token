@@ -2705,6 +2705,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
+comment|/* 		 * vm_fault_quick() can sleep.  Consequently, 		 * vm_page_lock_queue() and vm_page_unlock_queue() 		 * should not be performed outside of this loop. 		 */
 if|if
 condition|(
 name|vm_fault_quick
@@ -2741,6 +2742,9 @@ block|{
 name|int
 name|j
 decl_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -2768,6 +2772,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|EFAULT
@@ -2781,10 +2788,16 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|wpipe
 operator|->
@@ -3054,6 +3067,9 @@ name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3084,6 +3100,9 @@ index|]
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|wpipe
 operator|->
