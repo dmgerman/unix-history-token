@@ -2835,6 +2835,15 @@ operator|++
 name|xf
 control|)
 block|{
+if|if
+condition|(
+name|xf
+operator|->
+name|xf_data
+operator|==
+name|NULL
+condition|)
+continue|continue;
 name|hash
 operator|=
 call|(
