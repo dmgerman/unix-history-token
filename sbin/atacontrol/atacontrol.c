@@ -2571,7 +2571,15 @@ name|AR_RAID0
 case|:
 name|printf
 argument_list|(
-literal|"RAID0"
+literal|"RAID0 stripesize=%d"
+argument_list|,
+name|iocmd
+operator|.
+name|u
+operator|.
+name|raid_status
+operator|.
+name|interleave
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2591,7 +2599,15 @@ name|AR_RAID1
 case|:
 name|printf
 argument_list|(
-literal|"RAID0+1"
+literal|"RAID0+1 stripesize=%d"
+argument_list|,
+name|iocmd
+operator|.
+name|u
+operator|.
+name|raid_status
+operator|.
+name|interleave
 argument_list|)
 expr_stmt|;
 break|break;
