@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU Objective C Runtime message lookup     Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GNU Objective C Runtime message lookup     Copyright (C) 1993, 1995, 1996, 1997, 1998,    2001 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -56,6 +56,17 @@ begin_define
 define|#
 directive|define
 name|gen_rtx_MEM
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|gen_rtx_REG
 parameter_list|(
 name|args
 modifier|...
@@ -125,6 +136,24 @@ end_decl_stmt
 begin_comment
 comment|/* !T:MUTEX */
 end_comment
+
+begin_comment
+comment|/* Hook for method forwarding. If it is set, is invoked to return a    function that performs the real forwarding. Otherwise the libgcc    based functions (__builtin_apply and friends) are used. */
+end_comment
+
+begin_function_decl
+name|IMP
+function_decl|(
+modifier|*
+name|__objc_msg_forward
+function_decl|)
+parameter_list|(
+name|SEL
+parameter_list|)
+init|=
+name|NULL
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Send +initialize to class */
@@ -292,6 +321,31 @@ name|SEL
 name|sel
 parameter_list|)
 block|{
+if|if
+condition|(
+name|__objc_msg_forward
+condition|)
+block|{
+name|IMP
+name|result
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|result
+operator|=
+name|__objc_msg_forward
+argument_list|(
+name|sel
+argument_list|)
+operator|)
+condition|)
+return|return
+name|result
+return|;
+block|}
+else|else
+block|{
 specifier|const
 name|char
 modifier|*
@@ -370,6 +424,7 @@ name|IMP
 operator|)
 name|__objc_word_forward
 return|;
+block|}
 block|}
 end_function
 
@@ -2111,14 +2166,6 @@ return|;
 block|}
 comment|/* The object doesn't recognize the method.  Check for responding to      error:.  If it does then sent it. */
 block|{
-name|size_t
-name|strlen
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
 name|char
 name|msg
 index|[

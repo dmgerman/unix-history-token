@@ -339,6 +339,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|objc_thread_add
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|objc_thread_remove
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*   Use this to set the hook function that will be called when the    runtime initially becomes multi threaded.   The hook function is only called once, meaning only when the    2nd thread is spawned, not for each and every thread.    It returns the previous hook function or NULL if there is none.    A program outside of the runtime could set this to some function so   it can be informed; for example, the GNUstep Base Library sets it    so it can implement the NSBecomingMultiThreaded notification.   */
 end_comment

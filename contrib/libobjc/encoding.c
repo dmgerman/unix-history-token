@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Encoding of types for Objective C.    Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    Bitfield support by Ovidiu Predescu  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Encoding of types for Objective C.    Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.    Contributed by Kresten Krab Thorup    Bitfield support by Ovidiu Predescu  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ directive|include
 file|"encoding.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -38,6 +44,12 @@ define|\
 value|({ typeof(X) __x = (X), __y = (Y); \      (__x> __y ? __x : __y); })
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -50,6 +62,12 @@ parameter_list|)
 define|\
 value|({ typeof(X) __x = (X), __y = (Y); \      (__x< __y ? __x : __y); })
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ROUND
+end_undef
 
 begin_define
 define|#
@@ -75,7 +93,7 @@ name|TREE_CODE
 parameter_list|(
 name|TYPE
 parameter_list|)
-value|*TYPE
+value|*(TYPE)
 end_define
 
 begin_define
@@ -85,7 +103,7 @@ name|TREE_TYPE
 parameter_list|(
 name|TREE
 parameter_list|)
-value|TREE
+value|(TREE)
 end_define
 
 begin_define
@@ -119,6 +137,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|REAL_TYPE
+value|_C_DBL
+end_define
+
+begin_define
+define|#
+directive|define
+name|VECTOR_TYPE
+value|_C_VECTOR
+end_define
+
+begin_define
+define|#
+directive|define
 name|TYPE_FIELDS
 parameter_list|(
 name|TYPE
@@ -130,6 +162,16 @@ begin_define
 define|#
 directive|define
 name|DECL_MODE
+parameter_list|(
+name|TYPE
+parameter_list|)
+value|*(TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_MODE
 parameter_list|(
 name|TYPE
 parameter_list|)
@@ -152,6 +194,36 @@ name|TYPE
 parameter_list|)
 value|((TYPE) + 1)
 end_define
+
+begin_comment
+comment|/* Some ports (eg ARM) allow the structure size boundary to be    selected at compile-time.  We override the normal definition with    one that has a constant value for this compilation.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STRUCTURE_SIZE_BOUNDARY
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STRUCTURE_SIZE_BOUNDARY
+value|(BITS_PER_UNIT * sizeof (struct{char a;}))
+end_define
+
+begin_comment
+comment|/* Some ROUND_TYPE_ALIGN macros use TARGET_foo, and consequently    target_flags.  Define a dummy entry here to so we don't die.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|target_flags
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -2217,9 +2289,6 @@ name|record_align
 operator|=
 name|BITS_PER_UNIT
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|STRUCTURE_SIZE_BOUNDARY
 name|layout
 operator|->
 name|record_align
@@ -2233,8 +2302,6 @@ argument_list|,
 name|STRUCTURE_SIZE_BOUNDARY
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2283,43 +2350,6 @@ name|char
 modifier|*
 name|type
 decl_stmt|;
-if|#
-directive|if
-literal|1
-if|if
-condition|(
-name|layout
-operator|->
-name|prev_type
-operator|==
-name|NULL
-condition|)
-block|{
-name|layout
-operator|->
-name|prev_type
-operator|=
-name|layout
-operator|->
-name|type
-expr_stmt|;
-name|layout
-operator|->
-name|type
-operator|=
-name|objc_skip_typespec
-argument_list|(
-name|layout
-operator|->
-name|prev_type
-argument_list|)
-expr_stmt|;
-return|return
-name|YES
-return|;
-block|}
-endif|#
-directive|endif
 comment|/* Add the size of the previous field to the size of the record.  */
 if|if
 condition|(
@@ -2357,10 +2387,6 @@ name|BITS_PER_UNIT
 expr_stmt|;
 else|else
 block|{
-name|desired_align
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Get the bitfield's type */
 for|for
 control|(
@@ -2775,9 +2801,18 @@ name|_C_STRUCT_E
 condition|)
 block|{
 comment|/* Work out the alignment of the record as one expression and store          in the record type.  Round it up to a multiple of the record's          alignment. */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ROUND_TYPE_ALIGN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sparc__
+argument_list|)
 name|layout
 operator|->
 name|record_align
