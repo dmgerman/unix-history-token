@@ -395,8 +395,6 @@ name|argv0
 operator|=
 name|imgp
 operator|->
-name|uap
-operator|->
 name|fname
 expr_stmt|;
 return|return

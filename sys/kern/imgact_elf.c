@@ -2301,7 +2301,13 @@ name|p
 expr_stmt|;
 name|imgp
 operator|->
-name|uap
+name|userspace_argv
+operator|=
+name|NULL
+expr_stmt|;
+name|imgp
+operator|->
+name|userspace_envv
 operator|=
 name|NULL
 expr_stmt|;

@@ -50,12 +50,18 @@ modifier|*
 name|proc
 decl_stmt|;
 comment|/* our process struct */
-name|struct
-name|execve_args
+name|char
 modifier|*
-name|uap
+modifier|*
+name|userspace_argv
 decl_stmt|;
-comment|/* syscall arguments */
+comment|/* system call argument */
+name|char
+modifier|*
+modifier|*
+name|userspace_envv
+decl_stmt|;
+comment|/* system call argument */
 name|struct
 name|vnode
 modifier|*
