@@ -1517,12 +1517,12 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|LIST_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|mp
 operator|->
-name|mnt_vnodelist
+name|mnt_nvnodelist
 argument_list|)
 expr_stmt|;
 name|mp
@@ -2969,11 +2969,18 @@ name|v_mount
 operator|!=
 name|NULL
 condition|)
-name|LIST_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_nvnodelist
+argument_list|,
 name|vp
 argument_list|,
-name|v_mntvnodes
+name|v_nmntvnodes
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Insert into list of vnodes for the new mount point, if available. 	 */
@@ -2998,16 +3005,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|LIST_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|mp
 operator|->
-name|mnt_vnodelist
+name|mnt_nvnodelist
 argument_list|,
 name|vp
 argument_list|,
-name|v_mntvnodes
+name|v_nmntvnodes
 argument_list|)
 expr_stmt|;
 name|simple_unlock
@@ -6897,12 +6904,12 @@ for|for
 control|(
 name|vp
 operator|=
-name|LIST_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|mp
 operator|->
-name|mnt_vnodelist
+name|mnt_nvnodelist
 argument_list|)
 init|;
 name|vp
@@ -6926,11 +6933,11 @@ name|loop
 goto|;
 name|nvp
 operator|=
-name|LIST_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|vp
 argument_list|,
-name|v_mntvnodes
+name|v_nmntvnodes
 argument_list|)
 expr_stmt|;
 name|simple_lock
@@ -8734,13 +8741,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|LIST_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|vp
 argument_list|,
-argument|&mp->mnt_vnodelist
+argument|&mp->mnt_nvnodelist
 argument_list|,
-argument|v_mntvnodes
+argument|v_nmntvnodes
 argument_list|)
 block|{
 if|if
@@ -9286,12 +9293,12 @@ comment|/* Make an estimate */
 end_comment
 
 begin_comment
-unit|return (SYSCTL_OUT(req, 0, 			(numvnodes + KINFO_VNODESLOP) * (VPTRSZ + VNODESZ)));  	simple_lock(&mountlist_slock); 	for (mp = TAILQ_FIRST(&mountlist); mp != NULL; mp = nmp) { 		if (vfs_busy(mp, LK_NOWAIT,&mountlist_slock, p)) { 			nmp = TAILQ_NEXT(mp, mnt_list); 			continue; 		} again: 		simple_lock(&mntvnode_slock); 		for (vp = LIST_FIRST(&mp->mnt_vnodelist); 		     vp != NULL; 		     vp = nvp) {
+unit|return (SYSCTL_OUT(req, 0, 			(numvnodes + KINFO_VNODESLOP) * (VPTRSZ + VNODESZ)));  	simple_lock(&mountlist_slock); 	for (mp = TAILQ_FIRST(&mountlist); mp != NULL; mp = nmp) { 		if (vfs_busy(mp, LK_NOWAIT,&mountlist_slock, p)) { 			nmp = TAILQ_NEXT(mp, mnt_list); 			continue; 		} again: 		simple_lock(&mntvnode_slock); 		for (vp = TAILQ_FIRST(&mp->mnt_nvnodelist); 		     vp != NULL; 		     vp = nvp) {
 comment|/* 			 * Check that the vp is still associated with 			 * this filesystem.  RACE: could have been 			 * recycled onto the same filesystem. 			 */
 end_comment
 
 begin_endif
-unit|if (vp->v_mount != mp) { 				simple_unlock(&mntvnode_slock); 				goto again; 			} 			nvp = LIST_NEXT(vp, v_mntvnodes); 			simple_unlock(&mntvnode_slock); 			if ((error = SYSCTL_OUT(req,&vp, VPTRSZ)) || 			    (error = SYSCTL_OUT(req, vp, VNODESZ))) 				return (error); 			simple_lock(&mntvnode_slock); 		} 		simple_unlock(&mntvnode_slock); 		simple_lock(&mountlist_slock); 		nmp = TAILQ_NEXT(mp, mnt_list); 		vfs_unbusy(mp, p); 	} 	simple_unlock(&mountlist_slock);  	return (0); }
+unit|if (vp->v_mount != mp) { 				simple_unlock(&mntvnode_slock); 				goto again; 			} 			nvp = TAILQ_NEXT(vp, v_nmntvnodes); 			simple_unlock(&mntvnode_slock); 			if ((error = SYSCTL_OUT(req,&vp, VPTRSZ)) || 			    (error = SYSCTL_OUT(req, vp, VNODESZ))) 				return (error); 			simple_lock(&mntvnode_slock); 		} 		simple_unlock(&mntvnode_slock); 		simple_lock(&mountlist_slock); 		nmp = TAILQ_NEXT(mp, mnt_list); 		vfs_unbusy(mp, p); 	} 	simple_unlock(&mountlist_slock);  	return (0); }
 endif|#
 directive|endif
 end_endif
@@ -10841,12 +10848,12 @@ for|for
 control|(
 name|vp
 operator|=
-name|LIST_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|mp
 operator|->
-name|mnt_vnodelist
+name|mnt_nvnodelist
 argument_list|)
 init|;
 name|vp
@@ -10860,11 +10867,11 @@ control|)
 block|{
 name|nvp
 operator|=
-name|LIST_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|vp
 argument_list|,
-name|v_mntvnodes
+name|v_nmntvnodes
 argument_list|)
 expr_stmt|;
 if|if
