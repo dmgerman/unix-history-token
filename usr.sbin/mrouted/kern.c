@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: kern.c,v 3.8 1995/11/29 22:36:57 fenner Rel $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: kern.c,v 1.6 1996/01/06 21:09:50 peter Exp $  */
 end_comment
 
 begin_include
@@ -724,7 +724,9 @@ name|LOG_ERR
 argument_list|,
 name|errno
 argument_list|,
-literal|"setsockopt MRT_DEL_VIF"
+literal|"setsockopt MRT_DEL_VIF on vif %d"
+argument_list|,
+name|vifi
 argument_list|)
 expr_stmt|;
 block|}
