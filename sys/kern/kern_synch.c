@@ -1913,10 +1913,6 @@ name|sig
 operator|=
 name|SIGSTOP
 expr_stmt|;
-name|rval
-operator|=
-name|ERESTART
-expr_stmt|;
 block|}
 block|}
 name|mtx_lock_spin
