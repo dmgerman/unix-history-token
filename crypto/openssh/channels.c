@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: channels.c,v 1.57 2000/05/08 17:42:24 markus Exp $"
+literal|"$Id: channels.c,v 1.59 2000/05/30 17:23:36 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -446,96 +446,6 @@ block|}
 return|return
 name|c
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|set_nonblock
-parameter_list|(
-name|int
-name|fd
-parameter_list|)
-block|{
-name|int
-name|val
-decl_stmt|;
-name|val
-operator|=
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_GETFL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|val
-operator|<
-literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"fcntl(%d, F_GETFL, 0): %s"
-argument_list|,
-name|fd
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|val
-operator|&
-name|O_NONBLOCK
-condition|)
-return|return;
-name|debug
-argument_list|(
-literal|"fd %d setting O_NONBLOCK"
-argument_list|,
-name|fd
-argument_list|)
-expr_stmt|;
-name|val
-operator||=
-name|O_NONBLOCK
-expr_stmt|;
-if|if
-condition|(
-name|fcntl
-argument_list|(
-name|fd
-argument_list|,
-name|F_SETFL
-argument_list|,
-name|val
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|error
-argument_list|(
-literal|"fcntl(%d, F_SETFL, O_NONBLOCK): %s"
-argument_list|,
-name|fd
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -9824,11 +9734,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This if called to process SSH_CMSG_AGENT_REQUEST_FORWARDING on the server.  * This starts forwarding authentication requests.  */
+comment|/*  * This is called to process SSH_CMSG_AGENT_REQUEST_FORWARDING on the server.  * This starts forwarding authentication requests.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|auth_input_request_forwarding
 parameter_list|(
 name|struct
@@ -9900,9 +9810,10 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|packet_disconnect
+block|{
+name|packet_send_debug
 argument_list|(
-literal|"mkdtemp: %.100s"
+literal|"Agent forwarding disabled: mkdtemp() failed: %.100s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -9910,6 +9821,31 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|restore_uid
+argument_list|()
+expr_stmt|;
+name|xfree
+argument_list|(
+name|channel_forwarded_auth_socket_name
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|channel_forwarded_auth_socket_dir
+argument_list|)
+expr_stmt|;
+name|channel_forwarded_auth_socket_name
+operator|=
+name|NULL
+expr_stmt|;
+name|channel_forwarded_auth_socket_dir
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|snprintf
 argument_list|(
 name|channel_forwarded_auth_socket_name
@@ -10115,6 +10051,9 @@ name|path
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

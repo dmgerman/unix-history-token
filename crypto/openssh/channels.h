@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RCSID("$Id: channels.h,v 1.12 2000/05/03 18:03:06 markus Exp $"); */
+comment|/* RCSID("$Id: channels.h,v 1.13 2000/05/30 17:23:37 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -996,11 +996,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * This if called to process SSH_CMSG_AGENT_REQUEST_FORWARDING on the server.  * This starts forwarding authentication requests.  */
+comment|/*  * This is called to process SSH_CMSG_AGENT_REQUEST_FORWARDING on the server.  * This starts forwarding authentication requests.  */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|auth_input_request_forwarding
 parameter_list|(
 name|struct
