@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_domain.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_domain.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -116,16 +116,6 @@ name|ISO
 name|ADDDOMAIN
 argument_list|(
 name|iso
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|RMP
-name|ADDDOMAIN
-argument_list|(
-name|rmp
 argument_list|)
 expr_stmt|;
 endif|#
