@@ -1469,11 +1469,6 @@ argument_list|(
 literal|"don't do that"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|dev
-operator|)
-return|;
 block|}
 name|va_start
 argument_list|(
@@ -1885,7 +1880,6 @@ argument_list|(
 literal|"don't do that"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 name|devfs_destroy
 argument_list|(
