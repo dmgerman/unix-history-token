@@ -9398,7 +9398,7 @@ expr_stmt|;
 name|bitmask_snprintf
 argument_list|(
 operator|(
-name|u_long
+name|int
 operator|)
 name|le32toh
 argument_list|(
