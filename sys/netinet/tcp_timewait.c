@@ -6579,7 +6579,7 @@ name|isn_offset_old
 operator|+
 name|ISN_BYTES_PER_SECOND
 operator|/
-name|hz
+literal|100
 expr_stmt|;
 if|if
 condition|(
