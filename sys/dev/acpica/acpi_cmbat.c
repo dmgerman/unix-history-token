@@ -2758,9 +2758,7 @@ operator|++
 operator|,
 name|AcpiOsSleep
 argument_list|(
-literal|10
-argument_list|,
-literal|0
+literal|10000
 argument_list|)
 control|)
 block|{

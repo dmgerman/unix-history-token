@@ -85,7 +85,7 @@ parameter_list|(
 name|UINT32
 name|InterruptNumber
 parameter_list|,
-name|OSD_HANDLER
+name|ACPI_OSD_HANDLER
 name|ServiceRoutine
 parameter_list|,
 name|void
@@ -395,7 +395,7 @@ parameter_list|(
 name|UINT32
 name|InterruptNumber
 parameter_list|,
-name|OSD_HANDLER
+name|ACPI_OSD_HANDLER
 name|ServiceRoutine
 parameter_list|)
 block|{
