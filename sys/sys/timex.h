@@ -628,6 +628,10 @@ name|long
 name|esterror
 decl_stmt|;
 comment|/* estimated error (us) (ro) */
+name|int
+name|time_state
+decl_stmt|;
+comment|/* what ntp_gettime returns */
 block|}
 struct|;
 end_struct
@@ -719,6 +723,39 @@ ifdef|#
 directive|ifdef
 name|__FreeBSD__
 end_ifdef
+
+begin_comment
+comment|/*  * sysctl identifiers underneath kern.ntp_pll  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_PLL_GETTIME
+value|1
+end_define
+
+begin_comment
+comment|/* used by ntp_gettime() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_PLL_MAXID
+value|2
+end_define
+
+begin_comment
+comment|/* number of valid ids */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_PLL_NAMES
+value|{ \ 			  { 0, 0 }, \ 			  { "gettime", CTLTYPE_STRUCT }, \ 		      }
+end_define
 
 begin_ifndef
 ifndef|#
