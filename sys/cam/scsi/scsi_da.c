@@ -863,7 +863,7 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
-comment|/* 		 * Olympus E-100RS digital camera. 		 * Reported by:	Bernd Walter<ticso@cicely8.cicely.de> 		 * XXX See above; its likely all Olympus digital cameras 		 *     have the same quirk, but I cannot confirm. - kbyanc 		 */
+comment|/* 		 * Olympus digital cameras (E-100RS, E-10). 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -871,7 +871,7 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"OLYMPUS"
 block|,
-literal|"E-100RS"
+literal|"E-*"
 block|,
 literal|"*"
 block|}
