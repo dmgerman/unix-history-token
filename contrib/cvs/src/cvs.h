@@ -154,6 +154,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Begin GNULIB headers.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"xsize.h"
+end_include
+
+begin_comment
+comment|/* End GNULIB headers.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3777,31 +3791,6 @@ operator|*
 operator|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fopen_case
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|*
-operator|,
-name|char
-operator|*
 operator|*
 operator|)
 argument_list|)

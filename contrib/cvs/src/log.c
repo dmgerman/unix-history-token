@@ -4812,6 +4812,9 @@ operator|->
 name|first
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|really_quiet
 condition|)
 block|{
 name|error
@@ -4962,6 +4965,9 @@ operator|->
 name|first
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|really_quiet
 condition|)
 block|{
 name|error
@@ -5120,6 +5126,9 @@ operator|->
 name|last
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|really_quiet
 condition|)
 block|{
 name|error

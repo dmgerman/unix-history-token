@@ -833,9 +833,7 @@ name|dir
 argument_list|)
 condition|)
 return|return
-operator|(
 name|R_SKIP_ALL
-operator|)
 return|;
 comment|/* initialize the ignore list for this directory */
 name|find_data
@@ -2295,26 +2293,54 @@ literal|0
 return|;
 block|}
 comment|/* Now we keep track of which files we actually are going to 	   operate on, and only work with those files in the future. 	   This saves time--we don't want to search the file system 	   of the working directory twice.  */
-name|find_args
-operator|.
-name|argv
-operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|xmalloc
+if|if
+condition|(
+name|size_overflow_p
+argument_list|(
+name|xtimes
 argument_list|(
 name|find_args
 operator|.
 name|argc
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|char
 operator|*
 operator|*
+argument_list|)
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|find_args
+operator|.
+name|argc
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|find_args
+operator|.
+name|argv
+operator|=
+name|xmalloc
+argument_list|(
+name|xtimes
+argument_list|(
+name|find_args
+operator|.
+name|argc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+operator|*
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3021,9 +3047,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -3553,9 +3577,7 @@ name|fullname
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -3718,9 +3740,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 case|case
 name|T_MODIFIED
@@ -3776,9 +3796,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -3828,9 +3846,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -3881,9 +3897,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -3995,9 +4009,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -4066,9 +4078,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -4121,9 +4131,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -4656,9 +4664,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 case|case
 name|T_UPTODATE
@@ -4685,9 +4691,7 @@ name|vers
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -4748,9 +4752,7 @@ name|dir
 argument_list|)
 condition|)
 return|return
-operator|(
 name|R_SKIP_ALL
-operator|)
 return|;
 if|if
 condition|(
@@ -4769,9 +4771,7 @@ name|update_dir
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|R_PROCESS
-operator|)
 return|;
 block|}
 end_function
@@ -4837,9 +4837,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -4949,9 +4947,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 comment|/* so it fails! */
 block|}
@@ -4984,7 +4980,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|run_exec
 argument_list|(
 name|RUN_TTY
@@ -4997,7 +4992,6 @@ name|RUN_NORMAL
 operator||
 name|RUN_REALLY
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
@@ -5112,9 +5106,7 @@ operator|->
 name|list
 condition|)
 return|return
-operator|(
 name|err
-operator|)
 return|;
 comment|/* run any pre-commit checks */
 if|if
@@ -5152,9 +5144,7 @@ name|n
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -5327,9 +5317,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 name|ulist
 operator|=
@@ -5429,9 +5417,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 name|ci
 operator|=
@@ -6119,9 +6105,7 @@ name|SIG_endCrSect
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -6195,9 +6179,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|err
-operator|)
 return|;
 name|ulist
 operator|=
@@ -6419,9 +6401,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -6494,9 +6474,7 @@ name|dir
 argument_list|)
 condition|)
 return|return
-operator|(
 name|R_SKIP_ALL
-operator|)
 return|;
 comment|/* find the update list for this dir */
 name|p
@@ -6556,9 +6534,7 @@ operator|->
 name|list
 condition|)
 return|return
-operator|(
 name|R_SKIP_FILES
-operator|)
 return|;
 comment|/* get commit message */
 name|real_repos
@@ -6612,9 +6588,7 @@ name|real_repos
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|R_PROCESS
-operator|)
 return|;
 block|}
 end_function
@@ -6710,9 +6684,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -7045,9 +7017,7 @@ name|tag
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 name|branchname
@@ -7177,9 +7147,7 @@ name|fullname
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 name|RCS_rewrite
@@ -7260,9 +7228,7 @@ name|fullname
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 comment|/* Except when we are creating a branch, lock the revision so that        we can check in the new revision.  */
@@ -7367,9 +7333,7 @@ name|fullname
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 comment|/* At this point, the file has been committed as removed.  We should        probably tell the history file about it  */
@@ -7497,9 +7461,7 @@ name|file
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -7670,9 +7632,7 @@ name|last_register_time
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ret
-operator|)
 return|;
 block|}
 end_function
@@ -9314,9 +9274,7 @@ name|branch
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -9368,9 +9326,7 @@ operator|=
 name|branch
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 comment|/* try to restore the branch if we can on error */
@@ -9397,9 +9353,7 @@ name|branch
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function

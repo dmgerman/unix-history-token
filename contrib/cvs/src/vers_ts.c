@@ -1118,8 +1118,6 @@ condition|(
 name|entdata
 operator|->
 name|timestamp
-operator|!=
-name|NULL
 operator|&&
 operator|(
 name|entdata
