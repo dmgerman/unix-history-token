@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	6.7	84/06/27	*/
+comment|/*	vfs_syscalls.c	6.8	84/06/30	*/
 end_comment
 
 begin_include
@@ -4069,37 +4069,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Insure directory entry still exists and 	 * has not changed since the start of all 	 * this.  If either has occured, forget about 	 * about deleting the original entry and just 	 * adjust the link count in the inode. 	 */
+comment|/* 	 * Insure directory entry still exists and 	 * has not changed since the start of all 	 * this.  If either has occured, forget about 	 * about deleting the original entry. 	 */
 if|if
 condition|(
 name|dp
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 name|u
 operator|.
 name|u_dent
 operator|.
 name|d_ino
-operator|!=
+operator|==
 name|ip
 operator|->
 name|i_number
 condition|)
-block|{
-name|ip
-operator|->
-name|i_nlink
-operator|--
-expr_stmt|;
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|ICHG
-expr_stmt|;
-block|}
-else|else
 block|{
 comment|/* 		 * If source is a directory, must adjust 		 * link count of parent directory also. 		 * If target didn't exist and source and 		 * target have the same parent, then we 		 * needn't touch the link count, it all 		 * balances out in the end.  Otherwise, we 		 * must do so to reflect deletion of ".." 		 * done above. 		 */
 if|if
