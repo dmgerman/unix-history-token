@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.34 1996/04/03 13:52:13 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.35 1996/05/06 20:31:04 phk Exp $  */
 end_comment
 
 begin_comment
@@ -432,6 +432,60 @@ specifier|static
 name|ip_fw_ctl_t
 modifier|*
 name|old_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_fw_chk
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|*
+name|pip
+operator|,
+name|int
+name|hlen
+operator|,
+expr|struct
+name|ifnet
+operator|*
+name|rif
+operator|,
+name|int
+name|dir
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+name|m
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_fw_ctl
+name|__P
+argument_list|(
+operator|(
+name|int
+name|stage
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|*
+name|mm
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1168,6 +1222,7 @@ comment|/*  * Returns 1 if it should be accepted, 0 otherwise.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ip_fw_chk
 parameter_list|(
@@ -2830,6 +2885,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ip_fw_ctl
 parameter_list|(
