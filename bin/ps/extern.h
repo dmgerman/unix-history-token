@@ -75,13 +75,17 @@ name|totwidth
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|VARENT
-modifier|*
-name|vhead
-decl_stmt|;
-end_decl_stmt
+begin_extern
+extern|extern STAILQ_HEAD(velisthead
+operator|,
+extern|varent
+end_extern
+
+begin_expr_stmt
+unit|)
+name|varlist
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|__BEGIN_DECLS
