@@ -206,7 +206,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|M3_BUFSIZE
+name|M3_BUFSIZE_DEFAULT
 value|4096
 end_define
 
@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|M3_PCHANS
-value|1
+value|2
 end_define
 
 begin_comment
@@ -396,6 +396,10 @@ name|rch_cnt
 decl_stmt|;
 name|int
 name|pch_active_cnt
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|u_int16_t
 modifier|*
@@ -2001,7 +2005,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|M3_BUFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -3637,7 +3643,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|M3_BUFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -6233,6 +6241,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|1024
+argument_list|,
+name|M3_BUFSIZE_DEFAULT
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -6259,7 +6282,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|M3_BUFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -7021,8 +7046,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-name|index
 operator|++
+name|index
 index|]
 operator|=
 name|m3_rd_assp_code
@@ -7049,8 +7074,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-name|index
 operator|++
+name|index
 index|]
 operator|=
 name|m3_rd_assp_data
@@ -7156,8 +7181,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-name|index
 operator|++
+name|index
 index|]
 argument_list|)
 expr_stmt|;
@@ -7184,8 +7209,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-name|index
 operator|++
+name|index
 index|]
 argument_list|)
 expr_stmt|;
