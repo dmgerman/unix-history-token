@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpass.c	5.8 (Berkeley) %G%"
+literal|"@(#)getpass.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,12 +193,6 @@ operator|&=
 operator|~
 name|ECHO
 expr_stmt|;
-name|term
-operator|.
-name|c_cflag
-operator||=
-name|CIGNORE
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -210,6 +204,8 @@ name|fp
 argument_list|)
 argument_list|,
 name|TCSAFLUSH
+operator||
+name|TCSASOFT
 argument_list|,
 operator|&
 name|term
@@ -299,12 +295,6 @@ name|c_lflag
 operator||=
 name|ECHO
 expr_stmt|;
-name|term
-operator|.
-name|c_cflag
-operator||=
-name|CIGNORE
-expr_stmt|;
 name|tcsetattr
 argument_list|(
 name|fileno
@@ -313,6 +303,8 @@ name|fp
 argument_list|)
 argument_list|,
 name|TCSAFLUSH
+operator||
+name|TCSASOFT
 argument_list|,
 operator|&
 name|term
