@@ -44,9 +44,6 @@ name|rval
 init|=
 literal|0
 decl_stmt|;
-name|pthread_t
-name|next_thread
-decl_stmt|;
 comment|/* Check for invalid calling parameters: */
 if|if
 condition|(
@@ -95,58 +92,46 @@ comment|/* 		 * Defer signals to protect the scheduling queues from 		 * access 
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
-comment|/* Enter a loop to bring all threads off the join queue: */
-while|while
+comment|/* Check if there is a joiner: */
+if|if
 condition|(
-operator|(
-name|next_thread
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
 name|pthread
 operator|->
-name|join_queue
-argument_list|)
-operator|)
+name|joiner
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Remove the thread from the queue: */
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
+name|struct
+name|pthread
+modifier|*
+name|joiner
+init|=
 name|pthread
 operator|->
-name|join_queue
-argument_list|,
-name|next_thread
-argument_list|,
-name|sqe
-argument_list|)
-expr_stmt|;
-name|pthread
-operator|->
-name|flags
-operator|&=
-operator|~
-name|PTHREAD_FLAGS_IN_JOINQ
-expr_stmt|;
+name|joiner
+decl_stmt|;
 comment|/* Make the thread runnable: */
 name|PTHREAD_NEW_STATE
 argument_list|(
-name|next_thread
+name|joiner
 argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Set the return value for the woken thread: 			 */
-name|next_thread
+comment|/* Set the return value for the woken thread: */
+name|joiner
 operator|->
 name|error
 operator|=
 name|ESRCH
+expr_stmt|;
+comment|/* 			 * Disconnect the joiner from the thread being detached: 			 */
+name|pthread
+operator|->
+name|joiner
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 		 * Undefer and handle pending signals, yielding if a 		 * scheduling signal occurred while in the critical region. 		 */

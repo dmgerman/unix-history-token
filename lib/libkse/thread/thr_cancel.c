@@ -266,6 +266,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PS_JOIN
+case|:
+case|case
 name|PS_SUSPENDED
 case|:
 if|if
@@ -320,9 +323,6 @@ name|PS_FDLW_WAIT
 case|:
 case|case
 name|PS_FILE_WAIT
-case|:
-case|case
-name|PS_JOIN
 case|:
 comment|/* 				 * Threads in these states may be in queues. 				 * In order to preserve queue integrity, the 				 * cancelled thread must remove itself from the 				 * queue.  Mark the thread as interrupted and 				 * needing cancellation, and set the state to 				 * running.  When the thread resumes, it will 				 * remove itself from the queue and call the 				 * cancellation completion routine. 				 */
 name|pthread
@@ -660,6 +660,14 @@ expr_stmt|;
 name|_thread_exit_cleanup
 argument_list|()
 expr_stmt|;
+name|pthread_detach
+argument_list|(
+operator|(
+name|pthread_t
+operator|)
+name|curthread
+argument_list|)
+expr_stmt|;
 name|pthread_exit
 argument_list|(
 name|PTHREAD_CANCELED
@@ -783,6 +791,14 @@ name|PTHREAD_CANCEL_NEEDED
 expr_stmt|;
 name|_thread_exit_cleanup
 argument_list|()
+expr_stmt|;
+name|pthread_detach
+argument_list|(
+operator|(
+name|pthread_t
+operator|)
+name|curthread
+argument_list|)
 expr_stmt|;
 name|pthread_exit
 argument_list|(

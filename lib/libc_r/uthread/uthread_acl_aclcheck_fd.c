@@ -80,6 +80,11 @@ name|fd
 argument_list|,
 name|tp
 argument_list|,
+operator|(
+expr|struct
+name|acl
+operator|*
+operator|)
 name|acl
 argument_list|)
 expr_stmt|;

@@ -1109,16 +1109,12 @@ argument_list|(
 literal|"_thread_initial"
 argument_list|)
 expr_stmt|;
-comment|/* Initialise the queue: */
-name|TAILQ_INIT
-argument_list|(
-operator|&
-operator|(
+comment|/* Initialize joiner to NULL (no joiner): */
 name|_thread_initial
 operator|->
-name|join_queue
-operator|)
-argument_list|)
+name|joiner
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Initialize the owned mutex queue and count: */
 name|TAILQ_INIT

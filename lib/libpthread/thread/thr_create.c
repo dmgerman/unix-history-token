@@ -802,16 +802,12 @@ name|inherited_priority
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Initialise the join queue for the new thread: */
-name|TAILQ_INIT
-argument_list|(
-operator|&
-operator|(
+comment|/* Initialize joiner to NULL (no joiner): */
 name|new_thread
 operator|->
-name|join_queue
-operator|)
-argument_list|)
+name|joiner
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Initialize the mutex queue: */
 name|TAILQ_INIT
