@@ -268,12 +268,6 @@ begin_comment
 comment|/*  * BSD setjmp saves the signal mask, which violates ANSI C and takes time,  * so we use _setjmp instead.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -295,11 +289,6 @@ name|val
 parameter_list|)
 value|_longjmp(jmploc, val)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

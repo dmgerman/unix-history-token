@@ -144,6 +144,12 @@ directive|include
 file|"mystring.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"myhistedit.h"
+end_include
+
 begin_comment
 comment|/*  * Sigmode records the current value of the signal handlers for the various  * modes.  A value of zero means that the current handler is not known.  * S_HARD_IGN indicates that the signal was ignored on entry to the shell,  */
 end_comment
@@ -278,6 +284,13 @@ end_decl_stmt
 begin_comment
 comment|/* Used while handling SIGCHLD traps. */
 end_comment
+
+begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|gotwinch
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1013,6 +1026,25 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
+case|case
+name|SIGWINCH
+case|:
+if|if
+condition|(
+name|rootshell
+operator|&&
+name|iflag
+condition|)
+name|action
+operator|=
+name|S_CATCH
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 block|}
 block|}
 name|t
@@ -1154,9 +1186,6 @@ argument_list|,
 name|sigact
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BSD
 if|if
 condition|(
 name|sig
@@ -1174,8 +1203,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1361,18 +1388,6 @@ end_macro
 
 begin_block
 block|{
-ifndef|#
-directive|ifndef
-name|BSD
-name|signal
-argument_list|(
-name|signo
-argument_list|,
-name|onsig
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|signo
@@ -1482,6 +1497,21 @@ name|breakwaitcmd
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
+if|if
+condition|(
+name|signo
+operator|==
+name|SIGWINCH
+condition|)
+name|gotwinch
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1646,6 +1676,16 @@ argument_list|(
 name|SIGTERM
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_HISTORY
+name|setsignal
+argument_list|(
+name|SIGWINCH
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|is_interactive
 operator|=
 name|on

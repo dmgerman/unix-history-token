@@ -648,7 +648,7 @@ name|ENOSPC
 block|,
 name|ALL
 block|,
-literal|"filesystem full"
+literal|"file system full"
 block|}
 block|,
 ifdef|#
@@ -690,7 +690,7 @@ name|EROFS
 block|,
 name|ALL
 block|,
-literal|"read-only filesystem"
+literal|"read-only file system"
 block|}
 block|,
 block|{
@@ -701,19 +701,6 @@ block|,
 literal|"text busy"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|SYSV
-block|{
-name|EAGAIN
-block|,
-name|E_EXEC
-block|,
-literal|"not enough memory"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|ENOMEM
 block|,

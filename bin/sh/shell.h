@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of Cali
 end_comment
 
 begin_comment
-comment|/*  * The follow should be set to reflect the type of system you have:  *	JOBS -> 1 if you have Berkeley job control, 0 otherwise.  *	SHORTNAMES -> 1 if your linker cannot handle long names.  *	define BSD if you are running 4.2 BSD or later.  *	define SYSV if you are running under System V.  *	define DEBUG=1 to compile in debugging (set global "debug" to turn on)  *	define DEBUG=2 to compile in and turn on debugging.  *  * When debugging is on, debugging info will be written to $HOME/trace and  * a quit signal will generate a core dump.  */
+comment|/*  * The follow should be set to reflect the type of system you have:  *	JOBS -> 1 if you have Berkeley job control, 0 otherwise.  *	define DEBUG=1 to compile in debugging (set global "debug" to turn on)  *	define DEBUG=2 to compile in and turn on debugging.  *  * When debugging is on, debugging info will be written to $HOME/trace and  * a quit signal will generate a core dump.  */
 end_comment
 
 begin_define
@@ -13,24 +13,6 @@ directive|define
 name|JOBS
 value|1
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BSD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|BSD
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* #define DEBUG 1 */

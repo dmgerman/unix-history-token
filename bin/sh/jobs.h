@@ -108,7 +108,7 @@ name|short
 name|nprocs
 decl_stmt|;
 comment|/* number of processes */
-name|short
+name|pid_t
 name|pgrp
 decl_stmt|;
 comment|/* process group of this job */
@@ -306,7 +306,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|pid_t
 name|forkshell
 parameter_list|(
 name|struct

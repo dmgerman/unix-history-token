@@ -86,12 +86,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -115,11 +109,6 @@ include|#
 directive|include
 file|<paths.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -299,7 +288,7 @@ comment|/* most recently used job list */
 end_comment
 
 begin_decl_stmt
-name|int
+name|pid_t
 name|initialpgrp
 decl_stmt|;
 end_decl_stmt
@@ -410,7 +399,7 @@ end_function_decl
 
 begin_function_decl
 name|STATIC
-name|int
+name|pid_t
 name|dowait
 parameter_list|(
 name|int
@@ -422,30 +411,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|SYSV
-end_if
-
 begin_function_decl
 name|STATIC
-name|int
-name|onsigchild
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-name|STATIC
-name|int
+name|pid_t
 name|waitproc
 parameter_list|(
 name|int
@@ -547,7 +515,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Turn job control on and off.  *  * Note:  This code assumes that the third arg to ioctl is a character  * pointer, which is true on Berkeley systems but not System V.  Since  * System V doesn't have job control yet, this isn't a problem now.  */
+comment|/*  * Turn job control on and off.  */
 end_comment
 
 begin_decl_stmt
@@ -892,7 +860,7 @@ name|job
 operator|*
 name|jp
 block|;
-name|int
+name|pid_t
 name|pgrp
 block|;
 name|int
@@ -1281,6 +1249,10 @@ name|optreset
 operator|=
 literal|1
 expr_stmt|;
+name|opterr
+operator|=
+literal|0
+expr_stmt|;
 name|sformat
 operator|=
 name|lformat
@@ -1542,6 +1514,9 @@ name|out1fmt
 argument_list|(
 literal|"%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ps
 operator|->
 name|pid
@@ -1680,6 +1655,9 @@ literal|64
 argument_list|,
 literal|"%d "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ps
 operator|->
 name|pid
@@ -2458,6 +2436,9 @@ name|out1fmt
 argument_list|(
 literal|"%d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|jp
 operator|->
 name|ps
@@ -2516,7 +2497,7 @@ decl_stmt|,
 modifier|*
 name|jp
 decl_stmt|;
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 name|int
@@ -2916,6 +2897,9 @@ condition|)
 block|{
 name|pid
 operator|=
+operator|(
+name|pid_t
+operator|)
 name|number
 argument_list|(
 name|name
@@ -3671,7 +3655,7 @@ comment|/*  * Fork of a subshell.  If we are doing job control, give the subshel
 end_comment
 
 begin_function
-name|int
+name|pid_t
 name|forkshell
 parameter_list|(
 name|struct
@@ -3688,10 +3672,10 @@ name|int
 name|mode
 parameter_list|)
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
-name|int
+name|pid_t
 name|pgrp
 decl_stmt|;
 name|TRACE
@@ -3772,6 +3756,9 @@ argument_list|(
 operator|(
 literal|"Child shell %d\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 operator|)
@@ -3784,35 +3771,6 @@ expr_stmt|;
 name|rootshell
 operator|=
 literal|0
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|njobs
-operator|,
-name|p
-operator|=
-name|jobtab
-init|;
-operator|--
-name|i
-operator|>=
-literal|0
-condition|;
-name|p
-operator|++
-control|)
-if|if
-condition|(
-name|p
-operator|->
-name|used
-condition|)
-name|freejob
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|closescript
 argument_list|()
@@ -4054,6 +4012,39 @@ block|}
 block|}
 endif|#
 directive|endif
+name|INTOFF
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|njobs
+operator|,
+name|p
+operator|=
+name|jobtab
+init|;
+operator|--
+name|i
+operator|>=
+literal|0
+condition|;
+name|p
+operator|++
+control|)
+if|if
+condition|(
+name|p
+operator|->
+name|used
+condition|)
+name|freejob
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|INTON
+expr_stmt|;
 if|if
 condition|(
 name|wasroot
@@ -4222,6 +4213,9 @@ argument_list|(
 operator|(
 literal|"In parent shell:  child = %d\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|pid
 operator|)
 argument_list|)
@@ -4253,7 +4247,7 @@ block|{
 if|#
 directive|if
 name|JOBS
-name|int
+name|pid_t
 name|mypgrp
 init|=
 name|getpgrp
@@ -4484,7 +4478,7 @@ end_comment
 
 begin_function
 name|STATIC
-name|int
+name|pid_t
 name|dowait
 parameter_list|(
 name|int
@@ -4496,7 +4490,7 @@ modifier|*
 name|job
 parameter_list|)
 block|{
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 name|int
@@ -4558,6 +4552,9 @@ argument_list|(
 operator|(
 literal|"wait returns %d, status=%d\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|pid
 operator|,
 name|status
@@ -4704,6 +4701,9 @@ argument_list|(
 operator|(
 literal|"Changing status of proc %d from 0x%x to 0x%x\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|pid
 operator|,
 name|sp
@@ -4897,31 +4897,17 @@ condition|)
 block|{
 if|if
 condition|(
-name|jp
+name|thisjob
 operator|->
 name|foreground
-condition|)
-block|{
-if|#
-directive|if
-name|JOBS
-if|if
-condition|(
+operator|&&
+operator|!
 name|WIFSTOPPED
 argument_list|(
 name|status
 argument_list|)
 condition|)
-name|i
-operator|=
-name|WSTOPSIG
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
-else|else
-endif|#
-directive|endif
+block|{
 name|i
 operator|=
 name|WTERMSIG
@@ -4993,7 +4979,7 @@ name|pid
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5029,43 +5015,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do a wait system call.  If job control is compiled in, we accept  * stopped processes.  If block is zero, we return a value of zero  * rather than blocking.  *  * System V doesn't have a non-blocking wait system call.  It does  * have a SIGCLD signal that is sent to a process when one of it's  * children dies.  The obvious way to use SIGCLD would be to install  * a handler for SIGCLD which simply bumped a counter when a SIGCLD  * was received, and have waitproc bump another counter when it got  * the status of a process.  Waitproc would then know that a wait  * system call would not block if the two counters were different.  * This approach doesn't work because if a process has children that  * have not been waited for, System V will send it a SIGCLD when it  * installs a signal handler for SIGCLD.  What this means is that when  * a child exits, the shell will be sent SIGCLD signals continuously  * until is runs out of stack space, unless it does a wait call before  * restoring the signal handler.  The code below takes advantage of  * this (mis)feature by installing a signal handler for SIGCLD and  * then checking to see whether it was called.  If there are any  * children to be waited for, it will be.  *  * If neither SYSV nor BSD is defined, we don't implement nonblocking  * waits at all.  In this case, the user will not be informed when  * a background process until the next time she runs a real program  * (as opposed to running a builtin command or just typing return),  * and the jobs command may give out of date information.  */
+comment|/*  * Do a wait system call.  If job control is compiled in, we accept  * stopped processes.  If block is zero, we return a value of zero  * rather than blocking.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSV
-end_ifdef
-
-begin_decl_stmt
-name|STATIC
-name|sig_atomic_t
-name|gotsigchild
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|STATIC
-name|int
-name|onsigchild
-parameter_list|()
-block|{
-name|gotsigchild
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|STATIC
-name|int
+name|pid_t
 name|waitproc
 parameter_list|(
 name|int
@@ -5076,9 +5031,6 @@ modifier|*
 name|status
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|BSD
 name|int
 name|flags
 decl_stmt|;
@@ -5122,82 +5074,6 @@ operator|)
 name|NULL
 argument_list|)
 return|;
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|SYSV
-name|int
-function_decl|(
-modifier|*
-name|save
-function_decl|)
-parameter_list|()
-function_decl|;
-if|if
-condition|(
-name|block
-operator|==
-literal|0
-condition|)
-block|{
-name|gotsigchild
-operator|=
-literal|0
-expr_stmt|;
-name|save
-operator|=
-name|signal
-argument_list|(
-name|SIGCLD
-argument_list|,
-name|onsigchild
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGCLD
-argument_list|,
-name|save
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|gotsigchild
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-block|}
-return|return
-name|wait
-argument_list|(
-name|status
-argument_list|)
-return|;
-else|#
-directive|else
-if|if
-condition|(
-name|block
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
-return|return
-name|wait
-argument_list|(
-name|status
-argument_list|)
-return|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 block|}
 end_function
 
