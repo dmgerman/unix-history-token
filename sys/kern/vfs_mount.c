@@ -7012,6 +7012,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|g_waitidle
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Mount (mountfrom) as the root filesystem.  */
 end_comment
@@ -7070,6 +7079,9 @@ expr_stmt|;
 name|error
 operator|=
 name|EINVAL
+expr_stmt|;
+name|g_waitidle
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
