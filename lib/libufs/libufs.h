@@ -151,6 +151,27 @@ comment|/* superblock as buffer */
 block|}
 name|d_sbunion
 union|;
+union|union
+block|{
+name|struct
+name|cg
+name|d_cg
+decl_stmt|;
+comment|/* cylinder group */
+name|char
+name|d_buf
+index|[
+name|MAXBSIZE
+index|]
+decl_stmt|;
+comment|/* cylinder group storage */
+block|}
+name|d_cgunion
+union|;
+name|int
+name|d_ccg
+decl_stmt|;
+comment|/* current cylinder group */
 specifier|const
 name|char
 modifier|*
@@ -169,6 +190,10 @@ define|#
 directive|define
 name|d_sb
 value|d_sbunion.d_sb
+define|#
+directive|define
+name|d_cg
+value|d_cgunion.d_cg
 block|}
 struct|;
 end_struct
@@ -209,6 +234,34 @@ name|void
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * cgroup.c  */
+end_comment
+
+begin_function_decl
+name|int
+name|cgread
+parameter_list|(
+name|struct
+name|uufsd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cgread1
+parameter_list|(
+name|struct
+name|uufsd
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

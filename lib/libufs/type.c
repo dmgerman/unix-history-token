@@ -527,6 +527,12 @@ literal|1
 expr_stmt|;
 name|disk
 operator|->
+name|d_ccg
+operator|=
+literal|0
+expr_stmt|;
+name|disk
+operator|->
 name|d_fd
 operator|=
 name|fd
