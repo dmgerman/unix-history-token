@@ -745,15 +745,6 @@ operator|&
 name|rfd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|argv
-index|[
-literal|0
-index|]
-operator|==
-name|NULL
-condition|)
 name|FD_SET
 argument_list|(
 name|STDIN_FILENO
