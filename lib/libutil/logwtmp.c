@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<timeconv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -439,15 +445,16 @@ name|ut_host
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
 name|ut
 operator|.
 name|ut_time
+operator|=
+name|_time_to_time32
+argument_list|(
+name|time
+argument_list|(
+name|NULL
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
