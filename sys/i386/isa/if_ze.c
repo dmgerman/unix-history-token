@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: if_ze.c,v 1.40 1997/02/22 09:36:37 peter Exp $  */
 end_comment
 
 begin_comment
@@ -123,7 +123,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/sockio.h>
 end_include
 
 begin_include
