@@ -53,6 +53,7 @@ comment|/* !__i386__ */
 end_comment
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
 name|fp_rnd
 name|fpgetround
@@ -129,6 +130,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
