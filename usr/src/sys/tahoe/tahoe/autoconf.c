@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	1.9	86/12/15	*/
+comment|/*	autoconf.c	1.10	86/12/18	*/
 end_comment
 
 begin_comment
@@ -1110,7 +1110,7 @@ name|ui
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d at %s%d slave %d\n"
+literal|"    %s%d at %s%d slave %d"
 argument_list|,
 name|udp
 operator|->
@@ -1141,6 +1141,11 @@ name|ud_attach
 call|)
 argument_list|(
 name|ui
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
