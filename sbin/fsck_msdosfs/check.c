@@ -95,13 +95,11 @@ begin_function
 name|int
 name|checkfilesys
 parameter_list|(
-name|fname
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|fname
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|dosfs
@@ -350,6 +348,9 @@ literal|1
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|boot
 operator|.
 name|FATs

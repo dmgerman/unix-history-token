@@ -84,18 +84,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* file system currently checked */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|dosDirEntry
 modifier|*
