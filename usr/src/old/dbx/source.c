@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c 1.7 %G%"
+literal|"@(#)source.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,6 +515,28 @@ name|f
 operator|=
 name|nil
 expr_stmt|;
+if|if
+condition|(
+name|filename
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+name|f
+operator|=
+name|fopen
+argument_list|(
+name|filename
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|foreach
 argument_list|(
 argument|String
@@ -553,6 +575,7 @@ block|{
 break|break;
 block|}
 name|endfor
+block|}
 return|return
 name|f
 return|;
