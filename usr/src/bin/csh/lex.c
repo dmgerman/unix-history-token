@@ -11,17 +11,30 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c 4.4 %G%"
+literal|"@(#)lex.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|endif
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
 include|#
 directive|include
 file|"sh.h"
+end_include
+
+begin_comment
 comment|/*  * C shell  */
+end_comment
+
+begin_comment
 comment|/*  * These lexical routines read input and form lists of words.  * There is some involved processing here, because of the complications  * of input buffering, and especially because of history substitution.  */
+end_comment
+
+begin_function_decl
 name|char
 modifier|*
 name|word
