@@ -541,8 +541,6 @@ value|1
 name|flags
 operator|=
 name|FTS_PHYSICAL
-operator||
-name|FTS_NOCHDIR
 expr_stmt|;
 if|if
 condition|(
