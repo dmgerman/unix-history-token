@@ -384,6 +384,13 @@ begin_comment
 comment|/* APIC_IO */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INTRCNT_COUNT
+value|(1 + ICU_LEN + 2 * ICU_LEN)
+end_define
+
 begin_endif
 endif|#
 directive|endif
