@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -738,7 +738,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Digital Ultrix 4.2A or 4.3 */
+comment|/* **  Digital Ultrix 4.2A or 4.3 ** **	Apparently, fcntl locking is broken on 4.2A, in that locks are **	not dropped when the process exits.  This causes major problems, **	so flock is the only alternative. */
 end_comment
 
 begin_ifdef
@@ -791,8 +791,15 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
 begin_comment
-comment|/* # define HASFLOCK	1	/* has flock(2) call */
+comment|/* has flock(2) call */
 end_comment
 
 begin_define
