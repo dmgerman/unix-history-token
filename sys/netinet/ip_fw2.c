@@ -6905,13 +6905,13 @@ name|proto
 argument_list|,
 name|oif
 argument_list|,
-name|src_ip
-argument_list|,
-name|src_port
-argument_list|,
 name|dst_ip
 argument_list|,
 name|dst_port
+argument_list|,
+name|src_ip
+argument_list|,
+name|src_port
 argument_list|)
 expr_stmt|;
 break|break;
