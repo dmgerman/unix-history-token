@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.5 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983, 1989, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,7 +108,49 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_if
@@ -142,44 +184,24 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|"mntopts.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
+begin_decl_stmt
+name|struct
+name|mntopt
+name|mopts
+index|[]
+init|=
+block|{
+name|MOPT_STDOPTS
+block|,
+block|{
+name|NULL
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -741,6 +763,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -795,14 +818,29 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
+name|struct
+name|statfs
+modifier|*
+name|mp
+decl_stmt|;
 name|int
 name|fsi
 decl_stmt|,
 name|fso
+decl_stmt|,
+name|len
+decl_stmt|,
+name|n
 decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|s1
+decl_stmt|,
+modifier|*
+name|s2
 decl_stmt|,
 modifier|*
 name|special
@@ -814,23 +852,6 @@ name|buf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-name|struct
-name|statfs
-modifier|*
-name|mp
-decl_stmt|;
-name|char
-modifier|*
-name|s1
-decl_stmt|,
-modifier|*
-name|s2
-decl_stmt|;
-name|int
-name|len
-decl_stmt|,
-name|n
 decl_stmt|;
 if|if
 condition|(
@@ -873,18 +894,12 @@ expr_stmt|;
 block|}
 name|opstring
 operator|=
-literal|"F:NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:x:"
-expr_stmt|;
-if|if
-condition|(
-operator|!
 name|mfs
-condition|)
-name|opstring
-operator|+=
-literal|2
+condition|?
+literal|"Na:b:c:d:e:f:i:m:o:s:"
+else|:
+literal|"NOS:T:a:b:c:d:e:f:i:k:l:m:n:o:p:r:s:t:u:x:"
 expr_stmt|;
-comment|/* -F is mfs only */
 while|while
 condition|(
 operator|(
@@ -908,41 +923,19 @@ name|ch
 condition|)
 block|{
 case|case
-literal|'F'
-case|:
-if|if
-condition|(
-operator|(
-name|mntflags
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad mount flags"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'N'
 case|:
 name|Nflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
 literal|'O'
 case|:
 name|Oflag
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1000,7 +993,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad max contiguous blocks\n"
+literal|"%s: bad maximum contiguous blocks\n"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1099,7 +1092,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad blocks per file in a cyl group\n"
+literal|"%s: bad blocks per file in a cylinder group\n"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1123,7 +1116,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad frag size"
+literal|"%s: bad fragment size"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1258,6 +1251,22 @@ literal|'o'
 case|:
 if|if
 condition|(
+name|mfs
+condition|)
+name|getmntopts
+argument_list|(
+name|optarg
+argument_list|,
+name|mopts
+argument_list|,
+operator|&
+name|mntflags
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 name|strcmp
 argument_list|(
 name|optarg
@@ -1290,13 +1299,10 @@ expr_stmt|;
 else|else
 name|fatal
 argument_list|(
-literal|"%s: bad optimization preference %s"
-argument_list|,
-name|optarg
-argument_list|,
-literal|"(options are `space' or `time')"
+literal|"%s: unknown optimization preference: use `space' or `time'."
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'p'
@@ -1340,7 +1346,7 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: bad revs/minute\n"
+literal|"%s: bad revolutions/minute\n"
 argument_list|,
 name|optarg
 argument_list|)
