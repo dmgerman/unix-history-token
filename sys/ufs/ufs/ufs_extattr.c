@@ -1680,6 +1680,7 @@ name|error
 operator|)
 return|;
 block|}
+comment|/* 		 * XXXRW: While in UFS, we always get DIRBLKSIZ returns from 		 * the directory code on success, on other file systems this 		 * may not be the case.  For portability, we should check the 		 * read length on return from ufs_readdir(). 		 */
 name|edp
 operator|=
 operator|(
