@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.1 90/07/09$  *  *	@(#)hpux_tty.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_tty.c 1.1 90/07/09$  *  *	@(#)hpux_tty.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,73 +16,61 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"filedesc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/filedesc.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|"tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/tty.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/conf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/uio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
@@ -109,6 +97,8 @@ argument_list|,
 argument|com
 argument_list|,
 argument|data
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -123,6 +113,14 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +202,8 @@ name|caddr_t
 operator|)
 operator|&
 name|tios
+argument_list|,
+name|p
 argument_list|)
 condition|)
 break|break;
@@ -570,6 +570,8 @@ name|caddr_t
 operator|)
 operator|&
 name|line
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|tiop
@@ -733,6 +735,8 @@ name|caddr_t
 operator|)
 operator|&
 name|tios
+argument_list|,
+name|p
 argument_list|)
 condition|)
 break|break;
@@ -1309,6 +1313,8 @@ name|caddr_t
 operator|)
 operator|&
 name|tios
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1342,6 +1348,8 @@ name|caddr_t
 operator|)
 operator|&
 name|line
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Set non-blocking IO if VMIN == VTIME == 0. 			 * Should handle the other cases as well.  It also 			 * isn't correct to just turn it off as it could be 			 * on as the result of a fcntl operation. 			 * XXX - wouldn't need to do this at all if VMIN/VTIME 			 * were implemented. 			 */
@@ -1367,16 +1375,43 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-operator|(
+if|if
+condition|(
+name|line
+condition|)
+name|fp
+operator|->
+name|f_flag
+operator||=
+name|FNDELAY
+expr_stmt|;
+else|else
+name|fp
+operator|->
+name|f_flag
+operator|&=
+operator|~
+name|FNDELAY
+expr_stmt|;
+call|(
 name|void
-operator|)
-name|fset
+call|)
+argument_list|(
+operator|*
+name|ioctlrout
+argument_list|)
 argument_list|(
 name|fp
 argument_list|,
-name|FNDELAY
+name|FIONBIO
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
 name|line
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1868,17 +1903,17 @@ operator|)
 operator|>=
 name|fdp
 operator|->
-name|fd_maxfiles
+name|fd_nfiles
 operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|fdes
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
@@ -2030,6 +2065,8 @@ operator|(
 name|caddr_t
 operator|)
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|com
@@ -2076,6 +2113,8 @@ name|caddr_t
 operator|)
 operator|&
 name|sb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
