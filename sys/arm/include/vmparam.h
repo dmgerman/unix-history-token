@@ -211,7 +211,7 @@ value|0xffffffff
 end_define
 
 begin_comment
-comment|/*  *  * Virtual size (bytes) for various kernel submaps.  *   */
+comment|/*  * Virtual size (bytes) for various kernel submaps.  */
 end_comment
 
 begin_ifndef
