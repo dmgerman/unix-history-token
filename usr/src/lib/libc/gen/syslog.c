@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.3 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,9 +342,8 @@ argument_list|(
 name|LogTag
 argument_list|,
 name|LogStat
-operator|&
-operator|~
-name|LOG_ODELAY
+operator||
+name|LOG_NDELAY
 argument_list|,
 literal|0
 argument_list|)
@@ -875,12 +874,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|LogStat
 operator|&
-name|LOG_ODELAY
-operator|)
+name|LOG_NDELAY
 condition|)
 block|{
 name|LogFile
