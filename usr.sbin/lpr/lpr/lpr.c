@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.8 1996/10/25 18:14:48 imp Exp $\n"
+literal|"\n$Id: lpr.c,v 1.9 1996/10/26 00:46:34 imp Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,7 +626,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -1249,9 +1249,14 @@ comment|/* 	 * Check to make sure queuing is enabled if userid is not root. 	 */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -1578,9 +1583,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%d %d"
 argument_list|,
@@ -1723,8 +1733,9 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-continue|continue;
 block|}
+else|else
+block|{
 name|copy
 argument_list|(
 name|i
@@ -1760,6 +1771,7 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2223,9 +2235,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|getwd
+name|getcwd
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 operator|==
 name|NULL
@@ -3527,9 +3544,14 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%s/.seq"
 argument_list|,
@@ -3742,9 +3764,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%03d\n"
 argument_list|,
@@ -3830,9 +3857,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
+argument_list|,
+name|len
 argument_list|,
 literal|"%s/%sA%03d%s"
 argument_list|,

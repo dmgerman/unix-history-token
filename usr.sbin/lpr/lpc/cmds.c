@@ -1386,6 +1386,7 @@ name|b
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|c1
 operator|=
 name|strcmp
@@ -1408,6 +1409,7 @@ name|d_name
 operator|+
 literal|3
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -1575,6 +1577,7 @@ name|cp
 operator|=
 name|SD
 init|;
+operator|(
 operator|*
 name|lp
 operator|++
@@ -1582,6 +1585,7 @@ operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|;
 control|)
 empty_stmt|;
@@ -3044,6 +3048,7 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|cp1
 operator|++
@@ -3051,6 +3056,7 @@ operator|=
 operator|*
 name|cp2
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 name|cp1
@@ -4204,7 +4210,7 @@ expr_stmt|;
 comment|/* unlocks as well */
 name|printf
 argument_list|(
-literal|"\tno daemon present\n"
+literal|"\tprinter idle\n"
 argument_list|)
 expr_stmt|;
 return|return;

@@ -748,11 +748,13 @@ name|c
 operator|=
 name|cmdtab
 init|;
+operator|(
 name|p
 operator|=
 name|c
 operator|->
 name|c_name
+operator|)
 condition|;
 name|c
 operator|++
