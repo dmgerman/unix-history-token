@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.1	83/08/20	*/
+comment|/*	machdep.c	6.2	83/10/02	*/
 end_comment
 
 begin_include
@@ -3189,6 +3189,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
+name|DELAY
+argument_list|(
+literal|10000000
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 block|{
 specifier|register
 name|struct
@@ -3209,7 +3216,7 @@ literal|0
 init|;
 name|iter
 operator|<
-literal|10
+literal|20
 condition|;
 name|iter
 operator|++
@@ -3237,10 +3244,18 @@ condition|;
 control|)
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
+name|B_BUSY
+operator||
+name|B_INVAL
+operator|)
+operator|)
+operator|==
 name|B_BUSY
 condition|)
 name|nbusy
@@ -3262,13 +3277,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|#
-directive|else
-name|DELAY
-argument_list|(
-literal|10000000
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 name|printf
