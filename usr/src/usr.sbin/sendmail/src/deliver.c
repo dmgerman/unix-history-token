@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.122
+literal|3.123
 operator|%
 name|G
 operator|%
@@ -5122,6 +5122,8 @@ block|{
 name|printf
 argument_list|(
 literal|"\nSENDALL: verify %d, sendqueue:\n"
+argument_list|,
+name|verifyonly
 argument_list|)
 expr_stmt|;
 name|printaddr
