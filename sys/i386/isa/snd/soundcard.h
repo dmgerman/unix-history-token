@@ -835,7 +835,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *	Sample loading mechanism for internal synthesizers (/dev/sequencer)  *	The following patch_info structure has been designed to support  *	Gravis UltraSound. It tries to be universal format for uploading  *	sample based patches but is propably too limited.  */
+comment|/*  *	Sample loading mechanism for internal synthesizers (/dev/sequencer)  *	The following patch_info structure has been designed to support  *	Gravis UltraSound. It tries to be universal format for uploading  *	sample based patches but is probably too limited.  */
 end_comment
 
 begin_struct
@@ -1935,8 +1935,12 @@ name|FM_TYPE_OPL3
 value|0x01
 define|#
 directive|define
-name|SAMPLE_TYPE_GUS
+name|SAMPLE_TYPE_BASIC
 value|0x10
+define|#
+directive|define
+name|SAMPLE_TYPE_GUS
+value|SAMPLE_TYPE_BASIC
 name|int
 name|perc_mode
 decl_stmt|;
@@ -2646,7 +2650,7 @@ begin_define
 define|#
 directive|define
 name|SOUND_MIXER_NRDEVICES
-value|17
+value|25
 end_define
 
 begin_define
@@ -2800,6 +2804,94 @@ begin_comment
 comment|/* Input source 3  (line) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_DIGITAL1
+value|17
+end_define
+
+begin_comment
+comment|/* Digital (input) 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_DIGITAL2
+value|18
+end_define
+
+begin_comment
+comment|/* Digital (input) 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_DIGITAL3
+value|19
+end_define
+
+begin_comment
+comment|/* Digital (input) 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_PHONEIN
+value|20
+end_define
+
+begin_comment
+comment|/* Phone input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_PHONEOUT
+value|21
+end_define
+
+begin_comment
+comment|/* Phone output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_VIDEO
+value|22
+end_define
+
+begin_comment
+comment|/* Video/TV (audio) in */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_RADIO
+value|23
+end_define
+
+begin_comment
+comment|/* Radio in */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_MONITOR
+value|24
+end_define
+
+begin_comment
+comment|/* Monitor (usually mic) volume */
+end_comment
+
 begin_comment
 comment|/*  * Some on/off settings (SOUND_SPECIAL_MIN - SOUND_SPECIAL_MAX)  * Not counted to SOUND_MIXER_NRDEVICES, but use the same number space  */
 end_comment
@@ -2858,15 +2950,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SOUND_MIXER_NONE
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOUND_DEVICE_LABELS
-value|{ \ 	"Vol  ", "Bass ", "Trebl", "Synth", "Pcm  ", "Spkr ", "Line ", \ 	 "Mic  ", "CD   ", "Mix  ", "Pcm2 ", "Rec  ", "IGain", "OGain", \ 	 "Line1", "Line2", "Line3"}
+value|{ \ 	"Vol  ", "Bass ", "Trebl", "Synth", "Pcm  ", "Spkr ", "Line ", \ 	 "Mic  ", "CD   ", "Mix  ", "Pcm2 ", "Rec  ", "IGain", "OGain", \ 	"Line1", "Line2", "Line3", "Digital1", "Digital2", "Digital3", \ 	"PhoneIn", "PhoneOut", "Video", "Radio", "Monitor"}
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_DEVICE_NAMES
-value|{ \ 	"vol", "bass", "treble", "synth", "pcm", "speaker", "line", \ 	"mic", "cd", "mix", "pcm2", "rec", "igain", "ogain", \ 	"line1", "line2", "line3"}
+value|{ \ 	"vol", "bass", "treble", "synth", "pcm", "speaker", "line", \ 	"mic", "cd", "mix", "pcm2", "rec", "igain", "ogain", \ 	"line1", "line2", "line3", "dig1", "dig2", "dig3", \ 	"phin", "phout", "video", "radio", "monitor"}
 end_define
 
 begin_comment
@@ -3061,6 +3160,66 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOUND_MASK_DIGITAL1
+value|(1<< SOUND_MIXER_DIGITAL1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_DIGITAL2
+value|(1<< SOUND_MIXER_DIGITAL2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_DIGITAL3
+value|(1<< SOUND_MIXER_DIGITAL3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_PHONEIN
+value|(1<< SOUND_MIXER_PHONEIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_PHONEOUT
+value|(1<< SOUND_MIXER_PHONEOUT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_RADIO
+value|(1<< SOUND_MIXER_RADIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_VIDEO
+value|(1<< SOUND_MIXER_VIDEO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_MONITOR
+value|(1<< SOUND_MIXER_MONITOR)
+end_define
+
+begin_comment
+comment|/* Obsolete macros */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SOUND_MASK_MUTE
 value|(1<< SOUND_MIXER_MUTE)
 end_define
@@ -3207,6 +3366,10 @@ directive|define
 name|SOUND_MIXER_READ_LINE3
 value|MIXER_READ(SOUND_MIXER_LINE3)
 end_define
+
+begin_comment
+comment|/* Obsolete macros */
+end_comment
 
 begin_define
 define|#

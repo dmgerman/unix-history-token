@@ -789,7 +789,9 @@ name|dma_translat
 index|[
 name|sb_probed
 operator|.
-name|dma1
+name|dbuf_out
+operator|.
+name|chan
 index|]
 argument_list|)
 operator|&&

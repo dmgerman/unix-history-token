@@ -323,6 +323,14 @@ name|struct
 name|selinfo
 name|sel
 decl_stmt|;
+name|u_long
+name|total
+decl_stmt|;
+comment|/* total bytes processed */
+name|u_long
+name|prev_total
+decl_stmt|;
+comment|/* copy of the above when GETxPTR called */
 block|}
 name|snd_dbuf
 typedef|;
@@ -499,14 +507,6 @@ comment|/* base for the synth */
 name|int
 name|irq
 decl_stmt|;
-define|#
-directive|define
-name|dma1
-value|dbuf_out.chan
-define|#
-directive|define
-name|dma2
-value|dbuf_in.chan
 name|int
 name|bd_id
 decl_stmt|;
@@ -1368,6 +1368,16 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FULL_DUPLEX
+parameter_list|(
+name|d
+parameter_list|)
+value|(d->dbuf_out.chan != d->dbuf_in.chan)
+end_define
 
 begin_define
 define|#
