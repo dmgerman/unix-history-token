@@ -853,6 +853,20 @@ literal|"README"
 block|}
 block|,
 block|{
+literal|" Doc, Early Adopter's"
+block|,
+literal|"Early Adopter's Guide to FreeBSD 5.0."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"EARLY"
+block|}
+block|,
+block|{
 literal|" Doc, Errata"
 block|,
 literal|"The distribution errata."
@@ -1838,7 +1852,21 @@ literal|"README"
 block|}
 block|,
 block|{
-literal|"2 Errata"
+literal|"2 Early Adopter's"
+block|,
+literal|"Early Adopter's Guide to FreeBSD 5.0."
+block|,
+name|NULL
+block|,
+name|dmenuDisplayFile
+block|,
+name|NULL
+block|,
+literal|"EARLY"
+block|}
+block|,
+block|{
+literal|"3 Errata"
 block|,
 literal|"Late-breaking, post-release news."
 block|,
@@ -1852,7 +1880,7 @@ literal|"ERRATA"
 block|}
 block|,
 block|{
-literal|"3 Hardware"
+literal|"4 Hardware"
 block|,
 literal|"The FreeBSD survival guide for PC hardware."
 block|,
@@ -1866,7 +1894,7 @@ literal|"HARDWARE"
 block|}
 block|,
 block|{
-literal|"4 Install"
+literal|"5 Install"
 block|,
 literal|"A step-by-step guide to installing FreeBSD."
 block|,
@@ -1880,7 +1908,7 @@ literal|"INSTALL"
 block|}
 block|,
 block|{
-literal|"5 Copyright"
+literal|"6 Copyright"
 block|,
 literal|"The FreeBSD Copyright notices."
 block|,
@@ -1894,7 +1922,7 @@ literal|"COPYRIGHT"
 block|}
 block|,
 block|{
-literal|"6 Release"
+literal|"7 Release"
 block|,
 literal|"The release notes for this version of FreeBSD."
 block|,
@@ -1908,7 +1936,7 @@ literal|"RELNOTES"
 block|}
 block|,
 block|{
-literal|"7 Shortcuts"
+literal|"8 Shortcuts"
 block|,
 literal|"Creating shortcuts to sysinstall."
 block|,
@@ -1922,7 +1950,7 @@ literal|"shortcuts"
 block|}
 block|,
 block|{
-literal|"8 HTML Docs"
+literal|"9 HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)."
 block|,
