@@ -3313,6 +3313,7 @@ name|KASSERT
 argument_list|(
 name|mtx_initialized
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|ndis_mtx
@@ -3327,6 +3328,7 @@ name|KASSERT
 argument_list|(
 name|mtx_initialized
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|ndis_intrmtx
@@ -4672,6 +4674,12 @@ name|error
 decl_stmt|,
 name|len
 decl_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|xsc
@@ -4830,6 +4838,12 @@ block|}
 name|NDIS_UNLOCK
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return;
