@@ -1302,7 +1302,7 @@ value|0x3e0
 end_define
 
 begin_comment
-comment|/* Bogus for sure! */
+comment|/* OK for PCI, must be bogus for pccard */
 end_comment
 
 begin_define
