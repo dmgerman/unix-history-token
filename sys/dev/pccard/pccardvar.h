@@ -379,10 +379,11 @@ decl_stmt|;
 name|int
 name|last_config_index
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|ccr_base
 decl_stmt|;
-name|u_long
+comment|/* Offset with card's memory */
+name|uint32_t
 name|ccr_mask
 decl_stmt|;
 name|struct
@@ -436,15 +437,17 @@ define|#
 directive|define
 name|pf_ccr_realsize
 value|pf_pcmh.realsize
-name|bus_addr_t
+name|uint32_t
 name|pf_ccr_offset
 decl_stmt|;
+comment|/* Offset from ccr_base of CIS */
 name|int
 name|pf_ccr_window
 decl_stmt|;
 name|long
 name|pf_mfc_iobase
 decl_stmt|;
+comment|/* Right type? */
 name|long
 name|pf_mfc_iomax
 decl_stmt|;
