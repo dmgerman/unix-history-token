@@ -7018,6 +7018,7 @@ operator|)
 operator|/
 name|AAC_PAGE_SIZE
 expr_stmt|;
+block|}
 name|ip
 operator|->
 name|HostElapsedSeconds
@@ -7527,7 +7528,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Send a synchronous command to the controller and wait for a result.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_sync_command
@@ -7680,7 +7687,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Grab the sync fib area.  */
+end_comment
+
+begin_function
 name|int
 name|aac_alloc_sync_fib
 parameter_list|(
@@ -7733,7 +7746,13 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Release the sync fib area.  */
+end_comment
+
+begin_function
 name|void
 name|aac_release_sync_fib
 parameter_list|(
@@ -7752,7 +7771,13 @@ name|aac_sync_lock
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Send a synchronous FIB to the controller and wait for a result.  */
+end_comment
+
+begin_function
 name|int
 name|aac_sync_fib
 parameter_list|(
@@ -7928,7 +7953,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Adapter-space FIB queue manipulation  *  * Note that the queue implementation here is a little funky; neither the PI or  * CI will ever be zero.  This behaviour is a controller feature.  */
+end_comment
+
+begin_struct
 specifier|static
 struct|struct
 block|{
@@ -7992,7 +8023,13 @@ literal|0
 block|}
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/*  * Atomically insert an entry into the nominated queue, returns 0 on success or  * EBUSY if the queue is full.  *  * Note: it would be more efficient to defer notifying the controller in  *	 the case where we may be inserting several entries in rapid succession,  *	 but implementing this usefully may be difficult (it would involve a  *	 separate queue/notify interface).  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_enqueue_fib
@@ -8205,7 +8242,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Atomically remove one entry from the nominated queue, returns 0 on  * success or ENOENT if the queue is empty.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_dequeue_fib
@@ -8540,7 +8583,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Put our response to an Adapter Initialed Fib on the response queue  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_enqueue_response
@@ -8752,7 +8801,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Check for commands that have been outstanding for a suspiciously long time,  * and complain about them.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|aac_timeout
@@ -8840,8 +8895,17 @@ block|}
 block|}
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Interface Function Vectors  */
+end_comment
+
+begin_comment
 comment|/*  * Read the current firmware status word.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_sa_get_fwstatus
@@ -8868,6 +8932,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_rx_get_fwstatus
@@ -8894,6 +8961,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_fa_get_fwstatus
@@ -8927,7 +8997,13 @@ name|val
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Notify the controller of a change in a given queue  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|aac_sa_qnotify
@@ -8956,6 +9032,9 @@ name|qbit
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_rx_qnotify
@@ -8984,6 +9063,9 @@ name|qbit
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_fa_qnotify
@@ -9017,7 +9099,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Get the interrupt reason bits  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_sa_get_istatus
@@ -9044,6 +9132,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_rx_get_istatus
@@ -9070,6 +9161,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_fa_get_istatus
@@ -9103,7 +9197,13 @@ name|val
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Clear some interrupt reason bits  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|aac_sa_clear_istatus
@@ -9132,6 +9232,9 @@ name|mask
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_rx_clear_istatus
@@ -9160,6 +9263,9 @@ name|mask
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_fa_clear_istatus
@@ -9193,7 +9299,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Populate the mailbox and set the command word  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|aac_sa_set_mailbox
@@ -9278,6 +9390,9 @@ name|arg3
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_rx_set_mailbox
@@ -9362,6 +9477,9 @@ name|arg3
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_fa_set_mailbox
@@ -9471,7 +9589,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Fetch the immediate command status word  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_sa_get_mailbox
@@ -9507,6 +9631,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_rx_get_mailbox
@@ -9542,6 +9669,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_fa_get_mailbox
@@ -9584,7 +9714,13 @@ name|val
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Set/clear interrupt masks  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|aac_sa_set_interrupts
@@ -9644,6 +9780,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_rx_set_interrupts
@@ -9700,6 +9839,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_fa_set_interrupts
@@ -9769,8 +9911,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Debugging and Diagnostics  */
+end_comment
+
+begin_comment
 comment|/*  * Print some information about the controller.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|aac_describe_controller
@@ -10010,7 +10161,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Look up a text description of a numeric error code and return a pointer to  * same.  */
+end_comment
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -10080,7 +10237,13 @@ name|string
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Management Interface  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_open
@@ -10139,6 +10302,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_close
@@ -10185,6 +10351,9 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_ioctl
@@ -10550,6 +10719,9 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|aac_poll
@@ -10669,7 +10841,13 @@ name|revents
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Send a FIB supplied from userspace  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_ioctl_sendfib
@@ -10971,7 +11149,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Handle an AIF sent to us by the controller; queue it for later reference.  * If the queue fills up, then drop the older entries.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|aac_handle_aif
@@ -11539,7 +11723,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Return the Revision of the driver to userspace and check to see if the  * userspace app is possibly compatible.  This is extremely bogus since  * our driver doesn't follow Adaptec's versioning system.  Cheat by just  * returning what the card reported.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_rev_check
@@ -11671,7 +11861,13 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Pass the caller the next AIF in their queue  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_getnext_aif
@@ -11831,7 +12027,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Hand the next AIF off the top of the queue out to userspace.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_return_aif
@@ -11951,7 +12153,13 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Give the userland some information about the container.  The AAC arch  * expects the driver to be a SCSI passthrough type driver, so it expects  * the containers to have b:t:l numbers.  Fake it.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|aac_query_disk
@@ -12224,6 +12432,9 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|aac_get_bus_info
