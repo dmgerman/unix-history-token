@@ -585,6 +585,9 @@ name|volume
 modifier|*
 name|vol
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 comment|/*      * It's not an error for the plex to already      * belong to the volume, but we need to check a      * number of things to make sure it's done right.      * Some day.      */
 if|if
 condition|(
@@ -695,6 +698,45 @@ operator|=
 name|volno
 expr_stmt|;
 comment|/* note the number of our volume */
+comment|/* Find out how big our volume is */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|vol
+operator|->
+name|plexes
+condition|;
+name|i
+operator|++
+control|)
+name|vol
+operator|->
+name|size
+operator|=
+name|max
+argument_list|(
+name|vol
+operator|->
+name|size
+argument_list|,
+name|PLEX
+index|[
+name|vol
+operator|->
+name|plex
+index|[
+name|i
+index|]
+index|]
+operator|.
+name|length
+argument_list|)
+expr_stmt|;
 return|return
 name|vol
 operator|->
@@ -4229,7 +4271,7 @@ name|drive_referenced
 condition|)
 block|{
 comment|/* we already know this drive */
-comment|/* 	 * XXX Check which definition is more up-to-date.  Give 	 * preference for the definition on its own drive 	 */
+comment|/* 	 * XXX Check which definition is more up-to-date.  Give 	 * preference for the definition on its own drive. 	 */
 return|return;
 comment|/* XXX */
 block|}
@@ -4531,7 +4573,6 @@ case|case
 name|DL_DELETED_LABEL
 case|:
 comment|/* it was a drive, but we deleted it */
-break|break;
 case|case
 name|DL_NOT_OURS
 case|:
