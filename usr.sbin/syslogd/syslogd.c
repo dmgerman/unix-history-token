@@ -575,8 +575,6 @@ name|char
 name|f_hname
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -629,8 +627,6 @@ name|char
 name|f_prevhost
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 comment|/* host from which recd. */
@@ -984,8 +980,6 @@ name|char
 name|LocalHostName
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1692,7 +1686,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46Aa:df:kl:m:np:suv"
+literal|"46Aa:df:kl:m:np:P:suv"
 argument_list|)
 operator|)
 operator|!=
@@ -1832,6 +1826,15 @@ name|funixn
 index|[
 literal|0
 index|]
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+comment|/* path for alt. PID */
+name|PidFile
 operator|=
 name|optarg
 expr_stmt|;
@@ -3233,9 +3236,9 @@ literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: syslogd [-46Adnsuv] [-a allowed_peer] [-f config_file]"
 argument_list|,
-literal|"               [-m mark_interval] [-p log_socket]"
+literal|"               [-m mark_interval] [-l log_socket]"
 argument_list|,
-literal|"               [-l log_socket]"
+literal|"               [-p log_socket] [-P pid_file]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4936,11 +4939,12 @@ operator|->
 name|f_prevpri
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|f_s
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 name|f_n
@@ -4949,11 +4953,12 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* Hollow laugh */
+specifier|const
 name|char
 modifier|*
 name|p_s
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 name|p_n
@@ -7161,8 +7166,6 @@ name|char
 name|host
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|dprintf
@@ -7616,6 +7619,8 @@ init|;
 name|i
 operator|<
 name|MAXHOSTNAMELEN
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
