@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.10 1996/07/18 00:08:58 jkh Exp $ */
+comment|/* $Id: main.c,v 1.11 1996/08/03 13:14:47 jkh Exp $ */
 end_comment
 
 begin_include
@@ -981,6 +981,13 @@ argument_list|,
 literal|"Couldn't open FTP connection or login to %s."
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|ftpVerbose
+argument_list|(
+name|ftp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Time to set our defaults */
