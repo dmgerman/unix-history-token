@@ -193,6 +193,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RBX_MUTE
+value|0x10
+end_define
+
+begin_comment
+comment|/* -m */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RBX_PAUSE
+value|0x12
+end_define
+
+begin_comment
+comment|/* -p */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RBX_DUAL
 value|0x1d
 end_define
@@ -216,7 +238,7 @@ begin_define
 define|#
 directive|define
 name|RBX_MASK
-value|0x2000ffff
+value|0x2005ffff
 end_define
 
 begin_define
@@ -251,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|NOPT
-value|11
+value|13
 end_define
 
 begin_define
@@ -499,7 +521,7 @@ index|[
 name|NOPT
 index|]
 init|=
-literal|"DhaCcdgPrsv"
+literal|"DhaCcdgmPprsv"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,7 +550,11 @@ name|RBX_KDB
 block|,
 name|RBX_GDB
 block|,
+name|RBX_MUTE
+block|,
 name|RBX_PROBEKBD
+block|,
+name|RBX_PAUSE
 block|,
 name|RBX_DFLTROOT
 block|,
