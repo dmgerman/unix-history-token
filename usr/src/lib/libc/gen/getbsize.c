@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getbsize.c	5.3 (Berkeley) %G%"
+literal|"@(#)getbsize.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,9 +356,9 @@ name|n
 operator|=
 literal|512
 expr_stmt|;
-operator|*
-name|headerlenp
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|header
@@ -373,6 +373,14 @@ argument_list|,
 name|n
 argument_list|,
 name|form
+argument_list|)
+expr_stmt|;
+operator|*
+name|headerlenp
+operator|=
+name|strlen
+argument_list|(
+name|header
 argument_list|)
 expr_stmt|;
 operator|*

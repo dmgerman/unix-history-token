@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.22 (Berkeley) %G%"
+literal|"@(#)create.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1682,9 +1682,6 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|int
-name|len
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -1710,8 +1707,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|len
-operator|=
+operator|(
+name|void
+operator|)
 name|vsnprintf
 argument_list|(
 name|buf
@@ -1736,7 +1734,10 @@ condition|(
 operator|*
 name|offset
 operator|+
-name|len
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 operator|>
 name|MAXLINELEN
 operator|-

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.68 (Berkeley) %G%"
+literal|"@(#)ls.c	5.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2011,10 +2011,9 @@ name|btotal
 operator|=
 name|btotal
 expr_stmt|;
-name|d
-operator|.
-name|s_block
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -2031,6 +2030,15 @@ argument_list|)
 expr_stmt|;
 name|d
 operator|.
+name|s_block
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+name|d
+operator|.
 name|s_flags
 operator|=
 name|maxflags
@@ -2041,10 +2049,9 @@ name|s_group
 operator|=
 name|maxgroup
 expr_stmt|;
-name|d
-operator|.
-name|s_inode
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -2061,8 +2068,16 @@ argument_list|)
 expr_stmt|;
 name|d
 operator|.
-name|s_nlink
+name|s_inode
 operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -2079,8 +2094,16 @@ argument_list|)
 expr_stmt|;
 name|d
 operator|.
-name|s_size
+name|s_nlink
 operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -2093,6 +2116,15 @@ argument_list|,
 literal|"%qu"
 argument_list|,
 name|maxsize
+argument_list|)
+expr_stmt|;
+name|d
+operator|.
+name|s_size
+operator|=
+name|strlen
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 name|d

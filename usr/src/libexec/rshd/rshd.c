@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.41 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2748,8 +2748,9 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-name|len
-operator|+=
+operator|(
+name|void
+operator|)
 name|vsnprintf
 argument_list|(
 name|bp
@@ -2776,6 +2777,11 @@ argument_list|,
 name|buf
 argument_list|,
 name|len
+operator|+
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

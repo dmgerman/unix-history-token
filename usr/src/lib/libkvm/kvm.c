@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm.c	5.31 (Berkeley) %G%"
+literal|"@(#)kvm.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -540,8 +540,9 @@ name|kd
 operator|->
 name|errbuf
 decl_stmt|;
-name|n
-operator|=
+operator|(
+name|void
+operator|)
 name|vsnprintf
 argument_list|(
 name|cp
@@ -560,6 +561,13 @@ operator|)
 name|fmt
 argument_list|,
 name|ap
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|strlen
+argument_list|(
+name|cp
 argument_list|)
 expr_stmt|;
 operator|(

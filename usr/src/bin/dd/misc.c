@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.4 (Berkeley) %G%"
+literal|"@(#)misc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,9 +81,6 @@ block|{
 name|time_t
 name|secs
 decl_stmt|;
-name|int
-name|len
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -116,8 +113,9 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Use snprintf(3) so that we don't reenter stdio(3). */
-name|len
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -167,7 +165,10 @@ name|STDERR_FILENO
 argument_list|,
 name|buf
 argument_list|,
-name|len
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -177,8 +178,9 @@ operator|.
 name|swab
 condition|)
 block|{
-name|len
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -216,7 +218,10 @@ name|STDERR_FILENO
 argument_list|,
 name|buf
 argument_list|,
-name|len
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -227,8 +232,9 @@ operator|.
 name|trunc
 condition|)
 block|{
-name|len
-operator|=
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|buf
@@ -266,7 +272,10 @@ name|STDERR_FILENO
 argument_list|,
 name|buf
 argument_list|,
-name|len
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
