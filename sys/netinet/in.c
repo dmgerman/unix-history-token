@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_bootp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -3707,6 +3713,10 @@ name|ia_flags
 operator||=
 name|IFA_ROUTE
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BOOTP
+comment|/* 	 * This breaks kernel-bootp support when we have more than one 	 * interface, because the bootp code wants to set a 0.0.0.0/0 	 * address on all interfaces. Disable the check when bootp is used. 	 */
 if|if
 condition|(
 name|error
@@ -3734,6 +3744,8 @@ name|error
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 comment|/* XXX check if the subnet route points to the same interface */
 if|if
 condition|(
