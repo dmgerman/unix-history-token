@@ -325,6 +325,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|sx_args
@@ -357,11 +362,6 @@ parameter_list|)
 define|\
 value|static struct sx_args name##_args = {				\ 		sxa,							\ 		desc							\ 	};								\ 	SYSINIT(name##_sx_sysinit, SI_SUB_LOCK, SI_ORDER_MIDDLE,	\ 	    sx_sysinit,&name##_args)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
