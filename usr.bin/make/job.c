@@ -2715,6 +2715,17 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|out
+operator|==
+name|NULL
+condition|)
+name|Punt
+argument_list|(
+literal|"Cannot fdopen"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
