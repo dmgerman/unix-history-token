@@ -478,8 +478,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|reopen
-label|:
 comment|/* Open the fifo for reading. */
 if|if
 condition|(
@@ -491,7 +489,8 @@ argument_list|(
 name|_PATH_LCKFIFO
 argument_list|,
 name|O_RDONLY
-comment|/* | O_NONBLOCK */
+operator||
+name|O_NONBLOCK
 argument_list|)
 operator|)
 operator|<
@@ -515,13 +514,6 @@ argument_list|(
 name|daemon_uid
 argument_list|)
 expr_stmt|;
-comment|/* Set up the select. */
-name|FD_ZERO
-argument_list|(
-operator|&
-name|rdset
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -529,6 +521,13 @@ condition|;
 control|)
 block|{
 comment|/* Wait for contact... fifo's return EAGAIN when read with  		 * no data 		 */
+comment|/* Set up the select. */
+name|FD_ZERO
+argument_list|(
+operator|&
+name|rdset
+argument_list|)
+expr_stmt|;
 name|FD_SET
 argument_list|(
 name|fd
@@ -795,22 +794,6 @@ argument_list|,
 name|nr
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|nr
-operator|==
-literal|0
-condition|)
-block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-goto|goto
-name|reopen
-goto|;
 block|}
 block|}
 comment|/* Reached only on error. */
