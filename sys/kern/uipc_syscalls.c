@@ -8592,7 +8592,7 @@ operator|/
 name|bsize
 operator|)
 operator|<<
-literal|16
+name|IO_SEQSHIFT
 operator|)
 argument_list|,
 name|td
