@@ -966,6 +966,14 @@ operator|->
 name|queue_mtx
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|stp
+operator|->
+name|queue_mtx
+argument_list|)
+expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|stp

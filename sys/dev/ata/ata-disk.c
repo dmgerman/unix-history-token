@@ -908,6 +908,14 @@ operator|->
 name|queue_mtx
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|adp
+operator|->
+name|queue_mtx
+argument_list|)
+expr_stmt|;
 name|disk_destroy
 argument_list|(
 name|adp

@@ -1457,6 +1457,14 @@ operator|->
 name|queue_mtx
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|cdp
+operator|->
+name|queue_mtx
+argument_list|)
+expr_stmt|;
 name|ata_prtdev
 argument_list|(
 name|atadev
