@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.30 (Berkeley) %G%"
+literal|"@(#)main.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,8 @@ block|{
 literal|""
 block|,
 literal|""
+block|,
+name|NULL
 block|,
 literal|""
 block|}
