@@ -2379,6 +2379,13 @@ argument_list|,
 literal|"\t%lu SACK option%s (SACK blocks) sent\n"
 argument_list|)
 expr_stmt|;
+name|p1a
+argument_list|(
+name|tcps_sack_sboverflow
+argument_list|,
+literal|"\t%lu SACK scoreboard overflow\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
