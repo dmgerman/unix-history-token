@@ -50,6 +50,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NG_NETFLOW_HOOK_OUT
+value|"out"
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_NETFLOW_HOOK_EXPORT
 value|"export"
 end_define
@@ -542,6 +549,10 @@ name|hook_p
 name|hook
 decl_stmt|;
 comment|/* NULL when disconnected */
+name|hook_p
+name|out
+decl_stmt|;
+comment|/* NULL when no bypass hook */
 name|struct
 name|ng_netflow_ifinfo
 name|info
