@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: extract.c,v 1.7.6.3 1997/02/25 07:19:32 jkh Exp $"
+literal|"$Id: extract.c,v 1.7.6.4 1997/06/29 10:42:13 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -494,6 +494,11 @@ expr_stmt|;
 if|if
 condition|(
 name|preserve
+operator|&&
+name|fexists
+argument_list|(
+name|try
+argument_list|)
 condition|)
 block|{
 name|char
