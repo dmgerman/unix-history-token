@@ -4577,7 +4577,7 @@ name|getarg
 argument_list|(
 name|args
 argument_list|,
-literal|'e'
+literal|'p'
 argument_list|)
 decl_stmt|;
 if|if
