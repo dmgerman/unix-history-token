@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.1 (Berkeley) %G%"
+literal|"@(#)cico.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2714,6 +2714,15 @@ argument_list|,
 literal|"CAUGHT"
 argument_list|)
 expr_stmt|;
+name|systat
+argument_list|(
+name|Rmtname
+argument_list|,
+name|SS_FAIL
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
 name|cleanup
 argument_list|(
 name|inter
@@ -3000,6 +3009,15 @@ block|{
 name|logent
 argument_list|(
 name|Rmtname
+argument_list|,
+literal|"TIMEOUT"
+argument_list|)
+expr_stmt|;
+name|systat
+argument_list|(
+name|Rmtname
+argument_list|,
+name|SS_FAIL
 argument_list|,
 literal|"TIMEOUT"
 argument_list|)
