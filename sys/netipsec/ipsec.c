@@ -9030,6 +9030,18 @@ name|xformsw
 modifier|*
 name|xsp
 decl_stmt|;
+if|if
+condition|(
+name|sav
+operator|->
+name|tdb_xform
+operator|!=
+name|NULL
+condition|)
+comment|/* previously initialized */
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|xsp
