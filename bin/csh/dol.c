@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)dol.c	8.1 (Berkeley) 5/31/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)dol.c	8.1 (Berkeley) 5/31/93"
+literal|"$Id: dol.c,v 1.5 1997/02/22 14:01:47 peter Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -432,20 +450,17 @@ name|Dfix
 parameter_list|(
 name|t
 parameter_list|)
-specifier|register
 name|struct
 name|command
 modifier|*
 name|t
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 modifier|*
 name|pp
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|p
@@ -541,7 +556,6 @@ name|Dfix1
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|cp
@@ -716,11 +730,9 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|i
 init|=
@@ -922,7 +934,6 @@ name|int
 name|Dword
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|,
@@ -934,20 +945,17 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|wp
 init|=
 name|wbuf
 decl_stmt|;
-specifier|register
 name|int
 name|i
 init|=
 name|MAXWLEN
 decl_stmt|;
-specifier|register
 name|bool
 name|dolflg
 decl_stmt|;
@@ -1357,12 +1365,10 @@ name|DgetC
 parameter_list|(
 name|flag
 parameter_list|)
-specifier|register
 name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -1626,12 +1632,10 @@ name|void
 name|Dgetdol
 parameter_list|()
 block|{
-specifier|register
 name|Char
 modifier|*
 name|np
 decl_stmt|;
-specifier|register
 name|struct
 name|varent
 modifier|*
@@ -2539,7 +2543,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|int
 name|i
 init|=
@@ -2792,7 +2795,6 @@ name|void
 name|fixDolMod
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -3101,13 +3103,11 @@ name|setDolp
 parameter_list|(
 name|cp
 parameter_list|)
-specifier|register
 name|Char
 modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|Char
 modifier|*
 name|dp
@@ -3619,7 +3619,6 @@ name|int
 name|Dredc
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -3706,7 +3705,6 @@ name|Dtestq
 parameter_list|(
 name|c
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -3743,7 +3741,6 @@ modifier|*
 name|term
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -3777,7 +3774,6 @@ name|lcnt
 decl_stmt|,
 name|mcnt
 decl_stmt|;
-specifier|register
 name|Char
 modifier|*
 name|lbp
