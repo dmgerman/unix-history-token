@@ -1158,6 +1158,7 @@ name|ni_vp
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|vn_isdisk
 argument_list|(
 name|devvp
