@@ -1813,7 +1813,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expands the hash table for OFFPAGE zones.  This is done from zone_timeout  * to reduce collisions.  This must not be done in the regular allocation path,  * otherwise, we can recurse on the vm while allocating pages.  *  * Arguments:  *	oldhash  The hash you want to expand   *	newhash  The hash structure for the new table  *  * Returns:  * 	Nothing  *  * Discussion:  */
+comment|/*  * Expands the hash table for HASH zones.  This is done from zone_timeout  * to reduce collisions.  This must not be done in the regular allocation  * path, otherwise, we can recurse on the vm while allocating pages.  *  * Arguments:  *	oldhash  The hash you want to expand   *	newhash  The hash structure for the new table  *  * Returns:  * 	Nothing  *  * Discussion:  */
 end_comment
 
 begin_function
@@ -2160,7 +2160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drains the per cpu caches for a zone.  *  * Arguments:  *	zone     The zone to drain, must be unlocked.  *	destroy  Whether or not to destroy the pcpu buckets (from zone_dtor)  *  * Returns:  *	Nothing  *  * This function returns with the zone locked so that the per cpu queues can  * not be filled until zone_drain is finished.  *  */
+comment|/*  * Drains the per cpu caches for a zone.  *  * Arguments:  *	zone     The zone to drain, must be unlocked.  *	destroy  Whether or not to destroy the pcpu buckets (from zone_dtor)  *  * Returns:  *	Nothing  *  * This function returns with the zone locked so that the per cpu queues can  * not be filled until zone_drain is finished.  */
 end_comment
 
 begin_function
@@ -2896,7 +2896,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a new slab for a zone.  This does not insert the slab onto a list.  *  * Arguments:  *	zone  The zone to allocate slabs for  *	wait  Shall we wait?  *  * Returns:  *	The slab that was allocated or NULL if there is no memory and the  *	caller specified M_NOWAIT.  *	  */
+comment|/*  * Allocate a new slab for a zone.  This does not insert the slab onto a list.  *  * Arguments:  *	zone  The zone to allocate slabs for  *	wait  Shall we wait?  *  * Returns:  *	The slab that was allocated or NULL if there is no memory and the  *	caller specified M_NOWAIT.  */
 end_comment
 
 begin_function
@@ -3122,7 +3122,7 @@ name|us_data
 operator|=
 name|mem
 expr_stmt|;
-comment|/* 	 * This is intended to spread data out across cache lines. 	 * 	 * This code doesn't seem to work properly on x86, and on alpha 	 * it makes absolutely no performance difference. I'm sure it could 	 * use some tuning, but sun makes outrageous claims about it's 	 * performance. 	 */
+comment|/* 	 * This is intended to spread data out across cache lines. 	 * 	 * This code doesn't seem to work properly on x86, and on alpha 	 * it makes absolutely no performance difference. I'm sure it could 	 * use some tuning, but sun makes outrageous claims about its 	 * performance. 	 */
 if|#
 directive|if
 literal|0
@@ -3398,7 +3398,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocates a number of pages from within an object  *  * Arguments:  *	zone   Unused  *	bytes  The number of bytes requested  *	wait   Shall we wait?  *  * Returns:  *	A pointer to the alloced memory or possibly   *	NULL if M_NOWAIT is set.  *  */
+comment|/*  * Allocates a number of pages from within an object  *  * Arguments:  *	zone   Unused  *	bytes  The number of bytes requested  *	wait   Shall we wait?  *  * Returns:  *	A pointer to the alloced memory or possibly   *	NULL if M_NOWAIT is set.  */
 end_comment
 
 begin_function
@@ -3447,7 +3447,7 @@ name|retkva
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * This looks a little weird since we're getting one page at a time 	 */
+comment|/*  	 * This looks a little weird since we're getting one page at a time. 	 */
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -3643,7 +3643,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Frees a number of pages to the system  *   * Arguments:  *	mem   A pointer to the memory to be freed  *	size  The size of the memory being freed  *	flags The original p->us_flags field  *  * Returns:  *	Nothing  *  */
+comment|/*  * Frees a number of pages to the system  *   * Arguments:  *	mem   A pointer to the memory to be freed  *	size  The size of the memory being freed  *	flags The original p->us_flags field  *  * Returns:  *	Nothing  */
 end_comment
 
 begin_function
@@ -3699,7 +3699,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Zero fill initializer  *  * Arguments/Returns follow uma_init specifications  *  */
+comment|/*  * Zero fill initializer  *  * Arguments/Returns follow uma_init specifications  */
 end_comment
 
 begin_function
@@ -4035,7 +4035,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Zone header ctor.  This initializes all fields, locks, etc.  And inserts  * the zone onto the global zone list.  *  * Arguments/Returns follow uma_ctor specifications  *	udata  Actually uma_zcreat_args  *  */
+comment|/*   * Zone header ctor.  This initializes all fields, locks, etc.  And inserts  * the zone onto the global zone list.  *  * Arguments/Returns follow uma_ctor specifications  *	udata  Actually uma_zcreat_args  */
 end_comment
 
 begin_function
@@ -4615,7 +4615,8 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"Zone %s was not empty (%d items).  Lost %d pages of memory.\n"
+literal|"Zone %s was not empty (%d items). "
+literal|" Lost %d pages of memory.\n"
 argument_list|,
 name|zone
 operator|->
@@ -4695,13 +4696,11 @@ argument|&uma_zones
 argument_list|,
 argument|uz_link
 argument_list|)
-block|{
 name|zfunc
 argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -4778,11 +4777,6 @@ argument_list|,
 name|maxcpu
 argument_list|,
 name|mp_maxid
-argument_list|)
-expr_stmt|;
-name|Debugger
-argument_list|(
-literal|"stop"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5656,7 +5650,8 @@ directive|ifdef
 name|UMA_DEBUG_ALLOC
 name|printf
 argument_list|(
-literal|"uma_zalloc: Swapping empty with alloc.\n"
+literal|"uma_zalloc: Swapping empty with"
+literal|" alloc.\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6913,7 +6908,7 @@ goto|;
 block|}
 block|}
 block|}
-comment|/* 	 * We can get here for two reasons: 	 * 	 * 1) The buckets are NULL 	 * 2) The alloc and free buckets are both somewhat full. 	 * 	 */
+comment|/* 	 * We can get here for two reasons: 	 * 	 * 1) The buckets are NULL 	 * 2) The alloc and free buckets are both somewhat full. 	 */
 name|ZONE_LOCK
 argument_list|(
 name|zone
@@ -7101,7 +7096,7 @@ label|:
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-comment|/* 	 * If we need to skip the dtor and the uma_dbg_free in uma_zfree_internal 	 * because we've already called the dtor above, but we ended up here, then 	 * we need to make sure that we take care of the uma_dbg_free immediately. 	 */
+comment|/* 	 * If we need to skip the dtor and the uma_dbg_free in 	 * uma_zfree_internal because we've already called the dtor 	 * above, but we ended up here, then we need to make sure 	 * that we take care of the uma_dbg_free immediately. 	 */
 if|if
 condition|(
 name|skip
@@ -7713,6 +7708,7 @@ name|obj
 operator|==
 name|NULL
 condition|)
+block|{
 name|obj
 operator|=
 name|vm_object_allocate
@@ -7722,6 +7718,7 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|VM_OBJECT_LOCK_INIT
