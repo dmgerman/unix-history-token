@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -458,10 +452,6 @@ decl_stmt|;
 name|struct
 name|mtx
 name|queue_mtx
-decl_stmt|;
-name|struct
-name|disk
-name|disk
 decl_stmt|;
 name|dev_t
 name|dev
