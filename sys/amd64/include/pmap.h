@@ -244,6 +244,28 @@ comment|/* access from User mode (UPL) */
 end_comment
 
 begin_comment
+comment|/*  * Size of Kernel address space.  This is the number of page table pages  * (4MB each) to use for the kernel.  256 pages == 1 Gigabyte.  * This **MUST** be a multiple of 4 (eg: 252, 256, 260, etc).  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KVA_PAGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KVA_PAGES
+value|256
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Pte related macros  */
 end_comment
 
@@ -297,7 +319,7 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|254
+value|(KVA_PAGES - 2)
 end_define
 
 begin_comment
@@ -313,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|255
+value|(KVA_PAGES - 1)
 end_define
 
 begin_comment
@@ -324,10 +346,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
 
 begin_endif
 endif|#
