@@ -119,15 +119,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|int
+name|jmp_buf
+index|[
+name|_JBLEN
+index|]
+typedef|;
+end_typedef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_ANSI_SOURCE
 end_ifndef
-
-begin_comment
-comment|/*  * WARNING: sigsetjmp() isn't supported yet, this is a placeholder.  */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -149,16 +155,6 @@ end_endif
 begin_comment
 comment|/* not ANSI */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|jmp_buf
-index|[
-name|_JBLEN
-index|]
-typedef|;
-end_typedef
 
 begin_include
 include|#
@@ -198,10 +194,6 @@ ifndef|#
 directive|ifndef
 name|_ANSI_SOURCE
 end_ifndef
-
-begin_comment
-comment|/*  * WARNING: sigsetjmp() isn't supported yet, this is a placeholder.  */
-end_comment
 
 begin_decl_stmt
 name|int
