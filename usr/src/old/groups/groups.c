@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)groups.c	4.7 (Berkeley) %G%"
+literal|"@(#)groups.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_decl_stmt
@@ -199,6 +205,12 @@ modifier|*
 name|gr
 decl_stmt|;
 specifier|register
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+specifier|register
 name|char
 modifier|*
 modifier|*
@@ -210,6 +222,33 @@ name|sep
 init|=
 literal|""
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|pw
+operator|=
+name|getpwnam
+argument_list|(
+name|user
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"No such user\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|gr
@@ -217,6 +256,35 @@ operator|=
 name|getgrent
 argument_list|()
 condition|)
+block|{
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_gid
+operator|==
+name|gr
+operator|->
+name|gr_gid
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s%s"
+argument_list|,
+name|sep
+argument_list|,
+name|gr
+operator|->
+name|gr_name
+argument_list|)
+expr_stmt|;
+name|sep
+operator|=
+literal|" "
+expr_stmt|;
+continue|continue;
+block|}
 for|for
 control|(
 name|cp
@@ -262,6 +330,7 @@ operator|=
 literal|" "
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|printf
 argument_list|(
