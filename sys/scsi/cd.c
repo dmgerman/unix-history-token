@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.60 1996/01/30 16:38:30 ache Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.61 1996/01/30 23:11:06 ache Exp $  */
 end_comment
 
 begin_include
@@ -3924,9 +3924,11 @@ name|CD_MSF_FORMAT
 case|:
 name|lba2msf
 argument_list|(
-name|th
+name|cd
 operator|->
-name|len
+name|params
+operator|.
+name|disksize
 argument_list|,
 operator|&
 name|data
@@ -3988,9 +3990,11 @@ name|lba
 operator|=
 name|htonl
 argument_list|(
-name|th
+name|cd
 operator|->
-name|len
+name|params
+operator|.
+name|disksize
 argument_list|)
 expr_stmt|;
 break|break;
