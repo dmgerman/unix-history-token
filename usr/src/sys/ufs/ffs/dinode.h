@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.11	82/04/19	*/
+comment|/*	dinode.h	4.12	82/06/29	*/
 end_comment
 
 begin_comment
@@ -37,6 +37,15 @@ begin_struct
 struct|struct
 name|inode
 block|{
+name|struct
+name|inode
+modifier|*
+name|i_chain
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* must be first */
 name|char
 name|i_flag
 decl_stmt|;
@@ -73,6 +82,24 @@ name|socket
 modifier|*
 name|is_socket
 decl_stmt|;
+struct|struct
+block|{
+name|struct
+name|inode
+modifier|*
+name|if_freef
+decl_stmt|;
+comment|/* free list forward */
+name|struct
+name|inode
+modifier|*
+modifier|*
+name|if_freeb
+decl_stmt|;
+comment|/* free list back */
+block|}
+name|i_fr
+struct|;
 block|}
 name|i_un
 union|;
@@ -244,6 +271,34 @@ define|#
 directive|define
 name|i_socket
 value|is_socket
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_forw
+value|i_chain[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_back
+value|i_chain[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_freef
+value|i_un.i_fr.if_freef
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_freeb
+value|i_un.i_fr.if_freeb
 end_define
 
 begin_define
