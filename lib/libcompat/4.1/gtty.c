@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gtty.c,v 1.1 1994/05/21 05:20:34 cgd Exp $"
+literal|"$Id: gtty.c,v 1.1.1.1 1994/05/27 10:33:22 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,12 @@ end_include
 begin_comment
 comment|/*  * Get tty modes.  * This was defined in ioctl_compat.h as:  *	#define	gtty(fd, tty)	ioctl(fd, TIOCGETP, tty)  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|gtty
+end_undef
 
 begin_function
 name|int
