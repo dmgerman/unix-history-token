@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.5 1994/10/01 16:10:24 thomas Exp $  *  * $Log: if_de.c,v $  * Revision 1.5  1994/10/01  16:10:24  thomas  * Modifications for FreeBSD 2.0  *  * Revision 1.4  1994/09/09  21:10:05  thomas  * mbuf debugging code  * transmit fifo owkraroudns  *  * Revision 1.3  1994/08/16  20:40:56  thomas  * New README files (one per driver)  * Minor updates to drivers (DEPCA support and add pass to attach  * output)  *  * Revision 1.2  1994/08/15  20:41:22  thomas  * Support AUI and TP.  Autosense either.  * Revamp receive logic to use private kmem_alloc'ed 64K region.  * Some cleanup  *  * Revision 1.1  1994/08/12  21:01:18  thomas  * Initial revision  *  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.6 1994/10/11 18:20:10 thomas Exp $  *  * $Log: if_de.c,v $  * Revision 1.6  1994/10/11  18:20:10  thomas  * new pci interface  * new 100mb/s prelim support  *  * Revision 1.5  1994/10/01  16:10:24  thomas  * Modifications for FreeBSD 2.0  *  * Revision 1.4  1994/09/09  21:10:05  thomas  * mbuf debugging code  * transmit fifo owkraroudns  *  * Revision 1.3  1994/08/16  20:40:56  thomas  * New README files (one per driver)  * Minor updates to drivers (DEPCA support and add pass to attach  * output)  *  * Revision 1.2  1994/08/15  20:41:22  thomas  * Support AUI and TP.  Autosense either.  * Revamp receive logic to use private kmem_alloc'ed 64K region.  * Some cleanup  *  * Revision 1.1  1994/08/12  21:01:18  thomas  * Initial revision  *  */
 end_comment
 
 begin_comment
@@ -561,10 +561,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|TULIP_DC21040
+block|,
+name|TULIP_DC21140
+block|}
+name|tulip_chipid_t
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|tulip_chipdescs
+index|[]
+init|=
+block|{
+literal|"DC21040 [10Mb/s]"
+block|,
+literal|"DC21140 [100Mb/s]"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|tulip_softc_t
 modifier|*
 name|tulips
+index|[
+name|NDE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|tulip_chipid_t
+name|tulip_chipids
 index|[
 name|NDE
 index|]
@@ -1190,7 +1226,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-comment|/* XXX unsigned new_cmdmode; */
 if|if
 condition|(
 name|sc
@@ -3245,7 +3280,14 @@ name|spins
 init|=
 literal|0
 decl_stmt|;
-comment|/* XXX tulip_intrs[unit]++; */
+name|tulip_intrs
+index|[
+name|sc
+operator|->
+name|tulip_unit
+index|]
+operator|++
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3313,9 +3355,7 @@ name|tulip_unit
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -3415,9 +3455,7 @@ operator|=
 name|spins
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -5093,7 +5131,7 @@ literal|14
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: DC21040 pass %d.%d (TULIP) ethernet address %s\n"
+literal|"%s%d: %s pass %d.%d ethernet address %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -5102,6 +5140,16 @@ argument_list|,
 name|sc
 operator|->
 name|tulip_unit
+argument_list|,
+name|tulip_chipdescs
+index|[
+name|tulip_chipids
+index|[
+name|sc
+operator|->
+name|tulip_unit
+index|]
+index|]
 argument_list|,
 operator|(
 name|sc
@@ -5728,17 +5776,6 @@ block|{
 name|int
 name|idx
 decl_stmt|;
-if|if
-condition|(
-name|device_id
-operator|!=
-literal|0x00021011ul
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 for|for
 control|(
 name|idx
@@ -5752,6 +5789,7 @@ condition|;
 name|idx
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|tulips
@@ -5761,15 +5799,50 @@ index|]
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|device_id
+operator|==
+literal|0x00021011ul
+condition|)
+block|{
+name|tulip_chipids
+index|[
+name|idx
+index|]
+operator|=
+name|TULIP_DC21040
+expr_stmt|;
 return|return
-operator|(
 literal|"digital dc21040 ethernet"
-operator|)
 return|;
+block|}
+if|if
+condition|(
+name|device_id
+operator|==
+literal|0x00091011ul
+condition|)
+block|{
+name|tulip_chipids
+index|[
+name|idx
+index|]
+operator|=
+name|TULIP_DC21140
+expr_stmt|;
 return|return
-operator|(
+literal|"digital dc21140 fast ethernet"
+return|;
+block|}
+return|return
 name|NULL
-operator|)
+return|;
+block|}
+block|}
+return|return
+name|NULL
 return|;
 block|}
 end_function
@@ -5794,15 +5867,12 @@ name|int
 name|retval
 decl_stmt|,
 name|idx
-comment|/* XXX , revinfo, */
 decl_stmt|;
-comment|/* XXX signed int csr; */
 name|vm_offset_t
 name|va_csrs
 decl_stmt|,
 name|pa_csrs
 decl_stmt|;
-comment|/* XXX int result;*/
 name|tulip_desc_t
 modifier|*
 name|rxdescs
@@ -6167,7 +6237,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: DC21040 %d.%d ethernet address %s\n"
+literal|"%s%d: %s %d.%d ethernet address %s\n"
 argument_list|,
 name|sc
 operator|->
@@ -6176,6 +6246,16 @@ argument_list|,
 name|sc
 operator|->
 name|tulip_unit
+argument_list|,
+name|tulip_chipdescs
+index|[
+name|tulip_chipids
+index|[
+name|sc
+operator|->
+name|tulip_unit
+index|]
+index|]
 argument_list|,
 operator|(
 name|sc
