@@ -830,6 +830,8 @@ name|RFSTOPPED
 operator||
 name|RFHIGHPID
 argument_list|,
+literal|"%s"
+argument_list|,
 name|ithd
 operator|->
 name|it_name
