@@ -1260,6 +1260,8 @@ operator|&
 name|sc
 operator|->
 name|sc_ac
+operator|.
+name|ac_if
 argument_list|,
 name|ifa
 argument_list|)
