@@ -588,6 +588,52 @@ value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|\ 	    IFF_SIMPLEX|
 end_define
 
 begin_comment
+comment|/*  * Some convenience macros used for setting ifi_baudrate.  * XXX 1000 vs. 1024? --thorpej@netbsd.org  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_Kbps
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) * 1000)
+end_define
+
+begin_comment
+comment|/* kilobits/sec. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_Mbps
+parameter_list|(
+name|x
+parameter_list|)
+value|(IF_Kbps((x) * 1000))
+end_define
+
+begin_comment
+comment|/* megabits/sec. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_Gbps
+parameter_list|(
+name|x
+parameter_list|)
+value|(IF_Mbps((x) * 1000))
+end_define
+
+begin_comment
+comment|/* gigabits/sec. */
+end_comment
+
+begin_comment
 comment|/* Capabilities that interfaces can advertise. */
 end_comment
 
@@ -622,6 +668,39 @@ end_define
 
 begin_comment
 comment|/* can be a network console */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_VLAN_MTU
+value|0x0008
+end_define
+
+begin_comment
+comment|/* VLAN-compatible MTU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_VLAN_HWTAGGING
+value|0x0010
+end_define
+
+begin_comment
+comment|/* hardware VLAN tag support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_JUMBO_MTU
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 9000 byte MTU supported */
 end_comment
 
 begin_define
