@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.9 89/10/07$  *  *	@(#)autoconf.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.9 89/10/07$  *  *	@(#)autoconf.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,6 +37,31 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|internalhpib
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|"rominfo.h"
+end_include
+
+begin_endif
+unit|printrominfo() { 	struct rominfo *rp = (struct rominfo *)ROMADDR; 	printf("boottype %x, name %s, lowram %x, sysflag %x\n", 	       rp->boottype, rp->name, rp->lowram, rp->sysflag&0xff); 	printf("rambase %x, ndrives %x, sysflag2 %x, msus %x\n", 	       rp->rambase, rp->ndrives, rp->sysflag2&0xff, rp->msus); }
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|configure
 argument_list|()
@@ -50,6 +75,12 @@ expr_stmt|;
 name|cninit
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printrominfo();
+endif|#
+directive|endif
 name|hpibinit
 argument_list|()
 expr_stmt|;
@@ -74,10 +105,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|internalhpib
-decl_stmt|;
 if|if
 condition|(
 name|sc
@@ -107,6 +134,8 @@ condition|(
 name|sc
 operator|==
 literal|7
+operator|&&
+name|internalhpib
 condition|)
 return|return
 operator|(
@@ -236,6 +265,27 @@ name|hw_sc
 operator|=
 name|sc
 expr_stmt|;
+comment|/* 		 * Not all internal HP-IBs respond rationally to id requests 		 * so we just go by the "internal HPIB" indicator in SYSFLAG. 		 */
+if|if
+condition|(
+name|sc
+operator|==
+literal|7
+operator|&&
+name|internalhpib
+condition|)
+block|{
+name|hw
+operator|->
+name|hw_type
+operator|=
+name|HPIB
+expr_stmt|;
+name|hw
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 switch|switch
 condition|(
 name|hw
@@ -243,6 +293,23 @@ operator|->
 name|hw_id
 condition|)
 block|{
+case|case
+literal|5
+case|:
+comment|/* 98642A */
+case|case
+literal|128
+operator|+
+literal|5
+case|:
+comment|/* 98642A remote */
+name|hw
+operator|->
+name|hw_type
+operator|=
+name|COMMDCM
+expr_stmt|;
+break|break;
 case|case
 literal|8
 case|:

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.5 89/08/22$  *  *	@(#)cons.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.5 89/08/22$  *  *	@(#)cons.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -82,6 +82,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DCMCONSOLE
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|dcmprobe
+argument_list|()
+decl_stmt|,
+name|dcminit
+argument_list|()
+decl_stmt|,
+name|dcmgetchar
+argument_list|()
+decl_stmt|,
+name|dcmputchar
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|consdev
@@ -115,6 +142,21 @@ block|,
 name|dcagetchar
 block|,
 name|dcaputchar
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DCMCONSOLE
+block|{
+name|dcmprobe
+block|,
+name|dcminit
+block|,
+name|dcmgetchar
+block|,
+name|dcmputchar
 block|}
 block|,
 endif|#
