@@ -136,7 +136,7 @@ name|ap
 operator|->
 name|a_ioflag
 operator|>>
-literal|16
+name|IO_SEQSHIFT
 decl_stmt|;
 name|u_short
 name|mode
@@ -440,7 +440,7 @@ name|ap
 operator|->
 name|a_ioflag
 operator|>>
-literal|16
+name|IO_SEQSHIFT
 operator|)
 argument_list|,
 operator|&
@@ -722,7 +722,7 @@ name|ap
 operator|->
 name|a_ioflag
 operator|>>
-literal|16
+name|IO_SEQSHIFT
 expr_stmt|;
 name|uio
 operator|=

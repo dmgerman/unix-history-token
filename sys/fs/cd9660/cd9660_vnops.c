@@ -1102,7 +1102,7 @@ name|ap
 operator|->
 name|a_ioflag
 operator|>>
-literal|16
+name|IO_SEQSHIFT
 expr_stmt|;
 if|if
 condition|(
