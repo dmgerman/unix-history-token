@@ -4375,15 +4375,17 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|sc
 operator|->
 name|ih
-condition|)
-name|panic
-argument_list|(
+operator|==
+name|NULL
+argument_list|,
+operator|(
 literal|"fxp_release() called with intr handle still active"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
