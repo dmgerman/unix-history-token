@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.9 (Berkeley) %G%"
+literal|"@(#)send.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -982,15 +982,6 @@ decl_stmt|,
 modifier|*
 name|postage
 decl_stmt|;
-name|int
-name|remote
-init|=
-name|rflag
-operator|!=
-name|NOSTR
-operator|||
-name|rmail
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -1161,9 +1152,6 @@ expr_stmt|;
 if|if
 condition|(
 name|senderr
-operator|&&
-operator|!
-name|remote
 condition|)
 block|{
 name|topdog
@@ -1258,11 +1246,6 @@ argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
-name|mechk
-argument_list|(
-name|to
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|count
@@ -1284,9 +1267,6 @@ operator|->
 name|h_seq
 operator|>
 literal|0
-operator|&&
-operator|!
-name|remote
 condition|)
 block|{
 name|fixhead
@@ -1527,13 +1507,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|SIGTSTP
-if|if
-condition|(
-name|remote
-operator|==
-literal|0
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1564,7 +1537,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 operator|(
@@ -1731,16 +1703,12 @@ name|out
 label|:
 if|if
 condition|(
-name|remote
-operator|||
-operator|(
 name|value
 argument_list|(
 literal|"verbose"
 argument_list|)
 operator|!=
 name|NOSTR
-operator|)
 condition|)
 block|{
 while|while
@@ -2623,10 +2591,6 @@ argument_list|()
 decl_stmt|;
 name|char
 modifier|*
-name|n
-decl_stmt|;
-name|char
-modifier|*
 name|ctime
 parameter_list|()
 function_decl|;
@@ -2667,27 +2631,13 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|n
-operator|=
-name|rflag
-operator|)
-operator|==
-name|NOSTR
-condition|)
-name|n
-operator|=
-name|myname
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|fo
 argument_list|,
 literal|"From %s %s"
 argument_list|,
-name|n
+name|myname
 argument_list|,
 name|ctime
 argument_list|(
