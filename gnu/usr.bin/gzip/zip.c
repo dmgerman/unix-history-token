@@ -3,11 +3,11 @@ begin_comment
 comment|/* zip.c -- compress files to the gzip or pkzip format  * Copyright (C) 1992-1993 Jean-loup Gailly  * This is free software; you can redistribute it and/or modify it under the  * terms of the GNU General Public License, see the file COPYING.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
 
 begin_decl_stmt
 specifier|static

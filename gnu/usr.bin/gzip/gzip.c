@@ -48,11 +48,11 @@ begin_comment
 comment|/* Compress files with zip algorithm and 'compress' interface.  * See usage() and help() functions below for all options.  * Outputs:  *        file.gz:   compressed file with same mode, owner, and utimes  *     or stdout with -c option or if stdin used as input.  * If the output file name had to be truncated, the original name is kept  * in the compressed file.  * On MSDOS, file.tmp -> file.tmz. On VMS, file.tmp -> file.tmp-gz.  *  * Using gz on MSDOS would create too many file name conflicts. For  * example, foo.txt -> foo.tgz (.tgz must be reserved as shorthand for  * tar.gz). Similarly, foo.dir and foo.doc would both be mapped to foo.dgz.  * I also considered 12345678.txt -> 12345txt.gz but this truncates the name  * too heavily. There is no ideal solution given the MSDOS 8+3 limitation.   *  * For the meaning of all compilation flags, see comments in Makefile.in.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -60,7 +60,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gzip.c,v 0.22 1993/06/16 16:53:43 jloup Exp $"
+literal|"$Id: gzip.c,v 0.24 1993/06/24 10:52:07 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1011,12 +1011,26 @@ begin_decl_stmt
 name|int
 name|no_name
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* don't save or restore the original file name */
+end_comment
+
+begin_decl_stmt
+name|int
+name|no_time
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't save or restore the original file time */
 end_comment
 
 begin_decl_stmt
@@ -1522,7 +1536,18 @@ block|,
 literal|'n'
 block|}
 block|,
-comment|/* don't save or restore the original name */
+comment|/* don't save or restore original name& time */
+block|{
+literal|"name"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'N'
+block|}
+block|,
+comment|/* save or restore original name& time */
 block|{
 literal|"quiet"
 block|,
@@ -1546,7 +1571,7 @@ block|}
 block|,
 comment|/* quiet mode */
 block|{
-literal|"recurse"
+literal|"recursive"
 block|,
 literal|0
 block|,
@@ -1578,6 +1603,17 @@ literal|'t'
 block|}
 block|,
 comment|/* test compressed file integrity */
+block|{
+literal|"no-time"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'T'
+block|}
+block|,
+comment|/* don't save or restore the time stamp */
 block|{
 literal|"verbose"
 block|,
@@ -1926,26 +1962,6 @@ end_decl_stmt
 begin_decl_stmt
 name|local
 name|void
-name|reset_times
-name|OF
-argument_list|(
-operator|(
-name|char
-operator|*
-name|name
-operator|,
-expr|struct
-name|stat
-operator|*
-name|statb
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|local
-name|void
 name|copy_stat
 name|OF
 argument_list|(
@@ -1954,21 +1970,6 @@ expr|struct
 name|stat
 operator|*
 name|ifstat
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|local
-name|void
-name|treat_dir
-name|OF
-argument_list|(
-operator|(
-name|char
-operator|*
-name|dir
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2033,6 +2034,63 @@ begin_comment
 comment|/* function to call */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_DIR
+end_ifndef
+
+begin_decl_stmt
+name|local
+name|void
+name|treat_dir
+name|OF
+argument_list|(
+operator|(
+name|char
+operator|*
+name|dir
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_UTIME
+end_ifndef
+
+begin_decl_stmt
+name|local
+name|void
+name|reset_times
+name|OF
+argument_list|(
+operator|(
+name|char
+operator|*
+name|name
+operator|,
+expr|struct
+name|stat
+operator|*
+name|statb
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2059,7 +2117,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-%scdfhlLn%stvV19] [-S suffix] [file ...]\n"
+literal|"usage: %s [-%scdfhlLnN%stvV19] [-S suffix] [file ...]\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -2122,32 +2180,34 @@ block|,
 literal|" -h --help        give this help"
 block|,
 comment|/* -k --pkzip       force output in pkzip format */
-literal|" -l --list        list .gz file contents"
+literal|" -l --list        list compressed file contents"
 block|,
 literal|" -L --license     display software license"
 block|,
-literal|" -n --no-name     do not save or restore the original name"
+ifdef|#
+directive|ifdef
+name|UNDOCUMENTED
+literal|" -m --no-time     do not save or restore the original modification time"
+block|,
+literal|" -M --time        save or restore the original modification time"
+block|,
+endif|#
+directive|endif
+literal|" -n --no-name     do not save or restore the original name and time stamp"
+block|,
+literal|" -N --name        save or restore the original name and time stamp"
 block|,
 literal|" -q --quiet       suppress all warnings"
 block|,
 ifndef|#
 directive|ifndef
 name|NO_DIR
-literal|" -r --recurse     recurse through directories"
+literal|" -r --recursive   operate recursively on directories"
 block|,
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MAX_EXT_CHARS
-literal|" -S .suf  --suffix .suf     use suffix .suf instead of .z"
+literal|" -S .suf  --suffix .suf     use suffix .suf on compressed files"
 block|,
-else|#
-directive|else
-literal|" -S .suf  --suffix .suf     use suffix .suf instead of .gz"
-block|,
-endif|#
-directive|endif
 literal|" -t --test        test compressed file integrity"
 block|,
 literal|" -v --verbose     verbose mode"
@@ -2474,8 +2534,6 @@ decl_stmt|;
 block|{
 name|int
 name|file_count
-init|=
-literal|0
 decl_stmt|;
 comment|/* number of files to precess */
 name|int
@@ -2580,6 +2638,9 @@ condition|(
 name|foreground
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -2594,6 +2655,21 @@ block|}
 ifdef|#
 directive|ifdef
 name|SIGTERM
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
+block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -2604,11 +2680,27 @@ operator|)
 name|abort_gzip
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|SIGHUP
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
+block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -2619,6 +2711,7 @@ operator|)
 name|abort_gzip
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifndef|#
@@ -2720,7 +2813,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:cdfhlLnqrS:tvVZ123456789"
+literal|"ab:cdfhH?lLmMnNqrS:tvVZ123456789"
 argument_list|,
 name|longopts
 argument_list|,
@@ -2825,11 +2918,41 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'m'
+case|:
+comment|/* undocumented, may change later */
+name|no_time
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+comment|/* undocumented, may change later */
+name|no_time
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|no_name
 operator|=
+name|no_time
+operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|no_name
+operator|=
+name|no_time
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -3025,6 +3148,27 @@ expr_stmt|;
 block|}
 block|}
 comment|/* loop on all arguments */
+comment|/* By default, save name and timestamp on compression but do not      * restore them on decompression.      */
+if|if
+condition|(
+name|no_time
+operator|<
+literal|0
+condition|)
+name|no_time
+operator|=
+name|decompress
+expr_stmt|;
+if|if
+condition|(
+name|no_name
+operator|<
+literal|0
+condition|)
+name|no_name
+operator|=
+name|decompress
+expr_stmt|;
 name|file_count
 operator|=
 name|argc
@@ -3258,6 +3402,10 @@ name|list
 operator|&&
 operator|!
 name|quiet
+operator|&&
+name|file_count
+operator|>
+literal|1
 condition|)
 block|{
 name|do_list
@@ -3297,6 +3445,9 @@ if|if
 condition|(
 operator|!
 name|force
+operator|&&
+operator|!
+name|list
 operator|&&
 name|isatty
 argument_list|(
@@ -3412,16 +3563,22 @@ literal|"stdout"
 argument_list|)
 expr_stmt|;
 comment|/* Get the time stamp on the input file. */
-ifdef|#
-directive|ifdef
-name|NO_STDIN_FSTAT
 name|time_stamp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* time unknown */
-else|#
-directive|else
+comment|/* time unknown by default */
+ifndef|#
+directive|ifndef
+name|NO_STDIN_FSTAT
+if|if
+condition|(
+name|list
+operator|||
+operator|!
+name|no_time
+condition|)
+block|{
 if|if
 condition|(
 name|fstat
@@ -3444,13 +3601,11 @@ literal|"fstat(stdin)"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If you do not wish to save the time stamp when input comes from a pipe,      * compile with -DNO_PIPE_TIMESTAMP.      */
 ifdef|#
 directive|ifdef
 name|NO_PIPE_TIMESTAMP
 if|if
 condition|(
-operator|!
 name|S_ISREG
 argument_list|(
 name|istat
@@ -3458,11 +3613,6 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|time_stamp
-operator|=
-literal|0
-expr_stmt|;
-else|else
 endif|#
 directive|endif
 name|time_stamp
@@ -3473,6 +3623,8 @@ name|st_mtime
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NO_STDIN_FSTAT */
+block|}
 name|ifile_size
 operator|=
 operator|-
@@ -3692,6 +3844,31 @@ modifier|*
 name|iname
 decl_stmt|;
 block|{
+comment|/* Accept "-" as synonym for stdin */
+if|if
+condition|(
+name|strequ
+argument_list|(
+name|iname
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+block|{
+name|int
+name|cflag
+init|=
+name|to_stdout
+decl_stmt|;
+name|treat_stdin
+argument_list|()
+expr_stmt|;
+name|to_stdout
+operator|=
+name|cflag
+expr_stmt|;
+return|return;
+block|}
 comment|/* Check if the input file is present, set ifname and istat: */
 if|if
 condition|(
@@ -3739,6 +3916,9 @@ name|iname
 argument_list|)
 expr_stmt|;
 comment|/* Warning: ifname is now garbage */
+ifndef|#
+directive|ifndef
+name|NO_UTIME
 name|reset_times
 argument_list|(
 name|iname
@@ -3747,6 +3927,8 @@ operator|&
 name|st
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 endif|#
@@ -3849,17 +4031,27 @@ name|st_size
 expr_stmt|;
 name|time_stamp
 operator|=
+name|no_time
+operator|&&
+operator|!
+name|list
+condition|?
+literal|0
+else|:
 name|istat
 operator|.
 name|st_mtime
 expr_stmt|;
-comment|/* Generate output file name */
+comment|/* Generate output file name. For -r and (-t or -l), skip files      * without a valid gzip suffix (check done in make_ofname).      */
 if|if
 condition|(
 name|to_stdout
 operator|&&
 operator|!
 name|list
+operator|&&
+operator|!
+name|test
 condition|)
 block|{
 name|strcpy
@@ -4013,6 +4205,9 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|!
+name|decompress
+operator|&&
 name|save_orig_name
 operator|&&
 operator|!
@@ -5240,9 +5435,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* Whith -t or -l, try all files (even without .gz suffix) 	     * except with -r (behave as with just -dr).              */
 if|if
 condition|(
+operator|!
+name|recursive
+operator|&&
+operator|(
 name|list
+operator|||
+name|test
+operator|)
 condition|)
 return|return
 name|OK
@@ -5479,7 +5682,7 @@ return|return
 name|OK
 return|;
 block|}
-comment|/* ========================================================================  * Check the magic number of the input file and update ofname if an  * original name was given and to_stdout is not set.  * Return the compression method, -1 for error, -2 for warning.  * Set inptr to the offset of the next byte to be processed.  * This function may be called repeatedly for an input file consisting  * of several contiguous gzip'ed members.  * IN assertions: there is at least one remaining compressed member.  *   If the member is a zip file, it must be the only one.  */
+comment|/* ========================================================================  * Check the magic number of the input file and update ofname if an  * original name was given and to_stdout is not set.  * Return the compression method, -1 for error, -2 for warning.  * Set inptr to the offset of the next byte to be processed.  * Updates time_stamp if there is one and --no-time is not used.  * This function may be called repeatedly for an input file consisting  * of several contiguous gzip'ed members.  * IN assertions: there is at least one remaining compressed member.  *   If the member is a zip file, it must be the only one.  */
 name|local
 name|int
 name|get_method
@@ -5494,6 +5697,7 @@ block|{
 name|uch
 name|flags
 decl_stmt|;
+comment|/* compression flags */
 name|char
 name|magic
 index|[
@@ -5501,6 +5705,10 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* magic header */
+name|ulg
+name|stamp
+decl_stmt|;
+comment|/* time stamp */
 comment|/* If --force and --stdout, zcat == cat, so do not complain about      * premature end of file: use try_byte instead of get_byte.      */
 if|if
 condition|(
@@ -5558,13 +5766,6 @@ name|get_byte
 argument_list|()
 expr_stmt|;
 block|}
-name|time_stamp
-operator|=
-name|istat
-operator|.
-name|st_mtime
-expr_stmt|;
-comment|/* may be modified later for some methods */
 name|method
 operator|=
 operator|-
@@ -5765,7 +5966,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|time_stamp
+name|stamp
 operator|=
 operator|(
 name|ulg
@@ -5773,7 +5974,7 @@ operator|)
 name|get_byte
 argument_list|()
 expr_stmt|;
-name|time_stamp
+name|stamp
 operator||=
 operator|(
 operator|(
@@ -5785,7 +5986,7 @@ operator|)
 operator|<<
 literal|8
 expr_stmt|;
-name|time_stamp
+name|stamp
 operator||=
 operator|(
 operator|(
@@ -5797,7 +5998,7 @@ operator|)
 operator|<<
 literal|16
 expr_stmt|;
-name|time_stamp
+name|stamp
 operator||=
 operator|(
 operator|(
@@ -5808,6 +6009,19 @@ argument_list|()
 operator|)
 operator|<<
 literal|24
+expr_stmt|;
+if|if
+condition|(
+name|stamp
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|no_time
+condition|)
+name|time_stamp
+operator|=
+name|stamp
 expr_stmt|;
 operator|(
 name|void
@@ -5971,20 +6185,21 @@ name|char
 name|c
 decl_stmt|;
 comment|/* dummy used for NeXTstep 3.0 cc optimizer bug */
-while|while
-condition|(
-operator|(
+do|do
+block|{
 name|c
 operator|=
 name|get_byte
 argument_list|()
-operator|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|c
 operator|!=
 literal|0
 condition|)
-name|c
-operator|++
-expr_stmt|;
+do|;
 block|}
 else|else
 block|{
@@ -6059,8 +6274,13 @@ argument_list|(
 name|base
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|base
-operator|++
+condition|)
+name|list
+operator|=
+literal|0
 expr_stmt|;
 comment|/* avoid warning about unused variable */
 block|}
@@ -6259,6 +6479,9 @@ condition|(
 name|force
 operator|&&
 name|to_stdout
+operator|&&
+operator|!
+name|list
 condition|)
 block|{
 comment|/* pass input unchanged */
@@ -6515,6 +6738,9 @@ return|return;
 block|}
 name|crc
 operator|=
+operator|(
+name|ulg
+operator|)
 operator|~
 literal|0
 expr_stmt|;
@@ -6588,6 +6814,10 @@ name|read
 argument_list|(
 name|ifd
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -6631,6 +6861,10 @@ name|date
 operator|=
 name|ctime
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 operator|&
 name|time_stamp
 argument_list|)
@@ -6976,7 +7210,7 @@ return|return
 name|res
 return|;
 block|}
-comment|/* ========================================================================  * Shorten the given name by one character, or replace a .tar extension  * with .tgz. Truncate the last part of the name which is longer than  * MIN_PART characters: 1234.678.012.gz -> 123.678.012.gz. If the name  * has only parts shorter than MIN_PART truncate the longest part.  *  * IN assertion: This function is only called for the compressed file;  * the suffix of the given name is z_suffix.  */
+comment|/* ========================================================================  * Shorten the given name by one character, or replace a .tar extension  * with .tgz. Truncate the last part of the name which is longer than  * MIN_PART characters: 1234.678.012.gz -> 123.678.012.gz. If the name  * has only parts shorter than MIN_PART truncate the longest part.  * For decompression, just remove the last character of the name.  *  * IN assertion: for compression, the suffix of the given name is z_suffix.  */
 name|local
 name|void
 name|shorten_name
@@ -7013,6 +7247,40 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|decompress
+condition|)
+block|{
+if|if
+condition|(
+name|len
+operator|<=
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"name too short"
+argument_list|)
+expr_stmt|;
+name|name
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return;
+block|}
 name|p
 operator|=
 name|get_suffix
@@ -7035,13 +7303,6 @@ operator|*
 name|p
 operator|=
 literal|'\0'
-expr_stmt|;
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|name
-argument_list|)
 expr_stmt|;
 name|save_orig_name
 operator|=
@@ -7239,6 +7500,45 @@ name|stat
 name|ostat
 decl_stmt|;
 comment|/* stat for ofname */
+ifdef|#
+directive|ifdef
+name|ENAMETOOLONG
+comment|/* Check for strictly conforming Posix systems (which return ENAMETOOLONG      * instead of silently truncating filenames).      */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|stat
+argument_list|(
+name|ofname
+argument_list|,
+operator|&
+name|ostat
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENAMETOOLONG
+condition|)
+return|return
+literal|0
+return|;
+comment|/* ofname does not exist */
+name|shorten_name
+argument_list|(
+name|ofname
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|stat
@@ -7254,7 +7554,9 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Check for name truncation on existing file: */
+endif|#
+directive|endif
+comment|/* Check for name truncation on existing file. Do this even on systems      * defining ENAMETOOLONG, because on most systems the strict Posix      * behavior is disabled by default (silent name truncation allowed).      */
 if|if
 condition|(
 operator|!
@@ -7303,6 +7605,36 @@ name|ostat
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|strequ
+argument_list|(
+name|ifname
+argument_list|,
+name|ofname
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: %s: cannot %scompress onto itself\n"
+argument_list|,
+name|progname
+argument_list|,
+name|ifname
+argument_list|,
+name|decompress
+condition|?
+literal|"de"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -7316,6 +7648,7 @@ argument_list|,
 name|ofname
 argument_list|)
 expr_stmt|;
+block|}
 name|exit_code
 operator|=
 name|ERROR
@@ -7475,6 +7808,9 @@ return|return
 name|OK
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|NO_UTIME
 comment|/* ========================================================================  * Set the access and modification times from the given stat buffer.  */
 name|local
 name|void
@@ -7494,9 +7830,6 @@ modifier|*
 name|statb
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|NO_UTIME
 name|struct
 name|utimbuf
 name|timep
@@ -7560,20 +7893,9 @@ name|ofname
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|name
-operator|=
-name|name
-expr_stmt|;
-name|statb
-operator|=
-name|statb
-expr_stmt|;
-comment|/* avoid warnings */
+block|}
 endif|#
 directive|endif
-block|}
 comment|/* ========================================================================  * Copy modes, times, ownership from input file to output file.  * IN assertion: to_stdout is false.  */
 name|local
 name|void
@@ -7614,6 +7936,8 @@ expr_stmt|;
 if|if
 condition|(
 name|verbose
+operator|>
+literal|1
 condition|)
 block|{
 name|fprintf
@@ -7974,6 +8298,25 @@ name|int
 name|exitcode
 decl_stmt|;
 block|{
+specifier|static
+name|int
+name|in_exit
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|in_exit
+condition|)
+name|exit
+argument_list|(
+name|exitcode
+argument_list|)
+expr_stmt|;
+name|in_exit
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|env

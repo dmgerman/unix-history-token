@@ -3,11 +3,11 @@ begin_comment
 comment|/* crypt.c (dummy version) -- do not perform encryption  * Hardly worth copyrighting :-)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
 
 begin_decl_stmt
 specifier|static

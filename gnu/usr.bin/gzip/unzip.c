@@ -7,11 +7,11 @@ begin_comment
 comment|/*    This version can extract files in gzip or pkzip format.    For the latter, only the first entry is extracted, and it has to be    either deflated or stored.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -786,6 +786,9 @@ if|if
 condition|(
 name|orig_len
 operator|!=
+operator|(
+name|ulg
+operator|)
 name|bytes_out
 condition|)
 block|{

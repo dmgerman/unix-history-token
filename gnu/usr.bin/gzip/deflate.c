@@ -35,11 +35,11 @@ begin_comment
 comment|/* just for consistency checking */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -47,7 +47,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: deflate.c,v 0.14 1993/06/12 20:11:10 jloup Exp $"
+literal|"$Id: deflate.c,v 0.15 1993/06/24 10:53:53 jloup Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,13 +133,17 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|WSIZE
 operator|<<
 literal|1
+operator|)
 operator|>
+operator|(
 literal|1
 operator|<<
 name|BITS
+operator|)
 end_if
 
 begin_label
@@ -453,7 +457,7 @@ comment|/* compression level (1..9) */
 end_comment
 
 begin_decl_stmt
-name|int
+name|unsigned
 name|near
 name|good_match
 decl_stmt|;
@@ -2170,7 +2174,7 @@ value|flush_block(block_start>= 0L ? (char*)&window[(unsigned)block_start] : \  
 end_define
 
 begin_comment
-comment|/* ===========================================================================  * Processes a new input file and return its compressed length. This  * function does not perform lazy evaluationof matches and inserts  * new strings in the dictionary only for unmatched strings. It is used  * only for the fast compression options.  */
+comment|/* ===========================================================================  * Processes a new input file and return its compressed length. This  * function does not perform lazy evaluationof matches and inserts  * new strings in the dictionary only for unmatched strings or for short  * matches. It is used only for the fast compression options.  */
 end_comment
 
 begin_function

@@ -3,11 +3,11 @@ begin_comment
 comment|/* unlzw.c -- decompress files in LZW format.  * The code in this file is directly derived from the public domain 'compress'  * written by Spencer Thomas, Joe Orost, James Woods, Jim McKie, Steve Davies,  * Ken Turkowski, Dave Mack and Peter Jannesen.  *  * This is a temporary version which will be rewritten in some future version  * to accommodate in-memory decompression.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RCSID
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -1437,6 +1437,17 @@ argument_list|,
 name|bitmask
 argument_list|)
 expr_stmt|;
+name|Tracev
+argument_list|(
+operator|(
+name|stderr
+operator|,
+literal|"%d "
+operator|,
+name|code
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|oldcode
@@ -1445,6 +1456,17 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|code
+operator|>=
+literal|256
+condition|)
+name|error
+argument_list|(
+literal|"corrupt input."
+argument_list|)
+expr_stmt|;
 name|outbuf
 index|[
 name|outpos
@@ -1677,6 +1699,10 @@ expr_stmt|;
 block|}
 name|error
 argument_list|(
+name|to_stdout
+condition|?
+literal|"corrupt input."
+else|:
 literal|"corrupt input. Use zcat to recover some data."
 argument_list|)
 expr_stmt|;
