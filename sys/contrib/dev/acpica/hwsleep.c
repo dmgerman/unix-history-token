@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -38,6 +38,20 @@ argument_list|(
 literal|"hwsleep"
 argument_list|)
 end_macro
+
+begin_decl_stmt
+specifier|static
+name|UINT8
+name|SleepTypeA
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|UINT8
+name|SleepTypeB
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiSetFirmwareWakingVector  *  * PARAMETERS:  PhysicalAddress     - Physical address of ACPI real mode  *                                    entry point.  *  * RETURN:      AE_OK or AE_ERROR  *  * DESCRIPTION: Access function for dFirmwareWakingVector field in FACS  *  ******************************************************************************/
@@ -198,12 +212,12 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEnterSleepState  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state (see ACPI 2.0 spec p 231)  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiEnterSleepStatePrep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Prepare to enter a system sleep state (see ACPI 2.0 spec p 231)  *              This function must execute with interrupts enabled.  *              We break sleeping into 2 stages so that OSPM can handle  *              various OS-specific tasks between the two steps.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiEnterSleepState
+name|AcpiEnterSleepStatePrep
 parameter_list|(
 name|UINT8
 name|SleepState
@@ -218,24 +232,9 @@ decl_stmt|;
 name|ACPI_OBJECT
 name|Arg
 decl_stmt|;
-name|UINT8
-name|TypeA
-decl_stmt|;
-name|UINT8
-name|TypeB
-decl_stmt|;
-name|UINT16
-name|PM1AControl
-decl_stmt|;
-name|UINT16
-name|PM1BControl
-decl_stmt|;
-name|UINT32
-name|Retry
-decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiEnterSleepState"
+literal|"AcpiEnterSleepStatePrep"
 argument_list|)
 expr_stmt|;
 comment|/*      * _PSW methods could be run here to enable wake-on keyboard, LAN, etc.      */
@@ -246,10 +245,10 @@ argument_list|(
 name|SleepState
 argument_list|,
 operator|&
-name|TypeA
+name|SleepTypeA
 argument_list|,
 operator|&
-name|TypeB
+name|SleepTypeB
 argument_list|)
 expr_stmt|;
 if|if
@@ -261,9 +260,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* run the _PTS and _GTS methods */
 name|MEMSET
@@ -343,6 +344,72 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiEnterSleepState  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state (see ACPI 2.0 spec p 231)  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiEnterSleepState
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|)
+block|{
+name|UINT16
+name|PM1AControl
+decl_stmt|;
+name|UINT16
+name|PM1BControl
+decl_stmt|;
+name|UINT32
+name|Retry
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"AcpiEnterSleepState"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|SleepTypeA
+operator|>
+name|ACPI_SLEEP_TYPE_MAX
+operator|)
+operator|||
+operator|(
+name|SleepTypeB
+operator|>
+name|ACPI_SLEEP_TYPE_MAX
+operator|)
+condition|)
+block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Sleep values out of range: A=%x B=%x\n"
+operator|,
+name|SleepTypeA
+operator|,
+name|SleepTypeB
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_ERROR
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* clear wake status */
 name|AcpiHwRegisterBitAccess
 argument_list|(
@@ -355,9 +422,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|disable
+name|AcpiHwClearAcpiStatus
 argument_list|()
 expr_stmt|;
+comment|/* disable arbitration here? */
 name|AcpiHwDisableNonWakeupGpes
 argument_list|()
 expr_stmt|;
@@ -402,7 +470,7 @@ comment|/* mask in SLP_TYP */
 name|PM1AControl
 operator||=
 operator|(
-name|TypeA
+name|SleepTypeA
 operator|<<
 name|AcpiHwGetBitShift
 argument_list|(
@@ -413,7 +481,7 @@ expr_stmt|;
 name|PM1BControl
 operator||=
 operator|(
-name|TypeB
+name|SleepTypeB
 operator|<<
 name|AcpiHwGetBitShift
 argument_list|(
@@ -462,10 +530,6 @@ argument_list|(
 name|SLP_EN_MASK
 argument_list|)
 operator|)
-expr_stmt|;
-comment|/* flush caches */
-name|wbinvd
-argument_list|()
 expr_stmt|;
 comment|/* write #2: SLP_TYP + SLP_EN */
 name|AcpiHwRegisterWrite
@@ -517,11 +581,23 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* wait until we enter sleep state */
+comment|/* spin until we wake */
 name|Retry
 operator|=
 literal|1000
 expr_stmt|;
-do|do
+while|while
+condition|(
+operator|!
+name|AcpiHwRegisterBitAccess
+argument_list|(
+name|ACPI_READ
+argument_list|,
+name|ACPI_MTX_LOCK
+argument_list|,
+name|WAK_STS
+argument_list|)
+condition|)
 block|{
 comment|/*          * Some BIOSes don't set WAK_STS at all,          * give up waiting for wakeup if we time out.          */
 if|if
@@ -536,25 +612,6 @@ break|break;
 comment|/* giving up */
 block|}
 block|}
-do|while
-condition|(
-operator|!
-name|AcpiHwRegisterBitAccess
-argument_list|(
-name|ACPI_READ
-argument_list|,
-name|ACPI_MTX_LOCK
-argument_list|,
-name|WAK_STS
-argument_list|)
-condition|)
-do|;
-name|AcpiHwEnableNonWakeupGpes
-argument_list|()
-expr_stmt|;
-name|enable
-argument_list|()
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -585,6 +642,11 @@ name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiLeaveSleepState"
 argument_list|)
+expr_stmt|;
+comment|/* Ensure EnterSleepStatePrep -> EnterSleepState ordering */
+name|SleepTypeA
+operator|=
+name|ACPI_SLEEP_TYPE_INVALID
 expr_stmt|;
 name|MEMSET
 argument_list|(

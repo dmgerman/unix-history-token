@@ -367,17 +367,17 @@ operator|*
 name|OutputBufferLength
 condition|)
 block|{
+operator|*
+name|OutputBufferLength
+operator|=
+name|BufferSizeNeeded
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BUFFER_OVERFLOW
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|OutputBufferLength
-operator|=
-name|BufferSizeNeeded
-expr_stmt|;
 comment|/*      * Zero out the return buffer before proceeding      */
 name|MEMSET
 argument_list|(

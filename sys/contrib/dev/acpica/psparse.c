@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -87,7 +87,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|UINT32
 name|AcpiPsGetOpcodeSize
 parameter_list|(
@@ -154,10 +153,6 @@ argument_list|(
 name|Aml
 argument_list|)
 expr_stmt|;
-name|Aml
-operator|++
-expr_stmt|;
-comment|/*      * Original code special cased LNOTEQUAL, LLESSEQUAL, LGREATEREQUAL.      * These opcodes are no longer recognized. Instead, they are broken into      * two opcodes.      *      *      *    if (Opcode == AML_EXTOP      *       || (Opcode == AML_LNOT      *&& (GET8 (Aml) == AML_LEQUAL      *               || GET8 (Aml) == AML_LGREATER      *               || GET8 (Aml) == AML_LLESS)))      *      *     extended Opcode, !=,<=, or>=      */
 if|if
 condition|(
 name|Opcode
@@ -166,6 +161,9 @@ name|AML_EXTOP
 condition|)
 block|{
 comment|/* Extended opcode */
+name|Aml
+operator|++
+expr_stmt|;
 name|Opcode
 operator|=
 call|(
@@ -315,7 +313,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|BOOLEAN
 name|AcpiPsCompleteThisOp
 parameter_list|(
@@ -413,14 +410,33 @@ block|{
 case|case
 name|AML_CLASS_CONTROL
 case|:
-comment|/* IF, ELSE, WHILE only */
+break|break;
+case|case
+name|AML_CLASS_CREATE
+case|:
+comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replace by a placeholder return op                  */
+name|ReplacementOp
+operator|=
+name|AcpiPsAllocOp
+argument_list|(
+name|AML_INT_RETURN_VALUE_OP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ReplacementOp
+condition|)
+block|{
+name|return_VALUE
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|AML_CLASS_NAMED_OBJECT
-case|:
-comment|/* Scope, method, etc. */
-case|case
-name|AML_CLASS_CREATE
 case|:
 comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replace by a placeholder return op                  */
 if|if
@@ -442,57 +458,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_CREATE_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Parent
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_BIT_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Parent
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_BYTE_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Parent
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_WORD_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Parent
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_DWORD_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Parent
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_QWORD_FIELD_OP
+name|AML_DATA_REGION_OP
 operator|)
 condition|)
 block|{
@@ -730,7 +696,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_STATUS
 name|AcpiPsNextParseState
 parameter_list|(
@@ -1503,7 +1468,6 @@ operator|&
 name|Op
 argument_list|)
 expr_stmt|;
-comment|/* TBD: check status here? */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -2470,7 +2434,7 @@ name|WalkState
 operator|->
 name|ArgTypes
 expr_stmt|;
-comment|/*                  * TEMP:                  */
+comment|/*                  * TBD: TEMP:                  */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -2525,9 +2489,9 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/* ArgCount is non-zero */
 else|else
 block|{
+comment|/* ArgCount is non-zero */
 comment|/* complex argument, push Op and prepare for argument */
 name|AcpiPsPushScope
 argument_list|(
@@ -2775,10 +2739,11 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_WALK_LIST
-name|WalkList
+name|ACPI_THREAD_STATE
+modifier|*
+name|Thread
 decl_stmt|;
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
 name|PrevWalkList
 init|=
@@ -2831,49 +2796,41 @@ name|AmlSize
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Create and initialize a new walk list */
-name|WalkList
-operator|.
-name|WalkState
+comment|/* Create and initialize a new thread state */
+name|Thread
 operator|=
-name|NULL
+name|AcpiUtCreateThreadState
+argument_list|()
 expr_stmt|;
-name|WalkList
-operator|.
-name|AcquiredMutexList
-operator|.
-name|Prev
-operator|=
-name|NULL
+if|if
+condition|(
+operator|!
+name|Thread
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
 expr_stmt|;
-name|WalkList
-operator|.
-name|AcquiredMutexList
-operator|.
-name|Next
-operator|=
-name|NULL
-expr_stmt|;
+block|}
 name|WalkState
 operator|->
-name|WalkList
+name|Thread
 operator|=
-operator|&
-name|WalkList
+name|Thread
 expr_stmt|;
 name|AcpiDsPushWalkState
 argument_list|(
 name|WalkState
 argument_list|,
-operator|&
-name|WalkList
+name|Thread
 argument_list|)
 expr_stmt|;
 comment|/* TBD: [Restructure] TEMP until we pass WalkState to the interpreter      */
 name|AcpiGbl_CurrentWalkList
 operator|=
-operator|&
-name|WalkList
+name|Thread
 expr_stmt|;
 comment|/*      * Execute the walk loop as long as there is a valid Walk State.  This      * handles nested control method invocations without recursion.      */
 name|ACPI_DEBUG_PRINT
@@ -2936,8 +2893,7 @@ name|Status
 operator|=
 name|AcpiDsCallControlMethod
 argument_list|(
-operator|&
-name|WalkList
+name|Thread
 argument_list|,
 name|WalkState
 argument_list|,
@@ -2949,8 +2905,7 @@ name|WalkState
 operator|=
 name|AcpiDsGetCurrentWalkState
 argument_list|(
-operator|&
-name|WalkList
+name|Thread
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2973,8 +2928,7 @@ name|WalkState
 operator|=
 name|AcpiDsPopWalkState
 argument_list|(
-operator|&
-name|WalkList
+name|Thread
 argument_list|)
 expr_stmt|;
 comment|/* Save the last effective return value */
@@ -3063,8 +3017,7 @@ name|WalkState
 operator|=
 name|AcpiDsGetCurrentWalkState
 argument_list|(
-operator|&
-name|WalkList
+name|Thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -3180,14 +3133,16 @@ argument_list|)
 expr_stmt|;
 name|AcpiExReleaseAllMutexes
 argument_list|(
+name|Thread
+argument_list|)
+expr_stmt|;
+name|AcpiUtDeleteGenericState
+argument_list|(
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|ACPI_GENERIC_STATE
 operator|*
 operator|)
-operator|&
-name|WalkList
-operator|.
-name|AcquiredMutexList
+name|Thread
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_CurrentWalkList

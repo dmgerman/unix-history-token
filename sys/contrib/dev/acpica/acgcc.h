@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 14 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 15 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -260,7 +260,7 @@ parameter_list|,
 name|r32
 parameter_list|)
 define|\
-value|asm("divl %2;"        \ 		:"=a"(q32), "=d"(r32) \ 		:"r"(d32),            \ 		"0"(n_lo), "1"(n_hi))
+value|asm("divl %2;"        \         :"=a"(q32), "=d"(r32) \         :"r"(d32),            \         "0"(n_lo), "1"(n_hi))
 end_define
 
 begin_define
@@ -273,7 +273,7 @@ parameter_list|,
 name|n_lo
 parameter_list|)
 define|\
-value|asm("shrl   $1,%2;"             \ 	    "rcrl   $1,%3;"             \ 	    :"=r"(n_hi), "=r"(n_lo)     \ 	    :"0"(n_hi), "1"(n_lo))
+value|asm("shrl   $1,%2;"             \         "rcrl   $1,%3;"             \         :"=r"(n_hi), "=r"(n_lo)     \         :"0"(n_hi), "1"(n_lo))
 end_define
 
 begin_comment

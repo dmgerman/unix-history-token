@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 74 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 78 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * ACPI_DEBUG           - This switch enables all the debug facilities of the ACPI  *                          subsystem.  This includes the DEBUG_PRINT output statements  *                          When disabled, all DEBUG_PRINT statements are compiled out.  *  * ACPI_APPLICATION     - Use this switch if the subsystem is going to be run  *                          at the application level.  *  */
+comment|/*  * ACPI_DEBUG           - This switch enables all the debug facilities of the   *                        ACPI subsystem.  This includes the DEBUG_PRINT output   *                        statements.  When disabled, all DEBUG_PRINT   *                        statements are compiled out.  *  * ACPI_APPLICATION     - Use this switch if the subsystem is going to be run  *                        at the application level.  *  */
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20011018
+value|0x20011120
 end_define
 
 begin_comment
@@ -109,7 +109,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Objects for parse tree walks (method execution) */
+comment|/* Objects for parse tree walks */
 end_comment
 
 begin_comment
@@ -310,7 +310,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* 4 chars for name + 1 INT8 for separator */
+comment|/* 4 chars for name + 1 char for separator */
 end_comment
 
 begin_define
@@ -368,6 +368,24 @@ value|16
 end_define
 
 begin_comment
+comment|/* Operation regions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_PREDEFINED_REGIONS
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USER_REGION_BEGIN
+value|0x80
+end_define
+
+begin_comment
 comment|/* Maximum SpaceIds for Operation Regions */
 end_comment
 
@@ -376,13 +394,6 @@ define|#
 directive|define
 name|ACPI_MAX_ADDRESS_SPACE
 value|255
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_ADDRESS_SPACES
-value|256
 end_define
 
 begin_endif
