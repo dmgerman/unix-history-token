@@ -2424,8 +2424,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pid %d (%s) exited with masked floating"
-literal|" point exceptions 0x%02x\n"
+literal|"pid %d (%s) exited with masked floating point exceptions 0x%02x\n"
 argument_list|,
 name|td
 operator|->
