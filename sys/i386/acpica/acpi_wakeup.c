@@ -149,33 +149,6 @@ directive|include
 file|"acpi_wakecode.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_define
-define|#
-directive|define
-name|vm_page_lock_queues
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_page_unlock_queues
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|uint32_t
@@ -208,14 +181,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|r_ldt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|r_eax
 decl_stmt|,
 name|r_ebx
@@ -246,7 +219,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int16_t
+name|uint16_t
 name|r_cs
 decl_stmt|,
 name|r_ds
@@ -265,7 +238,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|r_esp
 init|=
 literal|0
@@ -530,7 +503,7 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|cr3
 decl_stmt|;
 name|u_long
@@ -728,7 +701,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|physical_esp
 argument_list|,
-name|u_int32_t
+name|uint32_t
 argument_list|,
 name|vtophys
 argument_list|(
@@ -740,7 +713,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_cr0
 argument_list|,
-name|u_int32_t
+name|uint32_t
 argument_list|,
 name|r_cr0
 argument_list|)
@@ -749,7 +722,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_cr2
 argument_list|,
-name|u_int32_t
+name|uint32_t
 argument_list|,
 name|r_cr2
 argument_list|)
@@ -758,7 +731,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_cr3
 argument_list|,
-name|u_int32_t
+name|uint32_t
 argument_list|,
 name|r_cr3
 argument_list|)
@@ -767,7 +740,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_cr4
 argument_list|,
-name|u_int32_t
+name|uint32_t
 argument_list|,
 name|r_cr4
 argument_list|)
@@ -785,7 +758,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_tr
 argument_list|,
-name|u_int16_t
+name|uint16_t
 argument_list|,
 name|r_tr
 argument_list|)
@@ -804,7 +777,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_ldt
 argument_list|,
-name|u_int16_t
+name|uint16_t
 argument_list|,
 name|r_ldt
 argument_list|)
@@ -832,7 +805,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_ds
 argument_list|,
-name|u_int16_t
+name|uint16_t
 argument_list|,
 name|r_ds
 argument_list|)
@@ -841,7 +814,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_es
 argument_list|,
-name|u_int16_t
+name|uint16_t
 argument_list|,
 name|r_es
 argument_list|)
@@ -850,7 +823,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_fs
 argument_list|,
-name|u_int16_t
+name|uint16_t
 argument_list|,
 name|r_fs
 argument_list|)
@@ -859,7 +832,7 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_gs
 argument_list|,
-name|u_int16_t
+name|uint16_t
 argument_list|,
 name|r_gs
 argument_list|)
@@ -868,17 +841,14 @@ name|WAKECODE_FIXUP
 argument_list|(
 name|previous_ss
 argument_list|,
-name|u_int16_t
+name|uint16_t
 argument_list|,
 name|r_ss
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|acpi_get_verbose
-argument_list|(
-name|sc
-argument_list|)
+name|bootverbose
 condition|)
 name|acpi_printcpu
 argument_list|()
@@ -958,10 +928,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|acpi_get_verbose
-argument_list|(
-name|sc
-argument_list|)
+name|bootverbose
 condition|)
 block|{
 name|acpi_savecpu
@@ -1195,14 +1162,14 @@ name|sc
 init|=
 name|arg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|addr
 decl_stmt|;
 name|addr
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|&

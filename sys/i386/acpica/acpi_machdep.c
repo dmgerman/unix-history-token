@@ -88,35 +88,11 @@ begin_comment
 comment|/*  * APM driver emulation   */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<sys/selinfo.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -130,38 +106,14 @@ directive|include
 file|<machine/pc/bios.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<i386/apm/apm.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<i386/bios/apm.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
-name|u_int32_t
+name|uint32_t
 name|acpi_reset_video
 init|=
 literal|1
@@ -178,6 +130,15 @@ name|acpi_reset_video
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|intr_model
+init|=
+name|ACPI_INTR_PIC
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -272,15 +233,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|intr_model
-init|=
-name|ACPI_INTR_PIC
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -371,21 +323,17 @@ name|cap
 operator|>=
 literal|50
 condition|)
-block|{
 name|state
 operator|=
 literal|0
 expr_stmt|;
 comment|/* high */
-block|}
 else|else
-block|{
 name|state
 operator|=
 literal|1
 expr_stmt|;
 comment|/* low */
-block|}
 block|}
 return|return
 operator|(
@@ -421,12 +369,10 @@ name|cap
 operator|>=
 literal|50
 condition|)
-block|{
 name|flags
 operator||=
 name|APM_BATT_HIGH
 expr_stmt|;
-block|}
 else|else
 block|{
 if|if
@@ -691,13 +637,11 @@ operator|>
 name|PMDV_BATT_ALL
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|app
