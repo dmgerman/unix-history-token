@@ -438,12 +438,12 @@ specifier|register
 name|char
 name|ch
 decl_stmt|,
-name|first
-decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
 name|int
+name|ignore
+decl_stmt|,
 name|mode
 decl_stmt|,
 name|n1
@@ -461,6 +461,10 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/* file name buffer */
+name|ignore
+operator|=
+literal|0
+expr_stmt|;
 comment|/* search for header line */
 do|do
 block|{
@@ -785,6 +789,7 @@ argument_list|,
 name|F_OK
 argument_list|)
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -797,6 +802,11 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|ignore
+operator|++
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -905,6 +915,14 @@ directive|define
 name|OUT_OF_RANGE
 define|\
 value|{	\     warnx( \ "\n\tinput file: %s\n\tencoded file: %s\n\tcharacter out of range: [%d-%d]", \  	filename, buffn, 1 + ' ', 077 + ' ' + 1); \         return(1); \ }
+define|#
+directive|define
+name|PUTCHAR
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|if (!ignore) \ 	putchar(c)
 comment|/* 		 * `n' is used to avoid writing out all the characters 		 * at the end of the file. 		 */
 if|if
 condition|(
@@ -1009,7 +1027,7 @@ argument_list|)
 operator|>>
 literal|4
 decl_stmt|;
-name|putchar
+name|PUTCHAR
 argument_list|(
 name|ch
 argument_list|)
@@ -1036,7 +1054,7 @@ argument_list|)
 operator|>>
 literal|2
 expr_stmt|;
-name|putchar
+name|PUTCHAR
 argument_list|(
 name|ch
 argument_list|)
@@ -1061,7 +1079,7 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-name|putchar
+name|PUTCHAR
 argument_list|(
 name|ch
 argument_list|)
@@ -1120,7 +1138,7 @@ argument_list|)
 operator|>>
 literal|4
 decl_stmt|;
-name|putchar
+name|PUTCHAR
 argument_list|(
 name|ch
 argument_list|)
@@ -1181,7 +1199,7 @@ argument_list|)
 operator|>>
 literal|2
 decl_stmt|;
-name|putchar
+name|PUTCHAR
 argument_list|(
 name|ch
 argument_list|)
@@ -1240,7 +1258,7 @@ literal|3
 index|]
 argument_list|)
 decl_stmt|;
-name|putchar
+name|PUTCHAR
 argument_list|(
 name|ch
 argument_list|)
