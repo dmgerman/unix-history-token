@@ -66,14 +66,25 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * ISA devices are partially ordered to ensure that devices which are  * sensitive to other driver probe routines are probed first. Plug and  * Play devices are added after devices with speculative probes so that  * the legacy hardware can claim resources allowing the Plug and Play  * hardware to choose different resources.  */
+comment|/*  * ISA devices are partially ordered.  This is to ensure that hardwired  * devices the BIOS tells us are there appear first, then speculative  * devices that are sensitive to the probe order, then devices that  * are hinted to be there, then the most flexible devices which support  * the ISA bus PNP standard.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISA_ORDER_PNPBIOS
+value|10
+end_define
+
+begin_comment
+comment|/* plug-and-play BIOS inflexible hardware */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ISA_ORDER_SENSITIVE
-value|0
+value|20
 end_define
 
 begin_comment
@@ -84,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|ISA_ORDER_SPECULATIVE
-value|1
+value|30
 end_define
 
 begin_comment
@@ -95,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|ISA_ORDER_PNP
-value|2
+value|40
 end_define
 
 begin_comment

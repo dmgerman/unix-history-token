@@ -887,7 +887,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|dev
 argument_list|,
-name|ISA_ORDER_PNP
+name|ISA_ORDER_PNPBIOS
 argument_list|,
 name|NULL
 argument_list|,
