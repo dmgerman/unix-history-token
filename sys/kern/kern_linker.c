@@ -524,7 +524,7 @@ name|sipp
 operator|)
 operator|->
 name|subsystem
-operator|<=
+operator|<
 operator|(
 operator|*
 name|xipp
@@ -764,7 +764,7 @@ name|sipp
 operator|)
 operator|->
 name|subsystem
-operator|>=
+operator|>
 operator|(
 operator|*
 name|xipp
