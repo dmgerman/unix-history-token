@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   *  Routines in this file based on the work of Volker Lendecke,  *  Adapted for ncplib by Boris Popov  *  Please note that ncpl_crypt.c file should be indentical to this one  *  * $FreeBSD$  */
+comment|/*   *  Routines in this file based on the work of Volker Lendecke,  *  Adapted for ncplib by Boris Popov  *  Please note that ncpl_crypt.c file should be indentical to this one  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
