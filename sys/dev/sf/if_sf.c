@@ -935,7 +935,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|sf
+name|if_sf
 argument_list|,
 name|pci
 argument_list|,
