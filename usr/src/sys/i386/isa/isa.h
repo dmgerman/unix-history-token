@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)isa.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)isa.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * ISA Bus conventions  */
+end_comment
+
+begin_comment
+comment|/*#ifndef LOCORE unsigned char inb(), rtcin(); void outb(); #endif*/
 end_comment
 
 begin_ifndef
@@ -13,23 +17,35 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 name|unsigned
 name|char
-name|inb
-argument_list|()
-decl_stmt|,
 name|rtcin
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|outb
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|inb
+parameter_list|(
+name|io
+parameter_list|)
+value|({u_short iop; register u_char rtn; \ 	iop = (io); \ 	asm (" movl %1,%%edx; inb %%al,%%dx; movzbl %%al,%0 " \ 		: "=r" (rtn) \ 		: "g" (iop) \ 		: "ax,dx"); \ 	rtn; \ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|outb
+parameter_list|(
+name|io
+parameter_list|,
+name|v
+parameter_list|)
+value|({u_short iop; u_char val; \ 	iop = (io); \ 	val = (v); \ 	asm (" movl %1,%%edx; movl %0,%%eax; outb %%dx,%%al " \ 		:  \ 		: "g" (val) \ 		: "g" (iop) \ 		: "ax,dx"); \ })
+end_define
 
 begin_endif
 endif|#
@@ -388,7 +404,7 @@ begin_define
 define|#
 directive|define
 name|IOM_BEGIN
-value|0x0a0000
+value|0xa0000
 end_define
 
 begin_comment
@@ -399,19 +415,12 @@ begin_define
 define|#
 directive|define
 name|IOM_END
-value|0x100000
+value|0xFFFFF
 end_define
 
 begin_comment
 comment|/* End of I/O Memory "hole" */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IOM_SIZE
-value|(IOM_END - IOM_BEGIN)
-end_define
 
 begin_endif
 endif|#
@@ -433,7 +442,7 @@ begin_define
 define|#
 directive|define
 name|RAM_BEGIN
-value|0x0000000
+value|0x000000
 end_define
 
 begin_comment
@@ -444,24 +453,17 @@ begin_define
 define|#
 directive|define
 name|RAM_END
-value|0x1000000
+value|0xFFFFFF
 end_define
 
 begin_comment
 comment|/* End of RAM Memory */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RAM_SIZE
-value|(RAM_END - RAM_BEGIN)
-end_define
-
 begin_endif
 endif|#
 directive|endif
-endif|RAM_BEGIN
+endif|IOM_BEGIN
 end_endif
 
 begin_comment
