@@ -200,6 +200,16 @@ name|USE_GETIPNODEBY
 end_undef
 
 begin_comment
+comment|/* define if you have ether_ntohost() and it works */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USE_ETHER_NTOHOST
+end_undef
+
+begin_comment
 comment|/* define if unaligned memory accesses fail */
 end_comment
 
@@ -285,6 +295,26 @@ begin_undef
 undef|#
 directive|undef
 name|u_int8_t
+end_undef
+
+begin_comment
+comment|/* Whether or not to include the possibly-buggy SMB printer */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TCPDUMP_DO_SMB
+end_undef
+
+begin_comment
+comment|/* Long story short: aclocal.m4 depends on autoconf 2.13  * implementation details wrt "const"; newer versions  * have different implementation details so for now we  * put "const" here.  This may cause duplicate definitions  * in config.h but that should be OK since they're the same.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|const
 end_undef
 
 end_unit
