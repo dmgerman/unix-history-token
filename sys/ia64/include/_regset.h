@@ -486,6 +486,7 @@ begin_function_decl
 name|void
 name|restore_callee_saved
 parameter_list|(
+specifier|const
 name|struct
 name|_callee_saved
 modifier|*
@@ -497,6 +498,7 @@ begin_function_decl
 name|void
 name|restore_callee_saved_fp
 parameter_list|(
+specifier|const
 name|struct
 name|_callee_saved_fp
 modifier|*
@@ -508,6 +510,7 @@ begin_function_decl
 name|void
 name|restore_high_fp
 parameter_list|(
+specifier|const
 name|struct
 name|_high_fp
 modifier|*
