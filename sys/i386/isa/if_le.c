@@ -1570,12 +1570,18 @@ name|IFF_SIMPLEX
 operator||
 name|IFF_NOTRAILERS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MULTICAST
 name|ifp
 operator|->
 name|if_flags
 operator||=
 name|IFF_MULTICAST
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* MULTICAST */
 name|ifp
 operator|->
 name|if_output
@@ -2720,6 +2726,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|MULTICAST
 case|case
 name|SIOCADDMULTI
 case|:
@@ -2796,6 +2805,9 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+endif|#
+directive|endif
+comment|/* MULTICAST */
 default|default:
 block|{
 name|error
@@ -3183,6 +3195,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|MULTICAST
 name|struct
 name|ether_multistep
 name|step
@@ -3192,6 +3207,8 @@ name|ether_multi
 modifier|*
 name|enm
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|ISO
@@ -3294,6 +3311,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|MULTICAST
 name|ETHER_FIRST_MULTI
 argument_list|(
 name|step
@@ -3384,6 +3404,8 @@ operator|&=
 operator|~
 name|IFF_ALLMULTI
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
