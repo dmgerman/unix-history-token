@@ -4271,7 +4271,7 @@ name|fp
 operator|->
 name|f_flag
 operator|&
-name|FNONBLOCK
+name|O_NONBLOCK
 condition|)
 name|ioflag
 operator||=
