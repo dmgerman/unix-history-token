@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	2.2 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	2.3 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -551,7 +551,7 @@ begin_define
 define|#
 directive|define
 name|NSPACE
-value|8
+value|25
 end_define
 
 begin_comment
