@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xargs.c,v 1.6 1998/06/17 12:58:43 jkoshy Exp $"
+literal|"$Id: xargs.c,v 1.8 1999/05/23 15:58:22 jmz Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +223,8 @@ decl_stmt|,
 name|nline
 decl_stmt|,
 name|xflag
+decl_stmt|,
+name|wasquoted
 decl_stmt|;
 name|char
 modifier|*
@@ -303,6 +305,8 @@ block|}
 name|nflag
 operator|=
 name|xflag
+operator|=
+name|wasquoted
 operator|=
 literal|0
 expr_stmt|;
@@ -607,30 +611,6 @@ argument_list|(
 name|rval
 argument_list|)
 expr_stmt|;
-comment|/* Nothing since end of last argument. */
-if|if
-condition|(
-name|argp
-operator|==
-name|p
-condition|)
-block|{
-operator|*
-name|xp
-operator|=
-name|NULL
-expr_stmt|;
-name|run
-argument_list|(
-name|av
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|rval
-argument_list|)
-expr_stmt|;
-block|}
 goto|goto
 name|arg1
 goto|;
@@ -678,14 +658,6 @@ condition|)
 goto|goto
 name|addch
 goto|;
-comment|/* Empty lines are skipped. */
-if|if
-condition|(
-name|argp
-operator|==
-name|p
-condition|)
-continue|continue;
 comment|/* Quotes do not escape newlines. */
 name|arg1
 label|:
@@ -704,8 +676,19 @@ argument_list|)
 expr_stmt|;
 name|arg2
 label|:
+comment|/* Do not make empty args unless they are quoted */
+if|if
+condition|(
+name|argp
+operator|!=
+name|p
+operator|||
+name|wasquoted
+condition|)
+block|{
 operator|*
 name|p
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -715,6 +698,7 @@ operator|++
 operator|=
 name|argp
 expr_stmt|;
+block|}
 comment|/* 			 * If max'd out on args or buffer, or reached EOF, 			 * run the command.  If xflag and max'd out on buffer 			 * but not on args, object. 			 */
 if|if
 condition|(
@@ -723,7 +707,7 @@ operator|==
 name|exp
 operator|||
 name|p
-operator|==
+operator|>
 name|ebp
 operator|||
 name|ch
@@ -740,7 +724,7 @@ operator|!=
 name|exp
 operator|&&
 name|p
-operator|==
+operator|>
 name|ebp
 condition|)
 name|errx
@@ -780,13 +764,13 @@ operator|=
 name|bxp
 expr_stmt|;
 block|}
-else|else
-operator|++
-name|p
-expr_stmt|;
 name|argp
 operator|=
 name|p
+expr_stmt|;
+name|wasquoted
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -806,6 +790,10 @@ operator|=
 operator|!
 name|insingle
 expr_stmt|;
+name|wasquoted
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'"'
@@ -823,6 +811,10 @@ name|indouble
 operator|=
 operator|!
 name|indouble
+expr_stmt|;
+name|wasquoted
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
