@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.16 (Berkeley) %G%"
+literal|"@(#)af.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,9 +174,11 @@ end_decl_stmt
 
 begin_block
 block|{
-name|hp
-operator|->
-name|afh_nethash
+specifier|register
+name|u_long
+name|n
+decl_stmt|;
+name|n
 operator|=
 name|inet_netof
 argument_list|(
@@ -184,6 +186,30 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+condition|)
+while|while
+condition|(
+operator|(
+name|n
+operator|&
+literal|0xff
+operator|)
+operator|==
+literal|0
+condition|)
+name|n
+operator|>>=
+literal|8
+expr_stmt|;
+name|hp
+operator|->
+name|afh_nethash
+operator|=
+name|n
 expr_stmt|;
 name|hp
 operator|->
@@ -466,6 +492,12 @@ name|IN_BADCLASS
 argument_list|(
 name|i
 argument_list|)
+operator|||
+name|sin
+operator|->
+name|sin_port
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
