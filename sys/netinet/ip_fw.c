@@ -4825,7 +4825,7 @@ name|PULLUP_TO
 parameter_list|(
 name|len
 parameter_list|)
-value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 			    }						\ 			} while (0)
+value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				ip = NULL ;				\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 			    }						\ 			} while (0)
 comment|/* 	 * Collect parameters into local variables for faster matching. 	 */
 name|proto
 operator|=
@@ -6371,6 +6371,10 @@ label|:
 if|if
 condition|(
 name|fw_verbose
+operator|&&
+name|ip
+operator|!=
+name|NULL
 condition|)
 name|ipfw_report
 argument_list|(
