@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c	8.2 (Berkeley) 9/23/93"
+literal|"@(#)clri.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,25 +289,15 @@ argument_list|(
 name|sblock
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"clri: %s: can't read the superblock.\n"
+literal|"%s: can't read superblock"
 argument_list|,
 name|fs
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|sbp
 operator|=
 operator|(
@@ -325,15 +315,11 @@ name|fs_magic
 operator|!=
 name|FS_MAGIC
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"clri: %s: superblock magic number 0x%x, not 0x%x.\n"
+literal|"%s: superblock magic number 0x%x, not 0x%x"
 argument_list|,
 name|fs
 argument_list|,
@@ -344,12 +330,6 @@ argument_list|,
 name|FS_MAGIC
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bsize
 operator|=
 name|sbp
@@ -379,26 +359,16 @@ operator|)
 operator|<=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"clri: %s is not a valid inode number.\n"
+literal|"%s is not a valid inode number"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	8.1 (Berkeley) 7/15/93"
+literal|"@(#)init.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -2370,9 +2370,11 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|clear
+argument_list|,
+literal|0
 argument_list|,
 name|_PASSWORD_LEN
 argument_list|)
@@ -3536,18 +3538,14 @@ condition|)
 return|return
 literal|0
 return|;
-name|bcopy
+name|memmove
 argument_list|(
+operator|&
+name|ret
+argument_list|,
 name|data
 operator|.
 name|data
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|ret
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3825,9 +3823,11 @@ name|session_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|sp
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 expr|*

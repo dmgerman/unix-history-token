@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	8.2 (Berkeley) 1/7/94"
+literal|"@(#)disklabel.c	8.4 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
@@ -1547,11 +1553,13 @@ directive|endif
 endif|#
 directive|endif
 comment|/* d_packname is union d_boot[01], so zero */
-name|bzero
+name|memset
 argument_list|(
 name|lp
 operator|->
 name|d_packname
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2395,13 +2403,11 @@ operator|+
 name|LABELOFFSET
 operator|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|lp
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 expr|*
@@ -2443,13 +2449,11 @@ argument_list|(
 name|specname
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|lp
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 expr|*
@@ -2482,7 +2486,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|dkname
 argument_list|,
@@ -3801,14 +3805,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|label
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4387,7 +4389,7 @@ if|if
 condition|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -4415,7 +4417,7 @@ condition|)
 continue|continue;
 name|tp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	8.2 (Berkeley) 2/16/94"
+literal|"@(#)shutdown.c	8.4 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -753,12 +753,12 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|p
 argument_list|,
 name|arglen
 argument_list|)
@@ -2361,6 +2361,11 @@ name|int
 name|signo
 decl_stmt|;
 block|{
+if|if
+condition|(
+operator|!
+name|killflg
+condition|)
 operator|(
 name|void
 operator|)

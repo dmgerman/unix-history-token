@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	8.2 (Berkeley) 4/19/94"
+literal|"@(#)tunefs.c	8.3 (Berkeley) 5/3/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
@@ -265,6 +271,10 @@ name|int
 name|Aflag
 init|=
 literal|0
+decl_stmt|,
+name|Nflag
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|fstab
@@ -428,6 +438,20 @@ argument_list|,
 name|special
 argument_list|)
 expr_stmt|;
+name|chg
+index|[
+name|FS_OPTSPACE
+index|]
+operator|=
+literal|"space"
+expr_stmt|;
+name|chg
+index|[
+name|FS_OPTTIME
+index|]
+operator|=
+literal|"time"
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -481,6 +505,13 @@ case|case
 literal|'A'
 case|:
 name|Aflag
+operator|++
+expr_stmt|;
+continue|continue;
+case|case
+literal|'N'
+case|:
+name|Nflag
 operator|++
 expr_stmt|;
 continue|continue;
@@ -840,20 +871,6 @@ operator|,
 name|argv
 operator|++
 expr_stmt|;
-name|chg
-index|[
-name|FS_OPTSPACE
-index|]
-operator|=
-literal|"space"
-expr_stmt|;
-name|chg
-index|[
-name|FS_OPTTIME
-index|]
-operator|=
-literal|"time"
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -998,6 +1015,80 @@ name|MINFREE
 argument_list|)
 expr_stmt|;
 continue|continue;
+case|case
+literal|'t'
+case|:
+name|name
+operator|=
+literal|"track skew in sectors"
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|10
+argument_list|,
+literal|"-t: missing %s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|i
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|10
+argument_list|,
+literal|"%s: %s must be>= 0"
+argument_list|,
+operator|*
+name|argv
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"%s changes from %d to %d"
+argument_list|,
+name|name
+argument_list|,
+name|sblock
+operator|.
+name|fs_trackskew
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_trackskew
+operator|=
+name|i
+expr_stmt|;
+continue|continue;
 default|default:
 name|usage
 argument_list|()
@@ -1012,6 +1103,124 @@ literal|1
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Nflag
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"tunefs: current settings\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\tmaximum contiguous block count %d\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_maxcontig
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\trotational delay between contiguous blocks %dms\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_rotdelay
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\tmaximum blocks per file in a cylinder group %d\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_maxbpg
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\tminimum percentage of free space %d%%\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_minfree
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\toptimization preference: %s\n"
+argument_list|,
+name|chg
+index|[
+name|sblock
+operator|.
+name|fs_optim
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"\ttrack skew %d sectors\n"
+argument_list|,
+name|sblock
+operator|.
+name|fs_trackskew
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"tunefs: no changes made\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|fi
+operator|=
+name|open
+argument_list|(
+name|special
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fi
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|3
+argument_list|,
+literal|"cannot open %s for writing"
+argument_list|,
+name|special
+argument_list|)
 expr_stmt|;
 name|bwrite
 argument_list|(
@@ -1099,7 +1308,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: tunefs tuneup-options special-device\n"
+literal|"Usage: tunefs [-AN] tuneup-options special-device\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1113,14 +1322,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-a maximum contiguous blocks\n"
+literal|"\t-d rotational delay between contiguous blocks\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-d rotational delay between contiguous blocks\n"
+literal|"\t-a maximum contiguous blocks\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1142,6 +1351,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-o optimization preference (`space' or `time')\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-t track skew in sectors\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1177,7 +1393,7 @@ name|open
 argument_list|(
 name|file
 argument_list|,
-literal|2
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1190,7 +1406,7 @@ name|err
 argument_list|(
 literal|3
 argument_list|,
-literal|"cannot open %s"
+literal|"cannot open %s for reading"
 argument_list|,
 name|file
 argument_list|)
@@ -1250,6 +1466,11 @@ argument_list|(
 name|fs
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fi
 argument_list|)
 expr_stmt|;
 block|}

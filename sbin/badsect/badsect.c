@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)badsect.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)badsect.c	8.2 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	8.1 (Berkeley) 6/5/93"
+literal|"@(#)ping.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1016,14 +1016,12 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|whereto
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1118,19 +1116,16 @@ name|hp
 operator|->
 name|h_addrtype
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|to
 operator|->
 name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr
 argument_list|,
 name|hp
 operator|->
@@ -2965,12 +2960,8 @@ operator|+
 literal|2
 operator|&&
 operator|!
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|cp
 argument_list|,
 name|old_rr
@@ -3022,15 +3013,11 @@ name|old_rrlen
 operator|=
 name|i
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|cp
-argument_list|,
 name|old_rr
+argument_list|,
+name|cp
 argument_list|,
 name|i
 argument_list|)

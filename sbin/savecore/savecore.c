@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	8.3 (Berkeley) 1/2/94"
+literal|"@(#)savecore.c	8.5 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,7 +708,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdfNvz"
+literal|"cdfN:vz"
 argument_list|)
 operator|)
 operator|!=
@@ -2855,7 +2855,7 @@ condition|(
 operator|(
 name|sl
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|s
 argument_list|,
@@ -3544,9 +3544,15 @@ name|fd
 decl_stmt|;
 name|fd
 operator|=
-name|creat
+name|open
 argument_list|(
 name|file
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 name|mode
 argument_list|)
