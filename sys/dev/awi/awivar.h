@@ -283,9 +283,9 @@ directive|ifdef
 name|__FreeBSD__
 if|#
 directive|if
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|4
+literal|40000
 struct|struct
 block|{
 name|char
