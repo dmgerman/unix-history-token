@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.26 1996/05/29 01:35:29 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.27 1996/07/02 01:03:43 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -935,8 +935,6 @@ block|{
 name|char
 modifier|*
 name|saved_etc
-init|=
-name|NULL
 decl_stmt|;
 name|Boolean
 name|extractingBin
@@ -975,6 +973,9 @@ argument_list|(
 literal|"upgrade"
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -985,6 +986,8 @@ argument_list|)
 condition|)
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
 return|;
 if|if
 condition|(
@@ -1014,8 +1017,6 @@ argument_list|)
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 operator||
 name|DITEM_RECREATE
 return|;
@@ -1097,8 +1098,6 @@ condition|)
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RESTORE
-operator||
 name|DITEM_RECREATE
 return|;
 block|}
@@ -1106,10 +1105,10 @@ name|msgConfirm
 argument_list|(
 literal|"OK.  First, we're going to go to the disk label editor.  In this editor\n"
 literal|"you will be expected to *Mount* any partitions you're interested in\n"
-literal|"upgrading.  Don't set the Newfs flag to Y on anything in the label editor\n"
+literal|"upgrading.  DO NOT set the Newfs flag to Y on anything in the label editor\n"
 literal|"unless you're absolutely sure you know what you're doing!  In this\n"
 literal|"instance, you'll be using the label editor as little more than a fancy\n"
-literal|"screen-oriented filesystem mounting utility, so think of it that way.\n\n"
+literal|"screen-oriented way of labeling existing partitions.\n\n"
 literal|"Once you're done in the label editor, press Q to return here for the next\n"
 literal|"step."
 argument_list|)
@@ -1135,8 +1134,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 operator||
 name|DITEM_RECREATE
 return|;
@@ -1176,8 +1173,6 @@ expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RESTORE
-operator||
 name|DITEM_RECREATE
 return|;
 block|}
@@ -1196,8 +1191,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 operator||
 name|DITEM_RECREATE
 return|;
@@ -1229,8 +1222,6 @@ expr_stmt|;
 return|return
 name|DITEM_FAILURE
 operator||
-name|DITEM_RESTORE
-operator||
 name|DITEM_RECREATE
 return|;
 block|}
@@ -1241,6 +1232,10 @@ argument_list|)
 expr_stmt|;
 name|systemCreateHoloshell
 argument_list|()
+expr_stmt|;
+name|saved_etc
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1279,6 +1274,10 @@ name|NULL
 argument_list|)
 condition|)
 block|{
+name|saved_etc
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -1301,17 +1300,28 @@ argument_list|(
 literal|"Preserving /etc directory.."
 argument_list|)
 expr_stmt|;
-comment|/* cp returns a bogus status, so we can't check the status meaningfully.  Bleah. */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|vsystem
 argument_list|(
-literal|"cp -pr /etc/* %s"
+literal|"tar -cf - -C /etc . | tar -xpf - -C %s"
 argument_list|,
 name|saved_etc
 argument_list|)
-expr_stmt|;
+condition|)
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Unable to backup your /etc into %s.\n"
+literal|"Do you want to continue anyway?"
+argument_list|)
+condition|)
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RECREATE
+return|;
 block|}
 if|if
 condition|(
@@ -1450,6 +1460,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|saved_etc
+operator|&&
 name|chdir
 argument_list|(
 name|saved_etc
@@ -1572,24 +1584,15 @@ condition|(
 operator|!
 name|Fake
 condition|)
-name|execlp
+name|system
 argument_list|(
-literal|"sh"
-argument_list|,
-literal|"-sh"
-argument_list|,
-literal|0
+literal|"/bin/sh"
 argument_list|)
 expr_stmt|;
 else|else
 name|exit
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-name|msgDebug
-argument_list|(
-literal|"Was unable to execute sh for post-upgrade shell!\n"
 argument_list|)
 expr_stmt|;
 if|if

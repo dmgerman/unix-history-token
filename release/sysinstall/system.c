@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.58 1996/05/01 03:31:08 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.59 1996/05/16 11:47:46 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -46,6 +46,17 @@ file|<sys/wait.h>
 end_include
 
 begin_comment
+comment|/* Where we stick our temporary expanded doc file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOC_TMP_FILE
+value|"/tmp/doc.tmp"
+end_define
+
+begin_comment
 comment|/*  * Handle interrupt signals - this probably won't work in all cases  * due to our having bogotified the internal state of dialog or curses,  * but we'll give it a try.  */
 end_comment
 
@@ -71,6 +82,46 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Expand a file into a convenient location, nuking it each time */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|expand
+parameter_list|(
+name|char
+modifier|*
+name|fname
+parameter_list|)
+block|{
+name|unlink
+argument_list|(
+name|DOC_TMP_FILE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"gzip -c -d %s> %s"
+argument_list|,
+name|fname
+argument_list|,
+name|DOC_TMP_FILE
+argument_list|)
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|DOC_TMP_FILE
+return|;
 block|}
 end_function
 
@@ -305,6 +356,12 @@ block|}
 comment|/* Shut down curses */
 name|endwin
 argument_list|()
+expr_stmt|;
+comment|/* If we have a temporary doc file lying around, nuke it */
+name|unlink
+argument_list|(
+name|DOC_TMP_FILE
+argument_list|)
 expr_stmt|;
 comment|/* REALLY exit! */
 if|if
@@ -591,7 +648,7 @@ name|buf
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"/stand/help/%s.hlp"
+literal|"/stand/help/%s.hlp.gz"
 argument_list|,
 name|file
 argument_list|)
@@ -604,7 +661,10 @@ name|buf
 argument_list|)
 condition|)
 return|return
+name|expand
+argument_list|(
 name|buf
+argument_list|)
 return|;
 name|snprintf
 argument_list|(
