@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vertlines.c	1.1 (CWI) 85/10/01"
+literal|"@(#)vertlines.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* tv.c: draw vertical lines */
+comment|/*  * draw vertical lines  */
 end_comment
 
 begin_include

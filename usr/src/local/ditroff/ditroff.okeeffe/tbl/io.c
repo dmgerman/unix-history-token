@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	1.1 (CWI) 85/10/01"
+literal|"@(#)io.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* te.c: error message control, input line count */
+comment|/*  * error message control  * input  * line count  */
 end_comment
 
 begin_include
@@ -271,7 +271,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* printf(".\\\" gets1 returns %s\n", p); */
 return|return
 operator|(
 name|p

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	1.1 (CWI) 85/10/01	*/
+comment|/*	@(#)defs.h	1.2 (CWI) 85/10/02	*/
 end_comment
 
 begin_define
@@ -277,6 +277,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|dprint
+value|if(dbg)printf
+end_define
 
 end_unit
 

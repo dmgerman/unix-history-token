@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)write1line.c	1.1 (CWI) 85/10/01"
+literal|"@(#)write1line.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* t8.c: write out one line of output table */
+comment|/*  * write out one line of output table  */
 end_comment
 
 begin_include
@@ -118,7 +118,7 @@ decl_stmt|,
 modifier|*
 name|fn
 decl_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- putline( %d, %d)\n"
 argument_list|,
@@ -1901,7 +1901,7 @@ modifier|*
 name|reg
 parameter_list|()
 function_decl|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- funnies\n"
 argument_list|)

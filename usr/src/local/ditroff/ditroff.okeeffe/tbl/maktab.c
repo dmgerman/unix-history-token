@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)maktab.c	1.1 (CWI) 85/10/01"
+literal|"@(#)maktab.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* t6.c: compute tab stops */
+comment|/*  * compute tab stops  */
 end_comment
 
 begin_define
@@ -166,7 +166,6 @@ name|text
 operator|++
 control|)
 block|{
-comment|/* printf(".\\\" text is %d\n", text); */
 if|if
 condition|(
 name|text
@@ -217,7 +216,6 @@ name|ilin
 index|]
 condition|)
 block|{
-comment|/* printf(".\\\" instead continue\n"); */
 continue|continue;
 block|}
 name|vforml
@@ -271,7 +269,6 @@ name|icol
 argument_list|)
 condition|)
 block|{
-comment|/* printf(".\\\" fspan continue\n"); */
 continue|continue;
 block|}
 if|if
@@ -290,7 +287,6 @@ name|col
 argument_list|)
 condition|)
 block|{
-comment|/* printf(".\\\" filler continue\n"); */
 continue|continue;
 block|}
 if|if
@@ -313,7 +309,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* printf(".\\\" stynum continue\n"); */
 continue|continue;
 block|}
 switch|switch
@@ -605,7 +600,6 @@ case|:
 case|case
 literal|'l'
 case|:
-comment|/* printf(".\\\" maktab: table[%d][%d].col is %s\n", ilin, icol, table[ilin][icol].col); */
 if|if
 condition|(
 name|real
@@ -643,7 +637,6 @@ operator|!=
 name|text
 condition|)
 continue|continue;
-comment|/* printf(".\\\" maktab: wide entry %s\n", s); */
 name|printf
 argument_list|(
 literal|".nr %d "

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)ext.h	1.1 (CWI) 85/10/01	*/
+comment|/*	@(#)ext.h	1.2 (CWI) 85/10/02	*/
 end_comment
 
 begin_comment
@@ -398,6 +398,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|pr1403
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dbg
 decl_stmt|;
 end_decl_stmt
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	1.1 (CWI) 85/10/01"
+literal|"@(#)subr.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* tt.c: subroutines for drawing horizontal lines */
+comment|/*  * variuos subroutines for f.i drawing horizontal lines  *  * We could stuff more routines in this file which are used in various modules  * of tbl, like reg in misc.c etc. We leave this for later.  */
 end_comment
 
 begin_include
@@ -137,6 +137,7 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|int
 name|k
 decl_stmt|;
@@ -218,6 +219,7 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|int
 name|k
 decl_stmt|;
@@ -315,6 +317,7 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|int
 name|c
 decl_stmt|,
@@ -401,13 +404,16 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|int
 name|t
 decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
+specifier|register
 name|struct
 name|colstr
 modifier|*

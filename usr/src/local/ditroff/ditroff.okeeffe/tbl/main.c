@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.1 (CWI) 85/10/01"
+literal|"@(#)main.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,10 +20,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_comment
-comment|/* t1.c: main control and input switching */
-end_comment
 
 begin_comment
 comment|/*  * tbl troff preprocessor.  *  * Tidied, and changed by jna  *  */
@@ -299,6 +295,30 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"-d"
+argument_list|,
+operator|*
+name|sargv
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|dbg
+operator|++
+expr_stmt|;
+name|sargc
+operator|--
+expr_stmt|;
+name|sargv
+operator|++
+expr_stmt|;
+break|break;
+block|}
 name|sargc
 operator|--
 expr_stmt|;
@@ -426,10 +446,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/* t2.c:  subroutine sequencing for one table */
-end_comment
-
 begin_macro
 name|tableput
 argument_list|()
@@ -445,7 +461,7 @@ block|{
 case|case
 name|CAT
 case|:
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- device CAT\n"
 argument_list|)
@@ -454,7 +470,7 @@ break|break;
 case|case
 name|HARRIS
 case|:
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- device HARRIS\n"
 argument_list|)
@@ -463,14 +479,14 @@ break|break;
 case|case
 name|DEVVER
 case|:
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- device VERSATEC\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- saveline\n"
 argument_list|)
@@ -478,7 +494,7 @@ expr_stmt|;
 name|saveline
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- savefill\n"
 argument_list|)
@@ -486,7 +502,7 @@ expr_stmt|;
 name|savefill
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- ifdivert\n"
 argument_list|)
@@ -494,7 +510,7 @@ expr_stmt|;
 name|ifdivert
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- cleanfc\n"
 argument_list|)
@@ -502,7 +518,7 @@ expr_stmt|;
 name|cleanfc
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- getcomm\n"
 argument_list|)
@@ -510,7 +526,7 @@ expr_stmt|;
 name|getcomm
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- getspec\n"
 argument_list|)
@@ -518,7 +534,7 @@ expr_stmt|;
 name|getspec
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- gettbl\n"
 argument_list|)
@@ -526,7 +542,7 @@ expr_stmt|;
 name|gettbl
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- getstop\n"
 argument_list|)
@@ -534,7 +550,7 @@ expr_stmt|;
 name|getstop
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- checkuse\n"
 argument_list|)
@@ -542,7 +558,7 @@ expr_stmt|;
 name|checkuse
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- choochar\n"
 argument_list|)
@@ -550,7 +566,7 @@ expr_stmt|;
 name|choochar
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- maktab\n"
 argument_list|)
@@ -558,7 +574,7 @@ expr_stmt|;
 name|maktab
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- runout\n"
 argument_list|)
@@ -566,7 +582,7 @@ expr_stmt|;
 name|runout
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- release\n"
 argument_list|)
@@ -574,7 +590,7 @@ expr_stmt|;
 name|release
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- rstofill\n"
 argument_list|)
@@ -582,7 +598,7 @@ expr_stmt|;
 name|rstofill
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- endoff\n"
 argument_list|)
@@ -590,7 +606,7 @@ expr_stmt|;
 name|endoff
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- restline\n"
 argument_list|)
@@ -598,7 +614,7 @@ expr_stmt|;
 name|restline
 argument_list|()
 expr_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- end off tableput\n"
 argument_list|)

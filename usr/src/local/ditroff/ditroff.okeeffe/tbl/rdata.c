@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rdata.c	1.1 (CWI) 85/10/01"
+literal|"@(#)rdata.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* t5.c: read data for table */
+comment|/*  * read data for table  */
 end_comment
 
 begin_include
@@ -247,7 +247,6 @@ name|cstore
 operator|++
 condition|)
 empty_stmt|;
-comment|/* printf( ".\\\" gettbl continue (cstore[0] == '.',&& !isdigit(ctore[1])\n"); */
 continue|continue;
 block|}
 else|else
@@ -288,7 +287,7 @@ name|FIX
 name|This
 name|FIX
 name|didn
-literal|'t work, so commented out for the time being, 	problem temporarily solved with signal catching... printf(".\\\" FIX nlin = %d\n", nlin); printf(".\\\" FIXgettbl: alocv %d\n", (ncol + 2) * sizeof(table[0][0])); 			/* 			 * start of FIX? 			 * 			 * Need to allocate pointers as well, in case 			 * of vertical spanning. 			 * I hope this works 			 */ 			table[nlin] = (struct colstr *) alocv((ncol + 2) * 							sizeof(*table[0])); 			/* 			 * Does alocv clears the pointers? 			 */ 		{	int tmp; 			for( tmp = 0; tmp< ncol +2; tmp++) { 		table[nlin][tmp].col = ""; 		table[nlin][tmp].rcol = (char*)0; printf(".\\\"FIX table[%d][%d].col:<%s>\n", nlin, tmp, table[nlin][tmp].col); printf(".\\\"FIX table[%d][%d].rcol:<%s>\n", nlin, tmp, table[nlin][tmp].rcol); 			} 		} 			/* 			 * End of FIX 			 */ #endif FIX 			nlin++; 			nslin++; 			instead[nlin] = (char *) 0; 			fullbot[nlin] = 0; printf(".\\\" gettbl continue, due to nodata\n"); 		} /* printf(".\\\"gettbl: alocv %d\n", (ncol + 2) * sizeof(table[0][0])); */ 		table[nlin] = (struct colstr *) alocv((ncol + 2) * 							sizeof(*table[0])); 		if(cstore[1] == 0) { 			switch(cstore[0]){  			case '
+literal|'t work, so commented out for the time being, 	problem temporarily solved with signal catching... dprint(".\\\" FIX nlin = %d\n", nlin); dprint(".\\\" FIXgettbl: alocv %d\n", (ncol + 2) * sizeof(table[0][0])); 			/* 			 * start of FIX? 			 * 			 * Need to allocate pointers as well, in case 			 * of vertical spanning. 			 * I hope this works 			 */ 			table[nlin] = (struct colstr *) alocv((ncol + 2) * 							sizeof(*table[0])); 			/* 			 * Does alocv clears the pointers? 			 */ 		{	int tmp; 			for( tmp = 0; tmp< ncol +2; tmp++) { 		table[nlin][tmp].col = ""; 		table[nlin][tmp].rcol = (char*)0; printf(".\\\"FIX table[%d][%d].col:<%s>\n", nlin, tmp, table[nlin][tmp].col); printf(".\\\"FIX table[%d][%d].rcol:<%s>\n", nlin, tmp, table[nlin][tmp].rcol); 			} 		} 			/* 			 * End of FIX 			 */ #endif FIX 			nlin++; 			nslin++; 			instead[nlin] = (char *) 0; 			fullbot[nlin] = 0; dprint(".\\\" gettbl continue, due to nodata\n"); 		} 		table[nlin] = (struct colstr *) alocv((ncol + 2) * 							sizeof(*table[0])); 		if(cstore[1] == 0) { 			switch(cstore[0]){  			case '
 name|_
 literal|':  				fullbot[nlin] = '
 operator|-
@@ -296,7 +295,7 @@ literal|'; 				continue; 			case '
 operator|=
 literal|':  				fullbot[nlin] = '
 operator|=
-literal|'; 				continue; 			} 		} 		stynum[nlin] = nslin; 		nslin = min(nslin + 1, nclin - 1); 		for(icol = 0; icol< ncol; icol++){ 			table[nlin][icol].col = cstore; 			table[nlin][icol].rcol = (char*)0; 			ch = 1; 			if(strcmp(cstore, "T{") == 0) { 				/* 				 * text follows 				 */ 				table[nlin][icol].col = 						gettext(cstore, nlin, icol, 						font[stynum[nlin]][icol], 						csize[stynum[nlin]][icol]); /* printf(".\\\" found T{, gettext returns table[%d][%d].col:<%s>\n", 			nlin, icol, table[nlin][icol]); */ 			} else { 				for(; (ch = *cstore) != '
+literal|'; 				continue; 			} 		} 		stynum[nlin] = nslin; 		nslin = min(nslin + 1, nclin - 1); 		for(icol = 0; icol< ncol; icol++){ 			table[nlin][icol].col = cstore; 			table[nlin][icol].rcol = (char*)0; 			ch = 1; 			if(strcmp(cstore, "T{") == 0) { 				/* 				 * text follows 				 */ 				table[nlin][icol].col = 						gettext(cstore, nlin, icol, 						font[stynum[nlin]][icol], 						csize[stynum[nlin]][icol]); 			} else { 				for(; (ch = *cstore) != '
 operator|\
 literal|0
 literal|'&& ch != tab; cstore++) 					; 				*cstore++ = '
@@ -306,7 +305,7 @@ literal|'; 				switch(ctype(nlin, icol)){  					/* 					 * numerical or alpha, s
 name|n
 literal|':  					table[nlin][icol].rcol = maknew(table[nlin][icol].col); 					break; 				case '
 name|a
-literal|':  					table[nlin][icol].rcol = table[nlin][icol].col; 					table[nlin][icol].col = ""; 					break; 				} /* printf(".\\\" gettbl: table[%d][%d].col is<%s>\n", nlin, icol, table[nlin][icol].col); printf(".\\\" gettbl: table[%d][%d].rcol is<%s>\n", nlin, icol, table[nlin][icol].rcol); */ 			} 			while(ctype(nlin, icol + 1) == '
+literal|':  					table[nlin][icol].rcol = table[nlin][icol].col; 					table[nlin][icol].col = ""; 					break; 				} 			} 			while(ctype(nlin, icol + 1) == '
 name|s
 literal|'){ 				/* 				 * spanning 				 */ 				table[nlin][++icol].col = ""; 			} 			if(ch == '
 operator|\
@@ -314,7 +313,7 @@ literal|0
 literal|') 				break; 		} 		while(++icol< ncol + 2){ 			table[nlin][icol].col = ""; 			table[nlin][icol].rcol = (char*)0; 		} 		while(*cstore != '
 operator|\
 literal|0
-literal|') 			cstore++; 		if(cstore - cspace> MAXCHS) 			cstore = cspace = chspace(); 	} 	last = cstore; 	savsign = signal(SIGBUS, interr); 	permute(); 	signal(SIGBUS, savsign); 	if(textflg) 		untext(); 	return; }  /*  * return 1 if no type of column specified for this line  */ nodata(il){ 	int c;  	for(c = 0; c< ncol; c++){ 		switch(ctype(il, c)){  		case '
+literal|') 			cstore++; 		if(cstore - cspace> MAXCHS) 			cstore = cspace = chspace(); 	} 	last = cstore; 	/* 	 * the next example is weird& legal tbl input. 	 * however, it generates a bus error. .TS linesize(24) tab(@); ct| c cf3 ^ | _ _ ^ | cf3 cf3 ^ | c s. 0,0@0,1@0,2 @1,1@1,2 @2,1@2,2 .TE 	 * This works: .TS linesize(24) tab(@); ct| c cf3 ^ | cf3 cf3 ^ | c s. 0,0@0,1@0,2 @1,1@1,2 @2,1@2,2 .TE 	 * So it is the vertical spanning of an empty column which 	 * cuases problems 	 */ 	savsign = signal(SIGBUS, interr); 	permute(); 	signal(SIGBUS, savsign); 	if(textflg) 		untext(); 	return; }  /*  * return 1 if no type of column specified for this line  */ nodata(il){ 	int c;  	for(c = 0; c< ncol; c++){ 		switch(ctype(il, c)){  		case '
 name|c
 literal|':  		case '
 name|n
@@ -326,7 +325,7 @@ literal|':  		case '
 name|s
 literal|':  		case '
 name|a
-literal|':  			return(0); 		} 	} 	return(1); }  /*  * returns the type of heading if they are all the same for the table  * line?  */ oneh(lin){ 	int k, icol;  	k = ctype(lin, 0); 	for(icol = 1; icol< ncol; icol++){ 		if(k != ctype(lin, icol)) 			return(0); 	} 	return(k); }  #define SPAN "\\^"  permute(){ 	register int irow, jcol, is; 	char *start, *strig;  	for(jcol = 0; jcol< ncol; jcol++){ 		for(irow = 1; irow< nlin; irow++){ 			if(vspand(irow, jcol, 0)){ 				is = prev(irow); 				if(is< 0) 					error("Vertical spanning in first row not allowed"); 				start = table[is][jcol].col; 				strig = table[is][jcol].rcol; /* printf(".\\\"Permute -- jcol: %d, irow: %d, is: %d\n", jcol, irow, is); printf(".\\\"start:<%s> strig:<%s>\n", start, strig); printf(".\\\"is: %d\n",is);  printf(".\\\"table[(is =)%d][%d].col:<%s>\n", is, jcol, table[is][jcol].col);  printf(".\\\"table[(is =)%d][%d].rcol:<%s>\n", is, jcol, table[is][jcol].rcol); */ 				while(irow< nlin&& vspand(irow, jcol, 0)){ /* printf(".\\\"vspand&& irow: %d< nlin: %d\n", irow, nlin); */ 					irow++; 				} 				table[--irow][jcol].col = start; /* printf(".\\\"irow: %d\n", irow); */ 				table[irow][jcol].rcol = strig; 				while(is< irow){ /* printf(".\\\"table[(is =)%d][%d].col:<%s>\n", is, jcol, table[is][jcol].col); printf(".\\\"table[(is =)%d][%d].rcol:<%s>\n", is, jcol, table[is][jcol].rcol); */ 					table[is][jcol].col = SPAN; 					table[is][jcol].rcol = (char*)0; /* printf(".\\\"table[(is =)%d][%d].col becomes:<%s>\n", is, jcol, table[is][jcol].col); printf(".\\\"table[(is =)%d][%d].rcol becomes:<%s>\n", is, jcol, table[is][jcol].rcol); */ 					is = next(is); /* printf(".\\\"is: %d\n",is); */ 				} 			} 		} 	} }  /*  * return 1 if vertical spanning is row ir, column ij, from position ifrom  */ vspand(ir, ij, ifform) { 	if(ir< 0) 		return(0); 	if(ir>= nlin) 		return(0); 	if(instead[ir]) 		return(0); 	if(ifform == 0&& ctype(ir, ij) == '
+literal|':  			return(0); 		} 	} 	return(1); }  /*  * returns the type of heading if they are all the same for the table  * line?  */ oneh(lin){ 	int k, icol;  	k = ctype(lin, 0); 	for(icol = 1; icol< ncol; icol++){ 		if(k != ctype(lin, icol)) 			return(0); 	} 	return(k); }  #define SPAN "\\^"  permute(){ 	register int irow, jcol, is; 	char *start, *strig;  	for(jcol = 0; jcol< ncol; jcol++){ 		for(irow = 1; irow< nlin; irow++){ 			if(vspand(irow, jcol, 0)){ 				is = prev(irow); 				if(is< 0) 					error("Vertical spanning in first row not allowed"); 				start = table[is][jcol].col; 				strig = table[is][jcol].rcol; 				while(irow< nlin&& vspand(irow, jcol, 0)){ 					irow++; 				} 				table[--irow][jcol].col = start; 				table[irow][jcol].rcol = strig; 				while(is< irow){ 					table[is][jcol].col = SPAN; 					table[is][jcol].rcol = (char*)0; 					is = next(is); 				} 			} 		} 	} }  /*  * return 1 if vertical spanning is row ir, column ij, from position ifrom  */ vspand(ir, ij, ifform) { 	if(ir< 0) 		return(0); 	if(ir>= nlin) 		return(0); 	if(instead[ir]) 		return(0); 	if(ifform == 0&& ctype(ir, ij) == '
 operator|^
 literal|'
 end_for

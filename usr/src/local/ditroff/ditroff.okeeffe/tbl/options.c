@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)options.c	1.1 (CWI) 85/10/01"
+literal|"@(#)options.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,10 +20,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_comment
-comment|/* t3.c: interpret commands affecting whole table */
-end_comment
 
 begin_comment
 comment|/*  * Threat the option part of the table  */
@@ -83,11 +79,13 @@ block|,
 operator|&
 name|ctrflg
 block|,
+comment|/* proper English added by jaap */
 literal|"CENTRE"
 block|,
 operator|&
 name|ctrflg
 block|,
+comment|/* proper English added by jaap */
 literal|"box"
 block|,
 operator|&

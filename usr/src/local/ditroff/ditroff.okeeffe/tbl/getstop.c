@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getstop.c	1.1 (CWI) 85/10/01"
+literal|"@(#)getstop.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* tu.c: draws horizontal lines */
+comment|/*  * find the start points for the line drawing routines  */
 end_comment
 
 begin_include

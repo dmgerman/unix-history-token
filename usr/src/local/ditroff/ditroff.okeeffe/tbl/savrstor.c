@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savrstor.c	1.1 (CWI) 85/10/01"
+literal|"@(#)savrstor.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,10 +20,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_comment
-comment|/* tf.c: save and restore fill mode around table */
-end_comment
 
 begin_include
 include|#
@@ -184,6 +180,7 @@ end_macro
 
 begin_block
 block|{
+specifier|register
 name|int
 name|i
 decl_stmt|;

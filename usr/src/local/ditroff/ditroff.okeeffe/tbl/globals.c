@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)globals.c	1.1 (CWI) 85/10/01"
+literal|"@(#)globals.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -543,6 +543,16 @@ name|int
 name|pr1403
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dbg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* debug flag */
+end_comment
 
 begin_comment
 comment|/* Device dependencies */

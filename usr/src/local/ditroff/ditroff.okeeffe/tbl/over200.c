@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)over200.c	1.1 (CWI) 85/10/01"
+literal|"@(#)over200.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* t9.c: write lines for tables over 200 lines */
+comment|/*   * write lines for tables over 200 lines (actually MAXLIN lines)   *   * Note that there is aserious bug here:   *	The T{ ... T} doesn't work after MAXLIN entries.   */
 end_comment
 
 begin_include
@@ -60,7 +60,7 @@ end_macro
 
 begin_block
 block|{
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- yetmore\n"
 argument_list|)
@@ -196,7 +196,7 @@ name|icol
 decl_stmt|,
 name|ch
 decl_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- domore\n"
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)specs.c	1.1 (CWI) 85/10/01"
+literal|"@(#)specs.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* t4.c: read table specification */
+comment|/*  * read table specification  */
 end_comment
 
 begin_include
@@ -381,7 +381,6 @@ argument_list|(
 literal|"too many lines in specification"
 argument_list|)
 expr_stmt|;
-comment|/* printf("qcol: %d, icol: %d\n", qcol, icol); 			if(icol != qcol -1) 				error("Unequal amount of columns specified\n"); */
 name|icol
 operator|=
 literal|0
@@ -1556,7 +1555,7 @@ value|200
 end_define
 
 begin_comment
-comment|/*  * This counts the number of columns and then puts the line back  */
+comment|/*  * findcol counts the number of columns and then puts the line back  */
 end_comment
 
 begin_expr_stmt

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)textblocks.c	1.1 (CWI) 85/10/01"
+literal|"@(#)textblocks.c	1.2 (CWI) 85/10/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,10 +20,6 @@ endif|#
 directive|endif
 endif|lint
 end_endif
-
-begin_comment
-comment|/* tg.c: process included text blocks */
-end_comment
 
 begin_include
 include|#
@@ -38,7 +34,7 @@ file|"ext.h"
 end_include
 
 begin_comment
-comment|/*  * Get a section of text  */
+comment|/*  * Get a section of text  *  * Note that this doen't work after MAXLIN lines (see over200.c)  *  */
 end_comment
 
 begin_comment
@@ -88,7 +84,7 @@ decl_stmt|;
 name|int
 name|oname
 decl_stmt|;
-name|printf
+name|dprint
 argument_list|(
 literal|".\\\" -- gettext\n"
 argument_list|)
@@ -489,7 +485,6 @@ operator|++
 name|texct
 index|]
 expr_stmt|;
-comment|/* printf(".\\\"gettext returns oname, oneme is: %c\n", oname); */
 return|return
 operator|(
 name|oname
