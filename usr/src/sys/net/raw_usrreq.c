@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.1	81/11/29	*/
+comment|/*	raw_usrreq.c	4.2	81/12/02	*/
 end_comment
 
 begin_include
@@ -94,11 +94,6 @@ name|struct
 name|mbuf
 modifier|*
 name|mh
-decl_stmt|;
-name|struct
-name|sockproto
-modifier|*
-name|pfp
 decl_stmt|;
 name|int
 name|s

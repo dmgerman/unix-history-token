@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.4	81/11/26	*/
+comment|/*	ip_var.h	4.5	81/12/02	*/
 end_comment
 
 begin_comment
@@ -153,6 +153,11 @@ block|{
 name|int
 name|ips_badsum
 decl_stmt|;
+comment|/* checksum bad */
+name|int
+name|ips_tooshort
+decl_stmt|;
+comment|/* packet too short */
 block|}
 struct|;
 end_struct

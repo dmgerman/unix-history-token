@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.12	81/11/29	*/
+comment|/*	udp_usrreq.c	4.13	81/12/02	*/
 end_comment
 
 begin_include
@@ -967,7 +967,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|in_pcballoc
+name|in_pcbattach
 argument_list|(
 name|so
 argument_list|,
@@ -1010,7 +1010,7 @@ operator|(
 name|ENOTCONN
 operator|)
 return|;
-name|in_pcbfree
+name|in_pcbdetach
 argument_list|(
 name|inp
 argument_list|)
@@ -1034,7 +1034,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|in_pcbsetpeer
+name|in_pcbconnect
 argument_list|(
 name|inp
 argument_list|,
@@ -1087,13 +1087,10 @@ operator|(
 name|ENOTCONN
 operator|)
 return|;
+name|in_pcbdisconnect
+argument_list|(
 name|inp
-operator|->
-name|inp_faddr
-operator|.
-name|s_addr
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|soisdisconnected
 argument_list|(
@@ -1133,7 +1130,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|in_pcbsetpeer
+name|in_pcbconnect
 argument_list|(
 name|inp
 argument_list|,
@@ -1184,19 +1181,16 @@ if|if
 condition|(
 name|addr
 condition|)
+name|in_pcbdisconnect
+argument_list|(
 name|inp
-operator|->
-name|inp_faddr
-operator|.
-name|s_addr
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|PRU_ABORT
 case|:
-name|in_pcbfree
+name|in_pcbdetach
 argument_list|(
 name|inp
 argument_list|)

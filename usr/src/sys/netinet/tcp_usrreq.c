@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.37 81/11/29 */
+comment|/* tcp_usrreq.c 1.38 81/12/02 */
 end_comment
 
 begin_include
@@ -279,7 +279,7 @@ break|break;
 block|}
 name|error
 operator|=
-name|in_pcballoc
+name|in_pcbattach
 argument_list|(
 name|so
 argument_list|,
@@ -337,7 +337,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|in_pcbfree
+name|in_pcbdetach
 argument_list|(
 name|inp
 argument_list|)
@@ -366,13 +366,18 @@ break|break;
 case|case
 name|PRU_DETACH
 case|:
+name|in_pcbdetach
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PRU_CONNECT
 case|:
 name|error
 operator|=
-name|in_pcbsetpeer
+name|in_pcbconnect
 argument_list|(
 name|inp
 argument_list|,
@@ -403,13 +408,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|in_pcbdisconnect
+argument_list|(
 name|inp
-operator|->
-name|inp_faddr
-operator|.
-name|s_addr
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

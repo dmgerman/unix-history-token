@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.h	4.1	81/11/29	*/
+comment|/*	tcp_timer.h	4.2	81/12/02	*/
 end_comment
 
 begin_comment
@@ -28,19 +28,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPT_2MSL
-value|1
-end_define
-
-begin_comment
-comment|/* 2*msl quiet time timer */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPT_PERSIST
-value|2
+value|1
 end_define
 
 begin_comment
@@ -51,11 +40,26 @@ begin_define
 define|#
 directive|define
 name|TCPT_KEEP
-value|3
+value|2
 end_define
 
 begin_comment
 comment|/* keep alive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_2MSL
+value|3
+end_define
+
+begin_comment
+comment|/* 2*msl quiet time timer */
+end_comment
+
+begin_comment
+comment|/*  * The TCPT_REXMT timer is used to force retransmissions.  * The TCP has the TCPT_REXMT timer set whenever segments  * have been sent for which ACKs are expected but not yet  * received.  If an ACK is received which advances tp->snd_una,  * then the retransmit timer is cleared (if there are no more  * outstanding segments) or reset to the base value (if there  * are more ACKs expected).  Whenever the retransmit timer goes off,  * we retransmit all unacknowledged segments, and do an exponential  * backoff on the retransmit timer.  *  * The TCPT_PERSIST timer is used to keep window size information  * flowing even if the window goes shut.  If an output is attempted when there  * is data ready to transmit, but nothing gets sent because the window  * is shut, then we start the TCPT_PERSIST timer, and at intervals  * send a single byte into the peers window to force him to update  * our window information.  We do this at most as often as TCPT_PERSMIN  * time intervals, but no more frequently than the current estimate of  * round-trip packet time.  The TCPT_PERSIST timer is cleared whenever  * we receive a window update from the peer.  *  * The TCPT_KEEP timer is used to keep connections alive.  If an  * connection is idle (no segments received) for TCPTV_KEEP amount of time,  * but not yet established, then we drop the connection.  If the connection  * is established, then we force the peer to send us a segment by sending:  *<SEQ=SND.UNA-1><ACK=RCV.NXT><CTL=ACK>  * This segment is (deliberately) outside the window, and should elicit  * an ack segment in response from the peer.  If, despite the TCPT_KEEP  * initiated segments we cannot elicit a response from a peer in TCPT_MAXIDLE  * amount of time, then we drop the connection.  */
 end_comment
 
 begin_define
@@ -70,13 +74,13 @@ comment|/* time to live for TCP segs */
 end_comment
 
 begin_comment
-comment|/*  * TCPSC constants give various timeouts in ``slow-clock'' ticks.  */
+comment|/*  * Time constants.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TCPSC_MSL
+name|TCPTV_MSL
 value|(120*PR_SLOWHZ)
 end_define
 
@@ -87,29 +91,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPSC_REXMT
+name|TCPTV_SRTTBASE
 value|(  1*PR_SLOWHZ)
 end_define
 
 begin_comment
-comment|/* base retransmit time */
+comment|/* base roundtrip time */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TCPSC_KEEP
+name|TCPTV_KEEP
 value|(240*PR_SLOWHZ)
 end_define
 
 begin_comment
-comment|/* keep alive */
+comment|/* keep alive - 4 mins */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TCPSC_PERSIST
+name|TCPTV_PERSMIN
 value|(  5*PR_SLOWHZ)
 end_define
 
@@ -120,31 +124,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPSC_KEEPTTL
-value|(  4*TCPSC_KEEP)
+name|TCPTV_MAXIDLE
+value|(  4*TCPTV_KEEP)
 end_define
 
 begin_comment
-comment|/* keep alive too long */
+comment|/* maximum allowable idle 						   time before drop conn */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TCPSC_2MSL
-value|(  2*TCPSC_MSL)
+name|TCPTV_MIN
+value|(  1*PR_SLOWHZ)
 end_define
 
 begin_comment
-comment|/* 2*msl quiet time timer */
+comment|/* minimum allowable value */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TCPSC_TOOLONG
+name|TCPTV_MAX
 value|(480*PR_SLOWHZ)
 end_define
+
+begin_comment
+comment|/* maximum allowable value */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -159,15 +167,9 @@ name|tcptimers
 index|[]
 init|=
 block|{
-literal|"INIT"
-block|,
 literal|"REXMT"
 block|,
-literal|"REXMTTL"
-block|,
 literal|"KEEP"
-block|,
-literal|"KEEPTTL"
 block|,
 literal|"PERSIST"
 block|,
@@ -180,6 +182,57 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Retransmission smoothing constants.  * Smoothed round trip time is updated by  *    tp->t_srtt = (tcp_alpha * tp->t_srtt) + ((1 - tcp_alpha) * tp->t_rtt)  * each time a new value of tp->t_rtt is available.  The initial  * retransmit timeout is then based on  *    tp->t_timer[TCPT_REXMT] = tcp_beta * tp->t_srtt;  * limited, however to be at least TCPTV_REXMTLO and at most TCPTV_REXMTHI.  */
+end_comment
+
+begin_decl_stmt
+name|float
+name|tcp_alpha
+decl_stmt|,
+name|tcp_beta
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Initial values of tcp_alpha and tcp_beta.  * These are conservative: averaging over a long  * period of time, and allowing for large individual deviations from  * tp->t_srtt.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_ALPHA
+value|0.9
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCP_BETA
+value|2.0
+end_define
+
+begin_comment
+comment|/*  * Force a time value to be in a certain range.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPT_RANGESET
+parameter_list|(
+name|tv
+parameter_list|,
+name|value
+parameter_list|,
+name|tvmin
+parameter_list|,
+name|tvmax
+parameter_list|)
+define|\
+value|(tv) = (value); \ 	if ((tv)< (tvmin)) \ 		(tv) = (tvmin); \ 	if ((tv)> (tvmax)) \ 		(tv) = (tvmax);
+end_define
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.4	81/11/29	*/
+comment|/*	if.h	4.5	81/12/02	*/
 end_comment
 
 begin_comment
@@ -117,7 +117,7 @@ name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(m)->m_act = 0; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_head = (ifq)->ifq_tail =  m; \ 	else \ 		(ifq)->ifq_tail->m_act = m; \ }
+value|{ \ 	(m)->m_act = 0; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_head = m; \ 	else \ 		(ifq)->ifq_tail->m_act = m; \ 	(ifq)->ifq_tail = m; \ }
 end_define
 
 begin_define

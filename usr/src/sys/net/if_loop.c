@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.1	81/11/29	*/
+comment|/*	if_loop.c	4.2	81/12/02	*/
 end_comment
 
 begin_comment
@@ -135,9 +135,10 @@ name|if_next
 operator|=
 name|ifnet
 expr_stmt|;
-name|ifnet
-operator|=
+name|if_attach
+argument_list|(
 name|ifp
+argument_list|)
 expr_stmt|;
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.10	81/11/29	*/
+comment|/*	tcp_var.h	4.11	81/12/02	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Kernel variables for tcp.  */
 end_comment
 
 begin_comment
-comment|/*  * Tcp control block.  */
+comment|/*  * Tcp control block, one per tcp; fields:  */
 end_comment
 
 begin_struct
@@ -30,10 +30,6 @@ name|int
 name|t_state
 decl_stmt|;
 comment|/* state of this connection */
-name|int
-name|t_seqcnt
-decl_stmt|;
-comment|/* count of chars in seq queue */
 name|short
 name|t_timer
 index|[
@@ -41,6 +37,10 @@ name|TCPT_NTIMERS
 index|]
 decl_stmt|;
 comment|/* tcp timers */
+name|short
+name|t_rxtshift
+decl_stmt|;
+comment|/* log(2) of rexmt exp. backoff */
 name|struct
 name|mbuf
 modifier|*
@@ -57,6 +57,10 @@ name|short
 name|t_maxseg
 decl_stmt|;
 comment|/* maximum segment size */
+name|short
+name|t_force
+decl_stmt|;
+comment|/* 1 if forcing out a byte */
 name|u_char
 name|t_flags
 decl_stmt|;
@@ -82,9 +86,9 @@ value|0x08
 comment|/* urgent mode */
 define|#
 directive|define
-name|TF_KEEP
+name|TF_DONTKEEP
 value|0x10
-comment|/* use keep-alives */
+comment|/* don't use keep-alives */
 name|struct
 name|tcpiphdr
 modifier|*
@@ -155,15 +159,23 @@ name|tcp_seq
 name|snd_max
 decl_stmt|;
 comment|/* highest sequence number sent 					   used to recognize retransmits */
+comment|/* transmit timing stuff */
+name|short
+name|t_idle
+decl_stmt|;
+comment|/* inactivity time */
+name|short
+name|t_rtt
+decl_stmt|;
+comment|/* round trip time */
 name|tcp_seq
-name|rxt_seq
+name|t_rtseq
 decl_stmt|;
-name|short
-name|rxt_time
+comment|/* sequence number being timed */
+name|float
+name|t_srtt
 decl_stmt|;
-name|short
-name|rxt_cnt
-decl_stmt|;
+comment|/* smoothed round-trip time */
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.4	81/11/29	*/
+comment|/*	if.c	4.5	81/12/02	*/
 end_comment
 
 begin_include
@@ -32,6 +32,41 @@ include|#
 directive|include
 file|"../net/if.h"
 end_include
+
+begin_macro
+name|if_attach
+argument_list|(
+argument|ifp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|COUNT
+argument_list|(
+name|IF_ATTACH
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_next
+operator|=
+name|ifnet
+expr_stmt|;
+name|ifnet
+operator|=
+name|ifp
+expr_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*ARGSUSED*/

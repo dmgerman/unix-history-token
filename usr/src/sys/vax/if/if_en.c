@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.15	81/11/29	*/
+comment|/*	if_en.c	4.16	81/12/02	*/
 end_comment
 
 begin_include
@@ -540,6 +540,14 @@ name|if_ubareset
 operator|=
 name|enreset
 expr_stmt|;
+name|if_attach
+argument_list|(
+operator|&
+name|es
+operator|->
+name|es_if
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -983,7 +991,7 @@ name|es_ifuba
 operator|.
 name|ifu_w
 operator|.
-name|ifrw_addr
+name|ifrw_info
 expr_stmt|;
 name|addr
 operator|->

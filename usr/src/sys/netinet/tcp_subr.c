@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_subr.c 4.4 81/11/29 */
+comment|/* tcp_subr.c 4.5 81/12/02 */
 end_comment
 
 begin_include
@@ -81,12 +81,6 @@ directive|include
 file|"../net/tcp.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|TCPFSTAB
-end_define
-
 begin_include
 include|#
 directive|include
@@ -154,6 +148,14 @@ name|inp_prev
 operator|=
 operator|&
 name|tcb
+expr_stmt|;
+name|tcp_alpha
+operator|=
+name|TCP_ALPHA
+expr_stmt|;
+name|tcp_beta
+operator|=
+name|TCP_BETA
 expr_stmt|;
 block|}
 end_block
@@ -384,7 +386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a reset message back to send of TCP segment ti,  * with ack, seq and flags fields as specified by parameters.  */
+comment|/*  * Send a single message to the TCP at address specified by  * the given TCP/IP header.  If flags==0, then we make a copy  * of the tcpiphdr at ti and send directly to the addressed host.  * This is used to force keep alive messages out using the TCP  * template for a connection tp->t_template.  If flags are given  * then we send a message back to the TCP which originated the  * segment ti, and discard the mbuf containing it and any other  * attached mbufs.  *  * In any case the ack and sequence number of the transmitted  * segment are as specified by the parameters.  */
 end_comment
 
 begin_expr_stmt
@@ -426,17 +428,80 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-init|=
-name|dtom
-argument_list|(
-name|ti
-argument_list|)
 decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_RESPOND
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|==
+literal|0
+condition|)
+block|{
+name|m
+operator|=
+name|m_get
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+return|return;
+name|m
+operator|->
+name|m_off
+operator|=
+name|MMINOFF
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+expr_stmt|;
+operator|*
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|tcpiphdr
+operator|*
+argument_list|)
+operator|=
+operator|*
+name|ti
+expr_stmt|;
+name|ti
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|tcpiphdr
+operator|*
+argument_list|)
+expr_stmt|;
+name|flags
+operator|=
+name|TH_ACK
+expr_stmt|;
+block|}
+else|else
+block|{
 name|m_freem
 argument_list|(
 name|m
@@ -504,6 +569,7 @@ expr_stmt|;
 undef|#
 directive|undef
 name|xchg
+block|}
 name|ti
 operator|->
 name|ti_next
@@ -838,6 +904,13 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|in_pcbdetach
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -976,13 +1049,6 @@ name|t_ipopt
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|in_pcbfree
-argument_list|(
-name|tp
-operator|->
-name|t_inpcb
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1002,6 +1068,13 @@ expr_stmt|;
 name|socantsendmore
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+name|in_pcbdisconnect
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.20 81/11/29 */
+comment|/* ip_input.c 1.21 81/12/02 */
 end_comment
 
 begin_include
@@ -95,7 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Ip initialization.  */
+comment|/*  * Ip initialization: fill in IP protocol switch table.  * All protocols not implemented in kernel go to raw IP protocol handler.  */
 end_comment
 
 begin_macro
@@ -242,10 +242,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Ip input routines.  */
-end_comment
-
-begin_comment
 comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  * try to reassamble.  If complete and fragment queue exists, discard.  * Process options.  Pass to next level.  */
 end_comment
 
@@ -375,7 +371,10 @@ operator|>
 name|m
 operator|->
 name|m_len
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|m_pullup
 argument_list|(
 name|m
@@ -388,6 +387,18 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ipcksum
@@ -419,6 +430,7 @@ operator|->
 name|ip_sum
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|ipstat
 operator|.
 name|ips_badsum
@@ -473,11 +485,12 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
 name|m0
 operator|=
 name|m
+expr_stmt|;
+for|for
+control|(
 init|;
 name|m
 operator|!=
@@ -516,9 +529,16 @@ name|ip
 operator|->
 name|ip_len
 condition|)
+block|{
+name|ipstat
+operator|.
+name|ips_tooshort
+operator|++
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|m_adj
 argument_list|(
 name|m
@@ -1039,6 +1059,18 @@ operator|)
 operator|->
 name|ip_dst
 expr_stmt|;
+name|q
+operator|=
+operator|(
+expr|struct
+name|ipasfrag
+operator|*
+operator|)
+name|fp
+expr_stmt|;
+goto|goto
+name|insert
+goto|;
 block|}
 comment|/* 	 * Find a segment which begins after this one does. 	 */
 for|for
@@ -1242,6 +1274,8 @@ name|ipf_prev
 argument_list|)
 expr_stmt|;
 block|}
+name|insert
+label|:
 comment|/* 	 * Stick new segment in its place; 	 * check for complete reassembly. 	 */
 name|ip_enq
 argument_list|(
