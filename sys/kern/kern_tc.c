@@ -536,14 +536,16 @@ literal|0
 block|,
 literal|18446744073709ULL
 block|,
+comment|/* 2^64/1000000 */
 literal|0
 block|,
 block|{
-literal|1
+literal|769769981
 block|,
 literal|0
 block|}
 block|,
+comment|/* Tue May 24 08:59:41 GMT 1994 */
 block|{
 literal|0
 block|,
@@ -1799,6 +1801,28 @@ operator|.
 name|sec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tc
+operator|->
+name|tc_counter
+operator|!=
+name|timecounter
+condition|)
+block|{
+name|tc
+operator|->
+name|tc_counter
+operator|=
+name|timecounter
+expr_stmt|;
+name|tc
+operator|->
+name|tc_offset_count
+operator|=
+name|ncount
+expr_stmt|;
+block|}
 name|tc_setscales
 argument_list|(
 name|tc
