@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"seg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"buf.h"
 end_include
 
@@ -933,6 +927,26 @@ name|ipc
 operator|.
 name|ip_addr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|mips
+name|poff
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|PHYSOFF
+argument_list|(
+name|curproc
+operator|->
+name|p_addr
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|poff
 operator|=
 operator|(
@@ -946,6 +960,8 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -1158,6 +1174,10 @@ operator|.
 name|ip_data
 expr_stmt|;
 comment|/* see issig */
+ifdef|#
+directive|ifdef
+name|PSL_T
+comment|/* need something more machine independent here... */
 if|if
 condition|(
 name|i
@@ -1173,6 +1193,8 @@ index|]
 operator||=
 name|PSL_T
 expr_stmt|;
+endif|#
+directive|endif
 name|wakeup
 argument_list|(
 operator|(
