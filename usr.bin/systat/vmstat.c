@@ -2378,6 +2378,11 @@ argument_list|(
 name|ncs_2passes
 argument_list|)
 expr_stmt|;
+name|Z
+argument_list|(
+name|ncs_neghits
+argument_list|)
+expr_stmt|;
 name|s
 operator|.
 name|nchcount
