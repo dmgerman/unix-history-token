@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.3 1995/04/02 01:35:54 wpaul Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.4 1995/05/30 03:51:25 rgrimes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -622,46 +622,26 @@ condition|(
 operator|!
 name|fflag
 condition|)
-block|{
-name|pid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-name|pid
-operator|>
-literal|0
-condition|)
-comment|/* Parent exits, leaving child in background. */
-name|exit
+name|daemon
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|pid
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
 argument_list|,
-literal|"cannot fork"
+literal|0
+argument_list|)
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"fork"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|rarp_loop
 argument_list|()
