@@ -151,6 +151,10 @@ name|int
 name|phy_10Mbps_only
 decl_stmt|;
 comment|/* PHY is 10Mbps-only device */
+name|int
+name|eeprom_size
+decl_stmt|;
+comment|/* size of serial EEPROM */
 block|}
 struct|;
 end_struct
