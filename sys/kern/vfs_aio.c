@@ -205,6 +205,10 @@ directive|include
 file|"opt_vfs_aio.h"
 end_include
 
+begin_comment
+comment|/*  * Counter for allocating reference ids to new jobs.  Wrapped to 1 on  * overflow.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|long
@@ -406,119 +410,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|int
-name|max_aio_procs
-init|=
-name|MAX_AIO_PROCS
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|num_aio_procs
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|target_aio_procs
-init|=
-name|TARGET_AIO_PROCS
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|max_queue_count
-init|=
-name|MAX_AIO_QUEUE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|num_queue_count
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|num_buf_aio
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|num_aio_resv_start
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|aiod_timeout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|aiod_lifetime
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|unloadable
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|max_aio_per_proc
-init|=
-name|MAX_AIO_PER_PROC
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|max_aio_queue_per_proc
-init|=
-name|MAX_AIO_QUEUE_PER_PROC
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|max_buf_aio
-init|=
-name|MAX_BUF_AIO
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -532,52 +423,19 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"AIO mgmt"
+literal|"Async IO management"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_aio
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|max_aio_per_proc
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|max_aio_per_proc
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_aio
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|max_aio_queue_per_proc
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|max_aio_queue_per_proc
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|int
+name|max_aio_procs
+init|=
+name|MAX_AIO_PROCS
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -595,10 +453,19 @@ name|max_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of kernel threads to use for handling async IO "
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|num_aio_procs
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -616,10 +483,23 @@ name|num_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of presently active kernel threads for async IO"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * The code will adjust the actual number of AIO processes towards this  * number when it gets a chance.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|target_aio_procs
+init|=
+name|TARGET_AIO_PROCS
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -628,19 +508,28 @@ name|_vfs_aio
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|num_queue_count
+name|target_aio_procs
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|num_queue_count
+name|target_aio_procs
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Preferred number of ready kernel threads for async IO"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_queue_count
+init|=
+name|MAX_AIO_QUEUE
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -658,10 +547,19 @@ name|max_queue_count
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of aio requests to queue, globally"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|num_queue_count
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -670,40 +568,28 @@ name|_vfs_aio
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|target_aio_procs
+name|num_queue_count
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|target_aio_procs
+name|num_queue_count
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of queued aio requests"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_aio
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|max_buf_aio
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|max_buf_aio
-argument_list|,
+begin_decl_stmt
+specifier|static
+name|int
+name|num_buf_aio
+init|=
 literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -721,31 +607,34 @@ name|num_buf_aio
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of aio requests presently handled by the buf subsystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_aio
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|aiod_lifetime
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|aiod_lifetime
-argument_list|,
+begin_comment
+comment|/* Number of async I/O thread in the process of being started */
+end_comment
+
+begin_comment
+comment|/* XXX This should be local to _aio_aqueue() */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|num_aio_resv_start
+init|=
 literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|aiod_timeout
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -763,10 +652,47 @@ name|aiod_timeout
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Timeout value for synchronous aio operations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|aiod_lifetime
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_aio
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|aiod_lifetime
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|aiod_lifetime
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum lifetime for idle aiod"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|unloadable
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -785,6 +711,96 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Allow unload of aio (not recommended)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_aio_per_proc
+init|=
+name|MAX_AIO_PER_PROC
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_aio
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_aio_per_proc
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|max_aio_per_proc
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum active aio requests per process (stored in the process)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_aio_queue_per_proc
+init|=
+name|MAX_AIO_QUEUE_PER_PROC
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_aio
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_aio_queue_per_proc
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|max_aio_queue_per_proc
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum queued aio requests per process (stored in the process)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_buf_aio
+init|=
+name|MAX_BUF_AIO
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_aio
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_buf_aio
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|max_buf_aio
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum buf aio requests per process (stored in the process)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1146,11 +1162,28 @@ argument_list|(
 argument_list|,
 argument|aiothreadlist
 argument_list|)
-name|aio_freeproc
-operator|,
 name|aio_activeproc
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Active daemons */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|aiothreadlist
+argument_list|)
+name|aio_freeproc
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Idle daemons */
+end_comment
 
 begin_expr_stmt
 specifier|static
@@ -1411,6 +1444,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Zones for:  * 	kaio	Per process async io info  *	aiop	async io thread data  *	aiocb	async io jobs  *	aiol	list io job pointer - internal to aio_suspend XXX  *	aiolio	list io jobs  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|vm_zone_t
@@ -1421,15 +1458,14 @@ decl_stmt|,
 name|aiocb_zone
 decl_stmt|,
 name|aiol_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vm_zone_t
+decl_stmt|,
 name|aiolio_zone
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* kqueue filters for aio */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -1448,6 +1484,10 @@ name|filt_aio
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Main operations function for use as a kernel module.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1786,6 +1826,10 @@ literal|1
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Callback for unload of AIO when used as a module.  */
+end_comment
 
 begin_function
 specifier|static
@@ -9444,6 +9488,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* syscall - asynchronous read from a file (REALTIME) */
+end_comment
+
 begin_function
 name|int
 name|aio_read
@@ -9474,6 +9522,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* syscall - asynchronous write to a file (REALTIME) */
+end_comment
+
 begin_function
 name|int
 name|aio_write
@@ -9503,6 +9555,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* syscall - XXX undocumented */
+end_comment
 
 begin_function
 name|int
@@ -10713,6 +10769,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* syscall - wait for the next completion of an aio request */
+end_comment
+
 begin_function
 name|int
 name|aio_waitcomplete
@@ -11161,6 +11221,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* kqueue attach function */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -11231,6 +11295,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* kqueue detach function */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -11272,6 +11340,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* kqueue filter function */
+end_comment
 
 begin_comment
 comment|/*ARGSUSED*/

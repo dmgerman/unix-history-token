@@ -422,6 +422,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Export size information to userland */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -3011,6 +3015,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * XXX All of these sysctls would probably be more productive dead.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -3034,10 +3042,14 @@ name|disablecwd
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Disable the getcwd syscall"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Various statistics for the getcwd syscall */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -3158,6 +3170,10 @@ name|numcwdfound
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Implementation of the getcwd syscall */
+end_comment
 
 begin_function
 name|int
@@ -3685,7 +3701,7 @@ name|disablefullpath
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Disable the vn_fullpath function"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3737,6 +3753,10 @@ name|numfullpathfound
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * Retrieve the full filesystem path that correspond to a vnode from the name  * cache (if available)  */
+end_comment
 
 begin_function
 name|int

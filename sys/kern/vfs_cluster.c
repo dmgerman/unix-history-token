@@ -139,7 +139,7 @@ name|rcluster
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Debug VFS clustering code"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -248,10 +248,14 @@ name|write_behind
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Cluster write-behind; 0: disable, 1: enable, 2: backed off"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Page expended to mark partially backed buffers */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -259,6 +263,10 @@ name|vm_page_t
 name|bogus_page
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Number of physical bufs (pbufs) this subsystem is allowed.  * Manipulated by vm_pager.c  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -279,7 +287,7 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * This replaces bread.  */
+comment|/*  * Read data to a buf, including read-ahead if we find this to be beneficial.  * cluster_read replaces bread.  */
 end_comment
 
 begin_function

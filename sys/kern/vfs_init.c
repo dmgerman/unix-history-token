@@ -77,6 +77,10 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Single-linked list of configured VFSes.  * New entries are added/deleted by vfs_register()/vfs_unregister()  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|vfsconf
@@ -125,6 +129,10 @@ name|vfs_op_descs
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Reference counts for vfs_op_descs */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -134,7 +142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* reference counts */
+comment|/* Number of descriptions */
 end_comment
 
 begin_decl_stmt
@@ -144,12 +152,20 @@ name|num_op_descs
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Number of entries in each description */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
 name|vfs_opv_numops
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Recalculate the operations vector/description (those parts of it that can  * be recalculated, that is.)  * XXX It may be preferable to replace this function with an invariant check  * and a set of functions that should keep the table invariant.  */
+end_comment
 
 begin_function
 specifier|static
@@ -473,6 +489,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* Add a set of vnode operations (a description) to the table above. */
+end_comment
 
 begin_function
 name|void
@@ -848,6 +868,10 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Remove a vnode type from the vnode description table above. */
+end_comment
 
 begin_function
 name|void
@@ -1392,6 +1416,10 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* Register a new file system type in the global table */
+end_comment
+
 begin_function
 name|int
 name|vfs_register
@@ -1546,6 +1574,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Remove registration of a file system type */
+end_comment
 
 begin_function
 name|int
@@ -1734,6 +1766,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Standard kernel module handling code for file system modules.  * Referenced from VFS_SET().  */
+end_comment
 
 begin_function
 name|int

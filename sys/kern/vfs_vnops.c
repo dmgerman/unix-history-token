@@ -1243,6 +1243,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Sequential heuristic - detect sequential operation  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -1260,7 +1264,6 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
-comment|/* 	 * Sequential heuristic - detect sequential operation 	 */
 if|if
 condition|(
 operator|(
@@ -2455,6 +2458,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Stat a vnode; implementation for the stat syscall  */
+end_comment
 
 begin_function
 name|int
@@ -4165,6 +4172,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Implement kqueues for files by translating it to vnode operation.  */
+end_comment
 
 begin_function
 specifier|static

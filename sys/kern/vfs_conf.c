@@ -145,6 +145,10 @@ name|ROOTNAME
 value|"root_device"
 end_define
 
+begin_comment
+comment|/*  * The vnode of the system's root (/ in the filesystem, without chroot  * active.)  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|vnode
@@ -1030,6 +1034,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Local helper function for vfs_mountroot_ask.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1278,6 +1286,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Show the dev_t for a disk specified by name */
+end_comment
 
 begin_ifdef
 ifdef|#

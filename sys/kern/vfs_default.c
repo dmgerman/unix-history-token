@@ -476,6 +476,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Series of placeholder functions for various error returns for  * VOPs.  */
+end_comment
+
 begin_function
 name|int
 name|vop_eopnotsupp
@@ -567,6 +571,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Used to make a defined VOP fall back to the default VOP.  */
+end_comment
+
 begin_function
 name|int
 name|vop_defaultop
@@ -596,6 +604,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Helper function to panic on some bad VOPs in some filesystems.  */
+end_comment
+
 begin_function
 name|int
 name|vop_panic
@@ -619,6 +631,14 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * vop_std<something> and vop_no<something> are default functions for use by  * filesystems that need the "default reasonable" implementation for a  * particular operation.  *  * The documentation for the operations they implement exists (if it exists)  * in the VOP_<SOMETHING>(9) manpage (all uppercase).  */
+end_comment
+
+begin_comment
+comment|/*  * Default vop for filesystems that do not support name lookup  */
+end_comment
 
 begin_function
 specifier|static
@@ -723,6 +743,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * vop_stdpathconf:  *   * Standard implementation of POSIX pathconf, to get information about limits  * for a filesystem.  * Override per filesystem for the case where the filesystem has smaller  * limits.  */
+end_comment
 
 begin_function
 name|int
@@ -939,6 +963,10 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|/* See above. */
+end_comment
+
 begin_function
 name|int
 name|vop_stdunlock
@@ -990,6 +1018,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* See above. */
+end_comment
+
 begin_function
 name|int
 name|vop_stdislocked
@@ -1022,6 +1054,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Mark the vnode inactive */
+end_comment
 
 begin_function
 name|int
@@ -1612,6 +1648,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Create the VM system backing object for this vnode */
+end_comment
+
 begin_function
 name|int
 name|vop_stdcreatevobject
@@ -1882,6 +1922,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Destroy the VM system object associated with this vnode */
+end_comment
+
 begin_function
 name|int
 name|vop_stddestroyvobject
@@ -2032,6 +2076,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX Needs good comment and VOP_BMAP(9) manpage */
+end_comment
+
 begin_function
 name|int
 name|vop_stdbmap
@@ -2130,6 +2178,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX Needs good comment and more info in the manpage (VOP_GETPAGES(9)). */
+end_comment
+
 begin_function
 name|int
 name|vop_stdgetpages
@@ -2165,6 +2217,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* XXX Needs good comment and more info in the manpage (VOP_PUTPAGES(9)). */
+end_comment
 
 begin_function
 name|int
@@ -2207,7 +2263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * vfs default ops  * used to fill the vfs fucntion table to get reasonable default return values.  */
+comment|/*   * vfs default ops  * used to fill the vfs function table to get reasonable default return values.  */
 end_comment
 
 begin_function
