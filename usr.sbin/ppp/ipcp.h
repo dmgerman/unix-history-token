@@ -305,7 +305,7 @@ name|struct
 name|mqueue
 name|Queue
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* Output packet queues */
