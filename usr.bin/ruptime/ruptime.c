@@ -35,26 +35,14 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)ruptime.c	8.2 (Berkeley) 4/5/94";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)ruptime.c	8.2 (Berkeley) 4/5/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +54,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -227,6 +229,7 @@ name|interval
 parameter_list|(
 name|time_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -300,18 +303,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 name|struct
 name|dirent
@@ -342,8 +341,6 @@ name|hspace
 decl_stmt|;
 name|int
 name|aflg
-decl_stmt|,
-name|cc
 decl_stmt|,
 name|ch
 decl_stmt|,
@@ -378,6 +375,9 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+name|u_int
+name|cc
+decl_stmt|;
 name|aflg
 operator|=
 literal|0
@@ -833,6 +833,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|nhosts
 condition|;
 name|i
@@ -1014,17 +1017,14 @@ name|char
 modifier|*
 name|interval
 parameter_list|(
-name|tval
-parameter_list|,
-name|updown
-parameter_list|)
 name|time_t
 name|tval
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|updown
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -1169,7 +1169,7 @@ name|HS
 parameter_list|(
 name|a
 parameter_list|)
-value|((struct hs *)(a))
+value|((const struct hs *)(a))
 end_define
 
 begin_comment
@@ -1180,21 +1180,16 @@ begin_function
 name|int
 name|hscmp
 parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|a2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1223,7 +1218,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Load average comparison. */
@@ -1233,21 +1228,16 @@ begin_function
 name|int
 name|lcmp
 parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|a2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1335,7 +1325,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Number of users comparison. */
@@ -1345,21 +1335,16 @@ begin_function
 name|int
 name|ucmp
 parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|a2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1437,7 +1422,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Uptime comparison. */
@@ -1447,21 +1432,16 @@ begin_function
 name|int
 name|tcmp
 parameter_list|(
-name|a1
-parameter_list|,
-name|a2
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|a2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -1549,12 +1529,14 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
