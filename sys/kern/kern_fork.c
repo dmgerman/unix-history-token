@@ -2022,7 +2022,11 @@ name|p1
 operator|->
 name|p_flag
 operator|&
+operator|(
 name|P_SUGID
+operator||
+name|P_ALTSTACK
+operator|)
 expr_stmt|;
 if|if
 condition|(

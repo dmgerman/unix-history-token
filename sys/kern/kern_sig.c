@@ -2387,6 +2387,13 @@ name|ss_sp
 operator|=
 literal|0
 expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_ALTSTACK
+expr_stmt|;
 comment|/* 	 * Reset no zombies if child dies flag as Solaris does. 	 */
 name|p
 operator|->
