@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l1dmux.c - isdn4bsd layer 1 driver multiplexer  *	--------------------------------------------------  *  *	$Id: i4b_l1dmux.c,v 1.12 2000/06/02 16:14:36 hm Exp $  *  * $FreeBSD$  *  *      last edit-date: [Fri Jun  2 14:37:39 2000]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 2000, 2001 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_l1dmux.c - isdn4bsd layer 1 driver multiplexer  *	--------------------------------------------------  *  * $FreeBSD$  *  *      last edit-date: [Wed Jan 10 16:43:24 2001]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"ihfc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"itjc.h"
 end_include
 
 begin_include
@@ -198,6 +204,29 @@ begin_decl_stmt
 specifier|static
 name|int
 name|l1ifpnpunittab
+index|[
+name|MAXL1UNITS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|NITJC
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+specifier|static
+name|int
+name|l1itjcunittab
 index|[
 name|MAXL1UNITS
 index|]
@@ -585,6 +614,22 @@ case|:
 return|return
 operator|(
 name|l1ifpnpunittab
+operator|)
+return|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NITJC
+operator|>
+literal|0
+case|case
+name|L1DRVR_ITJC
+case|:
+return|return
+operator|(
+name|l1itjcunittab
 operator|)
 return|;
 break|break;
@@ -1164,6 +1209,30 @@ argument_list|,
 name|numl1units
 argument_list|)
 expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NITJC
+operator|>
+literal|0
+case|case
+name|L1DRVR_ITJC
+case|:
+name|printf
+argument_list|(
+literal|"itjc%d: passive stack unit %d\n"
+argument_list|,
+name|L0UNIT
+argument_list|(
+name|drv_unit
+argument_list|)
+argument_list|,
+name|numl1units
+argument_list|)
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 block|}
