@@ -2,6 +2,12 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"f2c.h"
 end_include
 
@@ -115,7 +121,6 @@ modifier|*
 name|vde
 decl_stmt|;
 name|ftnint
-modifier|*
 name|number
 decl_stmt|,
 name|type
@@ -126,12 +131,6 @@ name|dims
 decl_stmt|;
 name|ftnlen
 name|size
-decl_stmt|;
-specifier|static
-name|ftnint
-name|one
-init|=
-literal|1
 decl_stmt|;
 specifier|extern
 name|ftnlen
@@ -269,11 +268,11 @@ name|dims
 operator|)
 condition|?
 name|dims
-operator|+
+index|[
 literal|1
+index|]
 else|:
-operator|&
-name|one
+literal|1
 expr_stmt|;
 name|type
 operator|=
@@ -308,6 +307,7 @@ index|]
 expr_stmt|;
 name|l_write
 argument_list|(
+operator|&
 name|number
 argument_list|,
 name|v

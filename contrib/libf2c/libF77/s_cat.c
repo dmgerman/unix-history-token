@@ -143,13 +143,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ftnlen
+name|ftnint
 name|rnp
 index|[]
 decl_stmt|,
 modifier|*
 name|np
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ftnlen
 name|ll
 decl_stmt|;
 end_decl_stmt
@@ -166,9 +170,9 @@ argument|char *lp
 argument_list|,
 argument|char *rpp[]
 argument_list|,
-argument|ftnlen rnp[]
+argument|ftnint rnp[]
 argument_list|,
-argument|ftnlen *np
+argument|ftnint *np
 argument_list|,
 argument|ftnlen ll
 argument_list|)
