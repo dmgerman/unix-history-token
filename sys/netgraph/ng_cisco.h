@@ -79,35 +79,76 @@ end_comment
 begin_enum
 enum|enum
 block|{
-comment|/* This takes two struct in_addr's: the IP address and netmask */
 name|NGM_CISCO_SET_IPADDR
 init|=
 literal|1
 block|,
-comment|/* This is both received and *sent* by this node (to the "inet" 	   peer). The reply contains the same info as NGM_CISCO_SET_IPADDR. */
+comment|/* requires a struct ng_cisco_ipaddr */
 name|NGM_CISCO_GET_IPADDR
 block|,
-comment|/* This returns a struct ngciscostat (see below) */
+comment|/* returns a struct ng_cisco_ipaddr */
 name|NGM_CISCO_GET_STATUS
-block|, }
+block|,
+comment|/* returns a struct ng_cisco_stat */
+block|}
 enum|;
 end_enum
 
 begin_struct
 struct|struct
-name|ngciscostat
+name|ng_cisco_ipaddr
+block|{
+name|struct
+name|in_addr
+name|ipaddr
+decl_stmt|;
+comment|/* IP address */
+name|struct
+name|in_addr
+name|netmask
+decl_stmt|;
+comment|/* Netmask */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_CISCO_IPADDR_TYPE_INFO
+value|{			\ 	{							\ 	  { "ipaddr",&ng_parse_ipaddr_type	},	\ 	  { "netmask",&ng_parse_ipaddr_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_struct
+struct|struct
+name|ng_cisco_stats
 block|{
 name|u_int32_t
-name|seq_retries
+name|seqRetries
 decl_stmt|;
 comment|/* # unack'd retries */
 name|u_int32_t
-name|keepalive_period
+name|keepAlivePeriod
 decl_stmt|;
 comment|/* in seconds */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_CISCO_STATS_TYPE_INFO
+value|{			\ 	{							\ 	  { "seqRetries",&ng_parse_int32_type	},	\ 	  { "keepAlivePeriod",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
 
 begin_endif
 endif|#

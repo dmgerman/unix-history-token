@@ -293,6 +293,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_LINK_TYPE_INFO
+value|{				\ 	{							\ 	  { "enable",&ng_parse_int8_type	},	\ 	  { "protocomp",&ng_parse_int8_type	},	\ 	  { "acfcomp",&ng_parse_int8_type	},	\ 	  { "mru",&ng_parse_int16_type	},	\ 	  { "latency",&ng_parse_int32_type	},	\ 	  { "bandwidth",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
 comment|/* Node config structure */
 end_comment
 
@@ -369,6 +380,20 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_CONFIG_TYPE_INFO
+parameter_list|(
+name|arytype
+parameter_list|)
+value|{		\ 	{							\ 	  { "mrru",&ng_parse_int16_type	},	\ 	  { "multilink",&ng_parse_int8_type	},	\ 	  { "recvShortSeq",&ng_parse_int8_type	},	\ 	  { "xmitShortSeq",&ng_parse_int8_type	},	\ 	  { "roundRobin",&ng_parse_int8_type	},	\ 	  { "ip",&ng_parse_int8_type	},	\ 	  { "appletalk",&ng_parse_int8_type	},	\ 	  { "ipx",&ng_parse_int8_type	},	\ 	  { "comp",&ng_parse_int8_type	},	\ 	  { "decomp",&ng_parse_int8_type	},	\ 	  { "encryption",&ng_parse_int8_type	},	\ 	  { "decryption",&ng_parse_int8_type	},	\ 	  { "vjcomp",&ng_parse_int8_type	},	\ 	  { "vjdecomp",&ng_parse_int8_type	},	\ 	  { "links",		(arytype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
 comment|/* Statistics struct for a link (or the bundle if NG_PPP_BUNDLE_LINKNUM) */
 end_comment
 
@@ -403,6 +428,17 @@ comment|/* MP frames with duplicate seq # */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPP_STATS_TYPE_INFO
+value|{				\ 	{							\ 	  { "xmitFrames",&ng_parse_int32_type	},	\ 	  { "xmitOctets",&ng_parse_int32_type	},	\ 	  { "recvFrames",&ng_parse_int32_type	},	\ 	  { "recvOctets",&ng_parse_int32_type	},	\ 	  { "badProtos",&ng_parse_int32_type	},	\ 	  { "dupFragments",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
 
 begin_endif
 endif|#

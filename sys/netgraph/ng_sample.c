@@ -165,6 +165,8 @@ block|,
 name|ng_xxx_rcvdataq
 block|,
 name|ng_xxx_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -484,7 +486,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|const
 name|char
 modifier|*
 name|eptr

@@ -131,6 +131,7 @@ specifier|extern
 name|void
 name|_NgDebugSockaddr
 parameter_list|(
+specifier|const
 name|struct
 name|sockaddr_ng
 modifier|*
@@ -144,10 +145,16 @@ specifier|extern
 name|void
 name|_NgDebugMsg
 parameter_list|(
+specifier|const
 name|struct
 name|ng_mesg
 modifier|*
 name|msg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
 parameter_list|)
 function_decl|;
 end_function_decl

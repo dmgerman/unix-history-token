@@ -1983,6 +1983,8 @@ block|,
 name|ngsr_rcvdata
 block|,
 name|ngsr_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

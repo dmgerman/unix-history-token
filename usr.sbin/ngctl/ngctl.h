@@ -111,6 +111,13 @@ directive|include
 file|<netgraph/ng_message.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAX_CMD_ALIAS
+value|8
+end_define
+
 begin_comment
 comment|/* Command descriptors */
 end_comment
@@ -134,21 +141,34 @@ modifier|*
 name|av
 parameter_list|)
 function_decl|;
+comment|/* command function */
 specifier|const
 name|char
 modifier|*
 name|cmd
 decl_stmt|;
+comment|/* command usage */
 specifier|const
 name|char
 modifier|*
 name|desc
 decl_stmt|;
+comment|/* description */
 specifier|const
 name|char
 modifier|*
 name|help
 decl_stmt|;
+comment|/* help text */
+specifier|const
+name|char
+modifier|*
+name|aliases
+index|[
+name|MAX_CMD_ALIAS
+index|]
+decl_stmt|;
+comment|/* command aliases */
 block|}
 struct|;
 end_struct
@@ -231,6 +251,15 @@ specifier|const
 name|struct
 name|ngcmd
 name|mkpeer_cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ngcmd
+name|msg_cmd
 decl_stmt|;
 end_decl_stmt
 

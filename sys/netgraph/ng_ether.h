@@ -51,6 +51,31 @@ name|NG_ETHER_HOOK_DIVERT
 value|"divert"
 end_define
 
+begin_comment
+comment|/* For adding/removing Ethernet multicast addresses */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NGM_ETHER_ADD_MULTICAST
+init|=
+literal|1
+block|,
+comment|/* supply struct ether_addr */
+name|NGM_ETHER_DEL_MULTICAST
+block|,
+comment|/* supply struct ether_addr */
+name|NGM_ETHER_GET_MULTICAST
+block|,
+comment|/* returns array of struct ether_addr */
+name|NGM_ETHER_CLR_MULTICAST
+block|,
+comment|/* clears all multicast addresses */
+block|}
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif

@@ -265,7 +265,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DIAGNOSTICS
+name|INVARIANTS
 end_ifdef
 
 begin_define
@@ -589,7 +589,9 @@ block|,
 name|ngt_rcvdata
 block|,
 name|ngt_disconnect
-block|, }
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 

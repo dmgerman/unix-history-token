@@ -483,6 +483,8 @@ block|,
 name|ngfrm_rcvdata
 block|,
 name|ngfrm_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -884,7 +886,8 @@ specifier|const
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|eptr
 decl_stmt|;

@@ -126,6 +126,8 @@ block|,
 name|nge_rcvdata
 block|,
 name|nge_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

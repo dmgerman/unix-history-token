@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_ASYNC_COOKIE
-value|886473716
+value|886473717
 end_define
 
 begin_comment
@@ -121,6 +121,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_ASYNC_STATS_TYPE_INFO
+value|{			\ 	{							\ 	  { "syncOctets",&ng_parse_int32_type	},	\ 	  { "syncFrames",&ng_parse_int32_type	},	\ 	  { "syncOverflows",&ng_parse_int32_type	},	\ 	  { "asyncOctets",&ng_parse_int32_type	},	\ 	  { "asyncFrames",&ng_parse_int32_type	},	\ 	  { "asyncRunts",&ng_parse_int32_type	},	\ 	  { "asyncOverflows",&ng_parse_int32_type	},	\ 	  { "asyncBadCheckSums",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
 comment|/* Configuration for this node */
 end_comment
 
@@ -132,10 +143,6 @@ name|u_char
 name|enabled
 decl_stmt|;
 comment|/* Turn encoding on/off */
-name|u_char
-name|acfcomp
-decl_stmt|;
-comment|/* Address/control field compression */
 name|u_int16_t
 name|amru
 decl_stmt|;
@@ -151,6 +158,17 @@ comment|/* ACCM encoding */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_ASYNC_CONFIG_TYPE_INFO
+value|{			\ 	{							\ 	  { "enabled",&ng_parse_int8_type	},	\ 	  { "amru",&ng_parse_int16_type	},	\ 	  { "smru",&ng_parse_int16_type	},	\ 	  { "accm",&ng_parse_int32_type	},	\ 	  { NULL },						\ 	}							\ }
+end_define
 
 begin_comment
 comment|/* Commands */

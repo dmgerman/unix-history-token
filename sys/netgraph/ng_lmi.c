@@ -248,6 +248,8 @@ block|,
 name|nglmi_rcvdata
 block|,
 name|nglmi_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

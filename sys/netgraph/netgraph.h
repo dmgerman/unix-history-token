@@ -327,7 +327,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INVALID_COOKIE
+name|NGM_INVALID_COOKIE
 value|865455152
 end_define
 
@@ -537,6 +537,46 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * Command list -- each node type specifies the command that it knows  * how to convert between ASCII and binary using an array of these.  * The last element in the array must be a terminator with cookie=0.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_cmdlist
+block|{
+name|u_int32_t
+name|cookie
+decl_stmt|;
+comment|/* command typecookie */
+name|int
+name|cmd
+decl_stmt|;
+comment|/* command number */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* command name */
+specifier|const
+name|struct
+name|ng_parse_type
+modifier|*
+name|mesgType
+decl_stmt|;
+comment|/* args if !NGF_RESP */
+specifier|const
+name|struct
+name|ng_parse_type
+modifier|*
+name|respType
+decl_stmt|;
+comment|/* args if NGF_RESP */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Structure of a node type  */
 end_comment
 
@@ -603,7 +643,14 @@ modifier|*
 name|disconnect
 decl_stmt|;
 comment|/* notify on disconnect */
-comment|/* R/W data  private to the base netgraph code DON'T TOUCH!*/
+specifier|const
+name|struct
+name|ng_cmdlist
+modifier|*
+name|cmdlist
+decl_stmt|;
+comment|/* commands we can convert */
+comment|/* R/W data private to the base netgraph code DON'T TOUCH! */
 name|LIST_ENTRY
 argument_list|(
 argument|ng_type

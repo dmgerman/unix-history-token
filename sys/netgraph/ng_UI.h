@@ -29,7 +29,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NGM_UI_NODE_COOKIE
+name|NGM_UI_COOKIE
 value|884639499
 end_define
 

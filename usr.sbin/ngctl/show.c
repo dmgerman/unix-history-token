@@ -60,6 +60,12 @@ block|,
 literal|"Show information about the node at<path>"
 block|,
 literal|"If the -n flag is given, hooks are not listed."
+block|,
+block|{
+literal|"inquire"
+block|,
+literal|"info"
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
