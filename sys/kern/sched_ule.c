@@ -198,6 +198,12 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|realstathz
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -417,7 +423,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This priority range has 20 priorities on either end that are reachable  * only through nice values.  */
+comment|/*  * This priority range has 20 priorities on either end that are reachable  * only through nice values.  *  * PRI_RANGE:	Total priority range for timeshare threads.  * PRI_NRESV:	Reserved priorities for nice.  * PRI_BASE:	The start of the dynamic range.  * DYN_RANGE:	Number of priorities that are available int the dynamic  *		priority range.  * DYN_HALF:	Half of DYN_RANGE for convenience elsewhere.  * PRI_DYN:	The dynamic priority which is derived from the number of ticks  *		running vs the total number of ticks.  */
 end_comment
 
 begin_define
@@ -438,32 +444,44 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_BASE
-value|(SCHED_PRI_NRESV / 2)
+value|((SCHED_PRI_NRESV / 2) + PRI_MIN_TIMESHARE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCHED_PRI_DYN
+name|SCHED_DYN_RANGE
 value|(SCHED_PRI_RANGE - SCHED_PRI_NRESV)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCHED_PRI_DYN_HALF
-value|(SCHED_PRI_DYN / 2)
+name|SCHED_DYN_HALF
+value|(SCHED_DYN_RANGE / 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCHED_PRI_DYN
+parameter_list|(
+name|run
+parameter_list|,
+name|total
+parameter_list|)
+value|(((run) * SCHED_DYN_RANGE) / (total))
 end_define
 
 begin_comment
-comment|/*  * These determine how sleep time effects the priority of a process.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_THORTTLE:	Divisor for reducing slp/run time.  * SLP_RATIO:	Compute a bounded ratio of slp time vs run time.  * SLP_TOPRI:	Convert a number of ticks slept and ticks ran into a priority  */
+comment|/*  * These determine the interactivity of a process.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_THROTTLE:	Divisor for reducing slp/run time.  * INTERACT_RANGE:	Range of interactivity values.  Smaller is better.  * INTERACT_HALF:	Convenience define, half of the interactivity range.  * INTERACT_THRESH:	Threshhold for placement on the current runq.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCHED_SLP_RUN_MAX
-value|((hz * 30) * 1024)
+value|((hz * 30)<< 10)
 end_define
 
 begin_define
@@ -473,61 +491,29 @@ name|SCHED_SLP_RUN_THROTTLE
 value|(10)
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|int
-name|sched_slp_ratio
-parameter_list|(
-name|int
-name|b
-parameter_list|,
-name|int
-name|s
-parameter_list|)
-block|{
-name|b
-operator|/=
-name|SCHED_PRI_DYN_HALF
-expr_stmt|;
-if|if
-condition|(
-name|b
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|s
-operator|/=
-name|b
-expr_stmt|;
-return|return
-operator|(
-name|s
-operator|)
-return|;
-block|}
-end_function
+begin_define
+define|#
+directive|define
+name|SCHED_INTERACT_RANGE
+value|(100)
+end_define
 
 begin_define
 define|#
 directive|define
-name|SCHED_SLP_TOPRI
-parameter_list|(
-name|slp
-parameter_list|,
-name|run
-parameter_list|)
-define|\
-value|((((slp)> (run))?							\     sched_slp_ratio((slp), (run)):					\     SCHED_PRI_DYN_HALF + (SCHED_PRI_DYN_HALF - sched_slp_ratio((run), (slp))))+ \     SCHED_PRI_NRESV / 2)
+name|SCHED_INTERACT_HALF
+value|(SCHED_INTERACT_RANGE / 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCHED_INTERACT_THRESH
+value|(10)
 end_define
 
 begin_comment
-comment|/*  * These parameters and macros determine the size of the time slice that is  * granted to each thread.  *  * SLICE_MIN:	Minimum time slice granted, in units of ticks.  * SLICE_MAX:	Maximum time slice granted.  * SLICE_RANGE:	Range of available time slices scaled by hz.  * SLICE_SCALE:	The number slices granted per unit of pri or slp.  * PRI_TOSLICE:	Compute a slice size that is proportional to the priority.  * SLP_TOSLICE:	Compute a slice size that is inversely proportional to the  *		amount of time slept. (smaller slices for interactive ksegs)  * PRI_COMP:	This determines what fraction of the actual slice comes from   *		the slice size computed from the priority.  * SLP_COMP:	This determines what component of the actual slice comes from  *		the slize size computed from the sleep time.  */
+comment|/*  * These parameters and macros determine the size of the time slice that is  * granted to each thread.  *  * SLICE_MIN:	Minimum time slice granted, in units of ticks.  * SLICE_MAX:	Maximum time slice granted.  * SLICE_RANGE:	Range of available time slices scaled by hz.  * SLICE_SCALE:	The number slices granted per unit of pri or slp.  * PRI_TOSLICE:	Compute a slice size that is proportional to the priority.  * INTERACT_TOSLICE:	Compute a slice size that is inversely proportional to   *		the amount of time slept. (smaller slices for interactive ksegs)  * PRI_COMP:	This determines what fraction of the actual slice comes from   *		the slice size computed from the priority.  * INTERACT_COMP:This determines what component of the actual slice comes from  *		the slize size computed from the interactivity score.  */
 end_comment
 
 begin_define
@@ -541,7 +527,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_SLICE_MAX
-value|(hz / 4)
+value|(hz / 10)
 end_define
 
 begin_define
@@ -566,6 +552,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCHED_INTERACT_COMP
+parameter_list|(
+name|slice
+parameter_list|)
+value|((slice) / 2)
+end_define
+
+begin_comment
+comment|/* 50% */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHED_PRI_COMP
+parameter_list|(
+name|slice
+parameter_list|)
+value|((slice) / 2)
+end_define
+
+begin_comment
+comment|/* 50% */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SCHED_PRI_TOSLICE
 parameter_list|(
 name|pri
@@ -577,41 +591,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCHED_SLP_TOSLICE
+name|SCHED_INTERACT_TOSLICE
 parameter_list|(
-name|slp
+name|score
 parameter_list|)
 define|\
-value|(SCHED_SLICE_MAX - SCHED_SLICE_SCALE((slp), SCHED_PRI_DYN))
+value|(SCHED_SLICE_SCALE((score), SCHED_INTERACT_RANGE))
 end_define
-
-begin_define
-define|#
-directive|define
-name|SCHED_SLP_COMP
-parameter_list|(
-name|slice
-parameter_list|)
-value|(((slice) / 5) * 3)
-end_define
-
-begin_comment
-comment|/* 60% */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCHED_PRI_COMP
-parameter_list|(
-name|slice
-parameter_list|)
-value|(((slice) / 5) * 2)
-end_define
-
-begin_comment
-comment|/* 40% */
-end_comment
 
 begin_comment
 comment|/*  * This macro determines whether or not the kse belongs on the current or  * next run queue.  *   * XXX nice value should effect how interactive a kg is.  */
@@ -624,7 +610,7 @@ name|SCHED_CURR
 parameter_list|(
 name|kg
 parameter_list|)
-value|(((kg)->kg_slptime> (kg)->kg_runtime&&	\ 	sched_slp_ratio((kg)->kg_slptime, (kg)->kg_runtime)> 4))
+value|(sched_interact_score(kg)< SCHED_INTERACT_THRESH)
 end_define
 
 begin_comment
@@ -783,6 +769,19 @@ begin_function_decl
 specifier|static
 name|int
 name|sched_priority
+parameter_list|(
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|sched_interact_score
 parameter_list|(
 name|struct
 name|ksegrp
@@ -1363,6 +1362,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|realstathz
+operator|=
+name|stathz
+condition|?
+name|stathz
+else|:
+name|hz
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1435,33 +1442,18 @@ operator|)
 return|;
 name|pri
 operator|=
-name|SCHED_SLP_TOPRI
+name|sched_interact_score
 argument_list|(
 name|kg
-operator|->
-name|kg_slptime
-argument_list|,
-name|kg
-operator|->
-name|kg_runtime
 argument_list|)
-expr_stmt|;
-name|CTR2
-argument_list|(
-name|KTR_RUNQ
-argument_list|,
-literal|"sched_priority: slptime: %d\tpri: %d"
-argument_list|,
-name|kg
-operator|->
-name|kg_slptime
-argument_list|,
-name|pri
-argument_list|)
+operator|*
+name|SCHED_DYN_RANGE
+operator|/
+name|SCHED_INTERACT_RANGE
 expr_stmt|;
 name|pri
 operator|+=
-name|PRI_MIN_TIMESHARE
+name|SCHED_PRI_BASE
 expr_stmt|;
 name|pri
 operator|+=
@@ -1525,7 +1517,7 @@ name|int
 name|pslice
 decl_stmt|;
 name|int
-name|sslice
+name|islice
 decl_stmt|;
 name|int
 name|slice
@@ -1550,48 +1542,26 @@ argument_list|(
 name|pri
 argument_list|)
 expr_stmt|;
-name|sslice
+name|islice
 operator|=
-name|SCHED_PRI_TOSLICE
+name|SCHED_INTERACT_TOSLICE
 argument_list|(
-name|SCHED_SLP_TOPRI
+name|sched_interact_score
 argument_list|(
 name|kg
-operator|->
-name|kg_slptime
-argument_list|,
-name|kg
-operator|->
-name|kg_runtime
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* SCHED_SLP_TOSLICE(SCHED_SLP_RATIO( 	    kg->kg_slptime, kg->kg_runtime)); */
 name|slice
 operator|=
-name|SCHED_SLP_COMP
+name|SCHED_INTERACT_COMP
 argument_list|(
-name|sslice
+name|islice
 argument_list|)
 operator|+
 name|SCHED_PRI_COMP
 argument_list|(
 name|pslice
-argument_list|)
-expr_stmt|;
-name|CTR4
-argument_list|(
-name|KTR_RUNQ
-argument_list|,
-literal|"sched_slice: pri: %d\tsslice: %d\tpslice: %d\tslice: %d"
-argument_list|,
-name|pri
-argument_list|,
-name|sslice
-argument_list|,
-name|pslice
-argument_list|,
-name|slice
 argument_list|)
 expr_stmt|;
 if|if
@@ -1647,6 +1617,105 @@ block|}
 return|return
 operator|(
 name|slice
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|sched_interact_score
+parameter_list|(
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+parameter_list|)
+block|{
+name|int
+name|big
+decl_stmt|;
+name|int
+name|small
+decl_stmt|;
+name|int
+name|base
+decl_stmt|;
+if|if
+condition|(
+name|kg
+operator|->
+name|kg_runtime
+operator|>
+name|kg
+operator|->
+name|kg_slptime
+condition|)
+block|{
+name|big
+operator|=
+name|kg
+operator|->
+name|kg_runtime
+expr_stmt|;
+name|small
+operator|=
+name|kg
+operator|->
+name|kg_slptime
+expr_stmt|;
+name|base
+operator|=
+name|SCHED_INTERACT_HALF
+expr_stmt|;
+block|}
+else|else
+block|{
+name|big
+operator|=
+name|kg
+operator|->
+name|kg_slptime
+expr_stmt|;
+name|small
+operator|=
+name|kg
+operator|->
+name|kg_runtime
+expr_stmt|;
+name|base
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|big
+operator|/=
+name|SCHED_INTERACT_HALF
+expr_stmt|;
+if|if
+condition|(
+name|big
+operator|!=
+literal|0
+condition|)
+name|small
+operator|/=
+name|big
+expr_stmt|;
+else|else
+name|small
+operator|=
+literal|0
+expr_stmt|;
+name|small
+operator|+=
+name|base
+expr_stmt|;
+comment|/* XXX Factor in nice */
+return|return
+operator|(
+name|small
 operator|)
 return|;
 block|}
@@ -2019,7 +2088,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
 name|td
 operator|->
 name|td_kse
@@ -2190,26 +2258,6 @@ name|td_priority
 operator|=
 name|prio
 expr_stmt|;
-comment|/* 	 * If this is an interactive task clear its queue so it moves back 	 * on to curr when it wakes up.  Otherwise let it stay on the queue 	 * that it was assigned to. 	 */
-if|if
-condition|(
-name|SCHED_CURR
-argument_list|(
-name|td
-operator|->
-name|td_kse
-operator|->
-name|ke_ksegrp
-argument_list|)
-condition|)
-name|td
-operator|->
-name|td_kse
-operator|->
-name|ke_runq
-operator|=
-name|NULL
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2298,8 +2346,8 @@ name|td
 operator|->
 name|td_slptime
 operator|)
-operator|*
-literal|1024
+operator|<<
+literal|10
 expr_stmt|;
 name|sched_priority
 argument_list|(
@@ -2453,7 +2501,7 @@ name|child
 operator|->
 name|kg_slptime
 operator|=
-name|SCHED_PRI_DYN
+name|SCHED_DYN_RANGE
 expr_stmt|;
 name|child
 operator|->
@@ -2463,7 +2511,7 @@ name|kg
 operator|->
 name|kg_slptime
 operator|/
-name|SCHED_PRI_DYN
+name|SCHED_DYN_RANGE
 expr_stmt|;
 block|}
 else|else
@@ -2472,7 +2520,7 @@ name|child
 operator|->
 name|kg_runtime
 operator|=
-name|SCHED_PRI_DYN
+name|SCHED_DYN_RANGE
 expr_stmt|;
 name|child
 operator|->
@@ -2482,7 +2530,7 @@ name|kg
 operator|->
 name|kg_runtime
 operator|/
-name|SCHED_PRI_DYN
+name|SCHED_DYN_RANGE
 expr_stmt|;
 block|}
 if|#
@@ -2764,7 +2812,9 @@ name|kg
 operator|->
 name|kg_runtime
 operator|+=
-literal|1024
+literal|1
+operator|<<
+literal|10
 expr_stmt|;
 comment|/* 	 * We used up one time slice. 	 */
 name|ke
@@ -2778,14 +2828,10 @@ condition|(
 name|ke
 operator|->
 name|ke_slice
-operator|==
+operator|<=
 literal|0
 condition|)
 block|{
-name|td
-operator|->
-name|td_priority
-operator|=
 name|sched_priority
 argument_list|(
 name|kg
