@@ -2072,6 +2072,10 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+specifier|extern
+name|flag
+name|echo
+decl_stmt|;
 specifier|register
 name|struct
 name|Entrypoint
@@ -2192,6 +2196,11 @@ name|procclass
 operator|=
 name|class
 expr_stmt|;
+if|if
+condition|(
+name|echo
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|diagfile
@@ -2244,6 +2253,7 @@ argument_list|(
 name|diagfile
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2529,6 +2539,10 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
+specifier|extern
+name|flag
+name|echo
+decl_stmt|;
 specifier|register
 name|Namep
 name|q
@@ -2556,7 +2570,11 @@ argument_list|,
 name|class
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|echo
+condition|)
 name|fprintf
 argument_list|(
 name|diagfile
@@ -2564,6 +2582,11 @@ argument_list|,
 literal|"       entry "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|echo
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|diagfile
@@ -2580,6 +2603,7 @@ argument_list|(
 name|diagfile
 argument_list|)
 expr_stmt|;
+block|}
 name|q
 operator|=
 name|mkname

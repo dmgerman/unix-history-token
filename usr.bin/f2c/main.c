@@ -181,6 +181,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|flag
+name|echo
+init|=
+name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|intr_omit
 decl_stmt|;
@@ -959,6 +967,20 @@ name|P_INT
 argument_list|,
 operator|&
 name|usedefsforcommon
+argument_list|,
+name|YES
+argument_list|)
+block|,
+name|f2c_entry
+argument_list|(
+literal|"v"
+argument_list|,
+name|P_NO_ARGS
+argument_list|,
+name|P_INT
+argument_list|,
+operator|&
+name|echo
 argument_list|,
 name|YES
 argument_list|)
@@ -3477,6 +3499,8 @@ expr_stmt|;
 if|if
 condition|(
 name|filename0
+operator|&&
+name|echo
 condition|)
 block|{
 name|fprintf
