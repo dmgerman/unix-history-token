@@ -5335,9 +5335,13 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> sendmsg: %s"
+literal|"<%s> sendmsg to %s: %s"
 argument_list|,
 name|__FUNCTION__
+argument_list|,
+name|rainfo
+operator|->
+name|ifname
 argument_list|,
 name|strerror
 argument_list|(
