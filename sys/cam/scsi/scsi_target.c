@@ -7748,7 +7748,7 @@ name|queue
 argument_list|,
 name|bp
 argument_list|,
-name|b_act
+name|bio_queue
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
@@ -7790,7 +7790,7 @@ name|queue
 argument_list|,
 name|bp
 argument_list|,
-name|b_act
+name|bio_queue
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
