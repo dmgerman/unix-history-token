@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.28 1999/10/13 08:10:57 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.33 1999/11/22 21:57:09 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -331,6 +331,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*   * 0  - do usual exploration  * 1  - do not use timeout exploration  *>1 - do no exploration  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -732,6 +736,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|usbrev_str
+index|[]
+init|=
+name|USBREV_STR
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|USB_DECLARE_DRIVER
 argument_list|(
@@ -821,6 +837,12 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
+specifier|static
+name|int
+name|global_init_done
+init|=
+literal|0
+decl_stmt|;
 endif|#
 directive|endif
 name|usbd_device_handle
@@ -829,42 +851,15 @@ decl_stmt|;
 name|usbd_status
 name|err
 decl_stmt|;
-specifier|static
 name|int
-name|global_init_done
-init|=
-literal|0
+name|usbrev
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|sc
 operator|->
 name|sc_dev
 operator|=
 name|self
 expr_stmt|;
-endif|#
-directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
@@ -896,6 +891,68 @@ operator|.
 name|power
 operator|=
 name|USB_MAX_POWER
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|usbrev
+operator|=
+name|sc
+operator|->
+name|sc_bus
+operator|->
+name|usbrev
+expr_stmt|;
+name|printf
+argument_list|(
+literal|": USB revision %s"
+argument_list|,
+name|usbrev_str
+index|[
+name|usbrev
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|usbrev
+operator|!=
+name|USBREV_1_0
+operator|&&
+name|usbrev
+operator|!=
+name|USBREV_1_1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|", not supported\n"
+argument_list|)
+expr_stmt|;
+name|USB_ATTACH_ERROR_RETURN
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
 expr_stmt|;
 name|err
 operator|=
@@ -1052,6 +1109,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+comment|/* The per controller devices (used for usb_discover) */
 name|make_dev
 argument_list|(
 operator|&
@@ -1082,6 +1140,7 @@ operator|!
 name|global_init_done
 condition|)
 block|{
+comment|/* The device spitting out events */
 name|make_dev
 argument_list|(
 operator|&
@@ -1223,8 +1282,9 @@ directive|ifdef
 name|USB_DEBUG
 if|if
 condition|(
-operator|!
 name|usb_noexplore
+operator|<
+literal|2
 condition|)
 endif|#
 directive|endif
@@ -1249,6 +1309,15 @@ name|PWAIT
 argument_list|,
 literal|"usbevt"
 argument_list|,
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+name|usb_noexplore
+condition|?
+literal|0
+else|:
+endif|#
+directive|endif
 name|hz
 operator|*
 literal|60

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.39 1999/11/10 04:19:59 mycroft Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.41 1999/11/18 23:32:37 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -329,6 +329,30 @@ decl_stmt|;
 name|u_int
 name|no_intrs
 decl_stmt|;
+name|int
+name|usbrev
+decl_stmt|;
+comment|/* USB revision */
+define|#
+directive|define
+name|USBREV_UNKNOWN
+value|0
+define|#
+directive|define
+name|USBREV_PRE_1_0
+value|1
+define|#
+directive|define
+name|USBREV_1_0
+value|2
+define|#
+directive|define
+name|USBREV_1_1
+value|3
+define|#
+directive|define
+name|USBREV_STR
+value|{ "unknown", "pre 1.0", "1.0", "1.1" }
 if|#
 directive|if
 name|defined
