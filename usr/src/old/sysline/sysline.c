@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.3 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1261,6 +1261,12 @@ name|char
 name|_sobuf
 index|[]
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|index
+parameter_list|()
+function_decl|;
 name|setbuf
 argument_list|(
 name|stdout
@@ -1280,6 +1286,26 @@ name|hostname
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|index
+argument_list|(
+name|hostname
+argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|cp
+operator|=
+literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
