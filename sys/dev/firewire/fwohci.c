@@ -11376,18 +11376,6 @@ operator|&=
 operator|~
 name|FWXFERQ_RUNNING
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|for( i = 0 ; i< fc->nisodma ; i ++ ){ 			OWRITE(sc,  OHCI_IRCTLCLR(i), OHCI_CNTL_DMA_RUN); 			OWRITE(sc,  OHCI_ITCTLCLR(i), OHCI_CNTL_DMA_RUN); 		}
-endif|#
-directive|endif
-name|fw_busreset
-argument_list|(
-name|fc
-argument_list|)
-expr_stmt|;
-comment|/* XXX need to wait DMA to stop */
 ifndef|#
 directive|ifndef
 name|ACK_ALL
@@ -11402,13 +11390,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-comment|/* pending all pre-bus_reset packets */
-block|fwohci_txd(sc,&sc->atrq); 		fwohci_txd(sc,&sc->atrs); 		fwohci_arcv(sc,&sc->arrs, -1); 		fwohci_arcv(sc,&sc->arrq, -1);
-endif|#
-directive|endif
+name|fw_busreset
+argument_list|(
+name|fc
+argument_list|)
+expr_stmt|;
 name|OWRITE
 argument_list|(
 name|sc
@@ -12039,6 +12025,11 @@ name|arrq
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|fw_drain_txq
+argument_list|(
+name|fc
 argument_list|)
 expr_stmt|;
 endif|#
@@ -14138,8 +14129,10 @@ name|PLEN
 parameter_list|(
 name|x
 parameter_list|)
-value|(((ntohs(x))+0x3)& ~0x3)
-argument|static int fwohci_get_plen(struct fwohci_softc *sc, struct fw_pkt *fp, int hlen) { 	int i;  	for( i =
+value|roundup2(ntohs(x), sizeof(u_int32_t))
+argument|static int fwohci_get_plen(struct fwohci_softc *sc, struct fwohci_dbch *dbch, struct fw_pkt *fp, int hlen) { 	int i
+argument_list|,
+argument|r;  	for( i =
 literal|4
 argument|; i< hlen ; i+=
 literal|4
@@ -14147,13 +14140,17 @@ argument|){ 		fp->mode.ld[i/
 literal|4
 argument|] = htonl(fp->mode.ld[i/
 literal|4
-argument|]); 	}  	switch(fp->mode.common.tcode){ 	case FWTCODE_RREQQ: 		return sizeof(fp->mode.rreqq) + sizeof(u_int32_t); 	case FWTCODE_WRES: 		return sizeof(fp->mode.wres) + sizeof(u_int32_t); 	case FWTCODE_WREQQ: 		return sizeof(fp->mode.wreqq) + sizeof(u_int32_t); 	case FWTCODE_RREQB: 		return sizeof(fp->mode.rreqb) + sizeof(u_int32_t); 	case FWTCODE_RRESQ: 		return sizeof(fp->mode.rresq) + sizeof(u_int32_t); 	case FWTCODE_WREQB: 		return sizeof(struct fw_asyhdr) + PLEN(fp->mode.wreqb.len) 						+ sizeof(u_int32_t); 	case FWTCODE_LREQ: 		return sizeof(struct fw_asyhdr) + PLEN(fp->mode.lreq.len) 						+ sizeof(u_int32_t); 	case FWTCODE_RRESB: 		return sizeof(struct fw_asyhdr) + PLEN(fp->mode.rresb.len) 						+ sizeof(u_int32_t); 	case FWTCODE_LRES: 		return sizeof(struct fw_asyhdr) + PLEN(fp->mode.lres.len) 						+ sizeof(u_int32_t); 	case FWOHCITCODE_PHY: 		return
+argument|]); 	}  	switch(fp->mode.common.tcode){ 	case FWTCODE_RREQQ: 		r = sizeof(fp->mode.rreqq) + sizeof(u_int32_t); 		break; 	case FWTCODE_WRES: 		r = sizeof(fp->mode.wres) + sizeof(u_int32_t); 		break; 	case FWTCODE_WREQQ: 		r = sizeof(fp->mode.wreqq) + sizeof(u_int32_t); 		break; 	case FWTCODE_RREQB: 		r = sizeof(fp->mode.rreqb) + sizeof(u_int32_t); 		break; 	case FWTCODE_RRESQ: 		r = sizeof(fp->mode.rresq) + sizeof(u_int32_t); 		break; 	case FWTCODE_WREQB: 		r = sizeof(struct fw_asyhdr) + PLEN(fp->mode.wreqb.len) 						+ sizeof(u_int32_t); 		break; 	case FWTCODE_LREQ: 		r = sizeof(struct fw_asyhdr) + PLEN(fp->mode.lreq.len) 						+ sizeof(u_int32_t); 		break; 	case FWTCODE_RRESB: 		r = sizeof(struct fw_asyhdr) + PLEN(fp->mode.rresb.len) 						+ sizeof(u_int32_t); 		break; 	case FWTCODE_LRES: 		r = sizeof(struct fw_asyhdr) + PLEN(fp->mode.lres.len) 						+ sizeof(u_int32_t); 		break; 	case FWOHCITCODE_PHY: 		r =
 literal|16
-argument|; 	} 	device_printf(sc->fc.dev,
+argument|; 		break; 	default: 		device_printf(sc->fc.dev,
 literal|"Unknown tcode %d\n"
-argument|, fp->mode.common.tcode); 	return
+argument|, 						fp->mode.common.tcode); 		r =
 literal|0
-argument|; }  static void fwohci_arcv(struct fwohci_softc *sc, struct fwohci_dbch *dbch, int count) { 	struct fwohcidb_tr *db_tr; 	int z =
+argument|; 	} 	if (r> dbch->xferq.psize) { 		device_printf(sc->fc.dev,
+literal|"Invalid packet length %d\n"
+argument|, r);
+comment|/* panic ? */
+argument|} 	return r; }  static void fwohci_arcv(struct fwohci_softc *sc, struct fwohci_dbch *dbch, int count) { 	struct fwohcidb_tr *db_tr; 	int z =
 literal|1
 argument|; 	struct fw_pkt *fp; 	u_int8_t *ld; 	u_int32_t stat
 argument_list|,
@@ -14193,7 +14190,7 @@ literal|0
 argument|printf("(1)frag.plen=%d frag.len=%d rlen=%d len=%d\n", dbch->frag.plen, dbch->frag.len, rlen, len);
 endif|#
 directive|endif
-argument|fp=(struct fw_pkt *)dbch->frag.buf; 					dbch->frag.plen 						= fwohci_get_plen(sc, fp, hlen); 					if (dbch->frag.plen ==
+argument|fp=(struct fw_pkt *)dbch->frag.buf; 					dbch->frag.plen 						= fwohci_get_plen(sc, 							dbch, fp, hlen); 					if (dbch->frag.plen ==
 literal|0
 argument|) 						goto out; 				} 				rlen = dbch->frag.plen - dbch->frag.len;
 if|#
@@ -14218,7 +14215,7 @@ argument|; 					break;  				case FWTCODE_RREQB: 				case FWTCODE_WREQB: 				case
 literal|16
 argument|; 					break;  				default: 					device_printf(sc->fc.dev,
 literal|"Unknown tcode %d\n"
-argument|, fp->mode.common.tcode); 					goto out; 				} 				if (len>= hlen) { 					plen = fwohci_get_plen(sc, fp, hlen); 					if (plen ==
+argument|, fp->mode.common.tcode); 					goto out; 				} 				if (len>= hlen) { 					plen = fwohci_get_plen(sc, 							dbch, fp, hlen); 					if (plen ==
 literal|0
 argument|) 						goto out; 					plen = (plen +
 literal|3
@@ -14228,7 +14225,7 @@ argument|; 					len -= plen; 				} else { 					plen = -hlen; 					len -= hlen; 	
 literal|0
 argument||| len>
 literal|0
-argument|){ 					buf = malloc( dbch->xferq.psize, 							M_FW, M_NOWAIT); 					if(buf == NULL){ 						printf(
+argument|){ 					buf = malloc(plen, M_FW, M_NOWAIT); 					if(buf == NULL){ 						printf(
 literal|"cannot malloc!\n"
 argument|); 						free(db_tr->buf, M_FW); 						goto out; 					} 					bcopy(ld, buf, plen); 					poff =
 literal|0

@@ -2467,7 +2467,7 @@ end_endif
 begin_function
 specifier|static
 name|void
-name|firewire_xferq_drain
+name|fw_xferq_drain
 parameter_list|(
 name|struct
 name|fw_xferq
@@ -2542,6 +2542,61 @@ block|}
 block|}
 end_function
 
+begin_function
+name|void
+name|fw_drain_txq
+parameter_list|(
+name|struct
+name|firewire_comm
+modifier|*
+name|fc
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|fw_xferq_drain
+argument_list|(
+name|fc
+operator|->
+name|atq
+argument_list|)
+expr_stmt|;
+name|fw_xferq_drain
+argument_list|(
+name|fc
+operator|->
+name|ats
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|fc
+operator|->
+name|nisodma
+condition|;
+name|i
+operator|++
+control|)
+name|fw_xferq_drain
+argument_list|(
+name|fc
+operator|->
+name|it
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Called after bus reset.  */
 end_comment
@@ -2586,46 +2641,6 @@ operator|->
 name|status
 operator|=
 name|FWBUSRESET
-expr_stmt|;
-comment|/* XXX: discard all queued packet */
-name|firewire_xferq_drain
-argument_list|(
-name|fc
-operator|->
-name|atq
-argument_list|)
-expr_stmt|;
-name|firewire_xferq_drain
-argument_list|(
-name|fc
-operator|->
-name|ats
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|fc
-operator|->
-name|nisodma
-condition|;
-name|i
-operator|++
-control|)
-name|firewire_xferq_drain
-argument_list|(
-name|fc
-operator|->
-name|it
-index|[
-name|i
-index|]
-argument_list|)
 expr_stmt|;
 name|CSRARC
 argument_list|(
@@ -9763,7 +9778,7 @@ argument|,
 endif|#
 directive|endif
 argument|ntohs(fp->mode.rreqq.dest_hi), 				ntohl(fp->mode.rreqq.dest_lo), 				fp->mode.common.tcode); 			if (fc->status == FWBUSRESET) { 				printf(
-literal|"fw_rcv: cannot response(bus reset)!\n"
+literal|"fw_rcv: cannot respond(bus reset)!\n"
 argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(M_FWXFER); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
 literal|16
 argument|, M_FW, M_NOWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
