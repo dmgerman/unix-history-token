@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.24 (Berkeley) %G%"
+literal|"@(#)rlogind.c	4.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1077,7 +1077,7 @@ name|stop
 init|=
 name|TIOCPKT_DOSTOP
 decl_stmt|;
-comment|/* 	 * This is a hack for the TIOCSWINSZ calls 	 * (csh pgrp manipulation appears to cause 	 * trouble). 	 */
+comment|/* 	 * Must ignore SIGTTOU, otherwise we'll stop 	 * when we try and set slave pty's window shape 	 * (our pgrp is that of the master pty). 	 */
 operator|(
 name|void
 operator|)
@@ -1088,7 +1088,6 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 for|for
 control|(
 init|;
