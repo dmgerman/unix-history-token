@@ -1250,6 +1250,9 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+name|int
+name|nalloc
+decl_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -1276,6 +1279,12 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+name|nalloc
+operator|=
+name|args
+operator|->
+name|nalloc
+expr_stmt|;
 if|if
 condition|(
 name|args
@@ -1285,8 +1294,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|args
-operator|->
 name|nalloc
 operator|=
 literal|32
@@ -1307,12 +1314,8 @@ name|num
 operator|+
 literal|2
 operator|>=
-name|args
-operator|->
 name|nalloc
 condition|)
-name|args
-operator|->
 name|nalloc
 operator|*=
 literal|2
@@ -1327,8 +1330,6 @@ name|args
 operator|->
 name|list
 argument_list|,
-name|args
-operator|->
 name|nalloc
 operator|*
 sizeof|sizeof
@@ -1337,6 +1338,12 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|args
+operator|->
+name|nalloc
+operator|=
+name|nalloc
 expr_stmt|;
 name|args
 operator|->
