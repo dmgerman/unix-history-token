@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.85 1999/05/11 19:54:43 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.86 1999/06/26 02:46:26 mckusick Exp $ */
 end_comment
 
 begin_comment
@@ -2718,6 +2718,9 @@ decl_stmt|;
 name|int
 name|isadir
 decl_stmt|;
+name|int
+name|orig_resid
+decl_stmt|;
 name|long
 name|n
 decl_stmt|;
@@ -2775,20 +2778,6 @@ name|ap
 operator|->
 name|a_uio
 decl_stmt|;
-comment|/* 	 * If they didn't ask for any data, then we are done. 	 */
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_resid
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 if|if
 condition|(
 name|uio
@@ -2800,6 +2789,24 @@ condition|)
 return|return
 operator|(
 name|EINVAL
+operator|)
+return|;
+comment|/* 	 * If they didn't ask for any data, then we are done. 	 */
+name|orig_resid
+operator|=
+name|uio
+operator|->
+name|uio_resid
+expr_stmt|;
+if|if
+condition|(
+name|orig_resid
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 name|isadir
@@ -2869,11 +2876,7 @@ name|diff
 operator|<=
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 if|if
 condition|(
 name|diff
@@ -2911,11 +2914,7 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+break|break;
 block|}
 comment|/* 		 * If we are operating on a directory file then be sure to 		 * do i/o with the vnode for the filesystem instead of the 		 * vnode for the directory. 		 */
 if|if
@@ -3056,11 +3055,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+break|break;
 block|}
 name|error
 operator|=
@@ -3108,7 +3103,18 @@ condition|(
 operator|!
 name|isadir
 operator|&&
-operator|!
+operator|(
+name|error
+operator|==
+literal|0
+operator|||
+name|uio
+operator|->
+name|uio_resid
+operator|!=
+name|orig_resid
+operator|)
+operator|&&
 operator|(
 name|vp
 operator|->
@@ -3118,6 +3124,8 @@ name|mnt_flag
 operator|&
 name|MNT_NOATIME
 operator|)
+operator|==
+literal|0
 condition|)
 name|dep
 operator|->
