@@ -85,13 +85,6 @@ name|struct
 name|reg
 name|r
 decl_stmt|;
-name|char
-modifier|*
-name|kv
-decl_stmt|;
-name|int
-name|kl
-decl_stmt|;
 comment|/* Can't trace a process that's currently exec'ing. */
 if|if
 condition|(
@@ -151,7 +144,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|uiomove
+name|uiomove_frombuf
 argument_list|(
 operator|&
 name|r
