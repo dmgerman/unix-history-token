@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optab.c 1.2 %G%"
+literal|"@(#)optab.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1192,6 +1192,24 @@ name|HWORD
 block|}
 block|,
 block|{
+literal|"new"
+block|,
+name|PSUBOP
+block|}
+block|,
+block|{
+literal|"dispose"
+block|,
+name|PSUBOP
+block|}
+block|,
+block|{
+literal|"dfdisp"
+block|,
+name|PSUBOP
+block|}
+block|,
+block|{
 literal|"argc"
 block|}
 block|,
@@ -1199,18 +1217,6 @@ block|{
 literal|"argv"
 block|,
 name|PSUBOP
-block|}
-block|,
-block|{
-literal|"badopnn"
-block|}
-block|,
-block|{
-literal|"badopnn"
-block|}
-block|,
-block|{
-literal|"badopnn"
 block|}
 block|,
 block|{
@@ -1227,18 +1233,6 @@ block|}
 block|,
 block|{
 literal|"sclck"
-block|}
-block|,
-block|{
-literal|"dispose"
-block|,
-name|PSUBOP
-block|}
-block|,
-block|{
-literal|"new"
-block|,
-name|PSUBOP
 block|}
 block|,
 block|{
