@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.7 (Berkeley) %G%"
+literal|"@(#)command.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1564,13 +1564,29 @@ comment|/* 			 * Print file name, etc. 			 */
 name|cmd_exec
 argument_list|()
 expr_stmt|;
-name|error
+name|lower_left
+argument_list|()
+expr_stmt|;
+name|clear_eol
+argument_list|()
+expr_stmt|;
+name|putstr
 argument_list|(
 name|eq_message
 argument_list|()
 argument_list|)
 expr_stmt|;
-break|break;
+name|lower_left
+argument_list|()
+expr_stmt|;
+name|c
+operator|=
+name|getcc
+argument_list|()
+expr_stmt|;
+goto|goto
+name|again
+goto|;
 case|case
 name|A_QUIT
 case|:
