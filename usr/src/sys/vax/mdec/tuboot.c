@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tuboot.c	4.1	83/02/16	*/
+comment|/*	tuboot.s	4.1	83/02/16	*/
 end_comment
 
 begin_comment
-comment|/*  * VAX tu58 console cassette boot block  *  * Thomas Ferrin  27oct82  *  * Reads a program from a tp directory on tape  * and executes it.  Program must be stripped of  * the header and is loaded ``bits as is''.  * You can return to this loader via ``ret'' as  * you are called ``calls $0,ent''.  */
+comment|/*  * VAX tu58 console cassette boot block  *  * Thomas Ferrin  27oct82  *  * Reads a program from a tp directory on tape  * and executes it.  Program must be stripped of  * the header and is loaded ``bits as is''.  * You can return to this loader via ``ret'' as  * you are called ``calls $0,ent''.  *   * Helge Skrivervik CSRG/UCB 18jun83  * 	Changed to use rt-11 format directory& files  *	instead of tp format  */
 end_comment
 
 begin_expr_stmt
@@ -50,38 +50,25 @@ name|TENT
 operator|,
 literal|024
 comment|/* task header entry loc */
-comment|/* tp directory definitions */
-comment|/*	.set	DIRBLK,8	/* tp directory starts at block 8 */
+comment|/* rt-11 directory definitions */
 operator|.
 name|set
 name|DIRBLK
 operator|,
-literal|1
-comment|/* tp directory starts at block 1 */
+literal|6
+comment|/* rt-11 directory starts at block 6 */
 operator|.
 name|set
 name|FILSIZ
 operator|,
-literal|38
-comment|/* tp direc offset for file size */
-operator|.
-name|set
-name|BNUM
-operator|,
-literal|44
-comment|/* tp dir offset for start block no. */
+literal|8
+comment|/* rt-11 direc entry offset for file size */
 operator|.
 name|set
 name|ENTSIZ
 operator|,
-literal|64
-comment|/* size of 1 TP dir entry, bytes */
-operator|.
-name|set
-name|PTHSIZ
-operator|,
-literal|32
-comment|/* size of TP path name, bytes */
+literal|14
+comment|/* size of 1 rt-11 dir entry, bytes */
 operator|.
 name|set
 name|BLKSIZ
@@ -92,14 +79,45 @@ operator|.
 name|set
 name|NUMDIR
 operator|,
-literal|24
+literal|2
 comment|/* no. of dir blocks on tape */
 operator|.
 name|set
-name|ENTBLK
+name|RT_FNSIZ
 operator|,
 literal|8
-comment|/* no. of dir entries per tape block */
+comment|/* size of rad50 filename + 2 */
+operator|.
+name|set
+name|NAME
+operator|,
+literal|2
+comment|/* direc entry offset for filename */
+operator|.
+name|set
+name|RT_STAT
+operator|,
+literal|1
+comment|/* direc entry offset for entry status */
+comment|/* rt-11 directory entry status */
+operator|.
+name|set
+name|RT_ESEG
+operator|,
+literal|8
+comment|/* end of directory segment */
+operator|.
+name|set
+name|RT_NULL
+operator|,
+literal|2
+comment|/* empty entry */
+operator|.
+name|set
+name|RT_FILE
+operator|,
+literal|4
+comment|/* valid file entry */
 comment|/* processor registers and bits */
 operator|.
 name|set
@@ -195,22 +213,28 @@ comment|/* length of readcom block */
 comment|/* local stack variables */
 operator|.
 name|set
-name|tapa
+name|ext
 operator|,
 operator|-
 literal|4
-comment|/* desired tape addr */
+comment|/* file ext. */
 operator|.
 name|set
 name|name
 operator|,
 operator|-
-literal|8
+literal|20
+comment|/* 12 bytes for full name */
+operator|.
+name|set
+name|rt_name
+operator|,
 operator|-
-name|PTHSIZ
-comment|/* operator-typed file name */
-comment|/* ===== */
-comment|/* initialization */
+literal|20
+operator|-
+name|RT_FNSIZ
+comment|/* rad50 file name */
+comment|/*   * Initialization.  */
 name|init
 operator|:
 operator|.
@@ -339,6 +363,12 @@ comment|/* is it a continue flag? */
 name|bneq
 decl|1b
 comment|/* nope, look more */
+name|clrq
+name|rt_name
+argument_list|(
+name|fp
+argument_list|)
+comment|/* init rad50 filename */
 name|movab
 name|name
 argument_list|(
@@ -383,26 +413,23 @@ name|r9
 comment|/* size of path name */
 name|beql
 name|start
-comment|/* dumb operator */
+comment|/* restart if empty string */
 name|clrb
 argument_list|(
 name|r1
 argument_list|)
-decl|+
+comment|/* add null byte at end */
 name|incl
 name|r9
-comment|/* user-specified tp filename has been stored at name(fp) */
-comment|/* read in entire tp directory contents into low core */
+comment|/* and fix length */
+comment|/*  * user-specified filename has been stored at name(fp)   * read in entire directory contents into low core   */
 name|dirred
 range|:
 name|movl
 name|$DIRBLK
 decl_stmt|,
-name|tapa
-argument_list|(
-name|fp
-argument_list|)
-comment|/* tp directory starts at block DIRBLK */
+name|r10
+comment|/* directory starts at block DIRBLK */
 name|movl
 name|$
 argument_list|(
@@ -413,355 +440,54 @@ argument_list|)
 decl_stmt|,
 name|r6
 comment|/* no. bytes in total dir */
+name|clrl
+name|r11
+comment|/* start address */
 name|bsbw
 name|taper
 comment|/* read no. bytes indicated */
-comment|/* search entire directory for user-specified file name */
-name|clrl
-name|r5
-comment|/* dir buff loc = 0 */
-name|nxtdir
-range|:
-name|cmpc3
-name|r9
+comment|/*  * Read in the character conversion table which reside in block 1  * (the second block) on the cassette.  */
+name|movl
+name|$1
 decl_stmt|,
+name|r10
+comment|/* start block */
+name|movl
+name|$BLKSIZ
+decl_stmt|,
+name|r6
+comment|/* read one block */
+name|movl
+decl|0x400
+decl_stmt|,
+name|r11
+comment|/* place it after the directory */
+name|bsbw
+name|taper
+comment|/*  * Convert the ascii filename to rad50.  */
+name|movab
+name|name
 argument_list|(
-name|r5
+name|fp
 argument_list|)
 decl_stmt|,
-argument_list|(
 name|r4
-argument_list|)
-comment|/* see if dir entry matches filename */
-name|beql
-name|fndfil
-comment|/* found match */
-name|acbl
-name|$NUMDIR
-modifier|*
-name|BLKSIZ
-decl|-1
-decl_stmt|,
-name|$ENTSIZ
-decl_stmt|,
-name|r5
-decl_stmt|,
-name|nxtdir
-comment|/* see if done with tp dir */
-name|brw
-name|start
-comment|/* entry not in directory; start over */
-comment|/* found desired tp dir entry */
-name|fndfil
-range|:
-name|movzwl
-name|BNUM
-argument_list|(
-name|r5
-argument_list|)
-decl_stmt|,
-name|tapa
-argument_list|(
-name|fp
-argument_list|)
-comment|/* start block no., 2 bytes */
-name|addl2
-name|$DIRBLK
-decl|-1
-decl_stmt|,
-name|tapa
-argument_list|(
-name|fp
-argument_list|)
-comment|/* skip boot block(s) */
-name|movzwl
-name|FILSIZ
-argument_list|(
-name|r5
-argument_list|)
-decl_stmt|,
-name|r6
-comment|/* low 2 bytes file size */
-name|insv
-name|FILSIZ
-decl|-1
-argument_list|(
-name|r5
-argument_list|)
-decl_stmt|,
-name|$16
-decl_stmt|,
-name|$8
-decl_stmt|,
-name|r6
-comment|/* file size, high byte */
-name|cmpl
-name|r6
-decl_stmt|,
-name|$RELOC
-decl|-512
-comment|/* check if file fits below stack */
-name|blss
-name|filok
-comment|/* file o.k. */
-name|brw
-name|start
-comment|/* file too large */
-comment|/* time to read in desired file from tape */
-name|filok
-range|:
+comment|/* ptr to ascii name */
 name|movl
-name|r6
+name|$6
 decl_stmt|,
-name|r5
-comment|/* start of bss space */
-name|bsbb
-name|taper
-name|bsbb
-name|rew
-comment|/* clear core */
-name|subl3
-name|r5
-decl_stmt|,
-name|$RELOC
-decl|-4
-decl_stmt|,
-name|r0
-comment|/* no. bytes to clear */
+name|r3
+comment|/* max length of filename */
 decl|1
 range|:
-name|clrb
-argument_list|(
-name|r5
-argument_list|)
-operator|+
-name|sobgtr
-name|r0
-decl_stmt|,1b
-comment|/* time to jump to start of file& execute */
-name|addl3
-name|$20
-decl_stmt|,
-name|fp
-decl_stmt|,
-name|ap
-name|clrl
-name|r5
-name|calls
-name|$0
-decl_stmt|,
-argument_list|(
-name|r5
-argument_list|)
-name|bad
-range|:
-name|brw
-name|start
-comment|/* rewind tape */
-name|rew
-operator|:
-name|movb
-name|$5
-decl_stmt|,
-name|readcom
-decl|+2
-comment|/* position opcode */
-name|clrl
-name|tapa
-argument_list|(
-name|fp
-argument_list|)
-comment|/* block 0 */
-name|clrl
-name|r6
-comment|/* 0 bytes */
-name|bsbb
-name|taper
-name|movb
-name|$2
-decl_stmt|,
-name|readcom
-decl|+2
-comment|/* read opcode */
-name|rsb
-comment|/* read (r6) bytes from tapa(fp) into loc 0 */
-name|taper
-range|:
-name|clrl
-name|r8
-comment|/* initialize checksum */
-name|movab
-name|readcom
-decl_stmt|,
-name|r0
-comment|/* read command packet addr */
-name|movzbl
-name|$TU_PACKETLEN
-decl|/2
-decl_stmt|,
-name|r1
-comment|/* size of readcom block */
-decl|1
-range|:
-name|movzwl
-argument_list|(
-name|r0
-argument_list|)
-operator|+
-decl_stmt|,
-name|r2
-comment|/* get 2 chars from block */
-name|bsbb
-name|xmit
-comment|/* xmit and update ckecksum */
-name|sobgtr
-name|r1
-decl_stmt|,1b
-comment|/* loop if more */
-comment|/* now do variable part of packet */
-name|movl
-name|r6
-decl_stmt|,
-name|r2
-comment|/* byte count */
-name|bsbb
-name|xmit
-name|movzwl
-name|tapa
-argument_list|(
-name|fp
-argument_list|)
-decl_stmt|,
-name|r2
-comment|/* starting block number */
-name|bsbb
-name|xmit
-name|movzwl
-name|r8
-decl_stmt|,
-name|r2
-comment|/* accumulated ckecksum */
-name|bsbb
-name|xmit
-comment|/* collect read packet from device */
-name|clrl
-name|r0
-comment|/* starting addr */
-decl|1
-range|:
-name|bsbb
-name|recv2
-comment|/* get 2 packet characters */
-name|decb
-name|r2
-comment|/* data packet? */
-name|bneq
-literal|1f
-comment|/* branch on end of data */
-name|movzbl
-name|r1
-decl_stmt|,
-name|r8
-comment|/* get byte count of packet */
-comment|/* read data into memory */
-decl|2
-range|:
-name|bsbb
-name|recv1
-comment|/* get a char */
-name|movb
-name|r1
-decl_stmt|,
-argument_list|(
-name|r0
-argument_list|)
-decl_stmt|+
-comment|/* stuff into memory */
-name|sobgtr
-name|r8
-decl_stmt|,2b
-comment|/* loop if more */
-name|bsbb
-name|recv2
-comment|/* skip checksum */
-name|brb
-decl|1b
-comment|/* read next packet */
-comment|/* end of data xfer; check for errors */
-decl|1
-range|:
-name|subl2
-name|r6
-decl_stmt|,
-name|r0
-comment|/* all bytes xfered? */
-name|bneq
-decl|9f
-comment|/* nope, error */
-name|bsbb
-name|recv2
-comment|/* get success code */
-name|tstl
-name|r1
-comment|/* error in read? */
-name|blss
-decl|9f
-comment|/* branch if status error */
-name|movl
-name|$5
-decl_stmt|,
-name|r0
-decl|1
-range|:
-name|bsbb
-name|recv2
-comment|/* discard 10 bytes */
-name|sobgtr
-name|r0
-decl_stmt|,1b
-name|rsb
-comment|/* fatal error */
-decl|9
-range|:
-name|movab
-name|ermsg
-decl_stmt|,
-name|r1
-decl|1
-range|:
-name|movb
-argument_list|(
-name|r1
-argument_list|)
-operator|+
-decl_stmt|,
-name|r0
-name|beql
-name|bad
-name|bsbb
-name|putc
-name|brb
-decl|1b
-comment|/* update checksum in r8 and xmit 2 characters */
-name|xmit
-range|:
-name|addw2
-name|r2
-decl_stmt|,
-name|r8
-comment|/* update checksum */
-name|bcc
-name|xmit2
-comment|/* branch if no overflow */
-name|incw
-name|r8
-comment|/* add  in carry */
-comment|/* send the 2 characters contained in r2 */
-name|xmit2
-range|:
-name|bsbb
-literal|1f
-comment|/* xmit one of 'em */
+name|cmpb
+name|$
+literal|'.,(r4)+		/* look for '
+operator|.
+literal|' */ 	sobgtr	r3,1b 	clrb	-1(r4)			/* end name with null */ 	movl	$3,r3			/* max length of extension */ 	movab	ext(fp),r5		/* place extension here */ 1: 	movb	(r4)+,(r5)+ 	beql	1f			/* the string is null terminated */ 	sobgtr	r3,1b 1: 	movab	name(fp),r4 	movab	rt_name(fp),r5		/* ptr to rad50 name */ 	bsbw	rad50			/* convert filename */ 	movab	ext(fp),r4 	movab	rt_name+4(fp),r5 	bsbw	rad50			/* convert extension */  /*  * Search entire directory for user-specified file name.  */  	movab	rt_name(fp),r4		/* search for this file */ 	movl	$10,r5			/* dir buff loc = 0, point to first */ 					/* file entry */ 	movzwl	-2(r5),r3		/* r3 = block # where files begin */ 2: 	cmpc3	$6,NAME(r5),(r4)	/* see if dir entry matches filename */ 	beql	fndfil			/* found match */ 1: 	addw2	FILSIZ(r5),r3		/* add file length to block pointer */ 	addl2	$ENTSIZ,r5		/* move to next entry */ #	cpmb	RT_STAT(r5),$RT_NULL	/* check if deleted file */ #	beql	1b 	cmpb	RT_STAT(r5),$RT_ESEG	/* check if end of segment */ 	bneq	2b 	brw	start			/* entry not in directory; start over */  /*   * Found desired directory entry   */ fndfil: 	movl	r3,r10			/* start block no., 2 bytes */ 	movzwl	FILSIZ(r5),r6		/* file size (blocks) */ 	mull2	$BLKSIZ,r6		/* file size (bytes) */ #	cmpl	r6,$RELOC-512		/* check if file fits below stack */ #	blss	filok #	brw	start			/* file too large */  /*   * Read in desired file from tape.  */ filok: 	movl	r6,r5			/* start of bss space */ 	clrl	r11			/* start address */ 	bsbb	taper #	bsbb	rew  /*   * Clear core.  */ 	subl3	r5,$RELOC-4,r0		/* no. bytes to clear */ 1: 	clrb	(r5)+ 	sobgtr	r0,1b  /*   * Jump to start of file& execute.  */ 	addl3	$20,fp,ap 	clrl	r5 	calls	$0,(r5) bad: 	brw	start  /* rewind tape */ #ifdef notdef rew: 	movb	$5,readcom+2		/* position opcode */ 	clrl	r10			/* block 0 */ 	clrl	r6			/* 0 bytes */ 	bsbb	taper 	movb	$2,readcom+2		/* read opcode */ 	rsb #endif  /* read (r6) bytes from (r10) into loc (r11) */ taper: 	clrl	r8			/* initialize checksum */ 	movab	readcom,r0		/* read command packet addr */ 	movzbl	$TU_PACKETLEN/2,r1	/* size of readcom block */ 1: 	movzwl	(r0)+,r2		/* get 2 chars from block */ 	bsbb	xmit			/* xmit and update ckecksum */ 	sobgtr	r1,1b			/* loop if more */  	/* now do variable part of packet */ 	movl	r6,r2			/* byte count */ 	bsbb	xmit 	movl	r10,r2			/* starting block number */ 	bsbb	xmit 	movzwl	r8,r2			/* accumulated ckecksum */ 	bsbb	xmit  	/* collect read packet from device */ 	movl	r11,r0			/* starting addr */ 1: 	bsbb	recv2			/* get 2 packet characters */ 	decb	r2			/* data packet? */ 	bneq	1f			/* branch on end of data */ 	movzbl	r1,r8			/* get byte count of packet */  	/* read data into memory */ 2: 	bsbb	recv1			/* get a char */ 	movb	r1,(r0)+		/* stuff into memory */ 	sobgtr	r8,2b			/* loop if more */ 	bsbb	recv2			/* skip checksum */ 	brb	1b			/* read next packet */  	/* end of data xfer; check for errors */ 1: 	subl2	r6,r0			/* all bytes xfered? */ 	bneq	9f			/* nope, error */ 	bsbb	recv2			/* get success code */ 	tstl	r1			/* error in read? */ 	blss	9f			/* branch if status error */ 	movl	$5,r0 1: 	bsbb	recv2			/* discard 10 bytes */ 	sobgtr	r0,1b 	rsb  	/* fatal error */ 9: 	movab	ermsg,r1 1: 	movb	(r1)+,r0 	beql	bad 	bsbb	putc 	brb	1b  	/* update checksum in r8 and xmit 2 characters */ xmit: 	addw2	r2,r8			/* update checksum */ 	bcc	xmit2			/* branch if no overflow */ 	incw	r8			/* add  in carry */  	/* send the 2 characters contained in r2 */ xmit2: 	bsbb	1f			/* xmit one of '
+name|em
+operator|*
+operator|/
 name|ashl
 name|$
 operator|-
@@ -824,8 +550,7 @@ name|$CSRD
 decl_stmt|,
 name|r1
 comment|/* get char */
-name|blss
-decl|9b
+empty|#	blss	9b
 comment|/* branch on recv error */
 name|rsb
 name|getc
@@ -845,11 +570,7 @@ name|mfpr
 name|$RXDB
 decl_stmt|,
 name|r0
-name|extzv
-name|$0
-decl_stmt|,
-name|$7
-decl_stmt|,
+name|movzbl
 name|r0
 decl_stmt|,
 name|r0
@@ -863,12 +584,8 @@ comment|/* echo and return */
 name|bsbb
 name|putc
 comment|/* carriage return */
-name|movb
-name|$0
-decl_stmt|,
-name|r0
-name|bsbb
-name|putc
+empty|#	movb	$0,r0
+empty|#	bsbb	putc
 comment|/* delay */
 name|movb
 name|$012
@@ -888,18 +605,101 @@ name|r2
 decl_stmt|,
 name|putc
 comment|/* transmitter ready ? */
-name|extzv
-name|$0
-decl_stmt|,
-name|$7
-decl_stmt|,
-name|r0
-decl_stmt|,
-name|r0
 name|mtpr
 name|r0
 decl_stmt|,
 name|$TXDB
+name|rsb
+comment|/*  * Convert the filename given from the console  * to radix 50 (rt-11) format.  */
+name|rad50
+range|:
+name|movl
+name|$0x400
+decl_stmt|,
+name|r6
+comment|/* address of conversion table */
+decl|1
+range|:
+name|bsbb
+name|getb50
+comment|/* get next ascii byte, exit if null */
+name|mull3
+name|$03100
+decl_stmt|,
+name|r0
+decl_stmt|,
+name|r1
+name|bsbb
+name|getb50
+name|mull3
+name|$050
+decl_stmt|,
+name|r0
+decl_stmt|,
+name|r2
+name|addl2
+name|r2
+decl_stmt|,
+name|r1
+name|bsbb
+name|getb50
+name|addl2
+name|r0
+decl_stmt|,
+name|r1
+comment|/* last byte, just add it in */
+name|movw
+name|r1
+decl_stmt|,
+argument_list|(
+name|r5
+argument_list|)
+decl_stmt|+
+comment|/* save result */
+name|brb
+decl|1b
+name|getb50
+range|:
+name|movzbl
+argument_list|(
+name|r4
+argument_list|)
+operator|+
+decl_stmt|,
+name|r0
+comment|/* get next ascii byte */
+name|beql
+decl|1f
+comment|/* if zero: end of string */
+name|addl2
+name|r6
+decl_stmt|,
+name|r0
+comment|/* calculate conversion table address */
+name|movzbl
+argument_list|(
+name|r0
+argument_list|)
+decl_stmt|,
+name|r0
+comment|/* and get the r50 byte from the table*/
+name|rsb
+decl|1
+range|:
+name|tstl
+argument_list|(
+name|sp
+argument_list|)
+operator|+
+comment|/* we're through, get back to where */
+comment|/* rad50 was called */
+name|movw
+name|r1
+decl_stmt|,
+argument_list|(
+name|r5
+argument_list|)
+comment|/* but first save the result */
 name|rsb
 operator|.
 name|align
