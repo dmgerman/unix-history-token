@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_param.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -452,6 +458,24 @@ literal|"Maximum number of ext_buf counters available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NMBCLUSTERS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NMBCLUSTERS
+value|(512 + MAXUSERS * 16)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|TUNABLE_INT_DECL
