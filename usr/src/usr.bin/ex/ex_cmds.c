@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	7.7	%G%"
+literal|"@(#)ex_cmds.c	7.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1809,9 +1809,6 @@ directive|endif
 name|laste
 operator|=
 literal|0
-expr_stmt|;
-name|sync
-argument_list|()
 expr_stmt|;
 name|nochng
 argument_list|()
