@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT946 and BT956 SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt9xx.c,v 1.3.2.2 1996/02/16 17:55:55 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      Buslogic BT946 and BT956 SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt9xx.c,v 1.7 1996/02/18 07:44:16 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -388,7 +388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*        * Handle an PCI interrupt.  * XXX should go away as soon as PCI interrupt handlers  * return void.  */
+comment|/*               * Handle an PCI interrupt.  * XXX should go away as soon as PCI interrupt handlers  * return void.  */
 end_comment
 
 begin_function
@@ -413,7 +413,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 		      * XXX: Always say we handle the interrupt. 		      * won't work with edge-triggered ints. 		      */
+comment|/*  		      * XXX: Always say we handle the interrupt. 		      * won't work with edge-triggered ints. 		      */
 block|}
 end_function
 
