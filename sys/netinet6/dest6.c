@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: dest6.c,v 1.34 2002/01/08 02:40:55 k-sugyou Exp $	*/
+comment|/*	$KAME: dest6.c,v 1.59 2003/07/11 13:21:16 t-momose Exp $	*/
 end_comment
 
 begin_comment
@@ -179,22 +179,6 @@ name|u_int8_t
 modifier|*
 name|opt
 decl_stmt|;
-name|struct
-name|ip6_hdr
-modifier|*
-name|ip6
-decl_stmt|;
-name|ip6
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip6_hdr
-operator|*
-argument_list|)
-expr_stmt|;
 comment|/* validation of the length of the header */
 ifndef|#
 directive|ifndef
