@@ -1854,7 +1854,8 @@ decl_stmt|,
 name|type
 decl_stmt|,
 name|ss
-decl_stmt|,
+decl_stmt|;
+name|long
 name|esp
 decl_stmt|;
 name|struct
@@ -1932,7 +1933,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fault virtual address	= 0x%x\n"
+literal|"fault virtual address	= 0x%lx\n"
 argument_list|,
 name|eva
 argument_list|)
@@ -1969,7 +1970,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"instruction pointer	= 0x%x:0x%x\n"
+literal|"instruction pointer	= 0x%lx:0x%lx\n"
 argument_list|,
 name|frame
 operator|->
@@ -2033,7 +2034,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"stack pointer	        = 0x%x:0x%x\n"
+literal|"stack pointer	        = 0x%x:0x%lx\n"
 argument_list|,
 name|ss
 argument_list|,
@@ -2042,7 +2043,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"frame pointer	        = 0x%x:0x%x\n"
+literal|"frame pointer	        = 0x%x:0x%lx\n"
 argument_list|,
 name|ss
 argument_list|,
@@ -2053,7 +2054,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"code segment		= base 0x%x, limit 0x%x, type 0x%x\n"
+literal|"code segment		= base 0x%lx, limit 0x%x, type 0x%x\n"
 argument_list|,
 name|softseg
 operator|.
@@ -2152,7 +2153,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"IOPL = %d\n"
+literal|"IOPL = %ld\n"
 argument_list|,
 operator|(
 name|frame

@@ -580,7 +580,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"kldload: unexpected relocation type %d\n"
+literal|"kldload: unexpected relocation type %ld\n"
 argument_list|,
 name|rtype
 argument_list|)

@@ -6805,11 +6805,8 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_enter: invalid page directory pdir=%#jx, va=%#x\n"
+literal|"pmap_enter: invalid page directory pdir=%#lx, va=%#lx\n"
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|pmap
 operator|->
 name|pm_pdir
@@ -7068,7 +7065,7 @@ name|err
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_enter: pte vanished, va: 0x%x"
+literal|"pmap_enter: pte vanished, va: 0x%lx"
 argument_list|,
 name|va
 argument_list|)
@@ -9775,7 +9772,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"TPTE at %p  IS ZERO @ VA %08x\n"
+literal|"TPTE at %p  IS ZERO @ VA %08lx\n"
 argument_list|,
 name|pte
 argument_list|,

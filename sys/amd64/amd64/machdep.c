@@ -1621,7 +1621,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sigreturn: rflags = 0x%x\n"
+literal|"sigreturn: rflags = 0x%lx\n"
 argument_list|,
 name|rflags
 argument_list|)
