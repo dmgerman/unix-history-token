@@ -5966,7 +5966,19 @@ operator|!=
 literal|255
 condition|)
 block|{
-comment|/* XXX write back to PCI space? */
+name|pci_write_config
+argument_list|(
+name|child
+argument_list|,
+name|PCIR_INTLINE
+argument_list|,
+name|cfg
+operator|->
+name|intline
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|resource_list_add
 argument_list|(
 name|rl
