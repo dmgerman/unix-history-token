@@ -58,7 +58,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.12 1997/10/08 14:47:56 eivind Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: stat_flags.c,v 1.9 1998/01/09 06:14:59 jb Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
