@@ -17,7 +17,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)zdump.c	7.24"
+literal|"@(#)zdump.c	7.28"
 decl_stmt|;
 end_decl_stmt
 
@@ -638,6 +638,71 @@ begin_comment
 comment|/* !defined TZ_DOMAIN */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|P
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|P
+parameter_list|(
+name|x
+parameter_list|)
+value|x
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined __STDC__ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|P
+parameter_list|(
+name|x
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined __STDC__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined P */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -647,13 +712,30 @@ name|environ
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|getopt
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|int
+name|argc
+operator|,
+name|char
+operator|*
+specifier|const
+name|argv
+index|[]
+operator|,
+specifier|const
+name|char
+operator|*
+name|options
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -670,14 +752,6 @@ name|optind
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -689,34 +763,68 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|abbr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|long
-name|delta
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|time_t
-name|hunt
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|tm
+operator|*
+name|tmp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
+name|delta
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|tm
+operator|*
+name|newp
+operator|,
+expr|struct
+name|tm
+operator|*
+name|oldp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|time_t
+name|hunt
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|name
+operator|,
+name|time_t
+name|lot
+operator|,
+name|time_t
+name|hit
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|size_t
 name|longest
 decl_stmt|;
 end_decl_stmt
@@ -729,13 +837,26 @@ name|progname
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|show
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|zone
+operator|,
+name|time_t
+name|t
+operator|,
+name|int
+name|v
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -904,9 +1025,16 @@ name|optarg
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|c
 operator|!=
 name|EOF
+operator|&&
+name|c
+operator|!=
+operator|-
+literal|1
+operator|)
 operator|||
 operator|(
 name|optind
@@ -1147,14 +1275,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-call|(
-name|size_t
-call|)
-argument_list|(
 name|longest
 operator|+
 literal|4
-argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -1615,7 +1738,7 @@ name|stderr
 argument_list|,
 name|_
 argument_list|(
-literal|"%s: Error writing standard output "
+literal|"%s: Error writing "
 argument_list|)
 argument_list|,
 name|argv
@@ -1995,16 +2118,6 @@ return|;
 block|}
 end_function
 
-begin_function_decl
-specifier|extern
-name|struct
-name|tm
-modifier|*
-name|localtime
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|void
@@ -2039,6 +2152,9 @@ name|printf
 argument_list|(
 literal|"%-*s  "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|longest
 argument_list|,
 name|zone
@@ -2053,7 +2169,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%.24s GMT = "
+literal|"%.24s UTC = "
 argument_list|,
 name|asctime
 argument_list|(
