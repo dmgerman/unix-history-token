@@ -18,14 +18,14 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_posix.h>
+file|<sys/cdefs.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_ANSI_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -174,18 +174,18 @@ name|_POSIX2_RE_DUP_MAX
 value|255
 end_define
 
-begin_define
-define|#
-directive|define
-name|_XOPEN_IOV_MAX
-value|16
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_P1003_1B_VISIBLE
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
+end_if
 
 begin_define
 define|#
@@ -262,35 +262,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_define
+define|#
+directive|define
+name|_POSIX_HOST_NAME_MAX
+value|255
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !_ANSI_SOURCE */
-end_comment
-
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_XOPEN_SOURCE
-argument_list|)
+name|__XSI_VISIBLE
 end_if
+
+begin_define
+define|#
+directive|define
+name|_XOPEN_IOV_MAX
+value|16
+end_define
 
 begin_define
 define|#
@@ -367,11 +370,7 @@ end_include
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
+name|__POSIX_VISIBLE
 end_if
 
 begin_include
