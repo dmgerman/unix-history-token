@@ -1292,6 +1292,17 @@ operator|->
 name|f_mntonname
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|args
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|args
+argument_list|)
+expr_stmt|;
 name|args
 operator|.
 name|fspec
