@@ -317,6 +317,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|__fixpt_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* fixed point number */
+end_comment
+
 begin_comment
 comment|/*  * mbstate_t is an opaque object to keep conversion state during multibyte  * stream conversions.  */
 end_comment

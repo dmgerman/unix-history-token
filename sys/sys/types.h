@@ -566,7 +566,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|__fixpt_t
 name|fixpt_t
 typedef|;
 end_typedef
