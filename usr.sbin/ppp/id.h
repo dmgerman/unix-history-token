@@ -232,11 +232,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KLDSYM_LOOKUP
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NOKLDLOAD
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|extern
