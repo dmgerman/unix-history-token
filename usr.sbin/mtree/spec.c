@@ -1059,7 +1059,7 @@ name|ip
 operator|->
 name|st_mtimespec
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|strtoul
 argument_list|(
@@ -1095,7 +1095,7 @@ name|ip
 operator|->
 name|st_mtimespec
 operator|.
-name|ts_nsec
+name|tv_nsec
 operator|=
 name|strtoul
 argument_list|(

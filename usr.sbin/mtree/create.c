@@ -1056,7 +1056,7 @@ name|fts_statp
 operator|->
 name|st_mtimespec
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|,
 name|p
 operator|->
@@ -1064,7 +1064,7 @@ name|fts_statp
 operator|->
 name|st_mtimespec
 operator|.
-name|ts_nsec
+name|tv_nsec
 argument_list|)
 expr_stmt|;
 if|if
