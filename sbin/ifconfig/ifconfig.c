@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.33 1997/12/24 00:57:41 imp Exp $"
+literal|"$Id: ifconfig.c,v 1.34 1997/12/26 23:28:04 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2322,6 +2322,25 @@ condition|)
 block|{
 if|if
 condition|(
+name|afp
+operator|==
+name|NULL
+operator|||
+name|afp
+operator|->
+name|af_status
+operator|!=
+name|ether_status
+operator|||
+name|sdl
+operator|->
+name|sdl_type
+operator|==
+name|IFT_ETHER
+condition|)
+block|{
+if|if
+condition|(
 name|need_nl
 condition|)
 name|putchar
@@ -2339,6 +2358,7 @@ expr_stmt|;
 name|need_nl
 operator|++
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 block|}
