@@ -262,7 +262,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/procfs/procfs.h>
+file|<fs/procfs/procfs.h>
 end_include
 
 begin_include

@@ -154,7 +154,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/fifofs/fifo.h>
+file|<fs/fifofs/fifo.h>
 end_include
 
 begin_include

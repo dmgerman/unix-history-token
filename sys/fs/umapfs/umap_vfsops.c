@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/umapfs/umap.h>
+file|<fs/umapfs/umap.h>
 end_include
 
 begin_expr_stmt

@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/fdesc/fdesc.h>
+file|<fs/fdescfs/fdesc.h>
 end_include
 
 begin_expr_stmt

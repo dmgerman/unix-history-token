@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/portal/portal.h>
+file|<fs/portalfs/portal.h>
 end_include
 
 begin_comment

@@ -136,7 +136,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/union/union.h>
+file|<fs/unionfs/union.h>
 end_include
 
 begin_undef

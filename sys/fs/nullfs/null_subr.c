@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/nullfs/null.h>
+file|<fs/nullfs/null.h>
 end_include
 
 begin_define
