@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.10 (Berkeley) 84/05/16"
+literal|"@(#)route.c	4.11 (Berkeley) 84/05/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -882,9 +882,15 @@ name|np
 operator|->
 name|n_name
 expr_stmt|;
+else|else
+goto|goto
+name|host
+goto|;
 block|}
 else|else
 block|{
+name|host
+label|:
 name|hp
 operator|=
 name|gethostbyaddr
