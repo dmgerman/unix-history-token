@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -715,12 +715,6 @@ name|np
 decl_stmt|;
 specifier|register
 name|struct
-name|nameidata
-modifier|*
-name|ndp
-decl_stmt|;
-specifier|register
-name|struct
 name|sillyrename
 modifier|*
 name|sp
@@ -786,13 +780,6 @@ name|sp
 condition|)
 block|{
 comment|/* 		 * Remove the silly file that was rename'd earlier 		 */
-name|ndp
-operator|=
-operator|&
-name|sp
-operator|->
-name|s_namei
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -812,9 +799,9 @@ name|dnp
 argument_list|)
 condition|)
 block|{
-name|ndp
+name|sp
 operator|->
-name|ni_dvp
+name|s_dvp
 operator|=
 name|NFSTOV
 argument_list|(
@@ -823,24 +810,31 @@ argument_list|)
 expr_stmt|;
 name|nfs_removeit
 argument_list|(
-name|ndp
+name|sp
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
 name|nfs_nput
 argument_list|(
-name|ndp
+name|sp
 operator|->
-name|ni_dvp
+name|s_dvp
 argument_list|)
 expr_stmt|;
 block|}
 name|crfree
 argument_list|(
-name|ndp
+name|sp
 operator|->
-name|ni_cred
+name|s_cred
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|sp
+operator|->
+name|s_dvp
 argument_list|)
 expr_stmt|;
 name|free
@@ -850,7 +844,7 @@ name|caddr_t
 operator|)
 name|sp
 argument_list|,
-name|M_TEMP
+name|M_NFSREQ
 argument_list|)
 expr_stmt|;
 block|}
