@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	8.2 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -770,7 +770,7 @@ name|lstatfsp
 argument_list|,
 name|fs_name
 argument_list|,
-name|MOUNT_LFS
+literal|"lfs"
 argument_list|)
 operator|==
 literal|0

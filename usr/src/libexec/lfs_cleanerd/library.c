@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	8.1 (Berkeley) %G%"
+literal|"@(#)library.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,7 +278,8 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
+name|char
+modifier|*
 name|type
 decl_stmt|;
 block|{
@@ -337,16 +338,17 @@ block|}
 comment|/* check to see if it's the one we want */
 if|if
 condition|(
-operator|(
+name|strcmp
+argument_list|(
 operator|(
 operator|*
 name|buf
 operator|)
 operator|->
-name|f_type
-operator|!=
+name|f_fstypename
+argument_list|,
 name|type
-operator|)
+argument_list|)
 operator|||
 name|strncmp
 argument_list|(
