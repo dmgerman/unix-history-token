@@ -3004,6 +3004,9 @@ name|buflen
 init|=
 name|BUFSIZ
 decl_stmt|;
+name|int
+name|linklen
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -3031,6 +3034,8 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|linklen
+operator|=
 name|readlink
 argument_list|(
 name|link
@@ -3038,6 +3043,8 @@ argument_list|,
 name|file
 argument_list|,
 name|buflen
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|buflen
@@ -3047,6 +3054,11 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+name|linklen
+operator|==
+operator|-
+literal|1
+operator|&&
 name|errno
 operator|==
 name|ENAMETOOLONG
@@ -3054,7 +3066,10 @@ condition|)
 do|;
 if|if
 condition|(
-name|errno
+name|linklen
+operator|==
+operator|-
+literal|1
 condition|)
 name|error
 argument_list|(
@@ -3066,6 +3081,13 @@ literal|"cannot readlink %s"
 argument_list|,
 name|link
 argument_list|)
+expr_stmt|;
+name|file
+index|[
+name|linklen
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 name|file
