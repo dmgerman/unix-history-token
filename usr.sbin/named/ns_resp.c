@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_resp.c,v 8.18 1995/12/29 21:08:13 vixie Exp $"
+literal|"$Id: ns_resp.c,v 8.19 1996/01/09 20:23:55 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4161,9 +4161,14 @@ argument_list|)
 expr_stmt|;
 name|newmsglen
 operator|=
+name|MIN
+argument_list|(
+name|PACKETSZ
+argument_list|,
 name|qp
 operator|->
 name|q_cmsglen
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -4181,7 +4186,12 @@ else|else
 block|{
 name|newmsglen
 operator|=
+name|MIN
+argument_list|(
+name|PACKETSZ
+argument_list|,
 name|msglen
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(

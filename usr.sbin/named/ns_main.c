@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_main.c,v 8.12 1995/12/29 07:16:18 vixie Exp $"
+literal|"$Id: ns_main.c,v 8.13 1996/01/09 20:23:55 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2798,8 +2798,11 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-sizeof|sizeof
+name|MIN
 argument_list|(
+name|PACKETSZ
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|)
 argument_list|,
