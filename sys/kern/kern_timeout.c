@@ -860,12 +860,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Expensive timeout(9) function: %p(%p) %d.%09ld s\n"
+literal|"Expensive timeout(9) function: %p(%p) %ld.%09ld s\n"
 argument_list|,
 name|c_func
 argument_list|,
 name|c_arg
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ts2
 operator|.
 name|tv_sec
