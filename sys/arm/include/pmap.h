@@ -826,6 +826,12 @@ begin_comment
 comment|/*  * virtual address to page table entry and  * to physical address. Likewise for alternate address space.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|pcb
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|pmap_set_pcb_pagedir
