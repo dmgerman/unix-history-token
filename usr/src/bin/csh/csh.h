@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)csh.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sh.h	5.6 (Berkeley) 2/25/91  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -13,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -572,7 +572,7 @@ name|getexit
 parameter_list|(
 name|a
 parameter_list|)
-value|copy((char *)(a), (char *)reslab, sizeof reslab)
+value|bcopy((char *)reslab, (char *)(a), sizeof reslab)
 end_define
 
 begin_define
@@ -582,7 +582,7 @@ name|resexit
 parameter_list|(
 name|a
 parameter_list|)
-value|copy((char *)reslab, ((char *)(a)), sizeof reslab)
+value|bcopy(((char *)(a)), (char *)reslab, sizeof reslab)
 end_define
 
 begin_decl_stmt
@@ -1507,12 +1507,6 @@ begin_comment
 comment|/* Number args in gargv */
 end_comment
 
-begin_decl_stmt
-name|short
-name|gnleft
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Variables for command expansion.  */
 end_comment
@@ -1681,6 +1675,18 @@ parameter_list|)
 value|((alloctmp = malloc(i)) ? alloctmp : (char *)nomem(i))
 end_define
 
+begin_define
+define|#
+directive|define
+name|xrealloc
+parameter_list|(
+name|p
+parameter_list|,
+name|i
+parameter_list|)
+value|((alloctmp = realloc(p, i)) ? alloctmp : (char *)nomem(i))
+end_define
+
 begin_function_decl
 name|char
 modifier|*
@@ -1737,6 +1743,14 @@ begin_function_decl
 name|char
 modifier|*
 name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|realloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1915,7 +1929,7 @@ begin_function_decl
 name|char
 modifier|*
 modifier|*
-name|glob
+name|globall
 parameter_list|()
 function_decl|;
 end_function_decl
