@@ -8565,24 +8565,9 @@ name|filedesc
 modifier|*
 name|fdp
 decl_stmt|;
-if|if
-condition|(
-name|fp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * POSIX record locking dictates that any close releases ALL 	 * locks owned by this process.  This is handled by setting 	 * a flag in the unlock to free ONLY locks obeying POSIX 	 * semantics, and not to free BSD-style file locks. 	 * If the descriptor was in a message, POSIX-style locks 	 * aren't passed with the descriptor. 	 */
 if|if
 condition|(
-name|td
-operator|!=
-name|NULL
-operator|&&
 name|fp
 operator|->
 name|f_type
