@@ -5561,7 +5561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cookie layers:  *  *	|. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .|  *	| peer iss                                                      |  *	| MD5(laddr,faddr,lport,fport,secret)             |. . . . . . .|  *	|                     0                       |(A)|             |  * (A): peer mss index  */
+comment|/*  * cookie layers:  *  *	|. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .|  *	| peer iss                                                      |  *	| MD5(laddr,faddr,secret,lport,fport)             |. . . . . . .|  *	|                     0                       |(A)|             |  * (A): peer mss index  */
 end_comment
 
 begin_comment
