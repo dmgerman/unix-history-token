@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.57 1996/01/08 12:25:06 joerg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.58 1996/01/14 16:29:01 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -2836,6 +2836,16 @@ name|flags
 operator||=
 name|ST_WRITTEN
 expr_stmt|;
+name|scsi_prevent
+argument_list|(
+name|sc_link
+argument_list|,
+name|PR_PREVENT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* who cares if it fails? */
 name|SC_DEBUG
 argument_list|(
 name|sc_link
@@ -3002,6 +3012,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|scsi_prevent
+argument_list|(
+name|sc_link
+argument_list|,
+name|PR_ALLOW
+argument_list|,
+name|SCSI_SILENT
+argument_list|)
+expr_stmt|;
 name|sc_link
 operator|->
 name|flags
@@ -3392,16 +3411,6 @@ return|return
 name|errno
 return|;
 block|}
-name|scsi_prevent
-argument_list|(
-name|sc_link
-argument_list|,
-name|PR_PREVENT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* who cares if it fails? */
 name|st
 operator|->
 name|flags
@@ -3507,15 +3516,6 @@ argument_list|(
 name|unit
 argument_list|,
 name|FALSE
-argument_list|,
-name|SCSI_SILENT
-argument_list|)
-expr_stmt|;
-name|scsi_prevent
-argument_list|(
-name|sc_link
-argument_list|,
-name|PR_ALLOW
 argument_list|,
 name|SCSI_SILENT
 argument_list|)
