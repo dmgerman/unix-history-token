@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.51 (Berkeley) %G%"
+literal|"@(#)headers.c	8.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +213,7 @@ name|q
 expr_stmt|;
 block|}
 else|else
-name|usrerr
+name|syserr
 argument_list|(
 literal|"553 header syntax error, line \"%s\""
 argument_list|,
@@ -1325,21 +1325,27 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Parameters: **		s -- string to check for possible headerness. ** **	Returns: **		TRUE if s is a header. **		FALSE otherwise. ** **	Side Effects: **		none. */
+comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Parameters: **		h -- string to check for possible headerness. ** **	Returns: **		TRUE if h is a header. **		FALSE otherwise. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
 name|bool
 name|isheader
 parameter_list|(
-name|s
+name|h
 parameter_list|)
+name|char
+modifier|*
+name|h
+decl_stmt|;
+block|{
 specifier|register
 name|char
 modifier|*
 name|s
+init|=
+name|h
 decl_stmt|;
-block|{
 while|while
 condition|(
 operator|*
@@ -1360,6 +1366,15 @@ condition|)
 name|s
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|h
+operator|==
+name|s
+condition|)
+return|return
+name|FALSE
+return|;
 comment|/* following technically violates RFC822 */
 while|while
 condition|(
