@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.45 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1338,9 +1338,14 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|vhangup
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1601,6 +1606,44 @@ if|if
 condition|(
 name|authenticated
 condition|)
+block|{
+if|if
+condition|(
+name|use_kerberos
+operator|&&
+operator|(
+name|pwd
+operator|->
+name|pw_uid
+operator|==
+literal|0
+operator|)
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+operator||
+name|LOG_AUTH
+argument_list|,
+literal|"ROOT Kerberos login from %s.%s@%s on %s\n"
+argument_list|,
+name|kdata
+operator|->
+name|pname
+argument_list|,
+name|kdata
+operator|->
+name|pinst
+argument_list|,
+name|kdata
+operator|->
+name|prealm
+argument_list|,
+name|hp
+operator|->
+name|h_name
+argument_list|)
+expr_stmt|;
 name|execl
 argument_list|(
 name|_PATH_LOGIN
@@ -1622,6 +1665,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|execl
 argument_list|(
