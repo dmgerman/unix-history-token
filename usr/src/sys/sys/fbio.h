@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software developed by the Computer Systems  * Engineering group at Lawrence Berkeley Laboratory under DARPA  * contract BG 91-66 and contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)fbio.h	8.1 (Berkeley) %G%  *  * from: $Header: fbio.h,v 1.3 91/12/13 22:16:32 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software developed by the Computer Systems  * Engineering group at Lawrence Berkeley Laboratory under DARPA  * contract BG 91-66 and contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)fbio.h	8.2 (Berkeley) %G%  *  * from: $Header: fbio.h,v 1.6 93/10/31 06:01:56 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -535,6 +535,177 @@ define|#
 directive|define
 name|FBIOGVIDEO
 value|_IOR('F', 8, int)
+end_define
+
+begin_comment
+comment|/*  * Hardware cursor control (for, e.g., CG6).  A rather complex and icky  * interface that smells like VMS, but there it is....  */
+end_comment
+
+begin_struct
+struct|struct
+name|fbcurpos
+block|{
+name|short
+name|x
+decl_stmt|;
+name|short
+name|y
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|fbcursor
+block|{
+name|short
+name|set
+decl_stmt|;
+comment|/* flags; see below */
+name|short
+name|enable
+decl_stmt|;
+comment|/* nonzero => cursor on, 0 => cursor off */
+name|struct
+name|fbcurpos
+name|pos
+decl_stmt|;
+comment|/* position on display */
+name|struct
+name|fbcurpos
+name|hot
+decl_stmt|;
+comment|/* hot-spot within cursor */
+name|struct
+name|fbcmap
+name|cmap
+decl_stmt|;
+comment|/* cursor color map */
+name|struct
+name|fbcurpos
+name|size
+decl_stmt|;
+comment|/* number of valid bits in image& mask */
+name|caddr_t
+name|image
+decl_stmt|;
+comment|/* cursor image bits */
+name|caddr_t
+name|mask
+decl_stmt|;
+comment|/* cursor mask bits */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FB_CUR_SETCUR
+value|0x01
+end_define
+
+begin_comment
+comment|/* set on/off (i.e., obey fbcursor.enable) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FB_CUR_SETPOS
+value|0x02
+end_define
+
+begin_comment
+comment|/* set position */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FB_CUR_SETHOT
+value|0x04
+end_define
+
+begin_comment
+comment|/* set hot-spot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FB_CUR_SETCMAP
+value|0x08
+end_define
+
+begin_comment
+comment|/* set cursor color map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FB_CUR_SETSHAPE
+value|0x10
+end_define
+
+begin_comment
+comment|/* set size& bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FB_CUR_SETALL
+value|(FB_CUR_SETCUR | FB_CUR_SETPOS | FB_CUR_SETHOT | \ 			 FB_CUR_SETCMAP | FB_CUR_SETSHAPE)
+end_define
+
+begin_comment
+comment|/* controls for cursor attributes& shape (including position) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FBIOSCURSOR
+value|_IOW('F', 24, struct fbcursor)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBIOGCURSOR
+value|_IOWR('F', 25, struct fbcursor)
+end_define
+
+begin_comment
+comment|/* controls for cursor position only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FBIOSCURPOS
+value|_IOW('F', 26, struct fbcurpos)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBIOGCURPOS
+value|_IOW('F', 27, struct fbcurpos)
+end_define
+
+begin_comment
+comment|/* get maximum cursor size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FBIOGCURMAX
+value|_IOR('F', 28, struct fbcurpos)
 end_define
 
 end_unit
