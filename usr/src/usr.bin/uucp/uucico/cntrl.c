@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cntrl.c	5.11	(Berkeley) %G%"
+literal|"@(#)cntrl.c	5.12	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1070,6 +1070,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|setproctitle
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|Rmtname
+argument_list|,
+name|role
+condition|?
+literal|"MASTER"
+else|:
+literal|"SLAVE"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setupline
 argument_list|(
 name|RESET
@@ -1391,7 +1407,7 @@ name|sprintf
 argument_list|(
 name|rqstr
 argument_list|,
-literal|"%s %s %s %s"
+literal|"(%s %s %s %s)"
 argument_list|,
 name|W_TYPE
 argument_list|,
@@ -2803,7 +2819,7 @@ name|sprintf
 argument_list|(
 name|rqstr
 argument_list|,
-literal|"%s %s %s %s"
+literal|"(%s %s %s %s)"
 argument_list|,
 name|W_TYPE
 argument_list|,
@@ -3820,9 +3836,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* request to send file */
-name|strcpy
+name|sprintf
 argument_list|(
 name|rqstr
+argument_list|,
+literal|"(%s)"
 argument_list|,
 name|msg
 argument_list|)
