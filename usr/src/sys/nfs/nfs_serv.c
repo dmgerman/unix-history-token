@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2191,15 +2191,6 @@ argument_list|)
 expr_stmt|;
 name|nfsm_srvfillattr
 expr_stmt|;
-if|if
-condition|(
-name|uiop
-operator|->
-name|uio_resid
-operator|>
-literal|0
-condition|)
-block|{
 name|len
 operator|-=
 name|uiop
@@ -2220,6 +2211,16 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cnt
+operator|!=
+name|tlen
+operator|||
+name|tlen
+operator|!=
+name|len
+condition|)
 name|nfsm_adj
 argument_list|(
 name|m3
@@ -2250,7 +2251,6 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-block|}
 block|}
 name|nfsm_build
 argument_list|(
