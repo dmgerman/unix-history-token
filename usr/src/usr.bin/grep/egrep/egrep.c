@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.2 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2608,6 +2608,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOKANJI
+end_ifndef
+
 begin_comment
 comment|/*  * EUC code disambiguation -- scan backwards to first 7-bit code, while  * counting intervening 8-bit codes.  If odd, reject unaligned Kanji pattern.   * SS2/3 checks are for intermixed Japanase Katakana or Kanji2.   */
 end_comment
@@ -2715,6 +2721,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Compute "Boyer-Moore" delta table -- put skip distance in delta0[c]   */
