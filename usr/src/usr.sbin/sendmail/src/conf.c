@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.157 (Berkeley) %G%"
+literal|"@(#)conf.c	8.158 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9484,6 +9484,9 @@ return|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|TRY_VERSIONED_CF_NAME
 comment|/* 	**  Try sendmail.8.6.12.cf, then sendmail.8.6.cf, then 	**  sendmail.8.cf, and finally sendmail.cf. 	** 	**	I suppose it should really try a search path here -- 	**	e.g., /etc/sendmail.cf, /etc/mail/sendmail.cf, 	**	/usr/lib/sendmail.cf, and so forth. 	*/
 name|strcpy
 argument_list|(
@@ -9644,6 +9647,8 @@ name|NULL
 condition|)
 do|;
 block|}
+endif|#
+directive|endif
 return|return
 name|_PATH_SENDMAILCF
 return|;
