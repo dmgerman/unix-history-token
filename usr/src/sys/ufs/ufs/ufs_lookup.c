@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.16	85/01/10	*/
+comment|/*	ufs_lookup.c	6.17	85/01/10	*/
 end_comment
 
 begin_include
@@ -5086,6 +5086,51 @@ expr_stmt|;
 name|nchhead
 operator|=
 name|ncp
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * Name cache invalidation of all entries.  */
+end_comment
+
+begin_macro
+name|cacheinvalall
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|nch
+modifier|*
+name|ncp
+decl_stmt|;
+for|for
+control|(
+name|ncp
+operator|=
+name|nch
+init|;
+name|ncp
+operator|<
+operator|&
+name|nch
+index|[
+name|nchsize
+index|]
+condition|;
+name|ncp
+operator|++
+control|)
+block|{
+name|ncp
+operator|->
+name|nc_id
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
