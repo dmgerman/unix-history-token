@@ -2426,7 +2426,9 @@ operator|==
 name|EINPROGRESS
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
