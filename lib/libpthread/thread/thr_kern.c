@@ -10248,11 +10248,6 @@ name|kse
 modifier|*
 name|curkse
 decl_stmt|;
-name|struct
-name|pthread
-modifier|*
-name|curthread
-decl_stmt|;
 name|crit
 operator|=
 name|_kse_critical_enter
@@ -10261,11 +10256,6 @@ expr_stmt|;
 name|curkse
 operator|=
 name|_get_curkse
-argument_list|()
-expr_stmt|;
-name|curthread
-operator|=
-name|_get_curthread
 argument_list|()
 expr_stmt|;
 name|KSE_LOCK_ACQUIRE
