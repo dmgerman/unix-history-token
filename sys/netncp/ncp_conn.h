@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NCP_CONN_H_
+name|_NETNCP_NCP_CONN_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NCP_CONN_H_
+name|_NETNCP_NCP_CONN_H_
 end_define
 
 begin_ifdef

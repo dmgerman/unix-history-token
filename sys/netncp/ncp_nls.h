@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NCP_NCP_NLS_H_
+name|_NETNCP_NCP_NLS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NCP_NCP_NLS_H_
+name|_NETNCP_NCP_NLS_H_
 end_define
 
 begin_comment
@@ -167,6 +167,7 @@ comment|/* active nls */
 end_comment
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|ncp_nls_setrecode
 parameter_list|(
@@ -272,22 +273,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
+begin_expr_stmt
+name|__END_DECLS
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* !KERNEL */
-end_comment
-
-begin_decl_stmt
 specifier|extern
-name|struct
+expr|struct
 name|ncp_nlstables
 name|ncp_defnls
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void

@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NCP_NCP_RQ_H_
+name|_NETNCP_NCP_RQ_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NCP_NCP_RQ_H_
+name|_NETNCP_NCP_RQ_H_
 end_define
 
 begin_include
@@ -1014,13 +1014,13 @@ value|(conn)->packet[(conn)->rqsize++]=x
 end_define
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|void
 name|ncp_init_request
 parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1032,10 +1032,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|int
-name|subfn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1047,10 +1045,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|u_int16_t
-name|x
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1062,10 +1058,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|u_int32_t
-name|x
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1077,10 +1071,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|u_int16_t
-name|x
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1092,10 +1084,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|u_int32_t
-name|x
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1107,15 +1097,12 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|source
 parameter_list|,
 name|int
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1127,15 +1114,12 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|source
 parameter_list|,
 name|int
-name|size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1147,12 +1131,10 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1164,21 +1146,16 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|nuint32
-name|volNumber
 parameter_list|,
 name|nuint32
-name|dirNumber
 parameter_list|,
 name|int
-name|handleFlag
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|path
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1214,10 +1191,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|int
-name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1229,10 +1204,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|int
-name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1244,10 +1217,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|int
-name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1259,10 +1230,8 @@ parameter_list|(
 name|struct
 name|ncp_buf
 modifier|*
-name|conn
 parameter_list|,
 name|int
-name|offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1299,6 +1268,10 @@ return|return;
 block|}
 end_function
 
+begin_macro
+name|__END_DECLS
+end_macro
+
 begin_endif
 endif|#
 directive|endif
@@ -1314,7 +1287,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NCP_NCP_RQ_H_ */
+comment|/* !_NETNCP_NCP_RQ_H_ */
 end_comment
 
 end_unit
