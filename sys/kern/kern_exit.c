@@ -725,11 +725,12 @@ expr_stmt|;
 comment|/* 	 * Release user portion of address space. 	 * This releases references to vnodes, 	 * which could cause I/O if the file has been unlinked. 	 * Need to do this early enough that we can still sleep. 	 * Can't free the entire vmspace as the kernel stack 	 * may be mapped within that space also. 	 */
 if|if
 condition|(
+operator|--
 name|vm
 operator|->
 name|vm_refcnt
 operator|==
-literal|1
+literal|0
 condition|)
 block|{
 if|if
@@ -769,6 +770,12 @@ name|VM_MIN_ADDRESS
 argument_list|,
 name|VM_MAXUSER_ADDRESS
 argument_list|)
+expr_stmt|;
+name|vm
+operator|->
+name|vm_freer
+operator|=
+name|p
 expr_stmt|;
 block|}
 name|PROC_LOCK
@@ -1406,7 +1413,7 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_free(p->p_vmspace)" 	 * in vm_waitproc(); 	 */
+comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_exitfree(p)" in 	 * vm_waitproc(). 	 */
 name|cpu_exit
 argument_list|(
 name|td

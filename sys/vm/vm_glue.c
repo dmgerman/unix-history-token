@@ -995,11 +995,9 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|vmspace_free
+name|vmspace_exitfree
 argument_list|(
 name|p
-operator|->
-name|p_vmspace
 argument_list|)
 expr_stmt|;
 comment|/* and clean-out the vmspace */

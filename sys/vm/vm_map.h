@@ -411,6 +411,16 @@ name|caddr_t
 name|vm_minsaddr
 decl_stmt|;
 comment|/* user VA at max stack growth */
+define|#
+directive|define
+name|vm_endcopy
+value|vm_freer
+name|struct
+name|proc
+modifier|*
+name|vm_freer
+decl_stmt|;
+comment|/* vm freed on whose behalf */
 block|}
 struct|;
 end_struct

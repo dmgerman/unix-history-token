@@ -772,6 +772,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|vmspace_exitfree
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|vnode_pager_setsize
 name|__P
 argument_list|(
