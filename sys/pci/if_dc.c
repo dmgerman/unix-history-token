@@ -5452,6 +5452,14 @@ block|{
 name|int
 name|watchdogreg
 decl_stmt|;
+if|if
+condition|(
+name|DC_IS_INTEL
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 comment|/* there's a write enable bit here that reads as 1 */
 name|watchdogreg
 operator|=
@@ -5471,6 +5479,19 @@ name|watchdogreg
 operator||=
 name|DC_WDOG_JABBERDIS
 expr_stmt|;
+block|}
+else|else
+block|{
+name|DC_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|DC_WATCHDOG
+argument_list|,
+name|DC_WDOG_JABBERDIS
+argument_list|)
+expr_stmt|;
+block|}
 name|DC_CLRBIT
 argument_list|(
 name|sc
