@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -237,6 +237,12 @@ name|count
 decl_stmt|,
 name|uid
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+modifier|*
+name|hash
+decl_stmt|;
 specifier|static
 name|int
 name|nextpid
@@ -319,7 +325,7 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Although process entries are dynamically created, 	 * we still keep a global limit on the maximum number 	 * we will create.  Don't allow a nonprivileged user 	 * to exceed its current limit or to bring us within one 	 * of the global limit; don't let root exceed the limit. 	 * nprocs is the current number of processes, 	 * maxproc is the limit. 	 */
+comment|/* 	 * Although process entries are dynamically created, we still keep 	 * a global limit on the maximum number we will create.  Don't allow 	 * a nonprivileged user to exceed its current limit or to bring us 	 * within one of the global limit; don't let root exceed the limit. 	 * nprocs is the current number of processes, maxproc is the limit. 	 */
 if|if
 condition|(
 name|nprocs
@@ -366,7 +372,27 @@ operator|(
 name|EAGAIN
 operator|)
 return|;
-comment|/* 	 * Find an unused process ID. 	 * We remember a range of unused IDs ready to use 	 * (from nextpid+1 through pidchecked-1). 	 */
+comment|/* Allocate new proc. */
+name|MALLOC
+argument_list|(
+name|p2
+argument_list|,
+expr|struct
+name|proc
+operator|*
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|proc
+argument_list|)
+argument_list|,
+name|M_PROC
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Find an unused process ID.  We remember a range of unused IDs 	 * ready to use (from nextpid+1 through pidchecked-1). 	 */
 name|nextpid
 operator|++
 expr_stmt|;
@@ -426,7 +452,7 @@ operator|->
 name|p_nxt
 control|)
 block|{
-if|if
+while|while
 condition|(
 name|p2
 operator|->
@@ -522,26 +548,7 @@ name|again
 goto|;
 block|}
 block|}
-comment|/* 	 * Allocate new proc. 	 * Link onto allproc (this should probably be delayed). 	 */
-name|MALLOC
-argument_list|(
-name|p2
-argument_list|,
-expr|struct
-name|proc
-operator|*
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|proc
-argument_list|)
-argument_list|,
-name|M_PROC
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
+comment|/* Link onto allproc (this should probably be delayed). */
 name|nprocs
 operator|++
 expr_stmt|;
@@ -552,6 +559,12 @@ operator|=
 name|SIDL
 expr_stmt|;
 comment|/* protect against others */
+name|p2
+operator|->
+name|p_pid
+operator|=
+name|nextpid
+expr_stmt|;
 name|p2
 operator|->
 name|p_nxt
@@ -595,6 +608,32 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* shouldn't be necessary */
+comment|/* Insert on the hash chain. */
+name|hash
+operator|=
+operator|&
+name|pidhash
+index|[
+name|PIDHASH
+argument_list|(
+name|p2
+operator|->
+name|p_pid
+argument_list|)
+index|]
+expr_stmt|;
+name|p2
+operator|->
+name|p_hash
+operator|=
+operator|*
+name|hash
+expr_stmt|;
+operator|*
+name|hash
+operator|=
+name|p2
+expr_stmt|;
 comment|/* 	 * Make a proc table entry for the new process. 	 * Start by zeroing the section of proc that is zero-initialized, 	 * then copy the section that is copied directly from the parent. 	 */
 name|bzero
 argument_list|(
@@ -850,43 +889,6 @@ name|p_flag
 operator||=
 name|SPPWAIT
 expr_stmt|;
-name|p2
-operator|->
-name|p_pid
-operator|=
-name|nextpid
-expr_stmt|;
-block|{
-name|struct
-name|proc
-modifier|*
-modifier|*
-name|hash
-init|=
-operator|&
-name|pidhash
-index|[
-name|PIDHASH
-argument_list|(
-name|p2
-operator|->
-name|p_pid
-argument_list|)
-index|]
-decl_stmt|;
-name|p2
-operator|->
-name|p_hash
-operator|=
-operator|*
-name|hash
-expr_stmt|;
-operator|*
-name|hash
-operator|=
-name|p2
-expr_stmt|;
-block|}
 name|p2
 operator|->
 name|p_pgrpnxt
