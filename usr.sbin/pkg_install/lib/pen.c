@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.9 1995/02/16 12:43:00 jkh Exp $"
+literal|"$Id: pen.c,v 1.10 1995/04/18 13:04:34 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,7 +250,7 @@ argument_list|)
 expr_stmt|;
 name|barf
 argument_list|(
-literal|"Not enough free space to create `%s'.\nPlease set your PKG_TMPDIRenvironment variable to a location with more space and\ntry the command again."
+literal|"Not enough free space to create `%s'.\nPlease set your PKG_TMPDIR environment variable to a location with more space and\ntry the command again."
 argument_list|,
 name|Pen
 argument_list|)
