@@ -1219,6 +1219,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|enable_fn_keys
+operator|!=
+literal|0
+condition|)
+block|{
 name|AcpiRemoveNotifyHandler
 argument_list|(
 name|sc
@@ -1230,6 +1237,7 @@ argument_list|,
 name|acpi_toshiba_notify
 argument_list|)
 expr_stmt|;
+block|}
 name|sysctl_ctx_free
 argument_list|(
 operator|&
