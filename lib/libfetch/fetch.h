@@ -53,6 +53,9 @@ begin_struct
 struct|struct
 name|url
 block|{
+name|off_t
+name|offset
+decl_stmt|;
 name|char
 name|scheme
 index|[
