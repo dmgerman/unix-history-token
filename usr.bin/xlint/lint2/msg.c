@@ -1,38 +1,45 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: msg.c,v 1.2 1995/07/03 21:24:56 cgd Exp $	*/
+comment|/*	$NetBSD: msg.c,v 1.6 2002/01/21 19:49:52 tv Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1994, 1995 Jochen Pohl  * All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Jochen Pohl for  *	The NetBSD Project.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$NetBSD: msg.c,v 1.2 1995/07/03 21:24:56 cgd Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__RCSID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: msg.c,v 1.6 2002/01/21 19:49:52 tv Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
 
 begin_include
 include|#
@@ -40,33 +47,17 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
-file|<varargs.h>
+file|<string.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -137,32 +128,26 @@ comment|/* 16 */
 literal|"%s function value must be declared before use  \t%s  ::  %s"
 block|,
 comment|/* 17 */
+literal|"%s renamed multiple times  \t%s  ::  %s"
+block|,
+comment|/* 18 */
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
-name|basename
-name|__P
-argument_list|(
-operator|(
+name|lbasename
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -174,26 +159,9 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-else|#
-directive|else
-name|void
-name|msg
-parameter_list|(
-name|va_alist
-parameter_list|)
-name|va_dcl
-name|int
-name|n
-decl_stmt|;
-block|{
-endif|#
-directive|endif
 name|va_list
 name|ap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|va_start
 argument_list|(
 name|ap
@@ -201,24 +169,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-name|n
-operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
-name|int
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -246,20 +196,24 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Return a pointer to the last component of a path.  */
+end_comment
+
+begin_function
 specifier|static
 specifier|const
 name|char
 modifier|*
-name|basename
+name|lbasename
 parameter_list|(
-name|path
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -329,18 +283,22 @@ name|cp1
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Create a string which describes a position in a source file.  */
+end_comment
+
+begin_function
 specifier|const
 name|char
 modifier|*
 name|mkpos
 parameter_list|(
-name|posp
-parameter_list|)
 name|pos_t
 modifier|*
 name|posp
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len
@@ -428,7 +386,7 @@ name|strlen
 argument_list|(
 name|fn
 operator|=
-name|basename
+name|lbasename
 argument_list|(
 name|fnames
 index|[
