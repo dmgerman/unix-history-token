@@ -45,6 +45,12 @@ modifier|*
 name|sc_ttyp
 decl_stmt|;
 comment|/* pointer to tty structure */
+name|struct
+name|mbuf
+modifier|*
+name|sc_mbuf
+decl_stmt|;
+comment|/* pointer to mbuf containing buffer */
 name|u_char
 modifier|*
 name|sc_mp
