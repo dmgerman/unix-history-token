@@ -36,6 +36,12 @@ block|,
 name|Sockaddr
 block|,
 name|StringArray
+block|,
+name|Fcntl
+block|,
+name|Mprot
+block|,
+name|Mmapflags
 block|}
 enum|;
 end_enum
