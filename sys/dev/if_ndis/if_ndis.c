@@ -1657,6 +1657,26 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Tell the user what version of the API the driver is using. */
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"NDIS API version: %d.%d\n"
+argument_list|,
+name|sc
+operator|->
+name|ndis_chars
+operator|.
+name|nmc_version_major
+argument_list|,
+name|sc
+operator|->
+name|ndis_chars
+operator|.
+name|nmc_version_minor
+argument_list|)
+expr_stmt|;
 comment|/* Do resource conversion. */
 name|ndis_convert_res
 argument_list|(
