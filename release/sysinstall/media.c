@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.6 1995/05/17 14:39:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.7 1995/05/20 00:13:11 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -30,6 +30,7 @@ parameter_list|)
 block|{
 name|Device
 modifier|*
+modifier|*
 name|devs
 decl_stmt|;
 name|int
@@ -52,7 +53,7 @@ name|deviceFind
 argument_list|(
 name|NULL
 argument_list|,
-name|MEDIA_TYPE_CDROM
+name|DEVICE_TYPE_CDROM
 argument_list|)
 expr_stmt|;
 name|cnt
@@ -123,25 +124,6 @@ operator|&
 name|MenuMediaFloppy
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|getenv
-argument_list|(
-name|MEDIA_DEVICE
-argument_list|)
-condition|)
-block|{
-name|variable_set2
-argument_list|(
-name|MEDIA_TYPE
-argument_list|,
-literal|"floppy"
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 return|return
 literal|0
 return|;
@@ -229,25 +211,6 @@ operator|&
 name|MenuMediaFTP
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|getenv
-argument_list|(
-name|MEDIA_DEVICE
-argument_list|)
-condition|)
-block|{
-name|variable_set2
-argument_list|(
-name|MEDIA_TYPE
-argument_list|,
-literal|"ftp"
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 return|return
 literal|0
 return|;
@@ -320,15 +283,25 @@ name|me
 argument_list|)
 expr_stmt|;
 else|else
-name|strncpy
+name|snprintf
 argument_list|(
 name|fname
 argument_list|,
+name|FILENAME_MAX
+argument_list|,
+literal|"%s/%s"
+argument_list|,
 name|me
 argument_list|,
-name|FILENAME_MAX
+name|me
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|strncpy(fname, me, FILENAME_MAX);
+endif|#
+directive|endif
 comment|/* XXX mediaDevice points to where we want to get it from */
 return|return
 name|NULL
@@ -368,21 +341,12 @@ operator|&
 name|MenuMedia
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
-name|getenv
-argument_list|(
-name|MEDIA_TYPE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cp
-condition|)
-return|return
-name|FALSE
-return|;
+if|#
+directive|if
+literal|0
+block|cp = getenv(MEDIA_TYPE);     if (!cp) 	return FALSE;
+endif|#
+directive|endif
 return|return
 name|TRUE
 return|;
@@ -419,6 +383,15 @@ return|return
 name|TRUE
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|mediaClose
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 end_unit
