@@ -2033,7 +2033,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Trim a mask in a sockaddr  *	Produce a length of 0 for an address of 0.  *	Otherwise produce the index of the first zero byte.  */
+comment|/* Trim a mask in a sockaddr  *	Produce the index of the first zero byte.  *	i.e. Produce a index of 4 for an mask of 0. (default route)  */
 end_comment
 
 begin_function
@@ -2065,25 +2065,13 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-if|if
-condition|(
 name|ap
 operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|==
-literal|0
-condition|)
-block|{
-name|ap
-operator|->
-name|sin_len
+name|sin_port
 operator|=
-literal|0
+literal|0xffff
 expr_stmt|;
-return|return;
-block|}
+comment|/* buffer zone for default route */
 name|cp
 operator|=
 operator|(
@@ -2110,6 +2098,8 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/*ap->sin_port = 0x0;*/
+comment|/* may not be needed (who cares?)*/
 name|ap
 operator|->
 name|sin_len
@@ -2412,27 +2402,6 @@ operator|&
 name|w
 operator|.
 name|w_mask
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|w
-operator|.
-name|w_mask
-operator|.
-name|sin_len
-operator|==
-literal|0
-condition|)
-name|w
-operator|.
-name|w_mask
-operator|.
-name|sin_len
-operator|=
-sizeof|sizeof
-argument_list|(
-name|long
 argument_list|)
 expr_stmt|;
 name|w
