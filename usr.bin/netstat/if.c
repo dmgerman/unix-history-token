@@ -2218,10 +2218,8 @@ if|if
 condition|(
 name|kread
 argument_list|(
-operator|*
 operator|(
 name|u_long
-operator|*
 operator|)
 name|multiaddr
 argument_list|,
@@ -2237,6 +2235,11 @@ name|ifma
 argument_list|)
 condition|)
 break|break;
+name|multiaddr
+operator|=
+operator|&
+name|ifma
+expr_stmt|;
 if|if
 condition|(
 name|kread
