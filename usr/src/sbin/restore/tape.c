@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.13	(Berkeley)	83/05/03"
+literal|"@(#)tape.c	3.14	(Berkeley)	83/05/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -1302,7 +1302,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong dump date got: %swanted %s"
+literal|"Wrong dump date\n\tgot: %s\twanted %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -4333,7 +4333,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"resync restor, skipped %d blocks\n"
+literal|"resync restore, skipped %d blocks\n"
 argument_list|,
 name|skipcnt
 argument_list|)
