@@ -431,6 +431,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_LOCK_INIT
+parameter_list|(
+name|object
+parameter_list|)
+value|mtx_init(&(object)->mtx, "vm object", \ 					    NULL, MTX_DEF | MTX_DUPOK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_LOCKED
 parameter_list|(
 name|object
