@@ -1651,7 +1651,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarModify --  *	Modify each of the words of the passed string using the given  *	function. Used to implement all modifiers.  *  * Results:  *	A string of all the words modified appropriately.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarModify --  *	Modify each of the words of the passed string using the given  *	function. Used to implement all modifiers.  *  * Results:  *	A string of all the words modified appropriately.  *  * Side Effects:  *	Uses brk_string() so it invalidates any previous call to  *	brk_string().  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1660,6 +1660,7 @@ name|char
 modifier|*
 name|VarModify
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1673,15 +1674,6 @@ modifier|*
 name|datum
 parameter_list|)
 block|{
-name|Buffer
-modifier|*
-name|buf
-decl_stmt|;
-comment|/* Buffer for the new string */
-name|Boolean
-name|addSpace
-decl_stmt|;
-comment|/* TRUE if need to add a space to the buffer 				 * before adding the trimmed word */
 name|char
 modifier|*
 modifier|*
@@ -1691,20 +1683,22 @@ comment|/* word list [first word does not count] */
 name|int
 name|ac
 decl_stmt|;
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
+comment|/* Buffer for the new string */
+name|Boolean
+name|addSpace
+decl_stmt|;
+comment|/* TRUE if need to add a space to the buffer 				 * before adding the trimmed word */
 name|int
 name|i
 decl_stmt|;
-name|buf
-operator|=
-name|Buf_Init
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|addSpace
-operator|=
-name|FALSE
-expr_stmt|;
+name|char
+modifier|*
+name|result
+decl_stmt|;
 name|av
 operator|=
 name|brk_string
@@ -1716,6 +1710,17 @@ name|ac
 argument_list|,
 name|FALSE
 argument_list|)
+expr_stmt|;
+name|buf
+operator|=
+name|Buf_Init
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|addSpace
+operator|=
+name|FALSE
 expr_stmt|;
 for|for
 control|(
@@ -1749,14 +1754,7 @@ argument_list|,
 name|datum
 argument_list|)
 expr_stmt|;
-name|Buf_AddByte
-argument_list|(
-name|buf
-argument_list|,
-literal|'\0'
-argument_list|)
-expr_stmt|;
-name|str
+name|result
 operator|=
 operator|(
 name|char
@@ -1782,14 +1780,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|str
+name|result
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSortWords --  *	Sort the words in the string.  *  * Input:  *	str		String whose words should be sorted  *	cmp		A comparison function to control the ordering  *  * Results:  *	A string containing the words sorted  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarSortWords --  *	Sort the words in the string.  *  * Input:  *	str		String whose words should be sorted  *	cmp		A comparison function to control the ordering  *  * Results:  *	A string containing the words sorted  *  * Side Effects:  *      Uses brk_string() so it invalidates any previous call to  *	brk_string().  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1798,6 +1796,7 @@ name|char
 modifier|*
 name|VarSortWords
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1818,10 +1817,6 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
-name|Buffer
-modifier|*
-name|buf
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -1829,16 +1824,18 @@ name|av
 decl_stmt|;
 name|int
 name|ac
-decl_stmt|,
+decl_stmt|;
+name|Buffer
+modifier|*
+name|buf
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
-name|buf
-operator|=
-name|Buf_Init
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+name|char
+modifier|*
+name|result
+decl_stmt|;
 name|av
 operator|=
 name|brk_string
@@ -1868,6 +1865,13 @@ operator|*
 argument_list|)
 argument_list|,
 name|cmp
+argument_list|)
+expr_stmt|;
+name|buf
+operator|=
+name|Buf_Init
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -1917,7 +1921,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|str
+name|result
 operator|=
 operator|(
 name|char
@@ -1943,7 +1947,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|str
+name|result
 operator|)
 return|;
 block|}
