@@ -3869,7 +3869,7 @@ operator|+=
 name|pcount
 expr_stmt|;
 comment|/* Do the input. */
-name|VOP_STRATEGY
+name|spec_xstrategy
 argument_list|(
 name|bp
 operator|->
