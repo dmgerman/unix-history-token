@@ -35,7 +35,7 @@ define|#
 directive|define
 name|_PATH_STDPATH
 define|\
-value|"/usr/bin:/bin:/usr/sbin:/sbin:/usr/contrib/bin:/usr/old/bin"
+value|"/usr/bin:/bin:/usr/sbin:/sbin:"
 end_define
 
 begin_define
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_UNIX
-value|"/vmunix"
+value|"/kernel"
 end_define
 
 begin_define
