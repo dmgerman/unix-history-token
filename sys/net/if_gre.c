@@ -1894,7 +1894,7 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* send it off */
+comment|/* 	 * Send it off and with IP_FORWARD flag to prevent it from 	 * overwriting the ip_id again.  ip_id is already set to the 	 * ip_id of the encapsulated packet. 	 */
 name|error
 operator|=
 name|ip_output
