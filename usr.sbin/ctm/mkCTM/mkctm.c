@@ -3698,6 +3698,11 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|logf
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'q'
