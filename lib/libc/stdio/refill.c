@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: refill.c,v 1.3 1996/06/22 10:33:45 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,9 +114,11 @@ name|__SWR
 operator|)
 operator|)
 operator|==
+operator|(
 name|__SLBF
 operator||
 name|__SWR
+operator|)
 condition|)
 return|return
 operator|(
