@@ -507,7 +507,7 @@ name|ac97enhancement
 index|[]
 init|=
 block|{
-literal|""
+literal|"no 3D Stereo Enhancement"
 block|,
 literal|"Analog Devices Phat Stereo"
 block|,
@@ -1301,6 +1301,9 @@ name|codec
 operator|->
 name|init
 condition|)
+block|{
+if|if
+condition|(
 name|codec
 operator|->
 name|init
@@ -1309,7 +1312,22 @@ name|codec
 operator|->
 name|devinfo
 argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|codec
+operator|->
+name|dev
+argument_list|,
+literal|"ac97 codec init failed\n"
+argument_list|)
 expr_stmt|;
+return|return
+name|ENODEV
+return|;
+block|}
+block|}
 name|wrcd
 argument_list|(
 name|codec
