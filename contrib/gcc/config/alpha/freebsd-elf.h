@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__alpha -D__alpha__ -D__FreeBSD__ -D__ELF__"
+value|"-Dunix -D__alpha -D__alpha__ -D__ELF__ -D__FreeBSD__=3 -Asystem(unix) -Asystem(FreeBSD) -Acpu(alpha) -Amachine(alpha)"
 end_define
 
 begin_undef
