@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c	5.8 (Berkeley) %G%"
+literal|"@(#)glob.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1688,10 +1688,18 @@ block|}
 block|}
 return|return
 operator|(
+name|nstr
+condition|?
 name|strip
 argument_list|(
 name|nstr
 argument_list|)
+else|:
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 operator|)
 return|;
 block|}
