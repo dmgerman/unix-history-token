@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.15	(Berkeley)	83/05/06"
+literal|"@(#)tape.c	3.16	(Berkeley)	83/05/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,18 +212,17 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|RRESTOR
 name|char
 modifier|*
 name|host
 decl_stmt|;
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
+name|terminal
+operator|=
+name|stdin
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RRESTOR
 name|host
 operator|=
 name|source
@@ -294,16 +293,9 @@ name|source
 argument_list|,
 literal|"-"
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
-name|terminal
-operator|=
-name|stdin
-expr_stmt|;
-block|}
-else|else
 block|{
 comment|/* 		 * Since input is coming from a pipe we must establish 		 * our own connection to the terminal. 		 */
 name|terminal
