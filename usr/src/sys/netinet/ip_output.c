@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.20	81/11/26	*/
+comment|/*	ip_output.c	1.21	81/12/09	*/
 end_comment
 
 begin_include
@@ -116,11 +116,11 @@ name|len
 decl_stmt|,
 name|hlen
 init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
 name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
+argument_list|)
 decl_stmt|,
 name|off
 decl_stmt|;
@@ -129,6 +129,17 @@ argument_list|(
 name|IP_OUTPUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|opt
+condition|)
+comment|/* XXX */
+name|m_free
+argument_list|(
+name|opt
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 comment|/* 	 * Fill in IP header. 	 */
 name|ip
 operator|->
@@ -208,6 +219,9 @@ operator|->
 name|if_mtu
 condition|)
 block|{
+if|#
+directive|if
+name|vax
 name|ip
 operator|->
 name|ip_len
@@ -236,6 +250,8 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|ip_sum
