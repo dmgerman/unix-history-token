@@ -1952,6 +1952,9 @@ name|struct
 name|_dom_binding
 modifier|*
 name|ypdb
+decl_stmt|,
+modifier|*
+name|next
 decl_stmt|;
 comment|/* Check that another ypbind isn't already running. */
 if|if
@@ -2545,11 +2548,15 @@ name|ypdb
 condition|;
 name|ypdb
 operator|=
+name|next
+control|)
+block|{
+name|next
+operator|=
 name|ypdb
 operator|->
 name|dom_pnext
-control|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 name|READFD
