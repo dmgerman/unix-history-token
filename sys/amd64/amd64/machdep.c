@@ -567,7 +567,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|u_long
 name|atdevbase
 decl_stmt|;
 end_decl_stmt
