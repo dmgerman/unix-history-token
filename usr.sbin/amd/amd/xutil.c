@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xutil.c,v 1.1.1.1.8.1 1997/09/03 06:27:04 charnier Exp $"
+literal|"$Id: xutil.c,v 1.1.1.1.8.2 1999/08/25 19:49:44 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
