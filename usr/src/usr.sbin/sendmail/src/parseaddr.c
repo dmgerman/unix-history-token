@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.68
+literal|3.69
 operator|%
 name|G
 operator|%
@@ -3374,11 +3374,15 @@ argument|); 	if (pvp == NULL) 		return (name); 	rewrite(pvp,
 literal|3
 argument|); 	if (CurEnv->e_fromdomain != NULL) 	{
 comment|/* append from domain to this address */
-argument|register char **pxp = pvp;  		while (*pxp != NULL&& strcmp(*pxp,
+argument|register char **pxp = pvp;
+comment|/* see if there is an "@domain" in the current name */
+argument|while (*pxp != NULL&& strcmp(*pxp,
 literal|"@"
 argument|) !=
 literal|0
-argument|) 			pxp++; 		if (*pxp == NULL) 		{ 			register char **qxq = CurEnv->e_fromdomain;  			while (*qxq != NULL) 				*pxp++ = *qxq++; 		} 	}
+argument|) 			pxp++; 		if (*pxp == NULL) 		{
+comment|/* no.... append the "@domain" from the sender */
+argument|register char **qxq = CurEnv->e_fromdomain;  			while ((*pxp++ = *qxq++) != NULL) 				continue; 		} 	}
 comment|/* 	**  Do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 depending on whether this is 	**		a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
 argument|if (senderaddress) 	{ 		rewrite(pvp,
 literal|1
