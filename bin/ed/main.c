@@ -426,9 +426,10 @@ comment|/* default command-line prompt */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
-modifier|*
 name|usage
+index|[]
 init|=
 literal|"usage: %s [-] [-sx] [-p string] [name]\n"
 decl_stmt|;
