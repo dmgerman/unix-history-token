@@ -208,11 +208,11 @@ begin_define
 define|#
 directive|define
 name|dPASSIVE
-value|1
+value|0
 end_define
 
 begin_comment
-comment|/* Works for most folks... */
+comment|/* Use PORT for more portability... */
 end_comment
 
 begin_endif
