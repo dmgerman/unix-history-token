@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -600,6 +606,26 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|ksym_start
+decl_stmt|,
+name|ksym_end
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|_udatasel
@@ -686,27 +712,6 @@ name|mtx
 name|icu_lock
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DDB
-end_ifdef
-
-begin_decl_stmt
-name|void
-modifier|*
-name|ksym_start
-decl_stmt|,
-modifier|*
-name|ksym_end
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -4741,8 +4746,7 @@ name|kmdp
 argument_list|,
 name|MODINFOMD_SSYM
 argument_list|,
-name|void
-operator|*
+name|uintptr_t
 argument_list|)
 expr_stmt|;
 name|ksym_end
@@ -4753,8 +4757,7 @@ name|kmdp
 argument_list|,
 name|MODINFOMD_ESYM
 argument_list|,
-name|void
-operator|*
+name|uintptr_t
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5379,19 +5382,19 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DDB
 name|kdb_init
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
 if|if
 condition|(
 name|boothowto
 operator|&
 name|RB_KDB
 condition|)
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"Boot flags requested debugger"
 argument_list|)
@@ -8417,49 +8420,14 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DDB
-end_ifndef
-
-begin_function
-name|void
-name|Debugger
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Debugger(\"%s\") called.\n"
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* no DDB */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_comment
-comment|/*  * Provide inb() and outb() as functions.  They are normally only  * available as macros calling inlined functions, thus cannot be  * called inside DDB.  *  * The actual code is stolen from<machine/cpufunc.h>, and de-inlined.  */
+comment|/*  * Provide inb() and outb() as functions.  They are normally only  * available as macros calling inlined functions, thus cannot be  * called from the debugger.  *  * The actual code is stolen from<machine/cpufunc.h>, and de-inlined.  */
 end_comment
 
 begin_undef
@@ -8548,7 +8516,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DDB */
+comment|/* KDB */
 end_comment
 
 end_unit
