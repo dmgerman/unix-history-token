@@ -972,9 +972,7 @@ name|PCCARD_PRODUCT_3COM_3C574
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_3COM_3C574
 block|}
 block|,
 block|{
@@ -986,9 +984,7 @@ name|PCCARD_PRODUCT_3COM_3C589
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_3COM_3C589
 block|}
 block|,
 block|{
@@ -1000,9 +996,7 @@ name|PCCARD_PRODUCT_3COM_3CXEM556
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_3COM_3CXEM556
 block|}
 block|,
 block|{
@@ -1014,9 +1008,7 @@ name|PCCARD_PRODUCT_3COM_3CXEM556INT
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_3COM_3CXEM556INT
 block|}
 block|,
 block|{
@@ -1028,9 +1020,7 @@ name|PCCARD_PRODUCT_3COM_3CCFEM556BI
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_3COM_3CCFEM556BI
 block|}
 block|,
 block|{

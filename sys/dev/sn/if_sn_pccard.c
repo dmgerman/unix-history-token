@@ -115,9 +115,7 @@ name|PCCARD_PRODUCT_MEGAHERTZ2_XJACK
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_MEGAHERTZ2_XJACK
 block|}
 block|,
 block|{
@@ -129,15 +127,13 @@ name|PCCARD_PRODUCT_NEWMEDIA_BASICS
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_NEWMEDIA_BASICS
 block|}
 block|,
 if|#
 directive|if
 literal|0
-block|{ PCCARD_STR_SMC_8020BT,		PCCARD_VENDOR_SMC, 	  PCCARD_PRODUCT_SMC_8020BT,		0, NULL, NULL},
+block|{ PCCARD_STR_SMC_8020BT,		PCCARD_VENDOR_SMC, 	  PCCARD_PRODUCT_SMC_8020BT,		0, 	  PCCARD_CIS_SMC_8020BT },
 endif|#
 directive|endif
 block|{

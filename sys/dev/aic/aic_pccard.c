@@ -168,9 +168,7 @@ name|PCCARD_PRODUCT_ADAPTEC_APA1460
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_ADAPTEC_APA1460
 block|}
 block|,
 block|{
@@ -182,9 +180,7 @@ name|PCCARD_PRODUCT_ADAPTEC_APA1460A
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_ADAPTEC_APA1460A
 block|}
 block|,
 block|{
@@ -196,9 +192,7 @@ name|PCCARD_PRODUCT_NEWMEDIA_BUSTOASTER
 block|,
 literal|0
 block|,
-name|NULL
-block|,
-name|NULL
+name|PCCARD_CIS_NEWMEDIA_BUSTOASTER
 block|}
 block|,
 block|{
