@@ -27,6 +27,10 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_comment
+comment|/*  * XXX: Should really be SPECNAMELEN  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -42,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|DEVSTAT_VERSION
-value|4
+value|5
 end_define
 
 begin_comment
@@ -269,6 +273,14 @@ begin_struct
 struct|struct
 name|devstat
 block|{
+name|int
+name|sequence0
+decl_stmt|;
+comment|/* Update sequence# */
+name|int
+name|allocated
+decl_stmt|;
+comment|/* Allocated entry */
 name|STAILQ_ENTRY
 argument_list|(
 argument|devstat
@@ -363,6 +375,10 @@ name|devstat_priority
 name|priority
 decl_stmt|;
 comment|/* Controls list pos. */
+name|int
+name|sequence1
+decl_stmt|;
+comment|/* Update sequence# */
 block|}
 struct|;
 end_struct
@@ -388,6 +404,35 @@ struct_decl|struct
 name|bio
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|struct
+name|devstat
+modifier|*
+name|devstat_new_entry
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|dev_name
+parameter_list|,
+name|int
+name|unit_number
+parameter_list|,
+name|u_int32_t
+name|block_size
+parameter_list|,
+name|devstat_support_flags
+name|flags
+parameter_list|,
+name|devstat_type_flags
+name|device_type
+parameter_list|,
+name|devstat_priority
+name|priority
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
