@@ -701,14 +701,14 @@ name|uap
 decl_stmt|;
 block|{
 name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
-name|struct
-name|socket
-modifier|*
-name|sp
 decl_stmt|;
 name|int
 name|error
@@ -733,7 +733,7 @@ operator|->
 name|s
 argument_list|,
 operator|&
-name|sp
+name|so
 argument_list|,
 name|NULL
 argument_list|)
@@ -773,7 +773,7 @@ name|error
 operator|=
 name|sobind
 argument_list|(
-name|sp
+name|so
 argument_list|,
 name|sa
 argument_list|,
@@ -791,7 +791,7 @@ name|done1
 label|:
 name|fputsock
 argument_list|(
-name|sp
+name|so
 argument_list|)
 expr_stmt|;
 name|done2
@@ -842,7 +842,7 @@ block|{
 name|struct
 name|socket
 modifier|*
-name|sp
+name|so
 decl_stmt|;
 name|int
 name|error
@@ -867,7 +867,7 @@ operator|->
 name|s
 argument_list|,
 operator|&
-name|sp
+name|so
 argument_list|,
 name|NULL
 argument_list|)
@@ -880,7 +880,7 @@ name|error
 operator|=
 name|solisten
 argument_list|(
-name|sp
+name|so
 argument_list|,
 name|uap
 operator|->
@@ -891,7 +891,7 @@ argument_list|)
 expr_stmt|;
 name|fputsock
 argument_list|(
-name|sp
+name|so
 argument_list|)
 expr_stmt|;
 block|}
