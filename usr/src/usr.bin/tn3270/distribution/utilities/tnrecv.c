@@ -2253,6 +2253,15 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
+name|char
+modifier|*
+name|argv0
+init|=
+name|argv
+index|[
+literal|0
+index|]
+decl_stmt|;
 name|argc
 operator|--
 expr_stmt|;
@@ -2262,6 +2271,9 @@ expr_stmt|;
 comment|/* Process any flags */
 while|while
 condition|(
+name|argc
+operator|&&
+operator|(
 name|argv
 index|[
 literal|0
@@ -2271,6 +2283,7 @@ literal|0
 index|]
 operator|==
 literal|'-'
+operator|)
 condition|)
 block|{
 switch|switch
@@ -2321,7 +2334,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s local.file remote.file [remote.options]\n"
+literal|"usage: %s [-b] [-v] local.file remote.file [remote.options]\n"
+argument_list|,
+name|argv0
 argument_list|)
 expr_stmt|;
 name|exit
