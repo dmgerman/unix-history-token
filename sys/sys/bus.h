@@ -1487,6 +1487,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|device_set_unit
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX DONT USE XXX */
+end_comment
+
+begin_function_decl
+name|int
 name|device_shutdown
 parameter_list|(
 name|device_t
