@@ -1613,6 +1613,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* Skip devices that aren't ready. */
 if|if
 condition|(
 operator|!
@@ -1625,6 +1626,7 @@ index|]
 argument_list|)
 condition|)
 continue|continue;
+comment|/* 		 * Get settings, skipping drivers that offer no settings or 		 * provide settings for informational purposes only. 		 */
 name|set_count
 operator|=
 name|MAX_SETTINGS
@@ -1654,8 +1656,15 @@ operator|||
 name|set_count
 operator|==
 literal|0
+operator|||
+operator|(
+name|type
+operator|&
+name|CPUFREQ_FLAG_INFO_ONLY
+operator|)
 condition|)
 continue|continue;
+comment|/* Add the settings to our absolute/relative lists. */
 switch|switch
 condition|(
 name|type

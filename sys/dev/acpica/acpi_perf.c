@@ -132,7 +132,7 @@ file|"cpufreq_if.h"
 end_include
 
 begin_comment
-comment|/*  * Support for ACPI processor performance states (Px) according to  * section x of the ACPI specification.  */
+comment|/*  * Support for ACPI processor performance states (Px) according to  * section 8.3.3 of the ACPI 2.0c specification.  */
 end_comment
 
 begin_struct
@@ -219,6 +219,10 @@ comment|/* Active state index. */
 name|int
 name|px_rid
 decl_stmt|;
+name|int
+name|info_only
+decl_stmt|;
+comment|/* Can we set new states? */
 block|}
 struct|;
 end_struct
@@ -698,7 +702,7 @@ name|rid
 decl_stmt|,
 name|type
 decl_stmt|;
-comment|/* 	 * Check the performance state registers.  If they are of type 	 * functional fixed hardware, we don't attach to allow a more 	 * specific hardware driver to manage this CPU. 	 */
+comment|/* 	 * Check the performance state registers.  If they are of type 	 * "functional fixed hardware", we attach quietly since we will 	 * only be providing information on settings to other drivers. 	 */
 name|error
 operator|=
 name|ENXIO
@@ -754,10 +758,6 @@ name|buf
 operator|.
 name|Pointer
 expr_stmt|;
-name|rid
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_PKG_VALID
@@ -766,7 +766,14 @@ name|pkg
 argument_list|,
 literal|2
 argument_list|)
-operator|&&
+condition|)
+block|{
+name|rid
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
 name|acpi_PkgGas
 argument_list|(
 name|dev
@@ -784,10 +791,15 @@ argument_list|,
 operator|&
 name|res
 argument_list|)
-operator|==
-literal|0
+expr_stmt|;
+switch|switch
+condition|(
+name|error
 condition|)
 block|{
+case|case
+literal|0
+case|:
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -806,11 +818,21 @@ argument_list|,
 literal|"ACPI CPU Frequency Control"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|EOPNOTSUPP
+case|:
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
-operator|-
-literal|10
+literal|0
 expr_stmt|;
+break|break;
+block|}
 block|}
 name|AcpiOsFree
 argument_list|(
@@ -1298,12 +1320,26 @@ condition|(
 name|error
 condition|)
 block|{
+comment|/* 		 * If the register is of type FFixedHW, we can only return 		 * info, we can't get or set new settings. 		 */
 if|if
 condition|(
 name|error
-operator|!=
+operator|==
 name|EOPNOTSUPP
 condition|)
+block|{
+name|sc
+operator|->
+name|info_only
+operator|=
+name|TRUE
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
 name|device_printf
 argument_list|(
 name|dev
@@ -1356,9 +1392,22 @@ block|{
 if|if
 condition|(
 name|error
-operator|!=
+operator|==
 name|EOPNOTSUPP
 condition|)
+block|{
+name|sc
+operator|->
+name|info_only
+operator|=
+name|TRUE
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
 name|device_printf
 argument_list|(
 name|dev
@@ -1852,6 +1901,17 @@ name|type
 operator|=
 name|CPUFREQ_TYPE_ABSOLUTE
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|info_only
+condition|)
+operator|*
+name|type
+operator||=
+name|CPUFREQ_FLAG_INFO_ONLY
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1907,6 +1967,18 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* If we can't set new states, return immediately. */
+if|if
+condition|(
+name|sc
+operator|->
+name|info_only
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* Look up appropriate state, based on frequency. */
 for|for
 control|(
@@ -2115,6 +2187,18 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* If we can't get new states, return immediately. */
+if|if
+condition|(
+name|sc
+operator|->
+name|info_only
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* If we've set the rate before, use the cached value. */
 if|if
 condition|(
