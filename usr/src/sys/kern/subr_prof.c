@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -474,11 +474,11 @@ name|version
 operator|=
 name|GMONVERSION
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PROFTIMER
-name|initprofclock
-argument_list|()
+name|startprofclock
+argument_list|(
+operator|&
+name|proc0
+argument_list|)
 expr_stmt|;
 operator|(
 operator|(
@@ -493,23 +493,6 @@ name|profrate
 operator|=
 name|profhz
 expr_stmt|;
-else|#
-directive|else
-operator|(
-operator|(
-expr|struct
-name|phdr
-operator|*
-operator|)
-name|sbuf
-operator|)
-operator|->
-name|profrate
-operator|=
-name|hz
-expr_stmt|;
-endif|#
-directive|endif
 name|kcount
 operator|=
 operator|(
