@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)rmchg.c	4.4	%G%"
+literal|"@(#)rmchg.c	4.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -873,7 +873,14 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|(
+expr|struct
+name|idel
+operator|*
+operator|)
 name|p
+operator|)
 operator|->
 name|i_pred
 operator|==
