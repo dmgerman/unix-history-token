@@ -208,14 +208,6 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|struct
-name|cdev
-modifier|*
-name|dev
-index|[
-literal|6
-index|]
-decl_stmt|;
 name|u_char
 modifier|*
 name|txbuf
@@ -245,14 +237,6 @@ name|u_char
 name|modem
 decl_stmt|;
 comment|/* Force values */
-name|int
-name|active_out
-decl_stmt|;
-comment|/* nonzero if the callout device is open */
-name|u_int
-name|wopeners
-decl_stmt|;
-comment|/* # processes waiting for DCD in open() */
 comment|/* 	 * The high level of the driver never reads status registers directly 	 * because there would be too many side effects to handle conveniently. 	 * Instead, it reads copies of the registers stored here by the 	 * interrupt handler. 	 */
 name|u_char
 name|last_modem_status
@@ -262,26 +246,6 @@ name|u_char
 name|prev_modem_status
 decl_stmt|;
 comment|/* last MSR handled by high level */
-comment|/* Initial state. */
-name|struct
-name|termios
-name|it_in
-decl_stmt|;
-comment|/* should be in struct tty */
-name|struct
-name|termios
-name|it_out
-decl_stmt|;
-comment|/* Lock state. */
-name|struct
-name|termios
-name|lt_in
-decl_stmt|;
-comment|/* should be in struct tty */
-name|struct
-name|termios
-name|lt_out
-decl_stmt|;
 name|u_long
 name|bytes_in
 decl_stmt|,
