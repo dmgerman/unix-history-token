@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.29 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -527,7 +527,7 @@ comment|/* Control strings length. */
 end_comment
 
 begin_comment
-comment|/*  * A window an array of __LINE structures pointed to by the 'lines' pointer.  * A line is an array of __LDATA structures pointed to by the 'line' pointer.  *  * IMPORTANT: the __LDATA structure must NOT induce any padding, so if new  * fields are added -- padding fields with *constant values* should ensure   * that the compiler will not generate any padding when storing an array of  *  __LDATA structures.  This is to enable consistent use of bcmp, and bcopy  * for comparing and copying arrays.  */
+comment|/*  * A window an array of __LINE structures pointed to by the 'lines' pointer.  * A line is an array of __LDATA structures pointed to by the 'line' pointer.  *  * IMPORTANT: the __LDATA structure must NOT induce any padding, so if new  * fields are added -- padding fields with *constant values* should ensure   * that the compiler will not generate any padding when storing an array of  *  __LDATA structures.  This is to enable consistent use of memcmp, and memcpy  * for comparing and copying arrays.  */
 end_comment
 
 begin_typedef
