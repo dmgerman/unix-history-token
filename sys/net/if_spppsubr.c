@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.43 1998/10/05 21:02:30 joerg Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.44 1998/10/06 20:47:53 joerg Exp $  */
 end_comment
 
 begin_include
@@ -16375,6 +16375,10 @@ name|i
 decl_stmt|,
 name|x
 decl_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
 name|sp
 operator|->
 name|rst_counter
@@ -16653,10 +16657,6 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
 name|u_long
 modifier|*
 name|ch
@@ -16666,6 +16666,23 @@ decl_stmt|;
 name|u_char
 name|clen
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Compute random challenge. */
 name|ch
 operator|=
@@ -19263,6 +19280,10 @@ name|ssrc
 decl_stmt|,
 name|ddst
 decl_stmt|;
+name|sm
+operator|=
+name|NULL
+expr_stmt|;
 name|ssrc
 operator|=
 name|ddst
@@ -19483,8 +19504,16 @@ name|u_long
 name|src
 parameter_list|)
 block|{
-name|STDDCL
-expr_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sp
+operator|->
+name|pp_if
+decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*
