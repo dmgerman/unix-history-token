@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.18	(Berkeley)	85/01/18"
+literal|"@(#)dirs.c	3.19	(Berkeley)	85/02/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,17 +476,19 @@ name|curfile
 operator|.
 name|dip
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
+name|ip
+operator|==
+name|NULL
+operator|||
+operator|(
 name|ip
 operator|->
 name|di_mode
 operator|&
 name|IFMT
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|)
 operator|!=
 name|IFDIR
 condition|)
