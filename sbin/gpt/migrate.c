@@ -1726,7 +1726,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mediasz
+name|last
 operator|>
 literal|0xffffffff
 condition|)
@@ -1773,7 +1773,7 @@ name|part_size_lo
 operator|=
 name|htole16
 argument_list|(
-name|mediasz
+name|last
 argument_list|)
 expr_stmt|;
 name|mbr
@@ -1787,7 +1787,7 @@ name|part_size_hi
 operator|=
 name|htole16
 argument_list|(
-name|mediasz
+name|last
 operator|>>
 literal|16
 argument_list|)
