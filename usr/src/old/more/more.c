@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.12 (Berkeley) 83/06/25"
+literal|"@(#)more.c	4.13 (Berkeley) 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -6188,7 +6188,7 @@ argument_list|(
 literal|"TERM"
 argument_list|)
 operator|)
-operator|&&
+operator|||
 name|tgetent
 argument_list|(
 name|buf
@@ -6486,7 +6486,7 @@ condition|(
 name|Home
 operator|==
 literal|0
-operator|&&
+operator|||
 operator|*
 name|Home
 operator|==
