@@ -377,14 +377,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"could not find mpic!\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|OF_getprop
 argument_list|(
 name|pic
