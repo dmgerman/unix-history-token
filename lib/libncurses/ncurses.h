@@ -1680,14 +1680,6 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
-name|wdeleteln
-parameter_list|(
-name|WINDOW
-modifier|*
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
 name|werase
 parameter_list|(
 name|WINDOW
@@ -1746,14 +1738,6 @@ name|WINDOW
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
-name|winsertln
-parameter_list|(
-name|WINDOW
-modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -2411,6 +2395,26 @@ parameter_list|,
 name|s
 parameter_list|)
 value|winsnstr(w, s, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|winsertln
+parameter_list|(
+name|w
+parameter_list|)
+value|winsdel(w, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wdeleteln
+parameter_list|(
+name|w
+parameter_list|)
+value|winsdel(w, -1)
 end_define
 
 begin_define
