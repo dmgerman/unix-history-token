@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c	4.1 (Berkeley) 81/02/28"
+literal|"@(#)misc.c	4.2 (Berkeley) 82/10/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -1295,7 +1295,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|sprintf
