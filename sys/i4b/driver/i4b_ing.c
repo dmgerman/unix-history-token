@@ -2728,9 +2728,14 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|THIS_DOESNT_COMPILE
 name|meta_p
 name|meta
 decl_stmt|;
+endif|#
+directive|endif
 name|NGI_GET_M
 argument_list|(
 name|item
