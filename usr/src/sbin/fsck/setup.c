@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.29 (Berkeley) %G%"
+literal|"@(#)setup.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2782,7 +2782,7 @@ argument_list|)
 expr_stmt|;
 name|errexit
 argument_list|(
-literal|"%s: can't read disk label"
+literal|"%s: can't read disk label\n"
 argument_list|,
 name|s
 argument_list|)
