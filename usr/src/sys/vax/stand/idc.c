@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,19 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
@@ -181,23 +181,27 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|io
-operator|->
-name|i_boff
-operator|<
-literal|0
-operator|||
+operator|(
+name|unsigned
+operator|)
 name|io
 operator|->
 name|i_boff
 operator|>
 literal|7
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
 literal|"idc bad unit"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
 name|idcaddr
 operator|->
 name|idcmpr
@@ -289,11 +293,11 @@ operator|->
 name|idccsr
 argument_list|)
 expr_stmt|;
-name|_stop
-argument_list|(
-literal|"idc fatal error"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
 name|i
 operator|=
@@ -378,7 +382,8 @@ name|i_boff
 operator|<
 literal|0
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
 literal|"idc%d: bad unit type"
 argument_list|,
@@ -387,6 +392,17 @@ operator|->
 name|i_unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mt.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mt.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,19 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
@@ -115,9 +115,29 @@ operator|->
 name|i_unit
 argument_list|)
 decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|mbainit
+argument_list|(
+name|UNITTOMBA
+argument_list|(
+name|io
+operator|->
+name|i_unit
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -150,23 +170,18 @@ condition|)
 goto|goto
 name|found
 goto|;
-name|_stop
+name|printf
 argument_list|(
 literal|"not a tape\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|found
 label|:
-name|mbainit
-argument_list|(
-name|UNITTOMBA
-argument_list|(
-name|io
-operator|->
-name|i_unit
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mtaddr
 operator|->
 name|mtid
@@ -240,6 +255,11 @@ name|MT_SFORWF
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

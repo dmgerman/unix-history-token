@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"udareg.h"
+file|"../vaxuba/udareg.h"
 end_include
 
 begin_include
@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"mscp.h"
+file|"../vax/mscp.h"
 end_include
 
 begin_decl_stmt
@@ -137,10 +137,6 @@ name|udaddr
 index|[
 name|MAXNUBA
 index|]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +193,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|ratype
 index|[
 name|MAXNUBA
@@ -215,15 +211,6 @@ name|SECTSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|struct
-name|mscp
-modifier|*
-name|udcmd
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_expr_stmt
 name|raopen
@@ -577,8 +564,6 @@ name|M_OP_SETCTLRC
 argument_list|,
 name|io
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|printf
@@ -641,8 +626,6 @@ name|M_OP_ONLINE
 argument_list|,
 name|io
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|printf
@@ -656,6 +639,19 @@ name|EIO
 operator|)
 return|;
 block|}
+name|ratype
+index|[
+name|unit
+index|]
+operator|=
+name|uda1
+operator|.
+name|uda1_rsp
+operator|.
+name|mscp_onle
+operator|.
+name|onle_drivetype
+expr_stmt|;
 name|tio
 operator|=
 operator|*
@@ -709,8 +705,10 @@ name|EIO
 operator|)
 return|;
 block|}
-name|dlp
+operator|*
+name|lp
 operator|=
+operator|*
 operator|(
 expr|struct
 name|disklabel
@@ -724,13 +722,13 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|dlp
+name|lp
 operator|->
 name|d_magic
 operator|!=
 name|DISKMAGIC
 operator|||
-name|dlp
+name|lp
 operator|->
 name|d_magic2
 operator|!=
@@ -764,13 +762,6 @@ return|;
 endif|#
 directive|endif
 block|}
-else|else
-operator|*
-name|lp
-operator|=
-operator|*
-name|dlp
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -826,9 +817,7 @@ block|}
 end_block
 
 begin_function
-name|struct
-name|mscp
-modifier|*
+name|int
 name|udcmd
 parameter_list|(
 name|op
@@ -847,6 +836,15 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
+name|uda1
+modifier|*
+name|u
+init|=
+operator|&
+name|uda1
+decl_stmt|;
+specifier|register
+name|struct
 name|mscp
 modifier|*
 name|mp
@@ -854,32 +852,32 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_cmd
 operator|.
 name|mscp_opcode
 operator|=
 name|op
 expr_stmt|;
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_cmd
 operator|.
 name|mscp_msglen
 operator|=
 name|MSCP_MSGLEN
 expr_stmt|;
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_rsp
 operator|.
 name|mscp_msglen
 operator|=
 name|MSCP_MSGLEN
 expr_stmt|;
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_ca
 operator|.
 name|ca_rspdsc
@@ -888,8 +886,8 @@ name|MSCP_OWN
 operator||
 name|MSCP_INT
 expr_stmt|;
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_ca
 operator|.
 name|ca_cmddsc
@@ -915,8 +913,8 @@ expr_stmt|;
 name|mp
 operator|=
 operator|&
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_rsp
 expr_stmt|;
 for|for
@@ -927,14 +925,14 @@ control|)
 block|{
 if|if
 condition|(
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_ca
 operator|.
 name|ca_cmdint
 condition|)
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_ca
 operator|.
 name|ca_cmdint
@@ -943,8 +941,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_ca
 operator|.
 name|ca_rspint
@@ -952,8 +950,8 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_ca
 operator|.
 name|ca_rspint
@@ -975,7 +973,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|"unexpected mscp response (type 0x%x) ignored"
+literal|"unexpected rsp type %x op %x ignored\n"
 argument_list|,
 name|MSCP_MSGTYPE
 argument_list|(
@@ -983,10 +981,14 @@ name|mp
 operator|->
 name|mscp_msgtc
 argument_list|)
+argument_list|,
+name|mp
+operator|->
+name|mscp_opcode
 argument_list|)
 expr_stmt|;
-name|uda1
-operator|.
+name|u
+operator|->
 name|uda1_ca
 operator|.
 name|ca_rspdsc
@@ -1010,37 +1012,13 @@ name|M_ST_SUCCESS
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
-if|if
-condition|(
-name|mp
-operator|->
-name|mscp_opcode
-operator|==
-operator|(
-name|M_OP_ONLINE
-operator||
-name|M_OP_END
-operator|)
-condition|)
-name|ratype
-index|[
-name|io
-operator|->
-name|i_unit
-index|]
-operator|=
-name|mp
-operator|->
-name|mscp_onle
-operator|.
-name|onle_drivetype
-expr_stmt|;
 return|return
 operator|(
-name|mp
+literal|0
 operator|)
 return|;
 block|}
@@ -1147,9 +1125,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|mp
-operator|=
 name|udcmd
 argument_list|(
 name|func
@@ -1162,9 +1137,6 @@ name|M_OP_WRITE
 argument_list|,
 name|io
 argument_list|)
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|printf
@@ -1561,7 +1533,7 @@ begin_define
 define|#
 directive|define
 name|NOFFS
-value|(sizeof(ra_off)/sizeof(int))
+value|(sizeof(ra_off)/sizeof(ra_off[0]))
 end_define
 
 begin_expr_stmt
@@ -1597,7 +1569,7 @@ modifier|*
 name|pp
 decl_stmt|;
 specifier|register
-name|int
+name|u_int
 name|i
 decl_stmt|;
 specifier|register
@@ -1605,6 +1577,9 @@ name|u_long
 modifier|*
 name|off
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|i
 operator|=
 name|ratype
@@ -1613,13 +1588,7 @@ name|io
 operator|->
 name|i_unit
 index|]
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|unsigned
 operator|)
-name|i
 operator|>=
 name|NOFFS
 operator|||

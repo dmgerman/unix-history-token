@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,25 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
@@ -314,6 +314,27 @@ condition|(
 name|cpu
 condition|)
 block|{
+if|#
+directive|if
+name|VAX8200
+case|case
+name|VAX_8200
+case|:
+name|UBA_PURGEBUA
+argument_list|(
+name|ubauba
+argument_list|(
+name|io
+operator|->
+name|i_unit
+argument_list|)
+argument_list|,
+name|bdp
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 name|VAX_8600
 case|:
@@ -357,9 +378,7 @@ operator||
 name|UBADPR_UCE
 expr_stmt|;
 break|break;
-case|case
-name|VAX_730
-case|:
+default|default:
 break|break;
 block|}
 block|}

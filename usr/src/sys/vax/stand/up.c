@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)up.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)up.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -40,19 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vax/pte.h"
+file|"../vax/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vaxuba/upreg.h"
+file|"../vaxuba/upreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vaxuba/ubareg.h"
+file|"../vaxuba/ubareg.h"
 end_include
 
 begin_include
@@ -633,6 +633,11 @@ operator|&=
 operator|~
 name|F_TYPEMASK
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -669,6 +674,7 @@ name|io
 operator|->
 name|i_unit
 expr_stmt|;
+specifier|register
 name|daddr_t
 name|bn
 decl_stmt|;
@@ -726,10 +732,6 @@ name|type
 index|]
 decl_stmt|;
 name|int
-name|doprintf
-init|=
-literal|0
-decl_stmt|,
 name|error
 decl_stmt|,
 name|rv
@@ -738,6 +740,16 @@ name|io
 operator|->
 name|i_cc
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
+name|int
+name|doprintf
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|sectsiz
 operator|=
 name|SECTSIZ
@@ -903,6 +915,9 @@ name|o
 operator|/
 name|sectsiz
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 if|if
 condition|(
 name|doprintf
@@ -934,6 +949,8 @@ argument_list|,
 name|bn
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -1634,9 +1651,14 @@ operator|->
 name|upwc
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|SMALL
 name|doprintf
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|restart
 goto|;

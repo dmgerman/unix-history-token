@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)savax.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)savax.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,6 +31,13 @@ name|MAXNUBA
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXNKDB
+value|2
+end_define
+
 begin_decl_stmt
 name|struct
 name|mba_regs
@@ -49,7 +56,7 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 modifier|*
-name|umaddr
+name|uioaddr
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +68,32 @@ modifier|*
 name|ubaddr
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX8200
+end_ifdef
+
+begin_decl_stmt
+name|caddr_t
+name|kdbaddr
+index|[
+name|MAXNKDB
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nkdb
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -122,6 +155,10 @@ parameter_list|)
 value|(ubaddr[UNITTOUBA(unit)])
 end_define
 
+begin_comment
+comment|/* compute an I/O page physical address from a 16/18/22-bit bus address */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -131,7 +168,7 @@ name|unit
 parameter_list|,
 name|off
 parameter_list|)
-value|(umaddr[UNITTOUBA(unit)] + \ 					(0760000 | ubdevreg(off)))
+value|(uioaddr[UNITTOUBA(unit)] + ubdevreg(off))
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"reboot.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<a.out.h>
 end_include
 
@@ -37,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"saio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"reboot.h"
 end_include
 
 begin_comment
@@ -161,9 +161,6 @@ name|type
 index|]
 operator|.
 name|dv_name
-index|[
-literal|0
-index|]
 condition|)
 name|strcpy
 argument_list|(
@@ -255,9 +252,14 @@ operator|>=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|VAX750
 name|loadpcs
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|copyunix
 argument_list|(
 name|howto
@@ -792,6 +794,12 @@ return|return;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX750
+end_ifdef
+
 begin_comment
 comment|/* 750 Patchable Control Store magic */
 end_comment
@@ -922,11 +930,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 name|sid
 operator|.
 name|cpusid
@@ -1239,6 +1242,11 @@ literal|1
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

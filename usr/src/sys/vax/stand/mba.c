@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	7.2 (Berkeley) 2/21/87  */
 end_comment
 
 begin_include
@@ -12,25 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"vm.h"
 end_include
 
 begin_include
@@ -490,13 +490,21 @@ name|long
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"nonexistent mba"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
+operator|(
 name|mbaact
 operator|&
 operator|(
@@ -504,12 +512,11 @@ literal|1
 operator|<<
 name|mbanum
 operator|)
-condition|)
-return|return
-operator|(
-literal|1
 operator|)
-return|;
+operator|==
+literal|0
+condition|)
+block|{
 name|mba
 operator|->
 name|mba_cr
@@ -522,6 +529,7 @@ literal|1
 operator|<<
 name|mbanum
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1

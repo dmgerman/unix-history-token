@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.1 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -40,25 +40,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/gnode.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/devio.h"
+file|"../vax/pte.h"
 end_include
 
 begin_include
@@ -644,12 +644,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_stop
+name|printf
 argument_list|(
-literal|"tms: open error, STCON"
+literal|"tms: open error, STCON\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
 name|tmscp_offline
 operator|=
@@ -699,10 +703,14 @@ condition|)
 block|{
 name|_stop
 argument_list|(
-literal|"tms: open error, ONLIN"
+literal|"tms: open error, ONLIN\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 block|}
 name|tms_offline
 index|[
@@ -730,11 +738,18 @@ name|i_boff
 operator|>
 literal|3
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
-literal|"tms: bad offset"
+literal|"tms: bad offset\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -772,6 +787,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

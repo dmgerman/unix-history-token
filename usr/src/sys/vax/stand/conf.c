@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,25 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vaxmba/mbareg.h"
+file|"fs.h"
 end_include
 
 begin_include
@@ -446,7 +440,7 @@ begin_define
 define|#
 directive|define
 name|HP
-value|""
+value|0
 end_define
 
 begin_define
@@ -552,7 +546,7 @@ begin_define
 define|#
 directive|define
 name|RB
-value|""
+value|0
 end_define
 
 begin_define
@@ -709,7 +703,7 @@ begin_define
 define|#
 directive|define
 name|HT
-value|""
+value|0
 end_define
 
 begin_define
@@ -737,7 +731,7 @@ begin_define
 define|#
 directive|define
 name|MT
-value|""
+value|0
 end_define
 
 begin_define
@@ -787,6 +781,26 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|TMSCP
+value|"tms"
+end_define
+
+begin_decl_stmt
+name|int
+name|tmscpstrategy
+argument_list|()
+decl_stmt|,
+name|tmscpopen
+argument_list|()
+decl_stmt|,
+name|tmscpclose
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -797,7 +811,7 @@ begin_define
 define|#
 directive|define
 name|TM
-value|""
+value|0
 end_define
 
 begin_define
@@ -825,7 +839,7 @@ begin_define
 define|#
 directive|define
 name|TS
-value|""
+value|0
 end_define
 
 begin_define
@@ -853,7 +867,7 @@ begin_define
 define|#
 directive|define
 name|HT
-value|""
+value|0
 end_define
 
 begin_define
@@ -881,7 +895,7 @@ begin_define
 define|#
 directive|define
 name|MT
-value|""
+value|0
 end_define
 
 begin_define
@@ -909,7 +923,7 @@ begin_define
 define|#
 directive|define
 name|UT
-value|""
+value|0
 end_define
 
 begin_define
@@ -931,6 +945,99 @@ define|#
 directive|define
 name|utclose
 value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|TMSCP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|tmscpstrategy
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|tmscpopen
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|tmscpclose
+value|nodev
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|BOOT
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX8200
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KRA
+value|"kra"
+end_define
+
+begin_decl_stmt
+name|int
+name|krastrategy
+argument_list|()
+decl_stmt|,
+name|kraopen
+argument_list|()
+decl_stmt|,
+name|kraioctl
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KRA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|krastrategy
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|kraopen
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|kraioctl
+value|noioctl
 end_define
 
 begin_endif
@@ -998,7 +1105,7 @@ block|}
 block|,
 comment|/* 3 = hk */
 block|{
-literal|""
+literal|0
 block|,
 name|nodev
 block|,
@@ -1050,7 +1157,7 @@ block|}
 block|,
 comment|/* 7 = mt */
 block|{
-literal|""
+literal|0
 block|,
 name|nodev
 block|,
@@ -1102,7 +1209,7 @@ block|}
 block|,
 comment|/* 11 = rb */
 block|{
-literal|""
+literal|0
 block|,
 name|nodev
 block|,
@@ -1115,7 +1222,7 @@ block|}
 block|,
 comment|/* 12 = uu */
 block|{
-literal|""
+literal|0
 block|,
 name|nodev
 block|,
@@ -1141,17 +1248,32 @@ block|}
 block|,
 comment|/* 14 = rl */
 block|{
-literal|0
+name|TMSCP
 block|,
-literal|0
+name|tmscpstrategy
 block|,
-literal|0
+name|tmscpopen
 block|,
-literal|0
+name|tmscpclose
 block|,
-literal|0
+name|noioctl
 block|}
-block|, }
+block|,
+comment|/* 15 = tmscp */
+block|{
+name|KRA
+block|,
+name|krastrategy
+block|,
+name|kraopen
+block|,
+name|nullsys
+block|,
+name|kraioctl
+block|}
+block|,
+comment|/* 16 = kra */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1172,8 +1294,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|-
-literal|1
 operator|)
 decl_stmt|;
 end_decl_stmt

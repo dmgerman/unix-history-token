@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,31 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"disklabel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/disklabel.h"
+file|"../vax/pte.h"
 end_include
 
 begin_include
@@ -414,20 +414,22 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|rkmaptype
 argument_list|(
-name|io
+argument|io
 argument_list|,
-name|lp
+argument|lp
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|iob
-operator|*
+modifier|*
 name|io
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -543,12 +545,11 @@ decl_stmt|;
 name|int
 name|com
 decl_stmt|;
+specifier|register
 name|daddr_t
 name|bn
 decl_stmt|;
 name|short
-name|dn
-decl_stmt|,
 name|cn
 decl_stmt|,
 name|sn
@@ -578,15 +579,6 @@ operator|=
 name|io
 operator|->
 name|i_bn
-expr_stmt|;
-name|dn
-operator|=
-name|UNITTODRIVE
-argument_list|(
-name|io
-operator|->
-name|i_unit
-argument_list|)
 expr_stmt|;
 name|cn
 operator|=
@@ -618,7 +610,12 @@ name|rkaddr
 operator|->
 name|rkcs2
 operator|=
-name|dn
+name|UNITTODRIVE
+argument_list|(
+name|io
+operator|->
+name|i_unit
+argument_list|)
 expr_stmt|;
 name|rkaddr
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hpmaptype.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hpmaptype.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,25 +22,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/disklabel.h"
+file|"disklabel.h"
 end_include
 
 begin_include
@@ -1046,14 +1046,9 @@ name|ncyl
 operator|==
 name|ncyl
 condition|)
-break|break;
-if|if
-condition|(
-name|type
-operator|>=
-name|NTYPES
-condition|)
-block|{
+goto|goto
+name|done
+goto|;
 name|printf
 argument_list|(
 literal|"%d sectors, %d tracks, %d cyl?\n"
@@ -1069,7 +1064,6 @@ name|type
 operator|=
 name|HPDT_RM02
 expr_stmt|;
-block|}
 name|done
 label|:
 name|hpaddr

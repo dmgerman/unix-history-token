@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rl.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rl.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,19 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
@@ -195,6 +195,43 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|badaddr
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|rladdr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"nonexistent device\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|io
+operator|->
+name|i_boff
+operator|>
+literal|7
+operator|||
 name|rl_off
 index|[
 name|io
@@ -204,24 +241,19 @@ index|]
 operator|==
 operator|-
 literal|1
-operator|||
-name|io
-operator|->
-name|i_boff
-operator|<
-literal|0
-operator|||
-name|io
-operator|->
-name|i_boff
-operator|>
-literal|7
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
-literal|"rl bad unit"
+literal|"rl bad unit\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
 comment|/* 	 * DEC reports that: 	 * For some unknown reason the RL02 (seems to be only drive 1) 	 * does not return a valid drive status the first time that a 	 * GET STATUS request is issued for the drive, in fact it can 	 * take up to three or more GET STATUS requests to obtain the 	 * correct status. 	 * In order to overcome this, the driver has been modified to 	 * issue a GET STATUS request and validate the drive status 	 * returned.  If a valid status is not returned after eight 	 * attempts, then an error message is printed. 	 */
 do|do
 block|{
@@ -290,11 +322,18 @@ operator|>=
 literal|8
 operator|)
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
-literal|"rl unit does not respond"
+literal|"rl unit does not respond\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -309,12 +348,19 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* NO RL01'S */
-name|_stop
+name|printf
 argument_list|(
-literal|"rl01 unit not supported"
+literal|"rl01 unit not supported\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EUNIT
+operator|)
+return|;
+block|}
 comment|/* Determine disk posistion */
 name|rladdr
 operator|->
@@ -378,6 +424,11 @@ name|NRLTRKS
 operator|*
 name|NRLSECT
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

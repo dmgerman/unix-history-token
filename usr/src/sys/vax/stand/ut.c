@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ut.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ut.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -16,19 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
@@ -98,6 +98,44 @@ block|{
 name|int
 name|skip
 decl_stmt|;
+if|if
+condition|(
+name|badaddr
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|ubamem
+argument_list|(
+name|io
+operator|->
+name|i_unit
+argument_list|,
+name|utstd
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"nonexistent device\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|utstrategy
 argument_list|(
 name|io
@@ -125,6 +163,11 @@ argument_list|,
 name|UT_SFORWF
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

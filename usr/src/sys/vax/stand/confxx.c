@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)confxx.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)confxx.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -69,11 +69,7 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|io
-operator|->
-name|i_ino
-operator|.
-name|i_dev
+literal|0
 index|]
 operator|.
 name|dv_strategy
@@ -135,11 +131,7 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|io
-operator|->
-name|i_ino
-operator|.
-name|i_dev
+literal|0
 index|]
 operator|.
 name|dv_strategy
@@ -185,11 +177,7 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|io
-operator|->
-name|i_ino
-operator|.
-name|i_dev
+literal|0
 index|]
 operator|.
 name|dv_open
@@ -220,11 +208,7 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|io
-operator|->
-name|i_ino
-operator|.
-name|i_dev
+literal|0
 index|]
 operator|.
 name|dv_close
@@ -273,11 +257,7 @@ operator|(
 operator|*
 name|devsw
 index|[
-name|io
-operator|->
-name|i_ino
-operator|.
-name|i_dev
+literal|0
 index|]
 operator|.
 name|dv_ioctl
@@ -405,19 +385,7 @@ name|nullsys
 block|,
 name|xxioctl
 block|}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -438,8 +406,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|-
-literal|1
 operator|)
 decl_stmt|;
 end_decl_stmt

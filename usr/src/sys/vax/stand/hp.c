@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,31 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dkbad.h"
+file|"dkbad.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/disklabel.h"
+file|"disklabel.h"
 end_include
 
 begin_include
@@ -372,18 +372,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"nonexistent mba"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|sc
@@ -455,11 +448,18 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
-literal|"drive nonexistent"
+literal|"drive nonexistent\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|sc
 operator|->
 name|type
@@ -481,7 +481,7 @@ condition|)
 name|sc
 operator|->
 name|type
-operator|==
+operator|=
 name|MBDT_ML11A
 expr_stmt|;
 if|if
@@ -561,7 +561,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"can't read disk label"
+literal|"can't read disk label\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -611,12 +611,7 @@ name|defined
 argument_list|(
 name|COMPAT_42
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SMALL
-argument_list|)
+comment|/*&& !defined(SMALL) */
 name|hpmaptype
 argument_list|(
 name|hpaddr
@@ -743,7 +738,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Unable to read bad sector table\n"
+literal|"can't read bad sector table\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -803,12 +798,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|io
-operator|->
-name|i_boff
-operator|<
-literal|0
-operator|||
+operator|(
+name|unsigned
+operator|)
 name|io
 operator|->
 name|i_boff
@@ -833,7 +825,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"hp bad minor"
+literal|"hp bad minor\n"
 argument_list|)
 expr_stmt|;
 return|return
