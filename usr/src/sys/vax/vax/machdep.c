@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.26	81/03/17	*/
+comment|/*	machdep.c	4.27	81/03/17	*/
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VAX/UNIX (Berkeley Version 4.26) 81/03/17 05:49:33 \n"
+literal|"VAX/UNIX (Berkeley Version 4.27) 81/03/17 17:01:04 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,6 +219,26 @@ sizeof|sizeof
 argument_list|(
 name|icode
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Declare these as initialized data so we can patch them.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|nbuf
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nswbuf
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -323,6 +343,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * First determine how many buffers are reasonable. 	 * Current alg is 32 per megabyte, with min of 32. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
+if|if
+condition|(
+name|nbuf
+operator|==
+literal|0
+condition|)
+block|{
 name|nbuf
 operator|=
 operator|(
@@ -348,6 +375,14 @@ name|nbuf
 operator|=
 literal|32
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|nswbuf
+operator|==
+literal|0
+condition|)
+block|{
 name|nswbuf
 operator|=
 operator|(
@@ -360,6 +395,18 @@ operator|~
 literal|1
 expr_stmt|;
 comment|/* force even */
+if|if
+condition|(
+name|nswbuf
+operator|>
+literal|256
+condition|)
+name|nswbuf
+operator|=
+literal|256
+expr_stmt|;
+comment|/* sanity */
+block|}
 comment|/* 	 * Allocate space for system data structures. 	 */
 name|v
 operator|=
