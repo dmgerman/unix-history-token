@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.70 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.71 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.70 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.71 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3134,6 +3134,9 @@ name|d_name
 argument_list|)
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|PICKY_QF_NAME_CHECK
 comment|/* 		**  Check queue name for plausibility.  This handles 		**  both old and new type ids. 		*/
 name|p
 operator|=
@@ -3237,11 +3240,11 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|3
+literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_CRIT
+name|LOG_ALERT
 argument_list|,
 literal|"orderq: bogus qf name %s"
 argument_list|,
@@ -3302,7 +3305,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* yes -- open control file (if not too many files) */
+endif|#
+directive|endif
+comment|/* open control file (if not too many files) */
 if|if
 condition|(
 operator|++
@@ -5134,6 +5139,17 @@ name|st_uid
 operator|!=
 name|geteuid
 argument_list|()
+operator|||
+name|bitset
+argument_list|(
+name|S_IWOTH
+operator||
+name|S_IWGRP
+argument_list|,
+name|st
+operator|.
+name|st_mode
+argument_list|)
 condition|)
 block|{
 ifdef|#
@@ -7592,6 +7608,10 @@ name|why
 decl_stmt|;
 block|{
 name|char
+modifier|*
+name|p
+decl_stmt|;
+name|char
 name|buf
 index|[
 literal|40
@@ -7637,21 +7657,48 @@ literal|'q'
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rename
-argument_list|(
-name|buf
-argument_list|,
+name|p
+operator|=
 name|queuename
 argument_list|(
 name|e
 argument_list|,
 literal|'Q'
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rename
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"cannot rename(%s, %s), uid=%d"
+argument_list|,
+name|buf
+argument_list|,
+name|p
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
+elseif|else
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
 name|syslog
 argument_list|(
 name|LOG_ALERT
