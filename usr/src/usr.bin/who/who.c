@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)who.c	5.3 (Berkeley) %G%"
+literal|"@(#)who.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,6 +217,9 @@ expr_stmt|;
 else|else
 block|{
 comment|/* no tty - use best guess from passwd file */
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|utmp
@@ -238,6 +241,7 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
 operator|(
 name|fi
 operator|=
@@ -248,13 +252,15 @@ argument_list|,
 literal|"r"
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
 block|{
-name|puts
+name|fprintf
 argument_list|(
-literal|"who: cannot open utmp"
+name|stderr
+argument_list|,
+literal|"who: cannot read %s.\n"
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
 name|exit
