@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: $	*/
+comment|/*	$Id: chio.c,v 1.1.1.1 1997/03/06 15:30:06 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -84,18 +84,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from crt0.o */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -970,10 +958,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s "
+literal|"usage: chio %s "
 literal|"<from ET><from EU><to ET><to EU> [inv]\n"
-argument_list|,
-name|__progname
 argument_list|,
 name|cname
 argument_list|)
@@ -1304,10 +1290,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s<src ET><src EU><dst1 ET><dst1 EU>\n"
+literal|"usage: chio %s<src ET><src EU><dst1 ET><dst1 EU>\n"
 literal|"       [<dst2 ET><dst2 EU>] [inv1] [inv2]\n"
-argument_list|,
-name|__progname
 argument_list|,
 name|cname
 argument_list|)
@@ -1516,9 +1500,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s<to ET><to EU> [inv]\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s<to ET><to EU> [inv]\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -1717,9 +1699,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -1822,9 +1802,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -1946,9 +1924,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s<picker>\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s<picker>\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -2343,9 +2319,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s [<element type>]\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s [<element type>]\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -2778,13 +2752,58 @@ name|void
 name|usage
 parameter_list|()
 block|{
+name|int
+name|i
+decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s command arg1 arg2 ...\n"
+literal|"usage: chio command arg1 arg2 ...\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
-name|__progname
+literal|"commands:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|commands
+index|[
+name|i
+index|]
+operator|.
+name|cc_name
+condition|;
+name|i
+operator|++
+control|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" %s"
+argument_list|,
+name|commands
+index|[
+name|i
+index|]
+operator|.
+name|cc_name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|exit
