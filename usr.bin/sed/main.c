@@ -976,10 +976,11 @@ name|size_t
 name|len
 decl_stmt|;
 name|char
-name|c
-decl_stmt|,
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|c
 decl_stmt|;
 if|if
 condition|(
