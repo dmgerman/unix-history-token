@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkioconf.c	2.7	83/03/28	*/
+comment|/*	mkioconf.c	2.8	83/06/11	*/
 end_comment
 
 begin_include
@@ -528,7 +528,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t{&%sdriver, %s,  %2d,    %s },\n"
+literal|"\t{&%sdriver, %s"
 argument_list|,
 name|mp
 operator|->
@@ -540,6 +540,13 @@ name|mp
 operator|->
 name|d_unit
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|",  %2d,    %s },\n"
 argument_list|,
 name|dp
 operator|->
