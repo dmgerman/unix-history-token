@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.40	82/10/10	*/
+comment|/*	kern_proc.c	4.41	82/10/17	*/
 end_comment
 
 begin_include
@@ -2976,6 +2976,9 @@ name|untimeout
 argument_list|(
 name|realitexpire
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	4.15	82/10/17	*/
+comment|/*	kern_resource.c	4.16	82/10/17	*/
 end_comment
 
 begin_include
@@ -999,6 +999,9 @@ operator|->
 name|which
 index|]
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|rlp
@@ -1107,6 +1110,9 @@ name|caddr_t
 operator|)
 name|rup
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|rusage
@@ -1420,6 +1426,9 @@ operator|)
 operator|&
 name|atms
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|tmsb

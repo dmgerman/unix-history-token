@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.25	82/10/09	*/
+comment|/*	uipc_proto.c	4.26	82/10/17	*/
 end_comment
 
 begin_include
@@ -968,6 +968,9 @@ name|timeout
 argument_list|(
 name|pfslowtimo
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|,
 name|hz
@@ -1022,6 +1025,9 @@ name|timeout
 argument_list|(
 name|pffasttimo
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|,
 name|hz

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.27	82/10/17	*/
+comment|/*	ufs_inode.c	4.28	82/10/17	*/
 end_comment
 
 begin_include
@@ -1209,15 +1209,9 @@ name|IUPDAT
 argument_list|(
 name|ip
 argument_list|,
-operator|&
 name|time
-operator|.
-name|tv_sec
 argument_list|,
-operator|&
 name|time
-operator|.
-name|tv_sec
 argument_list|,
 literal|0
 argument_list|)
@@ -1311,7 +1305,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|time_t
+name|struct
+name|timeval
 modifier|*
 name|ta
 decl_stmt|,
@@ -1435,8 +1430,9 @@ name|ip
 operator|->
 name|i_atime
 operator|=
-operator|*
 name|ta
+operator|->
+name|tv_sec
 expr_stmt|;
 if|if
 condition|(
@@ -1450,8 +1446,9 @@ name|ip
 operator|->
 name|i_mtime
 operator|=
-operator|*
 name|tm
+operator|->
+name|tv_sec
 expr_stmt|;
 if|if
 condition|(
@@ -1690,15 +1687,9 @@ argument_list|(
 operator|&
 name|itmp
 argument_list|,
-operator|&
 name|time
-operator|.
-name|tv_sec
 argument_list|,
-operator|&
 name|time
-operator|.
-name|tv_sec
 argument_list|,
 literal|1
 argument_list|)
@@ -2171,6 +2162,9 @@ name|ip
 argument_list|,
 name|nb
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -2208,6 +2202,9 @@ name|ip
 argument_list|,
 name|bn
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	4.18	82/10/17	*/
+comment|/*	subr_xxx.c	4.19	82/10/17	*/
 end_comment
 
 begin_include
@@ -177,8 +177,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-name|unsigned
-name|int
+name|u_int
 name|a
 decl_stmt|,
 name|b
@@ -206,8 +205,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-name|unsigned
-name|int
+name|u_int
 name|a
 decl_stmt|,
 name|b

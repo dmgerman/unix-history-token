@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_alloc.c	2.15	82/10/17	*/
+comment|/*	lfs_alloc.c	2.16	82/10/17	*/
 end_comment
 
 begin_include
@@ -79,7 +79,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|ino_t
+name|u_long
 name|ialloccg
 parameter_list|()
 function_decl|;
@@ -87,7 +87,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|daddr_t
+name|u_long
 name|alloccg
 parameter_list|()
 function_decl|;
@@ -2162,7 +2162,7 @@ comment|/*  * Determine whether a block can be allocated.  *  * Check to see if 
 end_comment
 
 begin_function
-name|daddr_t
+name|u_long
 name|alloccg
 parameter_list|(
 name|ip
@@ -3090,6 +3090,9 @@ name|cgp
 argument_list|,
 name|bpref
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_frag
@@ -3122,11 +3125,16 @@ name|cgp
 operator|->
 name|cg_free
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|bno
 operator|/
 name|fs
 operator|->
 name|fs_frag
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cgp
@@ -3216,7 +3224,7 @@ comment|/*  * Determine whether an inode can be allocated.  *  * Check to see if
 end_comment
 
 begin_function
-name|ino_t
+name|u_long
 name|ialloccg
 parameter_list|(
 name|ip
@@ -5299,15 +5307,9 @@ name|iupdat
 argument_list|(
 name|ip
 argument_list|,
-operator|&
 name|time
-operator|.
-name|tv_sec
 argument_list|,
-operator|&
 name|time
-operator|.
-name|tv_sec
 argument_list|,
 literal|0
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.12	82/10/17	*/
+comment|/*	kern_descrip.c	5.13	82/10/17	*/
 end_comment
 
 begin_include
@@ -1153,6 +1153,9 @@ name|untimeout
 argument_list|(
 name|unselect
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|u
 operator|.
 name|u_procp
@@ -1175,6 +1178,9 @@ name|timeout
 argument_list|(
 name|unselect
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|u
 operator|.
 name|u_procp
@@ -1217,6 +1223,9 @@ name|untimeout
 argument_list|(
 name|unselect
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|u
 operator|.
 name|u_procp

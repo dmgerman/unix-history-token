@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_time.c	5.9	82/10/17	*/
+comment|/*	kern_time.c	5.10	82/10/17	*/
 end_comment
 
 begin_include
@@ -160,6 +160,9 @@ operator|)
 operator|&
 name|tz
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|tzp
@@ -526,6 +529,9 @@ operator|)
 operator|&
 name|aitv
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|itv
@@ -717,6 +723,9 @@ name|untimeout
 argument_list|(
 name|realitexpire
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -746,6 +755,9 @@ name|timeout
 argument_list|(
 name|realitexpire
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
 name|hzto
@@ -890,6 +902,9 @@ name|timeout
 argument_list|(
 name|realitexpire
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
 name|hzto
@@ -1604,6 +1619,9 @@ name|untimeout
 argument_list|(
 name|realitexpire
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -1710,6 +1728,9 @@ name|timeout
 argument_list|(
 name|realitexpire
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|p
 argument_list|,
 name|hzto

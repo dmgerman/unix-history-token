@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.17	82/10/17	*/
+comment|/*	sys_generic.c	5.18	82/10/17	*/
 end_comment
 
 begin_include
@@ -1747,6 +1747,13 @@ name|i
 decl_stmt|,
 name|count
 decl_stmt|;
+specifier|extern
+name|struct
+name|cmap
+modifier|*
+name|mfind
+parameter_list|()
+function_decl|;
 name|count
 operator|=
 name|howmany
@@ -1869,9 +1876,6 @@ name|b_addr
 operator|+
 name|on
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|n
 argument_list|,
 name|rw

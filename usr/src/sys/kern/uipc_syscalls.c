@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.31	82/10/17	*/
+comment|/*	uipc_syscalls.c	4.32	82/10/17	*/
 end_comment
 
 begin_include
@@ -153,6 +153,9 @@ argument_list|(
 operator|&
 name|aopt
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|opt
@@ -397,6 +400,9 @@ argument_list|(
 operator|&
 name|aopt
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|opt
@@ -667,6 +673,9 @@ name|uap
 operator|->
 name|name
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|namelen
 argument_list|,
 name|B_WRITE
@@ -694,6 +703,9 @@ argument_list|(
 operator|&
 name|aopt
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|opt
@@ -1100,10 +1112,16 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|name
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|namelen
 argument_list|)
 expr_stmt|;
@@ -1118,6 +1136,9 @@ operator|)
 operator|&
 name|namelen
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|anamelen
@@ -1298,6 +1319,9 @@ argument_list|(
 operator|&
 name|aopt
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|uap
 operator|->
 name|opt
@@ -1624,6 +1648,9 @@ name|uap
 operator|->
 name|buf
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|uap
 operator|->
 name|len
@@ -1840,6 +1867,9 @@ name|uap
 operator|->
 name|buf
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|uap
 operator|->
 name|len
@@ -2081,6 +2111,9 @@ name|uap
 operator|->
 name|buf
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|uap
 operator|->
 name|len
@@ -2174,6 +2207,9 @@ name|uap
 operator|->
 name|from
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|fromlen
 argument_list|)
 condition|)
@@ -2393,6 +2429,9 @@ name|uap
 operator|->
 name|buf
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|uap
 operator|->
 name|len
@@ -2424,6 +2463,7 @@ argument_list|,
 operator|(
 expr|struct
 name|mbuf
+operator|*
 operator|*
 operator|)
 literal|0
@@ -2543,6 +2583,11 @@ name|SOCK_STREAM
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|socketopt
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2568,6 +2613,11 @@ name|SOCK_STREAM
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|socketopt
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3004,6 +3054,9 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|namelen
 argument_list|)
 condition|)
@@ -3164,6 +3217,9 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|m
 operator|->
 name|m_len
