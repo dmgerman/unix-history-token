@@ -753,20 +753,6 @@ name|ATASLEEP
 value|_IOWR('a',  8, struct ata_sleep)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ATAGSMART
-value|_IOWR('a',  9, struct ata_smart)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATASSMART
-value|_IOWR('a', 10, struct ata_smart)
-end_define
-
 begin_endif
 endif|#
 directive|endif
