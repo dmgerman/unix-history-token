@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.6 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,13 +147,19 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|path
 argument_list|,
-literal|"%s%s"
-argument_list|,
 name|file
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|path
 argument_list|,
 name|DBM_SUFFIX
 argument_list|)
