@@ -48,7 +48,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.9 %G%"
+literal|"@(#)send.c	2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1489,9 +1489,17 @@ literal|0
 condition|)
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 while|while
 condition|(
 name|wait3

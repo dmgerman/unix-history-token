@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)input.c	1.6 (Berkeley) 82/05/04"
+literal|"@(#)input.c	1.7 (Berkeley) 83/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -1574,6 +1574,10 @@ decl_stmt|;
 comment|/* 	 *	Now, attempt a match for the various errors that lint 	 *	can complain about. 	 * 	 *	Look first for type 1 lint errors 	 */
 if|if
 condition|(
+name|wordc
+operator|>
+literal|1
+operator|&&
 name|strcmp
 argument_list|(
 name|wordv
@@ -1596,6 +1600,10 @@ name|INLINT
 expr_stmt|;
 if|if
 condition|(
+name|wordc
+operator|>
+literal|2
+operator|&&
 operator|(
 name|persperdexplode
 argument_list|(

@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)tty.c	2.3 %G%"
+literal|"@(#)tty.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -636,6 +636,8 @@ end_decl_stmt
 begin_block
 block|{
 name|char
+name|ch
+decl_stmt|,
 name|canonb
 index|[
 name|BUFSIZ
@@ -643,8 +645,6 @@ index|]
 decl_stmt|;
 name|int
 name|c
-decl_stmt|,
-name|ch
 decl_stmt|,
 name|signull
 argument_list|()
@@ -783,6 +783,10 @@ name|ch
 argument_list|)
 expr_stmt|;
 block|}
+name|ch
+operator|=
+name|c
+expr_stmt|;
 name|ioctl
 argument_list|(
 literal|0
@@ -790,7 +794,7 @@ argument_list|,
 name|TIOCSTI
 argument_list|,
 operator|&
-name|c
+name|ch
 argument_list|)
 expr_stmt|;
 block|}

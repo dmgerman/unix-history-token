@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)unexpand.c	4.1 (Berkeley) %G%"
+literal|"@(#)unexpand.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,10 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
 name|argv
 index|[
 literal|0
@@ -307,13 +311,11 @@ case|case
 literal|'\t'
 case|:
 name|dcol
-operator|=
-operator|+
+operator|+=
 literal|8
 expr_stmt|;
 name|dcol
-operator|=
-operator|&
+operator|&=
 operator|~
 literal|07
 expr_stmt|;
@@ -351,13 +353,11 @@ operator|=
 literal|'\t'
 expr_stmt|;
 name|ocol
-operator|=
-operator|+
+operator|+=
 literal|8
 expr_stmt|;
 name|ocol
-operator|=
-operator|&
+operator|&=
 operator|~
 literal|07
 expr_stmt|;
