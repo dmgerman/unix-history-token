@@ -1095,6 +1095,26 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|readonlyfs
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"write lock failed - read-only repository"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* We only know how to do one list at a time */
 if|if
 condition|(
