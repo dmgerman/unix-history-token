@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -574,22 +574,20 @@ begin_comment
 comment|/*  * Connect from a socket to a specified address.  * Both address and port must be specified in argument sin.  * If don't have a local address for this socket yet,  * then pick one.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|in_pcbconnect
 argument_list|(
-argument|inp
-argument_list|,
-argument|nam
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|inpcb
-modifier|*
 name|inp
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+name|nam
+argument_list|)
+specifier|register
+expr|struct
+name|inpcb
+operator|*
+name|inp
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -1403,20 +1401,22 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|in_setpeeraddr
 argument_list|(
-name|inp
+argument|inp
 argument_list|,
-name|nam
+argument|nam
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|inpcb
-operator|*
+modifier|*
 name|inp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
