@@ -4,7 +4,7 @@ comment|/*  * Copyright 1987 by David C. Elliott, MIPS Computer Systems.  *  * U
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * David C. Elliott, of MIPS Computer Systems.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * David C. Elliott, of MIPS Computer Systems.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttwyse60.c	3.4 (Berkeley) %G%"
+literal|"@(#)ttwyse60.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
