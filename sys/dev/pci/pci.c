@@ -2038,6 +2038,8 @@ condition|(
 name|cfg
 operator|->
 name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
 condition|)
 block|{
 case|case
@@ -2045,7 +2047,7 @@ literal|0
 case|:
 name|ptrptr
 operator|=
-literal|0x34
+name|PCIR_CAP_PTR
 expr_stmt|;
 break|break;
 case|case
@@ -2123,7 +2125,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|0x01
+name|PCIY_PMG
 case|:
 comment|/* PCI power management */
 if|if
