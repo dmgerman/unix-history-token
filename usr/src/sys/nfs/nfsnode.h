@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -220,41 +220,6 @@ name|n_tprev
 value|n_un.un_nqnfs.un_tprev
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Convert between nfsnode pointers and vnode pointers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VTONFS
-parameter_list|(
-name|vp
-parameter_list|)
-value|((struct nfsnode *)(vp)->v_data)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSTOV
-parameter_list|(
-name|np
-parameter_list|)
-value|((struct vnode *)(np)->n_vnode)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Flags for n_flag  */
 end_comment
@@ -346,6 +311,36 @@ end_define
 begin_comment
 comment|/* Special file times changed */
 end_comment
+
+begin_comment
+comment|/*  * Convert between nfsnode pointers and vnode pointers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VTONFS
+parameter_list|(
+name|vp
+parameter_list|)
+value|((struct nfsnode *)(vp)->v_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSTOV
+parameter_list|(
+name|np
+parameter_list|)
+value|((struct vnode *)(np)->n_vnode)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Prototypes for NFS vnode operations  */
@@ -998,6 +993,15 @@ end_function_decl
 
 begin_comment
 comment|/* NFS needs a bwrite routine */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
 end_comment
 
 end_unit
