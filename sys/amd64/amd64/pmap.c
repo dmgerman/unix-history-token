@@ -6176,7 +6176,7 @@ name|m
 decl_stmt|;
 name|oldpte
 operator|=
-name|loadandclear
+name|atomic_readandclear_int
 argument_list|(
 name|ptq
 argument_list|)
@@ -6837,7 +6837,7 @@ argument_list|)
 expr_stmt|;
 name|tpte
 operator|=
-name|loadandclear
+name|atomic_readandclear_int
 argument_list|(
 name|pte
 argument_list|)
