@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Libretto PCMCIA floppy support by David Horwitt (dhorwitt@ucsd.edu)  * aided by the Linux floppy driver modifications from David Bateman  * (dbateman@eng.uts.edu.au).  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Copyright (c) 2001 Joerg Wunsch,  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Libretto PCMCIA floppy support by David Horwitt (dhorwitt@ucsd.edu)  * aided by the Linux floppy driver modifications from David Bateman  * (dbateman@eng.uts.edu.au).  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Copyright (c) 2001 Joerg Wunsch,  *  joerg_wunsch@uriah.heep.sax.de (Joerg Wunsch)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bio.h>
 end_include
 
@@ -54,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
+file|<sys/devicestat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/devicestat.h>
+file|<sys/disklabel.h>
 end_include
 
 begin_include
@@ -73,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|<sys/fdcio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -224,10 +224,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* misuse a flag to identify format operation */
-end_comment
-
-begin_comment
 comment|/* configuration flags */
 end_comment
 
@@ -336,21 +332,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* These defines (-1) must match index for fd_types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_TAPE_TYPE
-value|0x020
-end_define
-
-begin_comment
-comment|/* bit for fd_types to indicate tape */
-end_comment
 
 begin_define
 define|#
@@ -1336,6 +1317,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MAX_SEC_SIZE
+value|(128<< 3)
+end_define
+
 begin_comment
 comment|/***********************************************************************\ * Per controller structure.						* \***********************************************************************/
 end_comment
@@ -1799,34 +1787,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* needed for ft driver, thus exported */
-end_comment
-
-begin_function_decl
-name|int
-name|in_fdc
-parameter_list|(
-name|struct
-name|fdc_data
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|out_fdc
-parameter_list|(
-name|struct
-name|fdc_data
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* internal functions */
 end_comment
 
@@ -1924,6 +1884,20 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|out_fdc
+parameter_list|(
+name|struct
+name|fdc_data
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|fdstart
 parameter_list|(
@@ -2001,6 +1975,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|fd_clone
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|namelen
+parameter_list|,
+name|dev_t
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -2013,104 +2010,6 @@ end_decl_stmt
 begin_comment
 comment|/* XXX: should be accessible via sysctl */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DEVIDLE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|FINDWORK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DOSEEK
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEEKCOMPLETE
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOCOMPLETE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|RECALCOMPLETE
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|STARTRECAL
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESETCTLR
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEEKWAIT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|RECALWAIT
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|MOTORWAIT
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|IOTIMEDOUT
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESETCOMPLETE
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIOREAD
-value|13
-end_define
 
 begin_ifdef
 ifdef|#
@@ -2465,16 +2364,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * named Fdopen() to avoid confusion with fdopen() in fd(4); the  * difference is now only meaningful for debuggers  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
 name|Fdopen
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* NOTE, not fdopen */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2872,7 +2771,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * XXX:  		 * Cannot use fd_cmd the normal way here, since 		 * this might be an invalid command. Thus we send the 		 * first byte, and check for an early turn of data directon. 		 */
+comment|/* 		 * Cannot use fd_cmd the normal way here, since 		 * this might be an invalid command. Thus we send the 		 * first byte, and check for an early turn of data directon. 		 */
 if|if
 condition|(
 name|out_fdc
@@ -3627,6 +3526,8 @@ name|int
 name|retry
 init|=
 literal|0
+decl_stmt|,
+name|status
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3699,13 +3600,18 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
+name|fd_in
+argument_list|(
+name|fdc
+argument_list|,
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
-name|in_fdc
-argument_list|(
-name|fdc
-argument_list|)
+name|status
 operator|&
 name|NE7_ST3_RD
 operator|)
@@ -5310,7 +5216,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot re-aquire resources\n"
+literal|"cannot re-acquire resources\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5390,8 +5296,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Acquire the DMA channel forever, The driver will do the rest */
-comment|/* XXX should integrate with rman */
+comment|/* 		 * Acquire the DMA channel forever, the driver will do 		 * the rest 		 * XXX should integrate with rman 		 */
 name|isa_dma_acquire
 argument_list|(
 name|fdc
@@ -5405,10 +5310,7 @@ name|fdc
 operator|->
 name|dmachan
 argument_list|,
-literal|128
-operator|<<
-literal|3
-comment|/* XXX max secsize */
+name|MAX_SEC_SIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5801,32 +5703,6 @@ begin_comment
 comment|/* NCARD> 0 */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|fd_clone
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-name|arg
-operator|,
-name|char
-operator|*
-name|name
-operator|,
-name|int
-name|namelen
-operator|,
-name|dev_t
-operator|*
-name|dev
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 specifier|static
 struct|struct
@@ -6025,29 +5901,21 @@ specifier|static
 name|void
 name|fd_clone
 parameter_list|(
-name|arg
-parameter_list|,
-name|name
-parameter_list|,
-name|namelen
-parameter_list|,
-name|dev
-parameter_list|)
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|namelen
-decl_stmt|;
+parameter_list|,
 name|dev_t
 modifier|*
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|u
@@ -7352,7 +7220,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|512
+literal|0
 argument_list|,
 name|DEVSTAT_NO_ORDERED_TAGS
 argument_list|,
@@ -7706,7 +7574,7 @@ condition|(
 name|needspecify
 condition|)
 block|{
-comment|/* 		 * XXX 		 * special case: since we have just woken up the FDC 		 * from its sleep, we silently assume the command will 		 * be accepted, and do not test for a timeout 		 */
+comment|/* 		 * we silently assume the command will be accepted 		 * after an FDC reset 		 * 		 * Steinbach's Guideline for Systems Programming: 		 * Never test for an error condition you don't know 		 * how to handle. 		 */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -8158,7 +8026,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX after a reset, silently believe the FDC will accept commands */
+comment|/* after a reset, silently believe the FDC will accept commands */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -8251,128 +8119,6 @@ end_comment
 
 begin_comment
 comment|/****************************************************************************/
-end_comment
-
-begin_function
-name|int
-name|in_fdc
-parameter_list|(
-name|struct
-name|fdc_data
-modifier|*
-name|fdc
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-init|=
-literal|100000
-decl_stmt|;
-while|while
-condition|(
-operator|(
-name|i
-operator|=
-name|fdsts_rd
-argument_list|(
-name|fdc
-argument_list|)
-operator|&
-operator|(
-name|NE7_DIO
-operator||
-name|NE7_RQM
-operator|)
-operator|)
-operator|!=
-operator|(
-name|NE7_DIO
-operator||
-name|NE7_RQM
-operator|)
-operator|&&
-name|j
-operator|--
-operator|>
-literal|0
-condition|)
-if|if
-condition|(
-name|i
-operator|==
-name|NE7_RQM
-condition|)
-return|return
-name|fdc_err
-argument_list|(
-name|fdc
-argument_list|,
-literal|"ready for output in input\n"
-argument_list|)
-return|;
-if|if
-condition|(
-name|j
-operator|<=
-literal|0
-condition|)
-return|return
-name|fdc_err
-argument_list|(
-name|fdc
-argument_list|,
-name|bootverbose
-condition|?
-literal|"input ready timeout\n"
-else|:
-literal|0
-argument_list|)
-return|;
-ifdef|#
-directive|ifdef
-name|FDC_DEBUG
-name|i
-operator|=
-name|fddata_rd
-argument_list|(
-name|fdc
-argument_list|)
-expr_stmt|;
-name|TRACE1
-argument_list|(
-literal|"[FDDATA->0x%x]"
-argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|)
-name|i
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|i
-operator|)
-return|;
-else|#
-directive|else
-comment|/* !FDC_DEBUG */
-return|return
-name|fddata_rd
-argument_list|(
-name|fdc
-argument_list|)
-return|;
-endif|#
-directive|endif
-comment|/* FDC_DEBUG */
-block|}
-end_function
-
-begin_comment
-comment|/*  * fd_in: Like in_fdc, but allows you to see if it worked.  */
 end_comment
 
 begin_function
@@ -12857,13 +12603,6 @@ default|default:
 name|fail
 label|:
 block|{
-name|dev_t
-name|sav_bio_dev
-init|=
-name|bp
-operator|->
-name|bio_dev
-decl_stmt|;
 name|int
 name|printerror
 init|=
@@ -12877,37 +12616,6 @@ operator|)
 operator|==
 literal|0
 decl_stmt|;
-comment|/* Trick diskerr */
-name|bp
-operator|->
-name|bio_dev
-operator|=
-name|makedev
-argument_list|(
-name|major
-argument_list|(
-name|bp
-operator|->
-name|bio_dev
-argument_list|)
-argument_list|,
-operator|(
-name|FDUNIT
-argument_list|(
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|bio_dev
-argument_list|)
-argument_list|)
-operator|<<
-literal|3
-operator|)
-operator||
-name|RAW_PART
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|printerror
@@ -12933,12 +12641,6 @@ operator|*
 operator|)
 name|NULL
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|bio_dev
-operator|=
-name|sav_bio_dev
 expr_stmt|;
 if|if
 condition|(
