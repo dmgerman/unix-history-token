@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.12 2001/07/05 03:19:43 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.14 2001/10/05 05:32:27 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.131 2001/06/29 14:56:22 christos Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.139 2001/09/29 13:59:16  ichiro Exp $ */
 end_comment
 
 begin_comment
@@ -286,6 +286,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_PSION
+value|0x016c
+end_define
+
+begin_comment
+comment|/* Psion */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_COMPAQ2
 value|0x0183
 end_define
@@ -396,6 +407,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_SYMBOL
+value|0x026c
+end_define
+
+begin_comment
+comment|/* Symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_VENDOR_BUFFALO
 value|0x026f
 end_define
@@ -457,6 +479,17 @@ end_define
 
 begin_comment
 comment|/* Melco Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_VENDOR_ZONET
+value|0x8a01
+end_define
+
+begin_comment
+comment|/* Zonet Technology Inc. */
 end_comment
 
 begin_define
@@ -799,6 +832,27 @@ define|#
 directive|define
 name|PCCARD_STR_3COM_3CCFEM556BI
 value|"3Com/Megahertz 3CCFEM556BI Ethernet/Modem"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_3COM_3CRWE62092A
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_3COM_3CRWE62092A
+value|0x2092
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_3COM_3CRWE62092A
+value|"3Com 3CRWE62092A Wireless LAN"
 end_define
 
 begin_comment
@@ -1860,6 +1914,31 @@ value|"Panasonic 8X CD-ROM Interface Card"
 end_define
 
 begin_comment
+comment|/* Psion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_PSION_GOLDCARD
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_PSION_GOLDCARD
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_PSION_GOLDCARD
+value|"Psion Gold Card"
+end_define
+
+begin_comment
 comment|/* US Robotics Products */
 end_comment
 
@@ -2814,6 +2893,31 @@ value|"Samsung MagicLAN SWL-2000N"
 end_define
 
 begin_comment
+comment|/* Symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_SYMBOL_LA4100
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_SYMBOL_LA4100
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_SYMBOL_LA4100
+value|"Symbol Spectrum24 LA4100 Series WLAN"
+end_define
+
+begin_comment
 comment|/* Telecom Device */
 end_comment
 
@@ -2911,6 +3015,31 @@ define|#
 directive|define
 name|PCCARD_STR_BUFFALO_WLI_PCM_S11
 value|"BUFFALO AirStation 11Mbps WLAN"
+end_define
+
+begin_comment
+comment|/* ZONET */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_ZONET_ZEN
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_ZONET_ZEN
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_ZONET_ZEN
+value|"Zonet Zen 10/10"
 end_define
 
 begin_comment
@@ -3140,6 +3269,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCCARD_VENDOR_EIGERLABS
+value|-1
+end_define
+
+begin_comment
+comment|/* Eiger labs,Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCCARD_CIS_MEGAHERTZ_XJ2288
 value|{ "MEGAHERTZ", "MODEM XJ2288", NULL, NULL }
 end_define
@@ -3286,6 +3426,27 @@ define|#
 directive|define
 name|PCCARD_STR_DLINK_DE660
 value|"D-Link DE-660"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_DLINK_DE660PLUS
+value|{ "D-Link", "DE-660+", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_DLINK_DE660PLUS
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_DLINK_DE660PLUS
+value|"D-Link DE-660+"
 end_define
 
 begin_define
@@ -4046,6 +4207,52 @@ define|#
 directive|define
 name|PCCARD_STR_CNET_NE2000
 value|"CNet CN40BC NE2000 Compatible"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_GEMTEK_WLAN
+value|{ "Intersil", "PRISM 2_5 PCMCIA ADAPTER", "ISL37300P", "Eval-RevA" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_GEMTEK_WLAN
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_GEMTEK_WLAN
+value|"GEMTEK Prism2_5 WaveLAN Card"
+end_define
+
+begin_comment
+comment|/*  * vendor ID of EPX_AA2000 is Fujitsu (0x0004) and product ID is 0x2000, but  * it conflicts with Fujitsu Towa LA501 Ethernet.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_EIGERLABS_EPX_AA2000
+value|{ "Eiger labs,Inc.", "EPX-AA2000 PC Sound Card", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_EIGERLABS_EPX_AA2000
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_EIGERLABS_EPX_AA2000
+value|"EPX-AA2000 PC Sound Card"
 end_define
 
 begin_define
