@@ -3636,6 +3636,7 @@ name|np_private
 decl_stmt|;
 union|union
 block|{
+comment|/* For connectionless miniports. */
 struct|struct
 block|{
 name|uint8_t
@@ -3663,8 +3664,9 @@ argument_list|)
 index|]
 decl_stmt|;
 block|}
-name|np_rsvd
+name|np_clrsvd
 struct|;
+comment|/* For de-serialized miniports */
 struct|struct
 block|{
 name|uint8_t
@@ -3690,7 +3692,7 @@ argument_list|)
 index|]
 decl_stmt|;
 block|}
-name|np_rsvdrx
+name|np_dsrsvd
 struct|;
 struct|struct
 block|{
@@ -3746,6 +3748,17 @@ name|ndis_packet
 name|ndis_packet
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* mbuf ext type for NDIS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_NDIS
+value|0x999
+end_define
 
 begin_struct
 struct|struct

@@ -282,12 +282,6 @@ name|bus_dmamap_t
 modifier|*
 name|ndis_tmaps
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|ndis_mbufs
-decl_stmt|;
 name|int
 name|ndis_mmapcnt
 decl_stmt|;
