@@ -5877,13 +5877,6 @@ argument_list|,
 name|devlink
 argument_list|)
 expr_stmt|;
-name|device_set_desc
-argument_list|(
-name|child
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|kobj_delete
 argument_list|(
 operator|(
@@ -8319,6 +8312,13 @@ operator|=
 name|DS_NOTPRESENT
 expr_stmt|;
 name|device_set_driver
+argument_list|(
+name|dev
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
