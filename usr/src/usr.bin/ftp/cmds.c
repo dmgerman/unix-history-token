@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	8.4 (Berkeley) %G%"
+literal|"@(#)cmds.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2231,7 +2231,7 @@ name|glob_t
 name|gl
 decl_stmt|;
 name|int
-name|gflags
+name|flags
 decl_stmt|;
 if|if
 condition|(
@@ -2368,9 +2368,11 @@ name|gl
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|gflags
+name|flags
 operator|=
 name|GLOB_BRACE
+operator||
+name|GLOB_NOCHECK
 operator||
 name|GLOB_QUOTE
 operator||
@@ -2385,7 +2387,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|gflags
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -7172,6 +7174,9 @@ block|{
 name|glob_t
 name|gl
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -7182,6 +7187,16 @@ operator|(
 literal|1
 operator|)
 return|;
+name|flags
+operator|=
+name|GLOB_BRACE
+operator||
+name|GLOB_NOCHECK
+operator||
+name|GLOB_QUOTE
+operator||
+name|GLOB_TILDE
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -7202,11 +7217,7 @@ argument_list|(
 operator|*
 name|cpp
 argument_list|,
-name|GLOB_BRACE
-operator||
-name|GLOB_QUOTE
-operator||
-name|GLOB_TILDE
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
