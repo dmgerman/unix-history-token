@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fwrite.c	4.4 (Berkeley) %G% */
+comment|/* @(#)fwrite.c	4.5 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -245,6 +245,10 @@ block|}
 block|}
 return|return
 operator|(
+name|size
+operator|!=
+literal|0
+condition|?
 name|count
 operator|-
 operator|(
@@ -258,6 +262,8 @@ operator|)
 operator|/
 name|size
 operator|)
+else|:
+literal|0
 operator|)
 return|;
 block|}
