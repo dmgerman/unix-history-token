@@ -1542,6 +1542,11 @@ argument_list|,
 name|pageout_status
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -1578,10 +1583,6 @@ block|{
 case|case
 name|VM_PAGER_OK
 case|:
-name|numpagedout
-operator|++
-expr_stmt|;
-break|break;
 case|case
 name|VM_PAGER_PEND
 case|:
@@ -1664,6 +1665,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 return|return
 name|numpagedout
 return|;
