@@ -15388,7 +15388,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%.20s!%s!%s!%s/%s!%qd!%ld\n"
+literal|"%.20s!%s!%s!%s/%s!%jd!%ld\n"
 argument_list|,
 name|ctime
 argument_list|(
@@ -15407,8 +15407,7 @@ argument_list|,
 name|name
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|size
 argument_list|,
