@@ -4831,11 +4831,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
