@@ -1192,6 +1192,11 @@ name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
 expr_stmt|;
+name|vm_page_unmanage
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
