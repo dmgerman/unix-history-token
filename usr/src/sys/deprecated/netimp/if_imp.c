@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_imp.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_imp.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1929,7 +1929,7 @@ argument_list|(
 name|impdst
 argument_list|)
 block|,
-name|AF_IMPLINK
+name|AF_INET
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1945,7 +1945,7 @@ argument_list|(
 name|impsrc
 argument_list|)
 block|,
-name|AF_IMPLINK
+name|AF_INET
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1980,6 +1980,8 @@ name|ifp
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|code
 decl_stmt|;
 for|for
 control|(
@@ -2072,6 +2074,21 @@ name|dl_mtype
 operator|==
 name|IMPTYPE_HOSTUNREACH
 condition|)
+block|{
+name|code
+operator|=
+operator|(
+name|cp
+operator|->
+name|dl_mtype
+operator|==
+name|IMPTYPE_HOSTDEAD
+operator|)
+condition|?
+name|PRC_HOSTDEAD
+else|:
+name|PRC_UNREACH_HOST
+expr_stmt|;
 switch|switch
 condition|(
 name|cp
@@ -2084,12 +2101,7 @@ name|IMPLINK_IP
 case|:
 name|pfctlinput
 argument_list|(
-operator|(
-name|int
-operator|)
-name|cp
-operator|->
-name|dl_mtype
+name|code
 argument_list|,
 operator|(
 expr|struct
@@ -2104,12 +2116,7 @@ break|break;
 default|default:
 name|raw_ctlinput
 argument_list|(
-operator|(
-name|int
-operator|)
-name|cp
-operator|->
-name|dl_mtype
+name|code
 argument_list|,
 operator|(
 expr|struct
@@ -2121,6 +2128,7 @@ name|impsrc
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|raw_input
 argument_list|(
