@@ -259,7 +259,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: what [-s] file ...\n"
+literal|"usage: what [-s] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
