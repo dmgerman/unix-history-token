@@ -815,7 +815,7 @@ name|int
 name|countcpus
 parameter_list|)
 block|{
-name|ACPI_PTR
+name|ACPI_POINTER
 name|rsdp_ptr
 decl_stmt|;
 name|RSDP_DESCRIPTOR
