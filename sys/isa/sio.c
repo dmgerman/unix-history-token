@@ -3595,6 +3595,13 @@ block|}
 block|,
 comment|/* WCI0003 - Fax/Voice/Modem/Speakphone/Asvd */
 block|{
+literal|0x01a0896a
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ZTIA001 - Zoom Internal V90 Faxmodem */
+block|{
 literal|0x61f7896a
 block|,
 name|NULL
