@@ -263,6 +263,29 @@ index|[
 name|MC_YEAR
 index|]
 expr_stmt|;
+comment|/* 	 * This chip is not y2k compliant, so we'll do a 10 year window fix. 	 */
+if|if
+condition|(
+name|ct
+operator|->
+name|year
+operator|>=
+literal|0
+operator|&&
+name|ct
+operator|->
+name|year
+operator|<
+literal|10
+condition|)
+block|{
+name|ct
+operator|->
+name|year
+operator|+=
+literal|100
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -370,6 +393,23 @@ name|ct
 operator|->
 name|year
 expr_stmt|;
+comment|/* 	 * This chip is not y2k compliant, so we'll do a 10 year window fix. 	 * It's probably okay to write more than 100, but let's not and 	 * and say we didn't. 	 */
+if|if
+condition|(
+name|ct
+operator|->
+name|year
+operator|>=
+literal|100
+condition|)
+block|{
+name|ct
+operator|->
+name|year
+operator|-=
+literal|100
+expr_stmt|;
+block|}
 name|s
 operator|=
 name|splclock
