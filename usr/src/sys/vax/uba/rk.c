@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.21	%G%	*/
+comment|/*	rk.c	4.22	%G%	*/
 end_comment
 
 begin_include
@@ -2940,7 +2940,7 @@ name|PGOFSET
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rk%d%c: soft ecc bn%d\n"
+literal|"rk%d%c: soft ecc sn%d\n"
 argument_list|,
 name|dkunit
 argument_list|(
