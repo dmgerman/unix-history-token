@@ -3531,7 +3531,7 @@ name|vfs_stdquotactl
 block|,
 name|ntfs_statfs
 block|,
-name|vfs_stdsync
+name|vfs_stdnosync
 block|,
 name|ntfs_vget
 block|,

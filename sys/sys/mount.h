@@ -2518,6 +2518,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|vfs_sync_t
+name|vfs_stdnosync
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vfs_vget_t
 name|vfs_stdvget
 decl_stmt|;

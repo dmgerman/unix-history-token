@@ -827,7 +827,7 @@ name|vfs_stdquotactl
 block|,
 name|devfs_statfs
 block|,
-name|vfs_stdsync
+name|vfs_stdnosync
 block|,
 name|vfs_stdvget
 block|,

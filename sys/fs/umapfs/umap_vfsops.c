@@ -1978,7 +1978,7 @@ name|umapfs_quotactl
 block|,
 name|umapfs_statfs
 block|,
-name|vfs_stdsync
+name|vfs_stdnosync
 block|,
 name|umapfs_vget
 block|,

@@ -1834,7 +1834,7 @@ name|vfs_stdquotactl
 block|,
 name|union_statfs
 block|,
-name|vfs_stdsync
+name|vfs_stdnosync
 block|,
 comment|/* XXX assumes no cached data on union level */
 name|vfs_stdvget

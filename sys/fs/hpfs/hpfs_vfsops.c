@@ -2619,7 +2619,7 @@ name|vfs_stdquotactl
 block|,
 name|hpfs_statfs
 block|,
-name|vfs_stdsync
+name|vfs_stdnosync
 block|,
 name|hpfs_vget
 block|,

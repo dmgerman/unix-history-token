@@ -370,7 +370,7 @@ name|vfs_stdquotactl
 block|,
 name|udf_statfs
 block|,
-name|vfs_stdsync
+name|vfs_stdnosync
 block|,
 name|udf_vget
 block|,

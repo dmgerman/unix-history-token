@@ -1079,7 +1079,7 @@ name|vfs_stdquotactl
 block|,
 name|portal_statfs
 block|,
-name|vfs_stdsync
+name|vfs_stdnosync
 block|,
 name|vfs_stdvget
 block|,

@@ -209,7 +209,7 @@ name|vfs_stdquotactl
 block|,
 name|cd9660_statfs
 block|,
-name|vfs_stdsync
+name|vfs_stdnosync
 block|,
 name|cd9660_vget
 block|,
