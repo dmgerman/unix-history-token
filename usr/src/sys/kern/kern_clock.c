@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.8	%H%	*/
+comment|/*	kern_clock.c	3.9	%H%	*/
 end_comment
 
 begin_include
@@ -691,19 +691,32 @@ operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|pp
 operator|->
 name|p_stat
-operator|==
-name|SSLEEP
 condition|)
+block|{
+case|case
+name|SSLEEP
+case|:
 name|setrun
 argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|SSTOP
+case|:
+name|unsleep
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|pp
 operator|->
 name|p_flag
