@@ -550,6 +550,10 @@ name|PR_ADDR
 block|,
 name|in_gif_input
 block|,
+operator|(
+name|pr_output_t
+operator|*
+operator|)
 name|rip_output
 block|,
 literal|0
@@ -586,7 +590,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|domain6
+name|domain
 name|inet6domain
 decl_stmt|;
 end_decl_stmt
@@ -1727,14 +1731,8 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* LINTED const cast */
 name|m_copydata
 argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
 name|m
 argument_list|,
 literal|0
@@ -2707,6 +2705,14 @@ operator|->
 name|dstaddr
 operator|)
 expr_stmt|;
+default|default:
+name|error
+operator|=
+name|EADDRNOTAVAIL
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
 block|}
 comment|/* sa_family must be equal */
 if|if
