@@ -955,7 +955,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"Entry %u: Device %u:%u:%u Slot %u\r\n"
+literal|"Entry %u: Device %u:%u:%u Slot %u%s\r\n"
 argument_list|,
 name|i
 argument_list|,
@@ -980,6 +980,16 @@ argument_list|,
 name|p
 operator|->
 name|slot
+argument_list|,
+name|p
+operator|->
+name|slot
+operator|==
+literal|0
+condition|?
+literal|" (on-board)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|print_irq_line
@@ -1183,6 +1193,14 @@ condition|(
 name|id
 condition|)
 block|{
+case|case
+literal|0x06861106
+case|:
+return|return
+operator|(
+literal|"VIA VT82C686/686A/686B"
+operator|)
+return|;
 case|case
 literal|0x122E8086
 case|:
