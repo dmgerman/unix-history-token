@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.12 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4213,7 +4213,7 @@ operator|!=
 name|EOF
 condition|)
 block|{
-if|if
+while|while
 condition|(
 name|c
 operator|==
