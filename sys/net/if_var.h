@@ -280,6 +280,14 @@ name|if_flags
 decl_stmt|;
 comment|/* up/down, broadcast, etc. */
 name|int
+name|if_capabilities
+decl_stmt|;
+comment|/* interface capabilities */
+name|int
+name|if_capenable
+decl_stmt|;
+comment|/* enabled features */
+name|int
 name|if_mpsafe
 decl_stmt|;
 comment|/* XXX TEMPORARY */
