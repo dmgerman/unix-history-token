@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfscanf.c	5.6 (Berkeley) %G%"
+literal|"@(#)vfscanf.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,12 +95,6 @@ directive|define
 name|FLOATING_POINT
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOATING_POINT
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -111,29 +105,12 @@ begin_define
 define|#
 directive|define
 name|BUF
-value|(MAXEXP+MAXFRACT+3)
+value|513
 end_define
 
 begin_comment
-comment|/* 3 = sign + decimal point + NUL */
+comment|/* Maximum length of numeric string. */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BUF
-value|40
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Flags used during conversion.  */
@@ -2639,9 +2616,16 @@ literal|0
 expr_stmt|;
 name|res
 operator|=
-name|atof
+name|strtod
 argument_list|(
 name|buf
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
