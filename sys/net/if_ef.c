@@ -1730,7 +1730,6 @@ name|ether_type
 argument_list|)
 operator|)
 return|;
-break|break;
 ifdef|#
 directive|ifdef
 name|IPX
@@ -1762,7 +1761,6 @@ name|ether_type
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
 name|ETHER_FT_8022
 case|:
@@ -1780,7 +1778,6 @@ name|ether_type
 argument_list|)
 operator|)
 return|;
-break|break;
 default|default:
 name|EFDEBUG
 argument_list|(
