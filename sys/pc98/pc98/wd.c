@@ -4483,7 +4483,13 @@ argument|} 		du->dk_dd.d_secpercyl= du->dk_dd.d_ntracks*du->dk_dd.d_nsectors; 		
 comment|/* +- 1 */
 argument|du->dk_dd.d_ntracks = wp->wdp_heads; 		du->dk_dd.d_nsectors = wp->wdp_sectors; 		du->dk_dd.d_secpercyl =  			du->dk_dd.d_ntracks * du->dk_dd.d_nsectors; 		du->dk_dd.d_secperunit =  			du->dk_dd.d_secpercyl * du->dk_dd.d_ncylinders; 		if (wp->wdp_cylinders ==
 literal|16383
-argument|&& 		    du->dk_dd.d_secperunit< wp->wdp_lbasize) { 			du->dk_dd.d_secperunit = wp->wdp_lbasize; 			du->dk_dd.d_ncylinders =  				du->dk_dd.d_secperunit / du->dk_dd.d_secpercyl; 		} 	} 	if (WDOPT_FORCEHD(du->cfg_flags)) { 		du->dk_dd.d_ntracks = WDOPT_FORCEHD(du->cfg_flags); 		du->dk_dd.d_secpercyl =  		    du->dk_dd.d_ntracks * du->dk_dd.d_nsectors; 		du->dk_dd.d_ncylinders = 		    du->dk_dd.d_secperunit / du->dk_dd.d_secpercyl; 	}
+argument|&& 		    du->dk_dd.d_secperunit< wp->wdp_lbasize) { 			du->dk_dd.d_secperunit = wp->wdp_lbasize; 			du->dk_dd.d_ncylinders =  				du->dk_dd.d_secperunit / du->dk_dd.d_secpercyl; 		} 	} 	if (WDOPT_FORCEHD(du->cfg_flags)) { 		du->dk_dd.d_ntracks = WDOPT_FORCEHD(du->cfg_flags); 		du->dk_dd.d_secpercyl =  		    du->dk_dd.d_ntracks * du->dk_dd.d_nsectors; 		du->dk_dd.d_ncylinders = 		    du->dk_dd.d_secperunit / du->dk_dd.d_secpercyl; 	} 	if (du->dk_dd.d_ncylinders>
+literal|0x10000
+argument|&& !(du->cfg_flags& WDOPT_LBA)) { 		du->dk_dd.d_ncylinders =
+literal|0x10000
+argument|; 		du->dk_dd.d_secperunit = du->dk_dd.d_secpercyl * 		    du->dk_dd.d_ncylinders; 		printf(
+literal|"wd%d: cannot handle %d total sectors; truncating to %lu\n"
+argument|, 		    du->dk_lunit, wp->wdp_lbasize, du->dk_dd.d_secperunit); 	}
 if|#
 directive|if
 literal|0
