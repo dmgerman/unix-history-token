@@ -2719,13 +2719,14 @@ index|]
 decl_stmt|,
 name|maxvfsconf
 decl_stmt|,
-name|miblen
-decl_stmt|,
 name|cnt
 init|=
 literal|0
 decl_stmt|,
 name|i
+decl_stmt|;
+name|size_t
+name|miblen
 decl_stmt|;
 name|struct
 name|ovfsconf
@@ -2766,6 +2767,9 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
+operator|(
+name|u_int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mib
