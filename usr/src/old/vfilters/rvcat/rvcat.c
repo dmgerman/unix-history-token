@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	rvcat.c	4.4	83/05/16	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)rvcat.c	4.5 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Cat Simulator for Versatec and Varian  * Modified for Varian with rotated fonts: wnj 5/30/80.  *  * Takes two extra special codes defined by rvsort:  *	0115 - break for new page, goto (0,0)  *	0116 - lead 64* following byte  */

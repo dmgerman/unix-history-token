@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	vwidth.c	4.1	83/03/09	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)vwidth.c	4.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	Creates a width table for troff from a versatec font for a  *		normal font.  *	Usage: width font [ point_size ]  *		where font is the file name of the versatec font and  *		point_size is it point size.  *	If the point size is omitted it is taken from the suffix of  *	the font name, as bocklin.14 => 14 point.  *	It is better to use as large a point size font as possible   *	to avoid round off.  */

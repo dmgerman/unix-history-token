@@ -1,6 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)lpf.c	4.12 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*		lpf.c	4.11	83/05/19  * 	filter which reads the output of nroff and converts lines  *	with ^H's to overwritten lines.  Thus this works like 'ul'  *	but is much better: it can handle more than 2 overwrites  *	and it is written with some style.  *	modified by kls to use register references instead of arrays  *	to try to gain a little speed.  */
+comment|/*  * 	filter which reads the output of nroff and converts lines  *	with ^H's to overwritten lines.  Thus this works like 'ul'  *	but is much better: it can handle more than 2 overwrites  *	and it is written with some style.  *	modified by kls to use register references instead of arrays  *	to try to gain a little speed.  */
 end_comment
 
 begin_include
