@@ -116,7 +116,7 @@ name|char
 modifier|*
 name|bp
 decl_stmt|;
-name|int
+name|u_int
 name|len
 decl_stmt|;
 block|{
@@ -200,7 +200,7 @@ name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-name|long
+name|u_int
 name|len
 decl_stmt|;
 block|{
@@ -237,7 +237,7 @@ condition|(
 name|len
 operator|<
 operator|(
-name|long
+name|u_int
 operator|)
 name|xdrs
 operator|->
