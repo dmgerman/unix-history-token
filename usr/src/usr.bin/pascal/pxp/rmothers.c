@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rmothers.c	1.1 (Berkeley) %G%"
+literal|"@(#)rmothers.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -559,6 +559,15 @@ expr_stmt|;
 name|indent
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|othersp
+operator|==
+name|NIL
+condition|)
+block|{
+return|return;
+block|}
 name|ppkw
 argument_list|(
 literal|"else"
