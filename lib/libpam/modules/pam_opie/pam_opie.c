@@ -236,9 +236,9 @@ operator|)
 block|{
 name|pwd
 operator|=
-name|getpwuid
+name|getpwnam
 argument_list|(
-name|getuid
+name|getlogin
 argument_list|()
 argument_list|)
 block|;
