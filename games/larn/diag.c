@@ -1637,7 +1637,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|VT100
+comment|/* VT100 */
 name|lcreat
 argument_list|(
 operator|(
