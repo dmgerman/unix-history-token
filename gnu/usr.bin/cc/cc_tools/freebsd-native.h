@@ -175,7 +175,7 @@ define|#
 directive|define
 name|LIBGCC_SPEC
 define|\
-value|"%{!shared:%{!pthread:%{!kthread:libgcc.a%s}}%{pthread|kthread:libgcc_r.a%s}}"
+value|"%{!shared: \     %{!pthread:libgcc.a%s} \     %{pthread:libgcc_r.a%s}}"
 end_define
 
 end_unit
