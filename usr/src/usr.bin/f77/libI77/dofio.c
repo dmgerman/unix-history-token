@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dofio[] = "@(#)dofio.c	1.2";  *  * fortran format executer  */
+comment|/* char id_dofio[] = "@(#)dofio.c	1.3";  *  * fortran format executer  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ name|one
 argument_list|,
 name|NULL
 argument_list|,
-literal|0l
+literal|0L
 argument_list|)
 operator|)
 return|;
