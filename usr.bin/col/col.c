@@ -35,14 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)col.c	8.5 (Berkeley) 5/4/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)col.c	8.5 (Berkeley) 5/4/95"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -667,25 +679,15 @@ operator|)
 operator|<=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"col: bad -l argument %s.\n"
+literal|"bad -l argument %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'x'
@@ -2290,19 +2292,11 @@ name|void
 name|wrerr
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"col: write error.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"write error"
 argument_list|)
 expr_stmt|;
 block|}
