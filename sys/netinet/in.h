@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $Id: in.h,v 1.22.2.4 1998/02/25 02:34:30 julian Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $Id: in.h,v 1.22.2.5 1998/07/01 01:38:33 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -1792,6 +1792,50 @@ begin_comment
 comment|/* set/get NAT opts */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_DUMMYNET_CONFIGURE
+value|60
+end_define
+
+begin_comment
+comment|/* add/configure a dummynet pipe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DUMMYNET_DEL
+value|61
+end_define
+
+begin_comment
+comment|/* delete a dummynet pipe from chain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DUMMYNET_FLUSH
+value|62
+end_define
+
+begin_comment
+comment|/* flush dummynet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DUMMYNET_GET
+value|64
+end_define
+
+begin_comment
+comment|/* get entire dummynet pipes */
+end_comment
+
 begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment
@@ -2049,6 +2093,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IPCTL_STATS
+value|12
+end_define
+
+begin_comment
+comment|/* ipstat structure */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPCTL_ACCEPTSOURCEROUTE
 value|13
 end_define
@@ -2068,7 +2123,7 @@ begin_define
 define|#
 directive|define
 name|IPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "ttl", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "rtexpire", CTLTYPE_INT }, \ 	{ "rtminexpire", CTLTYPE_INT }, \ 	{ "rtmaxcache", CTLTYPE_INT }, \ 	{ "sourceroute", CTLTYPE_INT }, \  	{ "directed-broadcast", CTLTYPE_INT }, \ 	{ "intr-queue-maxlen", CTLTYPE_INT }, \ 	{ "intr-queue-drops", CTLTYPE_INT }, \ 	{ "accept_sourceroute", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "ttl", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "rtexpire", CTLTYPE_INT }, \ 	{ "rtminexpire", CTLTYPE_INT }, \ 	{ "rtmaxcache", CTLTYPE_INT }, \ 	{ "sourceroute", CTLTYPE_INT }, \  	{ "directed-broadcast", CTLTYPE_INT }, \ 	{ "intr-queue-maxlen", CTLTYPE_INT }, \ 	{ "intr-queue-drops", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "accept_sourceroute", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
@@ -2180,6 +2235,12 @@ name|ip
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ip_fw_chain
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -2199,6 +2260,10 @@ name|u_int16_t
 modifier|*
 typedef|, struct
 name|mbuf
+modifier|*
+modifier|*
+typedef|, struct
+name|ip_fw_chain
 modifier|*
 modifier|*
 typedef|));
@@ -2231,6 +2296,32 @@ specifier|extern
 name|ip_fw_ctl_t
 modifier|*
 name|ip_fw_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dummynet hooks */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|ip_dn_ctl_t
+name|__P
+typedef|((
+name|int
+typedef|, struct
+name|mbuf
+modifier|*
+modifier|*
+typedef|));
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|ip_dn_ctl_t
+modifier|*
+name|ip_dn_ctl_ptr
 decl_stmt|;
 end_decl_stmt
 

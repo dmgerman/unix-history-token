@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.53.2.4 1997/11/29 14:41:48 kato Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.53.2.5 1998/04/18 23:25:08 nate Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -246,6 +246,23 @@ begin_include
 include|#
 directive|include
 file|<net/bpfdesc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BRIDGE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/bridge.h>
 end_include
 
 begin_endif
@@ -5250,7 +5267,6 @@ name|ifp
 operator|->
 name|if_bpf
 condition|)
-block|{
 name|bpf_mtap
 argument_list|(
 name|ifp
@@ -5258,7 +5274,80 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that the interface cannot be in promiscuous mode if there are 	 * no BPF listeners.  And if we are in promiscuous mode, we have to 	 * check if this packet is really ours. 	 */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|BRIDGE
+if|if
+condition|(
+name|do_bridge
+condition|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|bdg_ifp
+decl_stmt|;
+name|bdg_ifp
+operator|=
+name|bridge_in
+argument_list|(
+name|top
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bdg_ifp
+operator|==
+name|BDG_DROP
+condition|)
+goto|goto
+name|dropit
+goto|;
+if|if
+condition|(
+name|bdg_ifp
+operator|!=
+name|BDG_LOCAL
+condition|)
+name|bdg_forward
+argument_list|(
+operator|&
+operator|(
+name|sc
+operator|->
+name|top
+operator|)
+argument_list|,
+name|bdg_ifp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bdg_ifp
+operator|!=
+name|BDG_LOCAL
+operator|&&
+name|bdg_ifp
+operator|!=
+name|BDG_BCAST
+operator|&&
+name|bdg_ifp
+operator|!=
+name|BDG_MCAST
+condition|)
+goto|goto
+name|dropit
+goto|;
+comment|/* all others accepted locally */
+goto|goto
+name|getit
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/*      * If we are in promiscuous mode, we have to      * check if this packet is really ours.      */
 name|eh
 operator|=
 name|mtod
@@ -5334,6 +5423,8 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|dropit
+label|:
 if|if
 condition|(
 name|sc
@@ -5395,9 +5486,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-endif|#
-directive|endif
+name|getit
+label|:
 name|eh
 operator|=
 name|mtod
