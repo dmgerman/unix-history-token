@@ -420,6 +420,14 @@ name|td_flags
 operator||=
 name|TDF_UNBOUND
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* 	 * Maybe move these here from process creation, but maybe not.    	 * Moving them here takes them away from their "natural" place 	 * in the fork process. 	 */
+comment|/* XXX td_contested does not appear to be initialized for threads! */
+block|LIST_INIT(&td->td_contested); 	callout_init(&td->td_slpcallout, 1);
+endif|#
+directive|endif
 name|cached_threads
 operator|--
 expr_stmt|;
