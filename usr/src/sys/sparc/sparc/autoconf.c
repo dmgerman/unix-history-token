@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	8.3 (Berkeley) %G%  *  * from: $Header: autoconf.c,v 1.37 93/09/28 07:19:48 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	8.4 (Berkeley) %G%  *  * from: $Header: autoconf.c,v 1.38 93/10/01 21:24:51 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -1901,11 +1901,12 @@ index|[]
 init|=
 block|{
 comment|/* find these first (end with empty string) */
+literal|"memory-error"
+block|,
+comment|/* as early as convenient, in case of error */
 literal|"eeprom"
 block|,
 literal|"counter-timer"
-block|,
-literal|"memory-error"
 block|,
 literal|""
 block|,
