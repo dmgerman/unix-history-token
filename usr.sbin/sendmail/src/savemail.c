@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.28 (Berkeley) 3/11/94"
+literal|"@(#)savemail.c	8.29 (Berkeley) 5/10/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -1929,7 +1929,12 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"Returned mail: %s"
+literal|"Returned mail: %.*s"
+argument_list|,
+sizeof|sizeof
+name|buf
+operator|-
+literal|20
 argument_list|,
 name|msg
 argument_list|)

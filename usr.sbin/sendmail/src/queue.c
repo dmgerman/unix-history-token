@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.41 (Berkeley) 4/18/94 (with queueing)"
+literal|"@(#)queue.c	8.41.1.1 (Berkeley) 2/10/95 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.41 (Berkeley) 4/18/94 (without queueing)"
+literal|"@(#)queue.c	8.41.1.1 (Berkeley) 2/10/95 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,9 +822,12 @@ name|tfp
 argument_list|,
 literal|"M%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|e
 operator|->
 name|e_message
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -936,7 +939,10 @@ name|tfp
 argument_list|,
 literal|"$r%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -963,7 +969,10 @@ name|tfp
 argument_list|,
 literal|"$s%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -990,7 +999,10 @@ name|tfp
 argument_list|,
 literal|"$_%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_if
@@ -1006,11 +1018,14 @@ name|tfp
 argument_list|,
 literal|"S%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_paddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1077,9 +1092,12 @@ name|tfp
 argument_list|,
 literal|"E%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|q
 operator|->
 name|q_paddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1153,9 +1171,12 @@ name|tfp
 argument_list|,
 literal|"R%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|q
 operator|->
 name|q_paddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2059,9 +2080,12 @@ literal|"C%s:%s\n"
 argument_list|,
 name|uname
 argument_list|,
+name|denlstring
+argument_list|(
 name|a
 operator|->
 name|q_paddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
