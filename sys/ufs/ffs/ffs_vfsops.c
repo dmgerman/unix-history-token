@@ -2720,7 +2720,7 @@ else|:
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are a root mount, drop the E flag so fsck can do its magic. 	 * We will pick it up again when we remounte R/W. 	 */
+comment|/* 	 * If we are a root mount, drop the E flag so fsck can do its magic. 	 * We will pick it up again when we remount R/W. 	 */
 if|if
 condition|(
 name|error
