@@ -1007,11 +1007,11 @@ define|\
 value|_rel_sleep_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMPnotyet
+end_ifndef
 
 begin_define
 define|#

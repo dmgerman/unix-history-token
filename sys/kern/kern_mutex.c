@@ -1877,6 +1877,8 @@ operator|||
 name|LOCK_DEBUG
 operator|>
 literal|0
+operator|||
+literal|1
 name|_get_spin_lock
 argument_list|(
 name|m
@@ -2017,6 +2019,8 @@ operator|||
 name|LOCK_DEBUG
 operator|>
 literal|0
+operator|||
+literal|1
 name|_rel_spin_lock
 argument_list|(
 name|m
