@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)init_main.c	8.9 (Berkeley) 1/21/94  * $Id: init_main.c,v 1.38 1996/02/23 19:44:10 peter Exp $  */
+comment|/*  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)init_main.c	8.9 (Berkeley) 1/21/94  * $Id: init_main.c,v 1.39 1996/03/02 18:24:05 peter Exp $  */
 end_comment
 
 begin_include
@@ -1033,29 +1033,20 @@ operator|=
 name|p
 expr_stmt|;
 comment|/* XXX redundant*/
-comment|/* 	 * Create process 0 (the swapper). 	 */
-name|allproc
-operator|=
-operator|(
-specifier|volatile
-expr|struct
-name|proc
-operator|*
-operator|)
-name|p
+comment|/* 	 * Initialize process and pgrp structures. 	 */
+name|procinit
+argument_list|()
 expr_stmt|;
-name|p
-operator|->
-name|p_prev
-operator|=
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|*
-operator|)
+comment|/* 	 * Create process 0 (the swapper). 	 */
+name|LIST_INSERT_HEAD
+argument_list|(
 operator|&
 name|allproc
+argument_list|,
+name|p
+argument_list|,
+name|p_list
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
@@ -1064,19 +1055,38 @@ operator|=
 operator|&
 name|pgrp0
 expr_stmt|;
-name|pgrphash
-index|[
+name|LIST_INSERT_HEAD
+argument_list|(
+name|PGRPHASH
+argument_list|(
 literal|0
-index|]
-operator|=
+argument_list|)
+argument_list|,
 operator|&
 name|pgrp0
+argument_list|,
+name|pg_hash
+argument_list|)
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
 name|pgrp0
 operator|.
-name|pg_mem
-operator|=
+name|pg_members
+argument_list|)
+expr_stmt|;
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|pgrp0
+operator|.
+name|pg_members
+argument_list|,
 name|p
+argument_list|,
+name|p_pglist
+argument_list|)
 expr_stmt|;
 name|pgrp0
 operator|.
@@ -1472,10 +1482,7 @@ name|p_addr
 operator|->
 name|u_sigacts
 expr_stmt|;
-comment|/* 	 * Initialize per uid information structure and charge 	 * root for one process. 	 */
-name|usrinfoinit
-argument_list|()
-expr_stmt|;
+comment|/* 	 * Charge root for one process. 	 */
 operator|(
 name|void
 operator|)
