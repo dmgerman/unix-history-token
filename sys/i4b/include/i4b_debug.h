@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_debug.h - i4b debug header file  *	-----------------------------------  *  *	$Id: i4b_debug.h,v 1.32 2000/07/24 12:22:08 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Wed May 31 09:51:34 2000]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_debug.h - i4b debug header file  *	-----------------------------------  *  *	$Id: i4b_debug.h,v 1.32 2000/07/24 12:22:08 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Wed Oct 18 09:48:16 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -246,7 +246,7 @@ begin_define
 define|#
 directive|define
 name|L1_ERROR
-value|0x0001
+value|0x000001
 end_define
 
 begin_comment
@@ -257,7 +257,7 @@ begin_define
 define|#
 directive|define
 name|L1_PRIM
-value|0x0002
+value|0x000002
 end_define
 
 begin_comment
@@ -268,7 +268,7 @@ begin_define
 define|#
 directive|define
 name|L1_BCHAN
-value|0x0004
+value|0x000004
 end_define
 
 begin_comment
@@ -279,7 +279,7 @@ begin_define
 define|#
 directive|define
 name|L1_H_ERR
-value|0x0008
+value|0x000008
 end_define
 
 begin_comment
@@ -290,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|L1_H_IRQ
-value|0x0010
+value|0x000010
 end_define
 
 begin_comment
@@ -301,7 +301,7 @@ begin_define
 define|#
 directive|define
 name|L1_I_ERR
-value|0x0020
+value|0x000020
 end_define
 
 begin_comment
@@ -312,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|L1_I_MSG
-value|0x0040
+value|0x000040
 end_define
 
 begin_comment
@@ -323,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|L1_I_SETUP
-value|0x0080
+value|0x000080
 end_define
 
 begin_comment
@@ -334,7 +334,7 @@ begin_define
 define|#
 directive|define
 name|L1_F_MSG
-value|0x0100
+value|0x000100
 end_define
 
 begin_comment
@@ -345,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|L1_F_ERR
-value|0x0200
+value|0x000200
 end_define
 
 begin_comment
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|L1_T_MSG
-value|0x0400
+value|0x000400
 end_define
 
 begin_comment
@@ -367,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|L1_T_ERR
-value|0x0800
+value|0x000800
 end_define
 
 begin_comment
@@ -378,7 +378,7 @@ begin_define
 define|#
 directive|define
 name|L1_H_XFRERR
-value|0x1000
+value|0x001000
 end_define
 
 begin_comment
@@ -389,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|L1_I_CICO
-value|0x2000
+value|0x002000
 end_define
 
 begin_comment
@@ -400,7 +400,7 @@ begin_define
 define|#
 directive|define
 name|L1_S_MSG
-value|0x4000
+value|0x004000
 end_define
 
 begin_comment
@@ -411,7 +411,7 @@ begin_define
 define|#
 directive|define
 name|L1_S_ERR
-value|0x8000
+value|0x008000
 end_define
 
 begin_comment
@@ -421,8 +421,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L1_HFC_DBG
+value|0x010000
+end_define
+
+begin_comment
+comment|/* HFC-S PCI messages */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|L1_DEBUG_MAX
-value|0xffef
+value|0x01ffef
 end_define
 
 begin_comment
