@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ansi.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ansi.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -85,15 +85,30 @@ begin_comment
 comment|/* va_list */
 end_comment
 
+begin_comment
+comment|/*  * Runes (wchar_t) is declared to be an ``int'' instead of the more natural  * ``unsigned long'' or ``long''.  Two things are happening here.  It is not  * unsigned so that EOF (-1) can be naturally assigned to it and used.  Also,  * it looks like 10646 will be a 31 bit standard.  This means that if your  * ints cannot hold 32 bits, you will be in trouble.  The reason an int was  * chosen over a long is that the is*() and to*() routines take ints (says  * ANSI C), but they use _RUNE_T_ instead of int.  By changing it here, you  * lose a bit of ANSI conformance, but your programs will still work.  *      * Note that _WCHAR_T_ and _RUNE_T_ must be of the same type.  When wchar_t  * and rune_t are typedef'd, _WCHAR_T_ will be undef'd, but _RUNE_T remains  * defined for ctype.h.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_BSD_WCHAR_T_
-value|unsigned short
+value|int
 end_define
 
 begin_comment
 comment|/* wchar_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_BSD_RUNE_T_
+value|int
+end_define
+
+begin_comment
+comment|/* rune_t */
 end_comment
 
 begin_endif
