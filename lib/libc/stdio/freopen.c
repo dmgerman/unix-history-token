@@ -488,6 +488,14 @@ name|_size
 operator|=
 literal|0
 expr_stmt|;
+name|fp
+operator|->
+name|_extra
+operator|->
+name|orientation
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|f
