@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_system[] = "@(#)system_.c	1.2";  *  * execute a unix command  *  * calling sequence:  *	iexit = system(command)  * where:  *	iexit will return the exit status of the command  *	command is a character string containing the command to be executed  */
+comment|/* char id_system[] = "@(#)system_.c	1.3";  *  * execute a unix command  *  * calling sequence:  *	iexit = system(command)  * where:  *	iexit will return the exit status of the command  *	command is a character string containing the command to be executed  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"../libI77/fiodefs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../libI77/f_errno.h"
 end_include
 
 begin_function
@@ -25,9 +31,35 @@ name|long
 name|n
 decl_stmt|;
 block|{
+name|char
+name|buf
+index|[
+literal|256
+index|]
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|n
+operator|>=
+sizeof|sizeof
+name|buf
+condition|)
+return|return
+operator|(
+operator|-
+call|(
+name|long
+call|)
+argument_list|(
+name|errno
+operator|=
+name|F_ERARG
+argument_list|)
+operator|)
+return|;
 for|for
 control|(
 name|i
@@ -45,6 +77,15 @@ operator|++
 argument_list|)
 control|)
 empty_stmt|;
+name|g_char
+argument_list|(
+name|s
+argument_list|,
+name|n
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -52,7 +93,7 @@ name|long
 operator|)
 name|system
 argument_list|(
-name|s
+name|buf
 argument_list|)
 operator|)
 return|;
