@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apx.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apx.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -72,13 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"net/if_types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"netccitt/x25.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"apxreg.h"
+file|"if_apxreg.h"
 end_include
 
 begin_decl_stmt
@@ -106,6 +112,9 @@ name|apxinit
 argument_list|()
 decl_stmt|,
 name|x25_ifoutput
+argument_list|()
+decl_stmt|,
+name|x25_rtrequest
 argument_list|()
 decl_stmt|,
 name|apxioctl
@@ -218,6 +227,7 @@ name|int
 name|pint
 decl_stmt|;
 block|}
+name|apxstat
 struct|;
 end_struct
 
@@ -289,13 +299,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"i386/isa/if_apxreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i386/isa/isa_device.h"
+file|"isa_device.h"
 end_include
 
 begin_decl_stmt
@@ -323,15 +327,8 @@ parameter_list|,
 name|csrnum
 parameter_list|)
 define|\
-value|(outw(&(apx->apx_sgcp->sgcp_rap), csrnum<< 1),
+value|(outw(&(apx->apx_sgcp->sgcp_rap), csrnum<< 1), \ 	  inw(&(apx->apx_sgcp->sgcp_rdp)))
 end_define
-
-begin_macro
-name|inw
-argument_list|(
-argument|&(apx->apx_sgcp->sgcp_rdp)
-argument_list|)
-end_macro
 
 begin_define
 define|#
@@ -345,27 +342,10 @@ parameter_list|,
 name|data
 parameter_list|)
 define|\
-value|(outw(&(apx->apx_sgcp->sgcp_rap), csrnum<< 1),
+value|(outw(&(apx->apx_sgcp->sgcp_rap), csrnum<< 1), \ 	  outw(&(apx->apx_sgcp->sgcp_rdp), data))
 end_define
 
-begin_expr_stmt
-name|outw
-argument_list|(
-operator|&
-operator|(
-name|apx
-operator|->
-name|apx_sgcp
-operator|->
-name|sgcp_rdp
-operator|)
-argument_list|,
-name|data
-argument_list|)
-end_expr_stmt
-
 begin_define
-unit|)
 define|#
 directive|define
 name|APX_RCSR
@@ -435,6 +415,11 @@ name|apc_reg
 modifier|*
 name|reg
 init|=
+operator|(
+expr|struct
+name|apc_reg
+operator|*
+operator|)
 name|id
 operator|->
 name|id_iobase
@@ -509,7 +494,7 @@ name|apx_sgcp
 operator|=
 name|reg
 operator|->
-name|axr_sgcb
+name|axr_sgcp
 operator|+
 name|subunit
 expr_stmt|;
@@ -525,6 +510,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|SG_RCSR
 argument_list|(
 name|apx
@@ -536,8 +522,8 @@ literal|0xff08
 operator|)
 operator|!=
 literal|0x08
+operator|)
 condition|)
-block|)
 block|{
 name|apxerror
 argument_list|(
@@ -621,19 +607,17 @@ literal|0x0110
 expr_stmt|;
 comment|/* no byte swapping for PC-AT */
 block|}
-end_block
-
-begin_return
 return|return
 literal|1
 return|;
-end_return
+block|}
+end_block
 
 begin_expr_stmt
-unit|}  apxattach
-operator|(
+name|apxattach
+argument_list|(
 name|id
-operator|)
+argument_list|)
 specifier|register
 expr|struct
 name|isa_device
@@ -683,14 +667,12 @@ begin_comment
 comment|/*  * Interface exists: make available by filling in network interface  * record.  System will initialize the interface when it is ready  * to accept packets.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|apx_ifattach
-argument_list|(
-argument|unit
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unit
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -769,7 +751,7 @@ name|if_type
 operator|=
 name|apx_default_modes
 operator|.
-name|axp_iftype
+name|apm_iftype
 expr_stmt|;
 name|ifp
 operator|->
@@ -789,7 +771,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialization of interface  */
@@ -983,10 +965,6 @@ name|apx
 operator|->
 name|apx_txcnt
 operator|=
-name|apx
-operator|->
-name|apx_rxnt
-operator|=
 literal|0
 expr_stmt|;
 if|if
@@ -1018,7 +996,7 @@ name|apx_meminit
 argument_list|(
 name|apx
 operator|->
-name|apc_mem
+name|apx_hmem
 argument_list|,
 name|apx
 argument_list|)
@@ -1059,7 +1037,6 @@ name|SG_INIT
 argument_list|,
 literal|"init request"
 argument_list|)
-condition|)
 operator|||
 name|apx_uprim
 argument_list|(
@@ -1078,16 +1055,10 @@ name|SG_TRANS
 argument_list|,
 literal|"transparent mode"
 argument_list|)
-block|)
-end_block
-
-begin_return
+condition|)
 return|return
 literal|0
 return|;
-end_return
-
-begin_expr_stmt
 name|SG_WCSR
 argument_list|(
 name|apx
@@ -1097,27 +1068,28 @@ argument_list|,
 name|SG_INEA
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 literal|1
-operator|:
-end_return
+return|;
+block|}
+end_block
 
-begin_expr_stmt
-unit|}  apx_uprim
-operator|(
-name|apx
-operator|,
-name|request
-operator|,
-name|ident
-operator|)
+begin_macro
+name|apx_uprim
+argument_list|(
+argument|apx
+argument_list|,
+argument|request
+argument_list|,
+argument|ident
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|request
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1157,13 +1129,13 @@ if|if
 condition|(
 name|reply
 operator|&
-name|x8040
+literal|0x8040
 condition|)
 name|SG_WCRS
 argument_list|(
 literal|1
 argument_list|,
-name|x8040
+literal|0x8040
 argument_list|)
 expr_stmt|;
 comment|/* Magic! */
@@ -1270,14 +1242,14 @@ name|LOWADDR
 parameter_list|(
 name|e
 parameter_list|)
-value|(((u_long)&(apcbase->(e)))& 0xffff)
+value|(((u_long)&(apcbase->e))& 0xffff)
 define|#
 directive|define
 name|HIADDR
 parameter_list|(
 name|e
 parameter_list|)
-value|((((u_long)&(apcbase->(e)))>> 16)& 0xff)
+value|((((u_long)&(apcbase->e))>> 16)& 0xff)
 define|#
 directive|define
 name|SET_SGDX
@@ -1556,7 +1528,7 @@ name|apc
 init|=
 name|apx
 operator|->
-name|apx_mem
+name|apx_hmem
 decl_stmt|;
 name|struct
 name|mbuf
@@ -1591,9 +1563,9 @@ name|apc
 operator|->
 name|apc_txmd
 operator|+
-name|apc
+name|apx
 operator|->
-name|apc_txnum
+name|apx_txnum
 expr_stmt|;
 if|if
 condition|(
@@ -1652,7 +1624,7 @@ name|len
 argument_list|,
 name|apc
 operator|->
-name|apc_txbuf
+name|apc_tbuf
 index|[
 name|apx
 operator|->
@@ -1740,12 +1712,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|apxintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1775,7 +1745,7 @@ if|if
 condition|(
 name|apx
 operator|->
-name|ap_if
+name|apx_if
 operator|.
 name|if_flags
 operator|&
@@ -1896,22 +1866,20 @@ name|apx_lastsoftc
 condition|)
 do|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|apxtint
-argument_list|(
+parameter_list|(
 name|apx
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|apx_softc
-operator|*
+modifier|*
 name|apx
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1921,7 +1889,7 @@ name|apc
 init|=
 name|apx
 operator|->
-name|apx_mem
+name|apx_hmem
 decl_stmt|;
 name|int
 name|i
@@ -2010,7 +1978,7 @@ name|apx_if
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|apxrint
@@ -2035,7 +2003,7 @@ name|apc
 init|=
 name|apx
 operator|->
-name|apx_mem
+name|apx_hmem
 decl_stmt|;
 specifier|register
 name|struct
@@ -2117,7 +2085,7 @@ name|apx
 argument_list|,
 literal|"chained buffer"
 argument_list|,
-name|ds
+name|dx
 operator|->
 name|sgdx_flags
 argument_list|)
@@ -2182,7 +2150,7 @@ name|SG_ELF
 operator|)
 operator|)
 operator|!=
-name|SG_ENP
+name|SG_ELF
 condition|)
 block|{
 name|apxreset
@@ -2246,30 +2214,25 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|apxinput
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|buffer
-argument_list|,
+parameter_list|,
 name|len
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|caddr_t
 name|buffer
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2424,7 +2387,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routine to copy from board local memory into mbufs.  */
@@ -2970,7 +2933,7 @@ operator|=
 operator|*
 operator|(
 expr|struct
-name|apx_modes
+name|apc_modes
 operator|*
 operator|)
 name|data
