@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pty.c	5.3 (Berkeley) %G%"
+literal|"@(#)pty.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,7 +399,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|&
 name|winp
 argument_list|)
 expr_stmt|;
