@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ranlib.c 4.7 %G%"
+literal|"@(#)ranlib.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +229,42 @@ name|int
 argument_list|)
 index|]
 decl_stmt|;
+specifier|register
+name|int
+name|just_touch
+init|=
+literal|0
+decl_stmt|;
+comment|/* check for the "-t" flag" */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-t"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|just_touch
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+block|}
 operator|--
 name|argc
 expr_stmt|;
@@ -238,6 +274,20 @@ name|argc
 operator|--
 condition|)
 block|{
+if|if
+condition|(
+name|just_touch
+condition|)
+block|{
+name|fixdate
+argument_list|(
+operator|*
+operator|++
+name|argv
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|fi
 operator|=
 name|fopen
