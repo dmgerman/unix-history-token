@@ -204,16 +204,5 @@ directive|define
 name|HAVE_ATEXIT
 end_define
 
-begin_comment
-comment|/* Our malloc can allocte pagesized blocks efficiently.  The default size     of 4072 bytes is not optimal on the i386 nor the Alpha.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OBSTACK_CHUNK_SIZE
-value|(getpagesize())
-end_define
-
 end_unit
 
