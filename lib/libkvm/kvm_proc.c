@@ -64,20 +64,18 @@ end_include
 begin_define
 define|#
 directive|define
-name|_KERNEL
+name|_WANT_UCRED
 end_define
+
+begin_comment
+comment|/* make ucred.h give us 'struct ucred' */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/ucred.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|_KERNEL
-end_undef
 
 begin_include
 include|#

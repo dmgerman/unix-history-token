@@ -16,24 +16,28 @@ name|_SYS_UCRED_H_
 end_define
 
 begin_comment
-comment|/*  * XXXMAC: this recursive include could be #ifdef _KERNEL if struct  * ucred could also be #ifdef _KERNEL.  */
+comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser() or suser_cred() function should be used for this.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WANT_UCRED
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<sys/_label.h>
 end_include
-
-begin_comment
-comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser() or suser_cred() function should be used for this.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_struct
 struct|struct
@@ -143,7 +147,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
+comment|/* _KERNEL || _WANT_UCRED */
 end_comment
 
 begin_comment
