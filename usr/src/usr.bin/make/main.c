@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.26 (Berkeley) %G%"
+literal|"@(#)main.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1159,7 +1159,23 @@ name|_PATH_OBJDIR
 expr_stmt|;
 if|if
 condition|(
-operator|!
+name|stat
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
 name|lstat
 argument_list|(
 name|path
@@ -1167,6 +1183,8 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
