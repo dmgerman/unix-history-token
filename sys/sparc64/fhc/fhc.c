@@ -1178,9 +1178,10 @@ index|]
 argument_list|,
 name|FHC_IMAP
 argument_list|,
+name|rman_get_start
+argument_list|(
 name|r
-operator|->
-name|r_start
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bus_space_read_4
@@ -1294,9 +1295,10 @@ name|FHC_IMAP
 argument_list|,
 name|INTMAP_ENABLE
 argument_list|(
+name|rman_get_start
+argument_list|(
 name|r
-operator|->
-name|r_start
+argument_list|)
 argument_list|,
 name|PCPU_GET
 argument_list|(
