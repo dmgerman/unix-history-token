@@ -193,6 +193,28 @@ name|tty
 operator|=
 name|ttyname
 argument_list|(
+name|STDIN_FILENO
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|tty
+operator|=
+name|ttyname
+argument_list|(
+name|STDOUT_FILENO
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|tty
+operator|=
+name|ttyname
+argument_list|(
 name|STDERR_FILENO
 argument_list|)
 operator|)
@@ -201,7 +223,7 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"ttyname"
 argument_list|)
@@ -220,7 +242,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -247,11 +269,9 @@ block|{
 operator|(
 name|void
 operator|)
-name|fprintf
+name|puts
 argument_list|(
-name|stderr
-argument_list|,
-literal|"is y\n"
+literal|"is y"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -263,11 +283,9 @@ block|}
 operator|(
 name|void
 operator|)
-name|fprintf
+name|puts
 argument_list|(
-name|stderr
-argument_list|,
-literal|"is n\n"
+literal|"is n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -305,7 +323,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -338,7 +356,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"%s"
 argument_list|,
