@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.2 1996/06/17 12:42:33 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.3 1996/06/17 15:28:00 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -667,7 +667,6 @@ name|ftp_close_method
 argument_list|)
 expr_stmt|;
 comment|/* BSD 4.4 function! */
-comment|/* Yuck, but can't use fdopen() because that also allocates an fp.  Sigh! */
 name|fp
 operator|->
 name|_file
@@ -677,18 +676,6 @@ operator|->
 name|fd_ctrl
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|n
-operator|&&
-operator|!
-name|fp
-condition|)
-name|free
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
 return|return
 name|fp
 return|;
@@ -746,8 +733,7 @@ name|FTP_CHDIR_HAPPY
 argument_list|)
 condition|)
 return|return
-operator|-
-literal|1
+name|i
 return|;
 return|return
 name|SUCCESS
@@ -1880,7 +1866,11 @@ modifier|*
 name|n
 parameter_list|)
 block|{
-return|return
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
 name|ftp_close
 argument_list|(
 operator|(
@@ -1888,6 +1878,14 @@ name|FTP_t
 operator|)
 name|n
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+return|return
+name|i
 return|;
 block|}
 end_function
@@ -2148,9 +2146,16 @@ condition|(
 operator|!
 name|p
 condition|)
+block|{
+name|ftp_close
+argument_list|(
+name|ftp
+argument_list|)
+expr_stmt|;
 return|return
 name|FAILURE
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2576,11 +2581,16 @@ name|con_state
 operator|!=
 name|init
 condition|)
+block|{
 name|ftp_close
 argument_list|(
 name|ftp
 argument_list|)
 expr_stmt|;
+return|return
+name|FAILURE
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3018,9 +3028,16 @@ argument_list|,
 name|FTP_PASSIVE_HAPPY
 argument_list|)
 condition|)
+block|{
+name|ftp_close
+argument_list|(
+name|ftp
+argument_list|)
+expr_stmt|;
 return|return
 name|i
 return|;
+block|}
 while|while
 condition|(
 operator|*
