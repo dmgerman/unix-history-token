@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.20 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3000,8 +3000,6 @@ condition|(
 name|bytes
 operator|>
 literal|0
-operator|&&
-name|verbose
 condition|)
 name|ptransfer
 argument_list|(
@@ -3145,8 +3143,6 @@ condition|(
 name|bytes
 operator|>
 literal|0
-operator|&&
-name|verbose
 condition|)
 name|ptransfer
 argument_list|(
@@ -4449,8 +4445,6 @@ condition|(
 name|bytes
 operator|>
 literal|0
-operator|&&
-name|verbose
 condition|)
 name|ptransfer
 argument_list|(
@@ -4928,8 +4922,6 @@ condition|(
 name|bytes
 operator|>
 literal|0
-operator|&&
-name|verbose
 condition|)
 name|ptransfer
 argument_list|(
@@ -5553,6 +5545,11 @@ name|s
 decl_stmt|,
 name|bs
 decl_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+block|{
 name|tvsub
 argument_list|(
 operator|&
@@ -5593,6 +5590,24 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%ld bytes %s in %.2g seconds (%.2g Kbytes/s)\n"
+argument_list|,
+name|bytes
+argument_list|,
+name|direction
+argument_list|,
+name|s
+argument_list|,
+name|bs
+operator|/
+literal|1024.
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|local
@@ -5620,21 +5635,7 @@ argument_list|,
 name|remote
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%ld bytes %s in %.2g seconds (%.2g Kbytes/s)\n"
-argument_list|,
-name|bytes
-argument_list|,
-name|direction
-argument_list|,
-name|s
-argument_list|,
-name|bs
-operator|/
-literal|1024.
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 end_block
 
