@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1695,9 +1695,13 @@ condition|(
 operator|!
 name|doforce
 operator|||
+operator|(
 name|mp
-operator|==
-name|rootfs
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ROOTFS
+operator|)
 condition|)
 return|return
 operator|(
@@ -1857,7 +1861,7 @@ name|lfs_ivnode
 operator|->
 name|v_dirtyblkhd
 operator|.
-name|le_next
+name|lh_first
 condition|)
 name|panic
 argument_list|(
