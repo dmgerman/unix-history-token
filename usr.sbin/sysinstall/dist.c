@@ -1885,6 +1885,8 @@ name|DIST_XF86_PROG
 operator||
 name|DIST_XF86_MAN
 operator||
+name|DIST_XF86_DOC
+operator||
 name|DIST_XF86_SERVER
 operator||
 name|DIST_XF86_FONTS
