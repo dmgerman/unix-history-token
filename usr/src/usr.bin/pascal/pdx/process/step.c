@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)step.c	5.2 (Berkeley) %G%"
+literal|"@(#)step.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Continue execution up to the next source line.  *  * We call "nextaddr" from the machine module to figure out  * what the object address is that corresponds to the next source line.  * If nextaddr returns -1, then the end of the program has been reached.  *  * There are two ways to define the next source line depending on what  * is desired when a procedure or function call is encountered.  Step  * stops at the beginning of the procedure or call; next skips over it.  */

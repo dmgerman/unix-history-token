@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)frame.c	5.2 (Berkeley) %G%"
+literal|"@(#)frame.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Activation record handling.  *  * The routines curframe and nextframe cheat by using a global copy  * of the display.  This means there can't be multiple instances of  * them active at the same time and nextframe won't work in arbitrary cases.  *  * This could be solved by putting the display copy into the FRAME structure,  * but I didn't feel like doing this.  The idea is that they be used  * in looping through all frames, if I had generators I would use them.  */

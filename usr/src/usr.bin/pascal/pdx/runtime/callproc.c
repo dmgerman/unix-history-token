@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)callproc.c	5.3 (Berkeley) %G%"
+literal|"@(#)callproc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Evaluate a call to a procedure.  *  * This file is a botch as far as modularity is concerned.  *  * In fact, FIXME, it does not work on either the Vax or Tahoe  * at this point (Sep 22, 1988).  It possibly doesn't work because  * the ptrace interface never sets "pc" back into the interpreter's  * program counter location.  *  * Due to portability changes  * in px for ANSI C, it is now even further broken, since the operand  * stack is no longer the system stack and since the interpreter's  * "pc" that we see is never read by the interpreter.  We could fix  * this, and increase the modularity, by:  *  *    * changing this whole module to build a string of bytecodes  *	that would: push a series of constant parameters, then call a  *	procedure, then take a breakpoint.  *    * Having px allocate a place for us to do this, and pass us the  *	address of this (otherwise unused) variable.  *    * Creating an entry point into the px interpreter which would  *	pick up the pc value from "*addrpc" and then enter the main loop.  *	Currently we never pick up *addrpc for speed.  *    * Fix the code below to use the new entry point rather than "loopaddr".  *  * But I suspect this code is dead enough that nobody will ever get  * around to it.		-- gnu@toad.com, 22Sep88  */
