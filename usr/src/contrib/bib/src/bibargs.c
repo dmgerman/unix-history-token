@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bibargs.c	2.11	%G%"
+literal|"@(#)bibargs.c	2.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5200,6 +5200,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|maxauthors
 operator|>=
 literal|3
@@ -5216,6 +5217,28 @@ name|temp
 argument_list|,
 name|ref
 argument_list|)
+operator|)
+operator|)
+operator|||
+operator|(
+operator|(
+name|maxauthors
+operator|<
+literal|3
+operator|)
+operator|&&
+operator|(
+name|getname
+argument_list|(
+literal|3
+argument_list|,
+name|name3
+argument_list|,
+name|temp
+argument_list|,
+name|ref
+argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
