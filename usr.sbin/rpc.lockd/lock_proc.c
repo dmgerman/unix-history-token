@@ -734,6 +734,12 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
+name|uid_t
+name|old_euid
+decl_stmt|;
+name|int
+name|clnt_fd
+decl_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -1065,6 +1071,42 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* Get the FD of the client, for bindresvport. */
+name|clnt_control
+argument_list|(
+name|client
+argument_list|,
+name|CLGET_FD
+argument_list|,
+operator|&
+name|clnt_fd
+argument_list|)
+expr_stmt|;
+comment|/* Regain root privileges, for bindresvport. */
+name|old_euid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|seteuid
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Bind the client FD to a reserved port. 	 * Some NFS servers reject any NLM request from a non-reserved port.  	 */
+name|bindresvport
+argument_list|(
+name|clnt_fd
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Drop root privileges again. */
+name|seteuid
+argument_list|(
+name|old_euid
+argument_list|)
+expr_stmt|;
 comment|/* Success - update the cache entry */
 name|clnt_cache_ptr
 index|[
