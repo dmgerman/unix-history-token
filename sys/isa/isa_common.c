@@ -421,6 +421,12 @@ operator|-
 literal|1
 operator|<=
 name|end
+operator|&&
+name|start
+operator|+
+name|size
+operator|>
+name|start
 condition|;
 name|start
 operator|+=
