@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Portions of this code were taken from or based on ftpio.c:  *  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Dag-Erling Coïdan Smørgrav  * 9 Jun 1998  *  * Incorporated into libfetch  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $ftpioId: ftpio.c,v 1.30 1998/04/11 07:28:53 phk Exp $  *  */
+comment|/*  * Portions of this code were taken from or based on ftpio.c:  *  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Dag-Erling Coïdan Smørgrav  * 9 Jun 1998  *  * Incorporated into libfetch  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $ftpioId: ftpio.c,v 1.30 1998/04/11 07:28:53 phk Exp $  *  */
 end_comment
 
 begin_include
