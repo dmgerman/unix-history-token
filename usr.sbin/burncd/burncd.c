@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_define
@@ -2855,16 +2855,6 @@ name|size
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|filesize
-operator|==
-literal|0
-condition|)
-name|filesize
-operator|++
-expr_stmt|;
-comment|/* cheat, avoid divide by zero */
 while|while
 condition|(
 operator|(
@@ -3019,6 +3009,8 @@ operator|->
 name|file
 operator|!=
 name|STDIN_FILENO
+operator|&&
+name|filesize
 condition|)
 block|{
 name|pct
