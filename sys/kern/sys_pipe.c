@@ -5572,6 +5572,11 @@ break|break;
 case|case
 name|FIOSETOWN
 case|:
+name|PIPE_UNLOCK
+argument_list|(
+name|mpipe
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fsetown
@@ -5589,7 +5594,9 @@ operator|->
 name|pipe_sigio
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|out_unlocked
+goto|;
 case|case
 name|FIOGETOWN
 case|:
@@ -5613,6 +5620,11 @@ comment|/* This is deprecated, FIOSETOWN should be used instead. */
 case|case
 name|TIOCSPGRP
 case|:
+name|PIPE_UNLOCK
+argument_list|(
+name|mpipe
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fsetown
@@ -5633,7 +5645,9 @@ operator|->
 name|pipe_sigio
 argument_list|)
 expr_stmt|;
-break|break;
+goto|goto
+name|out_unlocked
+goto|;
 comment|/* This is deprecated, FIOGETOWN should be used instead. */
 case|case
 name|TIOCGPGRP
@@ -5667,6 +5681,8 @@ argument_list|(
 name|mpipe
 argument_list|)
 expr_stmt|;
+name|out_unlocked
+label|:
 return|return
 operator|(
 name|error
