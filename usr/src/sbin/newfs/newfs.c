@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.14 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2847,7 +2847,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"ioctl (GWINFO)"
+literal|"ioctl (WDINFO)"
 argument_list|)
 expr_stmt|;
 name|fatal
