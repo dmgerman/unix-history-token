@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: malloc.c,v 1.2 1993/11/15 10:06:09 proven Exp $"
+literal|"$Id: malloc.c,v 1.1 1993/12/19 06:21:29 alm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,6 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<pthread/copyright.h>
-end_include
 
 begin_include
 include|#
