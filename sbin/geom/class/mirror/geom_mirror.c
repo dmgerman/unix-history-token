@@ -559,11 +559,6 @@ argument_list|,
 name|comm
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
