@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|ETCDIR
-value|"__PREFIX__/etc"
+value|"/etc"
 end_define
 
 begin_define
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|SSH_PROGRAM
-value|"__PREFIX__/bin/ssh"
+value|"/usrn1G/bin/ssh"
 end_define
 
 begin_comment
