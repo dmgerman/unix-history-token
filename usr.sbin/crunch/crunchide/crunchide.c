@@ -745,9 +745,9 @@ name|NLIST_ECOFF
 block|{
 literal|"ECOFF"
 block|,
-name|check_ecoff
+name|check_elf64
 block|,
-name|hide_ecoff
+name|hide_elf64
 block|,	}
 block|,
 endif|#
