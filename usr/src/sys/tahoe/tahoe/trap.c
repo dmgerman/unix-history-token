@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -830,7 +830,7 @@ name|ticks
 argument_list|)
 expr_stmt|;
 block|}
-name|curpri
+name|curpriority
 operator|=
 name|p
 operator|->
@@ -1483,7 +1483,7 @@ name|ticks
 argument_list|)
 expr_stmt|;
 block|}
-name|curpri
+name|curpriority
 operator|=
 name|p
 operator|->
