@@ -12,6 +12,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_sched.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCHED_ULE
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|MP_WATCHDOG cannot currently be used with SCHED_ULE
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
