@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.48 1997/12/05 02:43:26 julian Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.49 1997/12/26 03:24:26 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -3911,6 +3911,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|failed
+init|=
+literal|0
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -3978,14 +3983,33 @@ if|if
 condition|(
 name|i
 condition|)
+block|{
+name|failed
+operator|=
+literal|1
+expr_stmt|;
 name|warn
 argument_list|(
-literal|"setsockopt(%s)"
+literal|"rule %u: setsockopt(%s)"
+argument_list|,
+name|rule
+operator|.
+name|fw_number
 argument_list|,
 literal|"IP_FW_DEL"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|failed
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6388,6 +6412,11 @@ name|struct
 name|ip_fw
 name|rule
 decl_stmt|;
+name|int
+name|failed
+init|=
+literal|0
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -6448,13 +6477,23 @@ sizeof|sizeof
 name|rule
 argument_list|)
 condition|)
+block|{
 name|warn
 argument_list|(
-literal|"setsockopt(%s)"
+literal|"rule %u: setsockopt(%s)"
+argument_list|,
+name|rule
+operator|.
+name|fw_number
 argument_list|,
 literal|"IP_FW_ZERO"
 argument_list|)
 expr_stmt|;
+name|failed
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
 name|printf
 argument_list|(
@@ -6476,6 +6515,15 @@ name|av
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|failed
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
