@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apropos.c	5.7 (Berkeley) %G%"
+literal|"@(#)whatis.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,7 +289,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"apropos: out of space.\n"
+literal|"whatis: out of space.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -326,15 +326,25 @@ condition|;
 operator|++
 name|p
 control|)
-comment|/* convert to lower-case */
-name|lowstr
+comment|/* trim full paths */
+if|if
+condition|(
+name|beg
+operator|=
+name|rindex
 argument_list|(
 operator|*
 name|p
 argument_list|,
+literal|'/'
+argument_list|)
+condition|)
 operator|*
 name|p
-argument_list|)
+operator|=
+name|beg
+operator|+
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -436,7 +446,7 @@ argument_list|)
 condition|;
 control|)
 block|{
-name|lowstr
+name|dashtrunc
 argument_list|(
 name|buf
 argument_list|,
@@ -522,7 +532,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"apropos: no %s file found in %s.\n"
+literal|"whatis: no %s file found in %s.\n"
 argument_list|,
 name|WHATIS
 argument_list|,
@@ -559,7 +569,7 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"%s: nothing appropriate\n"
+literal|"%s: not found\n"
 argument_list|,
 operator|*
 name|p
@@ -569,7 +579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * match --  *	match anywhere the string appears  */
+comment|/*  * match --  *	match a full word  */
 end_comment
 
 begin_expr_stmt
@@ -597,10 +607,15 @@ name|len
 decl_stmt|;
 specifier|register
 name|char
-name|test
+modifier|*
+name|start
 decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|*
+name|str
+operator|||
 operator|!
 operator|*
 name|bp
@@ -610,26 +625,8 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* backward compatible: everything matches empty string */
-if|if
-condition|(
-operator|!
-operator|*
-name|str
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 for|for
 control|(
-name|test
-operator|=
-operator|*
-name|str
-operator|++
-operator|,
 name|len
 operator|=
 name|strlen
@@ -637,22 +634,80 @@ argument_list|(
 name|str
 argument_list|)
 init|;
-operator|*
-name|bp
 condition|;
 control|)
-if|if
-condition|(
-name|test
-operator|==
+block|{
+for|for
+control|(
+init|;
 operator|*
 name|bp
-operator|++
 operator|&&
 operator|!
-name|strncmp
+name|isdigit
 argument_list|(
+operator|*
 name|bp
+argument_list|)
+operator|&&
+operator|!
+name|isalpha
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+condition|;
+operator|++
+name|bp
+control|)
+empty_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|bp
+condition|)
+break|break;
+for|for
+control|(
+name|start
+operator|=
+name|bp
+operator|++
+init|;
+operator|*
+name|bp
+operator|&&
+operator|(
+name|isdigit
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+operator|||
+name|isalpha
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+operator|)
+condition|;
+operator|++
+name|bp
+control|)
+empty_stmt|;
+if|if
+condition|(
+name|bp
+operator|-
+name|start
+operator|==
+name|len
+operator|&&
+operator|!
+name|strncasecmp
+argument_list|(
+name|start
 argument_list|,
 name|str
 argument_list|,
@@ -664,6 +719,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -673,11 +729,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * lowstr --  *	convert a string to lower case  */
+comment|/*  * dashtrunc --  *	truncate a string at " - "  */
 end_comment
 
 begin_expr_stmt
-name|lowstr
+name|dashtrunc
 argument_list|(
 name|from
 argument_list|,
@@ -696,37 +752,50 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|char
+name|int
 name|ch
 decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+init|;
 operator|(
 name|ch
 operator|=
 operator|*
 name|from
-operator|++
 operator|)
 operator|&&
 name|ch
 operator|!=
 literal|'\n'
-condition|)
+operator|&&
+operator|(
+name|ch
+operator|!=
+literal|' '
+operator|||
+name|from
+index|[
+literal|1
+index|]
+operator|!=
+literal|'-'
+operator|||
+name|from
+index|[
+literal|2
+index|]
+operator|!=
+literal|' '
+operator|)
+condition|;
+operator|++
+name|from
+control|)
 operator|*
 name|to
 operator|++
 operator|=
-name|isupper
-argument_list|(
-name|ch
-argument_list|)
-condition|?
-name|tolower
-argument_list|(
-name|ch
-argument_list|)
-else|:
 name|ch
 expr_stmt|;
 operator|*
@@ -752,7 +821,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: apropos [-M path] string ...\n"
+literal|"usage: whatis [-M path] string ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
