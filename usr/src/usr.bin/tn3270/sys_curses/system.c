@@ -312,13 +312,6 @@ return|;
 block|}
 if|if
 condition|(
-name|storage_length
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
 name|api_exch_intype
 argument_list|(
 name|EXCH_TYPE_BYTES
@@ -344,7 +337,6 @@ return|return
 operator|-
 literal|1
 return|;
-block|}
 block|}
 return|return
 literal|0
@@ -1013,13 +1005,6 @@ return|return;
 block|}
 if|if
 condition|(
-name|storage_length
-operator|!=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
 name|api_exch_outtype
 argument_list|(
 name|EXCH_TYPE_BYTES
@@ -1041,7 +1026,6 @@ name|kill_connection
 argument_list|()
 expr_stmt|;
 return|return;
-block|}
 block|}
 block|}
 end_function
