@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dip.c	1.2	(Berkeley)	83/09/14  *	dip  *	driver for impress/imagen canon laser printer  */
+comment|/*	dip.c	1.3	(Berkeley)	83/10/22  *	dip  *	driver for impress/imagen canon laser printer  */
 end_comment
 
 begin_comment
@@ -758,6 +758,42 @@ index|]
 condition|)
 block|{
 case|case
+literal|'X'
+case|:
+name|MAXX
+operator|=
+name|atoi
+argument_list|(
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Y'
+case|:
+name|MAXY
+operator|=
+name|atoi
+argument_list|(
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'F'
 case|:
 name|fontdir
@@ -1035,16 +1071,11 @@ literal|0
 condition|)
 block|{
 comment|/* no operand */
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+name|FATAL
 argument_list|,
-literal|"command-line option operand missing.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"command-line option operand missing."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2002,7 +2033,6 @@ break|break;
 default|default:
 name|error
 argument_list|(
-operator|!
 name|FATAL
 argument_list|,
 literal|"unknown input character %o %c"
@@ -2010,11 +2040,6 @@ argument_list|,
 name|c
 argument_list|,
 name|c
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3310,7 +3335,7 @@ name|f
 condition|)
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -3990,9 +4015,9 @@ block|{
 comment|/* on another font */
 name|k
 operator|=
-literal|1
+name|font
 expr_stmt|;
-comment|/* start with ROMAN, then run down the list */
+comment|/* start with current, then run down the list */
 for|for
 control|(
 name|j
@@ -4771,21 +4796,28 @@ name|name
 argument_list|)
 expr_stmt|;
 comment|/* check for proper file mark */
+for|for
+control|(
 name|i
 operator|=
-name|fscanf
-argument_list|(
-name|fd
-argument_list|,
-literal|"%8s"
-argument_list|,
-operator|&
+literal|0
+init|;
+name|i
+operator|<
+name|FMARK
+condition|;
 name|filemark
 index|[
-literal|0
+name|i
+operator|++
 index|]
+operator|=
+name|getc
+argument_list|(
+name|fd
 argument_list|)
-expr_stmt|;
+control|)
+empty_stmt|;
 if|if
 condition|(
 name|strncmp
@@ -4796,10 +4828,6 @@ literal|"Rast"
 argument_list|,
 literal|4
 argument_list|)
-operator|||
-name|i
-operator|==
-name|EOF
 condition|)
 name|error
 argument_list|(
