@@ -738,7 +738,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|void
-name|g_call_me_t
+name|g_event_t
 parameter_list|(
 name|void
 modifier|*
@@ -758,15 +758,18 @@ end_define
 
 begin_function_decl
 name|int
-name|g_call_me
+name|g_post_event
 parameter_list|(
-name|g_call_me_t
+name|g_event_t
 modifier|*
 name|func
 parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flag
 parameter_list|,
 modifier|...
 parameter_list|)

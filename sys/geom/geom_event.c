@@ -774,15 +774,18 @@ end_function
 
 begin_function
 name|int
-name|g_call_me
+name|g_post_event
 parameter_list|(
-name|g_call_me_t
+name|g_event_t
 modifier|*
 name|func
 parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flag
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -806,11 +809,28 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_call_me(%p, %p"
+literal|"g_post_event(%p, %p, %d"
 argument_list|,
 name|func
 argument_list|,
 name|arg
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|flag
+operator|==
+name|M_NOWAIT
+operator|||
+name|flag
+operator|==
+name|M_WAITOK
+argument_list|,
+operator|(
+literal|"Wrong flag to g_post_event"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ep
@@ -821,7 +841,7 @@ sizeof|sizeof
 expr|*
 name|ep
 argument_list|,
-name|M_NOWAIT
+name|flag
 operator||
 name|M_ZERO
 argument_list|)
@@ -841,7 +861,7 @@ name|va_start
 argument_list|(
 name|ap
 argument_list|,
-name|arg
+name|flag
 argument_list|)
 expr_stmt|;
 for|for

@@ -994,13 +994,15 @@ name|G_SLICE_HOT_CALL
 case|:
 name|error
 operator|=
-name|g_call_me
+name|g_post_event
 argument_list|(
 name|gsp
 operator|->
 name|hot
 argument_list|,
 name|bp
+argument_list|,
+name|M_NOWAIT
 argument_list|,
 name|gp
 argument_list|,

@@ -94,7 +94,7 @@ name|void
 modifier|*
 name|arg
 decl_stmt|;
-name|g_call_me_t
+name|g_event_t
 modifier|*
 name|func
 decl_stmt|;

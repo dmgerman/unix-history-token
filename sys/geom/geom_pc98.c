@@ -1239,11 +1239,13 @@ case|:
 comment|/* 		 * These we cannot do without the topology lock and some 		 * some I/O requests.  Ask the event-handler to schedule 		 * us in a less restricted environment. 		 */
 name|error
 operator|=
-name|g_call_me
+name|g_post_event
 argument_list|(
 name|g_pc98_ioctl
 argument_list|,
 name|bp
+argument_list|,
+name|M_NOWAIT
 argument_list|,
 name|gp
 argument_list|,

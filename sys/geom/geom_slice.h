@@ -104,7 +104,7 @@ name|g_slice_start_t
 modifier|*
 name|start
 decl_stmt|;
-name|g_call_me_t
+name|g_event_t
 modifier|*
 name|hot
 decl_stmt|;

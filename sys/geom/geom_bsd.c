@@ -1282,7 +1282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement certain ioctls to modify disklabels with.  This function  * is called by the event handler thread with topology locked as result  * of the g_call_me() in g_bsd_start().  It is not necessary to keep  * topology locked all the time but make sure to return with topology  * locked as well.  */
+comment|/*  * Implement certain ioctls to modify disklabels with.  This function  * is called by the event handler thread with topology locked as result  * of the g_post_event() in g_bsd_start().  It is not necessary to keep  * topology locked all the time but make sure to return with topology  * locked as well.  */
 end_comment
 
 begin_function
@@ -2430,11 +2430,13 @@ case|:
 comment|/* 		 * These we cannot do without the topology lock and some 		 * some I/O requests.  Ask the event-handler to schedule 		 * us in a less restricted environment. 		 */
 name|error
 operator|=
-name|g_call_me
+name|g_post_event
 argument_list|(
 name|g_bsd_ioctl
 argument_list|,
 name|bp
+argument_list|,
+name|M_NOWAIT
 argument_list|,
 name|gp
 argument_list|,
