@@ -53,11 +53,7 @@ block|,
 name|GCTL_INSERT_GEOM
 block|,
 name|GCTL_ELIMINATE_GEOM
-block|,
-name|GCTL_WRITE_META
-block|,
-name|GCTL_READ_META
-block|}
+block|, }
 enum|;
 end_enum
 
@@ -86,9 +82,6 @@ decl_stmt|;
 name|int
 name|params
 decl_stmt|;
-name|int
-name|meta
-decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -102,7 +95,7 @@ name|gcrt
 index|[]
 init|=
 block|{
-comment|/*        Cl Ge Pr Co Pa Me Name                Request			*/
+comment|/*        Cl Ge Pr Co Pa Name                Request			*/
 block|{
 literal|1
 block|,
@@ -113,8 +106,6 @@ block|,
 literal|0
 block|,
 literal|1
-block|,
-literal|0
 block|,
 literal|"create geom"
 block|,
@@ -132,8 +123,6 @@ literal|0
 block|,
 literal|1
 block|,
-literal|0
-block|,
 literal|"destroy geom"
 block|,
 name|GCTL_DESTROY_GEOM
@@ -149,8 +138,6 @@ block|,
 literal|0
 block|,
 literal|1
-block|,
-literal|0
 block|,
 literal|"attach"
 block|,
@@ -168,8 +155,6 @@ literal|0
 block|,
 literal|1
 block|,
-literal|0
-block|,
 literal|"detach"
 block|,
 name|GCTL_DETACH
@@ -185,8 +170,6 @@ block|,
 literal|0
 block|,
 literal|1
-block|,
-literal|0
 block|,
 literal|"create provider"
 block|,
@@ -204,8 +187,6 @@ literal|0
 block|,
 literal|1
 block|,
-literal|0
-block|,
 literal|"destroy provider"
 block|,
 name|GCTL_DESTROY_PROVIDER
@@ -221,8 +202,6 @@ block|,
 literal|0
 block|,
 literal|1
-block|,
-literal|0
 block|,
 literal|"insert geom"
 block|,
@@ -240,53 +219,13 @@ literal|0
 block|,
 literal|1
 block|,
-literal|0
-block|,
 literal|"eliminate geom"
 block|,
 name|GCTL_ELIMINATE_GEOM
 block|}
 block|,
-block|{
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|1
-block|,
-literal|"write meta"
-block|,
-name|GCTL_WRITE_META
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|1
-block|,
-literal|"read meta"
-block|,
-name|GCTL_READ_META
-block|}
-block|,
 comment|/* Terminator entry */
 block|{
-literal|1
-block|,
 literal|1
 block|,
 literal|1
