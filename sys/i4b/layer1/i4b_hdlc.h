@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_hdlc.h - software-HDLC header file  *	--------------------------------------  *  *	$Id: i4b_hdlc.h,v 1.5 2000/08/28 07:41:19 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Wed Jul 19 09:41:13 2000]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 2000 Hans Petter Selasky. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_hdlc.h - software-HDLC header file  *	--------------------------------------  *  *	$Id: i4b_hdlc.h,v 1.5 2000/08/28 07:41:19 hm Exp $  *  * $FreeBSD$  *  *	last edit-date: [Wed Jul 19 09:41:13 2000]  *  *	NOTE:  *	- October 19th: made minor changes to HDLC_ENCODE macro  *	  Please conform "ihfc/i4b_ihfc_drv.c" (ihfc_hdlc_Bwrite)  *	  for correct usage! (-hp)  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -1185,19 +1185,19 @@ value|\ 		  case 2:
 comment|/* 2nd time FS */
 value|\ 			tmp2 = 0x7e;						\ 			goto j3##d;						\ 		  case 3:
 comment|/* get new frame  */
-value|\ 			flag--;							\ 			gfrcmd;							\ 			flag++;							\ 			crc = -1;						\ 			ib  = 0;						\ 			if (!len--) { len++; flag++; goto j0##d; }		\ 			goto j1##d;
+value|\ 			gfrcmd;							\ 			if (!len--)						\ 			{							\ 				len++;						\ 				flag--;
+comment|/* don't proceed */
+value|\ 				tmp2 = 0x7e;					\ 				goto j3##d;
+comment|/* final FS */
+value|\ 			}							\ 			else							\ 			{							\ 				crc = -1;					\ 				ib  = 0;					\ 				goto j1##d;
 comment|/* first byte */
-value|\ 		  case 4:
+value|\ 			}							\ 		  case 4:
 comment|/* CRC (lsb's) */
-value|\ 		   j0##d:							\ 			crc ^= -1;						\ 		  case 5:
+value|\ 			crc ^= -1;						\ 		  case 5:
 comment|/* CRC (msb's) */
-value|\ 			tmp2  = (u_char)crc;					\ 			crc>>= 8;						\ 			goto j2##d;
+value|\ 			tmp2  = (u_char)crc;					\ 			crc>>= 8;						\ 			flag  = 1;						\ 			goto j2##d;
 comment|/* CRC stuff */
-value|\ 		  case 6:
-comment|/* frame done */
-value|\ 			tmp2 = 0x7e;
-comment|/* end FS */
-value|\ 			flag = 1;						\ 			goto j3##d;						\ 		}								\ 	}									\  	else									\   	{ j1##d	:								\ 		tmp2 = (u_char)src;						\ 		crc =(HDLC_FCS_TAB[(u_char)(crc ^ tmp2)] ^ (u_char)(crc>> 8));	\ 	  j2##d:								\ 										\ 		ib>>= 12;							\ 		ib  += HDLC_BIT_TAB[(u_char)tmp2];				\ 										\ 		if ((u_char)ib>= 5)
+value|\ 		}								\ 	}									\  	else									\   	{ j1##d	:								\ 		tmp2 = (u_char)src;						\ 		crc =(HDLC_FCS_TAB[(u_char)(crc ^ tmp2)] ^ (u_char)(crc>> 8));	\ 	  j2##d:								\ 										\ 		ib>>= 12;							\ 		ib  += HDLC_BIT_TAB[(u_char)tmp2];				\ 										\ 		if ((u_char)ib>= 5)
 comment|/* stuffing */
 value|\ 		{								\ 			blevel&= ~0xff;					\ 										\ 			if (ib& 0xc0)
 comment|/* bit stuff (msb) */

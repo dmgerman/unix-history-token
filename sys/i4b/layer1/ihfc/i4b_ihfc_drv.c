@@ -689,6 +689,11 @@ operator|~
 literal|0x04
 expr_stmt|;
 comment|/* TE mode	*/
+name|S_STDEL
+operator|&=
+literal|0x7f
+expr_stmt|;
+comment|/* use mask!	*/
 name|S_CLKDEL
 operator|&=
 operator|~
@@ -699,7 +704,7 @@ name|S_CLKDEL
 operator||=
 name|S_STDEL
 expr_stmt|;
-comment|/* set delay	*/
+comment|/* set delay 	*/
 block|}
 if|if
 condition|(
@@ -4683,7 +4688,11 @@ argument|flag
 argument_list|,
 argument|{
 comment|/* gfr */
-argument|i4b_Bfreembuf(S_MBUF); 			S_MBUF = ihfc_getmbuf(sc, chan);  			if (!S_MBUF) goto d0;  			src = S_MBUFDATA; 			len = S_MBUFLEN; 		}
+argument|i4b_Bfreembuf(S_MBUF); 			S_MBUF = ihfc_getmbuf(sc, chan);  			if (S_MBUF) 			{ 				src = S_MBUFDATA; 				len = S_MBUFLEN; 			} 			else 			{ 				sendlen =
+literal|0
+argument|;
+comment|/* Exit after final FS, * 						 * else the buffer will * 						 * only be filled with  * 						 * "0x7e"-bytes!        */
+argument|} 		}
 argument_list|,
 argument|{
 comment|/* wrd */
@@ -4710,8 +4719,6 @@ operator|=
 name|len
 expr_stmt|;
 block|}
-name|d0
-label|:
 name|S_HDLC_IB
 operator|=
 name|ib
