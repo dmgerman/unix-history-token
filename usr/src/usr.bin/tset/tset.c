@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	5.13 (Berkeley) %G%"
+literal|"@(#)tset.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,7 +484,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CFLUSH
+name|CDISCARD
 value|CNTL('O')
 end_define
 
@@ -1971,7 +1971,7 @@ name|ltc
 operator|.
 name|t_flushc
 argument_list|,
-name|CFLUSH
+name|CDISCARD
 argument_list|)
 expr_stmt|;
 name|ltc
