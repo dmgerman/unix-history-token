@@ -18,29 +18,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|NPIL
+name|IRSR_BUSY
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIL_MAX
 value|(1<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|NIV
+name|IV_MAX
 value|(1<< 11)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IQ_SIZE
-value|(NPIL * 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IQ_MASK
-value|(IQ_SIZE - 1)
+name|IR_FREE
+value|(PIL_MAX * 2)
 end_define
 
 begin_define
@@ -137,12 +137,6 @@ name|PIL_TICK
 value|14
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|trapframe
-struct_decl|;
-end_struct_decl
-
 begin_typedef
 typedef|typedef
 name|void
@@ -166,58 +160,38 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_struct
-struct|struct
-name|iqe
-block|{
-name|u_int
-name|iqe_tag
-decl_stmt|;
-name|u_int
-name|iqe_pri
-decl_stmt|;
-name|u_long
-name|iqe_vec
-decl_stmt|;
-name|iv_func_t
-modifier|*
-name|iqe_func
-decl_stmt|;
-name|void
-modifier|*
-name|iqe_arg
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|intr_queue
-block|{
-name|struct
-name|iqe
-name|iq_queue
-index|[
-name|IQ_SIZE
-index|]
-decl_stmt|;
-comment|/* must be first */
-name|u_long
-name|iq_head
-decl_stmt|;
-name|u_long
-name|iq_tail
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct_decl
 struct_decl|struct
 name|ithd
 struct_decl|;
 end_struct_decl
+
+begin_struct
+struct|struct
+name|intr_request
+block|{
+name|struct
+name|intr_request
+modifier|*
+name|ir_next
+decl_stmt|;
+name|iv_func_t
+modifier|*
+name|ir_func
+decl_stmt|;
+name|void
+modifier|*
+name|ir_arg
+decl_stmt|;
+name|u_int
+name|ir_vec
+decl_stmt|;
+name|u_int
+name|ir_pri
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct

@@ -797,7 +797,7 @@ name|sc_intr_rman
 argument_list|,
 literal|0
 argument_list|,
-name|NIV
+name|IV_MAX
 operator|-
 literal|1
 argument_list|)
