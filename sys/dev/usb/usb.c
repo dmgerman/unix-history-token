@@ -4457,20 +4457,21 @@ name|usb_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* XXX, on some archs this is called too late. */
-if|if
-condition|(
-operator|!
-name|cold
-condition|)
-block|{
-name|printf
+name|KASSERT
 argument_list|(
-literal|"usb_cold_explore: skipping because !cold\n"
+name|cold
+operator|||
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|usb_coldexplist
+argument_list|)
+argument_list|,
+operator|(
+literal|"usb_cold_explore: busses to explore when !cold"
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 while|while
 condition|(
 operator|!
