@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tablet.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tablet.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -231,14 +231,14 @@ begin_define
 define|#
 directive|define
 name|TBUNUSED
-value|0x0000
+value|0x0
 end_define
 
 begin_define
 define|#
 directive|define
 name|TBHITACHI
-value|0x0001
+value|0x1
 end_define
 
 begin_comment
@@ -249,7 +249,7 @@ begin_define
 define|#
 directive|define
 name|TBTIGER
-value|0x0002
+value|0x2
 end_define
 
 begin_comment
@@ -260,7 +260,7 @@ begin_define
 define|#
 directive|define
 name|TBGTCO
-value|0x0003
+value|0x3
 end_define
 
 begin_comment
@@ -271,7 +271,7 @@ begin_define
 define|#
 directive|define
 name|TBPOL
-value|0x0004
+value|0x4
 end_define
 
 begin_comment
@@ -282,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|TBHDG
-value|0x0005
+value|0x5
 end_define
 
 begin_comment
@@ -293,11 +293,33 @@ begin_define
 define|#
 directive|define
 name|TBHDGHIRES
-value|0x0006
+value|0x6
 end_define
 
 begin_comment
 comment|/* hdg-1111b, high res */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TBDIGI
+value|0x7
+end_define
+
+begin_comment
+comment|/* gtco digi-pad, low res */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TBDIGIHIRES
+value|0x8
+end_define
+
+begin_comment
+comment|/* gtco digi-pad, high res */
 end_comment
 
 begin_define
