@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_param.h,v 5.3 88/11/18 17:28:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_param.h,v $  *	@(#)tp_param.h	7.5 (Berkeley) %G% *  *  */
+comment|/*   * ARGO TP  *  * $Header: tp_param.h,v 5.3 88/11/18 17:28:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_param.h,v $  *	@(#)tp_param.h	7.6 (Berkeley) %G% *  *  */
 end_comment
 
 begin_ifndef
@@ -45,12 +45,27 @@ name|TP_DECBIT_CLEAR_COUNT
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/*#define 	N_TPREF				100 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|N_TPREF
-value|100
-end_define
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -118,8 +133,12 @@ begin_define
 define|#
 directive|define
 name|TP_NRETRANS
-value|1
+value|5
 end_define
+
+begin_comment
+comment|/* was 1; cray uses 6 */
+end_comment
 
 begin_define
 define|#
