@@ -986,6 +986,12 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ifp
@@ -995,13 +1001,18 @@ operator|&
 name|IFF_RUNNING
 condition|)
 block|{
-comment|/* find internet addresses and delete routes */
 specifier|register
 name|struct
 name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+comment|/* find internet addresses and delete routes */
 for|for
 control|(
 name|ifa
@@ -1022,7 +1033,6 @@ name|ifa_link
 operator|.
 name|tqe_next
 control|)
-block|{
 if|if
 condition|(
 name|ifa
@@ -1033,7 +1043,6 @@ name|sa_family
 operator|==
 name|AF_INET
 condition|)
-block|{
 name|rtinit
 argument_list|(
 name|ifa
@@ -1054,9 +1063,13 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-block|}
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_RUNNING
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
