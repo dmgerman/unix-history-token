@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_pcb.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_pcb.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mbuf.h"
 end_include
 
@@ -55,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"socketvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"errno.h"
 end_include
 
 begin_include
@@ -740,12 +740,16 @@ literal|2
 operator|)
 operator|&&
 operator|(
-name|u
-operator|.
-name|u_uid
-operator|!=
-literal|0
+name|isop
+operator|->
+name|isop_socket
+operator|->
+name|so_state
+operator|&&
+name|SS_PRIV
 operator|)
+operator|==
+literal|0
 condition|)
 return|return
 name|EACCES

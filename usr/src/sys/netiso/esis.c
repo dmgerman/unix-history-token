@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"socket.h"
 end_include
 
@@ -75,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|"errno.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"kernel.h"
 end_include
 
 begin_include
@@ -161,6 +149,12 @@ directive|include
 file|"argo_debug.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"kernel.h"
+end_include
+
 begin_comment
 comment|/*  *	Global variables to esis implementation  *  *	esis_holding_time - the holding time (sec) parameter for outgoing pdus  *	esis_config_time  - the frequency (sec) that hellos are generated  *	esis_esconfig_time - suggested es configuration time placed in the  *						ish.  *  */
 end_comment
@@ -169,6 +163,16 @@ begin_decl_stmt
 name|struct
 name|rawcb
 name|esis_pcb
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|esis_config
+argument_list|()
+decl_stmt|,
+name|snpac_age
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -285,13 +289,6 @@ name|esis_input
 argument_list|()
 decl_stmt|,
 name|isis_input
-argument_list|()
-decl_stmt|;
-name|int
-name|esis_config
-argument_list|()
-decl_stmt|,
-name|snpac_age
 argument_list|()
 decl_stmt|;
 ifdef|#
@@ -486,17 +483,15 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|suser
-argument_list|(
-name|u
-operator|.
-name|u_cred
-argument_list|,
+operator|(
+name|so
+operator|->
+name|so_state
 operator|&
-name|u
-operator|.
-name|u_acflag
-argument_list|)
+name|SS_PRIV
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|error
