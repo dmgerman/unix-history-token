@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	5.2 (Berkeley) %G%"
+literal|"@(#)format.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cencode.h>
+file|<vis.h>
 end_include
 
 begin_decl_stmt
@@ -1630,26 +1630,35 @@ end_expr_stmt
 
 begin_block
 block|{
-name|adbprintf
+name|char
+name|visbuf
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|vis
 argument_list|(
-literal|"%s"
+name|visbuf
 argument_list|,
-name|cencode
-argument_list|(
 operator|(
 name|char
 operator|)
 name|c
 argument_list|,
-name|isprint
-argument_list|(
-name|c
-argument_list|)
-condition|?
+name|VIS_TAB
+operator||
+name|VIS_NL
+operator||
+name|VIS_NOSLASH
+argument_list|,
 literal|0
-else|:
-name|CENC_GRAPH
 argument_list|)
+expr_stmt|;
+name|adbprintf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|visbuf
 argument_list|)
 expr_stmt|;
 block|}
