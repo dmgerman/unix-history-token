@@ -3129,12 +3129,8 @@ name|mtr
 operator|->
 name|devfs_token
 operator|=
-name|devfs_add_devsw
+name|devfs_add_devswf
 argument_list|(
-literal|"/"
-argument_list|,
-literal|"meteor"
-argument_list|,
 operator|&
 name|meteor_cdevsw
 argument_list|,
@@ -3147,6 +3143,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0644
+argument_list|,
+literal|"meteor"
 argument_list|)
 expr_stmt|;
 endif|#
