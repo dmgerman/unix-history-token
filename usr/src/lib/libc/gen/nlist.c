@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)nlist.c	4.5 (Berkeley) %G% */
+comment|/* @(#)nlist.c	4.6 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -556,7 +556,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|nreq
 operator|)
 return|;
 block|}
