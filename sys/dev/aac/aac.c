@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -39,6 +39,18 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -87,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/eventhandler.h>
 end_include
 
 begin_include
@@ -145,6 +163,27 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|aac_add_container
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|aac_mntinforesponse
+modifier|*
+name|mir
+parameter_list|,
+name|int
+name|f
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -543,6 +582,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|aac_enqueue_response
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|queue
+parameter_list|,
+name|struct
+name|aac_fib
+modifier|*
+name|fib
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* StrongARM interface */
 end_comment
@@ -913,23 +973,17 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|aac_aif_command
+name|aac_fib
 modifier|*
-name|aif
+name|fib
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AAC_COMPAT_LINUX
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
-name|aac_linux_rev_check
+name|aac_rev_check
 parameter_list|(
 name|struct
 name|aac_softc
@@ -945,7 +999,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|aac_linux_getnext_aif
+name|aac_getnext_aif
 parameter_list|(
 name|struct
 name|aac_softc
@@ -961,7 +1015,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|aac_linux_return_aif
+name|aac_return_aif
 parameter_list|(
 name|struct
 name|aac_softc
@@ -974,10 +1028,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|static
+name|int
+name|aac_query_disk
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|caddr_t
+name|uptr
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1032,20 +1097,61 @@ comment|/* psize */
 literal|0
 block|,
 comment|/* flags */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500005
 operator|-
 literal|1
 block|,
 comment|/* bmaj */
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_AACBUF
+argument_list|,
+literal|"aacbuf"
+argument_list|,
+literal|"Buffers for the AAC driver"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                  Device Interface  ********************************************************************************  ********************************************************************************/
+comment|/* sysctl node */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|aac
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"AAC driver parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Device Interface  */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Initialise the controller and softc  */
+comment|/*  * Initialise the controller and softc  */
 end_comment
 
 begin_function
@@ -1068,7 +1174,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*      * Initialise per-controller queues.      */
+comment|/* 	 * Initialise per-controller queues. 	 */
 name|aac_initq_free
 argument_list|(
 name|sc
@@ -1099,7 +1205,7 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|500005
-comment|/*      * Initialise command-completion task.      */
+comment|/* 	 * Initialise command-completion task. 	 */
 name|TASK_INIT
 argument_list|(
 operator|&
@@ -1129,7 +1235,7 @@ name|aac_state
 operator||=
 name|AAC_STATE_SUSPEND
 expr_stmt|;
-comment|/*      * Allocate command structures.      */
+comment|/* 	 * Allocate command structures. 	 */
 if|if
 condition|(
 operator|(
@@ -1148,7 +1254,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/*      * Initialise the adapter.      */
+comment|/* 	 * Initialise the adapter. 	 */
 if|if
 condition|(
 operator|(
@@ -1167,13 +1273,29 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/*       * Print a little information about the controller.      */
+comment|/*  	 * Print a little information about the controller. 	 */
 name|aac_describe_controller
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*      * Register to probe our containers later.      */
+comment|/* 	 * Register to probe our containers later. 	 */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_tqh
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_lock
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|aac_ich
@@ -1218,7 +1340,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*      * Make the control device.      */
+comment|/* 	 * Make the control device. 	 */
 name|unit
 operator|=
 name|device_get_unit
@@ -1250,6 +1372,41 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500005
+operator|(
+name|void
+operator|)
+name|make_dev_alias
+argument_list|(
+name|sc
+operator|->
+name|aac_dev_t
+argument_list|,
+literal|"afa%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|make_dev_alias
+argument_list|(
+name|sc
+operator|->
+name|aac_dev_t
+argument_list|,
+literal|"hpn%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|aac_dev_t
@@ -1257,6 +1414,108 @@ operator|->
 name|si_drv1
 operator|=
 name|sc
+expr_stmt|;
+comment|/* Create the AIF thread */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500005
+if|if
+condition|(
+name|kthread_create
+argument_list|(
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
+name|aac_host_command
+argument_list|,
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|aifthread
+argument_list|,
+literal|0
+argument_list|,
+literal|"aac%daif"
+argument_list|,
+name|unit
+argument_list|)
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|kthread_create
+argument_list|(
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
+name|aac_host_command
+argument_list|,
+name|sc
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|aifthread
+argument_list|,
+literal|"aac%daif"
+argument_list|,
+name|unit
+argument_list|)
+condition|)
+endif|#
+directive|endif
+name|panic
+argument_list|(
+literal|"Could not create AIF thread\n"
+argument_list|)
+expr_stmt|;
+comment|/* Register the shutdown method to only be called post-dump */
+if|if
+condition|(
+operator|(
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|shutdown_final
+argument_list|,
+name|aac_shutdown
+argument_list|,
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+name|SHUTDOWN_PRI_DEFAULT
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"shutdown event registration failed\n"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1267,7 +1526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Probe for containers, create disks.  */
+comment|/*  * Probe for containers, create disks.  */
 end_comment
 
 begin_function
@@ -1284,13 +1543,6 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-operator|(
-expr|struct
-name|aac_softc
-operator|*
-operator|)
-name|arg
 decl_stmt|;
 name|struct
 name|aac_mntinfo
@@ -1300,19 +1552,27 @@ name|struct
 name|aac_mntinforesponse
 name|mir
 decl_stmt|;
-name|device_t
-name|child
-decl_stmt|;
 name|u_int16_t
 name|rsize
 decl_stmt|;
 name|int
 name|i
+init|=
+literal|0
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|aac_softc
+operator|*
+operator|)
+name|arg
 expr_stmt|;
 comment|/* disconnect ourselves from the intrhook chain */
 name|config_intrhook_disestablish
@@ -1336,19 +1596,7 @@ name|MntType
 operator|=
 name|FT_FILESYS
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|AAC_MAX_CONTAINERS
-condition|;
-name|i
-operator|++
-control|)
+do|do
 block|{
 comment|/* request information on this container */
 name|mi
@@ -1417,7 +1665,8 @@ name|debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"container info response wrong size (%d should be %d)"
+literal|"container info response wrong size "
+literal|"(%d should be %d)"
 argument_list|,
 name|rsize
 argument_list|,
@@ -1429,171 +1678,37 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*  	 * Check container volume type for validity.  Note that many of the possible types 	 * may never show up. 	 */
-if|if
+name|aac_add_container
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|mir
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
+do|while
 condition|(
 operator|(
+name|i
+operator|<
 name|mir
 operator|.
-name|Status
-operator|==
-name|ST_OK
+name|MntRespCount
 operator|)
 operator|&&
 operator|(
-name|mir
-operator|.
-name|MntTable
-index|[
-literal|0
-index|]
-operator|.
-name|VolType
-operator|!=
-name|CT_NONE
+name|i
+operator|<
+name|AAC_MAX_CONTAINERS
 operator|)
 condition|)
-block|{
-name|debug
-argument_list|(
-literal|1
-argument_list|,
-literal|"%d: id %x  name '%.16s'  size %u  type %d"
-argument_list|,
-name|i
-argument_list|,
-name|mir
-operator|.
-name|MntTable
-index|[
-literal|0
-index|]
-operator|.
-name|ObjectId
-argument_list|,
-name|mir
-operator|.
-name|MntTable
-index|[
-literal|0
-index|]
-operator|.
-name|FileSystemName
-argument_list|,
-name|mir
-operator|.
-name|MntTable
-index|[
-literal|0
-index|]
-operator|.
-name|Capacity
-argument_list|,
-name|mir
-operator|.
-name|MntTable
-index|[
-literal|0
-index|]
-operator|.
-name|VolType
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|child
-operator|=
-name|device_add_child
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-name|NULL
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-literal|"device_add_child failed\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|device_set_ivars
-argument_list|(
-name|child
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|aac_container
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|device_set_desc
-argument_list|(
-name|child
-argument_list|,
-name|aac_describe_code
-argument_list|(
-name|aac_container_types
-argument_list|,
-name|mir
-operator|.
-name|MntTable
-index|[
-literal|0
-index|]
-operator|.
-name|VolType
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|aac_container
-index|[
-name|i
-index|]
-operator|.
-name|co_disk
-operator|=
-name|child
-expr_stmt|;
-name|sc
-operator|->
-name|aac_container
-index|[
-name|i
-index|]
-operator|.
-name|co_mntobj
-operator|=
-name|mir
-operator|.
-name|MntTable
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
-block|}
+do|;
 comment|/* poke the bus to actually attach the child devices */
 if|if
 condition|(
@@ -1647,7 +1762,256 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Free all of the resources associated with (sc)  *  * Should not be called if the controller is active.  */
+comment|/*  * Create a device to respresent a new container  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|aac_add_container
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|aac_mntinforesponse
+modifier|*
+name|mir
+parameter_list|,
+name|int
+name|f
+parameter_list|)
+block|{
+name|struct
+name|aac_container
+modifier|*
+name|co
+decl_stmt|;
+name|device_t
+name|child
+decl_stmt|;
+comment|/*  	 * Check container volume type for validity.  Note that many of 	 * the possible types may never show up. 	 */
+if|if
+condition|(
+operator|(
+name|mir
+operator|->
+name|Status
+operator|==
+name|ST_OK
+operator|)
+operator|&&
+operator|(
+name|mir
+operator|->
+name|MntTable
+index|[
+literal|0
+index|]
+operator|.
+name|VolType
+operator|!=
+name|CT_NONE
+operator|)
+condition|)
+block|{
+name|MALLOC
+argument_list|(
+name|co
+argument_list|,
+expr|struct
+name|aac_container
+operator|*
+argument_list|,
+sizeof|sizeof
+expr|*
+name|co
+argument_list|,
+name|M_AACBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|co
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"Out of memory?!\n"
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|1
+argument_list|,
+literal|"id %x  name '%.16s'  size %u  type %d"
+argument_list|,
+name|mir
+operator|->
+name|MntTable
+index|[
+literal|0
+index|]
+operator|.
+name|ObjectId
+argument_list|,
+name|mir
+operator|->
+name|MntTable
+index|[
+literal|0
+index|]
+operator|.
+name|FileSystemName
+argument_list|,
+name|mir
+operator|->
+name|MntTable
+index|[
+literal|0
+index|]
+operator|.
+name|Capacity
+argument_list|,
+name|mir
+operator|->
+name|MntTable
+index|[
+literal|0
+index|]
+operator|.
+name|VolType
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|child
+operator|=
+name|device_add_child
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+name|NULL
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"device_add_child failed\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|device_set_ivars
+argument_list|(
+name|child
+argument_list|,
+name|co
+argument_list|)
+expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|child
+argument_list|,
+name|aac_describe_code
+argument_list|(
+name|aac_container_types
+argument_list|,
+name|mir
+operator|->
+name|MntTable
+index|[
+literal|0
+index|]
+operator|.
+name|VolType
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|co
+operator|->
+name|co_disk
+operator|=
+name|child
+expr_stmt|;
+name|co
+operator|->
+name|co_found
+operator|=
+name|f
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|mir
+operator|->
+name|MntTable
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|co
+operator|->
+name|co_mntobj
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_mntobj
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_AQUIRE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_lock
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_tqh
+argument_list|,
+name|co
+argument_list|,
+name|co_link
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_lock
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Free all of the resources associated with (sc)  *  * Should not be called if the controller is active.  */
 end_comment
 
 begin_function
@@ -1861,7 +2225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Disconnect from the controller completely, in preparation for unload.  */
+comment|/*  * Disconnect from the controller completely, in preparation for unload.  */
 end_comment
 
 begin_function
@@ -1876,18 +2240,25 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
+if|#
+directive|if
+name|AAC_BROKEN
 name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -1903,6 +2274,62 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+if|#
+directive|if
+name|AAC_BROKEN
+if|if
+condition|(
+name|sc
+operator|->
+name|aifflags
+operator|&
+name|AAC_AIFFLAGS_RUNNING
+condition|)
+block|{
+name|sc
+operator|->
+name|aifflags
+operator||=
+name|AAC_AIFFLAGS_EXIT
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|sc
+operator|->
+name|aifthread
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+name|PUSER
+operator||
+name|PCATCH
+argument_list|,
+literal|"aacdch"
+argument_list|,
+literal|30
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|aifflags
+operator|&
+name|AAC_AIFFLAGS_RUNNING
+condition|)
+name|panic
+argument_list|(
+literal|"Cannot shutdown AIF thread\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1929,11 +2356,20 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach or system shutdown.  *  * Note that we can assume that the bioq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
+comment|/*  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach or system shutdown.  *  * Note that we can assume that the bioq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
 end_comment
 
 begin_function
@@ -1948,11 +2384,6 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|struct
 name|aac_close_command
@@ -1968,6 +2399,13 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splbio
@@ -1979,7 +2417,7 @@ name|aac_state
 operator||=
 name|AAC_STATE_SUSPEND
 expr_stmt|;
-comment|/*       * Send a Container shutdown followed by a HostShutdown FIB to the      * controller to convince it that we don't want to talk to it anymore.      * We've been closed and all I/O completed already      */
+comment|/*  	 * Send a Container shutdown followed by a HostShutdown FIB to the 	 * controller to convince it that we don't want to talk to it anymore. 	 * We've been closed and all I/O completed already 	 */
 name|device_printf
 argument_list|(
 name|sc
@@ -2024,19 +2462,18 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"FAILED.\n"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|i
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 		 * XXX Issuing this command to the controller makes it shut down 		 * but also keeps it from coming back up without a reset of the 		 * PCI bus.  This is not desirable if you are just unloading the 		 * driver module with the intent to reload it later. 		 */
 if|if
 condition|(
 name|aac_sync_fib
@@ -2095,7 +2532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Bring the controller to a quiescent state, ready for system suspend.  */
+comment|/*  * Bring the controller to a quiescent state, ready for system suspend.  */
 end_comment
 
 begin_function
@@ -2110,11 +2547,6 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|int
 name|s
@@ -2122,6 +2554,13 @@ decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|s
@@ -2154,7 +2593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Bring the controller back to a state ready for operation.  */
+comment|/*  * Bring the controller back to a state ready for operation.  */
 end_comment
 
 begin_function
@@ -2169,15 +2608,17 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|sc
@@ -2201,7 +2642,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  * Take an interrupt.  */
+comment|/*  * Take an interrupt.  */
 end_comment
 
 begin_function
@@ -2217,13 +2658,6 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-operator|(
-expr|struct
-name|aac_softc
-operator|*
-operator|)
-name|arg
 decl_stmt|;
 name|u_int16_t
 name|reason
@@ -2233,6 +2667,15 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|aac_softc
+operator|*
+operator|)
+name|arg
+expr_stmt|;
 name|reason
 operator|=
 name|AAC_GET_ISTATUS
@@ -2240,7 +2683,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* controller wants to talk to the log?  XXX should we defer this? */
+comment|/* controller wants to talk to the log?  Defer it to the AIF thread */
 if|if
 condition|(
 name|reason
@@ -2248,47 +2691,6 @@ operator|&
 name|AAC_DB_PRINTF
 condition|)
 block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|aac_common
-operator|->
-name|ac_printf
-index|[
-literal|0
-index|]
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-literal|"** %.*s"
-argument_list|,
-name|AAC_PRINTF_BUFSIZE
-argument_list|,
-name|sc
-operator|->
-name|aac_common
-operator|->
-name|ac_printf
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|aac_common
-operator|->
-name|ac_printf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|AAC_CLEAR_ISTATUS
 argument_list|(
 name|sc
@@ -2296,11 +2698,33 @@ argument_list|,
 name|AAC_DB_PRINTF
 argument_list|)
 expr_stmt|;
-name|AAC_QNOTIFY
+if|if
+condition|(
+name|sc
+operator|->
+name|aifflags
+operator|&
+name|AAC_AIFFLAGS_RUNNING
+condition|)
+block|{
+name|sc
+operator|->
+name|aifflags
+operator||=
+name|AAC_AIFFLAGS_PENDING
+expr_stmt|;
+name|wakeup
 argument_list|(
 name|sc
-argument_list|,
-name|AAC_DB_PRINTF
+operator|->
+name|aifthread
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|aac_print_printf
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2319,11 +2743,30 @@ argument_list|,
 name|AAC_DB_COMMAND_READY
 argument_list|)
 expr_stmt|;
-name|aac_host_command
+comment|/* XXX What happens if the thread is already awake? */
+if|if
+condition|(
+name|sc
+operator|->
+name|aifflags
+operator|&
+name|AAC_AIFFLAGS_RUNNING
+condition|)
+block|{
+name|sc
+operator|->
+name|aifflags
+operator||=
+name|AAC_AIFFLAGS_PENDING
+expr_stmt|;
+name|wakeup
 argument_list|(
 name|sc
+operator|->
+name|aifthread
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* controller has a response for us? */
 if|if
@@ -2346,7 +2789,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* spurious interrupts that we don't use - reset the mask and clear the interrupts */
+comment|/* 	 * spurious interrupts that we don't use - reset the mask and clear the 	 * interrupts 	 */
 if|if
 condition|(
 name|reason
@@ -2381,11 +2824,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                Command Processing  ********************************************************************************  ********************************************************************************/
+comment|/*  * Command Processing  */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Start as much queued I/O as possible on the controller  */
+comment|/*  * Start as much queued I/O as possible on the controller  */
 end_comment
 
 begin_function
@@ -2415,7 +2858,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* try to get a command that's been put off for lack of resources */
+comment|/* 		 * Try to get a command that's been put off for lack of  		 * resources 		 */
 name|cm
 operator|=
 name|aac_dequeue_ready
@@ -2423,7 +2866,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* try to build a command off the bio queue (ignore error return) */
+comment|/* 		 * Try to build a command off the bio queue (ignore error  		 * return) 		 */
 if|if
 condition|(
 name|cm
@@ -2470,7 +2913,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Deliver a command to the controller; allocate controller resources at the  * last moment when possible.  */
+comment|/*  * Deliver a command to the controller; allocate controller resources at the  * last moment when possible.  */
 end_comment
 
 begin_function
@@ -2488,10 +2931,6 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|cm
-operator|->
-name|cm_sc
 decl_stmt|;
 name|int
 name|error
@@ -2500,6 +2939,12 @@ name|debug_called
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|cm
+operator|->
+name|cm_sc
 expr_stmt|;
 comment|/* get the command mapped */
 name|aac_map_command
@@ -2549,7 +2994,7 @@ name|u_int32_t
 operator|)
 name|cm
 expr_stmt|;
-comment|/* XXX 64-bit physical address issue */
+comment|/* XXX 64-bit physical 							 * address issue */
 comment|/* put the FIB on the outbound queue */
 name|error
 operator|=
@@ -2557,7 +3002,9 @@ name|aac_enqueue_fib
 argument_list|(
 name|sc
 argument_list|,
-name|AAC_ADAP_NORM_CMD_QUEUE
+name|cm
+operator|->
+name|cm_queue
 argument_list|,
 name|cm
 argument_list|)
@@ -2571,7 +3018,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle notification of one or more FIBs coming from the controller.  */
+comment|/*  * Handle notification of one or more FIBs coming from the controller.  */
 end_comment
 
 begin_function
@@ -2593,10 +3040,64 @@ decl_stmt|;
 name|u_int32_t
 name|fib_size
 decl_stmt|;
+name|int
+name|size
+decl_stmt|;
 name|debug_called
 argument_list|(
-literal|1
+literal|2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|aifflags
+operator||=
+name|AAC_AIFFLAGS_RUNNING
+expr_stmt|;
+while|while
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|aifflags
+operator|&
+name|AAC_AIFFLAGS_EXIT
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|aifflags
+operator|&
+name|AAC_AIFFLAGS_PENDING
+operator|)
+condition|)
+name|tsleep
+argument_list|(
+name|sc
+operator|->
+name|aifthread
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"aifthd"
+argument_list|,
+literal|15
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|aifflags
+operator|&=
+operator|~
+name|AAC_AIFFLAGS_PENDING
 expr_stmt|;
 for|for
 control|(
@@ -2621,6 +3122,13 @@ argument_list|)
 condition|)
 break|break;
 comment|/* nothing to do */
+name|AAC_PRINT_FIB
+argument_list|(
+name|sc
+argument_list|,
+name|fib
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|fib
@@ -2637,18 +3145,7 @@ name|aac_handle_aif
 argument_list|(
 name|sc
 argument_list|,
-operator|(
-expr|struct
-name|aac_aif_command
-operator|*
-operator|)
-operator|&
 name|fib
-operator|->
-name|data
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2659,26 +3156,158 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"unknown command from controller\n"
-argument_list|)
-expr_stmt|;
-name|AAC_PRINT_FIB
-argument_list|(
-name|sc
-argument_list|,
-name|fib
+literal|"unknown command "
+literal|"from controller\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* XXX reply to FIBs requesting responses ?? */
-comment|/* XXX how do we return these FIBs to the controller? */
+comment|/* Return the AIF to the controller. */
+if|if
+condition|(
+operator|(
+name|fib
+operator|->
+name|Header
+operator|.
+name|XferState
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|fib
+operator|->
+name|Header
+operator|.
+name|StructType
+operator|!=
+name|AAC_FIBTYPE_TFIB
+operator|)
+condition|)
+break|break;
+if|if
+condition|(
+name|fib
+operator|->
+name|Header
+operator|.
+name|XferState
+operator|&
+name|AAC_FIBSTATE_FROMADAP
+condition|)
+block|{
+name|fib
+operator|->
+name|Header
+operator|.
+name|XferState
+operator||=
+name|AAC_FIBSTATE_DONEHOST
+expr_stmt|;
+operator|*
+operator|(
+name|AAC_FSAStatus
+operator|*
+operator|)
+name|fib
+operator|->
+name|data
+operator|=
+name|ST_OK
+expr_stmt|;
+comment|/* XXX Compute the Size field? */
+name|size
+operator|=
+name|fib
+operator|->
+name|Header
+operator|.
+name|Size
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_fib
+argument_list|)
+condition|)
+block|{
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_fib
+argument_list|)
+expr_stmt|;
+name|fib
+operator|->
+name|Header
+operator|.
+name|Size
+operator|=
+name|size
+expr_stmt|;
 block|}
+comment|/* 				 * Since we did not generate this command, it 				 * cannot go through the normal 				 * enqueue->startio chain. 				 */
+name|aac_enqueue_response
+argument_list|(
+name|sc
+argument_list|,
+name|AAC_ADAP_NORM_RESP_QUEUE
+argument_list|,
+name|fib
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|aac_print_printf
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+name|sc
+operator|->
+name|aifflags
+operator|&=
+operator|~
+name|AAC_AIFFLAGS_RUNNING
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|500005
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|kthread_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle notification of one or more FIBs completed by the controller  */
+comment|/*  * Handle notification of one or more FIBs completed by the controller  */
 end_comment
 
 begin_function
@@ -2814,7 +3443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Process completed commands.  */
+comment|/*  * Process completed commands.  */
 end_comment
 
 begin_function
@@ -2834,13 +3463,6 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-operator|(
-expr|struct
-name|aac_softc
-operator|*
-operator|)
-name|context
 decl_stmt|;
 name|struct
 name|aac_command
@@ -2851,6 +3473,15 @@ name|debug_called
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|aac_softc
+operator|*
+operator|)
+name|context
 expr_stmt|;
 comment|/* pull completed commands off the queue */
 for|for
@@ -2917,7 +3548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle a bio submitted from a disk device.  */
+comment|/*  * Handle a bio submitted from a disk device.  */
 end_comment
 
 begin_function
@@ -2934,7 +3565,19 @@ name|struct
 name|aac_disk
 modifier|*
 name|ad
-init|=
+decl_stmt|;
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|ad
+operator|=
 operator|(
 expr|struct
 name|aac_disk
@@ -2945,20 +3588,12 @@ operator|->
 name|bio_dev
 operator|->
 name|si_drv1
-decl_stmt|;
-name|struct
-name|aac_softc
-modifier|*
+expr_stmt|;
 name|sc
-init|=
+operator|=
 name|ad
 operator|->
 name|ad_controller
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|2
-argument_list|)
 expr_stmt|;
 comment|/* queue the BIO and try to get some work done */
 name|aac_enqueue_bio
@@ -2977,7 +3612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Get a bio and build a command to go with it.  */
+comment|/*  * Get a bio and build a command to go with it.  */
 end_comment
 
 begin_function
@@ -3105,6 +3740,12 @@ operator|->
 name|cm_timestamp
 operator|=
 name|time_second
+expr_stmt|;
+name|cm
+operator|->
+name|cm_queue
+operator|=
+name|AAC_ADAP_NORM_CMD_QUEUE
 expr_stmt|;
 comment|/* build the FIB */
 name|fib
@@ -3379,7 +4020,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle a bio-instigated command that has been completed.  */
+comment|/*  * Handle a bio-instigated command that has been completed.  */
 end_comment
 
 begin_function
@@ -3537,7 +4178,440 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Submit a command to the controller, return when it completes.  */
+comment|/*  * Dump a block of data to the controller.  If the queue is full, tell the  * caller to hold off and wait for the queue to drain.  */
+end_comment
+
+begin_function
+name|int
+name|aac_dump_enqueue
+parameter_list|(
+name|struct
+name|aac_disk
+modifier|*
+name|ad
+parameter_list|,
+name|u_int32_t
+name|lba
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|dumppages
+parameter_list|)
+block|{
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
+name|aac_command
+modifier|*
+name|cm
+decl_stmt|;
+name|struct
+name|aac_fib
+modifier|*
+name|fib
+decl_stmt|;
+name|struct
+name|aac_blockwrite
+modifier|*
+name|bw
+decl_stmt|;
+name|sc
+operator|=
+name|ad
+operator|->
+name|ad_controller
+expr_stmt|;
+name|cm
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|aac_alloc_command
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|cm
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+comment|/* fill out the command */
+name|cm
+operator|->
+name|cm_data
+operator|=
+name|data
+expr_stmt|;
+name|cm
+operator|->
+name|cm_datalen
+operator|=
+name|dumppages
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
+name|cm
+operator|->
+name|cm_complete
+operator|=
+name|NULL
+expr_stmt|;
+name|cm
+operator|->
+name|cm_private
+operator|=
+name|NULL
+expr_stmt|;
+name|cm
+operator|->
+name|cm_timestamp
+operator|=
+name|time_second
+expr_stmt|;
+name|cm
+operator|->
+name|cm_queue
+operator|=
+name|AAC_ADAP_NORM_CMD_QUEUE
+expr_stmt|;
+comment|/* build the FIB */
+name|fib
+operator|=
+name|cm
+operator|->
+name|cm_fib
+expr_stmt|;
+name|fib
+operator|->
+name|Header
+operator|.
+name|XferState
+operator|=
+name|AAC_FIBSTATE_HOSTOWNED
+operator||
+name|AAC_FIBSTATE_INITIALISED
+operator||
+name|AAC_FIBSTATE_FROMHOST
+operator||
+name|AAC_FIBSTATE_REXPECTED
+operator||
+name|AAC_FIBSTATE_NORM
+expr_stmt|;
+name|fib
+operator|->
+name|Header
+operator|.
+name|Command
+operator|=
+name|ContainerCommand
+expr_stmt|;
+name|fib
+operator|->
+name|Header
+operator|.
+name|Size
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_fib_header
+argument_list|)
+expr_stmt|;
+name|bw
+operator|=
+operator|(
+expr|struct
+name|aac_blockwrite
+operator|*
+operator|)
+operator|&
+name|fib
+operator|->
+name|data
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|bw
+operator|->
+name|Command
+operator|=
+name|VM_CtBlockWrite
+expr_stmt|;
+name|bw
+operator|->
+name|ContainerId
+operator|=
+name|ad
+operator|->
+name|ad_container
+operator|->
+name|co_mntobj
+operator|.
+name|ObjectId
+expr_stmt|;
+name|bw
+operator|->
+name|BlockNumber
+operator|=
+name|lba
+expr_stmt|;
+name|bw
+operator|->
+name|ByteCount
+operator|=
+name|dumppages
+operator|*
+name|PAGE_SIZE
+expr_stmt|;
+name|bw
+operator|->
+name|Stable
+operator|=
+name|CUNSTABLE
+expr_stmt|;
+comment|/* XXX what's appropriate here? */
+name|fib
+operator|->
+name|Header
+operator|.
+name|Size
+operator|+=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_blockwrite
+argument_list|)
+expr_stmt|;
+name|cm
+operator|->
+name|cm_flags
+operator||=
+name|AAC_CMD_DATAOUT
+expr_stmt|;
+name|cm
+operator|->
+name|cm_sgtable
+operator|=
+operator|&
+name|bw
+operator|->
+name|SgMap
+expr_stmt|;
+return|return
+operator|(
+name|aac_start
+argument_list|(
+name|cm
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Wait for the card's queue to drain when dumping.  Also check for monitor  * printf's  */
+end_comment
+
+begin_function
+name|void
+name|aac_dump_complete
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|struct
+name|aac_fib
+modifier|*
+name|fib
+decl_stmt|;
+name|struct
+name|aac_command
+modifier|*
+name|cm
+decl_stmt|;
+name|u_int16_t
+name|reason
+decl_stmt|;
+name|u_int32_t
+name|pi
+decl_stmt|,
+name|ci
+decl_stmt|,
+name|fib_size
+decl_stmt|;
+do|do
+block|{
+name|reason
+operator|=
+name|AAC_GET_ISTATUS
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reason
+operator|&
+name|AAC_DB_RESPONSE_READY
+condition|)
+block|{
+name|AAC_CLEAR_ISTATUS
+argument_list|(
+name|sc
+argument_list|,
+name|AAC_DB_RESPONSE_READY
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|aac_dequeue_fib
+argument_list|(
+name|sc
+argument_list|,
+name|AAC_HOST_NORM_RESP_QUEUE
+argument_list|,
+operator|&
+name|fib_size
+argument_list|,
+operator|&
+name|fib
+argument_list|)
+condition|)
+break|break;
+name|cm
+operator|=
+operator|(
+expr|struct
+name|aac_command
+operator|*
+operator|)
+name|fib
+operator|->
+name|Header
+operator|.
+name|SenderData
+expr_stmt|;
+if|if
+condition|(
+name|cm
+operator|==
+name|NULL
+condition|)
+name|AAC_PRINT_FIB
+argument_list|(
+name|sc
+argument_list|,
+name|fib
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|aac_remove_busy
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
+name|aac_unmap_command
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
+name|aac_enqueue_complete
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
+name|aac_release_command
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|reason
+operator|&
+name|AAC_DB_PRINTF
+condition|)
+block|{
+name|AAC_CLEAR_ISTATUS
+argument_list|(
+name|sc
+argument_list|,
+name|AAC_DB_PRINTF
+argument_list|)
+expr_stmt|;
+name|aac_print_printf
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
+name|pi
+operator|=
+name|sc
+operator|->
+name|aac_queues
+operator|->
+name|qt_qindex
+index|[
+name|AAC_ADAP_NORM_CMD_QUEUE
+index|]
+index|[
+name|AAC_PRODUCER_INDEX
+index|]
+expr_stmt|;
+name|ci
+operator|=
+name|sc
+operator|->
+name|aac_queues
+operator|->
+name|qt_qindex
+index|[
+name|AAC_ADAP_NORM_CMD_QUEUE
+index|]
+index|[
+name|AAC_CONSUMER_INDEX
+index|]
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|ci
+operator|!=
+name|pi
+condition|)
+do|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Submit a command to the controller, return when it completes.  */
 end_comment
 
 begin_function
@@ -3567,6 +4641,12 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Put the command on the ready queue and get things going */
+name|cm
+operator|->
+name|cm_queue
+operator|=
+name|AAC_ADAP_NORM_CMD_QUEUE
+expr_stmt|;
 name|aac_enqueue_ready
 argument_list|(
 name|cm
@@ -3609,12 +4689,29 @@ argument_list|(
 name|cm
 argument_list|,
 name|PRIBIO
+operator||
+name|PCATCH
 argument_list|,
 literal|"aacwait"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|==
+name|ERESTART
+operator|)
+operator|||
+operator|(
+name|error
+operator|==
+name|EINTR
+operator|)
+condition|)
+break|break;
 block|}
 name|splx
 argument_list|(
@@ -3630,11 +4727,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                         Command Buffer Management  ********************************************************************************  ********************************************************************************/
+comment|/*  *Command Buffer Management  */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Allocate a command.  */
+comment|/*  * Allocate a command.  */
 end_comment
 
 begin_function
@@ -3696,7 +4793,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Release a command back to the freelist.  */
+comment|/*  * Release a command back to the freelist.  */
 end_comment
 
 begin_function
@@ -3784,7 +4881,7 @@ expr|struct
 name|aac_fib
 argument_list|)
 expr_stmt|;
-comment|/*       * These are duplicated in aac_start to cover the case where an      * intermediate stage may have destroyed them.  They're left      * initialised here for debugging purposes only.      */
+comment|/*  	 * These are duplicated in aac_start to cover the case where an 	 * intermediate stage may have destroyed them.  They're left 	 * initialised here for debugging purposes only. 	 */
 name|cm
 operator|->
 name|cm_fib
@@ -3821,7 +4918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Map helper for command/FIB allocation.  */
+comment|/*  * Map helper for command/FIB allocation.  */
 end_comment
 
 begin_function
@@ -3848,14 +4945,16 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|sc
+operator|=
 operator|(
 expr|struct
 name|aac_softc
 operator|*
 operator|)
 name|arg
-decl_stmt|;
+expr_stmt|;
 name|debug_called
 argument_list|(
 literal|3
@@ -3876,7 +4975,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Allocate and initialise commands/FIBs for this adapter.  */
+comment|/*  * Allocate and initialise commands/FIBs for this adapter.  */
 end_comment
 
 begin_function
@@ -4057,7 +5156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Free FIBs owned by this adapter.  */
+comment|/*  * Free FIBs owned by this adapter.  */
 end_comment
 
 begin_function
@@ -4138,7 +5237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Command-mapping helper function - populate this command's s/g table.  */
+comment|/*  * Command-mapping helper function - populate this command's s/g table.  */
 end_comment
 
 begin_function
@@ -4165,22 +5264,11 @@ name|struct
 name|aac_command
 modifier|*
 name|cm
-init|=
-operator|(
-expr|struct
-name|aac_command
-operator|*
-operator|)
-name|arg
 decl_stmt|;
 name|struct
 name|aac_fib
 modifier|*
 name|fib
-init|=
-name|cm
-operator|->
-name|cm_fib
 decl_stmt|;
 name|struct
 name|aac_sg_table
@@ -4194,6 +5282,21 @@ name|debug_called
 argument_list|(
 literal|3
 argument_list|)
+expr_stmt|;
+name|cm
+operator|=
+operator|(
+expr|struct
+name|aac_command
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|fib
+operator|=
+name|cm
+operator|->
+name|cm_fib
 expr_stmt|;
 comment|/* find the s/g table */
 name|sg
@@ -4283,7 +5386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Map a command into controller-visible space.  */
+comment|/*  * Map a command into controller-visible space.  */
 end_comment
 
 begin_function
@@ -4301,15 +5404,17 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|cm
-operator|->
-name|cm_sc
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|cm
+operator|->
+name|cm_sc
 expr_stmt|;
 comment|/* don't map more than once */
 if|if
@@ -4408,7 +5513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Unmap a command from controller-visible space.  */
+comment|/*  * Unmap a command from controller-visible space.  */
 end_comment
 
 begin_function
@@ -4426,15 +5531,17 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|cm
-operator|->
-name|cm_sc
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|cm
+operator|->
+name|cm_sc
 expr_stmt|;
 if|if
 condition|(
@@ -4522,11 +5629,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                                Hardware Interface  ********************************************************************************  ********************************************************************************/
+comment|/*  * Hardware Interface  */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Initialise the adapter.  */
+comment|/*  * Initialise the adapter.  */
 end_comment
 
 begin_function
@@ -4553,18 +5660,20 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
 operator|(
 expr|struct
 name|aac_softc
 operator|*
 operator|)
 name|arg
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -4611,7 +5720,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*      * First wait for the adapter to come ready.      */
+comment|/* 	 * First wait for the adapter to come ready. 	 */
 name|then
 operator|=
 name|time_second
@@ -4686,7 +5795,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"FATAL: controller not coming ready, status %x\n"
+literal|"FATAL: controller not coming ready, "
+literal|"status %x\n"
 argument_list|,
 name|code
 argument_list|)
@@ -4708,7 +5818,7 @@ name|AAC_UP_AND_RUNNING
 operator|)
 condition|)
 do|;
-comment|/*      * Create DMA tag for the common structure and allocate it.      */
+comment|/* 	 * Create DMA tag for the common structure and allocate it. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -4722,7 +5832,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* algnmnt, boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -4740,9 +5850,10 @@ expr|struct
 name|aac_common
 argument_list|)
 argument_list|,
+comment|/* maxsize */
 literal|1
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
@@ -4857,7 +5968,7 @@ name|aac_common
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Fill in the init structure.  This tells the adapter about the physical location      * of various important shared data structures.      */
+comment|/* 	 * Fill in the init structure.  This tells the adapter about the 	 * physical location of various important shared data structures. 	 */
 name|ip
 operator|=
 operator|&
@@ -4961,7 +6072,7 @@ operator|=
 name|time_second
 expr_stmt|;
 comment|/* reset later if invalid */
-comment|/*      * Initialise FIB queues.  Note that it appears that the layout of the indexes      * and the segmentation of the entries may be mandated by the adapter, which is       * only told about the base of the queue index fields.      *      * The initial values of the indices are assumed to inform the adapter      * of the sizes of the respective queues, and theoretically it could work out      * the entire layout of the queue structures from this.  We take the easy      * route and just lay this area out like everyone else does.      *      * The Linux driver uses a much more complex scheme whereby several header      * records are kept for each queue.  We use a couple of generic list manipulation      * functions which 'know' the size of each list by virtue of a table.      */
+comment|/* 	 * Initialise FIB queues.  Note that it appears that the layout of the 	 * indexes and the segmentation of the entries may be mandated by the 	 * adapter, which is only told about the base of the queue index fields. 	 * 	 * The initial values of the indices are assumed to inform the adapter 	 * of the sizes of the respective queues, and theoretically it could  	 * work out the entire layout of the queue structures from this.  We 	 * take the easy route and just lay this area out like everyone else 	 * does. 	 * 	 * The Linux driver uses a much more complex scheme whereby several  	 * header records are kept for each queue.  We use a couple of generic  	 * list manipulation functions which 'know' the size of each list by 	 * virtue of a table. 	 */
 name|qaddr
 operator|=
 operator|&
@@ -5393,7 +6504,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/*      * Do controller-type-specific initialisation      */
+comment|/* 	 * Do controller-type-specific initialisation 	 */
 switch|switch
 condition|(
 name|sc
@@ -5416,7 +6527,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Give the init structure to the controller.      */
+comment|/* 	 * Give the init structure to the controller. 	 */
 if|if
 condition|(
 name|aac_sync_command
@@ -5471,7 +6582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Send a synchronous command to the controller and wait for a result.  */
+comment|/*  * Send a synchronous command to the controller and wait for a result.  */
 end_comment
 
 begin_function
@@ -5628,7 +6739,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Send a synchronous FIB to the controller and wait for a result.  */
+comment|/*  * Send a synchronous FIB to the controller and wait for a result.  */
 end_comment
 
 begin_function
@@ -5667,18 +6778,20 @@ name|struct
 name|aac_fib
 modifier|*
 name|fib
-init|=
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+name|fib
+operator|=
 operator|&
 name|sc
 operator|->
 name|aac_common
 operator|->
 name|ac_sync_fib
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|3
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5691,7 +6804,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*      * Set up the sync FIB      */
+comment|/* 	 * Set up the sync FIB 	 */
 name|fib
 operator|->
 name|Header
@@ -5783,7 +6896,7 @@ argument_list|,
 name|ac_sync_fib
 argument_list|)
 expr_stmt|;
-comment|/*      * Copy in data.      */
+comment|/* 	 * Copy in data. 	 */
 if|if
 condition|(
 name|data
@@ -5829,7 +6942,7 @@ operator||
 name|AAC_FIBSTATE_NORM
 expr_stmt|;
 block|}
-comment|/*      * Give the FIB to the controller, wait for a response.      */
+comment|/* 	 * Give the FIB to the controller, wait for a response. 	 */
 if|if
 condition|(
 name|aac_sync_command
@@ -5867,7 +6980,7 @@ name|EIO
 operator|)
 return|;
 block|}
-comment|/*       * Copy out the result      */
+comment|/*  	 * Copy out the result 	 */
 if|if
 condition|(
 name|result
@@ -5940,7 +7053,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Adapter-space FIB queue manipulation  *  * Note that the queue implementation here is a little funky; neither the PI or  * CI will ever be zero.  This behaviour is a controller feature.  */
+comment|/*  * Adapter-space FIB queue manipulation  *  * Note that the queue implementation here is a little funky; neither the PI or  * CI will ever be zero.  This behaviour is a controller feature.  */
 end_comment
 
 begin_struct
@@ -6010,7 +7123,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Atomically insert an entry into the nominated queue, returns 0 on success or EBUSY  * if the queue is full.  *  * Note: it would be more efficient to defer notifying the controller in  *       the case where we may be inserting several entries in rapid succession, but  *       implementing this usefully may be difficult (it would involve a separate  *       queue/notify interface).  */
+comment|/*  * Atomically insert an entry into the nominated queue, returns 0 on success or  * EBUSY if the queue is full.  *  * Note: it would be more efficient to defer notifying the controller in  *	 the case where we may be inserting several entries in rapid succession,  *	 but implementing this usefully may be difficult (it would involve a  *	 separate queue/notify interface).  */
 end_comment
 
 begin_function
@@ -6048,6 +7161,11 @@ decl_stmt|;
 name|u_int32_t
 name|fib_addr
 decl_stmt|;
+name|debug_called
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
 name|fib_size
 operator|=
 name|cm
@@ -6067,11 +7185,6 @@ operator|->
 name|Header
 operator|.
 name|ReceiverFibAddress
-expr_stmt|;
-name|debug_called
-argument_list|(
-literal|3
-argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -6191,7 +7304,7 @@ name|pi
 operator|+
 literal|1
 expr_stmt|;
-comment|/*      * To avoid a race with its completion interrupt, place this command on the      * busy queue prior to advertising it to the controller.      */
+comment|/* 	 * To avoid a race with its completion interrupt, place this command on 	 * the busy queue prior to advertising it to the controller. 	 */
 name|aac_enqueue_busy
 argument_list|(
 name|cm
@@ -6241,7 +7354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Atomically remove one entry from the nominated queue, returns 0 on success or ENOENT  * if the queue is empty.  */
+comment|/*  * Atomically remove one entry from the nominated queue, returns 0 on  * success or ENOENT if the queue is empty.  */
 end_comment
 
 begin_function
@@ -6470,7 +7583,237 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Check for commands that have been outstanding for a suspiciously long time,  * and complain about them.  */
+comment|/*  * Put our response to an Adapter Initialed Fib on the response queue  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|aac_enqueue_response
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|queue
+parameter_list|,
+name|struct
+name|aac_fib
+modifier|*
+name|fib
+parameter_list|)
+block|{
+name|u_int32_t
+name|pi
+decl_stmt|,
+name|ci
+decl_stmt|;
+name|int
+name|s
+decl_stmt|,
+name|error
+decl_stmt|;
+name|u_int32_t
+name|fib_size
+decl_stmt|;
+name|u_int32_t
+name|fib_addr
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Tell the adapter where the FIB is */
+name|fib_size
+operator|=
+name|fib
+operator|->
+name|Header
+operator|.
+name|Size
+expr_stmt|;
+name|fib_addr
+operator|=
+name|fib
+operator|->
+name|Header
+operator|.
+name|SenderFibAddress
+expr_stmt|;
+name|fib
+operator|->
+name|Header
+operator|.
+name|ReceiverFibAddress
+operator|=
+name|fib_addr
+expr_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+comment|/* get the producer/consumer indices */
+name|pi
+operator|=
+name|sc
+operator|->
+name|aac_queues
+operator|->
+name|qt_qindex
+index|[
+name|queue
+index|]
+index|[
+name|AAC_PRODUCER_INDEX
+index|]
+expr_stmt|;
+name|ci
+operator|=
+name|sc
+operator|->
+name|aac_queues
+operator|->
+name|qt_qindex
+index|[
+name|queue
+index|]
+index|[
+name|AAC_CONSUMER_INDEX
+index|]
+expr_stmt|;
+comment|/* wrap the queue? */
+if|if
+condition|(
+name|pi
+operator|>=
+name|aac_qinfo
+index|[
+name|queue
+index|]
+operator|.
+name|size
+condition|)
+name|pi
+operator|=
+literal|0
+expr_stmt|;
+comment|/* check for queue full */
+if|if
+condition|(
+operator|(
+name|pi
+operator|+
+literal|1
+operator|)
+operator|==
+name|ci
+condition|)
+block|{
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+comment|/* populate queue entry */
+operator|(
+name|sc
+operator|->
+name|aac_qentries
+index|[
+name|queue
+index|]
+operator|+
+name|pi
+operator|)
+operator|->
+name|aq_fib_size
+operator|=
+name|fib_size
+expr_stmt|;
+operator|(
+name|sc
+operator|->
+name|aac_qentries
+index|[
+name|queue
+index|]
+operator|+
+name|pi
+operator|)
+operator|->
+name|aq_fib_addr
+operator|=
+name|fib_addr
+expr_stmt|;
+comment|/* update producer index */
+name|sc
+operator|->
+name|aac_queues
+operator|->
+name|qt_qindex
+index|[
+name|queue
+index|]
+index|[
+name|AAC_PRODUCER_INDEX
+index|]
+operator|=
+name|pi
+operator|+
+literal|1
+expr_stmt|;
+comment|/* notify the adapter if we know how */
+if|if
+condition|(
+name|aac_qinfo
+index|[
+name|queue
+index|]
+operator|.
+name|notify
+operator|!=
+literal|0
+condition|)
+name|AAC_QNOTIFY
+argument_list|(
+name|sc
+argument_list|,
+name|aac_qinfo
+index|[
+name|queue
+index|]
+operator|.
+name|notify
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|out
+label|:
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Check for commands that have been outstanding for a suspiciously long time,  * and complain about them.  */
 end_comment
 
 begin_function
@@ -6499,17 +7842,13 @@ if|#
 directive|if
 literal|0
 comment|/* simulate an interrupt to handle possibly-missed interrupts */
-comment|/*      * XXX This was done to work around another bug which has since been      * fixed.  It is dangerous anyways because you don't want multiple      * threads in the interrupt handler at the same time!  If calling      * is deamed neccesary in the future, proper mutexes must be used.      */
-block|s = splbio();     aac_intr(sc);     splx(s);
+comment|/* 	 * XXX This was done to work around another bug which has since been 	 * fixed.  It is dangerous anyways because you don't want multiple 	 * threads in the interrupt handler at the same time!  If calling 	 * is deamed neccesary in the future, proper mutexes must be used. 	 */
+block|s = splbio(); 	aac_intr(sc); 	splx(s);
+comment|/* kick the I/O queue to restart it in the case of deadlock */
+block|aac_startio(sc);
 endif|#
 directive|endif
-comment|/* kick the I/O queue to restart it in the case of deadlock */
-name|aac_startio
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* traverse the busy command list, bitch about late commands once only */
+comment|/* 	 * traverse the busy command list, bitch about late commands once 	 * only. 	 */
 name|deadline
 operator|=
 name|time_second
@@ -6607,11 +7946,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                        Interface Function Vectors  ********************************************************************************  ********************************************************************************/
+comment|/*  * Interface Function Vectors  */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Read the current firmware status word.  */
+comment|/*  * Read the current firmware status word.  */
 end_comment
 
 begin_function
@@ -6673,7 +8012,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Notify the controller of a change in a given queue  */
+comment|/*  * Notify the controller of a change in a given queue  */
 end_comment
 
 begin_function
@@ -6739,7 +8078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Get the interrupt reason bits  */
+comment|/*  * Get the interrupt reason bits  */
 end_comment
 
 begin_function
@@ -6801,7 +8140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Clear some interrupt reason bits  */
+comment|/*  * Clear some interrupt reason bits  */
 end_comment
 
 begin_function
@@ -6867,7 +8206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Populate the mailbox and set the command word  */
+comment|/*  * Populate the mailbox and set the command word  */
 end_comment
 
 begin_function
@@ -7045,7 +8384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Fetch the immediate command status word  */
+comment|/*  * Fetch the immediate command status word  */
 end_comment
 
 begin_function
@@ -7107,7 +8446,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Set/clear interrupt masks  */
+comment|/*  * Set/clear interrupt masks  */
 end_comment
 
 begin_function
@@ -7232,11 +8571,11 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                         Debugging and Diagnostics  ********************************************************************************  ********************************************************************************/
+comment|/*  * Debugging and Diagnostics  */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Print some information about the controller.  */
+comment|/*  * Print some information about the controller.  */
 end_comment
 
 begin_function
@@ -7256,7 +8595,7 @@ index|[
 name|AAC_FIB_DATASIZE
 index|]
 decl_stmt|;
-comment|/* XXX really a bit big for the stack */
+comment|/* XXX really a bit big 					 * for the stack */
 name|u_int16_t
 name|bufsize
 decl_stmt|;
@@ -7338,7 +8677,8 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"RequestAdapterInfo returned wrong data size (%d != %d)\n"
+literal|"RequestAdapterInfo returned wrong data size "
+literal|"(%d != %d)\n"
 argument_list|,
 name|bufsize
 argument_list|,
@@ -7370,7 +8710,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"%s %dMHz, %dMB total memory, %s (%d)\n"
+literal|"%s %dMHz, %dMB cache memory, %s\n"
 argument_list|,
 name|aac_describe_code
 argument_list|(
@@ -7387,7 +8727,7 @@ name|ClockSpeed
 argument_list|,
 name|info
 operator|->
-name|TotalMem
+name|BufferMem
 operator|/
 operator|(
 literal|1024
@@ -7403,10 +8743,6 @@ name|info
 operator|->
 name|batteryPlatform
 argument_list|)
-argument_list|,
-name|info
-operator|->
-name|batteryPlatform
 argument_list|)
 expr_stmt|;
 comment|/* save the kernel revision structure for later use */
@@ -7424,7 +8760,7 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"Kernel %d.%d-%d, S/N %llx\n"
+literal|"Kernel %d.%d-%d, Build %d, S/N %6X\n"
 argument_list|,
 name|info
 operator|->
@@ -7458,15 +8794,27 @@ name|dash
 argument_list|,
 name|info
 operator|->
+name|KernelRevision
+operator|.
+name|buildNumber
+argument_list|,
+call|(
+name|u_int32_t
+call|)
+argument_list|(
+name|info
+operator|->
 name|SerialNumber
+operator|&
+literal|0xffffff
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX how is this meant to be formatted? */
 block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Look up a text description of a numeric error code and return a pointer to  * same.  */
+comment|/*  * Look up a text description of a numeric error code and return a pointer to  * same.  */
 end_comment
 
 begin_function
@@ -7542,7 +8890,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *****************************************************************************                                                     Management Interface  *****************************************************************************  *****************************************************************************/
+comment|/*  * Management Interface  */
 end_comment
 
 begin_function
@@ -7569,15 +8917,17 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|dev
-operator|->
-name|si_drv1
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 comment|/* Check to make sure the device isn't already open */
 if|if
@@ -7629,15 +8979,17 @@ name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|dev
-operator|->
-name|si_drv1
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 comment|/* Mark this unit as no longer open  */
 name|sc
@@ -7680,40 +9032,39 @@ name|union
 name|aac_statrequest
 modifier|*
 name|as
-init|=
-operator|(
-expr|union
-name|aac_statrequest
-operator|*
-operator|)
-name|arg
 decl_stmt|;
 name|struct
 name|aac_softc
 modifier|*
 name|sc
-init|=
-name|dev
-operator|->
-name|si_drv1
 decl_stmt|;
 name|int
 name|error
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|AAC_COMPAT_LINUX
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|as
+operator|=
+operator|(
+expr|union
+name|aac_statrequest
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|sc
+operator|=
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 switch|switch
 condition|(
@@ -7778,11 +9129,20 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|AAC_COMPAT_LINUX
 case|case
 name|FSACTL_SENDFIB
+case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_SENDFIB
 case|:
 name|debug
 argument_list|(
@@ -7804,6 +9164,9 @@ break|break;
 case|case
 name|FSACTL_AIF_THREAD
 case|:
+case|case
+name|FSACTL_LNX_AIF_THREAD
+case|:
 name|debug
 argument_list|(
 literal|1
@@ -7819,6 +9182,18 @@ break|break;
 case|case
 name|FSACTL_OPEN_GET_ADAPTER_FIB
 case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_OPEN_GET_ADAPTER_FIB
+case|:
 name|debug
 argument_list|(
 literal|1
@@ -7826,10 +9201,15 @@ argument_list|,
 literal|"FSACTL_OPEN_GET_ADAPTER_FIB"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Pass the caller out an AdapterFibContext. 	 * 	 * Note that because we only support one opener, we 	 * basically ignore this.  Set the caller's context to a magic 	 * number just in case. 	 * 	 * The Linux code hands the driver a pointer into kernel space, 	 * and then trusts it when the caller hands it back.  Aiee! 	 */
+comment|/* 		 * Pass the caller out an AdapterFibContext. 		 * 		 * Note that because we only support one opener, we 		 * basically ignore this.  Set the caller's context to a magic 		 * number just in case. 		 * 		 * The Linux code hands the driver a pointer into kernel space, 		 * and then trusts it when the caller hands it back.  Aiee! 		 * Here, we give it the proc pointer of the per-adapter aif  		 * thread. It's only used as a sanity check in other calls. 		 */
 name|i
 operator|=
-name|AAC_AIF_SILLYMAGIC
+operator|(
+name|int
+operator|)
+name|sc
+operator|->
+name|aifthread
 expr_stmt|;
 name|error
 operator|=
@@ -7850,6 +9230,18 @@ break|break;
 case|case
 name|FSACTL_GET_NEXT_ADAPTER_FIB
 case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_GET_NEXT_ADAPTER_FIB
+case|:
 name|debug
 argument_list|(
 literal|1
@@ -7859,7 +9251,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|aac_linux_getnext_aif
+name|aac_getnext_aif
 argument_list|(
 name|sc
 argument_list|,
@@ -7869,6 +9261,9 @@ expr_stmt|;
 break|break;
 case|case
 name|FSACTL_CLOSE_GET_ADAPTER_FIB
+case|:
+case|case
+name|FSACTL_LNX_CLOSE_GET_ADAPTER_FIB
 case|:
 name|debug
 argument_list|(
@@ -7882,6 +9277,18 @@ break|break;
 case|case
 name|FSACTL_MINIPORT_REV_CHECK
 case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_MINIPORT_REV_CHECK
+case|:
 name|debug
 argument_list|(
 literal|1
@@ -7891,7 +9298,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|aac_linux_rev_check
+name|aac_rev_check
 argument_list|(
 name|sc
 argument_list|,
@@ -7899,8 +9306,50 @@ name|arg
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
+case|case
+name|FSACTL_QUERY_DISK
+case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_QUERY_DISK
+case|:
+name|debug
+argument_list|(
+literal|1
+argument_list|,
+literal|"FSACTL_QUERY_DISK"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|aac_query_disk
+argument_list|(
+name|sc
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|FSACTL_DELETE_DISK
+case|:
+case|case
+name|FSACTL_LNX_DELETE_DISK
+case|:
+comment|/* 		 * We don't trust the underland to tell us when to delete a 		 * container, rather we rely on an AIF coming from the  		 * controller 		 */
+name|error
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 default|default:
 name|device_printf
 argument_list|(
@@ -7928,7 +9377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Send a FIB supplied from userspace  */
+comment|/*  * Send a FIB supplied from userspace  */
 end_comment
 
 begin_function
@@ -7964,7 +9413,7 @@ name|cm
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*      * Get a command      */
+comment|/* 	 * Get a command 	 */
 if|if
 condition|(
 name|aac_alloc_command
@@ -7984,7 +9433,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Fetch the FIB header, then re-copy to get data as well.      */
+comment|/* 	 * Fetch the FIB header, then re-copy to get data as well. 	 */
 if|if
 condition|(
 operator|(
@@ -8102,7 +9551,7 @@ name|cm_timestamp
 operator|=
 name|time_second
 expr_stmt|;
-comment|/*      * Pass the FIB to the controller, wait for it to complete.      */
+comment|/* 	 * Pass the FIB to the controller, wait for it to complete. 	 */
 if|if
 condition|(
 operator|(
@@ -8122,7 +9571,7 @@ comment|/* XXX user timeout? */
 goto|goto
 name|out
 goto|;
-comment|/*      * Copy the FIB and data back out to the caller.      */
+comment|/* 	 * Copy the FIB and data back out to the caller. 	 */
 name|size
 operator|=
 name|cm
@@ -8207,7 +9656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Handle an AIF sent to us by the controller; queue it for later reference.  *  * XXX what's the right thing to do here when the queue is full?  Drop the older  * or newer entries?  */
+comment|/*  * Handle an AIF sent to us by the controller; queue it for later reference.  * If the queue fills up, then drop the older entries.  */
 end_comment
 
 begin_function
@@ -8221,21 +9670,435 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
+name|aac_fib
+modifier|*
+name|fib
+parameter_list|)
+block|{
+name|struct
 name|aac_aif_command
 modifier|*
 name|aif
-parameter_list|)
-block|{
+decl_stmt|;
+name|struct
+name|aac_container
+modifier|*
+name|co
+decl_stmt|,
+modifier|*
+name|co_next
+decl_stmt|;
+name|struct
+name|aac_mntinfo
+name|mi
+decl_stmt|;
+name|struct
+name|aac_mntinforesponse
+name|mir
+decl_stmt|;
+name|u_int16_t
+name|rsize
+decl_stmt|;
 name|int
 name|next
 decl_stmt|,
 name|s
+decl_stmt|,
+name|found
+decl_stmt|;
+name|int
+name|added
+init|=
+literal|0
+decl_stmt|,
+name|i
+init|=
+literal|0
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+name|aif
+operator|=
+operator|(
+expr|struct
+name|aac_aif_command
+operator|*
+operator|)
+operator|&
+name|fib
+operator|->
+name|data
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|aac_print_aif
+argument_list|(
+name|sc
+argument_list|,
+name|aif
+argument_list|)
+expr_stmt|;
+comment|/* Is it an event that we should care about? */
+switch|switch
+condition|(
+name|aif
+operator|->
+name|command
+condition|)
+block|{
+case|case
+name|AifCmdEventNotify
+case|:
+switch|switch
+condition|(
+name|aif
+operator|->
+name|data
+operator|.
+name|EN
+operator|.
+name|type
+condition|)
+block|{
+case|case
+name|AifEnAddContainer
+case|:
+case|case
+name|AifEnDeleteContainer
+case|:
+comment|/* 			 * A container was added or deleted, but the message  			 * doesn't tell us anything else!  Re-enumerate the 			 * containers and sort things out. 			 */
+name|mi
+operator|.
+name|Command
+operator|=
+name|VM_NameServe
+expr_stmt|;
+name|mi
+operator|.
+name|MntType
+operator|=
+name|FT_FILESYS
+expr_stmt|;
+do|do
+block|{
+comment|/* 				 * Ask the controller for its containers one at 				 * a time. 				 * XXX What if the controller's list changes 				 * midway through this enumaration? 				 * XXX This should be done async. 				 */
+name|mi
+operator|.
+name|MntCount
+operator|=
+name|i
+expr_stmt|;
+name|rsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|mir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|aac_sync_fib
+argument_list|(
+name|sc
+argument_list|,
+name|ContainerCommand
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|mi
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mi
+argument_list|)
+argument_list|,
+operator|&
+name|mir
+argument_list|,
+operator|&
+name|rsize
+argument_list|)
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"Error probing container %d\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|rsize
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|mir
+argument_list|)
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"Container response size too "
+literal|"large\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 				 * Check the container against our list. 				 * co->co_found was already set to 0 in a 				 * previous run. 				 */
+if|if
+condition|(
+operator|(
+name|mir
+operator|.
+name|Status
+operator|==
+name|ST_OK
+operator|)
+operator|&&
+operator|(
+name|mir
+operator|.
+name|MntTable
+index|[
+literal|0
+index|]
+operator|.
+name|VolType
+operator|!=
+name|CT_NONE
+operator|)
+condition|)
+block|{
+name|found
+operator|=
+literal|0
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|co
+argument_list|,
+argument|&sc->aac_container_tqh
+argument_list|,
+argument|co_link
+argument_list|)
+block|{
+if|if
+condition|(
+name|co
+operator|->
+name|co_mntobj
+operator|.
+name|ObjectId
+operator|==
+name|mir
+operator|.
+name|MntTable
+index|[
+literal|0
+index|]
+operator|.
+name|ObjectId
+condition|)
+block|{
+name|co
+operator|->
+name|co_found
+operator|=
+literal|1
+expr_stmt|;
+name|found
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/* 					 * If the container matched, continue 					 * in the list. 					 */
+if|if
+condition|(
+name|found
+condition|)
+block|{
+name|i
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 					 * This is a new container.  Do all the 					 * appropriate things to set it up.						 */
+name|aac_add_container
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|mir
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|added
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|i
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|i
+operator|<
+name|mir
+operator|.
+name|MntRespCount
+operator|)
+operator|&&
+operator|(
+name|i
+operator|<
+name|AAC_MAX_CONTAINERS
+operator|)
+condition|)
+do|;
+comment|/* 			 * Go through our list of containers and see which ones 			 * were not marked 'found'.  Since the controller didn't 			 * list them they must have been deleted.  Do the 			 * appropriate steps to destroy the device.  Also reset 			 * the co->co_found field. 			 */
+name|co
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_tqh
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|co
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|co
+operator|->
+name|co_found
+operator|==
+literal|0
+condition|)
+block|{
+name|device_delete_child
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+name|co
+operator|->
+name|co_disk
+argument_list|)
+expr_stmt|;
+name|co_next
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|co
+argument_list|,
+name|co_link
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_AQUIRE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_lock
+argument_list|)
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_tqh
+argument_list|,
+name|co
+argument_list|,
+name|co_link
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_lock
+argument_list|)
+expr_stmt|;
+name|FREE
+argument_list|(
+name|co
+argument_list|,
+name|M_AACBUF
+argument_list|)
+expr_stmt|;
+name|co
+operator|=
+name|co_next
+expr_stmt|;
+block|}
+else|else
+block|{
+name|co
+operator|->
+name|co_found
+operator|=
+literal|0
+expr_stmt|;
+name|co
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|co
+argument_list|,
+name|co_link
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Attach the newly created containers */
+if|if
+condition|(
+name|added
+condition|)
+name|bus_generic_attach
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+default|default:
+break|break;
+block|}
+comment|/* Copy the AIF data to the AIF queue for ioctl retrieval */
 name|s
 operator|=
 name|splbio
@@ -8308,18 +10171,12 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|aac_print_aif
-argument_list|(
-name|sc
-argument_list|,
-name|aif
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                        Linux Management Interface  ********************************************************************************  ********************************************************************************/
+comment|/*  * Linux Management Interface  * This is soon to be removed!  */
 end_comment
 
 begin_ifdef
@@ -8352,11 +10209,15 @@ directive|include
 file|<compat/linux/linux_ioctl.h>
 end_include
 
+begin_comment
+comment|/* There are multiple ioctl number ranges that need to be handled */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AAC_LINUX_IOCTL_MIN
-value|0x2000
+value|0x0000
 end_define
 
 begin_define
@@ -8459,7 +10320,17 @@ name|struct
 name|file
 modifier|*
 name|fp
-init|=
+decl_stmt|;
+name|u_long
+name|cmd
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
 name|p
 operator|->
 name|p_fd
@@ -8470,15 +10341,14 @@ name|args
 operator|->
 name|fd
 index|]
-decl_stmt|;
-name|u_long
+expr_stmt|;
 name|cmd
-init|=
+operator|=
 name|args
 operator|->
 name|cmd
-decl_stmt|;
-comment|/*      * Pass the ioctl off to our standard handler.      */
+expr_stmt|;
+comment|/* 	 * Pass the ioctl off to our standard handler. 	 */
 return|return
 operator|(
 name|fo_ioctl
@@ -8501,14 +10371,19 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/********************************************************************************  * Return the Revision of the driver to userspace and check to see if the  * userspace app is possibly compatible.  This is extremely bogus right now  * because I have no idea how to handle the versioning of this driver.  It is  * needed, though, to get aaccli working.  */
+comment|/*  * Return the Revision of the driver to userspace and check to see if the  * userspace app is possibly compatible.  This is extremely bogus since  * our driver doesn't follow Adaptec's versioning system.  Cheat by just  * returning what the card reported.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|aac_linux_rev_check
+name|aac_rev_check
 parameter_list|(
 name|struct
 name|aac_softc
@@ -8537,7 +10412,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/*      * Copyin the revision struct from userspace      */
+comment|/* 	 * Copyin the revision struct from userspace 	 */
 if|if
 condition|(
 operator|(
@@ -8581,7 +10456,7 @@ operator|.
 name|buildNumber
 argument_list|)
 expr_stmt|;
-comment|/*      * Doctor up the response struct.      */
+comment|/* 	 * Doctor up the response struct. 	 */
 name|rev_check_resp
 operator|.
 name|possiblyCompatible
@@ -8640,13 +10515,13 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Pass the caller the next AIF in their queue  */
+comment|/*  * Pass the caller the next AIF in their queue  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|aac_linux_getnext_aif
+name|aac_getnext_aif
 parameter_list|(
 name|struct
 name|aac_softc
@@ -8693,14 +10568,19 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	 * Check the magic number that we gave the caller. 	 */
+comment|/* 		 * Check the magic number that we gave the caller. 		 */
 if|if
 condition|(
 name|agf
 operator|.
 name|AdapterFibContext
 operator|!=
-name|AAC_AIF_SILLYMAGIC
+operator|(
+name|int
+operator|)
+name|sc
+operator|->
+name|aifthread
 condition|)
 block|{
 name|error
@@ -8717,7 +10597,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|aac_linux_return_aif
+name|aac_return_aif
 argument_list|(
 name|sc
 argument_list|,
@@ -8779,7 +10659,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|aac_linux_return_aif
+name|aac_return_aif
 argument_list|(
 name|sc
 argument_list|,
@@ -8813,13 +10693,13 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Hand the next AIF off the top of the queue out to userspace.  */
+comment|/*  * Hand the next AIF off the top of the queue out to userspace.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|aac_linux_return_aif
+name|aac_return_aif
 parameter_list|(
 name|struct
 name|aac_softc
@@ -8888,6 +10768,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+condition|)
+name|printf
+argument_list|(
+literal|"aac_return_aif: copyout returned %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|error
 condition|)
@@ -8919,14 +10810,273 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* AAC_COMPAT_LINUX */
+comment|/*  * Give the userland some information about the container.  The AAC arch  * expects the driver to be a SCSI passthrough type driver, so it expects  * the containers to have b:t:l numbers.  Fake it.  */
 end_comment
+
+begin_function
+specifier|static
+name|int
+name|aac_query_disk
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|caddr_t
+name|uptr
+parameter_list|)
+block|{
+name|struct
+name|aac_query_disk
+name|query_disk
+decl_stmt|;
+name|struct
+name|aac_container
+modifier|*
+name|co
+decl_stmt|;
+name|struct
+name|aac_disk
+modifier|*
+name|disk
+decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|id
+decl_stmt|;
+name|debug_called
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|disk
+operator|=
+name|NULL
+expr_stmt|;
+name|error
+operator|=
+name|copyin
+argument_list|(
+name|uptr
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|query_disk
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_query_disk
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|id
+operator|=
+name|query_disk
+operator|.
+name|ContainerNumber
+expr_stmt|;
+if|if
+condition|(
+name|id
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|AAC_LOCK_AQUIRE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_lock
+argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|co
+argument_list|,
+argument|&sc->aac_container_tqh
+argument_list|,
+argument|co_link
+argument_list|)
+block|{
+if|if
+condition|(
+name|co
+operator|->
+name|co_mntobj
+operator|.
+name|ObjectId
+operator|==
+name|id
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|co
+operator|==
+name|NULL
+condition|)
+block|{
+name|query_disk
+operator|.
+name|Valid
+operator|=
+literal|0
+expr_stmt|;
+name|query_disk
+operator|.
+name|Locked
+operator|=
+literal|0
+expr_stmt|;
+name|query_disk
+operator|.
+name|Deleted
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX is this right? */
+block|}
+else|else
+block|{
+name|disk
+operator|=
+name|device_get_softc
+argument_list|(
+name|co
+operator|->
+name|co_disk
+argument_list|)
+expr_stmt|;
+name|query_disk
+operator|.
+name|Valid
+operator|=
+literal|1
+expr_stmt|;
+name|query_disk
+operator|.
+name|Locked
+operator|=
+operator|(
+name|disk
+operator|->
+name|ad_flags
+operator|&
+name|AAC_DISK_OPEN
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+name|query_disk
+operator|.
+name|Deleted
+operator|=
+literal|0
+expr_stmt|;
+name|query_disk
+operator|.
+name|Bus
+operator|=
+literal|0
+expr_stmt|;
+name|query_disk
+operator|.
+name|Target
+operator|=
+name|disk
+operator|->
+name|unit
+expr_stmt|;
+name|query_disk
+operator|.
+name|Lun
+operator|=
+literal|0
+expr_stmt|;
+name|query_disk
+operator|.
+name|UnMapped
+operator|=
+literal|0
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|disk
+operator|->
+name|ad_dev_t
+operator|->
+name|si_name
+argument_list|,
+operator|&
+name|query_disk
+operator|.
+name|diskDeviceName
+index|[
+literal|0
+index|]
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_container_lock
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|copyout
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|query_disk
+argument_list|,
+name|uptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_query_disk
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

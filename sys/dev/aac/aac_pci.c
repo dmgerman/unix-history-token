@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -164,13 +164,6 @@ argument_list|(
 name|device_detach
 argument_list|,
 name|aac_detach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_shutdown
-argument_list|,
-name|aac_shutdown
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -388,20 +381,6 @@ literal|"Dell PERC 3/Di"
 block|}
 block|,
 block|{
-literal|0x9005
-block|,
-literal|0x0282
-block|,
-literal|0x9005
-block|,
-literal|0x0282
-block|,
-name|AAC_HWIF_I960RX
-block|,
-literal|"Adaptec AAC-2622"
-block|}
-block|,
-block|{
 literal|0x1011
 block|,
 literal|0x0046
@@ -448,21 +427,6 @@ literal|0x1011
 block|,
 literal|0x0046
 block|,
-literal|0x9005
-block|,
-literal|0x1365
-block|,
-name|AAC_HWIF_STRONGARM
-block|,
-literal|"Dell PERC 3/QC"
-block|}
-block|,
-comment|/* XXX guess */
-block|{
-literal|0x1011
-block|,
-literal|0x0046
-block|,
 literal|0x103c
 block|,
 literal|0x10c2
@@ -490,7 +454,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Determine whether this is one of our supported adapters.  */
+comment|/*  * Determine whether this is one of our supported adapters.  */
 end_comment
 
 begin_function
@@ -624,7 +588,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Allocate resources for our device, set up the bus interface.  */
+comment|/*  * Allocate resources for our device, set up the bus interface.  */
 end_comment
 
 begin_function
@@ -654,7 +618,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*      * Initialise softc.      */
+comment|/* 	 * Initialise softc. 	 */
 name|sc
 operator|=
 name|device_get_softc
@@ -684,7 +648,7 @@ name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-comment|/*       * Verify that the adapter is correctly set up in PCI space.      */
+comment|/*  	 * Verify that the adapter is correctly set up in PCI space. 	 */
 name|command
 operator|=
 name|pci_read_config
@@ -773,7 +737,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Allocate the PCI register window.      */
+comment|/* 	 * Allocate the PCI register window. 	 */
 name|sc
 operator|->
 name|aac_regs_rid
@@ -850,7 +814,7 @@ operator|->
 name|aac_regs_resource
 argument_list|)
 expr_stmt|;
-comment|/*       * Allocate and connect our interrupt.      */
+comment|/*  	 * Allocate and connect our interrupt. 	 */
 name|sc
 operator|->
 name|aac_irq_rid
@@ -906,6 +870,17 @@ goto|goto
 name|out
 goto|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500005
+define|#
+directive|define
+name|INTR_ENTROPY
+value|0
+endif|#
+directive|endif
 if|if
 condition|(
 name|bus_setup_intr
@@ -919,6 +894,8 @@ operator|->
 name|aac_irq
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|aac_intr
 argument_list|,
@@ -949,7 +926,7 @@ name|error
 operator|=
 name|ENOMEM
 expr_stmt|;
-comment|/*      * Allocate the parent bus DMA tag appropriate for our PCI interface.      *       * Note that some of these controllers are 64-bit capable.      */
+comment|/* 	 * Allocate the parent bus DMA tag appropriate for our PCI interface. 	 *  	 * Note that some of these controllers are 64-bit capable. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -961,7 +938,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* algnmnt, boundary */
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
@@ -975,9 +952,10 @@ argument_list|,
 comment|/* filter, filterarg */
 name|MAXBSIZE
 argument_list|,
+comment|/* maxsize */
 name|AAC_MAXSGENTRIES
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
@@ -1004,7 +982,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Create DMA tag for mapping buffers into controller-addressable space.      */
+comment|/* 	 * Create DMA tag for mapping buffers into controller-addressable space. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -1018,7 +996,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* algnmnt, boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -1061,7 +1039,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Create DMA tag for mapping FIBs into controller-addressable space..      */
+comment|/* 	 * Create DMA tag for mapping FIBs into controller-addressable space.. 	 */
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -1075,7 +1053,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* algnmnt, boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -1124,7 +1102,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*       * Detect the hardware interface version, set up the bus interface indirection.      */
+comment|/*  	 * Detect the hardware interface version, set up the bus interface 	 * indirection. 	 */
 name|sc
 operator|->
 name|aac_hwif
@@ -1263,7 +1241,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Do bus-independent initialisation.      */
+comment|/* 	 * Do bus-independent initialisation. 	 */
 name|error
 operator|=
 name|aac_attach

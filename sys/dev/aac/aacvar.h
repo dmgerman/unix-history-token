@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                      Driver Parameter Definitions  ********************************************************************************  ********************************************************************************/
+comment|/*  * Driver Parameter Definitions  */
 end_comment
 
 begin_comment
@@ -45,7 +45,7 @@ value|128
 end_define
 
 begin_comment
-comment|/*  * The controller reports status events in AIFs.  We hang on to a number of these  * in order to pass them out to user-space management tools.  */
+comment|/*  * The controller reports status events in AIFs.  We hang on to a number of  * these in order to pass them out to user-space management tools.  */
 end_comment
 
 begin_define
@@ -67,7 +67,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * We wait this many seconds for the adapter to come ready if it is still booting  */
+comment|/*  * We wait this many seconds for the adapter to come ready if it is still   * booting  */
 end_comment
 
 begin_define
@@ -115,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|AAC_PERIODIC_INTERVAL
-value|10
+value|20
 end_define
 
 begin_comment
@@ -134,7 +134,7 @@ value|200
 end_define
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                       Driver Variable Definitions  ********************************************************************************  ********************************************************************************/
+comment|/*  * Driver Variable Definitions  */
 end_comment
 
 begin_if
@@ -171,6 +171,15 @@ decl_stmt|;
 name|device_t
 name|co_disk
 decl_stmt|;
+name|int
+name|co_found
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|aac_container
+argument_list|)
+name|co_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -230,6 +239,9 @@ decl_stmt|;
 name|u_int32_t
 name|ad_size
 decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -260,7 +272,7 @@ name|aac_fib
 modifier|*
 name|cm_fib
 decl_stmt|;
-comment|/* FIB associated with this command */
+comment|/* FIB associated with this 						 * command */
 name|u_int32_t
 name|cm_fibphys
 decl_stmt|;
@@ -270,7 +282,7 @@ name|bio
 modifier|*
 name|cm_data
 decl_stmt|;
-comment|/* pointer to data in kernel space */
+comment|/* pointer to data in kernel 						 * space */
 name|u_int32_t
 name|cm_datalen
 decl_stmt|;
@@ -284,7 +296,7 @@ name|aac_sg_table
 modifier|*
 name|cm_sgtable
 decl_stmt|;
-comment|/* pointer to s/g table in command */
+comment|/* pointer to s/g table in 						 * command */
 name|int
 name|cm_flags
 decl_stmt|;
@@ -292,17 +304,17 @@ define|#
 directive|define
 name|AAC_CMD_MAPPED
 value|(1<<0)
-comment|/* command has had its data mapped */
+comment|/* command has had its data 						 * mapped */
 define|#
 directive|define
 name|AAC_CMD_DATAIN
 value|(1<<1)
-comment|/* command involves data moving from controller to host */
+comment|/* command involves data moving 						 * from controller to host */
 define|#
 directive|define
 name|AAC_CMD_DATAOUT
 value|(1<<2)
-comment|/* command involves data moving from host to controller */
+comment|/* command involves data moving 						 * from host to controller */
 define|#
 directive|define
 name|AAC_CMD_COMPLETED
@@ -353,6 +365,9 @@ name|time_t
 name|cm_timestamp
 decl_stmt|;
 comment|/* command creation time */
+name|int
+name|cm_queue
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -584,7 +599,7 @@ name|sc
 parameter_list|,
 name|mask
 parameter_list|)
-value|((sc)->aac_if.aif_set_istatus((sc), (mask)))
+value|((sc)->aac_if.aif_set_istatus((sc), \ 					(mask)))
 end_define
 
 begin_define
@@ -605,7 +620,7 @@ parameter_list|,
 name|arg3
 parameter_list|)
 define|\
-value|((sc)->aac_if.aif_set_mailbox((sc), (command), (arg0), (arg1), (arg2), (arg3)))
+value|((sc)->aac_if.aif_set_mailbox((sc), (command), (arg0), (arg1), (arg2), \ 	(arg3)))
 end_define
 
 begin_define
@@ -615,7 +630,7 @@ name|AAC_GET_MAILBOXSTATUS
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->aac_if.aif_get_mailboxstatus((sc)))
+value|((sc)->aac_if.aif_get_mailboxstatus(  \ 					(sc)))
 end_define
 
 begin_define
@@ -625,7 +640,7 @@ name|AAC_MASK_INTERRUPTS
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->aac_if.aif_set_interrupts((sc), 0))
+value|((sc)->aac_if.aif_set_interrupts((sc), \ 					0))
 end_define
 
 begin_define
@@ -635,7 +650,7 @@ name|AAC_UNMASK_INTERRUPTS
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->aac_if.aif_set_interrupts((sc), 1))
+value|((sc)->aac_if.aif_set_interrupts((sc), \ 					1))
 end_define
 
 begin_define
@@ -649,7 +664,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(sc->aac_btag, sc->aac_bhandle, reg, val)
+value|bus_space_write_4(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
 end_define
 
 begin_define
@@ -661,7 +676,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_4 (sc->aac_btag, sc->aac_bhandle, reg)
+value|bus_space_read_4 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
 begin_define
@@ -675,7 +690,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_2(sc->aac_btag, sc->aac_bhandle, reg, val)
+value|bus_space_write_2(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
 end_define
 
 begin_define
@@ -687,7 +702,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_2 (sc->aac_btag, sc->aac_bhandle, reg)
+value|bus_space_read_2 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
 
 begin_define
@@ -701,7 +716,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_1(sc->aac_btag, sc->aac_bhandle, reg, val)
+value|bus_space_write_1(sc->aac_btag, \ 					sc->aac_bhandle, reg, val)
 end_define
 
 begin_define
@@ -713,8 +728,128 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_space_read_1 (sc->aac_btag, sc->aac_bhandle, reg)
+value|bus_space_read_1 (sc->aac_btag, \ 					sc->aac_bhandle, reg)
 end_define
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|aac_container_tq
+argument_list|,
+name|aac_container
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Define the OS version specific locks */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500005
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mtx
+name|aac_lock_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|AAC_LOCK_INIT
+parameter_list|(
+name|l
+parameter_list|)
+value|mtx_init(l, "AAC Container Mutex", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_LOCK_AQUIRE
+parameter_list|(
+name|l
+parameter_list|)
+value|mtx_lock(l)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_LOCK_RELEASE
+parameter_list|(
+name|l
+parameter_list|)
+value|mtx_unlock(l)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|struct
+name|simplelock
+name|aac_lock_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|AAC_LOCK_INIT
+parameter_list|(
+name|l
+parameter_list|)
+value|simple_lock_init(l)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_LOCK_AQUIRE
+parameter_list|(
+name|l
+parameter_list|)
+value|simple_lock(l)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AAC_LOCK_RELEASE
+parameter_list|(
+name|l
+parameter_list|)
+value|simple_unlock(l)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Per-controller structure.  */
@@ -733,7 +868,7 @@ name|resource
 modifier|*
 name|aac_regs_resource
 decl_stmt|;
-comment|/* register interface window */
+comment|/* register interface 							 * window */
 name|int
 name|aac_regs_rid
 decl_stmt|;
@@ -753,7 +888,7 @@ comment|/* parent DMA tag */
 name|bus_dma_tag_t
 name|aac_buffer_dmat
 decl_stmt|;
-comment|/* data buffer/command DMA tag */
+comment|/* data buffer/command 							 * DMA tag */
 name|struct
 name|resource
 modifier|*
@@ -811,11 +946,11 @@ value|-1
 name|bus_dma_tag_t
 name|aac_common_dmat
 decl_stmt|;
-comment|/* common structure DMA tag */
+comment|/* common structure 							 * DMA tag */
 name|bus_dmamap_t
 name|aac_common_dmamap
 decl_stmt|;
-comment|/* common structure DMA map */
+comment|/* common structure 							 * DMA map */
 name|struct
 name|aac_common
 modifier|*
@@ -832,7 +967,7 @@ comment|/* command/fib resources */
 name|bus_dma_tag_t
 name|aac_fib_dmat
 decl_stmt|;
-comment|/* DMA tag for allocating FIBs */
+comment|/* DMA tag for allocing FIBs */
 name|struct
 name|aac_fib
 modifier|*
@@ -859,7 +994,7 @@ argument|aac_command
 argument_list|)
 name|aac_free
 expr_stmt|;
-comment|/* command structures available for reuse */
+comment|/* command structures  						 * available for reuse */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -867,7 +1002,7 @@ argument|aac_command
 argument_list|)
 name|aac_ready
 expr_stmt|;
-comment|/* commands on hold for controller resources */
+comment|/* commands on hold for 						 * controller resources */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -882,7 +1017,7 @@ argument|aac_command
 argument_list|)
 name|aac_complete
 expr_stmt|;
-comment|/* commands which have been returned by the controller */
+comment|/* commands which have been 						 * returned by the controller */
 name|struct
 name|bio_queue_head
 name|aac_bioq
@@ -910,11 +1045,11 @@ decl_stmt|;
 comment|/* queue statistics */
 comment|/* connected containters */
 name|struct
-name|aac_container
-name|aac_container
-index|[
-name|AAC_MAX_CONTAINERS
-index|]
+name|aac_container_tq
+name|aac_container_tqh
+decl_stmt|;
+name|aac_lock_t
+name|aac_container_lock
 decl_stmt|;
 comment|/* delayed activity infrastructure */
 if|#
@@ -926,7 +1061,7 @@ name|struct
 name|task
 name|aac_task_complete
 decl_stmt|;
-comment|/* deferred-completion task */
+comment|/* deferred-completion 							 * task */
 endif|#
 directive|endif
 name|struct
@@ -950,6 +1085,30 @@ decl_stmt|;
 name|int
 name|aac_aifq_tail
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|aifthread
+decl_stmt|;
+name|int
+name|aifflags
+decl_stmt|;
+define|#
+directive|define
+name|AAC_AIFFLAGS_RUNNING
+value|(1<< 0)
+define|#
+directive|define
+name|AAC_AIFFLAGS_PENDING
+value|(1<< 1)
+define|#
+directive|define
+name|AAC_AIFFLAGS_EXIT
+value|(1<< 2)
+define|#
+directive|define
+name|AAC_AIFFLAGS_EXITED
+value|(1<< 3)
 block|}
 struct|;
 end_struct
@@ -1073,6 +1232,42 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|aac_dump_enqueue
+parameter_list|(
+name|struct
+name|aac_disk
+modifier|*
+name|ad
+parameter_list|,
+name|u_int32_t
+name|lba
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|nblks
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|aac_dump_complete
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Debugging levels:  *  0 - quiet, only emit warnings  *  1 - noisy, emit major function points and things done  *  2 - extremely noisy, emit trace items in loops, etc.  */
 end_comment
@@ -1096,7 +1291,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {									\ 	if (level<= AAC_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args);	\     } while(0)
+value|do {								\ 	if (level<=AAC_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args); \ 	} while (0)
 end_define
 
 begin_define
@@ -1107,7 +1302,7 @@ parameter_list|(
 name|level
 parameter_list|)
 define|\
-value|do {								\ 	if (level<= AAC_DEBUG) printf(__FUNCTION__ ": called\n");	\     } while(0)
+value|do {								\ 	if (level<= AAC_DEBUG) printf(__FUNCTION__ ": called\n");	\ 	} while (0)
 end_define
 
 begin_function_decl
@@ -1243,22 +1438,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|aac_print_aif
+name|AAC_PRINT_FIB
 parameter_list|(
 name|sc
 parameter_list|,
-name|aif
+name|fib
 parameter_list|)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AAC_PRINT_FIB
+name|aac_print_aif
 parameter_list|(
 name|sc
 parameter_list|,
-name|fib
+name|aac_aif_command
 parameter_list|)
 end_define
 
@@ -1283,7 +1478,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Queue primitives for driver queues.  */
+comment|/*  * Queue primitives for driver queues.  */
 end_comment
 
 begin_define
@@ -1296,7 +1491,7 @@ parameter_list|,
 name|qname
 parameter_list|)
 define|\
-value|do {							\ 	    struct aac_qstat *qs =&(sc)->aac_qstat[qname];	\ 								\ 	    qs->q_length++;					\ 	    if (qs->q_length> qs->q_max)			\ 		qs->q_max = qs->q_length;			\ 	} while(0)
+value|do {							\ 		struct aac_qstat *qs;				\ 								\ 		qs =&(sc)->aac_qstat[qname];			\ 								\ 		qs->q_length++;					\ 		if (qs->q_length> qs->q_max)			\ 			qs->q_max = qs->q_length;		\ 	} while (0)
 end_define
 
 begin_define
@@ -1321,7 +1516,7 @@ parameter_list|,
 name|qname
 parameter_list|)
 define|\
-value|do {					\ 	    sc->aac_qstat[qname].q_length = 0;	\ 	    sc->aac_qstat[qname].q_max = 0;	\ 	} while(0)
+value|do {						\ 		sc->aac_qstat[qname].q_length = 0;	\ 		sc->aac_qstat[qname].q_max = 0;		\ 	} while (0)
 end_define
 
 begin_define
@@ -1334,7 +1529,7 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|static __inline void							\ aac_initq_ ## name (struct aac_softc *sc)				\ {									\     TAILQ_INIT(&sc->aac_ ## name);					\     AACQ_INIT(sc, index);						\ }									\ static __inline void							\ aac_enqueue_ ## name (struct aac_command *cm)				\ {									\     int		s;							\ 									\     s = splbio();							\     if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 	printf("command %p is on another queue, flags = %#x\n",		\ 	       cm, cm->cm_flags);					\ 	panic("command is on another queue");				\     }									\     TAILQ_INSERT_TAIL(&cm->cm_sc->aac_ ## name, cm, cm_link);		\     cm->cm_flags |= AAC_ON_ ## index;					\     AACQ_ADD(cm->cm_sc, index);						\     splx(s);								\ }									\ static __inline void							\ aac_requeue_ ## name (struct aac_command *cm)				\ {									\     int		s;							\ 									\     s = splbio();							\     if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 	printf("command %p is on another queue, flags = %#x\n",		\ 	       cm, cm->cm_flags);					\ 	panic("command is on another queue");				\     }									\     TAILQ_INSERT_HEAD(&cm->cm_sc->aac_ ## name, cm, cm_link);		\     cm->cm_flags |= AAC_ON_ ## index;					\     AACQ_ADD(cm->cm_sc, index);						\     splx(s);								\ }									\ static __inline struct aac_command *					\ aac_dequeue_ ## name (struct aac_softc *sc)				\ {									\     struct aac_command	*cm;						\     int			s;						\ 									\     s = splbio();							\     if ((cm = TAILQ_FIRST(&sc->aac_ ## name)) != NULL) {		\ 	if ((cm->cm_flags& AAC_ON_ ## index) == 0) {			\ 		printf("command %p not in queue, flags = %#x, bit = %#x\n",\ 		       cm, cm->cm_flags, AAC_ON_ ## index);		\ 		panic("command not in queue");				\ 	}								\ 	TAILQ_REMOVE(&sc->aac_ ## name, cm, cm_link);			\ 	cm->cm_flags&= ~AAC_ON_ ## index;				\ 	AACQ_REMOVE(sc, index);						\     }									\     splx(s);								\     return(cm);								\ }									\ static __inline void							\ aac_remove_ ## name (struct aac_command *cm)				\ {									\     int			s;						\ 									\     s = splbio();							\     if ((cm->cm_flags& AAC_ON_ ## index) == 0) {			\ 	printf("command %p not in queue, flags = %#x, bit = %#x\n",	\ 	       cm, cm->cm_flags, AAC_ON_ ## index);			\ 	panic("command not in queue");					\     }									\     TAILQ_REMOVE(&cm->cm_sc->aac_ ## name, cm, cm_link);		\     cm->cm_flags&= ~AAC_ON_ ## index;					\     AACQ_REMOVE(cm->cm_sc, index);					\     splx(s);								\ }									\ struct hack
+value|static __inline void							\ aac_initq_ ## name (struct aac_softc *sc)				\ {									\ 	TAILQ_INIT(&sc->aac_ ## name);					\ 	AACQ_INIT(sc, index);						\ }									\ static __inline void							\ aac_enqueue_ ## name (struct aac_command *cm)				\ {									\ 	int s;								\ 									\ 	s = splbio();							\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		printf("command %p is on another queue, flags = %#x\n",	\ 		       cm, cm->cm_flags);				\ 		panic("command is on another queue");			\ 	}								\ 	TAILQ_INSERT_TAIL(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ 	splx(s);							\ }									\ static __inline void							\ aac_requeue_ ## name (struct aac_command *cm)				\ {									\ 	int s;								\ 									\ 	s = splbio();							\ 	if ((cm->cm_flags& AAC_ON_AACQ_MASK) != 0) {			\ 		printf("command %p is on another queue, flags = %#x\n",	\ 		       cm, cm->cm_flags);				\ 		panic("command is on another queue");			\ 	}								\ 	TAILQ_INSERT_HEAD(&cm->cm_sc->aac_ ## name, cm, cm_link);	\ 	cm->cm_flags |= AAC_ON_ ## index;				\ 	AACQ_ADD(cm->cm_sc, index);					\ 	splx(s);							\ }									\ static __inline struct aac_command *					\ aac_dequeue_ ## name (struct aac_softc *sc)				\ {									\ 	struct aac_command *cm;						\ 	int s;								\ 									\ 	s = splbio();							\ 	if ((cm = TAILQ_FIRST(&sc->aac_ ## name)) != NULL) {		\ 		if ((cm->cm_flags& AAC_ON_ ## index) == 0) {		\ 			printf("command %p not in queue, flags = %#x, "	\ 		       	       "bit = %#x\n", cm, cm->cm_flags,		\ 			       AAC_ON_ ## index);			\ 			panic("command not in queue");			\ 		}							\ 		TAILQ_REMOVE(&sc->aac_ ## name, cm, cm_link);		\ 		cm->cm_flags&= ~AAC_ON_ ## index;			\ 		AACQ_REMOVE(sc, index);					\ 	}								\ 	splx(s);							\ 	return(cm);							\ }									\ static __inline void							\ aac_remove_ ## name (struct aac_command *cm)				\ {									\ 	int s;								\ 									\ 	s = splbio();							\ 	if ((cm->cm_flags& AAC_ON_ ## index) == 0) {			\ 		printf("command %p not in queue, flags = %#x, "		\ 		       "bit = %#x\n", cm, cm->cm_flags, 		\ 		       AAC_ON_ ## index);				\ 		panic("command not in queue");				\ 	}								\ 	TAILQ_REMOVE(&cm->cm_sc->aac_ ## name, cm, cm_link);		\ 	cm->cm_flags&= ~AAC_ON_ ## index;				\ 	AACQ_REMOVE(cm->cm_sc, index);					\ 	splx(s);							\ }									\ struct hack
 end_define
 
 begin_expr_stmt
@@ -1474,7 +1669,7 @@ argument_list|)
 block|{
 name|int
 name|s
-block|;     struct
+block|; 	struct
 name|bio
 operator|*
 name|bp
@@ -1534,6 +1729,68 @@ operator|)
 return|;
 end_return
 
-unit|}
+begin_function
+unit|}  static
+name|__inline
+name|void
+name|aac_print_printf
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|aac_common
+operator|->
+name|ac_printf
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"**Monitor** %.*s"
+argument_list|,
+name|AAC_PRINTF_BUFSIZE
+argument_list|,
+name|sc
+operator|->
+name|aac_common
+operator|->
+name|ac_printf
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|aac_common
+operator|->
+name|ac_printf
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|AAC_QNOTIFY
+argument_list|(
+name|sc
+argument_list|,
+name|AAC_DB_PRINTF
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 end_unit
 

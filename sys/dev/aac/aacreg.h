@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 Scott Long  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000-2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Data structures defining the interface between the driver and the 
 end_comment
 
 begin_comment
-comment|/********************************************************************************  * Misc. magic numbers.  */
+comment|/*  * Misc. magic numbers.  */
 end_comment
 
 begin_define
@@ -26,7 +26,7 @@ value|512
 end_define
 
 begin_comment
-comment|/********************************************************************************  * Communications interface.  *  * Where datastructure layouts are closely parallel to the Adaptec sample code,  * retain their naming conventions (for now) to aid in cross-referencing.  */
+comment|/*  * Communications interface.  *  * Where datastructure layouts are closely parallel to the Adaptec sample code,  * retain their naming conventions (for now) to aid in cross-referencing.  */
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* command adapter->host, normal priority */
+comment|/* command adapter->host, 						 * normal priority */
 end_comment
 
 begin_define
@@ -52,7 +52,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* command adapter->host, high priority */
+comment|/* command adapter->host, 						 * high priority */
 end_comment
 
 begin_define
@@ -63,7 +63,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* command host->adapter, normal priority */
+comment|/* command host->adapter, 						 * normal priority */
 end_comment
 
 begin_define
@@ -74,7 +74,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* command host->adapter, high priority */
+comment|/* command host->adapter, 						 * high priority */
 end_comment
 
 begin_define
@@ -85,7 +85,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* response, adapter->host, normal priority */
+comment|/* response, adapter->host, 						 * normal priority */
 end_comment
 
 begin_define
@@ -96,7 +96,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* response, adapter->host, high priority */
+comment|/* response, adapter->host, 						 * high priority */
 end_comment
 
 begin_define
@@ -107,7 +107,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* response, host->adapter, normal priority */
+comment|/* response, host->adapter, 						 * normal priority */
 end_comment
 
 begin_define
@@ -118,7 +118,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* response, host->adapter, high priority */
+comment|/* response, host->adapter, 						 * high priority */
 end_comment
 
 begin_define
@@ -994,7 +994,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Shared data types  */
+comment|/*  * Shared data types  */
 end_comment
 
 begin_comment
@@ -1080,13 +1080,13 @@ block|,
 comment|/* ADAPTEC's "FSA"(tm) filesystem */
 name|FT_DRIVE
 block|,
-comment|/* physical disk - addressable in scsi by bus/target/lun */
+comment|/* physical disk - addressable in scsi by b/t/l */
 name|FT_SLICE
 block|,
 comment|/* virtual disk - raw volume - slice */
 name|FT_PARTITION
 block|,
-comment|/* FSA partition - carved out of a slice - building block for containers */
+comment|/* FSA partition - carved out of a slice - building 			 * block for containers */
 name|FT_VOLUME
 block|,
 comment|/* Container - Volume Set */
@@ -1252,7 +1252,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Revision number handling  */
+comment|/*  * Revision number handling  */
 end_comment
 
 begin_typedef
@@ -1326,7 +1326,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Adapter Information  */
+comment|/*  * Adapter Information  */
 end_comment
 
 begin_typedef
@@ -1567,7 +1567,7 @@ comment|/* adapter CPU clockspeed */
 name|u_int32_t
 name|ExecutionMem
 decl_stmt|;
-comment|/* adapter Execution Memory size */
+comment|/* adapter Execution Memory 						  * size */
 name|u_int32_t
 name|BufferMem
 decl_stmt|;
@@ -1580,12 +1580,12 @@ name|struct
 name|FsaRevision
 name|KernelRevision
 decl_stmt|;
-comment|/* adapter Kernel Software Revision */
+comment|/* adapter Kernel Software 						  * Revision */
 name|struct
 name|FsaRevision
 name|MonitorRevision
 decl_stmt|;
-comment|/* adapter Monitor/Diagnostic Software Revision */
+comment|/* adapter Monitor/Diagnostic 						  * Software Revision */
 name|struct
 name|FsaRevision
 name|HardwareRevision
@@ -1611,7 +1611,7 @@ decl_stmt|;
 name|u_int32_t
 name|SupportedOptions
 decl_stmt|;
-comment|/* supported features of this controller */
+comment|/* supported features of this 						   * controller */
 name|AAC_OemFlavor
 name|OemVariant
 decl_stmt|;
@@ -1626,7 +1626,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Monitor/Kernel interface.  */
+comment|/*  * Monitor/Kernel interface.  */
 end_comment
 
 begin_comment
@@ -1673,7 +1673,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/********************************************************************************  * Data types relating to control and monitoring of the NVRAM/WriteCache   * subsystem.  */
+comment|/*  * Data types relating to control and monitoring of the NVRAM/WriteCache   * subsystem.  */
 end_comment
 
 begin_define
@@ -1706,12 +1706,11 @@ comment|/* present, possibly dirty, ready for use */
 name|NVSTATUS_ERROR
 block|,
 comment|/* present, dirty, contains dirty data */
-comment|/* for bad/missing device */
 name|NVSTATUS_BATTERY
 block|,
-comment|/* present, bad or low battery, may contain dirty data */
-comment|/* for bad/missing device */
+comment|/* present, bad or low battery, may contain 				 * dirty data */
 name|NVSTATUS_UNKNOWN
+comment|/* for bad/missing device */
 block|}
 name|AAC_NVSTATUS
 typedef|;
@@ -1735,9 +1734,9 @@ block|,
 comment|/* battery is low on power */
 name|NVBATTSTATUS_OK
 block|,
-comment|/* battery is okay - normal operation possible only in this state */
+comment|/* battery is okay - normal operation possible 				 * only in this state */
 name|NVBATTSTATUS_RECONDITIONING
-comment|/* no battery present - reconditioning in process */
+comment|/* no battery present - reconditioning 					 * in process */
 block|}
 name|AAC_NVBATTSTATUS
 typedef|;
@@ -1755,12 +1754,12 @@ name|NVBATT_TRANSITION_NONE
 init|=
 literal|0
 block|,
-comment|/* battery now has no power or is not present */
+comment|/* battery now has no power or is not 					 * present */
 name|NVBATT_TRANSITION_LOW
 block|,
 comment|/* battery is now low on power */
 name|NVBATT_TRANSITION_OK
-comment|/* battery is now okay - normal operation possible only in this state */
+comment|/* battery is now okay - normal 					 * operation possible only in this 					 * state */
 block|}
 name|AAC_NVBATT_TRANSITION
 typedef|;
@@ -1789,7 +1788,7 @@ comment|/* count of dirty NVRAM buffers */
 name|u_int32_t
 name|NV_NActive
 decl_stmt|;
-comment|/* count of NVRAM buffers being written */
+comment|/* count of NVRAM buffers being 					 * written */
 block|}
 name|__attribute__
 argument_list|(
@@ -1815,11 +1814,11 @@ comment|/* battery status */
 name|u_int32_t
 name|NV_Size
 decl_stmt|;
-comment|/* size of WriteCache NVRAM in bytes */
+comment|/* size of WriteCache NVRAM in 						 * bytes */
 name|u_int32_t
 name|NV_BufSize
 decl_stmt|;
-comment|/* size of NVRAM buffers in bytes */
+comment|/* size of NVRAM buffers in 						 * bytes */
 name|u_int32_t
 name|NV_NBufs
 decl_stmt|;
@@ -1827,19 +1826,19 @@ comment|/* number of NVRAM buffers */
 name|u_int32_t
 name|NV_NDirty
 decl_stmt|;
-comment|/* count of dirty NVRAM buffers */
+comment|/* Num dirty NVRAM buffers */
 name|u_int32_t
 name|NV_NClean
 decl_stmt|;
-comment|/* count of clean NVRAM buffers */
+comment|/* Num clean NVRAM buffers */
 name|u_int32_t
 name|NV_NActive
 decl_stmt|;
-comment|/* count of NVRAM buffers being written */
+comment|/* Num NVRAM buffers being 						 * written */
 name|u_int32_t
 name|NV_NBrokered
 decl_stmt|;
-comment|/* count of brokered NVRAM buffers */
+comment|/* Num brokered NVRAM buffers */
 name|struct
 name|aac_nvramdevinfo
 name|NV_DevInfo
@@ -1847,7 +1846,7 @@ index|[
 name|AAC_NFILESYS
 index|]
 decl_stmt|;
-comment|/* per device info */
+comment|/* per device 								 * info */
 name|u_int32_t
 name|NV_BattNeedsReconditioning
 decl_stmt|;
@@ -1855,7 +1854,7 @@ comment|/* boolean */
 name|u_int32_t
 name|NV_TotalSize
 decl_stmt|;
-comment|/* size of all non-volatile memories in bytes */
+comment|/* size of all non-volatile 						 * memories in bytes */
 block|}
 name|__attribute__
 argument_list|(
@@ -1867,7 +1866,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Data types relating to adapter-initiated FIBs  *  * Based on types and structures in<aifstruc.h>  */
+comment|/*  * Data types relating to adapter-initiated FIBs  *  * Based on types and structures in<aifstruc.h>  */
 end_comment
 
 begin_comment
@@ -1892,7 +1891,7 @@ name|AifJobStsLastReportMarker
 init|=
 literal|100
 block|,
-comment|/* All before mean last report */
+comment|/* All prior mean last report */
 name|AifJobStsSuspended
 block|,
 name|AifJobStsRunning
@@ -1915,13 +1914,13 @@ block|,
 comment|/* SCSI device clear operation */
 name|AifJobScsiVerify
 block|,
-comment|/* SCSI device Verify operation NO REPAIR */
+comment|/* SCSI device Verify operation NO 					 * REPAIR */
 name|AifJobScsiExercise
 block|,
 comment|/* SCSI device Exercise operation */
 name|AifJobScsiVerifyRepair
 block|,
-comment|/* SCSI device Verify operation WITH repair */
+comment|/* SCSI device Verify operation WITH 					 * repair */
 name|AifJobScsiMax
 init|=
 literal|99
@@ -1993,7 +1992,7 @@ block|,
 comment|/* Format a drive to FAT */
 name|AifJobApiUpdateSnapshot
 block|,
-comment|/* update the read/write half of a snapshot */
+comment|/* update the read/write half of a 					 * snapshot */
 name|AifJobApiFormatFAT32
 block|,
 comment|/* Format a drive to FAT32 */
@@ -2044,11 +2043,11 @@ name|struct
 name|aac_AifContainers
 name|container
 decl_stmt|;
-comment|/* For Container and file system progress ops; */
+comment|/* For Container and 							 * file system progress 							 * ops; */
 name|int32_t
 name|scsi_dh
 decl_stmt|;
-comment|/* For SCSI progress ops */
+comment|/* For SCSI progress 							 * ops */
 block|}
 union|;
 end_union
@@ -2060,11 +2059,11 @@ block|{
 name|u_int32_t
 name|jobID
 decl_stmt|;
-comment|/* DO NOT FILL IN! Will be filled in by AIF */
+comment|/* DO NOT FILL IN! Will be 						 * filled in by AIF */
 name|AAC_AifJobType
 name|type
 decl_stmt|;
-comment|/* Operation that is being performed */
+comment|/* Operation that is being 						 * performed */
 name|union
 name|aac_AifJobClient
 name|client
@@ -2132,10 +2131,10 @@ block|,
 comment|/* Task has completed */
 name|AifEnConfigChange
 block|,
-comment|/* Adapter configuration change occurred */
+comment|/* Adapter config change occurred */
 name|AifEnContainerChange
 block|,
-comment|/* Adapter specific container configuration change */
+comment|/* Adapter specific container  					 * configuration change */
 name|AifEnDeviceFailure
 block|,
 comment|/* SCSI device failed */
@@ -2194,7 +2193,7 @@ name|AifDenMorphComplete
 block|,
 comment|/* A morph operation completed */
 name|AifDenVolumeExtendComplete
-comment|/* A volume expand operation completed */
+comment|/* Volume expand operation completed */
 block|}
 name|AAC_AifEventNotifyType
 typedef|;
@@ -2275,7 +2274,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* container that changed, -1 if no container */
+comment|/* container that changed, -1 if no 					 * container */
 block|}
 name|__attribute__
 argument_list|(
@@ -2315,11 +2314,11 @@ block|{
 name|u_int32_t
 name|empID
 decl_stmt|;
-comment|/* enclosure management processor number  */
+comment|/* enclosure management proc number  */
 name|u_int32_t
 name|unitID
 decl_stmt|;
-comment|/* unitId, fan id, power supply id, slot id, tempsensor id.  */
+comment|/* unitId, fan id, power supply id, 					 * slot id, tempsensor id.  */
 name|u_int32_t
 name|eventType
 decl_stmt|;
@@ -2341,15 +2340,15 @@ block|{
 name|AAC_NVBATT_TRANSITION
 name|transition_type
 decl_stmt|;
-comment|/* e.g. from low to ok */
+comment|/* eg from low to ok */
 name|AAC_NVBATTSTATUS
 name|current_state
 decl_stmt|;
-comment|/* current battery state */
+comment|/* current batt state */
 name|AAC_NVBATTSTATUS
 name|prior_state
 decl_stmt|;
-comment|/* previous battery state */
+comment|/* prev batt state */
 block|}
 name|__attribute__
 argument_list|(
@@ -2393,10 +2392,10 @@ literal|0
 block|,
 name|CLUSTER_PARTNER_NAME_EVENT
 block|,
-comment|/* change in partner hostname or adaptername from NULL to non-NULL */
+comment|/* change in partner hostname or 					 * adaptername from NULL to non-NULL */
 comment|/* (partner's agent may be up) */
 name|CLUSTER_PARTNER_NULL_NAME_EVENT
-comment|/* change in partner hostname or adaptername from non-null to NULL */
+comment|/* change in partner hostname or 					 * adaptername from non-null to NULL */
 comment|/* (partner has rebooted) */
 block|}
 name|AAC_ClusterAifEvent
@@ -2461,7 +2460,7 @@ name|struct
 name|aac_AifEnsDiskSetEvent
 name|EDS
 decl_stmt|;
-comment|/*	struct aac_AifEnsSMARTEvent		ES;*/
+comment|/*		struct aac_AifEnsSMARTEvent		ES;*/
 name|struct
 name|aac_AifEnsClusterEvent
 name|ECLE
@@ -2521,7 +2520,7 @@ block|,
 comment|/* Gets back jobs for specific SCSI device */
 name|AifReqJobReport
 block|,
-comment|/* Gets back a specific job report or list of them */
+comment|/* Gets back a specific job report or list */
 name|AifReqTerminateJob
 block|,
 comment|/* Terminates job */
@@ -2554,11 +2553,11 @@ block|{
 name|AAC_AifCommand
 name|command
 decl_stmt|;
-comment|/* Tell host what type of notify this is */
+comment|/* Tell host what type of 					 * notify this is */
 name|u_int32_t
 name|seqNumber
 decl_stmt|;
-comment|/* To allow ordering of reports (if necessary) */
+comment|/* To allow ordering of 					 * reports (if necessary) */
 union|union
 block|{
 name|struct
@@ -2594,7 +2593,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Filesystem commands/data  *  * The adapter has a very complex filesystem interface, most of which we ignore.  * (And which seems not to be implemented, anyway.)  */
+comment|/*  * Filesystem commands/data  *  * The adapter has a very complex filesystem interface, most of which we ignore.  * (And which seems not to be implemented, anyway.)  */
 end_comment
 
 begin_comment
@@ -2864,7 +2863,7 @@ name|VM_CtBlockWrite
 block|,
 name|VM_SliceBlockRead
 block|,
-comment|/* raw access to configured "storage objects" */
+comment|/* raw access to configured storage objects */
 name|VM_SliceBlockWrite
 block|,
 name|VM_DriveBlockRead
@@ -2930,7 +2929,7 @@ define|#
 directive|define
 name|FSCS_READONLY
 value|0x0002
-comment|/* XXX need more information than this */
+comment|/* XXX need more information 						 * than this */
 union|union
 block|{
 name|u_int32_t
@@ -3020,7 +3019,7 @@ name|u_int32_t
 name|Command
 decl_stmt|;
 name|u_int32_t
-name|ComainerId
+name|ContainerId
 decl_stmt|;
 block|}
 name|__attribute__
@@ -3207,7 +3206,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************************  * Register definitions for the Adaptec AAC-364 'Jalapeno I/II' adapters, based  * on the SA110 'StrongArm'.  */
+comment|/*  * Register definitions for the Adaptec AAC-364 'Jalapeno I/II' adapters, based  * on the SA110 'StrongArm'.  */
 end_comment
 
 begin_define
@@ -3300,7 +3299,7 @@ value|0xc4
 end_define
 
 begin_comment
-comment|/********************************************************************************  * Register definitions for the Adaptec 'Pablano' adapters, based on the i960Rx,  * and other related adapters.  */
+comment|/*  * Register definitions for the Adaptec 'Pablano' adapters, based on the i960Rx,  * and other related adapters.  */
 end_comment
 
 begin_define
@@ -3388,7 +3387,7 @@ value|0x6c
 end_define
 
 begin_comment
-comment|/********************************************************************************  * Common bit definitions for the doorbell registers.  */
+comment|/*  * Common bit definitions for the doorbell registers.  */
 end_comment
 
 begin_comment
@@ -3466,14 +3465,14 @@ comment|/* adapter requests host printf */
 end_comment
 
 begin_comment
-comment|/*  * Mask containing the interrupt bits we care about.  We don't anticipate (or want)  * interrupts not in this mask.  */
+comment|/*  * Mask containing the interrupt bits we care about.  We don't anticipate (or  * want) interrupts not in this mask.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|AAC_DB_INTERRUPTS
-value|(AAC_DB_COMMAND_READY | AAC_DB_RESPONSE_READY | AAC_DB_PRINTF)
+value|(AAC_DB_COMMAND_READY  |	\ 				 AAC_DB_RESPONSE_READY |	\ 				 AAC_DB_PRINTF)
 end_define
 
 end_unit

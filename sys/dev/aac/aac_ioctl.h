@@ -93,12 +93,6 @@ name|AACIO_STATS
 value|_IOWR('T', 101, union aac_statrequest)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AAC_COMPAT_LINUX
-end_ifdef
-
 begin_comment
 comment|/*  * Ioctl commands likely to be submitted from a Linux management application.  * These bit encodings are actually descended from Windows NT.  Ick.  */
 end_comment
@@ -178,44 +172,344 @@ end_define
 begin_define
 define|#
 directive|define
-name|FSACTL_SENDFIB
-value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2050, METHOD_BUFFERED, FILE_ANY_ACCESS)
+name|FSACTL_LNX_SENDFIB
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2050, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FSACTL_AIF_THREAD
-value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2127, METHOD_NEITHER, FILE_ANY_ACCESS)
+name|FSACTL_LNX_GET_COMM_PERF_DATA
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2084, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_OPENCLS_COMM_PERF_DATA
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, \ 					2085, METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_OPEN_GET_ADAPTER_FIB
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2100, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_GET_NEXT_ADAPTER_FIB
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2101, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_CLOSE_GET_ADAPTER_FIB
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, \ 					2102, METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_CLOSE_ADAPTER_CONFIG
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2104, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_OPEN_ADAPTER_CONFIG
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2105, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_MINIPORT_REV_CHECK
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2107, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_QUERY_ADAPTER_CONFIG
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2113, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_GET_PCI_INFO
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2119, \ 					METHOD_BUFFERED, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_FORCE_DELETE_DISK
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2120, \ 					METHOD_NEITHER, FILE_ANY_ACCESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_AIF_THREAD
+value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2127, \ 					METHOD_NEITHER, FILE_ANY_ACCESS)
+end_define
+
+begin_comment
+comment|/* Why these don't follow the previous convention, I don't know */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_NULL_IO_TEST
+value|0x43
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_SIM_IO_TEST
+value|0x53
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_DOWNLOAD
+value|0x83
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_GET_VAR
+value|0x93
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_SET_VAR
+value|0xa3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_GET_FIBTIMES
+value|0xb3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_ZERO_FIBTIMES
+value|0xc3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_DELETE_DISK
+value|0x163
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_QUERY_DISK
+value|0x173
+end_define
+
+begin_comment
+comment|/* Ok, here it gets really lame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSACTL_LNX_PROBE_CONTAINERS
+value|2131
+end_define
+
+begin_comment
+comment|/* Just guessing */
+end_comment
+
+begin_comment
+comment|/* Do the native version of the ioctls.  Since the BSD encoding scheme  * conflicts with the 'standard' AAC encoding scheme, the resulting numbers  * will be different.  The '8' comes from the fact that the previous scheme  * used 12 bits for the number, with the the 12th bit being the only set  * bit above bit 8.  Thus the value of 8, with the lower 8 bits holding the  * command number.  9 is used for the odd overflow case.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSACTL_SENDFIB
+value|_IO('8', 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_GET_COMM_PERF_DATA
+value|_IO('8', 36)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_OPENCLS_COMM_PERF_DATA
+value|_IO('8', 37)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FSACTL_OPEN_GET_ADAPTER_FIB
-value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2100, METHOD_BUFFERED, FILE_ANY_ACCESS)
+value|_IO('8', 52)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FSACTL_GET_NEXT_ADAPTER_FIB
-value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2101, METHOD_BUFFERED, FILE_ANY_ACCESS)
+value|_IO('8', 53)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FSACTL_CLOSE_GET_ADAPTER_FIB
-value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2102, METHOD_BUFFERED, FILE_ANY_ACCESS)
+value|_IO('8', 54)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_CLOSE_ADAPTER_CONFIG
+value|_IO('8', 56)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_OPEN_ADAPTER_CONFIG
+value|_IO('8', 57)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FSACTL_MINIPORT_REV_CHECK
-value|CTL_CODE(FILE_DEVICE_CONTROLLER, 2107, METHOD_BUFFERED, FILE_ANY_ACCESS)
+value|_IO('8', 59)
 end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_QUERY_ADAPTER_CONFIG
+value|_IO('8', 65)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_GET_PCI_INFO
+value|_IO('8', 71)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_FORCE_DELETE_DISK
+value|_IO('8', 72)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_AIF_THREAD
+value|_IO('8', 79)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_NULL_IO_TEST
+value|_IO('8', 67)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_SIM_IO_TEST
+value|_IO('8', 83)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_DOWNLOAD
+value|_IO('8', 131)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_GET_VAR
+value|_IO('8', 147)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_SET_VAR
+value|_IO('8', 163)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_GET_FIBTIMES
+value|_IO('8', 179)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_ZERO_FIBTIMES
+value|_IO('8', 195)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_DELETE_DISK
+value|_IO('8', 99)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_QUERY_DISK
+value|_IO('9', 115)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSACTL_PROBE_CONTAINERS
+value|_IO('9', 83)
+end_define
+
+begin_comment
+comment|/* Just guessing */
+end_comment
 
 begin_comment
 comment|/*  * Support for faking the "miniport" version.  */
@@ -255,13 +549,6 @@ begin_comment
 comment|/*  * Context passed in by a consumer looking to collect an AIF.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AAC_AIF_SILLYMAGIC
-value|0xdeadbeef
-end_define
-
 begin_struct
 struct|struct
 name|get_adapter_fib_ioctl
@@ -279,10 +566,46 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_struct
+struct|struct
+name|aac_query_disk
+block|{
+name|int32_t
+name|ContainerNumber
+decl_stmt|;
+name|int32_t
+name|Bus
+decl_stmt|;
+name|int32_t
+name|Target
+decl_stmt|;
+name|int32_t
+name|Lun
+decl_stmt|;
+name|u_int32_t
+name|Valid
+decl_stmt|;
+name|u_int32_t
+name|Locked
+decl_stmt|;
+name|u_int32_t
+name|Deleted
+decl_stmt|;
+name|int32_t
+name|Instance
+decl_stmt|;
+name|char
+name|diskDeviceName
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|u_int32_t
+name|UnMapped
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 
