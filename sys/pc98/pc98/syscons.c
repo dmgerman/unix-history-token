@@ -18956,29 +18956,6 @@ name|u_short
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Save font and palette if VGA */
-if|if
-condition|(
-name|crtc_vga
-condition|)
-block|{
-name|copy_font
-argument_list|(
-name|SAVE
-argument_list|,
-name|FONT_16
-argument_list|,
-name|font_16
-argument_list|)
-expr_stmt|;
-name|fonts_loaded
-operator|=
-name|FONT_16
-expr_stmt|;
-name|save_palette
-argument_list|()
-expr_stmt|;
-block|}
 name|console
 index|[
 literal|0
@@ -25138,7 +25115,9 @@ index|]
 operator||=
 literal|0xff
 expr_stmt|;
-comment|/* wait for vertical retrace to avoid jitter on some videocards */
+if|#
+directive|if
+literal|1
 while|while
 condition|(
 operator|!
@@ -25153,8 +25132,10 @@ operator|&
 literal|0x08
 operator|)
 condition|)
-comment|/* idle */
+comment|/* wait for vertical retrace */
 empty_stmt|;
+endif|#
+directive|endif
 name|set_font_mode
 argument_list|()
 expr_stmt|;
@@ -26252,6 +26233,9 @@ operator|->
 name|mouse_pos
 expr_stmt|;
 comment|/* wait for vertical retrace to avoid jitter on some videocards */
+if|#
+directive|if
+literal|1
 while|while
 condition|(
 operator|!
@@ -26268,6 +26252,8 @@ operator|)
 condition|)
 comment|/* idle */
 empty_stmt|;
+endif|#
+directive|endif
 name|set_font_mode
 argument_list|()
 expr_stmt|;
@@ -27080,6 +27066,29 @@ name|pitch
 argument_list|,
 name|duration
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Save font and palette if VGA */
+if|if
+condition|(
+name|crtc_vga
+condition|)
+block|{
+name|copy_font
+argument_list|(
+name|SAVE
+argument_list|,
+name|FONT_16
+argument_list|,
+name|font_16
+argument_list|)
+expr_stmt|;
+name|fonts_loaded
+operator|=
+name|FONT_16
+expr_stmt|;
+name|save_palette
+argument_list|()
 expr_stmt|;
 block|}
 ifdef|#
