@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.13 %G%"
+literal|"@(#)var.c 1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"0.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfmt.h"
 end_include
 
 begin_include
@@ -582,18 +588,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"	.align	%d"
-argument_list|,
-literal|0
-argument_list|,
-name|dotalign
+name|aligndot
 argument_list|(
 name|align
 argument_list|(
 name|np
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1279,7 +1278,7 @@ case|case
 name|TSTR
 case|:
 return|return
-name|A_CHAR
+name|A_STRUCT
 return|;
 case|case
 name|TSET
@@ -1301,7 +1300,22 @@ block|}
 case|case
 name|ARRAY
 case|:
-comment|/* 			 * arrays are aligned as their component types 			 */
+comment|/* 			 * strings are structures, since they can get 			 * assigned form/to as structure assignments. 			 * other arrays are aligned as their component types 			 */
+if|if
+condition|(
+name|p
+operator|->
+name|type
+operator|==
+name|nl
+operator|+
+name|T1CHAR
+condition|)
+block|{
+return|return
+name|A_STRUCT
+return|;
+block|}
 name|p
 operator|=
 name|p
@@ -1399,8 +1413,9 @@ return|;
 case|case
 name|STR
 case|:
+comment|/* 			 * arrays of chars are structs 			 */
 return|return
-name|A_CHAR
+name|A_STRUCT
 return|;
 case|case
 name|RECORD
@@ -1421,12 +1436,18 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC
+end_ifdef
+
 begin_comment
-comment|/*      *	given an alignment, return power of two for .align pseudo-op      */
+comment|/*      *	output an alignment pseudo-op.      */
 end_comment
 
 begin_macro
-name|dotalign
+name|aligndot
 argument_list|(
 argument|alignment
 argument_list|)
@@ -1438,6 +1459,12 @@ name|alignment
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_block
 block|{
 switch|switch
@@ -1446,28 +1473,83 @@ name|alignment
 condition|)
 block|{
 case|case
-name|A_CHAR
-case|:
-comment|/* 				 * also 				 *	A_STRUCT 				 */
-return|return
-literal|0
-return|;
-case|case
-name|A_SHORT
-case|:
-return|return
 literal|1
-return|;
-case|case
-name|A_LONG
 case|:
-comment|/* 				 * also 				 *	A_POINT, A_INT, A_FLOAT, A_DOUBLE, 				 *	A_STACK, A_FILET, A_SET 				 */
-return|return
+return|return;
+case|case
 literal|2
-return|;
+case|:
+name|putprintf
+argument_list|(
+literal|"	.align 1"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+default|default:
+case|case
+literal|4
+case|:
+name|putprintf
+argument_list|(
+literal|"	.align 2"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|vax
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|mc68000
+end_ifdef
+
+begin_block
+block|{
+switch|switch
+condition|(
+name|alignment
+condition|)
+block|{
+case|case
+literal|1
+case|:
+return|return;
+default|default:
+name|putprintf
+argument_list|(
+literal|"	.even"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|mc68000
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|PC
+end_endif
 
 begin_comment
 comment|/*  * Return the width of an element  * of a n time subscripted np.  */
