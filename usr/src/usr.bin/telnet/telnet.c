@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.5 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1793,6 +1793,13 @@ argument_list|)
 operator|-
 literal|2
 expr_stmt|;
+name|hisopts
+index|[
+name|TELOPT_ECHO
+index|]
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|showoptions
@@ -1824,6 +1831,13 @@ argument_list|)
 operator|-
 literal|2
 expr_stmt|;
+name|hisopts
+index|[
+name|TELOPT_SGA
+index|]
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|showoptions
@@ -1854,6 +1868,13 @@ name|doopt
 argument_list|)
 operator|-
 literal|2
+expr_stmt|;
+name|myopts
+index|[
+name|TELOPT_SGA
+index|]
+operator|=
+literal|1
 expr_stmt|;
 name|ioctl
 argument_list|(
