@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	5.4 (Berkeley) %G%"
+literal|"@(#)config.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,11 @@ specifier|extern
 name|char
 modifier|*
 name|progname
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 name|pathbuf
 decl_stmt|,
