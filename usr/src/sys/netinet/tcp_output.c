@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.5 81/10/31 */
+comment|/* tcp_output.c 4.6 81/10/31 */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"../h/socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../inet/cksum.h"
 end_include
 
 begin_include
@@ -1242,15 +1248,16 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-specifier|register
-name|struct
 name|th
 modifier|*
 name|t
+decl_stmt|;
+comment|/* known to be r9 */
+specifier|register
+name|struct
+name|mbuf
+modifier|*
+name|m
 decl_stmt|;
 specifier|register
 name|struct
@@ -1602,17 +1609,24 @@ name|t
 operator|->
 name|t_sum
 operator|=
-name|cksum
+literal|0
+expr_stmt|;
+comment|/* gratuitous? */
+name|CKSUM_TCPSET
 argument_list|(
 name|m
 argument_list|,
-name|len
-operator|+
+name|t
+argument_list|,
+name|r9
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|th
 argument_list|)
+operator|+
+name|len
 argument_list|)
 expr_stmt|;
 name|ip
