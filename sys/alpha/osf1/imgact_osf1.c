@@ -701,6 +701,12 @@ goto|goto
 name|bail
 goto|;
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack). 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|exec_new_vmspace
 argument_list|(
 name|imgp
@@ -714,6 +720,12 @@ operator|->
 name|proc
 operator|->
 name|p_vmspace
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
 expr_stmt|;
 name|imgp
 operator|->
