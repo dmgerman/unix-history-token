@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)make_keypair.c	1.4 (Berkeley) %G%"
+literal|"@(#)make_keypair.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -55,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<kerberosIV/des.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<kerberosIV/krb.h>
 end_include
 
 begin_include
@@ -76,6 +82,27 @@ directive|include
 file|"register_proto.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|random_key
+argument_list|()
+decl_stmt|,
+name|herror
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|make_key
+argument_list|()
+decl_stmt|,
+name|usage
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -83,21 +110,15 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|char
-name|namebuf
-index|[
-literal|255
-index|]
-decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 name|struct
 name|hostent
 modifier|*
@@ -135,6 +156,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|hp
 operator|=
 name|gethostbyname
@@ -144,7 +168,25 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|herror
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -246,29 +288,32 @@ argument_list|(
 literal|"where the X's refer to digits of the host's inet address.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|make_key
-argument_list|(
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|)
 name|struct
 name|in_addr
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|keyfile_data
@@ -283,6 +328,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|namebuf
@@ -378,29 +426,28 @@ argument_list|(
 literal|"done.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -412,7 +459,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
