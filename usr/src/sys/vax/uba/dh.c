@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.54	82/12/05	*/
+comment|/*	dh.c	4.55	82/12/10	*/
 end_comment
 
 begin_include
@@ -4131,7 +4131,7 @@ operator|&&
 operator|(
 name|tp
 operator|->
-name|t_mode
+name|t_flags
 operator|&
 name|MDMBUF
 operator|)
@@ -4217,7 +4217,7 @@ operator|&&
 operator|(
 name|tp
 operator|->
-name|t_mode
+name|t_flags
 operator|&
 name|NOHANG
 operator|)

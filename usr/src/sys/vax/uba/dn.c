@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.13	82/10/21	*/
+comment|/*	dn.c	4.14	82/12/10	*/
 end_comment
 
 begin_include
@@ -67,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"../h/conf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ioctl.h"
 end_include
 
 begin_include
