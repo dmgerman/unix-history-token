@@ -1161,6 +1161,9 @@ default|default:
 break|break;
 block|}
 block|}
+name|endwin
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
