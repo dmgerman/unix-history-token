@@ -888,19 +888,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPCTL_KEEPINIT
-value|8
-end_define
-
-begin_comment
-comment|/* timeout for establishing syn */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCPCTL_SENDSPACE
-value|9
+value|8
 end_define
 
 begin_comment
@@ -911,6 +900,17 @@ begin_define
 define|#
 directive|define
 name|TCPCTL_RECVSPACE
+value|9
+end_define
+
+begin_comment
+comment|/* receive buffer space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_KEEPINIT
 value|10
 end_define
 
@@ -929,7 +929,7 @@ begin_define
 define|#
 directive|define
 name|TCPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
