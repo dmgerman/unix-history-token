@@ -3864,6 +3864,7 @@ name|error
 operator|==
 literal|0
 condition|)
+block|{
 name|getmicrotime
 argument_list|(
 operator|&
@@ -3872,6 +3873,12 @@ operator|->
 name|if_lastchange
 argument_list|)
 expr_stmt|;
+name|rt_ifmsg
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 * If the link MTU changed, do network layer specific procedure. 		 */
 if|if
 condition|(
