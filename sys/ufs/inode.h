@@ -119,6 +119,23 @@ end_struct
 begin_define
 define|#
 directive|define
+name|FASTLINK
+parameter_list|(
+name|ip
+parameter_list|)
+value|(DFASTLINK((ip)->i_din))
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_symlink
+value|i_din.di_symlink
+end_define
+
+begin_define
+define|#
+directive|define
 name|i_mode
 value|i_din.di_mode
 end_define
@@ -264,6 +281,13 @@ define|#
 directive|define
 name|i_back
 value|i_chain[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_di_spare
+value|i_din.di_spare
 end_define
 
 begin_comment

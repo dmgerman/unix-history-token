@@ -29,6 +29,13 @@ begin_comment
 comment|/* indirect addresses in inode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXFASTLINK
+value|(((NDADDR+NIADDR) * sizeof(daddr_t)) - 1)
+end_define
+
 begin_struct
 struct|struct
 name|dinode
@@ -74,20 +81,38 @@ comment|/* 32: last time inode changed */
 name|long
 name|di_ctspare
 decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
 name|daddr_t
-name|di_db
+name|di_udb
 index|[
 name|NDADDR
 index|]
 decl_stmt|;
 comment|/* 40: disk block addresses */
 name|daddr_t
-name|di_ib
+name|di_uib
 index|[
 name|NIADDR
 index|]
 decl_stmt|;
 comment|/* 88: indirect blocks */
+block|}
+name|di_addr
+struct|;
+name|char
+name|di_usymlink
+index|[
+name|MAXFASTLINK
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|di_un
+union|;
 name|long
 name|di_flags
 decl_stmt|;
@@ -100,16 +125,42 @@ name|long
 name|di_gen
 decl_stmt|;
 comment|/* 108: generation number */
-name|long
+define|#
+directive|define
+name|DI_SPARE_SZ
+value|4
+comment|/* 112: spare for 4 longs */
+name|u_long
 name|di_spare
 index|[
-literal|4
+name|DI_SPARE_SZ
 index|]
 decl_stmt|;
-comment|/* 112: reserved, currently unused */
+comment|/* reserved (unused) */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|di_db
+value|di_un.di_addr.di_udb
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_ib
+value|di_un.di_addr.di_uib
+end_define
+
+begin_define
+define|#
+directive|define
+name|di_symlink
+value|di_un.di_usymlink
+end_define
 
 begin_if
 if|#
@@ -320,6 +371,17 @@ end_define
 begin_comment
 comment|/* execute permission */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DFASTLINK
+parameter_list|(
+name|di
+parameter_list|)
+define|\
+value|((((di).di_mode& IFMT) == IFLNK)&& \ 	 ((di).di_size<= MAXFASTLINK)&& \ 	 ((di).di_size == (di).di_spare[0]))
+end_define
 
 end_unit
 
