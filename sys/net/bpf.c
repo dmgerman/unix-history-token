@@ -4972,7 +4972,7 @@ name|M_BPF
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  * Attach an interface to bpf.  driverp is a pointer to a (struct bpf_if *)  * in the driver's softc; dlt is the link layer type; hdrlen is the fixed  * size of the link header (variable length headers not yet supported).  */
+comment|/*  * Attach an interface to bpf.  ifp is a pointer to the structure  * defining the interface to be attached, dlt is the link layer type,  * and hdrlen is the fixed size of the link header (variable length  * headers are not yet supporrted).  */
 name|void
 name|bpfattach
 parameter_list|(
