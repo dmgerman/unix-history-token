@@ -525,6 +525,10 @@ name|u_long
 name|t_badrxtwin
 decl_stmt|;
 comment|/* window for retransmit recovery */
+name|u_char
+name|snd_limited
+decl_stmt|;
+comment|/* segments limited transmitted */
 block|}
 struct|;
 end_struct
