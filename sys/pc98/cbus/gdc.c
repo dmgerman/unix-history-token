@@ -470,6 +470,19 @@ name|gdc_softc_t
 modifier|*
 name|sc
 decl_stmt|;
+comment|/* Check isapnp ids */
+if|if
+condition|(
+name|isa_get_vendorid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev
