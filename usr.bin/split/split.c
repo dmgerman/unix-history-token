@@ -716,16 +716,32 @@ operator|!=
 name|NULL
 condition|)
 comment|/* File name prefix. */
-operator|(
-name|void
-operator|)
-name|strcpy
+if|if
+condition|(
+name|strlcpy
 argument_list|(
 name|fname
 argument_list|,
 operator|*
 name|argv
 operator|++
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fname
+argument_list|)
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|fname
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"file name prefix is too long"
 argument_list|)
 expr_stmt|;
 if|if
