@@ -9747,16 +9747,6 @@ condition|(
 name|i
 operator|>=
 name|ETHER_ADDR_LEN
-operator|&&
-name|OF_getetheraddr2
-argument_list|(
-name|dev
-argument_list|,
-name|eaddr
-argument_list|)
-operator|==
-operator|-
-literal|1
 condition|)
 name|OF_getetheraddr
 argument_list|(
