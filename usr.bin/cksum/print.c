@@ -60,7 +60,7 @@ name|char
 modifier|*
 name|fn
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|val
 decl_stmt|,
 name|len
@@ -73,8 +73,14 @@ name|printf
 argument_list|(
 literal|"%lu %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|val
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -117,7 +123,7 @@ name|char
 modifier|*
 name|fn
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|val
 decl_stmt|,
 name|len
@@ -130,13 +136,19 @@ name|printf
 argument_list|(
 literal|"%lu %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|val
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|len
 operator|+
 literal|1023
-operator|)
+argument_list|)
 operator|/
 literal|1024
 argument_list|)
@@ -180,7 +192,7 @@ name|char
 modifier|*
 name|fn
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|val
 decl_stmt|,
 name|len
@@ -193,13 +205,19 @@ name|printf
 argument_list|(
 literal|"%lu %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|val
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|len
 operator|+
 literal|511
-operator|)
+argument_list|)
 operator|/
 literal|512
 argument_list|)

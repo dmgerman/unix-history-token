@@ -54,7 +54,7 @@ specifier|register
 name|int
 name|fd
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|cval
 decl_stmt|,
@@ -66,7 +66,7 @@ end_function
 begin_block
 block|{
 specifier|register
-name|u_long
+name|u_int32_t
 name|crc
 decl_stmt|,
 name|total

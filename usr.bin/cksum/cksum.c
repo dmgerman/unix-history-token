@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cksum.c,v 1.7 1997/11/09 05:35:26 obrien Exp $"
+literal|"$Id: cksum.c,v 1.8 1997/11/09 05:47:55 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,7 +165,7 @@ name|fd
 decl_stmt|,
 name|rval
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|len
 decl_stmt|,
 name|val
@@ -186,12 +186,10 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|,
-name|unsigned
-name|long
+name|u_int32_t
 operator|*
 operator|)
 argument_list|)
@@ -206,11 +204,9 @@ operator|(
 name|char
 operator|*
 operator|,
-name|unsigned
-name|long
+name|u_int32_t
 operator|,
-name|unsigned
-name|long
+name|u_int32_t
 operator|)
 argument_list|)
 expr_stmt|;

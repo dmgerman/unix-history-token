@@ -42,7 +42,8 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|u_long
+specifier|const
+name|u_int32_t
 name|crctab
 index|[]
 init|=
@@ -567,7 +568,7 @@ comment|/*  * Compute a POSIX 1003.2 checksum.  This routine has been broken out
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|u_int32_t
 name|crc_total
 init|=
 operator|~
@@ -593,7 +594,7 @@ specifier|register
 name|int
 name|fd
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|cval
 decl_stmt|,
@@ -614,7 +615,7 @@ name|int
 name|nr
 decl_stmt|;
 specifier|register
-name|u_long
+name|u_int32_t
 name|crc
 decl_stmt|,
 name|len

@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * This code implements the AUTODIN II polynomial used by Ethernet,  * and can be used to calculate multicast address hash indices.  * It assumes that the low order bits will be transmitted first,  * and consequently the low byte should be sent first when  * the crc computation is finished.  The crc should be complemented  * before transmission.  * The variable corresponding to the macro argument "crc" should  * be an unsigned long and should be preset to all ones for Ethernet  * use.  An error-free packet will leave 0xDEBB20E3 in the crc.  *			Spencer Garrett<srg@quick.com>  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -20,8 +26,9 @@ comment|/* generated using the AUTODIN II polynomial  *	x^32 + x^26 + x^23 + x^2
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|long
+specifier|static
+specifier|const
+name|u_int32_t
 name|crctab
 index|[
 literal|256
@@ -562,7 +569,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
-name|u_long
+name|u_int32_t
 name|crc32_total
 init|=
 literal|0
@@ -583,7 +590,7 @@ specifier|register
 name|int
 name|fd
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|cval
 decl_stmt|,
@@ -594,7 +601,7 @@ end_function
 
 begin_block
 block|{
-name|u_long
+name|u_int32_t
 name|crc
 init|=
 operator|~
