@@ -676,7 +676,14 @@ argument_list|(
 operator|&
 name|vn_cdevsw
 argument_list|,
-literal|0
+name|dkmakeminor
+argument_list|(
+name|unit
+argument_list|,
+name|WHOLE_DISK_SLICE
+argument_list|,
+name|RAW_PART
+argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,
