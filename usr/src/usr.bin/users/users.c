@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)users.c	5.3 (Berkeley) %G%"
+literal|"@(#)users.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,13 @@ name|MAXUSERS
 value|200
 end_define
 
+begin_define
+define|#
+directive|define
+name|UTMP_FILE
+value|"/etc/utmp"
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -127,33 +134,16 @@ name|names
 index|[
 name|MAXUSERS
 index|]
-decl_stmt|,
-comment|/* names table */
-modifier|*
-modifier|*
-name|namp
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pointer to names table */
+comment|/* names table */
 end_comment
 
 begin_function
 name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|int
-name|argc
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
+parameter_list|()
 block|{
 specifier|register
 name|FILE
@@ -161,43 +151,6 @@ modifier|*
 name|fp
 decl_stmt|;
 comment|/* file pointer */
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|2
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"usage: users [ utmp_file ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|ERREXIT
-argument_list|)
-expr_stmt|;
-block|}
-name|fname
-operator|=
-name|argc
-operator|==
-literal|2
-condition|?
-name|argv
-index|[
-literal|1
-index|]
-else|:
-literal|"/etc/utmp"
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -206,7 +159,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|fname
+name|UTMP_FILE
 argument_list|,
 literal|"r"
 argument_list|)
@@ -215,7 +168,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|fname
+name|UTMP_FILE
 argument_list|)
 expr_stmt|;
 name|exit
@@ -224,10 +177,6 @@ name|ERREXIT
 argument_list|)
 expr_stmt|;
 block|}
-name|namp
-operator|=
-name|names
-expr_stmt|;
 while|while
 condition|(
 name|fread
@@ -284,10 +233,6 @@ name|nsave
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ncnt
-condition|)
 name|summary
 argument_list|()
 expr_stmt|;
@@ -306,6 +251,15 @@ end_macro
 
 begin_block
 block|{
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|namp
+init|=
+name|names
+decl_stmt|;
+comment|/* pointer to names table */
 name|char
 modifier|*
 name|calloc
@@ -378,15 +332,17 @@ name|char
 modifier|*
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-modifier|*
-name|q
 decl_stmt|;
 name|int
 name|scmp
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+operator|!
+name|ncnt
+condition|)
+return|return;
 name|qsort
 argument_list|(
 operator|(
@@ -408,27 +364,33 @@ argument_list|,
 name|scmp
 argument_list|)
 expr_stmt|;
+name|fputs
+argument_list|(
+name|names
+index|[
+literal|0
+index|]
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|p
 operator|=
+operator|&
 name|names
+index|[
+literal|1
+index|]
 init|;
-name|p
-operator|<
-name|namp
+operator|--
+name|ncnt
 condition|;
+operator|++
 name|p
-operator|=
-name|q
 control|)
 block|{
-if|if
-condition|(
-name|p
-operator|!=
-name|names
-condition|)
 name|putchar
 argument_list|(
 literal|' '
@@ -442,32 +404,6 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|q
-operator|=
-name|p
-operator|+
-literal|1
-init|;
-name|q
-operator|<
-name|namp
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-operator|*
-name|q
-argument_list|,
-operator|*
-name|p
-argument_list|)
-condition|;
-operator|++
-name|q
-control|)
-empty_stmt|;
 block|}
 name|putchar
 argument_list|(
