@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	2.9 84/02/28"
+literal|"@(#)dr_1.c	2.10 84/03/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -2995,7 +2995,7 @@ operator|*
 name|p
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strncpy
 argument_list|(
 name|bestship
 operator|->
@@ -3004,7 +3004,32 @@ operator|->
 name|captain
 argument_list|,
 name|p
+argument_list|,
+sizeof|sizeof
+name|bestship
+operator|->
+name|file
+operator|->
+name|captain
 argument_list|)
+expr_stmt|;
+name|bestship
+operator|->
+name|file
+operator|->
+name|captain
+index|[
+sizeof|sizeof
+name|bestship
+operator|->
+name|file
+operator|->
+name|captain
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|log
 argument_list|(
