@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_dnslookup.c,v 1.13 1997/10/29 07:25:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -225,6 +225,23 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
+name|len
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+sizeof|sizeof
+argument_list|(
+name|result
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|bzero
 argument_list|(
 name|result
