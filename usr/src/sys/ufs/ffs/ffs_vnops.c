@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.80 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.81 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1454,12 +1454,18 @@ condition|(
 name|uio
 operator|->
 name|uio_offset
-operator|<
-literal|0
+operator|+
+name|uio
+operator|->
+name|uio_resid
+operator|>
+name|fs
+operator|->
+name|fs_maxfilesize
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EFBIG
 operator|)
 return|;
 name|ip
@@ -1929,19 +1935,6 @@ if|if
 condition|(
 name|uio
 operator|->
-name|uio_offset
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-if|if
-condition|(
-name|uio
-operator|->
 name|uio_resid
 operator|==
 literal|0
@@ -1949,6 +1942,31 @@ condition|)
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+name|fs
+operator|=
+name|ip
+operator|->
+name|i_fs
+expr_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_offset
+operator|+
+name|uio
+operator|->
+name|uio_resid
+operator|>
+name|fs
+operator|->
+name|fs_maxfilesize
+condition|)
+return|return
+operator|(
+name|EFBIG
 operator|)
 return|;
 comment|/* 	 * Maybe this should be above the vnode op call, but so long as 	 * file servers have no limits, i don't think it matters 	 */
@@ -2004,12 +2022,6 @@ operator|=
 name|ip
 operator|->
 name|i_size
-expr_stmt|;
-name|fs
-operator|=
-name|ip
-operator|->
-name|i_fs
 expr_stmt|;
 name|flags
 operator|=
