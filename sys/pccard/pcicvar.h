@@ -126,6 +126,11 @@ directive|define
 name|PCIC_RICOH_POWER
 value|0x00000020
 comment|/* Uses the ricoh power regs */
+define|#
+directive|define
+name|PCIC_SHARED_IRQ
+value|0x00000040
+comment|/* Allow IRQs to be shared */
 name|int
 name|iorid
 decl_stmt|;
