@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -956,7 +956,7 @@ name|sototpcb
 parameter_list|(
 name|so
 parameter_list|)
-value|((struct tp_pcb *)(so->so_tpcb))
+value|((struct tp_pcb *)(so->so_pcb))
 end_define
 
 begin_define
@@ -966,7 +966,7 @@ name|sototpref
 parameter_list|(
 name|so
 parameter_list|)
-value|((struct tp_ref *)((so)->so_tpcb->tp_ref))
+value|((sototpcb(so)->tp_ref))
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_iso.c	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_iso.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2068,7 +2068,7 @@ name|isop
 operator|->
 name|isop_socket
 operator|->
-name|so_tpcb
+name|so_pcb
 argument_list|,
 name|PRC_QUENCH2
 argument_list|)
@@ -2103,7 +2103,7 @@ name|isop
 operator|->
 name|isop_socket
 operator|->
-name|so_tpcb
+name|so_pcb
 argument_list|,
 name|PRC_QUENCH
 argument_list|)
@@ -2482,7 +2482,7 @@ name|isop
 operator|->
 name|isop_socket
 operator|->
-name|so_tpcb
+name|so_pcb
 argument_list|,
 operator|&
 name|e
@@ -2525,7 +2525,7 @@ name|isop
 operator|->
 name|isop_socket
 operator|->
-name|so_tpcb
+name|so_pcb
 argument_list|,
 operator|&
 name|e

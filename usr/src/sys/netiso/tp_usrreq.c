@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1694,9 +1694,9 @@ operator|->
 name|nlp_pcbbind
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|nam
 argument_list|)
@@ -1716,9 +1716,9 @@ operator|->
 name|nlp_getsufx
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 operator|&
 name|tpcb
@@ -1758,9 +1758,9 @@ operator|->
 name|nlp_pcbbind
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|MNULL
 argument_list|)
@@ -1774,9 +1774,9 @@ operator|->
 name|nlp_getsufx
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 operator|&
 name|tpcb
@@ -1941,9 +1941,9 @@ operator|->
 name|nlp_pcbbind
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|MNULL
 argument_list|)
@@ -1971,9 +1971,9 @@ operator|->
 name|nlp_getsufx
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 operator|&
 name|tpcb
@@ -2117,9 +2117,9 @@ operator|->
 name|nlp_getsufx
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 operator|&
 name|tpcb
@@ -2150,9 +2150,9 @@ argument_list|)
 argument_list|(
 name|so
 argument_list|,
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 operator|&
 name|tpcb
@@ -2202,9 +2202,9 @@ operator|->
 name|nlp_pcbdisc
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|)
 expr_stmt|;
 name|error
@@ -2315,9 +2315,9 @@ operator|->
 name|nlp_getnetaddr
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|nam
 argument_list|,
@@ -3474,9 +3474,9 @@ operator|->
 name|nlp_getnetaddr
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|nam
 argument_list|,
@@ -3504,9 +3504,9 @@ operator|->
 name|nlp_getnetaddr
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|nam
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2282,9 +2282,6 @@ name|tpcb
 operator|->
 name|tp_npcb
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|so
 operator|->
 name|so_pcb
@@ -2294,7 +2291,7 @@ end_expr_stmt
 begin_expr_stmt
 name|so
 operator|->
-name|so_tpcb
+name|so_pcb
 operator|=
 operator|(
 name|caddr_t
@@ -2413,15 +2410,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|so
-operator|->
-name|so_tpcb
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*bad:*/
@@ -2792,9 +2780,9 @@ name|printf
 argument_list|(
 literal|"calling (...nlproto->...)(0x%x, so 0x%x)\n"
 argument_list|,
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|so
 argument_list|)
@@ -2837,9 +2825,9 @@ operator|->
 name|nlp_pcbdetach
 function_decl|)
 parameter_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2943,11 +2931,8 @@ end_if
 begin_expr_stmt
 name|so
 operator|->
-name|so_tpcb
+name|so_pcb
 operator|=
-operator|(
-name|caddr_t
-operator|)
 literal|0
 expr_stmt|;
 end_expr_stmt

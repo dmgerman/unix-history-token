@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3118,9 +3118,9 @@ operator|->
 name|nlp_putnetaddr
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|faddr
 argument_list|,
@@ -3135,9 +3135,9 @@ operator|->
 name|nlp_putnetaddr
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|laddr
 argument_list|,
@@ -3180,9 +3180,9 @@ operator|->
 name|nlp_putsufx
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|fsufxloc
 argument_list|,
@@ -3199,9 +3199,9 @@ operator|->
 name|nlp_putsufx
 call|)
 argument_list|(
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 name|lsufxloc
 argument_list|,
@@ -3301,9 +3301,9 @@ call|)
 argument_list|(
 name|so
 argument_list|,
-name|so
+name|tpcb
 operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 operator|&
 name|tpcb
@@ -4576,9 +4576,7 @@ name|tp_sock
 argument_list|,
 name|tpcb
 operator|->
-name|tp_sock
-operator|->
-name|so_pcb
+name|tp_npcb
 argument_list|,
 operator|&
 name|tpcb
