@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/linker.h>
 end_include
 
@@ -336,12 +342,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb_ext.h>
 end_include
 
 begin_comment
 comment|/* pcb.h included via sys/user.h */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/globaldata.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/globals.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -353,12 +377,6 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/globaldata.h>
 end_include
 
 begin_endif
@@ -399,6 +417,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/icu.h>
+end_include
 
 begin_include
 include|#
@@ -1317,6 +1341,25 @@ name|proc0_tf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|cpuhead
+name|cpuhead
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|mtx_t
+name|sched_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|mtx_t
+name|Giant
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -2100,6 +2143,32 @@ argument_list|()
 expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
+expr_stmt|;
+name|SLIST_INIT
+argument_list|(
+operator|&
+name|cpuhead
+argument_list|)
+expr_stmt|;
+name|SLIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|cpuhead
+argument_list|,
+name|GLOBALDATA
+argument_list|,
+name|gd_allcpu
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+literal|"sched lock"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -8935,11 +9004,6 @@ directive|endif
 name|int
 name|off
 decl_stmt|;
-comment|/* 	 * Prevent lowering of the ipl if we call tsleep() early. 	 */
-name|safepri
-operator|=
-name|cpl
-expr_stmt|;
 name|proc0
 operator|.
 name|p_addr
@@ -9221,6 +9285,23 @@ name|lgdt
 argument_list|(
 operator|&
 name|r_gdt
+argument_list|)
+expr_stmt|;
+comment|/* setup curproc so that mutexes work */
+name|PCPU_SET
+argument_list|(
+name|curproc
+argument_list|,
+operator|&
+name|proc0
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|prevproc
+argument_list|,
+operator|&
+name|proc0
 argument_list|)
 expr_stmt|;
 comment|/* make ldt memory segments */
@@ -10108,6 +10189,17 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We grab Giant during the vm86bios routines, so we need to ensure 	 * that it is up and running before we use vm86. 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+literal|"Giant"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|vm86_initialize
 argument_list|()
 expr_stmt|;
@@ -10301,21 +10393,16 @@ name|int
 operator|)
 name|IdlePTD
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|proc0
 operator|.
 name|p_addr
 operator|->
 name|u_pcb
 operator|.
-name|pcb_mpnest
+name|pcb_schednest
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|proc0
 operator|.
 name|p_addr
