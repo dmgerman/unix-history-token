@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1983, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fcntl.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -139,44 +139,33 @@ begin_comment
 comment|/* set append mode */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FMARK
-value|0x0010
-end_define
-
-begin_comment
-comment|/* mark during gc() */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDEFER
-value|0x0020
-end_define
-
-begin_comment
-comment|/* defer for next gc pass */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_SHLOCK
+value|0x0010
+end_define
+
+begin_comment
+comment|/* open with shared file lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|O_EXLOCK
+value|0x0020
+end_define
+
+begin_comment
+comment|/* open with exclusive file lock */
+end_comment
 
 begin_define
 define|#
@@ -192,23 +181,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|O_SHLOCK
+name|O_FSYNC
 value|0x0080
 end_define
 
 begin_comment
-comment|/* shared file lock present */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_EXLOCK
-value|0x0100
-end_define
-
-begin_comment
-comment|/* exclusive file lock present */
+comment|/* synchronous writes */
 end_comment
 
 begin_endif
@@ -249,16 +227,49 @@ begin_comment
 comment|/* error if already exists */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|O_FSYNC
+name|FMARK
 value|0x1000
 end_define
 
 begin_comment
-comment|/* synchronous writes */
+comment|/* mark during gc() */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FDEFER
+value|0x2000
+end_define
+
+begin_comment
+comment|/* defer for next gc pass */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FHASLOCK
+value|0x4000
+end_define
+
+begin_comment
+comment|/* descriptor holds advisory lock */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* defined by POSIX 1003.1; BSD default, so no bit required */
@@ -313,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|FMASK
-value|(FREAD|FWRITE|FAPPEND|FASYNC|FNONBLOCK)
+value|(FREAD|FWRITE|FAPPEND|FASYNC|FFSYNC|FNONBLOCK)
 end_define
 
 begin_comment
@@ -324,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|FCNTLFLAGS
-value|(O_NONBLOCK|O_APPEND|O_ASYNC|O_FSYNC)
+value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK)
 end_define
 
 begin_endif
@@ -359,7 +370,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|FNDELAY
+name|FFSYNC
+value|O_FSYNC
+end_define
+
+begin_define
+define|#
+directive|define
+name|FNONBLOCK
 value|O_NONBLOCK
 end_define
 
@@ -367,71 +385,6 @@ begin_define
 define|#
 directive|define
 name|O_NDELAY
-value|O_NONBLOCK
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FCREAT
-value|O_CREAT
-end_define
-
-begin_comment
-comment|/* not stored in f_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FEXCL
-value|O_EXCL
-end_define
-
-begin_comment
-comment|/* not stored in f_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTRUNC
-value|O_TRUNC
-end_define
-
-begin_comment
-comment|/* not stored in f_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FEXLOCK
-value|O_EXLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSHLOCK
-value|O_SHLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|FNONBLOCK
 value|O_NONBLOCK
 end_define
 
