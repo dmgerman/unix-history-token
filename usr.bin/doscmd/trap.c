@@ -1151,9 +1151,7 @@ name|sf_uc
 operator|.
 name|uc_mcontext
 operator|.
-name|mc_tf
-operator|.
-name|tf_trapno
+name|mc_trapno
 argument_list|,
 name|sf
 operator|->
@@ -1161,9 +1159,7 @@ name|sf_uc
 operator|.
 name|uc_mcontext
 operator|.
-name|mc_tf
-operator|.
-name|tf_err
+name|mc_err
 argument_list|)
 expr_stmt|;
 block|}

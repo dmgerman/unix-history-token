@@ -75,6 +75,9 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|int
+name|onstack
+decl_stmt|;
 name|reg86_t
 name|gs
 decl_stmt|;

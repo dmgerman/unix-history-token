@@ -133,9 +133,7 @@ name|sf_uc
 operator|.
 name|uc_mcontext
 operator|.
-name|mc_tf
-operator|.
-name|tf_eflags
+name|mc_eflags
 operator|&
 name|PSL_VM
 condition|)
