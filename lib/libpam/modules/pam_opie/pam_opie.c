@@ -342,11 +342,7 @@ argument_list|;
 comment|/* 	 * Don't call the OPIE atexit() handler when our program exits, 	 * since the module has been unloaded and we will SEGV. 	 */
 name|opiedisableaeh
 argument_list|()
-argument_list|;
-name|pwok
-operator|=
-literal|0
-argument_list|; 	if
+argument_list|;  	if
 operator|(
 name|opiechallenge
 argument_list|(
@@ -425,19 +421,24 @@ operator|->
 name|pw_dir
 argument_list|)
 block|; 	}
-for|for
-control|(
+else|else
+name|pwok
+operator|=
+literal|1
+expr_stmt|;
+argument_list|for
+operator|(
 name|i
 operator|=
 literal|0
-init|;
+expr|;
 name|i
 operator|<
 literal|2
-condition|;
+expr|;
 name|i
 operator|++
-control|)
+operator|)
 block|{
 name|snprintf
 argument_list|(
@@ -453,7 +454,7 @@ index|]
 argument_list|,
 name|challenge
 argument_list|)
-expr_stmt|;
+block|;
 name|retval
 operator|=
 name|pam_get_pass
@@ -468,7 +469,7 @@ argument_list|,
 operator|&
 name|options
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|retval
@@ -493,16 +494,15 @@ name|i
 argument_list|,
 name|response
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|;  		if
+operator|(
 name|response
 index|[
 literal|0
 index|]
 operator|!=
 literal|'\0'
-condition|)
+operator|)
 break|break;
 comment|/* Second time round, echo the password */
 name|pam_set_option
@@ -514,7 +514,13 @@ name|PAM_OPT_ECHO_PASS
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* We have to copy the response, because opieverify mucks with it. */
+end_comment
+
+begin_expr_stmt
 name|snprintf
 argument_list|(
 name|resp
@@ -527,7 +533,13 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Opieverify is supposed to return -1 only if an error occurs. 	 * But it returns -1 even if the response string isn't in the form 	 * it expects.  Thus we can't log an error and can only check for 	 * success or lack thereof. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|opieverify
@@ -626,16 +638,18 @@ name|retval
 operator|=
 name|PAM_AUTH_ERR
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|PAM_RETURN
 argument_list|(
 name|retval
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_function
-name|PAM_EXTERN
+unit|}  PAM_EXTERN
 name|int
 name|pam_sm_setcred
 parameter_list|(
