@@ -2332,9 +2332,13 @@ operator|!=
 name|FXP_CHIP_82557
 condition|)
 block|{
-comment|/* 		 * If there is a valid cacheline size (8 or 16 dwords), 		 * then turn on MWI. 		 */
+comment|/* 		 * If MWI is enabled in the PCI configuration, and there 		 * is a valid cacheline size (8 or 16 dwords), then tell 		 * the board to turn on MWI. 		 */
 if|if
 condition|(
+name|val
+operator|&
+name|PCIM_CMD_MWRICEN
+operator|&&
 name|pci_read_config
 argument_list|(
 name|dev
@@ -4308,6 +4312,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * It should not be possible to have all bits set; the 		 * FXP_SCB_INTR_SWI bit always returns 0 on a read.  If  		 * all bits are set, this may indicate that the card has 		 * been physically ejected, so ignore it. 		 */
+if|if
+condition|(
+name|statack
+operator|==
+literal|0xff
+condition|)
+return|return;
 comment|/* 		 * First ACK all the interrupts in this pass. 		 */
 name|CSR_WRITE_1
 argument_list|(
@@ -5037,6 +5049,11 @@ name|sc
 operator|->
 name|miibus
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Schedule another timeout one second from now. 	 */
