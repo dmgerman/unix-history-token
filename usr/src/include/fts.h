@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -74,33 +74,28 @@ value|0x002
 comment|/* user: use stat(2) */
 define|#
 directive|define
-name|FTS_MULTIPLE
-value|0x004
-comment|/* user: multiple args */
-define|#
-directive|define
 name|FTS_NOCHDIR
-value|0x008
+value|0x004
 comment|/* user: don't use chdir(2) */
 define|#
 directive|define
 name|FTS_NOSTAT
-value|0x010
+value|0x008
 comment|/* user: don't require stat info */
 define|#
 directive|define
 name|FTS_PHYSICAL
-value|0x020
+value|0x010
 comment|/* user: use lstat(2) */
 define|#
 directive|define
 name|FTS_SEEDOT
-value|0x040
+value|0x020
 comment|/* user: return dot and dot-dot */
 define|#
 directive|define
 name|FTS_XDEV
-value|0x080
+value|0x040
 comment|/* user: don't cross devices */
 name|int
 name|fts_options
