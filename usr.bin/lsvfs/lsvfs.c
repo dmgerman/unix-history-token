@@ -200,10 +200,14 @@ else|else
 block|{
 while|while
 condition|(
+operator|(
 name|ovfcp
 operator|=
 name|getvfsent
 argument_list|()
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|printf
