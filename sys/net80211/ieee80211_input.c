@@ -8551,6 +8551,18 @@ name|ic
 argument_list|)
 expr_stmt|;
 comment|/* NB: don't need the rest of this */
+if|if
+condition|(
+operator|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+operator|)
+operator|==
+literal|0
+condition|)
 return|return;
 block|}
 if|if
