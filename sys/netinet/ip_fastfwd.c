@@ -1112,6 +1112,15 @@ block|}
 comment|/* 	 * Or is it for a local IP broadcast address on this host? 	 */
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_BCAST
+operator|)
+operator|&&
+operator|(
 name|m
 operator|->
 name|m_pkthdr
@@ -1121,6 +1130,7 @@ operator|->
 name|if_flags
 operator|&
 name|IFF_BROADCAST
+operator|)
 condition|)
 block|{
 name|TAILQ_FOREACH
