@@ -12077,7 +12077,7 @@ name|m_len
 condition|)
 name|panic
 argument_list|(
-literal|"assumption failed in %s:%d\n"
+literal|"assumption failed in %s:%d"
 argument_list|,
 name|__FILE__
 argument_list|,

@@ -210,7 +210,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"in6_cksum: mbuf len (%d)< off+len (%d+%d)\n"
+literal|"in6_cksum: mbuf len (%d)< off+len (%d+%d)"
 argument_list|,
 name|m
 operator|->
@@ -1370,7 +1370,7 @@ name|len
 condition|)
 name|panic
 argument_list|(
-literal|"in6_cksum: out of data\n"
+literal|"in6_cksum: out of data"
 argument_list|)
 expr_stmt|;
 if|if

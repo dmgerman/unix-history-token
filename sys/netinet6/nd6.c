@@ -1187,7 +1187,7 @@ name|ndopts
 condition|)
 name|panic
 argument_list|(
-literal|"ndopts == NULL in nd6_option\n"
+literal|"ndopts == NULL in nd6_option"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1199,7 +1199,7 @@ name|nd_opts_last
 condition|)
 name|panic
 argument_list|(
-literal|"uninitialized ndopts in nd6_option\n"
+literal|"uninitialized ndopts in nd6_option"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1402,7 +1402,7 @@ name|ndopts
 condition|)
 name|panic
 argument_list|(
-literal|"ndopts == NULL in nd6_options\n"
+literal|"ndopts == NULL in nd6_options"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1414,7 +1414,7 @@ name|nd_opts_last
 condition|)
 name|panic
 argument_list|(
-literal|"uninitialized ndopts in nd6_options\n"
+literal|"uninitialized ndopts in nd6_options"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1837,7 +1837,7 @@ name|rt
 condition|)
 name|panic
 argument_list|(
-literal|"rt=0 in nd6_timer(ln=%p)\n"
+literal|"rt=0 in nd6_timer(ln=%p)"
 argument_list|,
 name|ln
 argument_list|)
@@ -1861,7 +1861,7 @@ name|ln
 condition|)
 name|panic
 argument_list|(
-literal|"rt_llinfo(%p) is not equal to ln(%p)\n"
+literal|"rt_llinfo(%p) is not equal to ln(%p)"
 argument_list|,
 name|rt
 operator|->
@@ -1877,7 +1877,7 @@ name|dst
 condition|)
 name|panic
 argument_list|(
-literal|"dst=0 in nd6_timer(ln=%p)\n"
+literal|"dst=0 in nd6_timer(ln=%p)"
 argument_list|,
 name|ln
 argument_list|)
