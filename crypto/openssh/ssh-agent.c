@@ -2861,9 +2861,6 @@ operator|!
 name|c_flag
 operator|&&
 operator|!
-name|k_flag
-operator|&&
-operator|!
 name|s_flag
 condition|)
 block|{
