@@ -5971,7 +5971,7 @@ name|timeout
 operator|--
 condition|)
 block|{
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|10000
 argument_list|)
@@ -6002,7 +6002,7 @@ literal|4
 operator|)
 condition|)
 block|{
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|10000
 argument_list|)
@@ -7171,7 +7171,7 @@ name|NVIDIA
 block|,
 name|ATA_UDMA6
 block|,
-literal|"nVidia MCP"
+literal|"nVidia nForce2 MCP"
 block|}
 block|,
 block|{
@@ -15059,15 +15059,9 @@ argument_list|,
 literal|0x00000000
 argument_list|)
 expr_stmt|;
-name|tsleep
+name|ata_udelay
 argument_list|(
-name|ch
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"siirst"
-argument_list|,
-name|hz
+literal|1000000
 argument_list|)
 expr_stmt|;
 block|}

@@ -148,6 +148,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*static int ata_command(struct ata_device *, u_int8_t, u_int64_t, u_int16_t, u_int16_t);*/
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -2638,7 +2642,7 @@ operator||
 name|ATA_A_RESET
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|10000
 argument_list|)
@@ -2652,7 +2656,7 @@ argument_list|,
 name|ATA_A_IDS
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|100000
 argument_list|)
@@ -3126,7 +3130,7 @@ operator|~
 literal|0x02
 expr_stmt|;
 block|}
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|100000
 argument_list|)
