@@ -1634,6 +1634,12 @@ name|cpu
 argument_list|)
 expr_stmt|;
 block|}
+name|zone
+operator|->
+name|uz_cachefree
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -7099,6 +7105,12 @@ name|offset
 operator|=
 name|tmpbuf
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|uma_mtx
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|z
@@ -7229,6 +7241,12 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|uma_mtx
+argument_list|)
+expr_stmt|;
 operator|*
 name|offset
 operator|++
