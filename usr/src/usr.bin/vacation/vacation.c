@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)vacation.c	5.2 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -889,6 +889,10 @@ decl_stmt|;
 name|long
 name|now
 decl_stmt|;
+specifier|auto
+name|long
+name|then
+decl_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -926,7 +930,20 @@ operator|.
 name|dptr
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+comment|/* be careful on 68k's and others with alignment restrictions */
+name|bcopy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 operator|(
 operator|(
 expr|struct
@@ -939,6 +956,21 @@ name|dptr
 operator|)
 operator|->
 name|sentdate
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|then
+argument_list|,
+sizeof|sizeof
+name|then
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|then
 operator|+
 name|Timeout
 operator|<
