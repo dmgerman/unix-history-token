@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calloc.c	5.4 (Berkeley) %G%"
+literal|"@(#)calloc.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,33 +93,25 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|cfree
-argument_list|(
-argument|p
-argument_list|,
-argument|num
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|num
+parameter_list|,
+name|size
+parameter_list|)
 name|void
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 name|num
 decl_stmt|,
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -130,7 +122,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
