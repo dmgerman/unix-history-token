@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Functions to provide access to special i386 instructions.  * XXX - bezillions more are defined in locore.s but are not declared anywhere.  *  *	$Id: cpufunc.h,v 1.6 1993/12/19 00:50:14 wollman Exp $  */
+comment|/*  * Functions to provide access to special i386 instructions.  * XXX - bezillions more are defined in locore.s but are not declared anywhere.  *  *	$Id: cpufunc.h,v 1.7 1993/12/21 21:27:04 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -154,6 +154,17 @@ name|data
 expr_stmt|;
 comment|/* help gcc-1.40's register allocator */
 asm|__asm __volatile("outb %0,%%dx" : : "a" (al), "d" (port));
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|tlbflush
+parameter_list|()
+block|{
+asm|__asm __volatile("movl %%cr3, %%eax; movl %%eax, %%cr3" : : : "ax");
 block|}
 end_function
 
@@ -941,16 +952,6 @@ name|kvtop
 parameter_list|(
 name|void
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|tlbflush
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
