@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: v.c,v 1.26 1999/07/03 05:53:09 grog Exp grog $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

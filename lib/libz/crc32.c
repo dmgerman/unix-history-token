@@ -4,7 +4,7 @@ comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-
 end_comment
 
 begin_comment
-comment|/* @(#) $Id$ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD2.H - header file for MD2C.C  * $Id: md2.h,v 1.6 1997/08/25 05:24:24 joerg Exp $  */
+comment|/* MD2.H - header file for MD2C.C  * $FreeBSD$  */
 end_comment
 
 begin_comment

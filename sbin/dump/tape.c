@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tape.c,v 1.10 1998/09/15 10:25:50 gibbs Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

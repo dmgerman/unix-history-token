@@ -4,7 +4,7 @@ comment|/* example.c -- usage example of the zlib compression library  * Copyrig
 end_comment
 
 begin_comment
-comment|/* @(#) $Id: example.c,v 1.1.1.3 1999/01/10 09:46:54 peter Exp $ */
+comment|/* @(#) $FreeBSD$ */
 end_comment
 
 begin_include

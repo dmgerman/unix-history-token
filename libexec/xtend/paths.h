@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Pathnames for files used by xtend  *  *	$Id$  */
+comment|/*  * Pathnames for files used by xtend  *  * $FreeBSD$  */
 end_comment
 
 begin_define

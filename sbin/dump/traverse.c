@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: traverse.c,v 1.8 1998/10/27 04:01:08 dima Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

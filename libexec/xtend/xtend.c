@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xtend.c,v 1.7 1999/08/08 07:05:46 stark Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

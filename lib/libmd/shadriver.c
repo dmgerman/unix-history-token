@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* SHADRIVER.C - test driver for SHA-1 (and SHA-0)  * $Id: mddriver.c,v 1.4 1997/08/25 05:24:26 joerg Exp $  */
+comment|/* SHADRIVER.C - test driver for SHA-1 (and SHA-0)  * $FreeBSD$  */
 end_comment
 
 begin_comment

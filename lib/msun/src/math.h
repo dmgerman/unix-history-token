@@ -4,7 +4,7 @@ comment|/*  * ====================================================  * Copyright 
 end_comment
 
 begin_comment
-comment|/*  * from: @(#)fdlibm.h 5.1 93/09/24  * $Id: math.h,v 1.5 1997/08/31 22:12:19 bde Exp $  */
+comment|/*  * from: @(#)fdlibm.h 5.1 93/09/24  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

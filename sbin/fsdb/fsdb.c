@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fsdb.c,v 1.11 1998/11/09 03:43:55 truckman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

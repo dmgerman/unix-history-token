@@ -4,7 +4,7 @@ comment|/*	From: NetBSD: strtod.c,v 1.26 1998/02/03 18:44:21 perry Exp */
 end_comment
 
 begin_comment
-comment|/*	$Id$	*/
+comment|/* $FreeBSD$	*/
 end_comment
 
 begin_comment

@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kvm_getswapinfo.c,v 1.6 1999/02/14 21:42:05 dt Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

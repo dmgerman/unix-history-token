@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tunefs.c,v 1.7 1999/01/20 01:22:39 luoqi Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

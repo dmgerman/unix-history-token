@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: spppcontrol.c,v 1.5 1999/02/23 21:47:05 gj Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: modeedit.c,v 1.1 1998/09/15 06:43:02 gibbs Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

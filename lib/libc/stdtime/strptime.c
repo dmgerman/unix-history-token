@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strptime.c,v 1.6 1999/04/25 07:28:39 wes Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

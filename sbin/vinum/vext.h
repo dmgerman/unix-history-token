@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: vext.h,v 1.12 1999/07/03 05:51:19 grog Exp grog $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_define

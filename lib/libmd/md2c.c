@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD2C.C - RSA Data Security, Inc., MD2 message-digest algorithm  * $Id: md2c.c,v 1.5 1997/02/22 15:07:15 peter Exp $  */
+comment|/* MD2C.C - RSA Data Security, Inc., MD2 message-digest algorithm  * $FreeBSD$  */
 end_comment
 
 begin_comment

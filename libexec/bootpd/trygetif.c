@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * trygetif.c - test program for getif.c  *  *	$Id$  */
+comment|/*  * trygetif.c - test program for getif.c  *  * $FreeBSD$  */
 end_comment
 
 begin_include

@@ -24,7 +24,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: ftok.c,v 1.3 1997/02/22 15:06:10 peter Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
