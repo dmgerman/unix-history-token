@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -39,24 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kse.h>
 end_include
 
 begin_include
@@ -74,13 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmeter.h>
+file|<sys/kse.h>
 end_include
 
 begin_include
@@ -98,6 +80,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -134,6 +134,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -158,13 +176,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
+file|<vm/vm_extern.h>
 end_include
 
 begin_include
@@ -188,13 +200,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_include
@@ -360,9 +366,6 @@ name|mdproc
 modifier|*
 name|mdp2
 decl_stmt|;
-name|register_t
-name|savecrit
-decl_stmt|;
 name|p1
 operator|=
 name|td1
@@ -381,33 +384,9 @@ literal|0
 condition|)
 return|return;
 comment|/* Ensure that p1's pcb is up to date. */
-name|savecrit
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|PCPU_GET
+name|fpuexit
 argument_list|(
-name|fpcurthread
-argument_list|)
-operator|==
 name|td1
-condition|)
-name|fpusave
-argument_list|(
-operator|&
-name|td1
-operator|->
-name|td_pcb
-operator|->
-name|pcb_save
-argument_list|)
-expr_stmt|;
-name|intr_restore
-argument_list|(
-name|savecrit
 argument_list|)
 expr_stmt|;
 comment|/* Point the pcb to the top of the stack */
@@ -619,7 +598,7 @@ operator|~
 name|PSL_I
 expr_stmt|;
 comment|/* ints disabled */
-comment|/*- 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase:	cloned above 	 */
+comment|/*- 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase:	cloned above 	 */
 comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 * pcb_rsp is loaded pointing to the cpu_switch() stack frame 	 * containing the return address when exiting cpu_switch. 	 * This will normally be to fork_trampoline(), which will have 	 * %ebx loaded with the new proc's pointer.  fork_trampoline() 	 * will set up a stack to call fork_return(p, frame); to complete 	 * the return to user-mode. 	 */
 block|}
 end_function
@@ -706,19 +685,35 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|mdproc
+name|pcb
 modifier|*
-name|mdp
-decl_stmt|;
-name|mdp
-operator|=
-operator|&
+name|pcb
+init|=
 name|td
 operator|->
-name|td_proc
+name|td_pcb
+decl_stmt|;
+if|if
+condition|(
+name|pcb
 operator|->
-name|p_md
+name|pcb_flags
+operator|&
+name|PCB_DBREGS
+condition|)
+block|{
+comment|/* disable all hardware breakpoints */
+name|reset_dbregs
+argument_list|()
 expr_stmt|;
+name|pcb
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+name|PCB_DBREGS
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -732,6 +727,15 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+name|struct
+name|pcb
+modifier|*
+name|pcb
+init|=
+name|td
+operator|->
+name|td_pcb
+decl_stmt|;
 if|if
 condition|(
 name|td
@@ -744,6 +748,27 @@ condition|)
 name|fpudrop
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|pcb
+operator|->
+name|pcb_flags
+operator|&
+name|PCB_DBREGS
+condition|)
+block|{
+comment|/* disable all hardware breakpoints */
+name|reset_dbregs
+argument_list|()
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_flags
+operator|&=
+operator|~
+name|PCB_DBREGS
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -998,7 +1023,7 @@ operator|=
 name|PSL_KERNEL
 expr_stmt|;
 comment|/* ints disabled */
-comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_rflags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase: cloned above 	 */
+comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_rflags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase: cloned above 	 */
 block|}
 end_function
 
