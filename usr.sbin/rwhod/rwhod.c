@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rwhod.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -486,6 +506,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -602,20 +635,13 @@ condition|(
 name|getuid
 argument_list|()
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rwhod: not super user\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"not super user"
 argument_list|)
 expr_stmt|;
-block|}
 name|run_as
 argument_list|(
 operator|&
@@ -703,22 +729,15 @@ name|multicast_scope
 operator|>
 name|MAX_MULTICAST_SCOPE
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"rwhod: ttl must not exceed %u\n"
+literal|"ttl must not exceed %u"
 argument_list|,
 name|MAX_MULTICAST_SCOPE
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 else|else
 name|multicast_mode
@@ -727,9 +746,9 @@ name|PER_INTERFACE_MULTICAST
 expr_stmt|;
 block|}
 else|else
-goto|goto
 name|usage
-goto|;
+argument_list|()
+expr_stmt|;
 name|argv
 operator|++
 operator|,
@@ -743,22 +762,9 @@ name|argc
 operator|>
 literal|0
 condition|)
-block|{
 name|usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: rwhod [ -m [ ttl ] ]\n"
-argument_list|)
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 ifndef|#
 directive|ifndef
 name|DEBUG
@@ -1309,8 +1315,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|path
+argument_list|,
+sizeof|sizeof
 name|path
 argument_list|,
 literal|"whod.%s"
@@ -1552,6 +1561,27 @@ name|whod
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: rwhod [-m [ttl]]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1948,11 +1978,11 @@ operator|!
 name|utmp
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_WARNING
 argument_list|,
-literal|"rwhod: malloc failed\n"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|utmpsize
@@ -2003,18 +2033,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"rwhod: %s: %s\n"
+literal|"read(%s): %m"
 argument_list|,
 name|_PATH_UTMP
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
