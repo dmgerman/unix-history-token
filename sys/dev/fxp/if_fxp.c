@@ -1925,7 +1925,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Enable bus mastering. Enable memory/port space too, in case 	 * BIOS/Prom forgot about it. 	 */
+comment|/* 	 * Enable bus mastering. 	 */
 name|pci_enable_busmaster
 argument_list|(
 name|dev
