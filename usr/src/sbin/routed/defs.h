@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)defs.h	5.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -122,6 +122,46 @@ end_decl_stmt
 
 begin_comment
 comment|/* source and sink of all data */
+end_comment
+
+begin_decl_stmt
+name|int
+name|r
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* routing socket */
+end_comment
+
+begin_decl_stmt
+name|pid_t
+name|pid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* process id for identifying messages */
+end_comment
+
+begin_decl_stmt
+name|uid_t
+name|uid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user id for identifying messages */
+end_comment
+
+begin_decl_stmt
+name|int
+name|seqno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sequence number for identifying messages */
 end_comment
 
 begin_decl_stmt
@@ -286,6 +326,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|inet_maskof
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sndmsg
 parameter_list|()
 function_decl|;
@@ -304,6 +351,34 @@ name|cleanup
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|rtioctl
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ADD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DELETE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHANGE
+value|3
+end_define
 
 end_unit
 

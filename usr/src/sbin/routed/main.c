@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.23 (Berkeley) %G%"
+literal|"@(#)main.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,6 +308,45 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
+name|r
+operator|=
+name|socket
+argument_list|(
+name|AF_ROUTE
+argument_list|,
+name|SOCK_RAW
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* later, get smart about lookingforinterfaces */
+if|if
+condition|(
+name|r
+condition|)
+name|shutdown
+argument_list|(
+name|r
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* for now, don't want reponses */
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"routed: no routing socket\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|s
 operator|=
 name|getsocket
