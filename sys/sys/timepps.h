@@ -398,7 +398,7 @@ comment|/* capture information */
 name|struct
 name|timehands
 modifier|*
-name|captc
+name|capth
 decl_stmt|;
 name|u_int
 name|capgen
