@@ -2400,7 +2400,9 @@ argument_list|(
 name|curpcb
 argument_list|)
 operator|->
-name|pcb_savefpu
+name|pcb_save
+operator|.
+name|sv_87
 operator|.
 name|sv_env
 operator|.
@@ -2411,7 +2413,9 @@ argument_list|(
 name|curpcb
 argument_list|)
 operator|->
-name|pcb_savefpu
+name|pcb_save
+operator|.
+name|sv_87
 operator|.
 name|sv_env
 operator|.
