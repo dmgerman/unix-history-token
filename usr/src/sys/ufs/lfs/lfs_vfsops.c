@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.86 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.87 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1432,6 +1432,39 @@ name|devvp
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ump
+operator|->
+name|um_bptrtodb
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ump
+operator|->
+name|um_seqinc
+operator|=
+literal|1
+operator|<<
+name|fs
+operator|->
+name|lfs_fsbtodb
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ump
+operator|->
+name|um_nindir
+operator|=
+name|fs
+operator|->
+name|lfs_nindir
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
@@ -1844,6 +1877,8 @@ operator|->
 name|lfs_ivnode
 operator|->
 name|v_dirtyblkhd
+operator|.
+name|le_next
 condition|)
 name|panic
 argument_list|(
