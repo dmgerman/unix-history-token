@@ -341,7 +341,7 @@ name|kargs
 operator|->
 name|bootinfo
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* 	 * We only want the PXE disk to try to init itself in the below 	 * walk through devsw if we actually booted off of PXE. 	 */
@@ -576,7 +576,7 @@ name|kargs
 operator|->
 name|bootinfo
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
