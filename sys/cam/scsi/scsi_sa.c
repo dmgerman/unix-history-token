@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $FreeBSD$  *  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *  * Substantial subsequent modifications  * Copyright (c) 1999 Matthew Jacob  *  NASA Ames Research Center,  *  Feral Software  */
+comment|/*  * $FreeBSD$  *  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1999, 2000 Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -478,17 +478,17 @@ name|SA_QUIRK_NOCOMP
 init|=
 literal|0x01
 block|,
-comment|/* Can't deal with compression at all */
+comment|/* can't deal with compression at all */
 name|SA_QUIRK_FIXED
 init|=
 literal|0x02
 block|,
-comment|/* Force fixed mode */
+comment|/* force fixed mode */
 name|SA_QUIRK_VARIABLE
 init|=
 literal|0x04
 block|,
-comment|/* Force variable mode */
+comment|/* force variable mode */
 name|SA_QUIRK_2FM
 init|=
 literal|0x08
@@ -502,12 +502,7 @@ comment|/* No more than 1 File Mark at EOD */
 name|SA_QUIRK_NODREAD
 init|=
 literal|0x20
-block|,
 comment|/* Don't try and dummy read density */
-name|SA_QUIRK_NO_MODESEL
-init|=
-literal|0x40
-comment|/* Don't do mode select at all */
 block|}
 name|sa_quirks
 typedef|;
@@ -842,30 +837,6 @@ name|sa_quirk_table
 index|[]
 init|=
 block|{
-block|{
-block|{
-name|T_SEQUENTIAL
-block|,
-name|SIP_MEDIA_REMOVABLE
-block|,
-literal|"OnStream"
-block|,
-literal|"ADR*"
-block|,
-literal|"*"
-block|}
-block|,
-name|SA_QUIRK_FIXED
-operator||
-name|SA_QUIRK_NODREAD
-operator||
-name|SA_QUIRK_1FM
-operator||
-name|SA_QUIRK_NO_MODESEL
-block|,
-literal|32768
-block|}
-block|,
 block|{
 block|{
 name|T_SEQUENTIAL
@@ -8620,16 +8591,6 @@ operator|&&
 operator|(
 name|softc
 operator|->
-name|quirks
-operator|&
-name|SA_QUIRK_NO_MODESEL
-operator|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|softc
-operator|->
 name|media_blksize
 operator|!=
 name|softc
@@ -9018,23 +8979,11 @@ name|SA_FLAG_COMP_UNSUPP
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|softc
 operator|->
 name|buffer_mode
 operator|==
 name|SMH_SA_BUF_MODE_NOBUF
-operator|)
-operator|&&
-operator|(
-name|softc
-operator|->
-name|quirks
-operator|&
-name|SA_QUIRK_NO_MODESEL
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|error
@@ -9066,25 +9015,6 @@ name|buffer_mode
 operator|=
 name|SMH_SA_BUF_MODE_SIBUF
 expr_stmt|;
-name|xpt_print_path
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"unable to set buffered mode\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* not an error */
 block|}
 if|if
 condition|(
