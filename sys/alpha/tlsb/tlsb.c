@@ -1150,6 +1150,13 @@ literal|2
 expr_stmt|;
 break|break;
 default|default:
+name|printf
+argument_list|(
+literal|"tlsb_add_child: unknown TLSB node type 0x%x\n"
+argument_list|,
+name|dtype
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 for|for
@@ -1190,7 +1197,9 @@ name|cd
 operator|==
 name|NULL
 condition|)
+block|{
 return|return;
+block|}
 name|device_set_ivars
 argument_list|(
 name|cd
