@@ -1539,6 +1539,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|wi_cmd_count
+operator|=
+literal|500
+expr_stmt|;
 comment|/* Reset the NIC. */
 if|if
 condition|(
@@ -2092,6 +2098,21 @@ operator|->
 name|sc_flags
 operator||=
 name|WI_FLAGS_HAS_SYSSCALE
+expr_stmt|;
+comment|/* 		 * Old firmware are slow, so give peace a chance. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_sta_firmware_ver
+operator|<
+literal|10000
+condition|)
+name|sc
+operator|->
+name|wi_cmd_count
+operator|=
+literal|5000
 expr_stmt|;
 if|if
 condition|(
@@ -12726,7 +12747,9 @@ for|for
 control|(
 name|i
 operator|=
-literal|500
+name|sc
+operator|->
+name|wi_cmd_count
 init|;
 name|i
 operator|>

@@ -275,6 +275,9 @@ decl_stmt|;
 name|int
 name|wi_io_addr
 decl_stmt|;
+name|int
+name|wi_cmd_count
+decl_stmt|;
 name|struct
 name|bpf_if
 modifier|*
