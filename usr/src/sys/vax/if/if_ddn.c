@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_ddn.c	7.1 (Berkeley) %G% */
+comment|/*	@(#)if_ddn.c	7.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -2227,7 +2227,7 @@ condition|(
 name|ifa
 operator|->
 name|ifa_addr
-operator|.
+operator|->
 name|sa_family
 operator|!=
 name|AF_INET
