@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)temp.c	1.2 %G%"
+literal|"@(#)temp.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,9 +191,20 @@ operator|==
 operator|-
 literal|1
 condition|)
-goto|goto
-name|youlose
-goto|;
+block|{
+name|printf
+argument_list|(
+literal|"\"%s\" is not a user of this system\n"
+argument_list|,
+name|myname
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -223,8 +234,6 @@ argument_list|,
 name|myname
 argument_list|)
 expr_stmt|;
-name|youlose
-label|:
 name|err
 operator|++
 expr_stmt|;
@@ -245,6 +254,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
 name|copy
 argument_list|(
 name|uname
