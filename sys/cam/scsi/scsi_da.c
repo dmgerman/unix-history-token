@@ -990,6 +990,26 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
+comment|/* 		 * Minolta Dimage E203 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"MINOLTA"
+block|,
+literal|"DiMAGE E203"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * DIVA USB Mp3 Player. 		 * Doesn't work correctly with 6 byte reads/writes. 		 */
 block|{
 name|T_DIRECT
