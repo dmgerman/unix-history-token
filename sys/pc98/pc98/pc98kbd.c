@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pckbd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_kbd.h"
 end_include
 
@@ -3951,7 +3945,7 @@ name|struct
 name|kbdc_softc
 name|kbdc_softc
 index|[
-name|NPCKBD
+literal|1
 index|]
 init|=
 block|{
@@ -3985,11 +3979,6 @@ name|port
 operator|=
 name|IO_KBD
 expr_stmt|;
-if|if
-condition|(
-name|NPCKBD
-condition|)
-block|{
 comment|/* PC-98 has only one keyboard I/F */
 name|kbdc_softc
 index|[
@@ -4019,11 +4008,6 @@ index|[
 literal|0
 index|]
 return|;
-block|}
-return|return
-name|NULL
-return|;
-comment|/* You didn't include sc driver in your config file */
 block|}
 end_function
 
