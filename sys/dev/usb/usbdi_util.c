@@ -2327,25 +2327,22 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 name|Static
 name|void
 name|usbd_bulk_transfer_cb
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|usbd_xfer_handle
 name|xfer
-operator|,
+parameter_list|,
 name|usbd_private_handle
 name|priv
-operator|,
+parameter_list|,
 name|usbd_status
 name|status
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|Static
