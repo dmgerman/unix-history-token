@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utils.c	5.5 (Berkeley) %G%"
+literal|"@(#)utils.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,6 +328,9 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Mmap and write if less than 8M (the limit is so we don't totally 	 * trash memory on big files.  This is really a minor hack, but it 	 * wins some CPU back. 	 */
+ifdef|#
+directive|ifdef
+name|VM_AND_BUFFER_CACHE_FIXED
 if|if
 condition|(
 name|fs
@@ -422,6 +425,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 while|while
 condition|(
