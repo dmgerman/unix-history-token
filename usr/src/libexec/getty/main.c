@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -800,6 +800,12 @@ argument_list|(
 name|ttyn
 argument_list|,
 literal|0622
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Delay the open so DTR stays down long enough to be detected. 		 */
+name|sleep
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 while|while
