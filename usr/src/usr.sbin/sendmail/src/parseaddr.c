@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.27 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.27.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5118,6 +5118,15 @@ name|NULL
 operator|)
 return|;
 block|}
+name|a
+operator|->
+name|q_host
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 else|else
 name|a
 operator|->
