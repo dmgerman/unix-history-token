@@ -384,6 +384,10 @@ define|#
 directive|define
 name|WI_FLAGS_HAS_DIVERSITY
 value|0x40
+define|#
+directive|define
+name|WI_FLAGS_HAS_HOSTAP
+value|0x80
 name|int
 name|wi_if_flags
 decl_stmt|;
