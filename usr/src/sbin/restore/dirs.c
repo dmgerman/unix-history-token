@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.14 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,7 +215,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|long
+name|off_t
 name|rst_telldir
 parameter_list|()
 function_decl|;
@@ -795,10 +795,6 @@ decl_stmt|;
 name|daddr_t
 name|bpt
 decl_stmt|;
-name|off_t
-name|rst_telldir
-parameter_list|()
-function_decl|;
 name|char
 name|locname
 index|[
@@ -1947,10 +1943,6 @@ decl_stmt|,
 name|base
 decl_stmt|;
 block|{
-name|off_t
-name|rst_telldir
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|loc
