@@ -5905,8 +5905,6 @@ name|CMD_GET_TOC
 argument_list|,
 literal|1
 argument_list|,
-name|part
-operator|+
 literal|1
 argument_list|)
 expr_stmt|;
