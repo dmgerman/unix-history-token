@@ -6616,7 +6616,7 @@ operator|->
 name|if_metric
 expr_stmt|;
 comment|/* we could do in(6)_socktrim here, but just omit it at this moment. */
-comment|/* 	 * Special case: 	 * If the destination address is specified for a point-to-point 	 * interface, install a route to the destination as an interface 	 * direct route. 	 */
+comment|/* 	 * Special case: 	 * If a new destination address is specified for a point-to-point 	 * interface, install a route to the destination as an interface 	 * direct route. 	 * XXX: the logic below rejects assigning multiple addresses on a p2p 	 * interface that share a same destination. 	 */
 name|plen
 operator|=
 name|in6_mask2len
@@ -6634,6 +6634,15 @@ expr_stmt|;
 comment|/* XXX */
 if|if
 condition|(
+operator|!
+operator|(
+name|ia
+operator|->
+name|ia_flags
+operator|&
+name|IFA_ROUTE
+operator|)
+operator|&&
 name|plen
 operator|==
 literal|128
