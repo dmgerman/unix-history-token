@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.24 1999/03/17 11:42:18 gpalmer Exp $"
+literal|"$Id: kbdcontrol.c,v 1.25 1999/05/09 04:57:51 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -948,6 +948,14 @@ operator||
 literal|0x100
 return|;
 case|case
+name|TPREV
+case|:
+return|return
+name|PREV
+operator||
+literal|0x100
+return|;
+case|case
 name|TRCTR
 case|:
 return|return
@@ -1853,6 +1861,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PREV
+operator||
+literal|0x100
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" pscr  "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|RCTR
 operator||
 literal|0x100
@@ -2696,6 +2717,15 @@ case|:
 name|printf
 argument_list|(
 literal|" NEXT, "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PREV
+case|:
+name|printf
+argument_list|(
+literal|" PREV, "
 argument_list|)
 expr_stmt|;
 break|break;
