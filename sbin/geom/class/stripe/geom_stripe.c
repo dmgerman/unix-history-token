@@ -800,7 +800,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't store metadata on %s: %s."
+literal|"Can't store metadata on %s: %s.\n"
 argument_list|,
 name|name
 argument_list|,
@@ -976,7 +976,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't clear metadata on %s: %s."
+literal|"Can't clear metadata on %s: %s.\n"
 argument_list|,
 name|name
 argument_list|,
