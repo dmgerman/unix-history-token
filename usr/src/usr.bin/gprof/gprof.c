@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.23 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,11 @@ name|char
 modifier|*
 modifier|*
 name|sp
+decl_stmt|;
+name|nltype
+modifier|*
+modifier|*
+name|timesortnlp
 decl_stmt|;
 operator|--
 name|argc
@@ -476,12 +481,24 @@ comment|/* 	 *	assign samples to procedures 	 */
 name|asgnsamples
 argument_list|()
 expr_stmt|;
-comment|/* 	 *	print the usual profile 	 */
+comment|/* 	 *	assemble the dynamic profile 	 */
+name|timesortnlp
+operator|=
+name|doarcs
+argument_list|()
+expr_stmt|;
+comment|/* 	 *	print the dynamic profile 	 */
+name|printgprof
+argument_list|(
+name|timesortnlp
+argument_list|)
+expr_stmt|;
+comment|/* 	 *	print the flat profile 	 */
 name|printprof
 argument_list|()
 expr_stmt|;
-comment|/* 	 *	assemble and print the dynamic profile 	 */
-name|doarcs
+comment|/* 	 *	print the index 	 */
+name|printindex
 argument_list|()
 expr_stmt|;
 name|done
