@@ -116,7 +116,7 @@ parameter_list|,
 name|sw
 parameter_list|)
 define|\
-value|static int name##_modevent(module_t mod, int type, void *data) \ 	{							\ 		switch ((modeventtype_t)type) {			\ 		case MOD_LOAD:					\ 			return splash_register(&sw);		\ 		case MOD_UNLOAD:				\ 			return splash_unregister(&sw);		\ 		default:					\ 			break;					\ 		}						\ 		return 0;					\ 	}							\ 	static moduledata_t name##_mod = {			\ 		#name, 						\ 		name##_modevent,				\ 		NULL						\ 	};							\ 	DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_ANY)
+value|static int name##_modevent(module_t mod, int type, void *data) \ 	{							\ 		switch ((modeventtype_t)type) {			\ 		case MOD_LOAD:					\ 			return splash_register(&sw);		\ 		case MOD_UNLOAD:				\ 			return splash_unregister(&sw);		\ 		default:					\ 			break;					\ 		}						\ 		return 0;					\ 	}							\ 	static moduledata_t name##_mod = {			\ 		#name, 						\ 		name##_modevent,				\ 		NULL						\ 	};							\ 	DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_ANY); \ 	MODULE_DEPEND(name, splash, 1, 1, 1)
 end_define
 
 begin_define
@@ -129,7 +129,7 @@ parameter_list|,
 name|sw
 parameter_list|)
 define|\
-value|static int name##_modevent(module_t mod, int type, void *data) \ 	{							\ 		switch ((modeventtype_t)type) {			\ 		case MOD_LOAD:					\ 			return splash_register(&sw);		\ 		case MOD_UNLOAD:				\ 			return splash_unregister(&sw);		\ 		default:					\ 			break;					\ 		}						\ 		return 0;					\ 	}							\ 	static moduledata_t name##_mod = {			\ 		#name, 						\ 		name##_modevent,				\ 		NULL						\ 	};							\ 	DECLARE_MODULE(name, name##_mod, SI_SUB_PSEUDO, SI_ORDER_MIDDLE)
+value|static int name##_modevent(module_t mod, int type, void *data) \ 	{							\ 		switch ((modeventtype_t)type) {			\ 		case MOD_LOAD:					\ 			return splash_register(&sw);		\ 		case MOD_UNLOAD:				\ 			return splash_unregister(&sw);		\ 		default:					\ 			break;					\ 		}						\ 		return 0;					\ 	}							\ 	static moduledata_t name##_mod = {			\ 		#name, 						\ 		name##_modevent,				\ 		NULL						\ 	};							\ 	DECLARE_MODULE(name, name##_mod, SI_SUB_PSEUDO, SI_ORDER_MIDDLE); \ 	MODULE_DEPEND(name, splash, 1, 1, 1)
 end_define
 
 begin_comment
