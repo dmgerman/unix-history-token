@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libdisk.h"
 end_include
 
@@ -465,7 +471,7 @@ directive|ifdef
 name|DEBUG
 name|warn
 argument_list|(
-literal|"Weird parititon letter %c"
+literal|"weird partition letter %c"
 argument_list|,
 name|c2
 operator|->
@@ -1086,7 +1092,8 @@ name|strcpy
 argument_list|(
 name|device
 argument_list|,
-literal|"/dev/r"
+name|_PATH_DEV
+literal|"r"
 argument_list|)
 expr_stmt|;
 name|strcat
