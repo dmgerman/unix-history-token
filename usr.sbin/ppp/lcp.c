@@ -3168,12 +3168,11 @@ argument_list|,
 name|MB_LCPOUT
 argument_list|)
 expr_stmt|;
-name|free
+name|command_Free
 argument_list|(
+literal|1
+argument_list|,
 name|exp
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 return|return

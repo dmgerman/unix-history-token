@@ -1972,7 +1972,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"iface add: ioctl(SIOCDIFADDR%s, %s -> %s): %s\n"
+literal|"iface add: ioctl(SIOCAIFADDR%s, %s -> %s): %s\n"
 argument_list|,
 name|end
 argument_list|,
