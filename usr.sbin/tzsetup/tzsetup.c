@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tzsetup.c,v 1.8 1997/10/27 07:49:47 charnier Exp $"
+literal|"$Id: tzsetup.c,v 1.2.2.5 1997/11/07 07:36:16 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3381,6 +3381,7 @@ argument_list|,
 literal|72
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|reallydoit
@@ -3390,7 +3391,9 @@ argument_list|(
 literal|"rm -f /etc/wall_cmos_clock"
 argument_list|)
 expr_stmt|;
-elseif|else
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|reallydoit
@@ -3400,6 +3403,7 @@ argument_list|(
 literal|"touch /etc/wall_cmos_clock"
 argument_list|)
 expr_stmt|;
+block|}
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
