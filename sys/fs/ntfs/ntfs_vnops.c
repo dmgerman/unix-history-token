@@ -174,19 +174,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs.h>
+file|<fs/ntfs/ntfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_inode.h>
+file|<fs/ntfs/ntfs_inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_subr.h>
+file|<fs/ntfs/ntfs_subr.h>
 end_include
 
 begin_if

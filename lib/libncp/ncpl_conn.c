@@ -118,7 +118,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nwfs/nwfs.h>
+file|<fs/nwfs/nwfs.h>
 end_include
 
 begin_decl_stmt

@@ -1025,7 +1025,7 @@ value|VT_TFS
 end_define
 
 begin_comment
-comment|/* XXX - bug compatibility with sys/nwfs/nwfs_node.h */
+comment|/* XXX - bug compatibility with sys/fs/nwfs/nwfs_node.h */
 end_comment
 
 begin_endif

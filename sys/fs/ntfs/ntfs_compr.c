@@ -66,13 +66,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs.h>
+file|<fs/ntfs/ntfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_compr.h>
+file|<fs/ntfs/ntfs_compr.h>
 end_include
 
 begin_define

@@ -120,25 +120,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nwfs/nwfs.h>
+file|<fs/nwfs/nwfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nwfs/nwfs_mount.h>
+file|<fs/nwfs/nwfs_mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nwfs/nwfs_node.h>
+file|<fs/nwfs/nwfs_node.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nwfs/nwfs_subr.h>
+file|<fs/nwfs/nwfs_subr.h>
 end_include
 
 begin_define

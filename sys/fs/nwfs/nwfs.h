@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nwfs/nwfs_mount.h>
+file|<fs/nwfs/nwfs_mount.h>
 end_include
 
 begin_define

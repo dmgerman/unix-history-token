@@ -58,19 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs.h>
+file|<fs/ntfs/ntfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_inode.h>
+file|<fs/ntfs/ntfs_inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_ihash.h>
+file|<fs/ntfs/ntfs_ihash.h>
 end_include
 
 begin_expr_stmt

@@ -106,43 +106,43 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs.h>
+file|<fs/ntfs/ntfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfsmount.h>
+file|<fs/ntfs/ntfsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_inode.h>
+file|<fs/ntfs/ntfs_inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_vfsops.h>
+file|<fs/ntfs/ntfs_vfsops.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_subr.h>
+file|<fs/ntfs/ntfs_subr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_compr.h>
+file|<fs/ntfs/ntfs_compr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfs_ihash.h>
+file|<fs/ntfs/ntfs_ihash.h>
 end_include
 
 begin_if

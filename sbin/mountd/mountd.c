@@ -160,7 +160,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ntfs/ntfsmount.h>
+file|<fs/ntfs/ntfsmount.h>
 end_include
 
 begin_include
