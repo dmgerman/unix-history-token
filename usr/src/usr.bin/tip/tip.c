@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.13 (Berkeley) %G%"
+literal|"@(#)tip.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2719,9 +2719,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: unknown parity value\n"
+literal|"%s: unknown parity value\r\n"
 argument_list|,
-name|PA
+name|parity
 argument_list|)
 expr_stmt|;
 name|fflush
