@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.9		%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.10		%G% */
 end_comment
 
 begin_ifndef
@@ -77,7 +77,7 @@ name|bit
 parameter_list|,
 name|word
 parameter_list|)
-value|((word)& (bit))
+value|(((word)& (bit)) != 0)
 end_define
 
 begin_comment
