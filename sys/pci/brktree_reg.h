@@ -1453,6 +1453,11 @@ decl_stmt|;
 name|u_char
 name|dbx
 decl_stmt|;
+comment|/* Has DBX chip? */
+name|u_char
+name|msp3400c
+decl_stmt|;
+comment|/* Has msp3400c chip? */
 name|u_char
 name|eepromAddr
 decl_stmt|;
@@ -1500,6 +1505,16 @@ decl_stmt|;
 comment|/* frame rate . for ntsc is 30 frames per second */
 name|int
 name|frame_rate
+decl_stmt|;
+comment|/* A-delay and B-delay */
+name|u_char
+name|adelay
+decl_stmt|,
+name|bdelay
+decl_stmt|;
+comment|/* Iform XTSEL value */
+name|int
+name|iform_xtsel
 decl_stmt|;
 block|}
 struct|;

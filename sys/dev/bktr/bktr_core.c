@@ -1137,10 +1137,7 @@ name|format_params
 index|[]
 init|=
 block|{
-define|#
-directive|define
-name|FORMAT_PARAMS_NTSC525
-value|0
+comment|/* # define BT848_IFORM_F_AUTO             (0x0) - don't matter. */
 block|{
 literal|525
 block|,
@@ -1159,12 +1156,69 @@ block|,
 literal|780
 block|,
 literal|30
+block|,
+literal|0x68
+block|,
+literal|0x5d
+block|,
+literal|0
 block|}
 block|,
-define|#
-directive|define
-name|FORMAT_PARAMS_PAL625
-value|1
+comment|/* # define BT848_IFORM_F_NTSCM            (0x1) */
+block|{
+literal|525
+block|,
+literal|22
+block|,
+literal|480
+block|,
+literal|910
+block|,
+literal|135
+block|,
+literal|754
+block|,
+literal|640
+block|,
+literal|780
+block|,
+literal|30
+block|,
+literal|0x68
+block|,
+literal|0x5d
+block|,
+name|BT848_IFORM_X_XT0
+block|}
+block|,
+comment|/* # define BT848_IFORM_F_NTSCJ            (0x2) */
+block|{
+literal|525
+block|,
+literal|22
+block|,
+literal|480
+block|,
+literal|910
+block|,
+literal|135
+block|,
+literal|754
+block|,
+literal|640
+block|,
+literal|780
+block|,
+literal|30
+block|,
+literal|0x68
+block|,
+literal|0x5d
+block|,
+name|BT848_IFORM_X_XT0
+block|}
+block|,
+comment|/* # define BT848_IFORM_F_PALBDGHI         (0x3) */
 block|{
 literal|625
 block|,
@@ -1183,8 +1237,123 @@ block|,
 literal|944
 block|,
 literal|25
+block|,
+literal|0x7f
+block|,
+literal|0x72
+block|,
+name|BT848_IFORM_X_XT1
 block|}
+block|,
+comment|/* # define BT848_IFORM_F_PALM             (0x4) */
+block|{
+literal|525
+block|,
+literal|22
+block|,
+literal|480
+block|,
+literal|910
+block|,
+literal|135
+block|,
+literal|754
+block|,
+literal|640
+block|,
+literal|780
+block|,
+literal|30
+block|,
+literal|0x68
+block|,
+literal|0x5d
+block|,
+name|BT848_IFORM_X_XT0
 block|}
+block|,
+comment|/*{ 625, 32, 576,  910, 186, 922, 640,  780, 25, 0x68, 0x5d, BT848_IFORM_X_XT0 }, */
+comment|/* # define BT848_IFORM_F_PALN             (0x5) */
+block|{
+literal|625
+block|,
+literal|32
+block|,
+literal|576
+block|,
+literal|1135
+block|,
+literal|186
+block|,
+literal|922
+block|,
+literal|768
+block|,
+literal|944
+block|,
+literal|25
+block|,
+literal|0x7f
+block|,
+literal|0x72
+block|,
+name|BT848_IFORM_X_XT1
+block|}
+block|,
+comment|/* # define BT848_IFORM_F_SECAM            (0x6) */
+block|{
+literal|625
+block|,
+literal|32
+block|,
+literal|576
+block|,
+literal|1135
+block|,
+literal|186
+block|,
+literal|922
+block|,
+literal|768
+block|,
+literal|944
+block|,
+literal|25
+block|,
+literal|0x7f
+block|,
+literal|0x00
+block|,
+name|BT848_IFORM_X_XT1
+block|}
+block|,
+comment|/* # define BT848_IFORM_F_RSVD             (0x7) - ???? */
+block|{
+literal|625
+block|,
+literal|32
+block|,
+literal|576
+block|,
+literal|1135
+block|,
+literal|186
+block|,
+literal|922
+block|,
+literal|768
+block|,
+literal|944
+block|,
+literal|25
+block|,
+literal|0x7f
+block|,
+literal|0x72
+block|,
+name|BT848_IFORM_X_XT0
+block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1877,6 +2046,24 @@ value|0xb7
 end_define
 
 begin_comment
+comment|/* address of MSP3400C chip */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSP3400C_WADDR
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSP3400C_RADDR
+value|0x81
+end_define
+
+begin_comment
 comment|/* EEProm (128 * 8) on an STB card */
 end_comment
 
@@ -2016,7 +2203,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_AUDIOMUX_BITS
-value|0x07
+value|0x0f
 end_define
 
 begin_comment
@@ -4153,7 +4340,7 @@ name|bktr
 operator|->
 name|format_params
 operator|=
-name|FORMAT_PARAMS_NTSC525
+name|BT848_IFORM_F_NTSCM
 expr_stmt|;
 name|bktr
 operator|->
@@ -4416,7 +4603,7 @@ name|gpio_out_en
 operator|=
 name|GPIO_AUDIOMUX_BITS
 expr_stmt|;
-comment|/* unmure the audio stream */
+comment|/* unmute the audio stream */
 name|set_audio
 argument_list|(
 name|bktr
@@ -5589,7 +5776,16 @@ name|bt848
 operator|->
 name|iform
 operator||=
+operator|(
 name|temp
+operator||
+name|format_params
+index|[
+name|temp
+index|]
+operator|.
+name|iform_xtsel
+operator|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -5621,9 +5817,6 @@ case|:
 case|case
 name|BT848_IFORM_F_NTSCJ
 case|:
-case|case
-name|BT848_IFORM_F_PALM
-case|:
 name|bktr
 operator|->
 name|flags
@@ -5643,19 +5836,29 @@ name|bt848
 operator|->
 name|adelay
 operator|=
-literal|0x68
+name|format_params
+index|[
+name|temp
+index|]
+operator|.
+name|adelay
 expr_stmt|;
 name|bt848
 operator|->
 name|bdelay
 operator|=
-literal|0x5d
+name|format_params
+index|[
+name|temp
+index|]
+operator|.
+name|bdelay
 expr_stmt|;
 name|bktr
 operator|->
 name|format_params
 operator|=
-name|FORMAT_PARAMS_NTSC525
+name|temp
 expr_stmt|;
 break|break;
 case|case
@@ -5669,6 +5872,9 @@ name|BT848_IFORM_F_SECAM
 case|:
 case|case
 name|BT848_IFORM_F_RSVD
+case|:
+case|case
+name|BT848_IFORM_F_PALM
 case|:
 name|bktr
 operator|->
@@ -5689,20 +5895,31 @@ name|bt848
 operator|->
 name|adelay
 operator|=
-literal|0x7f
+name|format_params
+index|[
+name|temp
+index|]
+operator|.
+name|adelay
 expr_stmt|;
 name|bt848
 operator|->
 name|bdelay
 operator|=
-literal|0x72
+name|format_params
+index|[
+name|temp
+index|]
+operator|.
+name|bdelay
 expr_stmt|;
 name|bktr
 operator|->
 name|format_params
 operator|=
-name|FORMAT_PARAMS_PAL625
+name|temp
 expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
@@ -5773,7 +5990,7 @@ name|bktr
 operator|->
 name|format_params
 operator|=
-name|FORMAT_PARAMS_NTSC525
+name|BT848_IFORM_F_NTSCM
 expr_stmt|;
 break|break;
 case|case
@@ -5823,7 +6040,7 @@ name|bktr
 operator|->
 name|format_params
 operator|=
-name|FORMAT_PARAMS_PAL625
+name|BT848_IFORM_F_PALBDGHI
 expr_stmt|;
 break|break;
 case|case
@@ -15129,6 +15346,8 @@ block|,
 comment|/* dbx unknown */
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm unknown */
 literal|0
 block|,
@@ -15159,6 +15378,8 @@ block|,
 comment|/* dbx unknown */
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm unknown */
 literal|0
 block|,
@@ -15170,7 +15391,7 @@ literal|0x01
 block|,
 literal|0x00
 block|,
-literal|0x00
+literal|0x0a
 block|,
 literal|1
 block|}
@@ -15188,6 +15409,8 @@ comment|/* the tuner */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 name|PFC8582_WADDR
 block|,
 comment|/* EEProm type */
@@ -15226,6 +15449,8 @@ comment|/* the tuner */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 name|X24C01_WADDR
 block|,
 comment|/* EEProm type */
@@ -15261,6 +15486,8 @@ comment|/* the 'name' */
 name|NULL
 block|,
 comment|/* the tuner */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -15338,6 +15565,20 @@ define|#
 directive|define
 name|PHILIPS_SECAM
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMIC_PALI
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_PALI
+value|8
 end_define
 
 begin_comment
@@ -15625,6 +15866,69 @@ block|,
 literal|0x30
 block|}
 block|}
+block|,
+comment|/* the band-switch values */
+comment|/* TEMIC_PAL I */
+block|{
+literal|"Temic PAL I"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+name|TEMIC_PALI_WADDR
+block|,
+comment|/* PLL write address */
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* PHILIPS_PAL */
+block|{
+literal|"Philips PAL I"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+literal|0x00
+block|,
+comment|/* PLL write address */
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|}
+block|}
+block|,
 comment|/* the band-switch values */
 block|}
 decl_stmt|;
@@ -15777,6 +16081,15 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+name|bt848_ptr_t
+name|bt848
+decl_stmt|;
+name|bt848
+operator|=
+name|bktr
+operator|->
+name|base
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -15801,6 +16114,25 @@ name|checkTuner
 goto|;
 endif|#
 directive|endif
+name|bt848
+operator|->
+name|gpio_out_en
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"bktr: GPIO is 0x%08x\n"
+argument_list|,
+name|bt848
+operator|->
+name|gpio_data
+argument_list|)
+expr_stmt|;
 comment|/* look for a tuner */
 if|if
 condition|(
@@ -15951,6 +16283,162 @@ goto|;
 endif|#
 directive|endif
 comment|/* differentiate type of tuner */
+switch|switch
+condition|(
+name|card
+condition|)
+block|{
+case|case
+name|CARD_MIRO
+case|:
+switch|switch
+condition|(
+operator|(
+operator|(
+name|bt848
+operator|->
+name|gpio_data
+operator|>>
+literal|10
+operator|)
+operator|-
+literal|1
+operator|)
+operator|&
+literal|7
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|TEMIC_PAL
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|PHILIPS_PAL
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|PHILIPS_NTSC
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|PHILIPS_SECAM
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|NO_TUNER
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|5
+case|:
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|PHILIPS_PALI
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|6
+case|:
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|TEMIC_NTSC
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|7
+case|:
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|TEMIC_PALI
+index|]
+expr_stmt|;
+break|break;
+block|}
+break|break;
+default|default:
 if|if
 condition|(
 name|i2cRead
@@ -16056,6 +16544,7 @@ index|[
 name|NO_TUNER
 index|]
 expr_stmt|;
+block|}
 name|checkDBX
 label|:
 if|#
@@ -16094,6 +16583,25 @@ operator|->
 name|card
 operator|.
 name|dbx
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|i2cRead
+argument_list|(
+name|bktr
+argument_list|,
+name|MSP3400C_RADDR
+argument_list|)
+operator|!=
+name|ABSENT
+condition|)
+name|bktr
+operator|->
+name|card
+operator|.
+name|msp3400c
 operator|=
 literal|1
 expr_stmt|;
@@ -16145,6 +16653,19 @@ condition|)
 name|printf
 argument_list|(
 literal|", dbx stereo"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bktr
+operator|->
+name|card
+operator|.
+name|msp3400c
+condition|)
+name|printf
+argument_list|(
+literal|", msp3400c stereo"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -18498,6 +19019,10 @@ end_comment
 
 begin_comment
 comment|/* c-tab-always-indent: nil */
+end_comment
+
+begin_comment
+comment|/* tab-width: 8 */
 end_comment
 
 begin_comment
