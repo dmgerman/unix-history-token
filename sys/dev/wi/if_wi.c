@@ -1408,6 +1408,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|LINKSYS2
+argument_list|,
+name|IWN
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|SAMSUNG
 argument_list|,
 name|SWL_2000N
