@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.9 81/12/20 */
+comment|/* mbuf.h 4.10 81/12/23 */
 end_comment
 
 begin_comment
@@ -376,6 +376,10 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|m_copy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|m_pullup
 argument_list|()
 decl_stmt|;
 end_decl_stmt
