@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -298,9 +298,9 @@ name|proc
 operator|*
 name|p
 operator|,
-name|int
+name|void
 operator|*
-name|regs
+name|framep
 operator|)
 argument_list|)
 decl_stmt|;
@@ -313,11 +313,11 @@ end_comment
 begin_function
 name|main
 parameter_list|(
-name|regs
+name|framep
 parameter_list|)
-name|int
+name|void
 modifier|*
-name|regs
+name|framep
 decl_stmt|;
 block|{
 specifier|register
@@ -1398,7 +1398,7 @@ name|start_init
 argument_list|(
 name|curproc
 argument_list|,
-name|regs
+name|framep
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1525,16 +1525,16 @@ name|start_init
 parameter_list|(
 name|p
 parameter_list|,
-name|regs
+name|framep
 parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|void
 modifier|*
-name|regs
+name|framep
 decl_stmt|;
 block|{
 name|vm_offset_t
@@ -1581,14 +1581,13 @@ name|initproc
 operator|=
 name|p
 expr_stmt|;
-comment|/* 	 * We need to set p->p_md.md_regs since start_init acts like a 	 * system call and references the regs to set the entry point 	 * (see setregs) when it tries to exec.  On regular fork, the 	 * p->p_md.md_regs of the child is undefined since it is set on 	 * each system call.  The startup code in "locore.s" has arranged 	 * that there be some place to set "p->p_md.md_regs" to, and 	 * passed a pointer to that place as main's argument. 	 */
+comment|/* 	 * We need to set the system call frame as if we were entered through 	 * a syscall() so that when we call execve() below, it will be able 	 * to set the entry point (see setregs) when it tries to exec.  The 	 * startup code in "locore.s" has allocated space for the frame and 	 * passed a pointer to that space as main's argument. 	 */
+name|cpu_set_init_frame
+argument_list|(
 name|p
-operator|->
-name|p_md
-operator|.
-name|md_regs
-operator|=
-name|regs
+argument_list|,
+name|framep
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Need just enough stack to hold the faked-up "execve()" arguments. 	 */
 name|addr
