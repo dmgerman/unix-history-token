@@ -545,7 +545,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|BETTER_CLOCK
+name|__i386__
 argument_list|)
 name|forward_hardclock
 argument_list|(
@@ -1100,7 +1100,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|BETTER_CLOCK
+name|__i386__
 argument_list|)
 if|if
 condition|(
@@ -1232,7 +1232,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|BETTER_CLOCK
+name|__i386__
 argument_list|)
 if|if
 condition|(
