@@ -910,12 +910,6 @@ comment|/* make sure we're updating */
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VINUMDEBUG
-end_ifdef
-
 begin_function
 name|void
 name|vinum_debug
@@ -938,6 +932,15 @@ name|struct
 name|debuginfo
 name|info
 decl_stmt|;
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_HASDEBUG
+condition|)
+block|{
 if|if
 condition|(
 name|argc
@@ -993,12 +996,17 @@ name|info
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+comment|/* no debug in kernel module */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Kernel module does not have debug support\n"
+argument_list|)
+expr_stmt|;
+block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
