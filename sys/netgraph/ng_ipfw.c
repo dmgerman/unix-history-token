@@ -1222,7 +1222,25 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+comment|/* which is ignored */
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|&&
 operator|(
 name|m
 operator|=
@@ -1242,10 +1260,9 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENOMEM
+name|EINVAL
 operator|)
 return|;
-comment|/* which is ignored */
 name|ip
 operator|=
 name|mtod
