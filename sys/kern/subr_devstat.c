@@ -1437,7 +1437,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_devstat
 argument_list|,
