@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.9 1995/09/06 09:29:18 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.10 1995/09/06 23:15:54 julian Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -2362,6 +2362,12 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 return|;
 case|case
@@ -2825,7 +2831,7 @@ modifier|*
 name|ap
 parameter_list|)
 comment|/*proto*/
-comment|/*struct vop_readdir_args {                 struct vnode *a_vp;                 struct uio *a_uio;                 struct ucred *a_cred;         } */
+comment|/*struct vop_readdir_args {                 struct vnode *a_vp;                 struct uio *a_uio;                 struct ucred *a_cred;         	int *eofflag;         	int *ncookies;         	u_int **cookies;         } */
 block|{
 name|struct
 name|vnode
@@ -3860,6 +3866,9 @@ name|vnode
 modifier|*
 name|vn_p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PARANOID
 if|if
 condition|(
 operator|!
@@ -3872,24 +3881,14 @@ literal|"devfs: dn count dropped too early\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|vn_p
 operator|=
 name|dnp
 operator|->
 name|vn
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|vn_p
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"devfs: vn count dropped too early\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * check if we have a vnode....... 	 */
 if|if
 condition|(

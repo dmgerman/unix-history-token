@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.4 1995/09/03 05:43:42 julian Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.5 1995/09/06 09:29:17 julian Exp $  *  *  */
 end_comment
 
 begin_include
@@ -444,7 +444,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|devfs_make_plane
+name|dev_dup_plane
 argument_list|(
 name|devfs_mp_p
 argument_list|)
