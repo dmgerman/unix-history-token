@@ -63,6 +63,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LDBL_NBIT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|LDBL_MANH_SIZE
 value|48
 end_define

@@ -53,11 +53,18 @@ end_union
 begin_define
 define|#
 directive|define
+name|LDBL_NBIT
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|mask_nbit_l
 parameter_list|(
 name|u
 parameter_list|)
-value|((u).bits.manh&= 0x7fffffff)
+value|((u).bits.manh&= ~LDBL_NBIT)
 end_define
 
 begin_define
