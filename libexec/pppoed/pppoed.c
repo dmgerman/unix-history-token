@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999-2001 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -223,7 +223,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-Fd] [-P pidfile] [-a name] [-e exec]"
+literal|"Usage: %s [-Fd] [-P pidfile] [-a name] [-e exec | -l label]"
 literal|" [-p provider] interface\n"
 argument_list|,
 name|prog
@@ -248,14 +248,6 @@ name|ReceivedSignal
 operator|=
 name|sig
 expr_stmt|;
-name|signal
-argument_list|(
-name|sig
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-comment|/* If something makes us block... */
 block|}
 end_function
 
@@ -2344,6 +2336,9 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|label
+decl_stmt|,
+modifier|*
 name|prog
 decl_stmt|,
 modifier|*
@@ -2355,6 +2350,10 @@ decl_stmt|;
 name|struct
 name|ngm_connect
 name|ngc
+decl_stmt|;
+name|struct
+name|sigaction
+name|act
 decl_stmt|;
 name|int
 name|ch
@@ -2413,6 +2412,10 @@ name|exec
 operator|=
 name|NULL
 expr_stmt|;
+name|label
+operator|=
+name|NULL
+expr_stmt|;
 name|acname
 operator|=
 name|NULL
@@ -2440,7 +2443,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"FP:a:de:n:p:"
+literal|"FP:a:de:l:n:p:"
 argument_list|)
 operator|)
 operator|!=
@@ -2489,6 +2492,14 @@ case|case
 literal|'e'
 case|:
 name|exec
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|label
 operator|=
 name|optarg
 expr_stmt|;
@@ -2547,13 +2558,39 @@ return|;
 if|if
 condition|(
 name|exec
+operator|!=
+name|NULL
+operator|&&
+name|label
+operator|!=
+name|NULL
+condition|)
+return|return
+name|usage
+argument_list|(
+name|prog
+argument_list|)
+return|;
+if|if
+condition|(
+name|exec
 operator|==
 name|NULL
 condition|)
 block|{
 if|if
 condition|(
+name|label
+operator|==
+name|NULL
+condition|)
+name|label
+operator|=
 name|provider
+expr_stmt|;
+if|if
+condition|(
+name|label
 operator|==
 name|NULL
 condition|)
@@ -2562,7 +2599,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Either a provider or an exec command"
+literal|"%s: Either a provider, a label or an exec command"
 literal|" must be given\n"
 argument_list|,
 name|prog
@@ -2588,7 +2625,7 @@ name|DEFAULT_EXEC_PREFIX
 operator|+
 name|strlen
 argument_list|(
-name|provider
+name|label
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2617,7 +2654,7 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|provider
+name|label
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2641,7 +2678,7 @@ name|DEFAULT_EXEC_PREFIX
 operator|-
 literal|1
 argument_list|,
-name|provider
+name|label
 argument_list|)
 expr_stmt|;
 block|}
@@ -2917,32 +2954,75 @@ argument_list|,
 name|nglogx
 argument_list|)
 expr_stmt|;
-name|signal
+name|memset
+argument_list|(
+operator|&
+name|act
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|act
+argument_list|)
+expr_stmt|;
+name|act
+operator|.
+name|sa_handler
+operator|=
+name|Farewell
+expr_stmt|;
+name|act
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|act
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sigaction
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|Farewell
+operator|&
+name|act
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
-name|Farewell
+operator|&
+name|act
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigaction
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|Farewell
+operator|&
+name|act
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigaction
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|Farewell
+operator|&
+name|act
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 while|while
