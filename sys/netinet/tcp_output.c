@@ -1139,6 +1139,14 @@ operator|-
 name|off
 operator|)
 expr_stmt|;
+comment|/* 			 * Don't remove this (len> 0) check ! 			 * We explicitly check for len> 0 here (although it  			 * isn't really necessary), to work around a gcc  			 * optimization issue - to force gcc to compute 			 * len above. Without this check, the computation 			 * of len is bungled by the optimizer. 			 */
+if|if
+condition|(
+name|len
+operator|>
+literal|0
+condition|)
+block|{
 name|cwin
 operator|=
 name|tp
@@ -1176,6 +1184,7 @@ argument_list|,
 name|cwin
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	 * Lop off SYN bit if it has already been sent.  However, if this 	 * is SYN-SENT state and if segment contains data and if we don't 	 * know that foreign host supports TAO, suppress sending segment. 	 */
