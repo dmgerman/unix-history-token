@@ -168,7 +168,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|thr_concurency
+name|thr_concurrency
 init|=
 literal|0
 decl_stmt|;
