@@ -997,6 +997,18 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"deviceTry: attempting to open %s\n"
+argument_list|,
+name|try
+argument_list|)
+expr_stmt|;
 name|fd
 operator|=
 name|open
@@ -1012,9 +1024,23 @@ name|fd
 operator|>=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"deviceTry: open of %s succeeded on first try.\n"
+argument_list|,
+name|try
+argument_list|)
+expr_stmt|;
 return|return
 name|fd
 return|;
+block|}
 name|m
 operator|=
 literal|0640
@@ -1040,6 +1066,42 @@ name|d
 operator|=
 name|makedev
 argument_list|(
+name|dev
+operator|.
+name|major
+argument_list|,
+name|dev
+operator|.
+name|minor
+operator|+
+operator|(
+name|i
+operator|*
+name|dev
+operator|.
+name|delta
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"deviceTry: Making %s device for %s [%d, %d]\n"
+argument_list|,
+name|m
+operator|&
+name|S_IFCHR
+condition|?
+literal|"raw"
+else|:
+literal|"block"
+argument_list|,
+name|try
+argument_list|,
 name|dev
 operator|.
 name|major
@@ -1083,9 +1145,23 @@ name|fd
 operator|>=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"deviceTry: open of %s succeeded on second try.\n"
+argument_list|,
+name|try
+argument_list|)
+expr_stmt|;
 return|return
 name|fd
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1119,6 +1195,20 @@ argument_list|(
 name|try
 argument_list|,
 name|O_RDONLY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"deviceTry: final attempt for %s returns %d\n"
+argument_list|,
+name|try
+argument_list|,
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -1734,6 +1824,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Found a network device named %s\n"
@@ -1954,6 +2049,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Found a CDROM device for %s\n"
@@ -2047,6 +2147,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Found a TAPE device for %s\n"
@@ -2347,6 +2452,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Found a floppy device for %s\n"
@@ -2512,6 +2622,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Add mapping for %s to ppp0\n"
@@ -2619,6 +2734,11 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Found a disk device named %s\n"
@@ -2725,6 +2845,11 @@ name|private
 operator|=
 name|c1
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"Found a DOS partition %s on drive %s\n"
