@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/genassym.c	7.13 (Berkeley) 12/27/92  *  *	@(#)genassym.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/genassym.c	7.13 (Berkeley) 12/27/92  *  *	@(#)genassym.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -268,18 +268,6 @@ name|main
 parameter_list|()
 block|{
 name|struct
-name|KernInter
-modifier|*
-name|KernInter
-init|=
-operator|(
-expr|struct
-name|KernInter
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-name|struct
 name|pio
 modifier|*
 name|pio
@@ -332,11 +320,22 @@ argument_list|)
 expr_stmt|;
 name|def
 argument_list|(
+literal|"KIFF_SIZE"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|KernInter
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|off
+argument_list|(
 literal|"KI_MAXADDR"
 argument_list|,
-operator|&
+expr|struct
 name|KernInter
-operator|->
+argument_list|,
 name|maxaddr
 argument_list|)
 expr_stmt|;
