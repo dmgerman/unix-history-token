@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwinfo.c	5.2 (Berkeley) %G%"
+literal|"@(#)getpwinfo.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,11 @@ file|<pwd.h>
 end_include
 
 begin_comment
-comment|/*******  *	guinfo(uid, name, path)	get passwd file info for uid  *	int uid;  *	char *path, *name;  *  *	return codes:  0  |  FAIL  *  *	modified 3/16/81 to use the "real" login name -- mcnc!dennis  *						(Dennis Rockwell)  */
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
+comment|/*  *	get passwd file info for uid  *  *	return codes:  SUCCESS  |  FAIL  *  */
 end_comment
 
 begin_macro
@@ -88,6 +92,10 @@ name|getlogin
 argument_list|()
 decl_stmt|,
 modifier|*
+name|getenv
+argument_list|()
+decl_stmt|,
+modifier|*
 name|l
 decl_stmt|;
 if|if
@@ -98,6 +106,21 @@ operator|=
 name|getlogin
 argument_list|()
 operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|l
+operator|=
+name|getenv
+argument_list|(
+literal|"USER"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|l
 operator|!=
 name|NULL
 condition|)
@@ -112,15 +135,14 @@ expr_stmt|;
 if|if
 condition|(
 name|pwd
+operator|!=
+name|NULL
+operator|&&
+name|pwd
 operator|->
 name|pw_uid
 operator|==
 name|uid
-operator|||
-operator|*
-name|l
-operator|==
-literal|'U'
 condition|)
 goto|goto
 name|setup
@@ -141,6 +163,11 @@ name|NULL
 condition|)
 block|{
 comment|/* can not find uid in passwd file */
+operator|*
+name|name
+operator|=
+literal|'\0'
+expr_stmt|;
 operator|*
 name|path
 operator|=

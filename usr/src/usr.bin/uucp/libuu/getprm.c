@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getprm.c	5.2 (Berkeley) %G%"
+literal|"@(#)getprm.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"uucp.h"
 end_include
 
 begin_define
@@ -55,6 +55,10 @@ value|1
 end_define
 
 begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
 comment|/*  *	get next parameter from s  *  *	return - pointer to next character in s  */
 end_comment
 
@@ -84,11 +88,6 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 while|while
 condition|(
 operator|*
@@ -380,15 +379,7 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
-name|char
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -485,42 +476,30 @@ return|;
 block|}
 operator|*
 name|c
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|7
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|(
-operator|*
+name|strncpy
+argument_list|(
 name|sys
-operator|++
-operator|=
-operator|*
+argument_list|,
 name|name
-operator|++
-operator|)
-operator|==
+argument_list|,
+name|MAXBASENAME
+argument_list|)
+expr_stmt|;
+name|sys
+index|[
+name|MAXBASENAME
+index|]
+operator|=
 literal|'\0'
-condition|)
-break|break;
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|rest
 argument_list|,
-operator|++
 name|c
 argument_list|)
 expr_stmt|;
