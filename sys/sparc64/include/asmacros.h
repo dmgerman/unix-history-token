@@ -6,33 +6,95 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PROC_H_
+name|_MACHINE_ASMACROS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PROC_H_
+name|_MACHINE_ASMACROS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<machine/tte.h>
-end_include
+begin_define
+define|#
+directive|define
+name|PCPU
+parameter_list|(
+name|member
+parameter_list|)
+value|%g7 + GD_ ## member
+end_define
 
-begin_struct
-struct|struct
-name|mdproc
-block|{ }
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|DEBUGGER
+parameter_list|()
+value|ta %xcc, 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PANIC
+parameter_list|(
+name|msg
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|.sect	.rodata ; \ 9:	.asciz	msg ; \ 	.previous ; \ 	setx	9b, reg, %o0 ; \ 	call	panic ; \ 	 nop
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DATA
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|.data ; \ 	.globl	name ; \ 	.type	name, @object ; \ name ## :
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMPTY
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTRY
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|.text ; \ 	.align	4 ; \ 	.globl	name ; \ 	.type	name, @function ; \ name ## :
+end_define
+
+begin_define
+define|#
+directive|define
+name|END
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|.size	name, . - name
+end_define
 
 begin_endif
 endif|#
@@ -40,7 +102,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PROC_H_ */
+comment|/* !_MACHINE_ASMACROS_H_ */
 end_comment
 
 end_unit

@@ -26,7 +26,14 @@ name|mtx
 modifier|*
 name|mtx
 parameter_list|)
-block|{ }
+block|{
+name|mtx
+operator|->
+name|mtx_savecrit
+operator||=
+name|PSTATE_IE
+expr_stmt|;
+block|}
 end_function
 
 begin_endif

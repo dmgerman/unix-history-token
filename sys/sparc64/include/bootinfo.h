@@ -6,31 +6,43 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PROC_H_
+name|_MACHINE_BOOTINFO_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PROC_H_
+name|_MACHINE_BOOTINFO_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
+begin_comment
+comment|/*  * Increment the version number when you break binary compatibiity.  */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|<machine/tte.h>
-end_include
+begin_define
+define|#
+directive|define
+name|BOOTINFO_VERSION
+value|1
+end_define
 
 begin_struct
 struct|struct
-name|mdproc
-block|{ }
+name|bootinfo
+block|{
+name|u_int
+name|bi_version
+decl_stmt|;
+name|u_long
+name|bi_end
+decl_stmt|;
+name|u_long
+name|bi_kpa
+decl_stmt|;
+name|u_long
+name|bi_metadata
+decl_stmt|;
+block|}
 struct|;
 end_struct
 
@@ -40,7 +52,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PROC_H_ */
+comment|/* !_MACHINE_BOOTINFO_H_ */
 end_comment
 
 end_unit

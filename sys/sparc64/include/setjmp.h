@@ -6,33 +6,111 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_PROC_H_
+name|_MACHINE_SETJMP_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_PROC_H_
+name|_MACHINE_SETJMP_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
+begin_define
+define|#
+directive|define
+name|_JBLEN
+value|3
+end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/tte.h>
-end_include
+begin_define
+define|#
+directive|define
+name|_JB_FP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|_JB_PC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|_JB_SP
+value|2
+end_define
+
+begin_comment
+comment|/*  * jmp_buf and sigjmp_buf are encapsulated in different structs to force  * compile-time diagnostics for mismatches.  The structs are the same  * internally to avoid some run-time errors for mismatches.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
 
 begin_struct
 struct|struct
-name|mdproc
-block|{ }
+name|_sigjmp_buf
+block|{
+name|long
+name|_sjb
+index|[
+name|_JBLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_sigjmp_buf
+name|sigjmp_buf
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|_jmp_buf
+block|{
+name|long
+name|_jb
+index|[
+name|_JBLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_jmp_buf
+name|jmp_buf
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
@@ -40,7 +118,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MACHINE_PROC_H_ */
+comment|/* !_MACHINE_SETJMP_H_ */
 end_comment
 
 end_unit

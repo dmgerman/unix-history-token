@@ -56,7 +56,7 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|gd_fpproc
+name|gd_fpcurproc
 decl_stmt|;
 name|struct
 name|proc

@@ -227,8 +227,92 @@ end_define
 begin_define
 define|#
 directive|define
-name|PAGE_SHIFT
+name|PAGE_SHIFT_8K
 value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SIZE_8K
+value|(1<<PAGE_SHIFT_8K)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_MASK_8K
+value|(PAGE_SIZE_8K-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SHIFT_64K
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SIZE_64K
+value|(1<<PAGE_SHIFT_64K)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_MASK_64K
+value|(PAGE_SIZE_64K-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SHIFT_512K
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SIZE_512K
+value|(1<<PAGE_SHIFT_512K)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_MASK_512K
+value|(PAGE_SIZE_512K-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SHIFT_4M
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SIZE_4M
+value|(1<<PAGE_SHIFT_4M)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_MASK_4M
+value|(PAGE_SIZE_4M-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAGE_SHIFT
+value|PAGE_SHIFT_8K
 end_define
 
 begin_comment
@@ -239,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_SIZE
-value|(1<<PAGE_SHIFT)
+value|PAGE_SIZE_8K
 end_define
 
 begin_comment
@@ -250,50 +334,7 @@ begin_define
 define|#
 directive|define
 name|PAGE_MASK
-value|(PAGE_SIZE-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NPTEPG
-value|(PAGE_SIZE/(sizeof (pt_entry_t)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NPDEPG
-value|(PAGE_SIZE/(sizeof (pd_entry_t)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PDRSHIFT
-value|22
-end_define
-
-begin_comment
-comment|/* LOG2(NBPDR) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NBPDR
-value|(1<<PDRSHIFT)
-end_define
-
-begin_comment
-comment|/* bytes/page dir */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PDRMASK
-value|(NBPDR-1)
+value|PAGE_MASK_8K
 end_define
 
 begin_define
@@ -469,7 +510,7 @@ name|ctob
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<<PAGE_SHIFT)
+value|((unsigned long)(x)<<PAGE_SHIFT)
 end_define
 
 begin_comment
@@ -483,11 +524,11 @@ name|btoc
 parameter_list|(
 name|x
 parameter_list|)
-value|(((unsigned)(x)+PAGE_MASK)>>PAGE_SHIFT)
+value|(((unsigned long)(x)+PAGE_MASK)>>PAGE_SHIFT)
 end_define
 
 begin_comment
-comment|/*  * btodb() is messy and perhaps slow because `bytes' may be an off_t.  We  * want to shift an unsigned type to avoid sign extension and we don't  * want to widen `bytes' unnecessarily.  Assume that the result fits in  * a daddr_t.  */
+comment|/* bytes to disk blocks */
 end_comment
 
 begin_define
@@ -499,8 +540,12 @@ name|bytes
 parameter_list|)
 comment|/* calculates (bytes / DEV_BSIZE) */
 define|\
-value|(sizeof (bytes)> sizeof(long) \ 	 ? (daddr_t)((unsigned long long)(bytes)>> DEV_BSHIFT) \ 	 : (daddr_t)((unsigned long)(bytes)>> DEV_BSHIFT))
+value|(daddr_t)((unsigned long)(bytes)>> DEV_BSHIFT)
 end_define
+
+begin_comment
+comment|/* disk blocks to bytes */
+end_comment
 
 begin_define
 define|#
@@ -511,22 +556,12 @@ name|db
 parameter_list|)
 comment|/* calculates (db * DEV_BSIZE) */
 define|\
-value|((off_t)(db)<< DEV_BSHIFT)
+value|(off_t)((unsigned long)(db)<< DEV_BSHIFT)
 end_define
 
 begin_comment
 comment|/*  * Mach derived conversion macros  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|trunc_page
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(x)& ~PAGE_MASK)
-end_define
 
 begin_define
 define|#
@@ -541,21 +576,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|trunc_4mpage
+name|trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)& ~PDRMASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|round_4mpage
-parameter_list|(
-name|x
-parameter_list|)
-value|((((unsigned long)(x)) + PDRMASK)& ~PDRMASK)
+value|((unsigned long)(x)& ~PAGE_MASK)
 end_define
 
 begin_define

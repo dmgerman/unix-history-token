@@ -19,6 +19,12 @@ begin_struct
 struct|struct
 name|pcb
 block|{
+name|u_long
+name|pcb_fp
+decl_stmt|;
+name|u_long
+name|pcb_pc
+decl_stmt|;
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;
@@ -40,7 +46,7 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|void
+name|int
 name|savectx
 parameter_list|(
 name|struct
