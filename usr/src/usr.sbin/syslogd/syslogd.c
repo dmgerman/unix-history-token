@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.26 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5829,31 +5829,33 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|char
-name|buf
-index|[
-literal|100
-index|]
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|,
+name|h_nerr
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"unknown host %s"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|h_errlist
+decl_stmt|;
 name|logerror
 argument_list|(
-name|buf
+operator|(
+name|u_int
+operator|)
+name|h_errno
+operator|<
+name|h_nerr
+condition|?
+name|h_errlist
+index|[
+name|h_errno
+index|]
+else|:
+literal|"Unknown error"
 argument_list|)
 expr_stmt|;
 break|break;
