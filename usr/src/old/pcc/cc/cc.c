@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.16 %G%"
+literal|"@(#)cc.c 4.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,7 +499,7 @@ operator|++
 expr_stmt|;
 name|crt0
 operator|=
-literal|"/lib/mcrt0.o"
+name|_PATH_MCRT0
 expr_stmt|;
 if|if
 condition|(
@@ -515,7 +515,7 @@ literal|'g'
 condition|)
 name|crt0
 operator|=
-literal|"/usr/lib/gcrt0.o"
+name|_PATH_GCRT0
 expr_stmt|;
 continue|continue;
 case|case
@@ -888,7 +888,7 @@ literal|0
 condition|)
 name|npassname
 operator|=
-literal|"/usr/new"
+name|_PATH_USRNEW
 expr_stmt|;
 if|if
 condition|(
