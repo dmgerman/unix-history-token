@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Id: $ */
+end_comment
+
+begin_comment
+comment|/* isp_freebsd.h 1.16 */
 end_comment
 
 begin_comment
@@ -398,7 +402,7 @@ name|XS_SNSLEN
 parameter_list|(
 name|xs
 parameter_list|)
-value|(sizeof (xs)->sense)
+value|(sizeof((xs)->sense))
 end_define
 
 begin_define
