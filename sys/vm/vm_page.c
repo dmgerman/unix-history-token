@@ -2269,6 +2269,13 @@ literal|"vm_page_alloc: NULL object."
 operator|)
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|!
