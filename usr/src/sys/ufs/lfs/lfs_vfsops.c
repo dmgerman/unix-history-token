@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1460,15 +1460,6 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_LOCAL
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ump
-operator|->
-name|um_relvp
-operator|=
-name|NULL
 expr_stmt|;
 end_expr_stmt
 
