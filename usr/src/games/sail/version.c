@@ -4,7 +4,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"Wooden Ships and Iron Men, Version 2.3 (84/01/19)"
+literal|"Wooden Ships and Iron Men, Version 2.4 (84/02/23)"
 decl_stmt|;
 end_decl_stmt
 
