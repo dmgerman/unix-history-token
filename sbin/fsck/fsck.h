@@ -921,6 +921,16 @@ begin_comment
 comment|/* number of files in use */
 end_comment
 
+begin_decl_stmt
+name|int
+name|got_siginfo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* received a SIGINFO */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1715,6 +1725,19 @@ argument_list|(
 operator|(
 name|ino_t
 name|inumber
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|infohandler
+name|__P
+argument_list|(
+operator|(
+name|int
+name|sig
 operator|)
 argument_list|)
 decl_stmt|;
