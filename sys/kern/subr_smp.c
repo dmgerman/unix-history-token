@@ -143,6 +143,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|cpu_top
+modifier|*
+name|smp_topology
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|volatile
 name|int
 name|smp_started

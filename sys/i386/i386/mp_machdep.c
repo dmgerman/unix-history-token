@@ -635,14 +635,6 @@ name|mp_top
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|cpu_top
-modifier|*
-name|smp_topology
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* AP uses this during bootstrap.  Do not staticize.  */
 end_comment
