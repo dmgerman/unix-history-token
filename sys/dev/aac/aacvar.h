@@ -1162,6 +1162,13 @@ define|#
 directive|define
 name|AAC_AIFFLAGS_EXITED
 value|(1<< 3)
+name|u_int32_t
+name|quirks
+decl_stmt|;
+define|#
+directive|define
+name|AAC_QUIRK_PERC2QC
+value|(1<< 0)
 block|}
 struct|;
 end_struct
