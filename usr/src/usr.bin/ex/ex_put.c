@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	6.1 %G%"
+literal|"@(#)ex_put.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3589,12 +3589,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\nPlease tell mark suspc is 377, and let him know\n"
+literal|"\r\n\nPlease tell mark suspc is 377, and let him know\r\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"what you just did.  Did you hit del?\n"
+literal|"what you just did.  Did you hit del?\r\n"
 argument_list|)
 expr_stmt|;
 name|nlttyc
