@@ -221,6 +221,17 @@ begin_comment
 comment|/* timestamp received dgram traffic */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_ACCEPTFILTER
+value|0x1000
+end_define
+
+begin_comment
+comment|/* there is an accept filter */
+end_comment
+
 begin_comment
 comment|/*  * Additional options, not kept in so_options.  */
 end_comment
@@ -333,6 +344,28 @@ name|int
 name|l_linger
 decl_stmt|;
 comment|/* linger time */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|accept_filter_arg
+block|{
+name|char
+name|af_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|af_arg
+index|[
+literal|256
+operator|-
+literal|16
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
