@@ -33,6 +33,63 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_comment
+comment|/*  * Topology of a NUMA or HTT system.  *  * The top level topology is an array of pointers to groups.  Each group  * contains a bitmask of cpus in its group or subgroups.  It may also  * contain a pointer to an array of child groups.  *  * The bitmasks at non leaf groups may be used by consumers who support  * a smaller depth than the hardware provides.  *  * The topology may be omitted by systems where all CPUs are equal.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cpu_group
+block|{
+name|u_int
+name|cg_mask
+decl_stmt|;
+comment|/* Mask of cpus in this group. */
+name|int
+name|cg_count
+decl_stmt|;
+comment|/* Count of cpus in this group. */
+name|int
+name|cg_children
+decl_stmt|;
+comment|/* Number of children groups. */
+name|struct
+name|cpu_group
+modifier|*
+name|cg_child
+decl_stmt|;
+comment|/* Optional child group. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cpu_top
+block|{
+name|int
+name|ct_count
+decl_stmt|;
+comment|/* Count of groups. */
+name|struct
+name|cpu_group
+modifier|*
+name|ct_group
+decl_stmt|;
+comment|/* Array of pointers to cpu groups. */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cpu_top
+modifier|*
+name|smp_topology
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|void
