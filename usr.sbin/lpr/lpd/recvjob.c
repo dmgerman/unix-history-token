@@ -1880,7 +1880,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-comment|/*          * rcleanup is not called until AFTER logging the error message,          * because rcleanup will zap some variables which may have been          * supplied as parameters for that msg... 	 */
+comment|/* 	 * rcleanup is not called until AFTER logging the error message, 	 * because rcleanup will zap some variables which may have been 	 * supplied as parameters for that msg... 	 */
 name|rcleanup
 argument_list|(
 literal|0
