@@ -2084,12 +2084,6 @@ operator|->
 name|a_pvp
 argument_list|)
 expr_stmt|;
-comment|/* Remove the inode from its hash chain */
-name|ufs_ihashrem
-argument_list|(
-name|pip
-argument_list|)
-expr_stmt|;
 name|fs
 operator|=
 name|pip
