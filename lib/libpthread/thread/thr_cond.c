@@ -853,6 +853,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 					 * This thread is active and is in a 					 * critical region (holding the cv 					 * lock); we should be able to safely 					 * set the state. 					 */
+name|THR_LOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|THR_SET_STATE
 argument_list|(
 name|curthread
@@ -897,6 +902,11 @@ operator|.
 name|cond
 operator|=
 name|NULL
+expr_stmt|;
+name|THR_UNLOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* 					 * XXX - This really isn't a good check 					 * since there can be more than one 					 * thread waiting on the CV.  Signals 					 * sent to threads waiting on mutexes 					 * or CVs should really be deferred 					 * until the threads are no longer 					 * waiting, but POSIX says that signals 					 * should be sent "as soon as possible". 					 */
 name|done
@@ -995,6 +1005,7 @@ name|done
 operator|!=
 literal|0
 condition|)
+block|{
 name|rval
 operator|=
 name|_mutex_cv_lock
@@ -1002,6 +1013,11 @@ argument_list|(
 name|mutex
 argument_list|)
 expr_stmt|;
+name|unlock_mutex
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -1540,6 +1556,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 					 * This thread is active and is in a 					 * critical region (holding the cv 					 * lock); we should be able to safely 					 * set the state. 					 */
+name|THR_LOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|THR_SET_STATE
 argument_list|(
 name|curthread
@@ -1584,6 +1605,11 @@ operator|.
 name|cond
 operator|=
 name|NULL
+expr_stmt|;
+name|THR_UNLOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* 					 * XXX - This really isn't a good check 					 * since there can be more than one 					 * thread waiting on the CV.  Signals 					 * sent to threads waiting on mutexes 					 * or CVs should really be deferred 					 * until the threads are no longer 					 * waiting, but POSIX says that signals 					 * should be sent "as soon as possible". 					 */
 name|done

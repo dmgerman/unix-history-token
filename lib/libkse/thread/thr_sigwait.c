@@ -383,10 +383,8 @@ operator|&
 name|waitset
 expr_stmt|;
 comment|/* Wait for a signal: */
-name|THR_SCHED_LOCK
+name|THR_LOCK_SWITCH
 argument_list|(
-name|curthread
-argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -397,14 +395,12 @@ argument_list|,
 name|PS_SIGWAIT
 argument_list|)
 expr_stmt|;
-name|THR_SCHED_UNLOCK
+name|_thr_sched_switch
 argument_list|(
-name|curthread
-argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-name|_thr_sched_switch
+name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)

@@ -102,6 +102,11 @@ name|sigset_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|THR_LOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|THR_SET_STATE
 argument_list|(
 name|curthread
@@ -109,15 +114,13 @@ argument_list|,
 name|PS_SIGSUSPEND
 argument_list|)
 expr_stmt|;
-name|THR_SCHED_UNLOCK
+comment|/* Wait for a signal: */
+name|_thr_sched_switch
 argument_list|(
-name|curthread
-argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* Wait for a signal: */
-name|_thr_sched_switch
+name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)

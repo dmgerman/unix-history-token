@@ -147,10 +147,8 @@ argument_list|,
 name|time_to_sleep
 argument_list|)
 expr_stmt|;
-name|THR_SCHED_LOCK
+name|THR_LOCK_SWITCH
 argument_list|(
-name|curthread
-argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -167,15 +165,13 @@ argument_list|,
 name|PS_SLEEP_WAIT
 argument_list|)
 expr_stmt|;
-name|THR_SCHED_UNLOCK
+comment|/* Reschedule the current thread to sleep: */
+name|_thr_sched_switch
 argument_list|(
-name|curthread
-argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* Reschedule the current thread to sleep: */
-name|_thr_sched_switch
+name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)

@@ -224,11 +224,25 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Flag this thread as exiting.  Threads should now be prevented 	 * from joining to this thread. 	 */
+name|THR_SCHED_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 name|curthread
 operator|->
 name|flags
 operator||=
 name|THR_FLAGS_EXITING
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* Save the return value: */
 name|curthread
@@ -293,10 +307,8 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* This thread will never be re-scheduled. */
-name|THR_SCHED_LOCK
+name|THR_LOCK_SWITCH
 argument_list|(
-name|curthread
-argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -307,14 +319,13 @@ argument_list|,
 name|PS_DEAD
 argument_list|)
 expr_stmt|;
-name|THR_SCHED_UNLOCK
+name|_thr_sched_switch
 argument_list|(
-name|curthread
-argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-name|_thr_sched_switch
+comment|/* Never reach! */
+name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)

@@ -794,13 +794,6 @@ name|curthread
 parameter_list|)
 block|{
 comment|/* Take the scheduling lock while fiddling with the state: */
-name|THR_SCHED_LOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|curthread
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|checkcancel
@@ -833,13 +826,6 @@ literal|"cancel"
 argument_list|)
 expr_stmt|;
 block|}
-name|THR_SCHED_UNLOCK
-argument_list|(
-name|curthread
-argument_list|,
-name|curthread
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -858,8 +844,22 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
+name|THR_SCHED_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 name|testcancel
 argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
@@ -877,6 +877,13 @@ name|thread
 parameter_list|)
 block|{
 comment|/* Look for a cancellation before we block: */
+name|THR_SCHED_LOCK
+argument_list|(
+name|thread
+argument_list|,
+name|thread
+argument_list|)
+expr_stmt|;
 name|testcancel
 argument_list|(
 name|thread
@@ -887,6 +894,13 @@ operator|->
 name|cancelflags
 operator||=
 name|THR_AT_CANCEL_POINT
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|thread
+argument_list|,
+name|thread
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -901,6 +915,13 @@ modifier|*
 name|thread
 parameter_list|)
 block|{
+name|THR_SCHED_LOCK
+argument_list|(
+name|thread
+argument_list|,
+name|thread
+argument_list|)
+expr_stmt|;
 name|thread
 operator|->
 name|cancelflags
@@ -911,6 +932,13 @@ expr_stmt|;
 comment|/* Look for a cancellation after we unblock: */
 name|testcancel
 argument_list|(
+name|thread
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|thread
+argument_list|,
 name|thread
 argument_list|)
 expr_stmt|;
@@ -947,6 +975,13 @@ name|interrupted
 operator|=
 literal|0
 expr_stmt|;
+name|THR_SCHED_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -967,6 +1002,13 @@ operator|&=
 operator|~
 name|THR_CANCEL_NEEDED
 expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 name|_thr_exit_cleanup
 argument_list|()
 expr_stmt|;
@@ -976,6 +1018,13 @@ name|PTHREAD_CANCELED
 argument_list|)
 expr_stmt|;
 block|}
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

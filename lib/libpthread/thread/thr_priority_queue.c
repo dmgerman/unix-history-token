@@ -469,6 +469,12 @@ name|pq_flags
 operator|=
 literal|0
 expr_stmt|;
+name|pq
+operator|->
+name|pq_threads
+operator|=
+literal|0
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -534,6 +540,11 @@ name|pthread
 argument_list|,
 name|pqe
 argument_list|)
+expr_stmt|;
+name|pq
+operator|->
+name|pq_threads
+operator|--
 expr_stmt|;
 comment|/* This thread is now longer in the priority queue. */
 name|pthread
@@ -630,6 +641,11 @@ argument_list|,
 name|prio
 argument_list|)
 expr_stmt|;
+name|pq
+operator|->
+name|pq_threads
+operator|++
+expr_stmt|;
 comment|/* Mark this thread as being in the priority queue. */
 name|pthread
 operator|->
@@ -723,6 +739,11 @@ name|pq
 argument_list|,
 name|prio
 argument_list|)
+expr_stmt|;
+name|pq
+operator|->
+name|pq_threads
+operator|++
 expr_stmt|;
 comment|/* Mark this thread as being in the priority queue. */
 name|pthread

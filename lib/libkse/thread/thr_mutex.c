@@ -1254,6 +1254,13 @@ name|m_owner
 operator|=
 name|curthread
 expr_stmt|;
+name|THR_SCHED_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Track number of priority mutexes owned: */
 name|curthread
 operator|->
@@ -1282,6 +1289,13 @@ operator|=
 name|curthread
 operator|->
 name|inherited_priority
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
 name|MUTEX_ASSERT_NOT_OWNED
@@ -1381,6 +1395,13 @@ name|m_owner
 operator|=
 name|curthread
 expr_stmt|;
+name|THR_SCHED_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Track number of priority mutexes owned: */
 name|curthread
 operator|->
@@ -1420,6 +1441,13 @@ name|mutex
 operator|)
 operator|->
 name|m_prio
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* Add to the list of owned mutexes: */
 name|MUTEX_ASSERT_NOT_OWNED
@@ -1894,6 +1922,11 @@ operator|*
 name|m
 expr_stmt|;
 comment|/* 				 * This thread is active and is in a critical 				 * region (holding the mutex lock); we should 				 * be able to safely set the state. 				 */
+name|THR_LOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|THR_SET_STATE
 argument_list|(
 name|curthread
@@ -1917,6 +1950,11 @@ argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thr_sched_switch
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)
@@ -1950,13 +1988,6 @@ name|m_owner
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* Track number of priority mutexes owned: */
-name|curthread
-operator|->
-name|priority_mutex_count
-operator|++
-expr_stmt|;
-comment|/* 				 * The mutex takes on attributes of the 				 * running thread when there are no waiters. 				 * Make sure the thread's scheduling lock is 				 * held while priorities are adjusted. 				 */
 name|THR_SCHED_LOCK
 argument_list|(
 name|curthread
@@ -1964,6 +1995,13 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* Track number of priority mutexes owned: */
+name|curthread
+operator|->
+name|priority_mutex_count
+operator|++
+expr_stmt|;
+comment|/* 				 * The mutex takes on attributes of the 				 * running thread when there are no waiters. 				 * Make sure the thread's scheduling lock is 				 * held while priorities are adjusted. 				 */
 operator|(
 operator|*
 name|m
@@ -2100,13 +2138,6 @@ operator|*
 name|m
 expr_stmt|;
 comment|/* 				 * This thread is active and is in a critical 				 * region (holding the mutex lock); we should 				 * be able to safely set the state. 				 */
-name|THR_SET_STATE
-argument_list|(
-name|curthread
-argument_list|,
-name|PS_MUTEX_WAIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|curthread
@@ -2129,6 +2160,18 @@ operator|*
 name|m
 argument_list|)
 expr_stmt|;
+name|THR_LOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|THR_SET_STATE
+argument_list|(
+name|curthread
+argument_list|,
+name|PS_MUTEX_WAIT
+argument_list|)
+expr_stmt|;
 comment|/* Unlock the mutex structure: */
 name|THR_LOCK_RELEASE
 argument_list|(
@@ -2145,6 +2188,11 @@ argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thr_sched_switch
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)
@@ -2213,13 +2261,6 @@ name|m_owner
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* Track number of priority mutexes owned: */
-name|curthread
-operator|->
-name|priority_mutex_count
-operator|++
-expr_stmt|;
-comment|/* 				 * The running thread inherits the ceiling 				 * priority of the mutex and executes at that 				 * priority.  Make sure the thread's 				 * scheduling lock is held while priorities 				 * are adjusted. 				 */
 name|THR_SCHED_LOCK
 argument_list|(
 name|curthread
@@ -2227,6 +2268,13 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* Track number of priority mutexes owned: */
+name|curthread
+operator|->
+name|priority_mutex_count
+operator|++
+expr_stmt|;
+comment|/* 				 * The running thread inherits the ceiling 				 * priority of the mutex and executes at that 				 * priority.  Make sure the thread's 				 * scheduling lock is held while priorities 				 * are adjusted. 				 */
 name|curthread
 operator|->
 name|active_priority
@@ -2370,6 +2418,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 				 * This thread is active and is in a critical 				 * region (holding the mutex lock); we should 				 * be able to safely set the state. 				 */
+name|THR_LOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|THR_SET_STATE
 argument_list|(
 name|curthread
@@ -2393,6 +2446,11 @@ argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thr_sched_switch
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)
@@ -2777,9 +2835,19 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|curthread
+operator|=
+name|_get_curthread
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2793,6 +2861,20 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|THR_LOCK_ACQUIRE
+argument_list|(
+name|curthread
+argument_list|,
+operator|&
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_lock
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|m
@@ -2801,6 +2883,20 @@ operator|->
 name|m_refcount
 operator|--
 expr_stmt|;
+name|THR_LOCK_RELEASE
+argument_list|(
+name|curthread
+argument_list|,
+operator|&
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_lock
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|ret
@@ -2928,6 +3024,11 @@ case|case
 name|PTHREAD_MUTEX_NORMAL
 case|:
 comment|/* 		 * What SS2 define as a 'normal' mutex.  Intentionally 		 * deadlock on attempts to get a lock you already own. 		 */
+name|THR_LOCK_SWITCH
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 name|THR_SET_STATE
 argument_list|(
 name|curthread
@@ -2948,6 +3049,11 @@ argument_list|)
 expr_stmt|;
 comment|/* Schedule the next thread: */
 name|_thr_sched_switch
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+name|THR_UNLOCK_SWITCH
 argument_list|(
 name|curthread
 argument_list|)
@@ -3280,18 +3386,18 @@ operator|->
 name|base_priority
 argument_list|)
 expr_stmt|;
+comment|/* 				 * This thread now owns one less priority mutex. 				 */
+name|curthread
+operator|->
+name|priority_mutex_count
+operator|--
+expr_stmt|;
 name|THR_SCHED_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
 name|curthread
 argument_list|)
-expr_stmt|;
-comment|/* 				 * This thread now owns one less priority mutex. 				 */
-name|curthread
-operator|->
-name|priority_mutex_count
-operator|--
 expr_stmt|;
 comment|/* Remove the mutex from the threads queue. */
 name|MUTEX_ASSERT_IS_OWNED
@@ -3449,18 +3555,18 @@ operator|->
 name|base_priority
 argument_list|)
 expr_stmt|;
+comment|/* 				 * This thread now owns one less priority mutex. 				 */
+name|curthread
+operator|->
+name|priority_mutex_count
+operator|--
+expr_stmt|;
 name|THR_SCHED_UNLOCK
 argument_list|(
 name|curthread
 argument_list|,
 name|curthread
 argument_list|)
-expr_stmt|;
-comment|/* 				 * This thread now owns one less priority mutex. 				 */
-name|curthread
-operator|->
-name|priority_mutex_count
-operator|--
 expr_stmt|;
 comment|/* Remove the mutex from the threads queue. */
 name|MUTEX_ASSERT_IS_OWNED

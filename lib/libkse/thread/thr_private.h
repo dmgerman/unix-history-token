@@ -365,6 +365,9 @@ value|0x0001
 name|int
 name|pq_flags
 decl_stmt|;
+name|int
+name|pq_threads
+decl_stmt|;
 block|}
 name|pq_queue_t
 typedef|;
@@ -538,6 +541,10 @@ comment|/* initialized on 1st upcall */
 name|int
 name|k_waiting
 decl_stmt|;
+name|int
+name|k_idle
+decl_stmt|;
+comment|/* kse is idle */
 name|int
 name|k_error
 decl_stmt|;
@@ -794,7 +801,7 @@ name|KSE_CLEAR_WAIT
 parameter_list|(
 name|kse
 parameter_list|)
-value|atomic_set_acq_int(&(kse)->k_waiting, 0)
+value|atomic_store_rel_int(&(kse)->k_waiting, 0)
 end_define
 
 begin_define
@@ -815,6 +822,36 @@ parameter_list|(
 name|kse
 parameter_list|)
 value|kse_wakeup(&(kse)->k_mbx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_SET_IDLE
+parameter_list|(
+name|kse
+parameter_list|)
+value|((kse)->k_idle = 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_CLEAR_IDLE
+parameter_list|(
+name|kse
+parameter_list|)
+value|((kse)->k_idle = 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KSE_IS_IDLE
+parameter_list|(
+name|kse
+parameter_list|)
+value|((kse)->k_idle != 0)
 end_define
 
 begin_comment
@@ -1697,6 +1734,9 @@ name|enum
 name|pthread_state
 name|state
 decl_stmt|;
+name|int
+name|lock_switch
+decl_stmt|;
 comment|/* 	 * Number of microseconds accumulated by this thread when 	 * time slicing is active. 	 */
 name|long
 name|slice_usec
@@ -1888,7 +1928,7 @@ parameter_list|(
 name|thrd
 parameter_list|)
 define|\
-value|do {								\ 	if (((thrd)->critical_yield != 0)&&			\ 	    !(THR_IN_CRITICAL(thrd)))				\ 		_thr_sched_switch(thrd);			\ 	else if (((thrd)->check_pending != 0)&&		\ 	    !(THR_IN_CRITICAL(thrd)))				\ 		_thr_sig_check_pending(thrd);			\ } while (0)
+value|do {								\ 	if (((thrd)->critical_yield != 0)&&			\ 	    !(THR_IN_CRITICAL(thrd))) {				\ 		THR_LOCK_SWITCH(thrd);				\ 		_thr_sched_switch(thrd);			\ 		THR_UNLOCK_SWITCH(thrd);			\ 	}							\ 	else if (((thrd)->check_pending != 0)&&		\ 	    !(THR_IN_CRITICAL(thrd)))				\ 		_thr_sig_check_pending(thrd);			\ } while (0)
 end_define
 
 begin_define
@@ -1914,7 +1954,29 @@ parameter_list|,
 name|lck
 parameter_list|)
 define|\
-value|do {								\ 	if ((thrd)->locklevel> 0) {				\ 		_lock_release((lck),				\&(thrd)->lockusers[(thrd)->locklevel - 1]);	\ 		(thrd)->locklevel--;				\ 		if ((thrd)->locklevel != 0)			\ 			;					\ 		else if ((thrd)->critical_yield != 0)		\ 			_thr_sched_switch(thrd);		\ 		else if ((thrd)->check_pending != 0)		\ 			_thr_sig_check_pending(thrd);		\ 	}							\ } while (0)
+value|do {								\ 	if ((thrd)->locklevel> 0) {				\ 		_lock_release((lck),				\&(thrd)->lockusers[(thrd)->locklevel - 1]);	\ 		(thrd)->locklevel--;				\ 		if ((thrd)->lock_switch)			\ 			;					\ 		else {						\ 			THR_YIELD_CHECK(thrd);			\ 		}						\ 	}							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_LOCK_SWITCH
+parameter_list|(
+name|thrd
+parameter_list|)
+define|\
+value|do {									\ 	THR_ASSERT(!(thrd)->lock_switch, "context switch locked");	\ 	_kse_critical_enter();						\ 	KSE_SCHED_LOCK((thrd)->kse, (thrd)->kseg);			\ 	(thrd)->lock_switch = 1;					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_UNLOCK_SWITCH
+parameter_list|(
+name|thrd
+parameter_list|)
+define|\
+value|do {									\ 	THR_ASSERT((thrd)->lock_switch, "context switch not locked");	\ 	THR_ASSERT(_kse_in_critical(), "Er,not in critical region");	\ 	(thrd)->lock_switch = 0;					\ 	KSE_SCHED_UNLOCK((thrd)->kse, (thrd)->kseg);			\ 	_kse_critical_leave(&thrd->tmbx);				\ } while (0)
 end_define
 
 begin_comment
@@ -2088,7 +2150,7 @@ name|curthr
 parameter_list|,
 name|thr
 parameter_list|)
-value|do {		\ 	KSE_SCHED_UNLOCK((curthr)->kse, (thr)->kseg);	\ 	(curthr)->locklevel--;				\ 	_kse_critical_leave((curthr)->critical[(curthr)->locklevel]); \ 	if ((curthr)->locklevel == 0)			\ 		THR_YIELD_CHECK(curthr);		\ } while (0)
+value|do {		\ 	KSE_SCHED_UNLOCK((curthr)->kse, (thr)->kseg);	\ 	(curthr)->locklevel--;				\ 	_kse_critical_leave((curthr)->critical[(curthr)->locklevel]); \ } while (0)
 end_define
 
 begin_define
@@ -2108,7 +2170,7 @@ name|THR_CRITICAL_LEAVE
 parameter_list|(
 name|thr
 parameter_list|)
-value|do {		\ 	(thr)->critical_count--;		\ 	if (((thr)->critical_yield != 0)&&	\ 	    ((thr)->critical_count == 0)) {	\ 		(thr)->critical_yield = 0;	\ 		_thr_sched_switch(thr);		\ 	}					\ } while (0)
+value|do {		\ 	(thr)->critical_count--;		\ 	if (((thr)->critical_yield != 0)&&	\ 	    ((thr)->critical_count == 0)) {	\ 		(thr)->critical_yield = 0;	\ 		THR_LOCK_SWITCH(thr);		\ 		_thr_sched_switch(thr);		\ 		THR_UNLOCK_SWITCH(thr);		\ 	}					\ } while (0)
 end_define
 
 begin_define
@@ -3581,6 +3643,25 @@ parameter_list|(
 name|struct
 name|pthread
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thr_setconcurrency
+parameter_list|(
+name|int
+name|new_level
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thr_setmaxconcurrency
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
