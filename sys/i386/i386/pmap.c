@@ -3860,31 +3860,7 @@ name|pm_stats
 operator|.
 name|resident_count
 expr_stmt|;
-comment|/* 	 * We never unwire a kernel page table page, making a 	 * check for the kernel_pmap unnecessary. 	 */
-if|if
-condition|(
-operator|(
-name|pmap
-operator|->
-name|pm_pdir
-index|[
-name|PTDPTDI
-index|]
-operator|&
-name|PG_FRAME
-operator|)
-operator|==
-operator|(
-name|PTDpde
-index|[
-literal|0
-index|]
-operator|&
-name|PG_FRAME
-operator|)
-condition|)
-block|{
-comment|/* 		 * Do an invltlb to make the invalidated mapping 		 * take effect immediately. 		 */
+comment|/* 	 * Do an invltlb to make the invalidated mapping 	 * take effect immediately. 	 */
 name|pteva
 operator|=
 name|VM_MAXUSER_ADDRESS
@@ -3903,7 +3879,6 @@ argument_list|,
 name|pteva
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * If the page is finally unwired, simply free it. 	 */
 operator|--
 name|m

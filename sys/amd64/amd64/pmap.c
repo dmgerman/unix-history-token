@@ -4121,15 +4121,7 @@ name|pdppg
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|pmap_is_current
-argument_list|(
-name|pmap
-argument_list|)
-condition|)
-block|{
-comment|/* 		 * Do an invltlb to make the invalidated mapping 		 * take effect immediately. 		 */
+comment|/* 	 * Do an invltlb to make the invalidated mapping 	 * take effect immediately. 	 */
 name|pmap_invalidate_page
 argument_list|(
 name|pmap
@@ -4137,7 +4129,6 @@ argument_list|,
 name|pteva
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * If the page is finally unwired, simply free it. 	 */
 operator|--
 name|m
