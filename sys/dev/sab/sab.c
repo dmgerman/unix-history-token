@@ -128,7 +128,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ofw/openfirm.h>
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_include
