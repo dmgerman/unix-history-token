@@ -173,6 +173,14 @@ index|[]
 init|=
 block|{
 block|{
+literal|"?"
+block|,
+name|cmd_help
+block|,
+literal|"              this list"
+block|}
+block|,
+block|{
 literal|"help"
 block|,
 name|cmd_help
@@ -507,12 +515,7 @@ name|printf
 argument_list|(
 literal|"netmask is %I\r\n"
 argument_list|,
-name|arptable
-index|[
-name|ARP_SERVER
-index|]
-operator|.
-name|ipaddr
+name|netmask
 argument_list|)
 expr_stmt|;
 block|}

@@ -440,6 +440,36 @@ name|sprintf
 argument_list|(
 name|cfg
 argument_list|,
+literal|"cfg.%I"
+argument_list|,
+name|arptable
+index|[
+name|ARP_CLIENT
+index|]
+operator|.
+name|ipaddr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Loading %s...\r\n"
+argument_list|,
+name|cfg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|tftp
+argument_list|(
+name|cfg
+argument_list|)
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|cfg
+argument_list|,
 literal|"/tftpboot/cfg.%I"
 argument_list|,
 name|arptable
@@ -478,6 +508,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Execute commands in config file */
 name|p
