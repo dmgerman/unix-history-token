@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncrcontrol.c,v 1.7 1995/03/16 15:10:11 se Exp $ ** **  Utility for NCR 53C810 device driver. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncrcontrol.c,v 1.9 1995/09/14 18:14:28 se Exp $ ** **  Utility for NCR 53C810 device driver. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -2999,6 +2999,37 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"?"
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"async:         disable synchronous transfers.\n"
+literal|"sync=value:    set the maximal synchronous transfer rate (MHz).\n"
+literal|"fast:          set FAST SCSI-2.\n"
+literal|"\n"
+literal|"wide=value:    set the bus width (0=8bit 1=16bit).\n"
+literal|"\n"
+literal|"tags=value:    use this number of tags.\n"
+literal|"orderedtag:    use ordered tags only.\n"
+literal|"simpletag:     use simple tags only.\n"
+literal|"orderedwrite:  use simple tags for read, else ordered tags.\n"
+literal|"\n"
+literal|"debug=value:   set debug mode.\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+empty_stmt|;
 name|open_kvm
 argument_list|(
 name|O_RDWR
@@ -3126,37 +3157,6 @@ name|cmd
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"?"
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"async:         disable synchronous transfers.\n"
-literal|"sync=value:    set the maximal synchronous transfer rate (MHz).\n"
-literal|"fast:          set FAST SCSI-2.\n"
-literal|"\n"
-literal|"wide=value:    set the bus width (0=8bit 1=16bit).\n"
-literal|"\n"
-literal|"tags=value:    use this number of tags.\n"
-literal|"orderedtag:    use ordered tags only.\n"
-literal|"simpletag:     use simple tags only.\n"
-literal|"orderedwrite:  use simple tags for read, else ordered tags.\n"
-literal|"\n"
-literal|"debug=value:   set debug mode.\n"
-literal|"\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -8607,6 +8607,9 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|OPT_F
 case|case
 literal|'f'
 case|:
@@ -8624,6 +8627,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 case|case
 literal|'u'
 case|:
@@ -9030,8 +9035,9 @@ name|stderr
 argument_list|,
 literal|"Usage:\n"
 literal|"\n"
-literal|"%s [-M$] [-N$] {-f$} {-t#} {-l#} [-hivw?] [-d$] [-s$] [-k] [[-p]<time>]\n"
+literal|"%s [-M$] [-N$] [-u] {-t#} {-l#} [-hivw?] [-d$] [-s$] [-k] [[-p]<time>]\n"
 literal|"\n"
+literal|"-u<#>             select controller number\n"
 literal|"-t<#>             select target number\n"
 literal|"-l<#>             select lun number\n"
 literal|"-i                 get info\n"
