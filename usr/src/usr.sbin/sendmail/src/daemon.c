@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.51 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.52 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.51 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.52 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -727,6 +727,29 @@ operator|==
 literal|'.'
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+name|int
+name|oldopts
+init|=
+name|_res
+operator|.
+name|options
+decl_stmt|;
+name|_res
+operator|.
+name|options
+operator|&=
+operator|~
+operator|(
+name|RES_DEFNAMES
+operator||
+name|RES_DNSRCH
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 name|p
 index|[
 operator|-
@@ -754,6 +777,17 @@ index|]
 operator|=
 literal|'.'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+name|_res
+operator|.
+name|options
+operator|=
+name|oldopts
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 operator|*
 name|p
@@ -852,6 +886,29 @@ operator|==
 literal|'.'
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+name|int
+name|oldopts
+init|=
+name|_res
+operator|.
+name|options
+decl_stmt|;
+name|_res
+operator|.
+name|options
+operator|&=
+operator|~
+operator|(
+name|RES_DEFNAMES
+operator||
+name|RES_DNSRCH
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|*
 name|p
 operator|=
@@ -869,6 +926,17 @@ name|p
 operator|=
 literal|'.'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+name|_res
+operator|.
+name|options
+operator|=
+name|oldopts
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|gothostent
 label|:
