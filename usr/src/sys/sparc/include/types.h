@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.6 (Berkeley) %G%  *  * from: $Header: types.h,v 1.5 92/11/26 02:00:07 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.7 (Berkeley) %G%  *  * from: $Header: types.h,v 1.5 92/11/26 02:00:07 torek Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,22 @@ define|#
 directive|define
 name|_MACHTYPES_H_
 end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_ANSI_SOURCE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_SOURCE
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -48,6 +64,11 @@ name|label_t
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|u_long
@@ -70,7 +91,7 @@ begin_typedef
 typedef|typedef
 name|signed
 name|char
-name|int8
+name|int8_t
 typedef|;
 end_typedef
 
@@ -78,14 +99,14 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|char
-name|u_int8
+name|u_int8_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 name|short
-name|int16
+name|int16_t
 typedef|;
 end_typedef
 
@@ -93,14 +114,14 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|short
-name|u_int16
+name|u_int16_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 name|int
-name|int32
+name|int32_t
 typedef|;
 end_typedef
 
@@ -108,7 +129,7 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|int
-name|u_int32
+name|u_int32_t
 typedef|;
 end_typedef
 
@@ -116,7 +137,7 @@ begin_typedef
 typedef|typedef
 name|long
 name|long
-name|int64
+name|int64_t
 typedef|;
 end_typedef
 
@@ -125,7 +146,7 @@ typedef|typedef
 name|unsigned
 name|long
 name|long
-name|u_int64
+name|u_int64_t
 typedef|;
 end_typedef
 
