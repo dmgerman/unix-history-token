@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.c	8.1 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.33 91/10/27 21:21:58 mccanne Exp $";  */
+comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.c	8.2 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.33 91/10/27 21:21:58 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -470,6 +470,7 @@ name|bpf_mcopy
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|void
 operator|*
 operator|,
@@ -588,6 +589,7 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
+specifier|const
 name|void
 operator|*
 argument_list|,
@@ -3632,11 +3634,13 @@ name|dst_arg
 parameter_list|,
 name|len
 parameter_list|)
+specifier|const
 name|void
 modifier|*
 name|src_arg
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|void
+modifier|*
 name|dst_arg
 decl_stmt|;
 specifier|register
@@ -3645,6 +3649,7 @@ name|len
 decl_stmt|;
 block|{
 specifier|register
+specifier|const
 name|struct
 name|mbuf
 modifier|*
@@ -3656,22 +3661,15 @@ name|count
 decl_stmt|;
 name|u_char
 modifier|*
-name|src
-decl_stmt|,
-modifier|*
 name|dst
 decl_stmt|;
-name|src
+name|m
 operator|=
 name|src_arg
 expr_stmt|;
 name|dst
 operator|=
 name|dst_arg
-expr_stmt|;
-name|m
-operator|=
-name|src_arg
 expr_stmt|;
 while|while
 condition|(
@@ -3910,7 +3908,16 @@ function_decl|(
 modifier|*
 name|cpfn
 function_decl|)
-parameter_list|()
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
 function_decl|;
 block|{
 specifier|register
