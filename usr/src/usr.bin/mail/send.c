@@ -42,7 +42,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.6 %G%"
+literal|"@(#)send.c	2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,9 +247,12 @@ goto|goto
 name|writeit
 goto|;
 block|}
-comment|/* 			 * If this line is a continuation 			 * of a previous header field, just echo it. 			 */
+comment|/* 			 * If this line is a continuation (via space or tab) 			 * of a previous header field, just echo it 			 * (unless the field should be ignored). 			 */
 if|if
 condition|(
+name|infld
+operator|&&
+operator|(
 name|isspace
 argument_list|(
 name|line
@@ -257,12 +260,30 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|&&
-name|infld
+operator|||
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|'\t'
+operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|doign
+operator|&&
+name|isign
+argument_list|(
+name|field
+argument_list|)
+condition|)
+continue|continue;
 goto|goto
 name|writeit
 goto|;
+block|}
 name|infld
 operator|=
 literal|0
