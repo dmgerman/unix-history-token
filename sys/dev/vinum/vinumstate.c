@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 2.10 1999/01/17 06:19:23 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumstate.c,v 1.7.2.3 1999/02/11 05:53:52 grog Exp $  */
 end_comment
 
 begin_define
@@ -1535,6 +1535,26 @@ comment|/* nothing done yet */
 if|if
 condition|(
 operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_concat
+operator|)
+comment|/* only change this for concat and struped */
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_striped
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
 operator|(
 name|vps
 operator|&
@@ -1582,7 +1602,7 @@ operator|)
 condition|)
 block|{
 comment|/* and we consider that up */
-comment|/* 	     * Conceptually, an empty plex does not contain valid data, 	     * but normally we'll see this state when we have just 	     * created a plex, and it's either consistent from earlier, 	     * or we don't care about the previous contents (we're going 	     * to create a file system or use it for swap). 	     * 	     * We need to do this in one swell foop: on the next call 	     * we will no longer be just empty. 	     * 	     * This code assumes that all the other plexes are also 	     * capable of coming up (i.e. all the sds are up), but 	     * that's OK: we'll come back to this function for the remaining 	     * plexes in the volume.  	     */
+comment|/* 		 * Conceptually, an empty plex does not contain valid data, 		 * but normally we'll see this state when we have just 		 * created a plex, and it's either consistent from earlier, 		 * or we don't care about the previous contents (we're going 		 * to create a file system or use it for swap). 		 * 		 * We need to do this in one swell foop: on the next call 		 * we will no longer be just empty. 		 * 		 * This code assumes that all the other plexes are also 		 * capable of coming up (i.e. all the sds are up), but 		 * that's OK: we'll come back to this function for the remaining 		 * plexes in the volume.  		 */
 name|struct
 name|volume
 modifier|*
@@ -1711,6 +1731,16 @@ operator|=
 name|plex_faulty
 expr_stmt|;
 comment|/* no, it's down */
+block|}
+else|else
+comment|/* invalid or RAID-5 organization */
+name|plex
+operator|->
+name|state
+operator|=
+name|plex_faulty
+expr_stmt|;
+comment|/* it's down */
 block|}
 elseif|else
 if|if
