@@ -573,17 +573,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|crc32_tab
+index|[]
+decl_stmt|;
+end_decl_stmt
 
-begin_endif
-unit|extern uint32_t crc32_tab[]; uint32_t crc32(const void *buf, size_t size);
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|uint32_t
+name|crc32
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
