@@ -1471,6 +1471,7 @@ condition|(
 operator|!
 name|others_active
 condition|)
+block|{
 comment|/* Down the NCPs.  We don't expect to get fsm_Close()d ourself ! */
 name|ncp2initial
 argument_list|(
@@ -1480,6 +1481,17 @@ operator|->
 name|ncp
 argument_list|)
 expr_stmt|;
+name|mp_Down
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|mp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -1499,7 +1511,7 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
-comment|/* The given fsm is now down (fp cannot be NULL)    *    * If it's the last NCP, fsm_Close all LCPs    */
+comment|/* The given fsm is now down (fp cannot be NULL)    *    * If it's the last NCP, fsm_Close all LCPs    * If it's the last NCP, bring any MP layer down    */
 name|struct
 name|bundle
 modifier|*
@@ -1586,6 +1598,16 @@ expr_stmt|;
 name|fsm2initial
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|mp_Down
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|mp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1777,6 +1799,16 @@ operator|&
 name|bundle
 operator|->
 name|ncp
+argument_list|)
+expr_stmt|;
+name|mp_Down
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|mp
 argument_list|)
 expr_stmt|;
 for|for
@@ -4740,6 +4772,16 @@ operator|&
 name|bundle
 operator|->
 name|ncp
+argument_list|)
+expr_stmt|;
+name|mp_Down
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|mp
 argument_list|)
 expr_stmt|;
 name|bundle_NewPhase
