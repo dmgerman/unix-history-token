@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	5.4 (Berkeley) %G%"
+literal|"@(#)arpadate.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,12 +211,6 @@ name|struct
 name|timeb
 modifier|*
 name|ftime
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|timezone
 parameter_list|()
 function_decl|;
 endif|#
@@ -553,12 +547,6 @@ else|#
 directive|else
 name|p
 operator|=
-name|timezone
-argument_list|(
-name|t
-operator|.
-name|timezone
-argument_list|,
 name|localtime
 argument_list|(
 operator|&
@@ -567,8 +555,7 @@ operator|.
 name|time
 argument_list|)
 operator|->
-name|tm_isdst
-argument_list|)
+name|tm_zone
 expr_stmt|;
 endif|#
 directive|endif
