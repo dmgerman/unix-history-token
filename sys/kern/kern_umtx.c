@@ -1105,17 +1105,17 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|old
 operator|!=
 name|owner
-argument_list|,
+condition|)
+return|return
 operator|(
-literal|"improper umtx access"
+name|EINVAL
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 comment|/* 		 * Recheck the umtx queue to make sure another thread 		 * didn't put itself on it after it was unlocked. 		 */
 name|UMTX_LOCK
 argument_list|()
@@ -1213,8 +1213,8 @@ argument_list|,
 name|UMTX_CONTESTED
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|old
 operator|!=
 operator|-
@@ -1223,12 +1223,12 @@ operator|&&
 name|old
 operator|!=
 name|owner
-argument_list|,
+condition|)
+return|return
 operator|(
-literal|"improper umtx access"
+name|EINVAL
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 if|if
 condition|(
