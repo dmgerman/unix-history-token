@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Header: /a/cvs/386BSD/src/usr.bin/netstat/iso.c,v 1.1.1.1 1993/06/12 14:47:55 rgrimes Exp $  * $Source: /a/cvs/386BSD/src/usr.bin/netstat/iso.c,v $  */
+comment|/*  * $Header: /a/cvs/386BSD/src/usr.bin/netstat/iso.c,v 1.2 1993/09/05 23:41:49 rgrimes Exp $  * $Source: /a/cvs/386BSD/src/usr.bin/netstat/iso.c,v $  */
 end_comment
 
 begin_comment
@@ -157,7 +157,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netiso/tp_astring.c>
+file|"tp_astring.c"
 end_include
 
 begin_include
