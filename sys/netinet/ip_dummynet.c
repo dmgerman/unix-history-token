@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7.2.3 1999/03/26 16:48:55 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.7.2.4 1999/05/04 07:47:44 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -886,7 +886,7 @@ name|pkt
 operator|->
 name|dn_next
 expr_stmt|;
-comment|/* 	 * the trick to avoid flow-id settings here is to prepend a 	 * vestigial mbuf to the packet, with the following values: 	 * m_type = MT_DUMMYNET 	 * m_next = the actual mbuf to be processed by ip_input/output 	 * m_data = the matching rule 	 * The vestigial element is the same memory area used by 	 * the dn_pkt, and IS FREED IN ip_input/ip_output. IT IS 	 * NOT A REAL MBUF, just a block of memory acquired with malloc(). 	 */
+comment|/* 	 * the trick to avoid flow-id settings here is to prepend a 	 * vestigial mbuf to the packet, with the following values: 	 * m_type = MT_DUMMYNET 	 * m_next = the actual mbuf to be processed by ip_input/output 	 * m_data = the matching rule 	 * The vestigial element is the same memory area used by 	 * the dn_pkt, and IS FREED HERE because it can contain 	 * parameters passed to the called routine. The buffer IS NOT 	 * A REAL MBUF, just a block of memory acquired with malloc(). 	 */
 switch|switch
 condition|(
 name|pkt
@@ -1024,6 +1024,8 @@ operator|->
 name|dn_m
 argument_list|)
 expr_stmt|;
+break|break ;
+block|}
 name|FREE
 argument_list|(
 name|pkt
@@ -1031,8 +1033,6 @@ argument_list|,
 name|M_IPFW
 argument_list|)
 expr_stmt|;
-break|break ;
-block|}
 block|}
 block|}
 end_function
