@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reader.c	5.3 (Berkeley) %G%"
+literal|"@(#)reader.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5177,6 +5177,15 @@ control|)
 continue|continue;
 if|if
 condition|(
+name|pitem
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|==
+literal|0
+operator|||
 name|pitem
 index|[
 name|i
