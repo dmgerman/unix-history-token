@@ -1067,11 +1067,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* XXX: FIXME - mmap() not support files over 2Gb */
+comment|/* Large file processing require alternative implementation */
+comment|/* for now print nice error diagnostic at least */
 if|if
 condition|(
 name|size
 operator|>
-name|INT_MAX
+name|SSIZE_MAX
 condition|)
 block|{
 name|errno
