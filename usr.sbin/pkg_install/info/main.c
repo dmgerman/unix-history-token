@@ -41,7 +41,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fgGhiIkl:LmoO:pPqrRst:vVW:x"
+literal|"acdDe:fgGhiIkl:LmoO:pPqQrRst:vVW:x"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,14 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|Quiet
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|QUIET
 init|=
 name|FALSE
 decl_stmt|;
@@ -445,6 +453,18 @@ case|case
 literal|'q'
 case|:
 name|Quiet
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'Q'
+case|:
+name|Quiet
+operator|=
+name|TRUE
+expr_stmt|;
+name|QUIET
 operator|=
 name|TRUE
 expr_stmt|;
