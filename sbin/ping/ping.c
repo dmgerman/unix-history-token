@@ -1119,6 +1119,11 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|alarmtimeout
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * Do the stuff that we need root priv's for *first*, and 	 * then drop our setuid bit.  Save error reporting for 	 * after arg parsing. 	 */
 name|s
 operator|=
@@ -1174,7 +1179,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:LQRT:c:adfi:l:np:qrs:v"
+literal|"I:LQRT:c:adfi:l:np:qrs:t:v"
 argument_list|)
 operator|)
 operator|!=
@@ -1197,7 +1202,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"I:LQRT:c:adfi:l:np:qrs:vP:"
+literal|"I:LQRT:c:adfi:l:np:qrs:t:vP:"
 argument_list|)
 operator|)
 operator|!=
@@ -1632,6 +1637,45 @@ case|:
 name|source
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|alarmtimeout
+operator|=
+operator|(
+name|int
+operator|)
+name|strtoul
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|alarmtimeout
+operator|<
+literal|1
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timeout: `%s'"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
+name|alarmtimeout
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2952,6 +2996,34 @@ literal|"sigaction"
 argument_list|)
 expr_stmt|;
 block|}
+name|si_sa
+operator|.
+name|sa_handler
+operator|=
+name|stopit
+expr_stmt|;
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|SIGALRM
+argument_list|,
+operator|&
+name|si_sa
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"sigaction SIGALRM"
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -7152,9 +7224,9 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-literal|"[-s packetsize] [-S src_addr]"
+literal|"[-s packetsize] [-S src_addr] [-t timeout]"
 argument_list|,
-literal|"[host | [-L] [-I iface] [-T ttl] mcast-group]"
+literal|"            [host | [-L] [-I iface] [-T ttl] mcast-group]"
 argument_list|)
 expr_stmt|;
 name|exit
