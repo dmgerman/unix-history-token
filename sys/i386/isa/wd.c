@@ -15,11 +15,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.33 1994/02/23 11:14:26 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.34 1994/02/25 23:17:40 ache Exp $  */
 end_comment
 
 begin_comment
-comment|/* TODO:  *	o Fix timeout from 2 to about 4 seconds.  *	o Bump error count after timeout.  *	o Satisfy ATA timing in all cases.  *	o Finish merging berry/sos timeout code (bump error count...).  *	o Merge/fix TIH/NetBSD bad144 code.  *	o Merge/fix Dyson/NetBSD clustering code.  *	o Don't use polling except for initialization.  Need to  *	  reorganize the state machine.  Then "extra" interrupts  *	  shouldn't happen (except maybe one for initialization).  *	o Fix disklabel, boot and driver inconsistencies with  *	  bad144 in standard versions.  *	o Support extended DOS partitions.  *	o Support swapping to DOS partitions.  *	o Look at latest linux clustering methods.  Our disksort()  *	  gets in the way of clustering.  *	o Handle bad sectors, clustering, disklabelling, DOS  *	  partitions and swapping driver-independently.  Use  *	  i386/dkbad.c for bad sectors.  Swapping will need new  *	  driver entries for polled reinit and polled write).  */
+comment|/* TODO:  *	o Bump error count after timeout.  *	o Satisfy ATA timing in all cases.  *	o Finish merging berry/sos timeout code (bump error count...).  *	o Merge/fix TIH/NetBSD bad144 code.  *	o Merge/fix Dyson/NetBSD clustering code.  *	o Don't use polling except for initialization.  Need to  *	  reorganize the state machine.  Then "extra" interrupts  *	  shouldn't happen (except maybe one for initialization).  *	o Fix disklabel, boot and driver inconsistencies with  *	  bad144 in standard versions.  *	o Support extended DOS partitions.  *	o Support swapping to DOS partitions.  *	o Look at latest linux clustering methods.  Our disksort()  *	  gets in the way of clustering.  *	o Handle bad sectors, clustering, disklabelling, DOS  *	  partitions and swapping driver-independently.  Use  *	  i386/dkbad.c for bad sectors.  Swapping will need new  *	  driver entries for polled reinit and polled write).  */
 end_comment
 
 begin_include
@@ -2556,7 +2556,7 @@ name|dk_timeout
 operator|=
 literal|1
 operator|+
-literal|1
+literal|3
 expr_stmt|;
 comment|/* If this is a read operation, just go away until it's done. */
 if|if
@@ -2788,19 +2788,34 @@ name|b_active
 operator|=
 literal|0
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|wdcontrol
 argument_list|(
 name|bp
 argument_list|)
 condition|)
+block|{
+case|case
+literal|0
+case|:
+return|return;
+case|case
+literal|1
+case|:
 name|wdstart
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
 return|return;
+case|case
+literal|2
+case|:
+goto|goto
+name|done
+goto|;
+block|}
 block|}
 comment|/* have we an error? */
 if|if
@@ -3270,14 +3285,9 @@ return|return;
 comment|/* redo xfer sector by sector */
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|B_FORMAT
 name|done
 label|:
 empty_stmt|;
-endif|#
-directive|endif
 comment|/* done with this transfer, with or without error */
 name|du
 operator|->
@@ -3452,10 +3462,6 @@ decl_stmt|;
 name|struct
 name|disklabel
 name|save_label
-decl_stmt|;
-name|unsigned
-name|long
-name|save_heads
 decl_stmt|;
 name|lunit
 operator|=
@@ -3637,14 +3643,6 @@ name|du
 operator|->
 name|dk_dd
 expr_stmt|;
-name|save_heads
-operator|=
-name|du
-operator|->
-name|dk_dd
-operator|.
-name|d_ntracks
-expr_stmt|;
 define|#
 directive|define
 name|WDSTRATEGY
@@ -3752,43 +3750,6 @@ name|offset
 decl_stmt|,
 name|size
 decl_stmt|;
-if|if
-condition|(
-name|du
-operator|->
-name|dk_dd
-operator|.
-name|d_ntracks
-operator|>
-literal|16
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"wd%d: can't handle %lu heads from partition table (controller value (%lu) restored)\n"
-argument_list|,
-name|du
-operator|->
-name|dk_lunit
-argument_list|,
-name|du
-operator|->
-name|dk_dd
-operator|.
-name|d_ntracks
-argument_list|,
-name|save_heads
-argument_list|)
-expr_stmt|;
-name|du
-operator|->
-name|dk_dd
-operator|.
-name|d_ntracks
-operator|=
-name|save_heads
-expr_stmt|;
-block|}
 name|du
 operator|->
 name|dk_flags
@@ -4264,7 +4225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Implement operations other than read/write.  * Called from wdstart or wdintr during opens and formats.  * Uses finite-state-machine to track progress of operation in progress.  * Returns 0 if operation still in progress, 1 if completed.  */
+comment|/*  * Implement operations other than read/write.  * Called from wdstart or wdintr during opens and formats.  * Uses finite-state-machine to track progress of operation in progress.  * Returns 0 if operation still in progress, 1 if completed, 2 if error.  */
 end_comment
 
 begin_function
@@ -4452,7 +4413,7 @@ name|B_ERROR
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|2
 operator|)
 return|;
 block|}
@@ -4485,7 +4446,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|2
 operator|)
 return|;
 block|}
@@ -4725,13 +4686,26 @@ operator|->
 name|dk_dd
 operator|.
 name|d_ntracks
+operator|==
+literal|0
+operator|||
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_ntracks
 operator|>
 literal|16
 condition|)
 block|{
+name|struct
+name|wdparams
+modifier|*
+name|wp
+decl_stmt|;
 name|printf
 argument_list|(
-literal|"wd%d: cannot handle %lu heads (truncating to 16)\n"
+literal|"wd%d: can't handle %lu heads from partition table "
 argument_list|,
 name|du
 operator|->
@@ -4744,6 +4718,56 @@ operator|.
 name|d_ntracks
 argument_list|)
 expr_stmt|;
+comment|/* obtain parameters */
+name|wp
+operator|=
+operator|&
+name|du
+operator|->
+name|dk_params
+expr_stmt|;
+if|if
+condition|(
+name|wp
+operator|->
+name|wdp_heads
+operator|>
+literal|0
+operator|&&
+name|wp
+operator|->
+name|wdp_heads
+operator|<=
+literal|16
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"(controller value %lu restored)\n"
+argument_list|,
+name|wp
+operator|->
+name|wdp_heads
+argument_list|)
+expr_stmt|;
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_ntracks
+operator|=
+name|wp
+operator|->
+name|wdp_heads
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"(truncating to 16)\n"
+argument_list|)
+expr_stmt|;
 name|du
 operator|->
 name|dk_dd
@@ -4752,6 +4776,7 @@ name|d_ntracks
 operator|=
 literal|16
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -4794,7 +4819,7 @@ name|WDCS_READY
 argument_list|,
 name|TIMEOUT
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 block|{
@@ -4948,7 +4973,7 @@ name|WDCS_DRQ
 argument_list|,
 name|TIMEOUT
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{
