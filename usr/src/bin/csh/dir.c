@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dir.c 4.1 %G%"
+literal|"@(#)dir.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,7 @@ operator|=
 name|hp
 expr_stmt|;
 else|else
+block|{
 name|cp
 operator|=
 name|getwd
@@ -133,6 +134,32 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+block|{
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|path
+argument_list|,
+name|strlen
+argument_list|(
+name|path
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|dp
 operator|=
 operator|(
