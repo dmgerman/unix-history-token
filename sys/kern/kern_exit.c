@@ -1956,6 +1956,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|crfree
 argument_list|(
 name|p
@@ -1970,6 +1975,11 @@ operator|->
 name|p_cred
 operator|->
 name|p_uidinfo
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 name|FREE
