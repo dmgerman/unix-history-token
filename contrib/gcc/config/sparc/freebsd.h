@@ -21,7 +21,8 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU64_DEFAULT_SPEC
-value|"-D__sparc64__ -D__sparc_v9__ -D__arch64__"
+define|\
+value|"-D__sparc64__ -D__sparc_v9__ -D__sparcv9 -D__sparc__ -D__arch64__"
 end_define
 
 begin_comment
