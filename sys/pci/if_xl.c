@@ -1031,6 +1031,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|xl_choose_xcvr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|xl_softc
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4330,9 +4347,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-name|u_int16_t
-name|devid
-decl_stmt|;
 comment|/* 	 * If some of the media options bits are set, assume they are 	 * correct. If not, try to figure it out down below. 	 * XXX I should check for 10baseFL, but I don't have an adapter 	 * to test with. 	 */
 if|if
 condition|(
@@ -4434,6 +4448,38 @@ name|xl_unit
 argument_list|)
 expr_stmt|;
 block|}
+name|xl_choose_xcvr
+argument_list|(
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|xl_choose_xcvr
+parameter_list|(
+name|sc
+parameter_list|,
+name|verbose
+parameter_list|)
+name|struct
+name|xl_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|int
+name|verbose
+decl_stmt|;
+block|{
+name|u_int16_t
+name|devid
+decl_stmt|;
 comment|/* 	 * Read the device ID from the EEPROM. 	 * This is what's loaded into the PCI device ID register, so it has 	 * to be correct otherwise we wouldn't have gotten this far. 	 */
 name|xl_read_eeprom
 argument_list|(
@@ -4477,9 +4523,14 @@ name|xl_xcvr
 operator|=
 name|XL_XCVR_10BT
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
-literal|"xl%d: guessing 10BaseT transceiver\n"
+literal|"xl%d: guessing 10BaseT "
+literal|"transceiver\n"
 argument_list|,
 name|sc
 operator|->
@@ -4511,9 +4562,14 @@ name|xl_xcvr
 operator|=
 name|XL_XCVR_10BT
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
-literal|"xl%d: guessing COMBO (AUI/BNC/TP)\n"
+literal|"xl%d: guessing COMBO "
+literal|"(AUI/BNC/TP)\n"
 argument_list|,
 name|sc
 operator|->
@@ -4539,6 +4595,10 @@ name|xl_xcvr
 operator|=
 name|XL_XCVR_10BT
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"xl%d: guessing TPC (BNC/TP)\n"
@@ -4565,6 +4625,10 @@ name|xl_xcvr
 operator|=
 name|XL_XCVR_AUI
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"xl%d: guessing 10baseFL\n"
@@ -4591,6 +4655,10 @@ name|xl_xcvr
 operator|=
 name|XL_XCVR_MII
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"xl%d: guessing MII\n"
@@ -4621,6 +4689,10 @@ name|xl_xcvr
 operator|=
 name|XL_XCVR_MII
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"xl%d: guessing 100BaseT4/MII\n"
@@ -4663,6 +4735,10 @@ name|xl_xcvr
 operator|=
 name|XL_XCVR_AUTO
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"xl%d: guessing 10/100 internal\n"
@@ -4693,9 +4769,14 @@ name|xl_xcvr
 operator|=
 name|XL_XCVR_AUTO
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
-literal|"xl%d: guessing 10/100 plus BNC/AUI\n"
+literal|"xl%d: guessing 10/100 "
+literal|"plus BNC/AUI\n"
 argument_list|,
 name|sc
 operator|->
@@ -5825,6 +5906,22 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* 	 * Sanity check. If the user has selected "auto" and this isn't 	 * a 10/100 card of some kind, we need to force the transceiver 	 * type to something sane. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|xl_xcvr
+operator|==
+name|XL_XCVR_AUTO
+condition|)
+name|xl_choose_xcvr
+argument_list|(
+name|sc
+argument_list|,
+name|bootverbose
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Do ifmedia setup. 	 */
 name|ifmedia_init
 argument_list|(
@@ -10767,68 +10864,6 @@ condition|)
 name|mii_mediachg
 argument_list|(
 name|mii
-argument_list|)
-expr_stmt|;
-name|XL_SEL_WIN
-argument_list|(
-literal|7
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|XL_COMMAND
-argument_list|,
-name|XL_CMD_UP_STALL
-argument_list|)
-expr_stmt|;
-name|xl_wait
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|XL_UPLIST_PTR
-argument_list|,
-name|vtophys
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|xl_ldata
-operator|->
-name|xl_rx_list
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|XL_UP_POLL
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-name|CSR_WRITE_2
-argument_list|(
-name|sc
-argument_list|,
-name|XL_COMMAND
-argument_list|,
-name|XL_CMD_UP_UNSTALL
-argument_list|)
-expr_stmt|;
-name|xl_wait
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Select window 7 for normal operations. */
