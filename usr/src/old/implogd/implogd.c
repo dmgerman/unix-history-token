@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implogd.c	4.7 (Berkeley) %G%"
+literal|"@(#)implogd.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,13 +23,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sgtty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<sys/time.h>
 end_include
 
 begin_include
