@@ -371,6 +371,9 @@ name|struct
 name|ACPIrsdp
 name|rsdp
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 comment|/* Read in the table signature and check it. */
 name|pread
 argument_list|(
@@ -434,6 +437,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* If the revision is 0, assume a version 1 length. */
 if|if
 condition|(
 name|rsdp
@@ -442,11 +446,17 @@ name|revision
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+name|len
+operator|=
+literal|20
+expr_stmt|;
+else|else
+name|len
+operator|=
+name|rsdp
+operator|.
+name|length
+expr_stmt|;
 comment|/* XXX Should handle ACPI 2.0 RSDP extended checksum here. */
 return|return
 operator|(
@@ -454,9 +464,7 @@ name|acpi_map_physical
 argument_list|(
 name|addr
 argument_list|,
-name|rsdp
-operator|.
-name|length
+name|len
 argument_list|)
 operator|)
 return|;
