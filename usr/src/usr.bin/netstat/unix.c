@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.14 (Berkeley) %G%"
+literal|"@(#)unix.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +152,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file
 modifier|*
@@ -163,6 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfiles
 decl_stmt|;
@@ -616,14 +618,22 @@ name|m
 operator|->
 name|m_len
 operator|-
-operator|(
+call|(
 name|int
-operator|)
+call|)
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sa
+argument_list|)
+operator|-
 sizeof|sizeof
 argument_list|(
 name|sa
 operator|->
-name|sun_family
+name|sun_path
+argument_list|)
 argument_list|)
 argument_list|,
 name|sa
