@@ -784,6 +784,16 @@ decl_stmt|;
 name|int
 name|pflags
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|M_NOWAIT
+operator|)
+operator|==
+literal|0
+condition|)
 name|GIANT_REQUIRED
 expr_stmt|;
 name|size
