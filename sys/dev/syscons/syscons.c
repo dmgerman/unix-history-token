@@ -1395,7 +1395,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"sc%d: no video adapter is found.\n"
+literal|"sc%d: no video adapter found.\n"
 argument_list|,
 name|unit
 argument_list|)
