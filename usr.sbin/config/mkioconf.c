@@ -4648,10 +4648,10 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"/* unit  driver  driver unit */\n"
+literal|"/* scbus, driver, driver unit, ctlr bus*/\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Why do we always get an entry such as: 	 * { '?', "ncr", '?' }, 	 */
+comment|/* XXX: Why do we always get an entry such as: 	 * { '?', "ncr", '?', '?' }, 	 */
 for|for
 control|(
 name|dp
@@ -4731,7 +4731,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s },\n"
+literal|"%s, "
 argument_list|,
 name|id
 argument_list|(
@@ -4741,12 +4741,26 @@ name|d_unit
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s },\n"
+argument_list|,
+name|id
+argument_list|(
+name|dp
+operator|->
+name|d_slave
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ 0, 0, 0 }\n};\n"
+literal|"{ 0, 0, 0, 0 }\n};\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
