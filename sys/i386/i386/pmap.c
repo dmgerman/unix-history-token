@@ -5155,8 +5155,10 @@ name|ptepa
 operator|=
 literal|0
 expr_stmt|;
-name|invltlb
-argument_list|()
+name|pmap_invalidate_all
+argument_list|(
+name|kernel_pmap
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If the page table page is mapped, we just increment the 	 * hold count, and activate it. 	 */
@@ -8657,8 +8659,10 @@ argument_list|,
 name|PG_MAPPED
 argument_list|)
 expr_stmt|;
-name|invltlb
-argument_list|()
+name|pmap_invalidate_all
+argument_list|(
+name|kernel_pmap
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
