@@ -1685,9 +1685,8 @@ name|constty
 operator|==
 name|tp
 condition|)
-name|constty
-operator|=
-name|NULL
+name|constty_clear
+argument_list|()
 expr_stmt|;
 name|ttyflush
 argument_list|(
@@ -4826,9 +4825,10 @@ operator|(
 name|error
 operator|)
 return|;
-name|constty
-operator|=
+name|constty_set
+argument_list|(
 name|tp
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -4838,9 +4838,8 @@ name|tp
 operator|==
 name|constty
 condition|)
-name|constty
-operator|=
-name|NULL
+name|constty_clear
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
