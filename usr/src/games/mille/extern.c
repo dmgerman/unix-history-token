@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)extern.c	5.2 (Berkeley) %G%"
+literal|"@(#)extern.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,15 +266,12 @@ comment|/* C_RIGHT_WAY */
 literal|0
 comment|/* C_INIT */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+decl_stmt|,
 name|Numneed
 index|[
 name|NUM_CARDS
 index|]
-operator|=
+init|=
 block|{
 comment|/* number of cards needed per hand	*/
 literal|0
@@ -337,8 +334,8 @@ comment|/* C_RIGHT_WAY */
 literal|0
 comment|/* C_INIT */
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|CARD

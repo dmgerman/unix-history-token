@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.2 (Berkeley) %G%"
+literal|"@(#)exec.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,17 +57,13 @@ literal|"/bin/sh"
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
-name|execat
-argument_list|()
-decl_stmt|,
-modifier|*
 name|getenv
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_extern
 extern|extern	errno;
@@ -151,6 +147,10 @@ name|newargs
 index|[
 literal|256
 index|]
+decl_stmt|,
+modifier|*
+name|execat
+argument_list|()
 decl_stmt|;
 name|int
 name|i
