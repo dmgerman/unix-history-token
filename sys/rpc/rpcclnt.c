@@ -299,6 +299,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|rpcclnt_backoff
 index|[
