@@ -695,6 +695,22 @@ block|}
 end_function
 
 begin_function
+name|void
+name|softdep_fsync_mountdev
+parameter_list|(
+name|vp
+parameter_list|)
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+block|{
+return|return;
+block|}
+end_function
+
+begin_function
 name|int
 name|softdep_sync_metadata
 parameter_list|(
