@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/diskslice.h>
 end_include
 
@@ -57,6 +51,18 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -105,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -1994,32 +2006,6 @@ literal|'/'
 argument_list|)
 condition|)
 block|{
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-literal|"%s%s"
-argument_list|,
-name|_PATH_DEV
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-name|buf
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-condition|)
 name|snprintf
 argument_list|(
 name|buf
