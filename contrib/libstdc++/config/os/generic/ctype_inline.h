@@ -176,13 +176,18 @@ name|__ret
 init|=
 name|true
 decl_stmt|;
+name|bool
+name|__any_match
+init|=
+name|false
+decl_stmt|;
 specifier|const
-name|int
+name|size_t
 name|__bitmasksize
 init|=
-literal|11
+literal|10
 decl_stmt|;
-name|int
+name|size_t
 name|__bitcur
 init|=
 literal|0
@@ -194,7 +199,7 @@ init|;
 name|__ret
 operator|&&
 name|__bitcur
-operator|<
+operator|<=
 name|__bitmasksize
 condition|;
 operator|++
@@ -221,6 +226,10 @@ operator|&
 name|__bit
 condition|)
 block|{
+name|__any_match
+operator|=
+name|true
+expr_stmt|;
 name|bool
 name|__testis
 decl_stmt|;
@@ -367,6 +376,8 @@ begin_return
 unit|} 	  }
 return|return
 name|__ret
+operator|&
+name|__any_match
 return|;
 end_return
 
@@ -422,10 +433,10 @@ else|else
 block|{
 comment|// Highest bitmask in ctype_base == 10.
 specifier|const
-name|int
+name|size_t
 name|__bitmasksize
 init|=
-literal|11
+literal|10
 decl_stmt|;
 for|for
 control|(
@@ -447,7 +458,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|// Lowest bitmask in ctype_base == 0
-name|int
+name|size_t
 name|__i
 init|=
 literal|0
@@ -456,7 +467,7 @@ for|for
 control|(
 init|;
 name|__i
-operator|<
+operator|<=
 name|__bitmasksize
 condition|;
 operator|++

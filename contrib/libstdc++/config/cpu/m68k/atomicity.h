@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: m68k version -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -118,6 +118,7 @@ end_typedef
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__mc68020__
@@ -137,6 +138,14 @@ operator|||
 name|defined
 argument_list|(
 name|__mc68060__
+argument_list|)
+operator|)
+expr|\
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mcpu32__
 argument_list|)
 end_if
 
@@ -251,25 +260,10 @@ return|;
 block|}
 end_decl_stmt
 
-begin_elif
-elif|#
-directive|elif
-operator|!
-name|defined
-argument_list|(
-name|__mcf5200__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__mcf5300__
-argument_list|)
-end_elif
-
-begin_comment
-comment|// 68000, 68010, cpu32 and 5400 support test-and-set.
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
 begin_expr_stmt
 name|template
@@ -347,9 +341,50 @@ block|{
 name|_Atomic_word
 name|__result
 decl_stmt|;
+comment|// bset with no immediate addressing
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mcf5200__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mcf5300__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mcf5400__
+argument_list|)
 asm|__asm__
 specifier|__volatile__
-asm|("1: tas %0\n\tjbne 1b" 		       : "=m"(__Atomicity_lock<0>::_S_atomicity_lock) 		       : "m"(__Atomicity_lock<0>::_S_atomicity_lock));
+asm|("1: bset.b #7,%0@\n\tjbne 1b" 		       :
+comment|/* no outputs */
+asm|: "a"(&__Atomicity_lock<0>::_S_atomicity_lock) 		       : "cc", "memory");
+comment|// bset with immediate addressing
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mc68000__
+argument_list|)
+asm|__asm__
+specifier|__volatile__
+asm|("1: bset.b #7,%0\n\tjbne 1b" 		       : "+m"(__Atomicity_lock<0>::_S_atomicity_lock) 		       :
+comment|/* none */
+asm|: "cc");
+else|#
+directive|else
+comment|// 680x0, cpu32, 5400 support test-and-set.
+asm|__asm__
+specifier|__volatile__
+asm|("1: tas %0\n\tjbne 1b" 		       : "+m"(__Atomicity_lock<0>::_S_atomicity_lock) 		       :
+comment|/* none */
+asm|: "cc");
+endif|#
+directive|endif
 name|__result
 operator|=
 operator|*
@@ -377,145 +412,13 @@ return|;
 block|}
 end_decl_stmt
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__vxWorks__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__embedded__
-argument_list|)
-end_elif
-
-begin_comment
-comment|// The best we can hope for is to disable interrupts, which we
-end_comment
-
-begin_comment
-comment|// can only do from supervisor mode.
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|inline
-name|_Atomic_word
-name|__attribute__
-argument_list|(
-operator|(
-name|__unused__
-operator|)
-argument_list|)
-name|__exchange_and_add
-argument_list|(
-specifier|volatile
-name|_Atomic_word
-operator|*
-name|__mem
-argument_list|,
-name|int
-name|__val
-argument_list|)
-block|{
-name|_Atomic_word
-name|__result
-decl_stmt|;
-name|short
-name|__level
-decl_stmt|,
-name|__tmpsr
-decl_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("move%.w %%sr,%0\n\tor%.l %0,%1\n\tmove%.w %1,%%sr" 		  	: "=d"(__level), "=d"(__tmpsr) : "1"(0x700));
-name|__result
-operator|=
-operator|*
-name|__mem
-expr_stmt|;
-operator|*
-name|__mem
-operator|=
-name|__result
-operator|+
-name|__val
-expr_stmt|;
-asm|__asm__
-specifier|__volatile__
-asm|("move%.w %0,%%sr" : : "d"(__level));
-return|return
-name|__result
-return|;
-block|}
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|// These variants do not support any atomic operations at all.
-end_comment
-
-begin_warning
-warning|#
-directive|warning
-literal|"__exchange_and_add is not atomic for this target"
-end_warning
-
-begin_decl_stmt
-specifier|static
-specifier|inline
-name|_Atomic_word
-name|__attribute__
-argument_list|(
-operator|(
-name|__unused__
-operator|)
-argument_list|)
-name|__exchange_and_add
-argument_list|(
-specifier|volatile
-name|_Atomic_word
-operator|*
-name|__mem
-argument_list|,
-name|int
-name|__val
-argument_list|)
-block|{
-name|_Atomic_word
-name|__result
-decl_stmt|;
-name|__result
-operator|=
-operator|*
-name|__mem
-expr_stmt|;
-operator|*
-name|__mem
-operator|=
-name|__result
-operator|+
-name|__val
-expr_stmt|;
-return|return
-name|__result
-return|;
-block|}
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* CAS / IRQ / TAS */
+comment|/* TAS / BSET */
 end_comment
 
 begin_decl_stmt
@@ -560,7 +463,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* atomicity.h */
+comment|/* _BITS_ATOMICITY_H */
 end_comment
 
 end_unit

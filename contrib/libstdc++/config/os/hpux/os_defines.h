@@ -339,14 +339,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Don't use pragma weak in gthread headers.  */
+comment|/* Don't use pragma weak in gthread headers.  HP-UX rejects programs    with unsatisfied external references even if all of those references    are weak; gthread relies on such unsatisfied references being resolved    to null pointers when weak symbol support is on.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__hppa__
-end_ifdef
 
 begin_define
 define|#
@@ -354,11 +348,6 @@ directive|define
 name|_GLIBCPP_GTHREAD_USE_WEAK
 value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -503,6 +503,9 @@ argument_list|)
 specifier|const
 block|; }
 decl_stmt|;
+name|class
+name|__class_type_info
+decl_stmt|;
 comment|/* type information for a pointer to member variable */
 name|class
 name|__pointer_to_member_type_info
@@ -569,9 +572,6 @@ argument|unsigned __outer
 argument_list|)
 specifier|const
 block|; }
-decl_stmt|;
-name|class
-name|__class_type_info
 decl_stmt|;
 comment|/* helper class for __vmi_class_type */
 name|class
