@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	4.5 82/12/18"
+literal|"@(#)mbuf.c	4.6 84/10/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,17 +99,12 @@ block|,
 literal|"IMP host table entries"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notdef
 block|{
 name|MT_ATABLE
 block|,
 literal|"address resolution tables"
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 name|MT_FTABLE
 block|,
@@ -132,6 +127,12 @@ block|{
 name|MT_SOOPTS
 block|,
 literal|"socket options"
+block|}
+block|,
+block|{
+name|MT_RIGHTS
+block|,
+literal|"access rights"
 block|}
 block|,
 block|{
@@ -237,7 +238,10 @@ name|m_mbufs
 operator|-
 name|mbstat
 operator|.
-name|m_mbfree
+name|m_mtypes
+index|[
+name|MT_FREE
+index|]
 argument_list|,
 name|mbstat
 operator|.
@@ -313,7 +317,10 @@ name|m_mbufs
 operator|-
 name|mbstat
 operator|.
-name|m_mbfree
+name|m_mtypes
+index|[
+name|MT_FREE
+index|]
 condition|)
 name|printf
 argument_list|(
@@ -326,7 +333,10 @@ name|m_mbufs
 operator|-
 name|mbstat
 operator|.
-name|m_mbfree
+name|m_mtypes
+index|[
+name|MT_FREE
+index|]
 operator|)
 operator|-
 name|totmbufs
@@ -351,9 +361,7 @@ argument_list|)
 expr_stmt|;
 name|totmem
 operator|=
-name|mbstat
-operator|.
-name|m_mbufs
+name|totmbufs
 operator|*
 name|MSIZE
 operator|+
@@ -367,7 +375,10 @@ name|totfree
 operator|=
 name|mbstat
 operator|.
-name|m_mbfree
+name|m_mtypes
+index|[
+name|MT_FREE
+index|]
 operator|*
 name|MSIZE
 operator|+
