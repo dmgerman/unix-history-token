@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	@(#)shutdown.c	4.6 (Berkeley/Melbourne) 81/05/10	*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)shutdown.c	4.7 (Berkeley) 81/05/11"
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
