@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    hv.c  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    hv.c  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -80,8 +80,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|HE
-modifier|*
+name|void
 name|more_he
 name|_
 argument_list|(
@@ -161,11 +160,16 @@ name|HE
 modifier|*
 name|he
 decl_stmt|;
+name|LOCK_SV_MUTEX
+expr_stmt|;
 if|if
 condition|(
+operator|!
 name|PL_he_root
 condition|)
-block|{
+name|more_he
+argument_list|()
+expr_stmt|;
 name|he
 operator|=
 name|PL_he_root
@@ -177,13 +181,10 @@ argument_list|(
 name|he
 argument_list|)
 expr_stmt|;
+name|UNLOCK_SV_MUTEX
+expr_stmt|;
 return|return
 name|he
-return|;
-block|}
-return|return
-name|more_he
-argument_list|()
 return|;
 block|}
 end_function
@@ -198,6 +199,8 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|LOCK_SV_MUTEX
+expr_stmt|;
 name|HeNEXT
 argument_list|(
 name|p
@@ -213,13 +216,14 @@ name|PL_he_root
 operator|=
 name|p
 expr_stmt|;
+name|UNLOCK_SV_MUTEX
+expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|STATIC
-name|HE
-modifier|*
+name|void
 name|more_he
 parameter_list|(
 name|void
@@ -303,10 +307,6 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-return|return
-name|new_he
-argument_list|()
-return|;
 block|}
 end_function
 
@@ -4880,11 +4880,6 @@ name|HV
 modifier|*
 name|hv
 decl_stmt|;
-specifier|register
-name|XPVHV
-modifier|*
-name|xhv
-decl_stmt|;
 name|STRLEN
 name|hv_max
 init|=
@@ -4933,18 +4928,10 @@ operator|/
 literal|2
 expr_stmt|;
 comment|/* Is always 2^n-1 */
-operator|(
-operator|(
-name|XPVHV
-operator|*
-operator|)
-name|SvANY
+name|HvMAX
 argument_list|(
 name|hv
 argument_list|)
-operator|)
-operator|->
-name|xhv_max
 operator|=
 name|hv_max
 expr_stmt|;
@@ -4959,7 +4946,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|if (!SvRMAGICAL(ohv) || !mg_find((SV*)ohv,'P')) {
+block|if (! SvTIED_mg((SV*)ohv, 'P')) {
 comment|/* Quick way ???*/
 block|}      else
 endif|#
@@ -4991,7 +4978,7 @@ comment|/* current entry of iterator */
 comment|/* Slow way */
 name|hv_iterinit
 argument_list|(
-name|hv
+name|ohv
 argument_list|)
 expr_stmt|;
 while|while
@@ -5819,15 +5806,9 @@ name|xhv_eiter
 expr_stmt|;
 if|if
 condition|(
-name|SvRMAGICAL
-argument_list|(
-name|hv
-argument_list|)
-operator|&&
-operator|(
 name|mg
 operator|=
-name|mg_find
+name|SvTIED_mg
 argument_list|(
 operator|(
 name|SV
@@ -5837,7 +5818,6 @@ name|hv
 argument_list|,
 literal|'P'
 argument_list|)
-operator|)
 condition|)
 block|{
 name|SV
@@ -6584,6 +6564,8 @@ name|PL_strtab
 argument_list|)
 expr_stmt|;
 comment|/* assert(xhv_array != 0) */
+name|LOCK_STRTAB_MUTEX
+expr_stmt|;
 name|oentry
 operator|=
 operator|&
@@ -6729,6 +6711,8 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+name|UNLOCK_STRTAB_MUTEX
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -6803,6 +6787,8 @@ name|PL_strtab
 argument_list|)
 expr_stmt|;
 comment|/* assert(xhv_array != 0) */
+name|LOCK_STRTAB_MUTEX
+expr_stmt|;
 name|oentry
 operator|=
 operator|&
@@ -6976,6 +6962,8 @@ name|entry
 argument_list|)
 expr_stmt|;
 comment|/* use value slot as REFCNT */
+name|UNLOCK_STRTAB_MUTEX
+expr_stmt|;
 return|return
 name|HeKEY_hek
 argument_list|(

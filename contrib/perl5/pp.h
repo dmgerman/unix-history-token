@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    pp.h  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    pp.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_ifdef
@@ -297,6 +297,17 @@ name|POPp
 value|(SvPVx(POPs, PL_na))
 end_define
 
+begin_comment
+comment|/* deprecated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POPpx
+value|(SvPVx(POPs, n_a))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -337,6 +348,17 @@ define|#
 directive|define
 name|TOPp
 value|(SvPV(TOPs, PL_na))
+end_define
+
+begin_comment
+comment|/* deprecated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOPpx
+value|(SvPV(TOPs, n_a))
 end_define
 
 begin_define

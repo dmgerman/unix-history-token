@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: walk.c,v $$Revision: 4.1 $$Date: 92/08/07 18:29:31 $  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log:	walk.c,v $  */
+comment|/* $RCSfile: walk.c,v $$Revision: 1.1.1.2 $$Date: 1999/05/02 14:33:17 $  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log: walk.c,v $  * Revision 1.1.1.2  1999/05/02 14:33:17  markm  * Maintenance releace 3 of perl5.005. Includes support for threads.  *  */
 end_comment
 
 begin_include
@@ -845,7 +845,7 @@ name|str_cat
 argument_list|(
 name|str
 argument_list|,
-literal|"chop;\t# strip record separator\n"
+literal|"chomp;\t# strip record separator\n"
 argument_list|)
 expr_stmt|;
 name|tab
@@ -1177,7 +1177,7 @@ name|str_cat
 argument_list|(
 name|str
 argument_list|,
-literal|"chop;\t# strip record separator\n"
+literal|"chomp;\t# strip record separator\n"
 argument_list|)
 expr_stmt|;
 name|tab

@@ -230,7 +230,7 @@ name|BGET_IV64
 parameter_list|(
 name|arg
 parameter_list|)
-value|STMT_START {			\ 	U32 hi, lo;					\ 	BGET_U32(hi);					\ 	BGET_U32(lo);					\ 	if (sizeof(IV) == 8)				\ 	    arg = (IV) (hi<< (sizeof(IV)*4) | lo);	\ 	else if (((I32)hi == -1&& (I32)lo< 0)		\ 		 || ((I32)hi == 0&& (I32)lo>= 0)) {	\ 	    arg = (I32)lo;				\ 	}						\ 	else {						\ 	    PL_bytecode_iv_overflows++;				\ 	    arg = 0;					\ 	}						\     } STMT_END
+value|STMT_START {			\ 	U32 hi, lo;					\ 	BGET_U32(hi);					\ 	BGET_U32(lo);					\ 	if (sizeof(IV) == 8)				\ 	    arg = ((IV)hi<< (sizeof(IV)*4) | lo);	\ 	else if (((I32)hi == -1&& (I32)lo< 0)		\ 		 || ((I32)hi == 0&& (I32)lo>= 0)) {	\ 	    arg = (I32)lo;				\ 	}						\ 	else {						\ 	    PL_bytecode_iv_overflows++;				\ 	    arg = 0;					\ 	}						\     } STMT_END
 end_define
 
 begin_define

@@ -147,6 +147,11 @@ name|defined
 argument_list|(
 name|M_XENIX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 end_if
 
 begin_include

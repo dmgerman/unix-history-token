@@ -2198,7 +2198,7 @@ literal|"next statement"
 block|,
 literal|"debug next statement"
 block|,
-literal|"unstack"
+literal|"iteration finalizer"
 block|,
 literal|"block entry"
 block|,
@@ -9920,7 +9920,7 @@ comment|/* splice */
 literal|0x0002351d
 block|,
 comment|/* push */
-literal|0x00003c14
+literal|0x00003c04
 block|,
 comment|/* pop */
 literal|0x00003c04
@@ -10115,7 +10115,7 @@ comment|/* sysseek */
 literal|0x0917651d
 block|,
 comment|/* sysread */
-literal|0x0911651d
+literal|0x0991651d
 block|,
 comment|/* syswrite */
 literal|0x0911651d

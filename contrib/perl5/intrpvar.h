@@ -1562,6 +1562,19 @@ begin_comment
 comment|/* incremented each thread creation */
 end_comment
 
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Istrtab_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Mutex for string table access */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    gv.c  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    gv.c  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -617,7 +617,10 @@ expr_stmt|;
 if|if
 condition|(
 name|multi
+operator|||
+name|doproto
 condition|)
+comment|/* doproto means it _was_ mentioned */
 name|GvMULTI_on
 argument_list|(
 name|gv
@@ -636,6 +639,7 @@ argument_list|)
 expr_stmt|;
 name|ENTER
 expr_stmt|;
+comment|/* XXX unsafe for threads if eval_owner isn't held */
 name|start_subparse
 argument_list|(
 literal|0
@@ -719,6 +723,7 @@ name|gv
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|New
 argument_list|(
 literal|666
@@ -747,6 +752,7 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* USE_THREADS */
@@ -3556,24 +3562,6 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|'a'
-case|:
-case|case
-literal|'b'
-case|:
-if|if
-condition|(
-name|len
-operator|==
-literal|1
-condition|)
-name|GvMULTI_on
-argument_list|(
-name|gv
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'E'
 case|:
 if|if
@@ -4236,6 +4224,9 @@ case|case
 literal|'\001'
 case|:
 case|case
+literal|'\003'
+case|:
+case|case
 literal|'\004'
 case|:
 case|case
@@ -4720,10 +4711,26 @@ argument_list|,
 name|SVt_PVHV
 argument_list|)
 expr_stmt|;
+comment|/* unless exists($main::{FileHandle}) and defined(%main::FileHandle::) */
 if|if
 condition|(
 operator|!
+operator|(
 name|iogv
+operator|&&
+name|GvHV
+argument_list|(
+name|iogv
+argument_list|)
+operator|&&
+name|HvARRAY
+argument_list|(
+name|GvHV
+argument_list|(
+name|iogv
+argument_list|)
+argument_list|)
+operator|)
 condition|)
 name|iogv
 operator|=
@@ -5464,6 +5471,9 @@ decl_stmt|;
 name|AMT
 name|amt
 decl_stmt|;
+name|STRLEN
+name|n_a
+decl_stmt|;
 if|if
 condition|(
 name|mg
@@ -5837,7 +5847,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6214,7 +6224,7 @@ argument_list|(
 name|gv
 argument_list|)
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|,
 name|cp

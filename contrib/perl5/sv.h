@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    sv.h  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    sv.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_ifdef
@@ -1386,7 +1386,18 @@ value|16
 end_define
 
 begin_comment
-comment|/* consider this fp (and it's data) "safe" */
+comment|/* consider this fp (and its data) "safe" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IOf_NOLINE
+value|32
+end_define
+
+begin_comment
+comment|/* slurped a pseudo-line from empty file */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    mg.h  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    mg.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_ifdef
@@ -222,6 +222,32 @@ parameter_list|,
 name|lp
 parameter_list|)
 value|(((lp = (mg)->mg_len) == HEf_SVKEY) ?   \ 				 SvPV((SV*)((mg)->mg_ptr),lp) :		\ 				 (mg)->mg_ptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvTIED_mg
+parameter_list|(
+name|sv
+parameter_list|,
+name|how
+parameter_list|)
+define|\
+value|(SvRMAGICAL(sv) ? mg_find((sv),(how)) : Null(MAGIC*))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvTIED_obj
+parameter_list|(
+name|sv
+parameter_list|,
+name|mg
+parameter_list|)
+define|\
+value|((mg)->mg_obj ? (mg)->mg_obj : sv_2mortal(newRV(sv)))
 end_define
 
 end_unit
