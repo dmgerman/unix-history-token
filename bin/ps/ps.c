@@ -270,7 +270,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * isdigit is defined to work on an 'int', in the range 0 to 255, plus EOF.  * Define a wrapper which can take 'char', either signed or unsigned.  */
+comment|/*  * isdigit takes an `int', but expects values in the range of unsigned char.  * This wrapper ensures that values from a 'char' end up in the correct range.  */
 end_comment
 
 begin_define
@@ -280,7 +280,7 @@ name|isdigitch
 parameter_list|(
 name|Anychar
 parameter_list|)
-value|isdigit(((int) Anychar)& 255)
+value|isdigit((u_char)(Anychar))
 end_define
 
 begin_decl_stmt
