@@ -1448,6 +1448,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|g_topology_lock
+argument_list|()
+expr_stmt|;
 name|g_mbr_modify
 argument_list|(
 name|gp
@@ -1456,6 +1459,9 @@ name|ms
 argument_list|,
 name|dp
 argument_list|)
+expr_stmt|;
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
