@@ -437,7 +437,7 @@ directive|ifdef
 name|DEBUG
 name|warn
 argument_list|(
-literal|"Weird parititon letter %c"
+literal|"weird partition letter %c"
 argument_list|,
 name|c2
 operator|->
