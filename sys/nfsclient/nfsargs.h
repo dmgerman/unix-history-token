@@ -3501,21 +3501,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
-name|nfs_hash
-name|__P
-argument_list|(
-operator|(
-name|nfsfh_t
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|nfsrv_dorec
 name|__P

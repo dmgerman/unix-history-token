@@ -121,6 +121,13 @@ name|register_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|u_register_t
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
