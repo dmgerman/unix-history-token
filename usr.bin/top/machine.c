@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.19 1999/01/22 11:09:41 dillon Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.20 1999/02/06 06:33:55 dillon Exp $  */
 end_comment
 
 begin_include
@@ -2553,6 +2553,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|int
+name|state
+decl_stmt|;
 comment|/* find and remember the next proc structure */
 name|hp
 operator|=
@@ -2728,6 +2731,8 @@ expr_stmt|;
 comment|/* generate "STATE" field */
 switch|switch
 condition|(
+name|state
+operator|=
 name|PP
 argument_list|(
 name|pp
@@ -2808,6 +2813,25 @@ break|break;
 block|}
 comment|/* fall through */
 default|default:
+if|if
+condition|(
+name|state
+operator|>=
+literal|0
+operator|&&
+name|state
+operator|<
+sizeof|sizeof
+argument_list|(
+name|state_abbrev
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|state_abbrev
+argument_list|)
+condition|)
 name|sprintf
 argument_list|(
 name|status
@@ -2820,13 +2844,18 @@ operator|(
 name|unsigned
 name|char
 operator|)
-name|PP
-argument_list|(
-name|pp
-argument_list|,
-name|p_stat
-argument_list|)
+name|state
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|status
+argument_list|,
+literal|"?%5d"
+argument_list|,
+name|state
 argument_list|)
 expr_stmt|;
 break|break;
