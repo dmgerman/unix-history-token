@@ -23,22 +23,6 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|vm_object_t
-name|vnode_pager_alloc
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|vm_ooffset_t
-parameter_list|,
-name|vm_prot_t
-parameter_list|,
-name|vm_ooffset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|vnode
 modifier|*
