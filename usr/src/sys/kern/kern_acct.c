@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_acct.c	6.3	84/07/14	*/
+comment|/*	kern_acct.c	6.4	84/07/15	*/
 end_comment
 
 begin_include
@@ -608,7 +608,7 @@ operator|=
 name|t
 operator|.
 name|tv_sec
-operator|/
+operator|*
 name|hz
 operator|+
 name|t
