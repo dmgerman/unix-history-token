@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: net.c,v 1.8 1997/07/02 06:34:50 charnier Exp $"
+literal|"$Id: net.c,v 1.9 1997/08/01 20:10:44 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -373,9 +379,19 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sin

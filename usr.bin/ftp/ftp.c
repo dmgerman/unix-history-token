@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ftp.c,v 1.11 1997/12/13 20:38:17 pst Exp $	*/
+comment|/*	$Id: ftp.c,v 1.12 1997/12/16 08:22:37 ache Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: ftp.c,v 1.11 1997/12/13 20:38:17 pst Exp $"
+literal|"$Id: ftp.c,v 1.12 1997/12/16 08:22:37 ache Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -359,21 +359,7 @@ sizeof|sizeof
 argument_list|(
 name|hostnamebuf
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|hostnamebuf
-index|[
-sizeof|sizeof
-argument_list|(
-name|hostnamebuf
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 block|}
 else|else
@@ -436,11 +422,24 @@ name|sin_addr
 argument_list|,
 name|hp
 operator|->
-name|h_addr
+name|h_addr_list
+index|[
+literal|0
+index|]
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hisctladdr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -458,10 +457,9 @@ sizeof|sizeof
 argument_list|(
 name|hostnamebuf
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|hostnamebuf
 index|[
 sizeof|sizeof
@@ -474,7 +472,6 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
 name|hostname
 operator|=
 name|hostnamebuf
@@ -599,11 +596,24 @@ name|sin_addr
 argument_list|,
 name|hp
 operator|->
-name|h_addr
+name|h_addr_list
+index|[
+literal|0
+index|]
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hisctladdr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpcinfo.c,v 1.5 1997/03/29 04:31:57 imp Exp $"
+literal|"$Id: rpcinfo.c,v 1.6 1997/08/06 06:49:06 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,18 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_define
@@ -2397,9 +2409,19 @@ name|server_addr
 operator|.
 name|sin_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|server_addr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3216,7 +3238,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s is unknown host"
+literal|"%s is unknown host\n"
 argument_list|,
 name|host
 argument_list|)
@@ -3236,9 +3258,19 @@ name|addr
 operator|->
 name|sin_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
