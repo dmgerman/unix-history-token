@@ -2935,7 +2935,17 @@ block|}
 block|}
 else|else
 block|{
-comment|/* nobody uses ia beyond here */
+name|ia
+operator|=
+name|ifatoia
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_ifa
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 name|ro
