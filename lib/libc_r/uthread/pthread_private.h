@@ -2371,6 +2371,10 @@ comment|/* Number of priority ceiling or protection mutexes owned. */
 name|int
 name|priority_mutex_count
 decl_stmt|;
+comment|/* Number rwlocks rdlocks held. */
+name|int
+name|rdlock_count
+decl_stmt|;
 comment|/* 	 * Queue of currently owned mutexes. 	 */
 name|TAILQ_HEAD
 argument_list|(
