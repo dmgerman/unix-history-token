@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.78 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.79 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -699,6 +699,11 @@ index|]
 operator|=
 name|mtype
 expr_stmt|;
+if|if
+condition|(
+name|rootfs
+condition|)
+block|{
 while|while
 condition|(
 name|getvfs
@@ -719,6 +724,7 @@ expr_stmt|;
 name|xxxfs_mntid
 operator|++
 expr_stmt|;
+block|}
 block|}
 name|mp
 operator|->
