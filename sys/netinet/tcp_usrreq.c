@@ -4314,7 +4314,7 @@ name|tcp_sendspace
 init|=
 literal|1024
 operator|*
-literal|16
+literal|32
 decl_stmt|;
 end_decl_stmt
 
@@ -4345,7 +4345,7 @@ name|tcp_recvspace
 init|=
 literal|1024
 operator|*
-literal|16
+literal|64
 decl_stmt|;
 end_decl_stmt
 
