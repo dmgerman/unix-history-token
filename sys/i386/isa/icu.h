@@ -26,7 +26,7 @@ name|LOCORE
 end_ifndef
 
 begin_comment
-comment|/* #define MP_SAFE  * Note:  *	Most of the SMP equivilants of the icu macros are coded  *	elsewhere in an MP-safe fashion.  *	In particular note that the 'imen' variable is opaque.  *	DO NOT access imen directly, use INTREN()/INTRDIS().  */
+comment|/*  * Note:  *	Most of the SMP equivilants of the icu macros are coded  *	elsewhere in an MP-safe fashion.  *	In particular note that the 'imen' variable is opaque.  *	DO NOT access imen directly, use INTREN()/INTRDIS().  */
 end_comment
 
 begin_decl_stmt
