@@ -1660,11 +1660,6 @@ name|timeout
 operator|=
 literal|1
 expr_stmt|;
-name|CHN_UNLOCK
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|chn_sleep
@@ -1674,11 +1669,6 @@ argument_list|,
 literal|"pcmrd"
 argument_list|,
 name|timeout
-argument_list|)
-expr_stmt|;
-name|CHN_LOCK
-argument_list|(
-name|c
 argument_list|)
 expr_stmt|;
 if|if
