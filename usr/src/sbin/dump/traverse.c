@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.6 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,6 +247,10 @@ operator|&&
 name|f
 operator|!=
 name|IFDIR
+operator|&&
+name|f
+operator|!=
+name|IFLNK
 condition|)
 block|{
 name|esize
@@ -675,6 +679,10 @@ operator|&&
 name|i
 operator|!=
 name|IFREG
+operator|&&
+name|i
+operator|!=
+name|IFLNK
 operator|)
 operator|||
 name|ip
