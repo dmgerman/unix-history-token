@@ -281,6 +281,15 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tx_speed
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -357,6 +366,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Stream channel to use"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_firewire_fwe
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tx_speed
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tx_speed
+argument_list|,
+literal|0
+argument_list|,
+literal|"Transmission Speed"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1846,7 +1876,7 @@ name|xfer
 operator|->
 name|spd
 operator|=
-literal|2
+name|tx_speed
 expr_stmt|;
 name|xfer
 operator|->
