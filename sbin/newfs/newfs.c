@@ -313,6 +313,16 @@ comment|/* exit in middle of newfs for testing */
 end_comment
 
 begin_decl_stmt
+name|int
+name|lflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable multilabel for file system */
+end_comment
+
+begin_decl_stmt
 name|quad_t
 name|fssize
 decl_stmt|;
@@ -617,7 +627,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EL:NO:RS:T:Ua:b:c:d:e:f:g:h:i:m:o:s:"
+literal|"EL:NO:RS:T:Ua:b:c:d:e:f:g:h:i:lm:o:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -1042,6 +1052,14 @@ literal|"%s: bad bytes per inode"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|lflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case

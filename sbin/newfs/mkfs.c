@@ -577,6 +577,16 @@ argument_list|,
 name|MAXVOLLEN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lflag
+condition|)
+name|sblock
+operator|.
+name|fs_flags
+operator||=
+name|FS_MULTILABEL
+expr_stmt|;
 comment|/* 	 * Validate the given file system size. 	 * Verify that its last block can actually be accessed. 	 * Convert to file system fragment sized units. 	 */
 if|if
 condition|(

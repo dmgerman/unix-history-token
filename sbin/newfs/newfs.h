@@ -81,6 +81,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|lflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable multilabel MAC for file system */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|quad_t
 name|fssize
 decl_stmt|;
