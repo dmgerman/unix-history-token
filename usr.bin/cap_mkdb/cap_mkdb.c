@@ -681,9 +681,14 @@ name|warnx
 argument_list|(
 literal|"record not tc expanded: %.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|bp
+argument_list|)
 argument_list|,
 name|bp
 argument_list|)
