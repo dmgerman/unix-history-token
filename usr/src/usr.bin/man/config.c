@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	8.3 (Berkeley) %G%"
+literal|"@(#)config.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,13 @@ end_comment
 begin_function
 name|void
 name|config
-parameter_list|()
+parameter_list|(
+name|fname
+parameter_list|)
+name|char
+modifier|*
+name|fname
+decl_stmt|;
 block|{
 name|ENTRY
 modifier|*
@@ -130,12 +136,22 @@ name|t
 decl_stmt|;
 if|if
 condition|(
+name|fname
+operator|==
+name|NULL
+condition|)
+name|fname
+operator|=
+name|_PATH_MANCONF
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|cfp
 operator|=
 name|fopen
 argument_list|(
-name|_PATH_MANCONF
+name|fname
 argument_list|,
 literal|"r"
 argument_list|)
@@ -149,7 +165,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|_PATH_MANCONF
+name|fname
 argument_list|)
 expr_stmt|;
 name|queue_init
@@ -206,7 +222,7 @@ name|warnx
 argument_list|(
 literal|"%s: line %d corrupted"
 argument_list|,
-name|_PATH_MANCONF
+name|fname
 argument_list|,
 name|lcnt
 argument_list|)
