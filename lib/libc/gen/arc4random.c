@@ -595,7 +595,9 @@ name|as
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|val
+operator|)
 return|;
 block|}
 end_function
@@ -682,11 +684,13 @@ name|arc4random_stir
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|arc4_getword
 argument_list|(
 operator|&
 name|rs
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
