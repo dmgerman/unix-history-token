@@ -1051,7 +1051,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|bzero
@@ -1113,7 +1113,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|ia
@@ -1130,7 +1130,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipstat
@@ -1225,7 +1225,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|==
-literal|0
+name|NULL
 condition|)
 name|rtalloc_ign
 argument_list|(
@@ -1240,7 +1240,7 @@ name|ro
 operator|->
 name|ro_rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipstat
@@ -3354,7 +3354,7 @@ name|ro_fwd
 operator|->
 name|ro_rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipstat
@@ -4499,7 +4499,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -4688,7 +4688,7 @@ name|m
 operator|->
 name|m_next
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* copy failed */
@@ -5218,7 +5218,7 @@ if|if
 condition|(
 name|n
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
@@ -5817,7 +5817,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error

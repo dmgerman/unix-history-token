@@ -1675,7 +1675,7 @@ argument_list|)
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipstat
@@ -1765,7 +1765,7 @@ name|hlen
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|ipstat
@@ -5826,7 +5826,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -6055,7 +6055,7 @@ name|ipaddr
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ia
 operator|=
@@ -6086,7 +6086,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|type
@@ -6306,7 +6306,7 @@ name|ipaddr
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|ia
@@ -6319,7 +6319,7 @@ name|sin_addr
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|type
@@ -6626,7 +6626,7 @@ if|if
 condition|(
 name|ia
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 operator|(
@@ -6740,7 +6740,7 @@ operator|&
 name|ipaddr
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 continue|continue;
 name|cp
@@ -7158,7 +7158,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -7849,7 +7849,7 @@ name|pkt_dst
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|icmp_error
