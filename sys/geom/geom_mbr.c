@@ -100,12 +100,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -915,9 +909,6 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|!
-name|error
-operator|&&
 name|sectorsize
 operator|!=
 literal|512
@@ -1868,9 +1859,6 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|!
-name|error
-operator|&&
 name|sectorsize
 operator|!=
 literal|512

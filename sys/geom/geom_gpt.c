@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sbuf.h>
 end_include
 
@@ -656,6 +650,8 @@ name|dumpconf
 operator|=
 name|g_gpt_dumpconf
 expr_stmt|;
+do|do
+block|{
 name|npart
 operator|=
 literal|0
@@ -676,9 +672,7 @@ name|insist
 operator|==
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+break|break;
 name|error
 operator|=
 name|g_getattr
@@ -695,9 +689,7 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|out
-goto|;
+break|break;
 comment|/* XXX: we need to get the media size as well. */
 comment|/* Read both the MBR sector and the GPT sector. */
 name|mbr
@@ -726,9 +718,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+break|break;
 if|#
 directive|if
 literal|0
@@ -757,9 +747,7 @@ argument_list|(
 name|hdr
 argument_list|)
 condition|)
-goto|goto
-name|out
-goto|;
+break|break;
 name|tblsz
 operator|=
 operator|(
@@ -970,6 +958,8 @@ operator|*
 name|secsz
 argument_list|,
 operator|(
+literal|1
+operator|+
 name|ent
 operator|->
 name|ent_lba_end
@@ -977,8 +967,6 @@ operator|-
 name|ent
 operator|->
 name|ent_lba_start
-operator|+
-literal|1ULL
 operator|)
 operator|*
 name|secsz
@@ -1008,8 +996,12 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|out
-label|:
+block|}
+do|while
+condition|(
+literal|0
+condition|)
+do|;
 if|if
 condition|(
 name|mbr

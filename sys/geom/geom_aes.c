@@ -98,11 +98,10 @@ directive|include
 file|<sys/libkern.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/md5.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -110,10 +109,11 @@ directive|include
 file|<sys/endian.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/md5.h>
+end_include
 
 begin_include
 include|#
@@ -1759,6 +1759,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|sc
 operator|->
@@ -1807,6 +1810,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 name|sc
 operator|->

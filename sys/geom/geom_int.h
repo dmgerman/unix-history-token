@@ -36,14 +36,6 @@ end_expr_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|g_tailq_head
-name|geoms
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
 name|event_tailq_head
 name|events
 decl_stmt|;

@@ -1032,7 +1032,6 @@ name|struct
 name|g_consumer
 modifier|*
 name|cp
-name|__unused
 parameter_list|,
 name|struct
 name|g_provider

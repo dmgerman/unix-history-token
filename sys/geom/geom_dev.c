@@ -184,7 +184,10 @@ operator||
 name|D_CANFREE
 operator||
 name|D_TRACKCLOSE
-block|, }
+block|,
+comment|/* kqfilter */
+name|nokqfilter
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -228,6 +231,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|char
 modifier|*

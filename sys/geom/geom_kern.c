@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<geom/geom.h>
 end_include
 
@@ -178,7 +172,7 @@ operator|&
 name|mymutex
 argument_list|)
 expr_stmt|;
-name|curthread
+name|tp
 operator|->
 name|td_base_pri
 operator|=
@@ -288,7 +282,7 @@ operator|&
 name|mymutex
 argument_list|)
 expr_stmt|;
-name|curthread
+name|tp
 operator|->
 name|td_base_pri
 operator|=
@@ -359,7 +353,24 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|curthread
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|g_down_proc
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|tp
+init|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|p
+argument_list|)
+decl_stmt|;
+name|tp
 operator|->
 name|td_base_pri
 operator|=
