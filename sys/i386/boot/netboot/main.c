@@ -1022,7 +1022,10 @@ name|swap_saddr
 operator|.
 name|sin_port
 operator|=
+name|htons
+argument_list|(
 name|swap_nfs_port
+argument_list|)
 expr_stmt|;
 name|nfsdiskless
 operator|.
@@ -1213,7 +1216,10 @@ name|root_saddr
 operator|.
 name|sin_port
 operator|=
+name|htons
+argument_list|(
 name|root_nfs_port
+argument_list|)
 expr_stmt|;
 name|nfsdiskless
 operator|.
