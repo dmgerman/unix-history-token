@@ -104,7 +104,7 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 decl_stmt|;
 name|int

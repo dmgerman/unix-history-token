@@ -7639,7 +7639,7 @@ name|newblk
 modifier|*
 name|newblk
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 decl_stmt|;
 if|if

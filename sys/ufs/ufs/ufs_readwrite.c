@@ -146,7 +146,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|ufs_daddr_t
+name|daddr_t
 name|lbn
 decl_stmt|,
 name|nextlbn
@@ -2315,7 +2315,7 @@ decl_stmt|;
 name|int
 name|reqlblkno
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|reqblkno
 decl_stmt|;
 name|int
