@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.48 1997/11/22 03:37:35 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.49 1997/12/03 10:23:49 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -1199,7 +1199,7 @@ parameter_list|(
 name|period
 parameter_list|)
 define|\
-value|do {								\   o.id = TY_QUALPROTO;						\   o.len = 8;							\   *(u_short *)o.data = htons(PROTO_LQR);			\   *(u_long *)(o.data+2) = period;				\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "period %ld", period);\ } while (0)
+value|do {								\   o.id = TY_QUALPROTO;						\   o.len = 8;							\   *(u_short *)o.data = htons(PROTO_LQR);			\   *(u_long *)(o.data+2) = htonl(period);			\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "period %ld", period);\ } while (0)
 end_define
 
 begin_define
@@ -1208,7 +1208,7 @@ directive|define
 name|PUTPAP
 parameter_list|()
 define|\
-value|do {								\   o.id = TY_AUTHPROTO;						\   o.len = 4;							\   *(u_short *)o.data = PROTO_PAP;				\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "PAP REQ");	\ } while (0)
+value|do {								\   o.id = TY_AUTHPROTO;						\   o.len = 4;							\   *(u_short *)o.data = htons(PROTO_PAP);			\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id],		\ 		   "0x%04x (PAP)", PROTO_PAP);			\ } while (0)
 end_define
 
 begin_define
@@ -1219,7 +1219,7 @@ parameter_list|(
 name|val
 parameter_list|)
 define|\
-value|do {								\   o.id = TY_AUTHPROTO;						\   o.len = 5;							\   *(u_short *)o.data = PROTO_CHAP;				\   o.data[4] = val;						\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id], "CHAP REQ (0x%02x)", val);\ } while (0)
+value|do {								\   o.id = TY_AUTHPROTO;						\   o.len = 5;							\   *(u_short *)o.data = htons(PROTO_CHAP);			\   o.data[2] = val;						\   cp += LcpPutConf(LogLCP, cp,&o, cftypes[o.id],		\ 		   "0x%04x (CHAP 0x%02x)", PROTO_CHAP, val);	\ } while (0)
 end_define
 
 begin_define
@@ -1426,14 +1426,12 @@ argument_list|()
 expr_stmt|;
 comment|/* Use MSChap */
 else|else
-else|#
-directive|else
+endif|#
+directive|endif
 name|PUTMD5CHAP
 argument_list|()
 expr_stmt|;
 comment|/* Use MD5 */
-endif|#
-directive|endif
 break|break;
 block|}
 name|FsmOutput
@@ -2300,6 +2298,47 @@ operator|*
 name|sp
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|proto
+condition|)
+block|{
+case|case
+name|PROTO_PAP
+case|:
+name|LogPrintf
+argument_list|(
+name|LogLCP
+argument_list|,
+literal|"%s 0x%04x (PAP)\n"
+argument_list|,
+name|request
+argument_list|,
+name|proto
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PROTO_CHAP
+case|:
+name|LogPrintf
+argument_list|(
+name|LogLCP
+argument_list|,
+literal|"%s 0x%04x (CHAP 0x%02x)\n"
+argument_list|,
+name|request
+argument_list|,
+name|proto
+argument_list|,
+name|cp
+index|[
+literal|4
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 name|LogPrintf
 argument_list|(
 name|LogLCP
@@ -2311,6 +2350,8 @@ argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 switch|switch
 condition|(
 name|mode_type
@@ -2419,6 +2460,22 @@ name|char
 operator|)
 name|PROTO_CHAP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+if|if
+condition|(
+name|VarMSChap
+condition|)
+operator|*
+name|nakp
+operator|++
+operator|=
+literal|0x80
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 operator|*
 name|nakp
 operator|++
@@ -2588,7 +2645,9 @@ name|LogPrintf
 argument_list|(
 name|LogLCP
 argument_list|,
-literal|" proto %d not implemented, NAK.\n"
+literal|"%s 0x%04x - not recognised, NAK\n"
+argument_list|,
+name|request
 argument_list|,
 name|proto
 argument_list|)
@@ -2612,6 +2671,99 @@ break|break;
 case|case
 name|MODE_NAK
 case|:
+switch|switch
+condition|(
+name|proto
+condition|)
+block|{
+case|case
+name|PROTO_PAP
+case|:
+if|if
+condition|(
+name|Enabled
+argument_list|(
+name|ConfPap
+argument_list|)
+condition|)
+name|LcpInfo
+operator|.
+name|want_auth
+operator|=
+name|PROTO_PAP
+expr_stmt|;
+else|else
+block|{
+name|LogPrintf
+argument_list|(
+name|LogLCP
+argument_list|,
+literal|"Peer will only send PAP (not enabled)\n"
+argument_list|)
+expr_stmt|;
+name|LcpInfo
+operator|.
+name|his_reject
+operator||=
+operator|(
+literal|1
+operator|<<
+name|type
+operator|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|PROTO_CHAP
+case|:
+if|if
+condition|(
+name|Enabled
+argument_list|(
+name|ConfChap
+argument_list|)
+condition|)
+name|LcpInfo
+operator|.
+name|want_auth
+operator|=
+name|PROTO_CHAP
+expr_stmt|;
+else|else
+block|{
+name|LogPrintf
+argument_list|(
+name|LogLCP
+argument_list|,
+literal|"Peer will only send CHAP (not enabled)\n"
+argument_list|)
+expr_stmt|;
+name|LcpInfo
+operator|.
+name|his_reject
+operator||=
+operator|(
+literal|1
+operator|<<
+name|type
+operator|)
+expr_stmt|;
+block|}
+break|break;
+default|default:
+comment|/* We've been NAK'd with something we don't understand :-( */
+name|LcpInfo
+operator|.
+name|his_reject
+operator||=
+operator|(
+literal|1
+operator|<<
+name|type
+operator|)
+expr_stmt|;
+break|break;
+block|}
 break|break;
 case|case
 name|MODE_REJ

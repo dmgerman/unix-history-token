@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: phase.c,v 1.2 1997/10/29 01:19:50 brian Exp $  */
+comment|/*  * $Id: phase.c,v 1.3 1997/11/22 03:37:43 brian Exp $  */
 end_comment
 
 begin_include
@@ -152,6 +152,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|Auth2Nam
+parameter_list|(
+name|u_short
+name|auth
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|auth
+condition|)
+block|{
+case|case
+name|PROTO_PAP
+case|:
+return|return
+literal|"PAP"
+return|;
+case|case
+name|PROTO_CHAP
+case|:
+return|return
+literal|"CHAP"
+return|;
+case|case
+literal|0
+case|:
+return|return
+literal|"none"
+return|;
+block|}
+return|return
+literal|"unknown"
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|NewPhase
 parameter_list|(
@@ -222,15 +263,21 @@ name|LogPrintf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|" his = %x, mine = %x\n"
+literal|" his = %s, mine = %s\n"
 argument_list|,
+name|Auth2Nam
+argument_list|(
 name|lcp
 operator|->
 name|his_auth
+argument_list|)
 argument_list|,
+name|Auth2Nam
+argument_list|(
 name|lcp
 operator|->
 name|want_auth
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
