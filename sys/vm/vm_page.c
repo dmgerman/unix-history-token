@@ -2179,6 +2179,8 @@ name|vm_pindex_t
 name|color
 decl_stmt|;
 name|int
+name|flags
+decl_stmt|,
 name|page_req
 decl_stmt|,
 name|s
@@ -2511,6 +2513,10 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize structure.  Only the PG_ZERO flag is inherited. 	 */
+name|flags
+operator|=
+name|PG_BUSY
+expr_stmt|;
 if|if
 condition|(
 name|m
@@ -2523,8 +2529,12 @@ block|{
 name|vm_page_zero_count
 operator|--
 expr_stmt|;
-name|m
-operator|->
+if|if
+condition|(
+name|req
+operator|&
+name|VM_ALLOC_ZERO
+condition|)
 name|flags
 operator|=
 name|PG_ZERO
@@ -2532,15 +2542,12 @@ operator||
 name|PG_BUSY
 expr_stmt|;
 block|}
-else|else
-block|{
 name|m
 operator|->
 name|flags
 operator|=
-name|PG_BUSY
+name|flags
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|req
