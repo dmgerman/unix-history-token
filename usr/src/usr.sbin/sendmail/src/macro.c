@@ -21,7 +21,7 @@ operator|)
 name|macro
 operator|.
 name|c
-literal|3.17
+literal|3.18
 operator|%
 name|G
 operator|%
@@ -30,7 +30,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. **		e -- envelope in which to work. ** **	Returns: **		End of interpolated output. ** **	Side Effects: **		none. */
+comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. ** **	Bugs: **		The handling of $$ (to get one dollar) is rather bizarre, **			especially if there should be another macro **			expansion in the same string. */
 end_comment
 
 begin_expr_stmt
@@ -76,67 +76,21 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|char
-modifier|*
-name|expand2
-parameter_list|()
-function_decl|;
-operator|(
-name|void
-operator|)
-name|expand2
-argument_list|(
-name|s
-argument_list|,
-name|buf
-argument_list|,
-name|buflim
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_function
-name|char
-modifier|*
-name|expand2
-parameter_list|(
-name|s
-parameter_list|,
-name|buf
-parameter_list|,
-name|buflim
-parameter_list|,
-name|e
-parameter_list|)
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|char
-modifier|*
-name|buflim
-decl_stmt|;
-specifier|register
-name|ENVELOPE
-modifier|*
-name|e
-decl_stmt|;
-block|{
 specifier|register
 name|char
 modifier|*
 name|q
 decl_stmt|;
+name|bool
+name|skipping
+decl_stmt|;
+comment|/* set if conditionally skipping output */
+name|bool
+name|gotone
+init|=
+name|FALSE
+decl_stmt|;
+comment|/* set if any expansion done */
 name|char
 name|xbuf
 index|[
@@ -150,16 +104,6 @@ name|xp
 init|=
 name|xbuf
 decl_stmt|;
-name|bool
-name|skipping
-decl_stmt|;
-comment|/* set if conditionally skipping output */
-name|bool
-name|gotone
-init|=
-name|FALSE
-decl_stmt|;
-comment|/* set if any expansion done */
 specifier|extern
 name|char
 modifier|*
@@ -293,6 +237,13 @@ operator|*
 operator|++
 name|s
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'$'
+condition|)
+break|break;
 name|q
 operator|=
 name|macvalue
@@ -309,10 +260,6 @@ condition|(
 name|q
 operator|==
 name|NULL
-operator|&&
-name|c
-operator|!=
-literal|'$'
 condition|)
 continue|continue;
 name|gotone
@@ -359,7 +306,7 @@ condition|(
 operator|*
 name|q
 operator|==
-name|NULL
+literal|'\0'
 condition|)
 break|break;
 operator|*
@@ -414,9 +361,8 @@ if|if
 condition|(
 name|gotone
 condition|)
-return|return
-operator|(
-name|expand2
+block|{
+name|expand
 argument_list|(
 name|xbuf
 argument_list|,
@@ -426,8 +372,9 @@ name|buflim
 argument_list|,
 name|e
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+return|return;
+block|}
 comment|/* copy results out */
 for|for
 control|(
@@ -463,19 +410,14 @@ name|q
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return
-operator|(
-name|q
-operator|)
-return|;
 block|}
-end_function
+end_block
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DEFINE -- define a macro. ** **	this would be better done using a #define macro. ** **	Parameters: **		n -- the macro name. **		v -- the macro value. ** **	Returns: **		none. ** **	Side Effects: **		CurEnv->e_macro[n] is defined. ** **	Notes: **		There is one macro for each ASCII character, **		although they are not all used.  The currently **		defined macros are: ** **		$a   date in ARPANET format (preferring the Date: line **		     of the message) **		$b   the current date (as opposed to the date as found **		     the message) in ARPANET format **		$c   hop count **		$d   (current) date in UNIX (ctime) format **		$f   raw from address **		$g   translated from address **		$h   to host **		$i   queue id **		$j   official SMTP hostname, used in messages+ **		$l   UNIX-style from line+ **		$n   name of sendmail ("MAILER-DAEMON" on local **		     net typically)+ **		$o   delimiters ("operators") for address tokens+ **		$p   my process id in decimal **		$q   the string that becomes an address -- this is **		     normally used to combine $g& $x. **		$r   protocol used to talk to sender **		$s   sender's host name **		$t   the current time in seconds since 1/1/1970 **		$u   to user **		$v   version number of sendmail **		$x   signature (full name) of from person **		$y   the tty id of our terminal **		$z   home directory of to person ** **		Macros marked with + must be defined in the **		configuration file and are used internally, but **		are not set. ** **		There are also some macros that can be used **		arbitrarily to make the configuration file **		cleaner.  In general all upper-case letters **		are available. */
+comment|/* **  DEFINE -- define a macro. ** **	this would be better done using a #define macro. ** **	Parameters: **		n -- the macro name. **		v -- the macro value. **		e -- the envelope to store the definition in. ** **	Returns: **		none. ** **	Side Effects: **		e->e_macro[n] is defined. ** **	Notes: **		There is one macro for each ASCII character, **		although they are not all used.  The currently **		defined macros are: ** **		$a   date in ARPANET format (preferring the Date: line **		     of the message) **		$b   the current date (as opposed to the date as found **		     the message) in ARPANET format **		$c   hop count **		$d   (current) date in UNIX (ctime) format **		$f   raw from address **		$g   translated from address **		$h   to host **		$i   queue id **		$j   official SMTP hostname, used in messages+ **		$l   UNIX-style from line+ **		$n   name of sendmail ("MAILER-DAEMON" on local **		     net typically)+ **		$o   delimiters ("operators") for address tokens+ **		$p   my process id in decimal **		$q   the string that becomes an address -- this is **		     normally used to combine $g& $x. **		$r   protocol used to talk to sender **		$s   sender's host name **		$t   the current time in seconds since 1/1/1970 **		$u   to user **		$v   version number of sendmail **		$x   signature (full name) of from person **		$y   the tty id of our terminal **		$z   home directory of to person ** **		Macros marked with + must be defined in the **		configuration file and are used internally, but **		are not set. ** **		There are also some macros that can be used **		arbitrarily to make the configuration file **		cleaner.  In general all upper-case letters **		are available. */
 end_comment
 
 begin_macro
@@ -484,6 +426,8 @@ argument_list|(
 argument|n
 argument_list|,
 argument|v
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -497,6 +441,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|v
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -536,7 +488,7 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-name|CurEnv
+name|e
 operator|->
 name|e_macro
 index|[

@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.64
+literal|3.65
 operator|%
 name|G
 operator|%
@@ -647,6 +647,34 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  USERNAME -- return the user id of the logged in user. ** **	Parameters: **		none. ** **	Returns: **		The login name of the logged in user. ** **	Side Effects: **		none. ** **	Notes: **		The return value is statically allocated. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|username
+parameter_list|()
+block|{
+specifier|extern
+name|char
+modifier|*
+name|getlogin
+parameter_list|()
+function_decl|;
+return|return
+operator|(
+name|getlogin
+argument_list|()
+operator|)
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  TTYPATH -- Get the path of the user's tty ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
 end_comment
 
@@ -903,6 +931,38 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  HOLDSIGS -- arrange to hold all signals ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Arranges that signals are held. */
+end_comment
+
+begin_macro
+name|holdsigs
+argument_list|()
+end_macro
+
+begin_block
+block|{ }
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  RLSESIGS -- arrange to release all signals ** **	This undoes the effect of holdsigs. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Arranges that signals are released. */
+end_comment
+
+begin_macro
+name|rlsesigs
+argument_list|()
+end_macro
+
+begin_block
+block|{ }
+end_block
 
 end_unit
 

@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -145,6 +145,10 @@ name|EX_OSFILE
 argument_list|)
 expr_stmt|;
 block|}
+name|FileName
+operator|=
+name|cfname
+expr_stmt|;
 name|LineNumber
 operator|=
 literal|0
@@ -218,9 +222,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"line %d: invalid rewrite line \"%s\""
-argument_list|,
-name|LineNumber
+literal|"invalid rewrite line \"%s\""
 argument_list|,
 name|buf
 argument_list|)
@@ -455,9 +457,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"readcf: line %d: bad ruleset %d (%d max)"
-argument_list|,
-name|LineNumber
+literal|"bad ruleset %d (%d max)"
 argument_list|,
 name|ruleset
 argument_list|,
@@ -493,6 +493,8 @@ index|[
 literal|2
 index|]
 argument_list|)
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -538,9 +540,16 @@ argument_list|(
 name|class
 argument_list|)
 condition|)
-goto|goto
-name|badline
-goto|;
+block|{
+name|syserr
+argument_list|(
+literal|"illegal class name %c"
+argument_list|,
+name|class
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|isupper
@@ -832,6 +841,11 @@ operator|*
 name|p
 operator|!=
 literal|'='
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\t'
 condition|;
 name|p
 operator|++
@@ -1008,15 +1022,17 @@ name|badline
 label|:
 name|syserr
 argument_list|(
-literal|"readcf: line %d: unknown control line \"%s\""
-argument_list|,
-name|LineNumber
+literal|"unknown control line \"%s\""
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|FileName
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_block
 
@@ -1052,9 +1068,7 @@ begin_block
 block|{
 name|syserr
 argument_list|(
-literal|"readcf: line %d: too many %c lines, %d max"
-argument_list|,
-name|LineNumber
+literal|"too many %c lines, %d max"
 argument_list|,
 name|id
 argument_list|,
@@ -1319,9 +1333,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"readcf: line %d: too many mailers defined (%d max)"
-argument_list|,
-name|LineNumber
+literal|"too many mailers defined (%d max)"
 argument_list|,
 name|MAXMAILERS
 argument_list|)
@@ -1392,9 +1404,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"readcf: line %d: invalid M line in configuration file"
-argument_list|,
-name|LineNumber
+literal|"invalid M line in configuration file"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1471,12 +1481,6 @@ operator|->
 name|m_s_rwset
 operator|=
 name|msset
-expr_stmt|;
-name|m
-operator|->
-name|m_badstat
-operator|=
-name|EX_UNAVAILABLE
 expr_stmt|;
 name|m
 operator|->
@@ -1757,9 +1761,9 @@ literal|'r'
 block|,
 name|M_ROPT
 block|,
-literal|'q'
+literal|'P'
 block|,
-name|M_QUIET
+name|M_RPATH
 block|,
 literal|'S'
 block|,
@@ -2106,15 +2110,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|time_t
-name|tval
-decl_stmt|;
-name|int
-name|ival
-decl_stmt|;
-name|bool
-name|bval
-decl_stmt|;
 name|int
 name|smask
 decl_stmt|;
@@ -2253,119 +2248,6 @@ name|safe
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	**  Encode this option as appropriate. 	*/
-if|if
-condition|(
-name|index
-argument_list|(
-literal|"rT"
-argument_list|,
-name|opt
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|tval
-operator|=
-name|convtime
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|index
-argument_list|(
-literal|"gLu"
-argument_list|,
-name|opt
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|ival
-operator|=
-name|atoi
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|index
-argument_list|(
-literal|"F"
-argument_list|,
-name|opt
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|ival
-operator|=
-name|atooct
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|index
-argument_list|(
-literal|"acDfimosv"
-argument_list|,
-name|opt
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|bval
-operator|=
-name|atobool
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|index
-argument_list|(
-literal|"be"
-argument_list|,
-name|opt
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-comment|/* do nothing */
-empty_stmt|;
-elseif|else
-if|if
-condition|(
-name|val
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-name|val
-operator|=
-literal|""
-expr_stmt|;
-else|else
-name|val
-operator|=
-name|newstr
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-comment|/* 	**  Now do the actual assignment. 	*/
 switch|switch
 condition|(
 name|opt
@@ -2375,13 +2257,9 @@ case|case
 literal|'A'
 case|:
 comment|/* set default alias file */
-name|AliasFile
-operator|=
-name|val
-expr_stmt|;
 if|if
 condition|(
-name|AliasFile
+name|val
 index|[
 literal|0
 index|]
@@ -2392,6 +2270,14 @@ name|AliasFile
 operator|=
 literal|"aliases"
 expr_stmt|;
+else|else
+name|AliasFile
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'a'
@@ -2399,7 +2285,10 @@ case|:
 comment|/* look for "@:@" in alias file */
 name|SafeAlias
 operator|=
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2408,7 +2297,10 @@ case|:
 comment|/* don't connect to "expensive" mailers */
 name|NoConnect
 operator|=
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2469,7 +2361,10 @@ case|:
 comment|/* rebuild alias database as needed */
 name|AutoRebuild
 operator|=
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2483,13 +2378,7 @@ name|val
 condition|)
 block|{
 case|case
-literal|'p'
-case|:
-comment|/* print errors normally */
-break|break;
-comment|/* (default) */
-case|case
-literal|'q'
+name|EM_QUIET
 case|:
 comment|/* be silent about it */
 operator|(
@@ -2504,44 +2393,32 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-break|break;
+comment|/* fall through... */
 case|case
-literal|'m'
+name|EM_MAIL
 case|:
 comment|/* mail back */
-name|MailBack
-operator|=
-name|TRUE
-expr_stmt|;
-name|HoldErrs
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
 case|case
-literal|'e'
+name|EM_BERKNET
 case|:
 comment|/* do berknet error processing */
-name|BerkNet
-operator|=
-name|TRUE
-expr_stmt|;
-name|HoldErrs
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
 case|case
-literal|'w'
+name|EM_WRITE
 case|:
 comment|/* write back (or mail) */
-name|WriteBack
-operator|=
-name|TRUE
-expr_stmt|;
 name|HoldErrs
 operator|=
 name|TRUE
+expr_stmt|;
+comment|/* fall through... */
+case|case
+name|EM_PRINT
+case|:
+comment|/* print errors normally (default) */
+name|ErrorMode
+operator|=
+operator|*
+name|val
 expr_stmt|;
 break|break;
 block|}
@@ -2552,7 +2429,10 @@ case|:
 comment|/* file mode */
 name|FileMode
 operator|=
-name|ival
+name|atooct
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2561,7 +2441,10 @@ case|:
 comment|/* save Unix-style From lines on front */
 name|SaveFrom
 operator|=
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2574,20 +2457,19 @@ name|safe
 condition|)
 name|DefGid
 operator|=
-name|ival
+name|atoi
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'H'
 case|:
 comment|/* help file */
-name|HelpFile
-operator|=
-name|val
-expr_stmt|;
 if|if
 condition|(
-name|HelpFile
+name|val
 index|[
 literal|0
 index|]
@@ -2598,6 +2480,14 @@ name|HelpFile
 operator|=
 literal|"sendmail.hf"
 expr_stmt|;
+else|else
+name|HelpFile
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'i'
@@ -2605,7 +2495,10 @@ case|:
 comment|/* ignore dot lines in message */
 name|IgnrDot
 operator|=
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2614,7 +2507,10 @@ case|:
 comment|/* log level */
 name|LogLevel
 operator|=
-name|ival
+name|atoi
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2628,11 +2524,16 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|newstr
+argument_list|(
 operator|&
 name|val
 index|[
 literal|1
 index|]
+argument_list|)
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2642,7 +2543,10 @@ case|:
 comment|/* send to me too */
 name|MeToo
 operator|=
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2651,7 +2555,10 @@ case|:
 comment|/* assume old style headers */
 if|if
 condition|(
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 condition|)
 name|CurEnv
 operator|->
@@ -2672,13 +2579,9 @@ case|case
 literal|'Q'
 case|:
 comment|/* queue directory */
-name|QueueDir
-operator|=
-name|val
-expr_stmt|;
 if|if
 condition|(
-name|QueueDir
+name|val
 index|[
 literal|0
 index|]
@@ -2689,6 +2592,14 @@ name|QueueDir
 operator|=
 literal|"mqueue"
 expr_stmt|;
+else|else
+name|QueueDir
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'r'
@@ -2696,20 +2607,19 @@ case|:
 comment|/* read timeout */
 name|ReadTimeout
 operator|=
-name|tval
+name|convtime
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'S'
 case|:
 comment|/* status file */
-name|StatFile
-operator|=
-name|val
-expr_stmt|;
 if|if
 condition|(
-name|StatFile
+name|val
 index|[
 literal|0
 index|]
@@ -2720,6 +2630,14 @@ name|StatFile
 operator|=
 literal|"sendmail.st"
 expr_stmt|;
+else|else
+name|StatFile
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'s'
@@ -2727,7 +2645,10 @@ case|:
 comment|/* be super safe, even if expensive */
 name|SuperSafe
 operator|=
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2736,7 +2657,10 @@ case|:
 comment|/* queue timeout */
 name|TimeOut
 operator|=
-name|tval
+name|convtime
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2748,13 +2672,16 @@ directive|ifdef
 name|V6
 name|StdTimezone
 operator|=
+name|newstr
+argument_list|(
 name|val
+argument_list|)
 expr_stmt|;
 name|DstTimezone
 operator|=
 name|index
 argument_list|(
-name|val
+name|StdTimeZone
 argument_list|,
 literal|','
 argument_list|)
@@ -2765,9 +2692,12 @@ name|DstTimezone
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|syntax
-goto|;
+name|syserr
+argument_list|(
+literal|"bad time zone spec"
+argument_list|)
+expr_stmt|;
+else|else
 operator|*
 name|DstTimezone
 operator|++
@@ -2788,7 +2718,10 @@ name|safe
 condition|)
 name|DefUid
 operator|=
-name|ival
+name|atoi
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2797,7 +2730,10 @@ case|:
 comment|/* run in verbose mode */
 name|Verbose
 operator|=
-name|bval
+name|atobool
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 ifdef|#
@@ -2813,7 +2749,10 @@ name|safe
 condition|)
 name|WizWord
 operator|=
+name|newstr
+argument_list|(
 name|val
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
@@ -2823,19 +2762,6 @@ default|default:
 break|break;
 block|}
 return|return;
-name|syntax
-label|:
-name|syserr
-argument_list|(
-literal|"setoption: line %d: syntax error on \"%c%s\""
-argument_list|,
-name|LineNumber
-argument_list|,
-name|opt
-argument_list|,
-name|val
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

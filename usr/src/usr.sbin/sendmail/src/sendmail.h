@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.101		%G%"
+literal|"@(#)sendmail.h	3.102		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,10 +301,6 @@ name|m_flags
 decl_stmt|;
 comment|/* status flags, see below */
 name|short
-name|m_badstat
-decl_stmt|;
-comment|/* the status code to use on unknown error */
-name|short
 name|m_mno
 decl_stmt|;
 comment|/* mailer number internally */
@@ -363,12 +359,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_QUIET
+name|M_RPATH
 value|000000004L
 end_define
 
 begin_comment
-comment|/* don't print error on bad status */
+comment|/* wants a Return-Path: line */
 end_comment
 
 begin_define
@@ -708,17 +704,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_USED
-value|00010
-end_define
-
-begin_comment
-comment|/* indicates that this has been output */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|H_CHECK
 value|00020
 end_define
@@ -842,6 +827,10 @@ name|short
 name|e_flags
 decl_stmt|;
 comment|/* flags, see below */
+name|short
+name|e_hopcount
+decl_stmt|;
+comment|/* number of times processed */
 name|int
 function_decl|(
 modifier|*
@@ -981,6 +970,17 @@ begin_comment
 comment|/* keep queue files always */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EF_RESPONSE
+value|000200
+end_define
+
+begin_comment
+comment|/* this is an error or return receipt */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|ENVELOPE
@@ -995,53 +995,6 @@ end_comment
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* **  Work queue. */
-end_comment
-
-begin_struct
-struct|struct
-name|work
-block|{
-name|char
-modifier|*
-name|w_name
-decl_stmt|;
-comment|/* name of control file */
-name|long
-name|w_pri
-decl_stmt|;
-comment|/* priority of message, see below */
-name|struct
-name|work
-modifier|*
-name|w_next
-decl_stmt|;
-comment|/* next in queue */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|work
-name|WORK
-typedef|;
-end_typedef
-
-begin_decl_stmt
-name|EXTERN
-name|WORK
-modifier|*
-name|WorkQ
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* queue of things to be done */
-end_comment
 
 begin_comment
 comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
@@ -1550,78 +1503,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  Statistics structure. */
-end_comment
-
-begin_struct
-struct|struct
-name|statistics
-block|{
-name|time_t
-name|stat_itime
-decl_stmt|;
-comment|/* file initialization time */
-name|short
-name|stat_size
-decl_stmt|;
-comment|/* size of this structure */
-name|long
-name|stat_nf
-index|[
-name|MAXMAILERS
-index|]
-decl_stmt|;
-comment|/* # msgs from each mailer */
-name|long
-name|stat_bf
-index|[
-name|MAXMAILERS
-index|]
-decl_stmt|;
-comment|/* kbytes from each mailer */
-name|long
-name|stat_nt
-index|[
-name|MAXMAILERS
-index|]
-decl_stmt|;
-comment|/* # msgs to each mailer */
-name|long
-name|stat_bt
-index|[
-name|MAXMAILERS
-index|]
-decl_stmt|;
-comment|/* kbytes to each mailer */
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-name|EXTERN
-name|struct
-name|statistics
-name|Stat
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|long
-name|kbytes
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* for _bf, _bt */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  Operation and send modes ** **	The operation mode describes the basic operation of sendmail. **	This can be set from the command line, and is "send mail" by **	default. ** **	The send mode tells how to send mail.  It can be set in the **	configuration file.  It's setting determines how quickly the **	mail will be delivered versus the load on your system.  If the **	-v (verbose) flag is given, it will be forced to SM_DELIVER **	mode. ** **	The default send mode can be safely changed. */
+comment|/* **  Operation, send, and error modes ** **	The operation mode describes the basic operation of sendmail. **	This can be set from the command line, and is "send mail" by **	default. ** **	The send mode tells how to send mail.  It can be set in the **	configuration file.  It's setting determines how quickly the **	mail will be delivered versus the load on your system.  If the **	-v (verbose) flag is given, it will be forced to SM_DELIVER **	mode. ** **	The error mode tells how to return errors. */
 end_comment
 
 begin_decl_stmt
@@ -1800,6 +1682,72 @@ begin_comment
 comment|/* verify only (used internally) */
 end_comment
 
+begin_decl_stmt
+name|EXTERN
+name|char
+name|ErrorMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* error mode, see below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_PRINT
+value|'p'
+end_define
+
+begin_comment
+comment|/* print errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MAIL
+value|'m'
+end_define
+
+begin_comment
+comment|/* mail back errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_WRITE
+value|'w'
+end_define
+
+begin_comment
+comment|/* write back errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_BERKNET
+value|'e'
+end_define
+
+begin_comment
+comment|/* special berknet processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_QUIET
+value|'q'
+end_define
+
+begin_comment
+comment|/* don't print messages (stat only) */
+end_comment
+
 begin_escape
 end_escape
 
@@ -1816,39 +1764,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* if set, "From" person is explicit */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|MailBack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mail back response on error */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|BerkNet
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* called from BerkNet */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|WriteBack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* write back response on error */
 end_comment
 
 begin_decl_stmt
@@ -1926,17 +1841,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* if set, get recipients from msg */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|DontSend
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mark recipients as QDONTSEND */
 end_comment
 
 begin_decl_stmt
@@ -2166,17 +2070,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|HopCount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hop count */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
 name|AliasLevel
 decl_stmt|;
 end_decl_stmt
@@ -2309,6 +2202,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of queue directory */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|FileName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name to print on error messages */
 end_comment
 
 begin_decl_stmt

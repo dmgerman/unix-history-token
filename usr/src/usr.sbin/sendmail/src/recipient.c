@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -345,8 +345,6 @@ argument_list|(
 name|ctladdr
 argument_list|,
 name|a
-argument_list|,
-name|FALSE
 argument_list|)
 condition|)
 name|selfref
@@ -915,8 +913,6 @@ argument_list|(
 name|q
 argument_list|,
 name|a
-argument_list|,
-name|FALSE
 argument_list|)
 condition|)
 block|{
@@ -1033,16 +1029,6 @@ operator|->
 name|q_next
 operator|=
 name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|DontSend
-condition|)
-name|a
-operator|->
-name|q_flags
-operator||=
-name|QDONTSEND
 expr_stmt|;
 comment|/* 	**  Alias the name and handle :include: specs. 	*/
 if|if
@@ -1294,8 +1280,6 @@ name|giveresponse
 argument_list|(
 name|EX_CANTCREAT
 argument_list|,
-name|TRUE
-argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
@@ -1340,8 +1324,6 @@ expr_stmt|;
 name|giveresponse
 argument_list|(
 name|EX_NOUSER
-argument_list|,
-name|TRUE
 argument_list|,
 name|m
 argument_list|)
@@ -1517,7 +1499,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FINDUSER -- find the password entry for a user. ** **	This looks a lot like getpwnam, except that it may want to **	do some fancier pattern matching in /etc/passwd. ** **	Parameters: **		name -- the name to match against. ** **	Returns: **		A pointer to a pw struct. **		NULL if name is unknown or ambiguous. ** **	Side Effects: **		may modify name. */
+comment|/* **  FINDUSER -- find the password entry for a user. ** **	This looks a lot like getpwnam, except that it may want to **	do some fancier pattern matching in /etc/passwd. ** **	This routine contains most of the time of many sendmail runs. **	It deserves to be optimized. ** **	Parameters: **		name -- the name to match against. ** **	Returns: **		A pointer to a pw struct. **		NULL if name is unknown or ambiguous. ** **	Side Effects: **		may modify name. */
 end_comment
 
 begin_function
@@ -1911,6 +1893,17 @@ name|CurEnv
 operator|->
 name|e_to
 decl_stmt|;
+name|char
+modifier|*
+name|oldfilename
+init|=
+name|FileName
+decl_stmt|;
+name|int
+name|oldlinenumber
+init|=
+name|LineNumber
+decl_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -1996,6 +1989,14 @@ name|QGOODUID
 expr_stmt|;
 block|}
 comment|/* read the file -- each line is a comma-separated list. */
+name|FileName
+operator|=
+name|fname
+expr_stmt|;
+name|LineNumber
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|fgets
@@ -2086,6 +2087,14 @@ name|fclose
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+name|FileName
+operator|=
+name|oldfilename
+expr_stmt|;
+name|LineNumber
+operator|=
+name|oldlinenumber
 expr_stmt|;
 block|}
 end_block

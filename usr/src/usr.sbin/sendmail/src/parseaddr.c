@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.66
+literal|3.67
 operator|%
 name|G
 operator|%
@@ -25,6 +25,10 @@ end_expr_stmt
 
 begin_comment
 comment|/* **  PARSE -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none */
+end_comment
+
+begin_comment
+comment|/* following delimiters are inherent to the internal algorithms */
 end_comment
 
 begin_define
@@ -390,7 +394,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into canonical form.  This involves **	deleting blanks, comments (in parentheses), and turning the **	word "at" into an at-sign ("@").  The name is copied as this **	is done; it is legal to copy a name onto itself, since this **	process can only make things smaller. ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. ** **	Side Effects: **		none. */
+comment|/* **  PRESCAN -- Prescan name and make it canonical ** **	Scans a name and turns it into a set of tokens.  This process **	deletes blanks and comments (in parentheses). ** **	This routine knows about quoted strings and angle brackets. ** **	There are certain subtleties to this routine.  The one that **	comes to mind now is that backslashes on the ends of names **	are silently stripped off; this is intentional.  The problem **	is that some versions of sndmsg (like at LBL) set the kill **	character to something other than @ when reading addresses; **	so people type "csvax.eric\@berkeley" -- which screws up the **	berknet mailer. ** **	Parameters: **		addr -- the name to chomp. **		delim -- the delimiter for the address, normally **			'\0' or ','; \0 is accepted in any case. ** **	Returns: **		A pointer to a vector of tokens. **		NULL on error. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -2031,17 +2035,45 @@ comment|/* 		**  See if we successfully matched 		*/
 if|if
 condition|(
 name|rvp
-operator|>=
+operator|<
 name|rwr
 operator|->
 name|r_lhs
-operator|&&
+operator|||
 operator|*
 name|rvp
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|21
+argument_list|,
+literal|10
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"----- rule fails\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+name|rwr
+operator|=
+name|rwr
+operator|->
+name|r_next
+expr_stmt|;
+continue|continue;
+block|}
 name|rvp
 operator|=
 name|rwr
@@ -2143,19 +2175,6 @@ name|rvp
 operator|++
 control|)
 block|{
-name|rp
-operator|=
-operator|*
-name|rvp
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|rp
-operator|==
-name|MATCHREPL
-condition|)
-block|{
 specifier|register
 name|struct
 name|match
@@ -2168,6 +2187,46 @@ modifier|*
 modifier|*
 name|pp
 decl_stmt|;
+name|rp
+operator|=
+operator|*
+name|rvp
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|rp
+operator|!=
+name|MATCHREPL
+condition|)
+block|{
+if|if
+condition|(
+name|avp
+operator|>=
+operator|&
+name|npvp
+index|[
+name|MAXATOM
+index|]
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"rewrite: expansion too long"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+operator|*
+name|avp
+operator|++
+operator|=
+name|rp
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* substitute from LHS */
 name|m
 operator|=
 operator|&
@@ -2294,34 +2353,6 @@ operator|=
 operator|*
 name|pp
 operator|++
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|avp
-operator|>=
-operator|&
-name|npvp
-index|[
-name|MAXATOM
-index|]
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"rewrite: expansion too long"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-operator|*
-name|avp
-operator|++
-operator|=
-name|rp
 expr_stmt|;
 block|}
 block|}
@@ -2465,36 +2496,6 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|21
-argument_list|,
-literal|10
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"----- rule fails\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
-name|rwr
-operator|=
-name|rwr
-operator|->
-name|r_next
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -3077,7 +3078,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SAMEADDR -- Determine if two addresses are the same ** **	This is not just a straight comparison -- if the mailer doesn't **	care about the host we just ignore it, etc. ** **	Parameters: **		a, b -- pointers to the internal forms to compare. **		wildflg -- if TRUE, 'a' may have no user specified, **			in which case it is to match anything. ** **	Returns: **		TRUE -- they represent the same mailbox. **		FALSE -- they don't. ** **	Side Effects: **		none. */
+comment|/* **  SAMEADDR -- Determine if two addresses are the same ** **	This is not just a straight comparison -- if the mailer doesn't **	care about the host we just ignore it, etc. ** **	Parameters: **		a, b -- pointers to the internal forms to compare. ** **	Returns: **		TRUE -- they represent the same mailbox. **		FALSE -- they don't. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -3087,8 +3088,6 @@ parameter_list|(
 name|a
 parameter_list|,
 name|b
-parameter_list|,
-name|wildflg
 parameter_list|)
 specifier|register
 name|ADDRESS
@@ -3099,9 +3098,6 @@ specifier|register
 name|ADDRESS
 modifier|*
 name|b
-decl_stmt|;
-name|bool
-name|wildflg
 decl_stmt|;
 block|{
 comment|/* if they don't have the same mailer, forget it */
@@ -3123,20 +3119,6 @@ return|;
 comment|/* if the user isn't the same, we can drop out */
 if|if
 condition|(
-operator|(
-operator|!
-name|wildflg
-operator|||
-name|a
-operator|->
-name|q_user
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-operator|)
-operator|&&
 name|strcmp
 argument_list|(
 name|a
@@ -3382,11 +3364,11 @@ argument|);
 comment|/* 	**  Now restore the comment information we had at the beginning. 	*/
 argument|cataddr(pvp, lbuf, sizeof lbuf); 	define(
 literal|'g'
-argument|, lbuf); 	expand(fancy, buf,&buf[sizeof buf -
+argument|, lbuf, CurEnv); 	expand(fancy, buf,&buf[sizeof buf -
 literal|1
 argument|], CurEnv); 	define(
 literal|'g'
-argument|, oldg);
+argument|, oldg, CurEnv);
 ifdef|#
 directive|ifdef
 name|DEBUG

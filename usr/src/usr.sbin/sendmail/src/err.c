@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -186,6 +186,7 @@ operator|=
 name|EX_OSERR
 expr_stmt|;
 block|}
+comment|/* insure that we have a queue id for logging */
 operator|(
 name|void
 operator|)
@@ -780,6 +781,36 @@ name|eb
 operator|+=
 literal|4
 expr_stmt|;
+comment|/* output the file name and line number */
+if|if
+condition|(
+name|FileName
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|eb
+argument_list|,
+literal|"%s: line %d: "
+argument_list|,
+name|FileName
+argument_list|,
+name|LineNumber
+argument_list|)
+expr_stmt|;
+name|eb
+operator|+=
+name|strlen
+argument_list|(
+name|eb
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* output the "to" person */
 if|if
 condition|(

@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.54
+literal|3.55
 operator|%
 name|G
 operator|%
@@ -30,7 +30,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  While it is doing it, it looks for **	"From:" and "Sender:" fields to use as the from-person **	(but only if the -a flag is specified).  It prefers to **	to use the "Sender:" field. ** **	MIT seems to like to produce "Sent-By:" fields instead **	of "Sender:" fields.  We used to catch this, but it turns **	out that the "Sent-By:" field doesn't always correspond **	to someone real ("___057", for instance), as required by **	the protocol.  So we limp by..... ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
+comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
 end_comment
 
 begin_macro
@@ -503,10 +503,6 @@ name|NULL
 control|)
 block|{
 specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|bp
@@ -557,8 +553,20 @@ name|OpMode
 operator|==
 name|MD_SMTP
 operator|&&
-operator|*
+operator|!
+name|IgnrDot
+operator|&&
 name|bp
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+name|bp
+index|[
+literal|1
+index|]
 operator|==
 literal|'.'
 condition|)
@@ -600,18 +608,14 @@ endif|#
 directive|endif
 endif|NOTUNIX
 comment|/* 		**  Figure message length, output the line to the temp 		**  file, and insert a newline if missing. 		*/
-name|i
-operator|=
-name|strlen
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|CurEnv
 operator|->
 name|e_msgsize
 operator|+=
-name|i
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
 operator|+
 literal|1
 expr_stmt|;
@@ -705,7 +709,9 @@ argument_list|)
 expr_stmt|;
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
 name|eatheader
-argument_list|()
+argument_list|(
+name|CurEnv
+argument_list|)
 expr_stmt|;
 comment|/* 	**  Add an Apparently-To: line if we have no recipient lines. 	*/
 if|if
@@ -811,20 +817,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* check for hop count overflow */
-if|if
-condition|(
-name|HopCount
-operator|>
-name|MAXHOP
-condition|)
-name|syserr
-argument_list|(
-literal|"Too many hops (%d max); probably forwarding loop"
-argument_list|,
-name|MAXHOP
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1216,6 +1208,8 @@ argument_list|(
 literal|'d'
 argument_list|,
 name|q
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|q
@@ -1233,6 +1227,8 @@ name|newstr
 argument_list|(
 name|q
 argument_list|)
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 block|}

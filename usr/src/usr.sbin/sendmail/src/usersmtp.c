@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -185,37 +185,19 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-extern|extern tick(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|canonname
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* 	**  Open the connection to the mailer. 	*/
-end_comment
-
-begin_expr_stmt
 name|SmtpIn
 operator|=
 name|SmtpOut
 operator|=
 name|NULL
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SmtpPid
 operator|=
 name|openmailer
@@ -235,9 +217,6 @@ operator|&
 name|SmtpIn
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|SmtpPid
@@ -279,21 +258,12 @@ name|ExitStat
 operator|)
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously. 	*/
-end_comment
-
-begin_expr_stmt
 name|r
 operator|=
 name|reply
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|r
@@ -312,13 +282,7 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
-end_if
-
-begin_comment
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself. 	*/
-end_comment
-
-begin_expr_stmt
 name|smtpmessage
 argument_list|(
 literal|"HELO %s"
@@ -326,17 +290,11 @@ argument_list|,
 name|HostName
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|r
 operator|=
 name|reply
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|r
@@ -378,13 +336,7 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
-end_if
-
-begin_comment
 comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	*/
-end_comment
-
-begin_if
 if|if
 condition|(
 name|bitset
@@ -442,17 +394,8 @@ name|EX_TEMPFAIL
 operator|)
 return|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
-end_comment
-
-begin_comment
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
-end_comment
-
-begin_expr_stmt
 name|expand
 argument_list|(
 literal|"$g"
@@ -471,9 +414,6 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|CurEnv
@@ -536,17 +476,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|r
 operator|=
 name|reply
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|r
@@ -589,34 +523,34 @@ operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
-end_if
-
-begin_return
 return|return
 operator|(
 name|EX_PROTOCOL
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_escape
-unit|}
 end_escape
 
 begin_comment
 comment|/* **  SMTPRCPT -- designate recipient. ** **	Parameters: **		to -- address of recipient. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
 end_comment
 
-begin_expr_stmt
-unit|smtprcpt
-operator|(
-name|to
-operator|)
+begin_macro
+name|smtprcpt
+argument_list|(
+argument|to
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|ADDRESS
-operator|*
+modifier|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1023,8 +957,6 @@ condition|)
 name|giveresponse
 argument_list|(
 name|i
-argument_list|,
-name|TRUE
 argument_list|,
 name|LocalMailer
 argument_list|)

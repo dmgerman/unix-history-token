@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -82,7 +82,56 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  QUEUEUP -- queue a message up for future transmission. ** **	The queued message should already be in the correct place. **	This routine just outputs the control file as appropriate. ** **	Parameters: **		e -- the envelope to queue up. **		queueall -- if TRUE, queue all addresses, rather than **			just those with the QQUEUEUP flag set. ** **	Returns: **		none. ** **	Side Effects: **		The current request (only unsatisfied addresses) **			are saved in a control file. */
+comment|/* **  Work queue. */
+end_comment
+
+begin_struct
+struct|struct
+name|work
+block|{
+name|char
+modifier|*
+name|w_name
+decl_stmt|;
+comment|/* name of control file */
+name|long
+name|w_pri
+decl_stmt|;
+comment|/* priority of message, see below */
+name|struct
+name|work
+modifier|*
+name|w_next
+decl_stmt|;
+comment|/* next in queue */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|work
+name|WORK
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|WORK
+modifier|*
+name|WorkQ
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* queue of things to be done */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  QUEUEUP -- queue a message up for future transmission. ** **	Parameters: **		e -- the envelope to queue up. **		queueall -- if TRUE, queue all addresses, rather than **			just those with the QQUEUEUP flag set. **		announce -- if TRUE, tell when you are queueing up. ** **	Returns: **		none. ** **	Side Effects: **		The current request are saved in a control file. */
 end_comment
 
 begin_expr_stmt
@@ -91,6 +140,8 @@ argument_list|(
 name|e
 argument_list|,
 name|queueall
+argument_list|,
+name|announce
 argument_list|)
 specifier|register
 name|ENVELOPE
@@ -102,6 +153,12 @@ end_expr_stmt
 begin_decl_stmt
 name|bool
 name|queueall
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|announce
 decl_stmt|;
 end_decl_stmt
 
@@ -293,10 +350,7 @@ call|)
 argument_list|(
 name|dfp
 argument_list|,
-name|Mailer
-index|[
-literal|1
-index|]
+name|ProgMailer
 argument_list|,
 name|FALSE
 argument_list|)
@@ -310,7 +364,19 @@ name|dfp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	**  Output future work requests. 	*/
+comment|/* 	**  Output future work requests. 	**	Priority should be first, since it is read by orderq. 	*/
+comment|/* output message priority */
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"P%ld\n"
+argument_list|,
+name|e
+operator|->
+name|e_msgpriority
+argument_list|)
+expr_stmt|;
 comment|/* output name of data file */
 name|fprintf
 argument_list|(
@@ -347,18 +413,6 @@ argument_list|,
 name|e
 operator|->
 name|e_ctime
-argument_list|)
-expr_stmt|;
-comment|/* output message priority */
-name|fprintf
-argument_list|(
-name|tfp
-argument_list|,
-literal|"P%ld\n"
-argument_list|,
-name|e
-operator|->
-name|e_msgpriority
 argument_list|)
 expr_stmt|;
 comment|/* output message class */
@@ -457,14 +511,54 @@ operator|->
 name|q_paddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|announce
+condition|)
+block|{
+name|e
+operator|->
+name|e_to
+operator|=
+name|q
+operator|->
+name|q_paddr
+expr_stmt|;
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"queued"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|4
+condition|)
+name|logdelivery
+argument_list|(
+literal|"queued"
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_to
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
-comment|/* output headers for this message */
+block|}
+comment|/* 	**  Output headers for this message. 	**	Expand macros completely here.  Queue run will deal with 	**	everything as absolute headers. 	**		All headers that must be relative to the recipient 	**		can be cracked later. 	*/
 name|define
 argument_list|(
 literal|'g'
 argument_list|,
 literal|"$f"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 for|for
@@ -663,6 +757,9 @@ argument_list|,
 literal|'q'
 argument_list|)
 expr_stmt|;
+name|holdsigs
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -703,6 +800,9 @@ name|unlink
 argument_list|(
 name|tf
 argument_list|)
+expr_stmt|;
+name|rlsesigs
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -759,10 +859,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 comment|/* 	**  See if we want to go off and do other useful work. 	*/
 if|if
 condition|(
@@ -785,32 +881,14 @@ literal|0
 condition|)
 block|{
 comment|/* parent -- pick up intermediate zombie */
-do|do
-block|{
-specifier|auto
-name|int
-name|stat
-decl_stmt|;
-name|i
-operator|=
-name|wait
+operator|(
+name|void
+operator|)
+name|waitfor
 argument_list|(
-operator|&
-name|stat
+name|pid
 argument_list|)
 expr_stmt|;
-block|}
-do|while
-condition|(
-name|i
-operator|>=
-literal|0
-operator|&&
-name|i
-operator|!=
-name|pid
-condition|)
-do|;
 if|if
 condition|(
 name|QueueIntvl
@@ -1165,15 +1243,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|FILE
+modifier|*
+name|cf
+decl_stmt|;
 name|char
 name|lbuf
 index|[
 name|MAXNAME
 index|]
-decl_stmt|;
-name|FILE
-modifier|*
-name|cf
 decl_stmt|;
 comment|/* is this an interesting entry? */
 if|if
@@ -1287,25 +1365,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fixcrlf
-argument_list|(
-name|lbuf
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|lbuf
 index|[
 literal|0
 index|]
+operator|==
+literal|'P'
 condition|)
 block|{
-case|case
-literal|'P'
-case|:
-comment|/* message priority */
 operator|(
 name|void
 operator|)
@@ -1377,7 +1446,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	**  Convert the work list into canonical form. 	*/
+comment|/* 	**  Convert the work list into canonical form. 	**	Should be turning it into a list of envelopes here perhaps. 	*/
 end_comment
 
 begin_expr_stmt
@@ -1623,10 +1692,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|auto
-name|int
-name|xstat
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1703,9 +1768,9 @@ name|QueueRun
 operator|=
 name|TRUE
 expr_stmt|;
-name|MailBack
+name|ErrorMode
 operator|=
-name|TRUE
+name|EM_MAIL
 expr_stmt|;
 name|CurEnv
 operator|->
@@ -1823,12 +1888,7 @@ expr_stmt|;
 comment|/* read the queue control file */
 name|readqf
 argument_list|(
-name|queuename
-argument_list|(
 name|CurEnv
-argument_list|,
-literal|'q'
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|CurEnv
@@ -1838,7 +1898,9 @@ operator||=
 name|EF_INQUEUE
 expr_stmt|;
 name|eatheader
-argument_list|()
+argument_list|(
+name|CurEnv
+argument_list|)
 expr_stmt|;
 comment|/* do the delivery */
 if|if
@@ -1917,38 +1979,14 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
 operator|(
-name|i
-operator|=
-name|wait
-argument_list|(
-operator|&
-name|xstat
-argument_list|)
+name|void
 operator|)
-operator|>
-literal|0
-operator|&&
-name|errno
-operator|!=
-name|EINTR
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-block|{
-name|errno
-operator|=
-literal|0
+name|waitfor
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_block
 
@@ -1956,22 +1994,20 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		cf -- name of queue control file. ** **	Returns: **		none. ** **	Side Effects: **		cf is read and created as the current job, as though **		we had been invoked by argument. */
+comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. ** **	Returns: **		none. ** **	Side Effects: **		cf is read and created as the current job, as though **		we had been invoked by argument. */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|readqf
 argument_list|(
-argument|cf
+name|e
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cf
-decl_stmt|;
-end_decl_stmt
+specifier|register
+name|ENVELOPE
+operator|*
+name|e
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1992,6 +2028,11 @@ modifier|*
 name|fgetfolded
 parameter_list|()
 function_decl|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 specifier|extern
 name|ADDRESS
 modifier|*
@@ -1999,11 +2040,20 @@ name|sendto
 parameter_list|()
 function_decl|;
 comment|/* 	**  Open the file created by queueup. 	*/
+name|p
+operator|=
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'q'
+argument_list|)
+expr_stmt|;
 name|f
 operator|=
 name|fopen
 argument_list|(
-name|cf
+name|p
 argument_list|,
 literal|"r"
 argument_list|)
@@ -2017,13 +2067,21 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"readqf: no cf file %s"
+literal|"readqf: no control file %s"
 argument_list|,
-name|cf
+name|p
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|FileName
+operator|=
+name|p
+expr_stmt|;
+name|LineNumber
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	**  Read and process the file. 	*/
 if|if
 condition|(
@@ -2033,7 +2091,9 @@ name|printf
 argument_list|(
 literal|"\nRunning %s\n"
 argument_list|,
-name|cf
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 while|while
@@ -2126,7 +2186,7 @@ case|case
 literal|'D'
 case|:
 comment|/* data file name */
-name|CurEnv
+name|e
 operator|->
 name|e_df
 operator|=
@@ -2143,7 +2203,7 @@ name|TempFile
 operator|=
 name|fopen
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|,
@@ -2160,7 +2220,7 @@ name|syserr
 argument_list|(
 literal|"readqf: cannot open %s"
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_df
 argument_list|)
@@ -2184,7 +2244,7 @@ argument_list|,
 literal|"%ld"
 argument_list|,
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_ctime
 argument_list|)
@@ -2208,41 +2268,17 @@ argument_list|,
 literal|"%ld"
 argument_list|,
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_msgpriority
 argument_list|)
 expr_stmt|;
 comment|/* make sure that big things get sent eventually */
-name|CurEnv
+name|e
 operator|->
 name|e_msgpriority
 operator|-=
 name|WKTIMEFACT
-expr_stmt|;
-break|break;
-case|case
-literal|'C'
-case|:
-comment|/* message class */
-operator|(
-name|void
-operator|)
-name|sscanf
-argument_list|(
-operator|&
-name|buf
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"%hd"
-argument_list|,
-operator|&
-name|CurEnv
-operator|->
-name|e_class
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2264,6 +2300,8 @@ index|[
 literal|2
 index|]
 argument_list|)
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2272,7 +2310,9 @@ name|syserr
 argument_list|(
 literal|"readqf(%s): bad line \"%s\""
 argument_list|,
-name|cf
+name|e
+operator|->
+name|e_id
 argument_list|,
 name|buf
 argument_list|)
@@ -2280,6 +2320,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|FileName
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_block
 

@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -92,7 +92,7 @@ endif|DBM
 end_endif
 
 begin_comment
-comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file /usr/lib/aliases for a set of aliases. **	If found, it arranges to deliver to them.  Uses libdbm **	database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Files: **		/usr/lib/aliases -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. **		/usr/lib/aliases.pag, /usr/lib/aliases.dir: libdbm version **			of alias file.  Keys are aliases, datums **			(data?) are name1,name2, ... ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
+comment|/* **  ALIAS -- Compute aliases. ** **	Scans the alias file for an alias for the given address. **	If found, it arranges to deliver to the alias list instead. **	Uses libdbm database if -DDBM. ** **	Parameters: **		a -- address to alias. **		sendq -- a pointer to the head of the send queue **			to put the aliases in. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. */
 end_comment
 
 begin_ifdef
@@ -445,6 +445,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|DBM
 name|int
 name|atcnt
 decl_stmt|;
@@ -453,10 +456,6 @@ name|buf
 index|[
 name|MAXNAME
 index|]
-decl_stmt|;
-name|struct
-name|stat
-name|stb
 decl_stmt|;
 name|time_t
 name|modtime
@@ -468,6 +467,13 @@ name|oldsigint
 function_decl|)
 parameter_list|()
 function_decl|;
+endif|#
+directive|endif
+endif|DBM
+name|struct
+name|stat
+name|stb
+decl_stmt|;
 if|if
 condition|(
 name|stat
@@ -601,7 +607,7 @@ name|stb
 operator|.
 name|st_mode
 operator|&
-literal|0666
+literal|0777
 operator|)
 operator|==
 literal|0666
@@ -708,6 +714,16 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|oldsigint
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 operator|(
@@ -750,6 +766,16 @@ argument_list|(
 literal|"cannot make %s"
 argument_list|,
 name|buf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|oldsigint
 argument_list|)
 expr_stmt|;
 return|return;
@@ -846,12 +872,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-name|line
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -868,29 +888,32 @@ decl_stmt|;
 name|bool
 name|skipping
 decl_stmt|;
-name|ADDRESS
-name|al
-decl_stmt|,
-name|bl
-decl_stmt|;
-name|FILE
-modifier|*
-name|af
-decl_stmt|;
-name|int
-name|lineno
-decl_stmt|;
-specifier|register
-name|STAB
-modifier|*
-name|s
-decl_stmt|;
 name|int
 name|naliases
 decl_stmt|,
 name|bytes
 decl_stmt|,
 name|longest
+decl_stmt|;
+name|FILE
+modifier|*
+name|af
+decl_stmt|;
+name|ADDRESS
+name|al
+decl_stmt|,
+name|bl
+decl_stmt|;
+specifier|register
+name|STAB
+modifier|*
+name|s
+decl_stmt|;
+name|char
+name|line
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -939,7 +962,11 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	**  Read and interpret lines 	*/
-name|lineno
+name|FileName
+operator|=
+name|aliasfile
+expr_stmt|;
+name|LineNumber
 operator|=
 literal|0
 expr_stmt|;
@@ -977,7 +1004,7 @@ name|lhssize
 decl_stmt|,
 name|rhssize
 decl_stmt|;
-name|lineno
+name|LineNumber
 operator|++
 expr_stmt|;
 switch|switch
@@ -1015,9 +1042,7 @@ name|skipping
 condition|)
 name|syserr
 argument_list|(
-literal|"aliases: %d: Non-continuation line starts with space"
-argument_list|,
-name|lineno
+literal|"Non-continuation line starts with space"
 argument_list|)
 expr_stmt|;
 name|skipping
@@ -1069,8 +1094,6 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|syntaxerr
-label|:
 name|syserr
 argument_list|(
 literal|"%s, line %d: syntax error"
@@ -1109,9 +1132,12 @@ name|p
 operator|=
 literal|':'
 expr_stmt|;
-goto|goto
-name|syntaxerr
-goto|;
+name|syserr
+argument_list|(
+literal|"illegal alias name"
+argument_list|)
+expr_stmt|;
+continue|continue;
 block|}
 comment|/* 		**  Process the RHS. 		**	'al' is the internal form of the LHS address. 		**	'p' points to the text of the RHS. 		**		'p' may begin with a colon (i.e., the 		**		separator was "::") which will use the 		**		first address as the person to send 		**		errors to -- i.e., designates the 		**		list maintainer. 		*/
 if|if
@@ -1429,7 +1455,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-name|lineno
+name|LineNumber
 operator|++
 expr_stmt|;
 block|}
@@ -1444,9 +1470,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"aliases: %d: cannot alias non-local names"
-argument_list|,
-name|lineno
+literal|"cannot alias non-local names"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1582,6 +1606,10 @@ name|e_to
 operator|=
 name|NULL
 expr_stmt|;
+name|FileName
+operator|=
+name|NULL
+expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_Info
@@ -1711,6 +1739,8 @@ argument_list|,
 name|user
 operator|->
 name|q_home
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|expand

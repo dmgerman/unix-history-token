@@ -15,7 +15,7 @@ operator|)
 name|clock
 operator|.
 name|c
-literal|3.12
+literal|3.13
 operator|%
 name|G
 operator|%
@@ -24,7 +24,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  SETEVENT -- set an event to happen at a specific time. ** **	Parameters: **		intvl -- intvl until next event occurs. **		func -- function to call on event. **		arg -- argument to func on event. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  SETEVENT -- set an event to happen at a specific time. ** **	Events are stored in a sorted list for fast processing. **	An event only applies to the process that set it. ** **	Parameters: **		intvl -- intvl until next event occurs. **		func -- function to call on event. **		arg -- argument to func on event. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_decl_stmt
@@ -364,6 +364,9 @@ name|NULL
 condition|)
 return|return;
 comment|/* find the parent event */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGALRM
@@ -459,11 +462,22 @@ name|EVENT
 modifier|*
 name|ev
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|tick
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|now
@@ -574,6 +588,16 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* we must be careful in here because ev_func may not return */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|tick
+argument_list|)
+expr_stmt|;
 name|f
 operator|=
 name|ev
@@ -664,6 +688,16 @@ name|curtime
 argument_list|()
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|tick
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|EventQueue

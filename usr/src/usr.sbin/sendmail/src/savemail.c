@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.49
+literal|3.50
 operator|%
 name|G
 operator|%
@@ -30,7 +30,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  SAVEMAIL -- Save mail on error ** **	If the MailBack flag is set, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		e -- the envelope containing the message in error. ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. */
+comment|/* **  SAVEMAIL -- Save mail on error ** **	If mailing back errors, mail it back to the originator **	together with an error message; otherwise, just put it in **	dead.letter in the user's home directory (if he exists on **	this machine). ** **	Parameters: **		e -- the envelope containing the message in error. ** **	Returns: **		none ** **	Side Effects: **		Saves the letter, by writing or mailing it back to the **		sender, or by putting it in dead.letter in her home **		directory. */
 end_comment
 
 begin_expr_stmt
@@ -84,10 +84,6 @@ modifier|*
 name|ttypath
 parameter_list|()
 function_decl|;
-specifier|static
-name|int
-name|exclusive
-decl_stmt|;
 typedef|typedef
 name|int
 function_decl|(
@@ -110,9 +106,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\nsavemail: exclusive %d\n"
-argument_list|,
-name|exclusive
+literal|"\nsavemail\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -120,8 +114,14 @@ directive|endif
 endif|DEBUG
 if|if
 condition|(
-name|exclusive
-operator|++
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 return|return;
 if|if
@@ -212,16 +212,18 @@ expr_stmt|;
 comment|/* 	**  If called from Eric Schmidt's network, do special mailback. 	**	Fundamentally, this is the mailback case except that 	**	it returns an OK exit status (assuming the return 	**	worked). 	**  Also, if the from address is not local, mail it back. 	*/
 if|if
 condition|(
-name|BerkNet
+name|ErrorMode
+operator|==
+name|EM_BERKNET
 condition|)
 block|{
 name|ExitStat
 operator|=
 name|EX_OK
 expr_stmt|;
-name|MailBack
+name|ErrorMode
 operator|=
-name|TRUE
+name|EM_MAIL
 expr_stmt|;
 block|}
 if|if
@@ -240,14 +242,16 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
-name|MailBack
+name|ErrorMode
 operator|=
-name|TRUE
+name|EM_MAIL
 expr_stmt|;
-comment|/* 	**  If writing back, do it. 	**	If the user is still logged in on the same terminal, 	**	then write the error messages back to hir (sic). 	**	If not, set the MailBack flag so that it will get 	**	mailed back instead. 	*/
+comment|/* 	**  If writing back, do it. 	**	If the user is still logged in on the same terminal, 	**	then write the error messages back to hir (sic). 	**	If not, mail back instead. 	*/
 if|if
 condition|(
-name|WriteBack
+name|ErrorMode
+operator|==
+name|EM_WRITE
 condition|)
 block|{
 name|p
@@ -273,9 +277,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|MailBack
+name|ErrorMode
 operator|=
-name|TRUE
+name|EM_MAIL
 expr_stmt|;
 name|errno
 operator|=
@@ -284,52 +288,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|Xscript
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|Xscript
-argument_list|)
-expr_stmt|;
-name|xfile
-operator|=
-name|fopen
-argument_list|(
-name|queuename
-argument_list|(
-name|e
-argument_list|,
-literal|'x'
-argument_list|)
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|xfile
-operator|==
-name|NULL
-condition|)
-name|syserr
-argument_list|(
-literal|"Cannot open %s"
-argument_list|,
-name|queuename
-argument_list|(
-name|e
-argument_list|,
-literal|'x'
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|expand
 argument_list|(
 literal|"$n"
@@ -357,7 +315,74 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Errors occurred while sending mail; transcript follows:\r\n"
+literal|"Errors occurred while sending mail.\r\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Xscript
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|Xscript
+argument_list|)
+expr_stmt|;
+name|xfile
+operator|=
+name|fopen
+argument_list|(
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'x'
+argument_list|)
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|xfile
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|xfile
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Cannot open %s"
+argument_list|,
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'x'
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Transcript of session is unavailable.\r\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Transcript follows:\r\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -387,6 +412,15 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|xfile
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ferror
@@ -402,20 +436,14 @@ argument_list|(
 literal|"savemail: stdout: write err"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|xfile
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 comment|/* 	**  If mailing back, do it. 	**	Throw away all further output.  Don't do aliases, since 	**	this could cause loops, e.g., if joe mails to x:joe, 	**	and for some reason the network for x: is down, then 	**	the response gets sent to x:joe, which gives a 	**	response, etc.  Also force the mail to be delivered 	**	even if a version of it has already been sent to the 	**	sender. 	*/
 if|if
 condition|(
-name|MailBack
+name|ErrorMode
+operator|==
+name|EM_MAIL
 condition|)
 block|{
 if|if
@@ -435,18 +463,7 @@ literal|0
 condition|)
 return|return;
 block|}
-comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back, and the user is local, we 	**	should save the message in dead.letter so that the 	**	poor person doesn't have to type it over again -- 	**	and we all know what poor typists programmers are. 	**	However, if we are running a "smart" protocol, we don't 	**	bother to return the message, since the other end is 	**	expected to handle that. 	*/
-if|if
-condition|(
-name|OpMode
-operator|==
-name|MD_ARPAFTP
-operator|||
-name|OpMode
-operator|==
-name|MD_SMTP
-condition|)
-return|return;
+comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back, and the user is local, we 	**	should save the message in dead.letter so that the 	**	poor person doesn't have to type it over again -- 	**	and we all know what poor typists programmers are. 	*/
 name|p
 operator|=
 name|NULL
@@ -555,26 +572,13 @@ init|=
 name|Verbose
 decl_stmt|;
 comment|/* we have a home directory; open dead.letter */
-name|Verbose
-operator|=
-name|TRUE
-expr_stmt|;
-name|message
-argument_list|(
-name|Arpa_Info
-argument_list|,
-literal|"Saving message in dead.letter"
-argument_list|)
-expr_stmt|;
-name|Verbose
-operator|=
-name|oldverb
-expr_stmt|;
 name|define
 argument_list|(
 literal|'z'
 argument_list|,
 name|p
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|expand
@@ -594,6 +598,23 @@ index|]
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"Saving message in %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|Verbose
+operator|=
+name|oldverb
 expr_stmt|;
 name|e
 operator|->
@@ -624,6 +645,8 @@ name|void
 operator|)
 name|deliver
 argument_list|(
+name|e
+argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
@@ -631,7 +654,9 @@ block|}
 comment|/* add terminator to writeback message */
 if|if
 condition|(
-name|WriteBack
+name|ErrorMode
+operator|==
+name|EM_WRITE
 condition|)
 name|printf
 argument_list|(
@@ -749,6 +774,14 @@ name|returndepth
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|register
+name|ADDRESS
+modifier|*
+name|q
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -786,7 +819,7 @@ name|printaddr
 argument_list|(
 name|returnto
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -833,13 +866,6 @@ block|}
 end_if
 
 begin_expr_stmt
-name|NoAlias
-operator|=
-name|TRUE
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SendBody
 operator|=
 name|sendbody
@@ -852,6 +878,8 @@ argument_list|(
 literal|'g'
 argument_list|,
 literal|"$f"
+argument_list|,
+name|CurEnv
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -886,6 +914,24 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|ee
+operator|->
+name|e_flags
+operator||=
+name|EF_RESPONSE
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ee
+operator|->
+name|e_sendqueue
+operator|=
+name|returnto
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -898,19 +944,45 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_for
+for|for
+control|(
+name|q
+operator|=
+name|returnto
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+block|{
+if|if
+condition|(
+name|q
+operator|->
+name|q_alias
+operator|==
+name|NULL
+condition|)
 name|addheader
 argument_list|(
 literal|"to"
 argument_list|,
-name|returnto
+name|q
 operator|->
 name|q_paddr
 argument_list|,
 name|ee
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_for
 
 begin_expr_stmt
 name|addheader
@@ -989,15 +1061,6 @@ return|;
 block|}
 end_if
 
-begin_expr_stmt
-name|ee
-operator|->
-name|e_sendqueue
-operator|=
-name|returnto
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* push state into submessage */
 end_comment
@@ -1015,6 +1078,8 @@ argument_list|(
 literal|'f'
 argument_list|,
 literal|"$n"
+argument_list|,
+name|ee
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1025,6 +1090,8 @@ argument_list|(
 literal|'x'
 argument_list|,
 literal|"Mail Delivery Subsystem"
+argument_list|,
+name|ee
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1039,18 +1106,6 @@ argument_list|(
 name|ee
 argument_list|,
 name|SendMode
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* do any closing error processing */
-end_comment
-
-begin_expr_stmt
-name|checkerrors
-argument_list|(
-name|ee
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1364,6 +1419,8 @@ argument_list|,
 name|m
 argument_list|,
 name|CurEnv
+operator|->
+name|e_parent
 argument_list|)
 expr_stmt|;
 block|}
