@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	compact.h	4.5	84/08/25	*/
+comment|/*	compact.h	4.6	84/08/25	*/
 end_comment
 
 begin_if
@@ -263,27 +263,27 @@ name|struct
 name|fpoint
 name|fath
 decl_stmt|;
+struct|struct
+name|son
+block|{
 name|union
 name|treep
 name|sp
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|struct
 name|index
 modifier|*
 name|top
-index|[
-literal|2
-index|]
 decl_stmt|;
 name|longint
 name|count
+decl_stmt|;
+block|}
+name|sons
 index|[
 literal|2
 index|]
-decl_stmt|;
+struct|;
 define|#
 directive|define
 name|LEFT
