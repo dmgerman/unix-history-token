@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READ4.c 1.5 %G%"
+literal|"@(#)READ4.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -18,6 +18,19 @@ include|#
 directive|include
 file|"h00vars.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|long
@@ -63,6 +76,10 @@ argument_list|(
 name|curfile
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|retval
 operator|=
 name|fscanf
@@ -106,6 +123,40 @@ name|ERROR
 argument_list|(
 literal|"%s: Bad data found on integer read\n"
 argument_list|,
+name|curfile
+operator|->
+name|pfname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|errno
+operator|==
+name|ERANGE
+condition|)
+block|{
+name|ERROR
+argument_list|(
+literal|"%s: Overflow on integer read\n"
+argument_list|,
+name|curfile
+operator|->
+name|pfname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+name|PERROR
+argument_list|(
 name|curfile
 operator|->
 name|pfname
