@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c	1.6 (Berkeley from Hp Labs) %G%"
+literal|"@(#)file.c	1.7 (Berkeley from Hp Labs) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1846,7 +1846,6 @@ name|items
 operator|==
 name|NULL
 condition|)
-block|{
 name|items
 operator|=
 operator|(
@@ -1867,20 +1866,12 @@ argument_list|,
 name|MAXITEMS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|items
-operator|==
-name|NULL
-condition|)
-break|break;
-block|}
 name|items
 index|[
 name|numitems
 index|]
 operator|=
-name|malloc
+name|xalloc
 argument_list|(
 operator|(
 name|unsigned
@@ -1893,23 +1884,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|items
-index|[
-name|numitems
-index|]
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"out of mem\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|copyn
 argument_list|(
 name|items
