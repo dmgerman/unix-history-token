@@ -31,17 +31,6 @@ name|READ_INTR
 value|(-2)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NO_HORIZ_OFF
-value|(-1)
-end_define
-
-begin_comment
-comment|/* Wrap lines like normal */
-end_comment
-
 begin_comment
 comment|/* Special chars used to tell put_line() to do something special */
 end_comment
@@ -167,6 +156,35 @@ name|BADCOMMAND
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|NOFLAGS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FORCE_OPEN
+value|0
+end_define
+
+begin_comment
+comment|/* edit() flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_FORCE_OPEN
+value|1
+end_define
+
+begin_comment
+comment|/* edit() flag */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -311,7 +329,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * It is possible for erreur to become dis-synchronized from errstr if  * its users aren't careful.  Access through the macros is considered  * careful.  */
+comment|/*  * It is possible for erreur to become unsynchronized from errstr if  * its users aren't careful.  Access through the macros is considered  * careful.  */
 end_comment
 
 begin_macro
@@ -358,7 +376,7 @@ comment|/* SETERRSTR() also exists.  It is in command.c */
 end_comment
 
 begin_comment
-comment|/*  * An emalloc() traditionally never fails, but fmalloc() may fail, hence  * the non-standard name.  The fmalloc() is just syntactic sugar that sets  * erreur for the user.  *  * fmalloc(size, pointer-to-new-memory);  *  * Don't compile this puppy with -Wall...  */
+comment|/*  * An emalloc() traditionally never fails, but fmalloc() may fail, hence  * the non-standard name.  The fmalloc() is just syntactic sugar that sets  * erreur for the user.  *  * fmalloc(size, pointer-to-new-memory);  *  * Don't compile this puppy with -Wall or she'll squeel loud!  */
 end_comment
 
 begin_define

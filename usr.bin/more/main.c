@@ -245,13 +245,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Edit a new file.  * Filename "-" means standard input.  * No filename means the "current" file, from the command line.  If called  * with the same filename in succession, filename will be closed and reopened.  */
+comment|/*  * Edit a new file.  * Filename "-" means standard input.  * No filename means the "current" file, from the command line.  If called  * with the same filename in succession, filename will be closed and reopened.  *  * If called with FORCE_OPEN, the file will be re-opened even if it is  * already open.  */
 end_comment
 
 begin_expr_stmt
 name|edit
 argument_list|(
 name|filename
+argument_list|,
+name|force_open
 argument_list|)
 specifier|register
 name|char
@@ -313,6 +315,44 @@ modifier|*
 name|bad_file
 argument_list|()
 decl_stmt|;
+specifier|extern
+name|int
+name|horiz_off
+decl_stmt|,
+name|wraplines
+decl_stmt|;
+if|if
+condition|(
+name|force_open
+operator|==
+name|NO_FORCE_OPEN
+operator|&&
+name|current_file
+operator|&&
+name|filename
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|filename
+argument_list|,
+name|current_file
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* Okay since later code in this fcn() always forces redraw() */
+name|horiz_off
+operator|=
+literal|0
+expr_stmt|;
+name|wraplines
+operator|=
+literal|0
+expr_stmt|;
 name|initial_pos
 operator|=
 name|NULL_POSITION
@@ -700,9 +740,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|init_mark
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|isatty
@@ -829,6 +866,8 @@ name|curr_ac
 operator|+=
 name|n
 index|]
+argument_list|,
+name|FORCE_OPEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -878,6 +917,8 @@ name|curr_ac
 operator|-=
 name|n
 index|]
+argument_list|,
+name|FORCE_OPEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -1104,6 +1145,9 @@ name|curr_ac
 operator|=
 literal|0
 expr_stmt|;
+name|init_mark
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Set up terminal, etc. 	 */
 if|if
 condition|(
@@ -1128,6 +1172,8 @@ operator|)
 name|edit
 argument_list|(
 literal|"-"
+argument_list|,
+name|NOFLAGS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1154,6 +1200,8 @@ name|char
 operator|*
 operator|)
 name|NULL
+argument_list|,
+name|FORCE_OPEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -1216,6 +1264,8 @@ operator|!
 name|edit
 argument_list|(
 name|tagfile
+argument_list|,
+name|NOFLAGS
 argument_list|)
 operator|||
 name|tagsearch
@@ -1238,6 +1288,8 @@ operator|)
 name|edit
 argument_list|(
 literal|"-"
+argument_list|,
+name|NOFLAGS
 argument_list|)
 expr_stmt|;
 comment|/* Standard input */
@@ -1256,6 +1308,8 @@ name|char
 operator|*
 operator|)
 name|NULL
+argument_list|,
+name|NOFLAGS
 argument_list|)
 expr_stmt|;
 block|}

@@ -30,7 +30,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * These functions handle evaluation of primitive commands.  In general,  * commands either come from macro.h as it expands user input, or  * directly from a .morerc file (in which case only a limited set of  * commands is valid.  *  * Commands are matched by command() against a command table.  The rest  * of the command line string passed to command() is then passed to a  * function corresponding to the given command.  The specific command  * function evaluates the remainder of the command string with the help  * of getstr() and getnumb(), both of which also handle variable expansion  * into a single word.  It may in the future be desirable to add a special  * getsstring(), get-search-string, function.  Specific command functions  * should not try grokking the command string by themselves.  *  * A command and its arguments are terminated by either a NUL or a ';'.  * This is recognized by both getstr() and getint().  Specific command  * functions return a pointer to the end of the command (and its arguments)  * thus allowing command() to accept commands that are chained together  * by semicolons.  If a specific command fails it returns NULL preventing  * any proceeding commands (chained together with ';') from being parsed.  * This can be considered as a feature.  *   * All variable-access functions and variable state are internal to  * ncommand.c.  The sole exceptions are setvar() and setvari().  */
+comment|/*  * These functions handle evaluation of primitive commands.  In general,  * commands either come from macro.h as it expands user input, or  * directly from a .morerc file (in which case only a limited set of  * commands is valid.  *  * Commands are matched by command() against a command table.  The rest  * of the command line string passed to command() is then passed to a  * function corresponding to the given command.  The specific command  * function evaluates the remainder of the command string with the help  * of getstr() and getint(), both of which also handle variable expansion  * into a single word.  Specific command functions should not try grokking  * the command string by themselves.  *  * A command and its arguments are terminated by either a NUL or a ';'.  * This is recognized by both getstr() and getint().  Specific command  * functions return a pointer to the end of the command (and its arguments)  * thus allowing command() to accept commands that are chained together  * by semicolons.  If a specific command fails, it returns NULL preventing  * any proceeding commands (chained together with ';') from being parsed.  * This can be considered as a feature.  *   * All variable-access functions and variable state are internal to  * ncommand.c.  The sole exceptions are setvar() and setvari().  */
 end_comment
 
 begin_include
@@ -4720,6 +4720,8 @@ name|glob
 argument_list|(
 name|buf
 argument_list|)
+argument_list|,
+name|FORCE_OPEN
 argument_list|)
 expr_stmt|;
 return|return
@@ -5604,6 +5606,8 @@ condition|(
 name|edit
 argument_list|(
 name|tagfile
+argument_list|,
+name|NO_FORCE_OPEN
 argument_list|)
 condition|)
 name|tagsearch
