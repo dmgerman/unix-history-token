@@ -1243,6 +1243,9 @@ name|kd
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|print_header
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|plast
