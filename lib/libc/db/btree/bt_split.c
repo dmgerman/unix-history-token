@@ -40,6 +40,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -3262,7 +3276,7 @@ condition|)
 block|{
 name|skip
 operator|=
-literal|0
+name|MAX_PAGE_OFFSET
 expr_stmt|;
 name|rval
 operator|=
@@ -3307,7 +3321,7 @@ name|off
 expr_stmt|;
 name|skip
 operator|=
-literal|0
+name|MAX_PAGE_OFFSET
 expr_stmt|;
 block|}
 switch|switch
