@@ -183,10 +183,7 @@ name|atkbd_methods
 block|,
 name|DRIVER_TYPE_TTY
 block|,
-sizeof|sizeof
-argument_list|(
-name|atkbd_softc_t
-argument_list|)
+literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -290,9 +287,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|atkbd_softc_t
+name|keyboard_t
 modifier|*
-name|sc
+name|kbd
 decl_stmt|;
 name|u_long
 name|port
@@ -320,17 +317,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|sc
-operator|=
-operator|(
-name|atkbd_softc_t
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|BUS_READ_IVAR
 argument_list|(
 name|device_get_parent
@@ -385,7 +371,8 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-name|sc
+operator|&
+name|kbd
 argument_list|,
 name|port
 argument_list|,
@@ -437,7 +424,7 @@ name|res
 argument_list|,
 name|atkbd_isa_intr
 argument_list|,
-name|sc
+name|kbd
 argument_list|,
 operator|&
 name|ih
@@ -459,14 +446,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|atkbd_softc_t
+name|keyboard_t
 modifier|*
-name|sc
+name|kbd
 decl_stmt|;
-name|sc
+name|kbd
 operator|=
 operator|(
-name|atkbd_softc_t
+name|keyboard_t
 operator|*
 operator|)
 name|arg
@@ -475,8 +462,6 @@ operator|(
 operator|*
 name|kbdsw
 index|[
-name|sc
-operator|->
 name|kbd
 operator|->
 name|kb_index
@@ -485,8 +470,6 @@ operator|->
 name|intr
 operator|)
 operator|(
-name|sc
-operator|->
 name|kbd
 operator|,
 name|NULL
