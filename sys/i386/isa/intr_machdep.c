@@ -1920,12 +1920,6 @@ decl_stmt|;
 name|u_char
 name|irr2
 decl_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|icu_lock
-argument_list|)
-expr_stmt|;
 name|irr1
 operator|=
 name|inb
@@ -1938,12 +1932,6 @@ operator|=
 name|inb
 argument_list|(
 name|IO_ICU2
-argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|icu_lock
 argument_list|)
 expr_stmt|;
 return|return
