@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.38 2003/04/28 02:54:07 grog Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.39 2003/05/04 05:22:46 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -9,6 +9,16 @@ directive|define
 name|STATIC
 value|static
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_include
 include|#
@@ -592,6 +602,9 @@ name|volno
 parameter_list|,
 name|int
 name|plexno
+parameter_list|,
+name|int
+name|preferme
 parameter_list|)
 block|{
 name|struct
@@ -602,22 +615,19 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|volplexno
+decl_stmt|;
 comment|/*      * It's not an error for the plex to already      * belong to the volume, but we need to check a      * number of things to make sure it's done right.      * Some day.      */
-if|if
-condition|(
+name|volplexno
+operator|=
 name|my_plex
 argument_list|(
 name|volno
 argument_list|,
 name|plexno
 argument_list|)
-operator|>=
-literal|0
-condition|)
-return|return
-name|plexno
-return|;
-comment|/* that's it */
+expr_stmt|;
 name|vol
 operator|=
 operator|&
@@ -627,6 +637,13 @@ name|volno
 index|]
 expr_stmt|;
 comment|/* point to volume */
+if|if
+condition|(
+name|volplexno
+operator|<
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|vol
@@ -683,7 +700,7 @@ argument_list|,
 name|sd_stale
 argument_list|)
 expr_stmt|;
-comment|/* make the subdisks invalid */
+comment|/* make our subdisks invalid */
 name|vol
 operator|->
 name|plex
@@ -751,14 +768,70 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
-return|return
+name|volplexno
+operator|=
 name|vol
 operator|->
 name|plexes
 operator|-
 literal|1
+expr_stmt|;
+comment|/* number of plex in volume */
+block|}
+if|if
+condition|(
+name|preferme
+condition|)
+block|{
+if|if
+condition|(
+name|vol
+operator|->
+name|preferred_plex
+operator|>
+literal|0
+condition|)
+comment|/* already had a facourite, */
+name|printf
+argument_list|(
+literal|"vinum: changing preferred plex for %s from %s to %s\n"
+argument_list|,
+name|vol
+operator|->
+name|name
+argument_list|,
+name|PLEX
+index|[
+name|vol
+operator|->
+name|plex
+index|[
+name|vol
+operator|->
+name|preferred_plex
+index|]
+index|]
+operator|.
+name|name
+argument_list|,
+name|PLEX
+index|[
+name|plexno
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+name|vol
+operator|->
+name|preferred_plex
+operator|=
+name|volplexno
+expr_stmt|;
+block|}
+return|return
+name|volplexno
 return|;
-comment|/* and return its index */
 block|}
 end_function
 
@@ -5890,12 +5963,21 @@ init|=
 name|plex_init
 decl_stmt|;
 comment|/* state to set at end */
+name|int
+name|preferme
+decl_stmt|;
+comment|/* set if we want to be preferred access */
 name|current_plex
 operator|=
 operator|-
 literal|1
 expr_stmt|;
 comment|/* forget the previous plex */
+name|preferme
+operator|=
+literal|0
+expr_stmt|;
+comment|/* nothing special yet */
 name|plexno
 operator|=
 name|get_empty_plex
@@ -6372,6 +6454,15 @@ literal|"Need a stripe size parameter"
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	     * We're the preferred plex of our volume. 	     * Unfortunately, we don't know who our 	     * volume is yet.  Note that we want to be 	     * preferred, and actually do it after we 	     * get a volume. 	     */
+case|case
+name|kw_preferred
+case|:
+name|preferme
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 name|kw_volume
 case|:
@@ -6541,10 +6632,12 @@ name|plex
 operator|->
 name|volno
 argument_list|,
+comment|/* Now tell the volume that it has this plex */
 name|plexno
+argument_list|,
+name|preferme
 argument_list|)
 expr_stmt|;
-comment|/* Now tell the volume that it has this plex */
 comment|/* Does the plex have a name?  If not, give it one */
 if|if
 condition|(
@@ -7066,9 +7159,25 @@ name|myplexno
 operator|<
 literal|0
 condition|)
+block|{
 comment|/* couldn't */
+name|printf
+argument_list|(
+literal|"vinum: couldn't find preferred plex %s for %s\n"
+argument_list|,
+name|token
+index|[
+name|parameter
+index|]
+argument_list|,
+name|vol
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 break|break;
 comment|/* we've already had an error message */
+block|}
 name|myplexno
 operator|=
 name|my_plex
