@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.32 (Berkeley) %G%"
+literal|"@(#)trees.c	4.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2441,9 +2441,9 @@ endif|#
 directive|endif
 argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;  	if( o == ASSIGN || o == CAST || o == RETURN ) 	{ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
 comment|/* because expressions have values that are at least as wide 	   as INT or UNSIGNED, the only conversions needed 	   are those involving FLOAT/DOUBLE, and those 	   from LONG to INT and ULONG to UNSIGNED */
-argument|if( t != t1&& ! asgop(o) ) 		p->in.left = makety( p->in.left, tu,
+argument|if( (t != t1 || (u&& !ISUNSIGNED(p->in.left->in.type)))&& ! asgop(o) ) 		p->in.left = makety( p->in.left, tu,
 literal|0
-argument|, (int)tu );  	if( t != t2 || o==CAST) 		if ( tu == ENUMTY ) {
+argument|, (int)tu );  	if( t != t2 || (u&& !ISUNSIGNED(p->in.right->in.type)) || o==CAST) 		if ( tu == ENUMTY ) {
 comment|/* always asgop */
 argument|p->in.right = makety( p->in.right, INT,
 literal|0
