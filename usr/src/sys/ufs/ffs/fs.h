@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -422,10 +422,14 @@ comment|/* old rotation block list head */
 name|long
 name|fs_sparecon
 index|[
-literal|52
+literal|51
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
+name|long
+name|fs_maxsymlinklen
+decl_stmt|;
+comment|/* max length of an internal symlink */
 name|long
 name|fs_inodefmt
 decl_stmt|;
