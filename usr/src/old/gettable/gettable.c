@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gettable.c	5.1 (Berkeley) %G%"
+literal|"@(#)gettable.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,11 +170,6 @@ name|sfo
 decl_stmt|,
 modifier|*
 name|hf
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|char
 modifier|*
@@ -387,8 +382,6 @@ argument_list|,
 name|SOCK_STREAM
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -422,8 +415,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -446,6 +437,10 @@ name|hp
 operator|->
 name|h_addr
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sin
 operator|.
@@ -477,8 +472,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
