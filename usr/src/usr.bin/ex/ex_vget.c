@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vget.c	6.11 (Berkeley) %G%"
+literal|"@(#)ex_vget.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2663,8 +2663,6 @@ argument_list|(
 name|trace
 argument_list|,
 literal|"[OK]"
-argument_list|,
-name|c
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2686,8 +2684,6 @@ argument_list|(
 name|trace
 argument_list|,
 literal|"[TIMEOUT]"
-argument_list|,
-name|c
 argument_list|)
 expr_stmt|;
 endif|#
