@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.32	82/03/15	*/
+comment|/*	ip_input.c	1.33	82/03/19	*/
 end_comment
 
 begin_include
@@ -1318,6 +1318,12 @@ name|q
 operator|->
 name|ip_len
 operator|-=
+name|i
+expr_stmt|;
+name|q
+operator|->
+name|ip_off
+operator|+=
 name|i
 expr_stmt|;
 name|m_adj
