@@ -2013,9 +2013,7 @@ name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
-name|vp
-operator|->
-name|v_object
+name|obj
 operator|==
 name|NULL
 condition|)
@@ -2024,6 +2022,11 @@ operator|(
 literal|0
 operator|)
 return|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|obj
@@ -2051,9 +2054,20 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
+else|else
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Woe to the process that tries to page now :-). 		 */
 name|vm_pager_deallocate
 argument_list|(

@@ -1763,6 +1763,11 @@ return|return;
 block|}
 name|doterm
 label|:
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|temp
 operator|=
 name|object
@@ -1821,6 +1826,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+else|else
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|object
 operator|=
 name|temp
@@ -1852,14 +1863,14 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* 	 * Make sure no one uses us. 	 */
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Make sure no one uses us. 	 */
 name|vm_object_set_flag
 argument_list|(
 name|object
