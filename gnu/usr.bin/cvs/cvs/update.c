@@ -433,6 +433,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|K_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|aflag
 init|=
@@ -528,6 +536,8 @@ literal|"\t-j rev\tMerge in changes made between current revision and rev.\n"
 block|,
 literal|"\t-I ign\tMore files to ignore (! to reset).\n"
 block|,
+literal|"\t-K key\tUse RCS key -K option on checkout.\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -600,7 +610,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ApPflRQqdk:r:D:j:I:"
+literal|"ApPflRQqdk:r:D:j:I:K:"
 argument_list|)
 operator|)
 operator|!=
@@ -771,6 +781,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'K'
+case|:
+name|K_flag
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -891,6 +909,8 @@ name|join_rev1
 argument_list|,
 name|join_rev2
 argument_list|,
+name|K_flag
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -954,6 +974,8 @@ name|xjoin_rev1
 parameter_list|,
 name|xjoin_rev2
 parameter_list|,
+name|xK_flag
+parameter_list|,
 name|preload_update_dir
 parameter_list|)
 name|int
@@ -1007,6 +1029,10 @@ name|xjoin_rev2
 decl_stmt|;
 name|char
 modifier|*
+name|xK_flag
+decl_stmt|;
+name|char
+modifier|*
 name|preload_update_dir
 decl_stmt|;
 block|{
@@ -1051,6 +1077,10 @@ expr_stmt|;
 name|pipeout
 operator|=
 name|xpipeout
+expr_stmt|;
+name|K_flag
+operator|=
+name|xK_flag
 expr_stmt|;
 comment|/* setup the join support */
 name|join_rev1
@@ -2635,7 +2665,7 @@ expr_stmt|;
 block|}
 name|run_setup
 argument_list|(
-literal|"%s%s -q -r%s %s"
+literal|"%s%s -q -r%s %s %s%s"
 argument_list|,
 name|Rcsbin
 argument_list|,
@@ -2648,6 +2678,18 @@ argument_list|,
 name|vers_ts
 operator|->
 name|options
+argument_list|,
+name|K_flag
+condition|?
+literal|"-K"
+else|:
+literal|""
+argument_list|,
+name|K_flag
+condition|?
+name|K_flag
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/*      * if we are checking out to stdout, print a nice message to stderr, and      * add the -p flag to the command      */
