@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|UPDATEA
-value|0xb
+value|0x9
 end_define
 
 begin_comment
@@ -151,22 +151,44 @@ begin_define
 define|#
 directive|define
 name|UPDATED
-value|0xc
+value|0xa
 end_define
 
 begin_comment
-comment|/* delete resource record */
+comment|/* delete a specific resource record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPDATEDA
+value|0xb
+end_define
+
+begin_comment
+comment|/* delete all nemed resource record */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UPDATEM
+value|0xc
+end_define
+
+begin_comment
+comment|/* modify a specific resource record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPDATEMA
 value|0xd
 end_define
 
 begin_comment
-comment|/* modify resource record */
+comment|/* modify all named resource record */
 end_comment
 
 begin_define
@@ -482,6 +504,17 @@ begin_comment
 comment|/* group ID */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T_UNSPEC
+value|103
+end_define
+
+begin_comment
+comment|/* Unspecified format (binary data) */
+end_comment
+
 begin_comment
 comment|/* Query type values which do not appear in resource records */
 end_comment
@@ -570,6 +603,45 @@ end_define
 begin_comment
 comment|/* wildcard match */
 end_comment
+
+begin_comment
+comment|/*  * Status return codes for T_UNSPEC conversion routines  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONV_SUCCESS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONV_OVERFLOW
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONV_BADFMT
+value|-2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONV_BADCKSUM
+value|-3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONV_BADBUFLEN
+value|-4
+end_define
 
 begin_comment
 comment|/*  * Structure for query header, the order of the fields is machine and  * compiler dependent, in our case, the bits within a byte are assignd   * least significant first, while the order of transmition is most   * significant first.  This requires a somewhat confusing rearrangement.  */
