@@ -4139,12 +4139,6 @@ operator|->
 name|end
 argument_list|)
 expr_stmt|;
-name|last_index
-operator|=
-name|index
-operator|-
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -4163,6 +4157,12 @@ operator|++
 index|]
 operator|=
 name|MALLOC_NOT_MINE
+expr_stmt|;
+name|last_index
+operator|=
+name|index
+operator|-
+literal|1
 expr_stmt|;
 comment|/* XXX: We could realloc/shrink the pagedir here I guess. */
 block|}
