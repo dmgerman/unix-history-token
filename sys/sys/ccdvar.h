@@ -220,11 +220,6 @@ name|ccdgeom
 name|sc_geom
 decl_stmt|;
 comment|/* pseudo geometry info */
-name|struct
-name|disklabel
-name|sc_label
-decl_stmt|;
-comment|/* generic disk device info */
 name|int
 name|sc_openmask
 decl_stmt|;
@@ -239,6 +234,16 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* mirror localization */
+name|struct
+name|disk
+modifier|*
+name|sc_disk
+decl_stmt|;
+name|struct
+name|cdev
+modifier|*
+name|sc_dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
