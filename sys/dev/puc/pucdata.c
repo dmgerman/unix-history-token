@@ -3613,8 +3613,8 @@ name|COM_FREQ
 operator|*
 literal|8
 block|}
-block|,             }
-block|,         }
+block|, 	    }
+block|, 	}
 block|,
 block|{
 literal|"Titan VScom PCI-200HV2"
@@ -4156,7 +4156,7 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
-comment|/* Actiontec  56K PCI Master */
+comment|/* Actiontec 56K PCI Master */
 block|{
 literal|"Actiontec 56K PCI Master"
 block|,
