@@ -1002,7 +1002,7 @@ block|{
 case|case
 name|LK_SHARED
 case|:
-comment|/* 		 * If we are not the exclusive lock holder, we have to block 		 * while there is an exclusive lock holder or while an 		 * exclusive lock request or upgrade request is in progress. 		 * 		 * However, if TDF_DEADLKTREAT is set, we override exclusive 		 * lock requests or upgrade requests ( but not the exclusive 		 * lock itself ). 		 */
+comment|/* 		 * If we are not the exclusive lock holder, we have to block 		 * while there is an exclusive lock holder or while an 		 * exclusive lock request or upgrade request is in progress. 		 * 		 * However, if TDP_DEADLKTREAT is set, we override exclusive 		 * lock requests or upgrade requests ( but not the exclusive 		 * lock itself ). 		 */
 if|if
 condition|(
 name|lkp
@@ -1016,12 +1016,6 @@ name|lockflags
 operator|=
 name|LK_HAVE_EXCL
 expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|td
@@ -1032,9 +1026,9 @@ operator|!
 operator|(
 name|td
 operator|->
-name|td_flags
+name|td_pflags
 operator|&
-name|TDF_DEADLKTREAT
+name|TDP_DEADLKTREAT
 operator|)
 condition|)
 name|lockflags
@@ -1042,12 +1036,6 @@ operator||=
 name|LK_WANT_EXCL
 operator||
 name|LK_WANT_UPGRADE
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
 expr_stmt|;
 name|error
 operator|=

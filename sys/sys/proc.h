@@ -942,17 +942,6 @@ begin_comment
 comment|/* Libthr thread must not suspend itself. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TDF_DEADLKTREAT
-value|0x800000
-end_define
-
-begin_comment
-comment|/* Lock aquisition - deadlock treatment. */
-end_comment
-
 begin_comment
 comment|/* "Private" flags kept in td_pflags: */
 end_comment
@@ -1021,6 +1010,17 @@ end_define
 
 begin_comment
 comment|/* Have alternate signal stack. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_DEADLKTREAT
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Lock aquisition - deadlock treatment. */
 end_comment
 
 begin_define

@@ -2022,9 +2022,9 @@ else|:
 name|curthread
 operator|)
 operator|->
-name|td_flags
+name|td_pflags
 operator|&
-name|TDF_DEADLKTREAT
+name|TDP_DEADLKTREAT
 operator|)
 operator|==
 literal|0
