@@ -1094,7 +1094,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"uint64 %llu\n"
+literal|"uint64 %ju\n"
 argument_list|,
 name|value
 operator|.
@@ -1297,7 +1297,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"int64 %lld\n"
+literal|"int64 %ju\n"
 argument_list|,
 name|value
 operator|.

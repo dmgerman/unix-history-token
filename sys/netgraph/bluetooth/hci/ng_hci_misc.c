@@ -423,7 +423,7 @@ name|msg
 argument_list|,
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

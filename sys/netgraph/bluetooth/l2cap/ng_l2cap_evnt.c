@@ -497,7 +497,7 @@ condition|)
 block|{
 name|NG_L2CAP_ERR
 argument_list|(
-literal|"%s: %s - invalid L2CAP packet. Payload length mismatch, length=%d, len=%d\n"
+literal|"%s: %s - invalid L2CAP packet. Payload length mismatch, length=%d, len=%zd\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3922,7 +3922,7 @@ condition|)
 block|{
 name|NG_L2CAP_ALERT
 argument_list|(
-literal|"%s: %s - ng_l2cap_prepend() failed, size=%d\n"
+literal|"%s: %s - ng_l2cap_prepend() failed, size=%zd\n"
 argument_list|,
 name|__func__
 argument_list|,

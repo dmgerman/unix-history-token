@@ -100,7 +100,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do { 						\ 		if ((m)->m_len< (s)) 			\ 			(m) = m_pullup((m), (s)); 	\ 		if ((m) == NULL) 			\ 			NG_HCI_ALERT("%s: %s - m_pullup(%d) failed\n", \ 				__func__, NG_NODE_NAME(unit->node), (s)); \ 	} while (0)
+value|do { 						\ 		if ((m)->m_len< (s)) 			\ 			(m) = m_pullup((m), (s)); 	\ 		if ((m) == NULL) 			\ 			NG_HCI_ALERT("%s: %s - m_pullup(%zd) failed\n", \ 				__func__, NG_NODE_NAME(unit->node), (s)); \ 	} while (0)
 end_define
 
 begin_comment

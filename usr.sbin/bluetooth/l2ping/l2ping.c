@@ -1240,7 +1240,7 @@ name|stderr
 argument_list|,
 literal|"\t-s size            - Packet size (bytes), "
 expr|\
-literal|"between %d and %d\n"
+literal|"between %zd and %zd\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(

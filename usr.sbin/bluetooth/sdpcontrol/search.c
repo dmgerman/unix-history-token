@@ -194,7 +194,7 @@ name|stderr
 argument_list|,
 literal|"Invalid Service Class ID List. "
 expr|\
-literal|"Too short, len=%d\n"
+literal|"Too short, len=%zd\n"
 argument_list|,
 name|end
 operator|-
@@ -849,7 +849,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"u/int64 %llu\n"
+literal|"u/int64 %ju\n"
 argument_list|,
 name|value
 operator|.
@@ -1270,7 +1270,7 @@ name|stderr
 argument_list|,
 literal|"Invalid Protocol Descriptor List. "
 expr|\
-literal|"Too short, len=%d\n"
+literal|"Too short, len=%zd\n"
 argument_list|,
 name|end
 operator|-
@@ -1469,7 +1469,7 @@ name|stderr
 argument_list|,
 literal|"Invalid Bluetooth Profile Descriptor List. "
 expr|\
-literal|"Too short, len=%d\n"
+literal|"Too short, len=%zd\n"
 argument_list|,
 name|end
 operator|-

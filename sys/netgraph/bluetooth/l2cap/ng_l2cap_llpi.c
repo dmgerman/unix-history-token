@@ -362,7 +362,7 @@ name|l2cap
 operator|->
 name|hci
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -971,7 +971,7 @@ name|l2cap
 operator|->
 name|hci
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1509,7 +1509,7 @@ name|l2cap
 operator|->
 name|hci
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1933,7 +1933,7 @@ condition|)
 block|{
 name|NG_L2CAP_ALERT
 argument_list|(
-literal|"%s: %s - ng_l2cap_prepend(%d) failed\n"
+literal|"%s: %s - ng_l2cap_prepend(%zd) failed\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2091,7 +2091,7 @@ condition|)
 block|{
 name|NG_L2CAP_ALERT
 argument_list|(
-literal|"%s: %s - ng_l2cap_prepend(%d) failed\n"
+literal|"%s: %s - ng_l2cap_prepend(%zd) failed\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3613,7 +3613,7 @@ name|l2cap
 operator|->
 name|hci
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -1075,17 +1075,19 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%-8.8x %-8.8x %-6.6x %6d %6d %-16.16s\n"
+literal|"%-8lx %-8lx %-6.6x %6d %6d %-16.16s\n"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|pcb
 operator|.
 name|so
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|this
 argument_list|,
@@ -1300,17 +1302,19 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%-8.8x %-8.8x %6d %6d %-17.17s\n"
+literal|"%-8lx %-8lx %6d %6d %-17.17s\n"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|pcb
 operator|.
 name|so
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|this
 argument_list|,
@@ -1567,10 +1571,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%-8.8x %6d %6d %-17.17s/%-5d %-17.17s %-5d %s\n"
+literal|"%-8lx %6d %6d %-17.17s/%-5d %-17.17s %-5d %s\n"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|this
 argument_list|,
@@ -1813,15 +1818,17 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%-8.8x %-8.8x %-17.17s\n"
+literal|"%-8lx %-8lx %-17.17s\n"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|this
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|rt
 operator|.
@@ -2073,10 +2080,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%-8.8x %6d %6d %-17.17s %-17.17s %-4d %-4d %s\n"
+literal|"%-8lx %6d %6d %-17.17s %-17.17s %-4d %-4d %s\n"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|this
 argument_list|,
@@ -2368,17 +2376,19 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%-8.8x %-8.8x %-4x %-5d %-5d %-4s %s\n"
+literal|"%-8lx %-8lx %-4x %-5d %-5d %-4s %s\n"
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|so
 operator|.
 name|so_pcb
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|this
 argument_list|,

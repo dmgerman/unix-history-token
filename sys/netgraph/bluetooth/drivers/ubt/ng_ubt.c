@@ -3923,7 +3923,7 @@ name|UBT_CTRL_BUFFER_SIZE
 condition|)
 name|panic
 argument_list|(
-literal|"%s: %s - HCI command frame too big, size=%d, len=%d\n"
+literal|"%s: %s - HCI command frame too big, size=%zd, len=%d\n"
 argument_list|,
 name|__func__
 argument_list|,

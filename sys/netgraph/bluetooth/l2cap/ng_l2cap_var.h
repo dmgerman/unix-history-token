@@ -100,7 +100,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do { \ 		if ((m)->m_len< (s)) \ 			(m) = m_pullup((m), (s)); \ 		if ((m) == NULL) \ 			NG_L2CAP_ALERT("%s: %s - m_pullup(%d) failed\n", \ 				__func__, NG_NODE_NAME(l2cap->node), (s)); \ 	} while (0)
+value|do { \ 		if ((m)->m_len< (s)) \ 			(m) = m_pullup((m), (s)); \ 		if ((m) == NULL) \ 			NG_L2CAP_ALERT("%s: %s - m_pullup(%zd) failed\n", \ 				__func__, NG_NODE_NAME(l2cap->node), (s)); \ 	} while (0)
 end_define
 
 begin_comment

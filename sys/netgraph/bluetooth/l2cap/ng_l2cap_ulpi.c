@@ -673,7 +673,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1270,7 +1270,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1470,7 +1470,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2202,7 +2202,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2875,7 +2875,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3073,7 +3073,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3658,7 +3658,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4458,7 +4458,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4992,7 +4992,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5154,7 +5154,7 @@ name|l2cap
 operator|->
 name|l2c
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5952,7 +5952,7 @@ name|l2cap
 operator|->
 name|ctl
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6515,7 +6515,7 @@ name|l2cap
 operator|->
 name|ctl
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6787,7 +6787,7 @@ block|*
 comment|/* Create and send response message */
 block|* 	token = msg->header.token;  * 	NG_FREE_MSG(msg);  * 	NG_MKMESSAGE(msg, NGM_L2CAP_COOKIE, NGM_L2CAP_L2CA_ENABLE_CLT,  * 		sizeof(*op), M_NOWAIT);  * 	if (msg == NULL)  * 		error = ENOMEM;  * 	else {  * 		msg->header.token = token;  * 		msg->header.flags |= NGF_RESP;  *   * 		op = (ng_l2cap_l2ca_enable_clt_op *)(msg->data);  * 		op->result = result;  * 	}  *   *
 comment|/* Send response to control hook */
-block|* 	if (l2cap->ctl != NULL&& NG_HOOK_IS_VALID(l2cap->ctl))  * 		NG_SEND_MSG_HOOK(error, l2cap->node, msg, l2cap->ctl, NULL);
+block|* 	if (l2cap->ctl != NULL&& NG_HOOK_IS_VALID(l2cap->ctl))  * 		NG_SEND_MSG_HOOK(error, l2cap->node, msg, l2cap->ctl, 0);
 endif|#
 directive|endif
 return|return

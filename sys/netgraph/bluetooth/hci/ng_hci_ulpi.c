@@ -2353,7 +2353,7 @@ name|unit
 operator|->
 name|acl
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2500,7 +2500,7 @@ name|unit
 operator|->
 name|sco
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2720,7 +2720,7 @@ name|msg
 argument_list|,
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3584,7 +3584,7 @@ name|unit
 operator|->
 name|acl
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3698,7 +3698,7 @@ name|unit
 operator|->
 name|sco
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4386,7 +4386,7 @@ name|unit
 operator|->
 name|acl
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4505,7 +4505,7 @@ name|unit
 operator|->
 name|sco
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4661,7 +4661,7 @@ name|unit
 operator|->
 name|acl
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4760,7 +4760,7 @@ name|unit
 operator|->
 name|sco
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
