@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   */
-end_comment
-
-begin_comment
-comment|/*  * HISTORY  *   *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  *   */
+comment|/*   * Written by Julian Elischer (julian@tfs.com)  *  *	$Id$  */
 end_comment
 
 begin_include
@@ -469,7 +465,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"	ch%d: scsi changer, %d slot(s) %d drive(s) %d arm(s) %d i/e-slot(s) \n"
+literal|"ch%d: scsi changer, %d slot(s) %d drive(s) %d arm(s) %d i/e-slot(s)\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -511,7 +507,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"	ch%d: scsi changer :- offline\n"
+literal|"ch%d: scsi changer :- offline\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -579,7 +575,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ch %d> %d\n"
+literal|"ch%d: ch %d> %d\n"
+argument_list|,
+name|unit
 argument_list|,
 name|unit
 argument_list|,
@@ -611,7 +609,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"CH%d already open\n"
+literal|"ch%d: already open\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -700,7 +698,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"  ch%d: scsi changer :- offline\n"
+literal|"ch%d: scsi changer :- offline\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -794,7 +792,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ch%d not ready\n"
+literal|"ch%d: not ready\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2474,7 +2472,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"could not mode sense for unit %d\n"
+literal|"ch%d: could not mode sense\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3279,7 +3277,7 @@ name|EIO
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"st%d: unknown error category from scsi driver\n"
+literal|"ch%d: unknown error category from scsi driver\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3337,7 +3335,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"chd: not set up\n"
+literal|"ch%d: not set up\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3901,7 +3899,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: soft error(corrected) "
+literal|"ch%d: soft error(corrected)"
 argument_list|,
 name|unit
 argument_list|)
@@ -3917,7 +3915,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -3979,14 +3977,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -4003,7 +3998,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: not ready\n "
+literal|"ch%d: not ready\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4057,7 +4052,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: medium error "
+literal|"ch%d: medium error"
 argument_list|,
 name|unit
 argument_list|)
@@ -4073,7 +4068,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -4135,14 +4130,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -4159,7 +4151,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: non-media hardware failure\n "
+literal|"ch%d: non-media hardware failure\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4212,7 +4204,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: illegal request\n "
+literal|"ch%d: illegal request\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4265,7 +4257,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: Unit attention.\n "
+literal|"ch%d: Unit attention\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4344,7 +4336,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: attempted protection violation "
+literal|"ch%d: attempted protection violation"
 argument_list|,
 name|unit
 argument_list|)
@@ -4360,7 +4352,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)\n"
 argument_list|,
 operator|(
 name|sense
@@ -4422,14 +4414,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -4447,7 +4436,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: block wrong state (worm)\n "
+literal|"ch%d: block wrong state (worm)"
 argument_list|,
 name|unit
 argument_list|)
@@ -4463,7 +4452,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -4525,14 +4514,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -4549,7 +4535,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: vendor unique\n"
+literal|"ch%d: vendor unique\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4569,7 +4555,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: copy aborted\n "
+literal|"ch%d: copy aborted\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4589,7 +4575,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: command aborted\n "
+literal|"ch%d: command aborted\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4643,7 +4629,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: search returned\n "
+literal|"ch%d: search returned"
 argument_list|,
 name|unit
 argument_list|)
@@ -4659,7 +4645,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -4721,14 +4707,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -4745,7 +4728,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: volume overflow\n "
+literal|"ch%d: volume overflow\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4766,7 +4749,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: verify miscompare\n "
+literal|"ch%d: verify miscompare"
 argument_list|,
 name|unit
 argument_list|)
@@ -4782,7 +4765,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -4844,14 +4827,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -4868,7 +4848,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: unknown error key\n "
+literal|"ch%d: unknown error key\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4889,9 +4869,10 @@ condition|(
 operator|!
 name|silent
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"st%d: error code %d\n"
+literal|"ch%d: error code %d"
 argument_list|,
 name|unit
 argument_list|,
@@ -4910,14 +4891,10 @@ name|error_code
 operator|&
 name|SSD_ERRCODE_VALID
 condition|)
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
+block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -4956,6 +4933,13 @@ name|blocklow
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(

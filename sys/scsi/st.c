@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
-end_comment
-
-begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *	$Id$  */
 end_comment
 
 begin_comment
@@ -964,7 +960,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\tst%d: tape present: %d blocks of %d bytes\n"
+literal|"st%d: tape present: %d blocks of %d bytes\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -982,7 +978,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\tst%d: drive empty\n"
+literal|"st%d: drive empty\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -993,7 +989,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\tst%d: drive offline\n"
+literal|"st%d: drive offline\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1225,7 +1221,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"	st%d: couldn't get device type, using default\n"
+literal|"st%d: couldn't get device type, using default\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1436,7 +1432,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"	st%d: %s is a known rogue\n"
+literal|"st%d: %s is a known rogue\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1784,7 +1780,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d not ready\n"
+literal|"st%d: not ready\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1811,7 +1807,7 @@ comment|/* first may get 'unit attn' */
 block|{
 name|printf
 argument_list|(
-literal|"st%d not ready\n"
+literal|"st%d: not ready\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4125,7 +4121,9 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"device busy"
+literal|"st%d: device busy\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|xs
@@ -4619,7 +4617,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"rewind failed, unit still loaded\n"
+literal|"st%d: rewind failed, unit still loaded\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -5211,7 +5211,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"could not get blk limits for unit %d\n"
+literal|"st%d: could not get blk limits\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -5484,7 +5484,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"could not mode sense for unit %d\n"
+literal|"st%d: could not mode sense\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -6004,7 +6004,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"could not mode select for unit %d\n"
+literal|"st%d: could not mode select\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -6152,7 +6152,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"could not space st%d\n"
+literal|"st%d: could not space\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -6288,7 +6288,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"could not write_filemarks st%d\n"
+literal|"st%d: could not write_filemarks\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -6552,7 +6552,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"cannot prevent/allow on st%d\n"
+literal|"st%d: cannot prevent/allow\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -6699,7 +6699,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"could not rewind st%d\n"
+literal|"st%d: could not rewind\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7679,7 +7679,9 @@ block|{
 comment|/* makes no sense.. complain */
 name|printf
 argument_list|(
-literal|"BAD length error?"
+literal|"st%d: BAD length error?\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -7759,7 +7761,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|"block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7821,14 +7823,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -7867,7 +7866,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: not ready\n "
+literal|"st%d: not ready\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7904,7 +7903,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|"block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7966,14 +7965,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -7990,7 +7986,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: non-media hardware failure\n "
+literal|"st%d: non-media hardware failure\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -8010,7 +8006,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: illegal request\n "
+literal|"st%d: illegal request\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -8030,7 +8026,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: Unit attention.\n "
+literal|"st%d: Unit attention.\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -8093,7 +8089,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: attempted protection violation "
+literal|"st%d: attempted protection violation"
 argument_list|,
 name|unit
 argument_list|)
@@ -8109,7 +8105,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -8171,14 +8167,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -8196,7 +8189,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: fixed block wrong size \n "
+literal|"st%d: fixed block wrong size"
 argument_list|,
 name|unit
 argument_list|)
@@ -8212,7 +8205,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"requested size: %d (decimal)\n"
+literal|" requested size: %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -8274,14 +8267,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -8318,7 +8308,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: copy aborted\n "
+literal|"st%d: copy aborted\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -8338,7 +8328,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: command aborted\n "
+literal|"st%d: command aborted\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -8359,7 +8349,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: search returned\n "
+literal|"st%d: search returned"
 argument_list|,
 name|unit
 argument_list|)
@@ -8375,7 +8365,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -8437,14 +8427,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -8482,7 +8469,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: verify miscompare\n "
+literal|"st%d: verify miscompare"
 argument_list|,
 name|unit
 argument_list|)
@@ -8498,7 +8485,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -8560,14 +8547,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -8584,7 +8568,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: unknown error key\n "
+literal|"st%d: unknown error key\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -8607,7 +8591,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: error code %d\n"
+literal|"st%d: error code %d"
 argument_list|,
 name|unit
 argument_list|,
@@ -8626,14 +8610,16 @@ name|error_code
 operator|&
 name|SSD_ERRCODE_VALID
 condition|)
+block|{
 if|if
 condition|(
 operator|!
 name|silent
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -8672,6 +8658,13 @@ name|blocklow
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(

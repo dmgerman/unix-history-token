@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  */
+comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  *	$Id$  */
 end_comment
 
 begin_include
@@ -1562,6 +1562,8 @@ name|scsi_switch
 name|uha_switch
 init|=
 block|{
+literal|"uha"
+block|,
 name|uha_scsi_cmd
 block|,
 name|uhaminphys
@@ -2031,7 +2033,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"discarding %x "
+literal|"uha%d: discarding %x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|inl
 argument_list|(
@@ -2125,7 +2129,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"uha: unit number (%d) too high\n"
+literal|"uha%d: unit number too high\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2219,17 +2223,6 @@ name|dev
 operator|->
 name|dev_unit
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__386BSD__
-name|printf
-argument_list|(
-literal|" probing for scsi devices**\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|__386BSD__
 comment|/***********************************************\ 	* ask the adapter what subunits are present     * 	\***********************************************/
 name|scsi_attachdevs
 argument_list|(
@@ -2262,19 +2255,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(OSF) */
-ifdef|#
-directive|ifdef
-name|__386BSD__
-name|printf
-argument_list|(
-literal|"uha%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|__386BSD__
 return|return;
 block|}
 end_block
@@ -3249,7 +3229,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ultrastor 14f not responding\n"
+literal|"uha%d: not responding\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -3260,7 +3242,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"uha%d reading board settings, "
+literal|"uha%d: reading board settings, "
 argument_list|,
 name|unit
 argument_list|)
@@ -3867,7 +3849,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Already done?"
+literal|"uha%d: Already done?"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|xs
@@ -3890,7 +3874,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Not in use?"
+literal|"uha%d: Not in use?"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|xs
@@ -5020,7 +5006,7 @@ block|{
 comment|/* there's still data, must have run out of segs! */
 name|printf
 argument_list|(
-literal|"uha_scsi_cmd%d: more than %d DMA segs\n"
+literal|"uha%d: uha_scsi_cmd, more than %d DMA segs\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -5295,7 +5281,9 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"cmd fail\n"
+literal|"uha%d: cmd fail\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -5313,7 +5301,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"abort failed in wait\n"
+literal|"uha%d: abort failed in wait\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|uha_free_mscp
