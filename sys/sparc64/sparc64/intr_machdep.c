@@ -98,16 +98,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|intr_queue
-name|intr_queues
-index|[
-name|MAXCPU
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|intr_vector
 name|intr_vectors
 index|[
