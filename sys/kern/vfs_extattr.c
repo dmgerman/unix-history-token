@@ -3318,8 +3318,6 @@ operator|->
 name|td_dupfd
 operator|=
 operator|-
-name|indx
-operator|-
 literal|1
 expr_stmt|;
 comment|/* XXX check for fdopen */
