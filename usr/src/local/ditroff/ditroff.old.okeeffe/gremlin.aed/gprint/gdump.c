@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gdump.c	1.1	83/06/17 	by David Slattengren  *  *      This file contains a program for printing gprint raster files.  *   Gprint puts out a generic file, and gdump changes the size to fit  *   the proper device that's being used.  */
+comment|/* gdump.c	1.2	83/06/22 	by David Slattengren  *  *      This file contains a program for printing gprint raster files.  *   Gprint puts out a generic file, and gdump changes the size to fit  *   the proper device that's being used.  */
 end_comment
 
 begin_include
@@ -334,7 +334,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unknown switch %c"
+literal|"unknown switch %c\n"
 argument_list|,
 operator|*
 name|arg
@@ -524,11 +524,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|close
-argument_list|(
-name|infile
-argument_list|)
-expr_stmt|;
 comment|/* eat the rest of input */
 while|while
 condition|(
@@ -545,6 +540,11 @@ literal|0
 condition|)
 comment|/* if there is any */
 empty_stmt|;
+name|close
+argument_list|(
+name|infile
+argument_list|)
+expr_stmt|;
 name|execv
 argument_list|(
 name|LPR
