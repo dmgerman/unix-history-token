@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.5 (Lucasfilm) %G%"
+literal|"@(#)main.c	1.6 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,28 +172,10 @@ name|cmdtab
 modifier|*
 name|p
 decl_stmt|;
-for|for
-control|(
 name|p
 operator|=
-name|cmdtab
-init|;
-operator|*
-name|p
-operator|->
-name|c_name
-condition|;
-name|p
-operator|++
-control|)
-if|if
-condition|(
-name|strcmp
+name|lookup
 argument_list|(
-name|p
-operator|->
-name|c_name
-argument_list|,
 operator|&
 name|argv
 index|[
@@ -203,18 +185,18 @@ index|[
 literal|1
 index|]
 argument_list|)
-operator|==
-literal|0
-condition|)
-break|break;
+expr_stmt|;
 if|if
 condition|(
-operator|*
 name|p
-operator|->
-name|c_name
 operator|==
-literal|0
+operator|(
+expr|struct
+name|cmdtab
+operator|*
+operator|)
+operator|-
+literal|1
 condition|)
 block|{
 name|fprintf
@@ -483,9 +465,6 @@ name|die
 argument_list|()
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
 name|gethostname
 argument_list|(
 name|hostname
@@ -496,8 +475,6 @@ name|hostname
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|lseek
 argument_list|(
 name|kmem

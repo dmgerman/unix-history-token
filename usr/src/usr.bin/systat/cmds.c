@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	1.1 (Lucasfilm) %G%"
+literal|"@(#)cmds.c	1.2 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,36 +102,19 @@ literal|"quit"
 argument_list|)
 operator|==
 literal|0
-condition|)
-name|die
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cmd
-argument_list|,
-literal|"status"
-argument_list|)
-operator|==
-literal|0
 operator|||
 name|strcmp
 argument_list|(
 name|cmd
 argument_list|,
-literal|"help"
+literal|"q"
 argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|status
+name|die
 argument_list|()
 expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|strcmp
@@ -151,7 +134,7 @@ return|return;
 block|}
 name|p
 operator|=
-name|getcmd
+name|lookup
 argument_list|(
 name|cmd
 argument_list|)
@@ -298,6 +281,15 @@ literal|"start"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|cmd
+argument_list|,
+literal|"interval"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|int
@@ -390,7 +382,7 @@ begin_function
 name|struct
 name|cmdtab
 modifier|*
-name|getcmd
+name|lookup
 parameter_list|(
 name|name
 parameter_list|)
