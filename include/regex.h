@@ -402,6 +402,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * XXX forth parameter should be `regmatch_t [__restrict]', but isn't because  * of a bug in GCC 3.2 (when -std=c99 is specified) which perceives this as a  * syntax error.  */
+end_comment
+
 begin_function_decl
 name|int
 name|regexec
@@ -419,9 +423,8 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|regmatch_t
-index|[
+modifier|*
 name|__restrict
-index|]
 parameter_list|,
 name|int
 parameter_list|)
