@@ -4,6 +4,10 @@ comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyrig
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	Send updates to sendmail@Sendmail.ORG so they will be **	included in the next release. */
 end_comment
 
@@ -4927,6 +4931,45 @@ include|#
 directive|include
 file|<paths.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_PATH_VENDOR_CF
+value|"/etc/mail/sendmail.cf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_VENDOR_CF_PATH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
