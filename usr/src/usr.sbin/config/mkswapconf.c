@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkswapconf.c	5.3 (Berkeley) %G%"
+literal|"@(#)mkswapconf.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,9 +127,6 @@ name|swapname
 index|[
 literal|80
 index|]
-decl_stmt|,
-modifier|*
-name|cp
 decl_stmt|;
 specifier|register
 name|struct
