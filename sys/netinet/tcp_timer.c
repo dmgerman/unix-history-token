@@ -1647,9 +1647,7 @@ condition|(
 operator|(
 name|always_keepalive
 operator|||
-name|tp
-operator|->
-name|t_inpcb
+name|inp
 operator|->
 name|inp_socket
 operator|->
@@ -1778,9 +1776,7 @@ directive|ifdef
 name|TCPDEBUG
 if|if
 condition|(
-name|tp
-operator|->
-name|t_inpcb
+name|inp
 operator|->
 name|inp_socket
 operator|->
