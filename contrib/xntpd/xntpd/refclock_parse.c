@@ -21,7 +21,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/xntpd/refclock_parse.c,v 3.51 1994/03/03 09:49:54 kardel Exp  *  * refclock_parse.c,v 3.51 1994/03/03 09:49:54 kardel Exp  *  * generic reference clock driver for receivers  *  * make use of a STREAMS module for input processing where  * available and configured. Currently the STREAMS module  * is only available for Suns running SunOS 4.x and SunOS5.x (new - careful!)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/xntpd/refclock_parse.c,v 3.53 1994/03/25 13:07:39 kardel Exp  *  * refclock_parse.c,v 3.53 1994/03/25 13:07:39 kardel Exp  *  * generic reference clock driver for receivers  *  * make use of a STREAMS module for input processing where  * available and configured. Currently the STREAMS module  * is only available for Suns running SunOS 4.x and SunOS5.x (new - careful!)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_comment
@@ -293,7 +293,7 @@ name|char
 name|rcsid
 index|[]
 operator|=
-literal|"refclock_parse.c,v 3.51 1994/03/03 09:49:54 kardel Exp"
+literal|"refclock_parse.c,v 3.53 1994/03/25 13:07:39 kardel Exp"
 expr_stmt|;
 end_expr_stmt
 
@@ -11584,7 +11584,7 @@ name|sprintf
 argument_list|(
 name|tt
 argument_list|,
-literal|"refclock_driver_version=\"refclock_parse.c,v 3.51 1994/03/03 09:49:54 kardel Exp\""
+literal|"refclock_driver_version=\"refclock_parse.c,v 3.53 1994/03/25 13:07:39 kardel Exp\""
 argument_list|)
 expr_stmt|;
 name|out
@@ -12388,14 +12388,47 @@ operator|=
 name|off
 expr_stmt|;
 comment|/* this makes org time and xmt time somewhat artificial */
+name|L_SUB
+argument_list|(
+operator|&
+name|off
+argument_list|,
+operator|&
+name|parsetime
+operator|->
+name|parse_stime
+operator|.
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
 name|parse
 operator|->
 name|flags
 operator|&
 name|PARSE_STAT_FILTER
+operator|)
+operator|&&
+operator|(
+name|off
+operator|.
+name|l_i
+operator|>
+operator|-
+literal|60
+operator|)
+operator|&&
+operator|(
+name|off
+operator|.
+name|l_i
+operator|<
+literal|60
+operator|)
 condition|)
+comment|/* take usec error only if within +- 60 secs */
 block|{
 name|struct
 name|timeval
@@ -12438,22 +12471,6 @@ name|off
 argument_list|,
 operator|&
 name|offset
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|L_SUB
-argument_list|(
-operator|&
-name|off
-argument_list|,
-operator|&
-name|parsetime
-operator|->
-name|parse_stime
-operator|.
-name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -13513,7 +13530,7 @@ comment|/* defined(REFCLOCK)&& defined(PARSE) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * refclock_parse.c,v  * Revision 3.49  1994/02/20  13:26:00  kardel  * rcs id cleanup  *  * Revision 3.48  1994/02/20  13:04:56  kardel  * parse add/delete second support  *  * Revision 3.47  1994/02/02  17:44:30  kardel  * rcs ids fixed  *  * Revision 3.45  1994/01/25  19:06:27  kardel  * 94/01/23 reconcilation  *  * Revision 3.44  1994/01/25  17:32:23  kardel  * settable extended variables  *  * Revision 3.43  1994/01/23  16:28:39  kardel  * HAVE_TERMIOS introduced  *  * Revision 3.42  1994/01/22  11:35:04  kardel  * added HAVE_TERMIOS  *  * Revision 3.41  1993/11/27  18:44:37  kardel  * can't trust GPS166 on unsync  *  * Revision 3.40  1993/11/21  18:03:36  kardel  * useless declaration deleted  *  * Revision 3.39  1993/11/21  15:30:15  kardel  * static funcitions may be declared only at outer level  *  * Revision 3.38  1993/11/15  21:26:49  kardel  * conditional define comments fixed  *  * Revision 3.37  1993/11/11  11:20:49  kardel  * declaration fixes  *  * Revision 3.36  1993/11/10  12:17:14  kardel  * #ifdef glitch  *  * Revision 3.35  1993/11/01  21:15:06  kardel  * comments updated  *  * Revision 3.34  1993/11/01  20:01:08  kardel  * parse Solaris support (initial version)  *  * Revision 3.33  1993/10/30  09:44:58  kardel  * conditional compilation flag cleanup  *  * Revision 3.32  1993/10/22  14:28:43  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.31  1993/10/10  21:19:10  kardel  * compilation cleanup - (minimal porting tests)  *  * Revision 3.30  1993/10/09  21:44:35  kardel  * syslog strings fixed  *  * Revision 3.29  1993/10/09  14:40:15  kardel  * default precision setting fixed  *  * Revision 3.28  1993/10/08  14:48:22  kardel  * Changed offset determination logic:  * 	Take the PPS offset if it is available and the time  * 	code offset is within [-0.5..0.5[, otherwise stick  * 	to the time code offset  *  * Revision 3.27  1993/10/08  00:53:17  kardel  * announce also simulated PPS via CIOGETEV in ntpq cl  *  * Revision 3.26  1993/10/07  23:29:35  kardel  * trimble fixes  *  * Revision 3.25  1993/10/06  21:13:35  kardel  * test reversed (CIOGETEV support)  *  * Revision 3.24  1993/10/03  20:18:26  kardel  * Well, values> 999999 in the usec field from uniqtime() timestamps  * can prove harmful.  *  * Revision 3.23  1993/10/03  19:49:54  kardel  * buftvtots where failing on uninitialized time stamps  *  * Revision 3.22  1993/10/03  19:11:09  kardel  * restructured I/O handling  *  * Revision 3.21  1993/09/29  11:30:18  kardel  * special init for trimble to set EOL  *  * Revision 3.20  1993/09/27  22:46:28  kardel  * preserve module stack if I_PUSH parse fails  *  * Revision 3.19  1993/09/27  21:10:11  kardel  * wrong structure member  *  * Revision 3.18  1993/09/27  13:05:06  kardel  * Trimble is true polling only  *  * Revision 3.17  1993/09/27  12:47:10  kardel  * poll string support generalized  *  * Revision 3.16  1993/09/26  23:40:56  kardel  * new parse driver logic  *  * Revision 3.15  1993/09/24  15:00:51  kardel  * Sep 23rd distribution...  *  * Revision 3.14  1993/09/22  18:21:15  kardel  * support ppsclock streams module (-DSTREAM -DPPSPPS -DPARSEPPS -UPARSESTREAM)  *  * Revision 3.13  1993/09/05  15:38:33  kardel  * not every cpp understands #error...  *  * Revision 3.12  1993/09/02  20:04:19  kardel  * TTY cleanup  *  * Revision 3.11  1993/09/01  21:48:47  kardel  * conditional cleanup  *  * Revision 3.10  1993/09/01  11:32:45  kardel  * assuming HAVE_POSIX_TTYS when STREAM defined  *  * Revision 3.9  1993/08/31  22:31:46  kardel  * SINIX-M SysVR4 integration  *  * Revision 3.8  1993/08/27  00:29:50  kardel  * compilation cleanup  *  * Revision 3.7  1993/08/24  22:27:30  kardel  * cleaned up AUTOCONF DCF77 mess 8-) - wasn't too bad  *  * Revision 3.6  1993/08/24  21:36:23  kardel  * casting and ifdefs  *  * Revision 3.5  1993/07/09  23:36:59  kardel  * HAVE_POSIX_TTYS used to produce errors 8-( - BSD driver support still lacking  *  * Revision 3.4  1993/07/09  12:42:29  kardel  * RAW DCF now officially released  *  * Revision 3.3  1993/07/09  11:50:37  kardel  * running GPS also on 960 to be able to switch GPS/DCF77  *  * Revision 3.2  1993/07/09  11:37:34  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:01:07  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * refclock_parse.c,v  * Revision 3.53  1994/03/25  13:07:39  kardel  * fixed offset calculation for large (>4 Min) offsets  *  * Revision 3.52  1994/03/03  09:58:00  kardel  * stick -kv in cvs is no fun  *  * Revision 3.49  1994/02/20  13:26:00  kardel  * rcs id cleanup  *  * Revision 3.48  1994/02/20  13:04:56  kardel  * parse add/delete second support  *  * Revision 3.47  1994/02/02  17:44:30  kardel  * rcs ids fixed  *  * Revision 3.45  1994/01/25  19:06:27  kardel  * 94/01/23 reconcilation  *  * Revision 3.44  1994/01/25  17:32:23  kardel  * settable extended variables  *  * Revision 3.43  1994/01/23  16:28:39  kardel  * HAVE_TERMIOS introduced  *  * Revision 3.42  1994/01/22  11:35:04  kardel  * added HAVE_TERMIOS  *  * Revision 3.41  1993/11/27  18:44:37  kardel  * can't trust GPS166 on unsync  *  * Revision 3.40  1993/11/21  18:03:36  kardel  * useless declaration deleted  *  * Revision 3.39  1993/11/21  15:30:15  kardel  * static funcitions may be declared only at outer level  *  * Revision 3.38  1993/11/15  21:26:49  kardel  * conditional define comments fixed  *  * Revision 3.37  1993/11/11  11:20:49  kardel  * declaration fixes  *  * Revision 3.36  1993/11/10  12:17:14  kardel  * #ifdef glitch  *  * Revision 3.35  1993/11/01  21:15:06  kardel  * comments updated  *  * Revision 3.34  1993/11/01  20:01:08  kardel  * parse Solaris support (initial version)  *  * Revision 3.33  1993/10/30  09:44:58  kardel  * conditional compilation flag cleanup  *  * Revision 3.32  1993/10/22  14:28:43  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.31  1993/10/10  21:19:10  kardel  * compilation cleanup - (minimal porting tests)  *  * Revision 3.30  1993/10/09  21:44:35  kardel  * syslog strings fixed  *  * Revision 3.29  1993/10/09  14:40:15  kardel  * default precision setting fixed  *  * Revision 3.28  1993/10/08  14:48:22  kardel  * Changed offset determination logic:  * 	Take the PPS offset if it is available and the time  * 	code offset is within [-0.5..0.5[, otherwise stick  * 	to the time code offset  *  * Revision 3.27  1993/10/08  00:53:17  kardel  * announce also simulated PPS via CIOGETEV in ntpq cl  *  * Revision 3.26  1993/10/07  23:29:35  kardel  * trimble fixes  *  * Revision 3.25  1993/10/06  21:13:35  kardel  * test reversed (CIOGETEV support)  *  * Revision 3.24  1993/10/03  20:18:26  kardel  * Well, values> 999999 in the usec field from uniqtime() timestamps  * can prove harmful.  *  * Revision 3.23  1993/10/03  19:49:54  kardel  * buftvtots where failing on uninitialized time stamps  *  * Revision 3.22  1993/10/03  19:11:09  kardel  * restructured I/O handling  *  * Revision 3.21  1993/09/29  11:30:18  kardel  * special init for trimble to set EOL  *  * Revision 3.20  1993/09/27  22:46:28  kardel  * preserve module stack if I_PUSH parse fails  *  * Revision 3.19  1993/09/27  21:10:11  kardel  * wrong structure member  *  * Revision 3.18  1993/09/27  13:05:06  kardel  * Trimble is true polling only  *  * Revision 3.17  1993/09/27  12:47:10  kardel  * poll string support generalized  *  * Revision 3.16  1993/09/26  23:40:56  kardel  * new parse driver logic  *  * Revision 3.15  1993/09/24  15:00:51  kardel  * Sep 23rd distribution...  *  * Revision 3.14  1993/09/22  18:21:15  kardel  * support ppsclock streams module (-DSTREAM -DPPSPPS -DPARSEPPS -UPARSESTREAM)  *  * Revision 3.13  1993/09/05  15:38:33  kardel  * not every cpp understands #error...  *  * Revision 3.12  1993/09/02  20:04:19  kardel  * TTY cleanup  *  * Revision 3.11  1993/09/01  21:48:47  kardel  * conditional cleanup  *  * Revision 3.10  1993/09/01  11:32:45  kardel  * assuming HAVE_POSIX_TTYS when STREAM defined  *  * Revision 3.9  1993/08/31  22:31:46  kardel  * SINIX-M SysVR4 integration  *  * Revision 3.8  1993/08/27  00:29:50  kardel  * compilation cleanup  *  * Revision 3.7  1993/08/24  22:27:30  kardel  * cleaned up AUTOCONF DCF77 mess 8-) - wasn't too bad  *  * Revision 3.6  1993/08/24  21:36:23  kardel  * casting and ifdefs  *  * Revision 3.5  1993/07/09  23:36:59  kardel  * HAVE_POSIX_TTYS used to produce errors 8-( - BSD driver support still lacking  *  * Revision 3.4  1993/07/09  12:42:29  kardel  * RAW DCF now officially released  *  * Revision 3.3  1993/07/09  11:50:37  kardel  * running GPS also on 960 to be able to switch GPS/DCF77  *  * Revision 3.2  1993/07/09  11:37:34  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:01:07  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

@@ -263,6 +263,12 @@ directive|include
 file|<sys/timex.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_SYSCALLS_LIBC
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -282,6 +288,11 @@ name|t
 parameter_list|)
 value|syscall(SYS_ntp_adjtime, (t))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
