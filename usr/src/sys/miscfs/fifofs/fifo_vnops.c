@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"fifo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"errno.h"
 end_include
 
@@ -104,58 +110,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|int
-name|fifo_lookup
-argument_list|()
-decl_stmt|,
-name|fifo_open
-argument_list|()
-decl_stmt|,
-name|fifo_read
-argument_list|()
-decl_stmt|,
-name|fifo_write
-argument_list|()
-decl_stmt|,
-name|fifo_strategy
-argument_list|()
-decl_stmt|,
-name|fifo_bmap
-argument_list|()
-decl_stmt|,
-name|fifo_ioctl
-argument_list|()
-decl_stmt|,
-name|fifo_select
-argument_list|()
-decl_stmt|,
-name|fifo_lock
-argument_list|()
-decl_stmt|,
-name|fifo_unlock
-argument_list|()
-decl_stmt|,
-name|fifo_close
-argument_list|()
-decl_stmt|,
-name|fifo_print
-argument_list|()
-decl_stmt|,
-name|fifo_advlock
-argument_list|()
-decl_stmt|,
-name|fifo_ebadf
-argument_list|()
-decl_stmt|,
-name|fifo_badop
-argument_list|()
-decl_stmt|,
-name|nullop
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnodeops
 name|fifo_vnodeops
@@ -164,10 +118,10 @@ block|{
 name|fifo_lookup
 block|,
 comment|/* lookup */
-name|fifo_badop
+name|fifo_create
 block|,
 comment|/* create */
-name|fifo_badop
+name|fifo_mknod
 block|,
 comment|/* mknod */
 name|fifo_open
@@ -176,13 +130,13 @@ comment|/* open */
 name|fifo_close
 block|,
 comment|/* close */
-name|fifo_ebadf
+name|fifo_access
 block|,
 comment|/* access */
-name|fifo_ebadf
+name|fifo_getattr
 block|,
 comment|/* getattr */
-name|fifo_ebadf
+name|fifo_setattr
 block|,
 comment|/* setattr */
 name|fifo_read
@@ -197,46 +151,46 @@ comment|/* ioctl */
 name|fifo_select
 block|,
 comment|/* select */
-name|fifo_badop
+name|fifo_mmap
 block|,
 comment|/* mmap */
-name|nullop
+name|fifo_fsync
 block|,
 comment|/* fsync */
-name|fifo_badop
+name|fifo_seek
 block|,
 comment|/* seek */
-name|fifo_badop
+name|fifo_remove
 block|,
 comment|/* remove */
-name|fifo_badop
+name|fifo_link
 block|,
 comment|/* link */
-name|fifo_badop
+name|fifo_rename
 block|,
 comment|/* rename */
-name|fifo_badop
+name|fifo_mkdir
 block|,
 comment|/* mkdir */
-name|fifo_badop
+name|fifo_rmdir
 block|,
 comment|/* rmdir */
-name|fifo_badop
+name|fifo_symlink
 block|,
 comment|/* symlink */
-name|fifo_badop
+name|fifo_readdir
 block|,
 comment|/* readdir */
-name|fifo_badop
+name|fifo_readlink
 block|,
 comment|/* readlink */
-name|fifo_badop
+name|fifo_abortop
 block|,
 comment|/* abortop */
-name|nullop
+name|fifo_inactive
 block|,
 comment|/* inactive */
-name|nullop
+name|fifo_reclaim
 block|,
 comment|/* reclaim */
 name|fifo_lock
@@ -248,13 +202,13 @@ comment|/* unlock */
 name|fifo_bmap
 block|,
 comment|/* bmap */
-name|fifo_badop
+name|fifo_strategy
 block|,
 comment|/* strategy */
 name|fifo_print
 block|,
 comment|/* print */
-name|nullop
+name|fifo_islocked
 block|,
 comment|/* islocked */
 name|fifo_advlock
@@ -268,12 +222,18 @@ begin_comment
 comment|/*  * Trivial lookup routine that always fails.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|fifo_lookup
 argument_list|(
 argument|vp
 argument_list|,
 argument|ndp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -290,6 +250,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -331,6 +299,8 @@ argument_list|,
 name|mode
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -351,6 +321,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -799,6 +777,8 @@ argument_list|,
 name|mode
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -880,6 +860,9 @@ name|error
 decl_stmt|,
 name|startresid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -893,6 +876,8 @@ argument_list|(
 literal|"fifo_read mode"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|uio
@@ -1078,6 +1063,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -1091,6 +1079,8 @@ argument_list|(
 literal|"fifo_write mode"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ioflag
@@ -1179,6 +1169,8 @@ argument_list|,
 argument|fflag
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1213,6 +1205,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1279,6 +1279,8 @@ argument_list|,
 name|com
 argument_list|,
 name|data
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -1299,6 +1301,8 @@ argument_list|,
 argument|fflag
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1323,6 +1327,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1376,6 +1388,8 @@ operator|&
 name|filetmp
 argument_list|,
 name|which
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -1539,6 +1553,8 @@ argument_list|,
 name|fflag
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -1559,6 +1575,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1798,6 +1822,10 @@ end_block
 
 begin_comment
 comment|/*  * Fifo advisory byte-level locks.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
