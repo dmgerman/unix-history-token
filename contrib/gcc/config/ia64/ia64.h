@@ -25,8 +25,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EXTRA_SPECS
+define|\
+value|{ "cpp_cpu", CPP_CPU_SPEC }, \   { "asm_extra", ASM_EXTRA_SPEC },
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPP_CPU_SPEC
-value|"\   -Acpu=ia64 -Amachine=ia64 \   %{!ansi:%{!std=c*:%{!std=i*:-Dia64}}} -D__ia64 -D__ia64__"
+value|" \   -Acpu=ia64 -Amachine=ia64 -D__ia64 -D__ia64__ %{!milp32:-D_LP64 -D__LP64__} \   -D__ELF__"
 end_define
 
 begin_define
@@ -34,6 +42,13 @@ define|#
 directive|define
 name|CC1_SPEC
 value|"%(cc1_cpu) "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_EXTRA_SPEC
+value|""
 end_define
 
 begin_comment
@@ -444,7 +459,7 @@ define|#
 directive|define
 name|CPP_SPEC
 define|\
-value|"%{mcpu=itanium:-D__itanium__} %{mbig-endian:-D__BIG_ENDIAN__}	\    -D__LONG_MAX__=9223372036854775807L"
+value|"%{mcpu=itanium:-D__itanium__} %{mbig-endian:-D__BIG_ENDIAN__}	\    %(cpp_cpu)	\    -D__LONG_MAX__=9223372036854775807L"
 end_define
 
 begin_comment
@@ -772,7 +787,7 @@ value|IEEE_FLOAT_FORMAT
 end_define
 
 begin_comment
-comment|/* By default, the C++ compiler will use function addresses in the    vtable entries.  Setting this non-zero tells the compiler to use    function descriptors instead.  The value of this macro says how    many words wide the descriptor is (normally 2).  It is assumed     that the address of a function descriptor may be treated as a    pointer to a function.  */
+comment|/* By default, the C++ compiler will use function addresses in the    vtable entries.  Setting this non-zero tells the compiler to use    function descriptors instead.  The value of this macro says how    many words wide the descriptor is (normally 2).  It is assumed    that the address of a function descriptor may be treated as a    pointer to a function.  */
 end_comment
 
 begin_define
@@ -918,7 +933,7 @@ comment|/* Register Basics */
 end_comment
 
 begin_comment
-comment|/* Number of hardware registers known to the compiler.      We have 128 general registers, 128 floating point registers,    64 predicate registers, 8 branch registers, one frame pointer,    and several "application" registers.  */
+comment|/* Number of hardware registers known to the compiler.    We have 128 general registers, 128 floating point registers,    64 predicate registers, 8 branch registers, one frame pointer,    and several "application" registers.  */
 end_comment
 
 begin_define
@@ -1251,7 +1266,7 @@ value|\      1, 1,  1,   1,  1, 0, 1				\ }
 end_define
 
 begin_comment
-comment|/* Like `CALL_USED_REGISTERS' but used to overcome a historical     problem which makes CALL_USED_REGISTERS *always* include    all the FIXED_REGISTERS.  Until this problem has been     resolved this macro can be used to overcome this situation.    In particular, block_propagate() requires this list     be acurate, or we can remove registers which should be live.      This macro is used in regs_invalidated_by_call.  */
+comment|/* Like `CALL_USED_REGISTERS' but used to overcome a historical    problem which makes CALL_USED_REGISTERS *always* include    all the FIXED_REGISTERS.  Until this problem has been    resolved this macro can be used to overcome this situation.    In particular, block_propagate() requires this list    be acurate, or we can remove registers which should be live.    This macro is used in regs_invalidated_by_call.  */
 end_comment
 
 begin_define
@@ -2224,6 +2239,18 @@ value|R_GR(0)
 end_define
 
 begin_comment
+comment|/* Due to the way varargs and argument spilling happens, the argument    pointer is not 16-byte aligned like the stack pointer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INIT_EXPANDERS
+define|\
+value|do {							\     if (cfun&& cfun->emit->regno_pointer_align)	\       REGNO_POINTER_ALIGN (ARG_POINTER_REGNUM) = 64;	\   } while (0)
+end_define
+
+begin_comment
 comment|/* The register number for the return address register.  For IA-64, this    is not actually a pointer as the name suggests, but that's a name that    gen_rtx_REG already takes care to keep unique.  We modify    return_address_pointer_rtx in ia64_expand_prologue to reference the    final output regnum.  */
 end_comment
 
@@ -2523,7 +2550,8 @@ name|TYPE
 parameter_list|,
 name|NAMED
 parameter_list|)
-value|0
+define|\
+value|ia64_function_arg_pass_by_reference (&CUM, MODE, TYPE, NAMED)
 end_define
 
 begin_comment
@@ -2539,6 +2567,10 @@ name|int
 name|words
 decl_stmt|;
 comment|/* # words of arguments so far  */
+name|int
+name|int_regs
+decl_stmt|;
+comment|/* # GR registers used so far  */
 name|int
 name|fp_regs
 decl_stmt|;
@@ -2570,7 +2602,7 @@ parameter_list|,
 name|INDIRECT
 parameter_list|)
 define|\
-value|do {									\   (CUM).words = 0;							\   (CUM).fp_regs = 0;							\   (CUM).prototype = ((FNTYPE)&& TYPE_ARG_TYPES (FNTYPE)) || (LIBNAME);	\ } while (0)
+value|do {									\   (CUM).words = 0;							\   (CUM).int_regs = 0;							\   (CUM).fp_regs = 0;							\   (CUM).prototype = ((FNTYPE)&& TYPE_ARG_TYPES (FNTYPE)) || (LIBNAME);	\ } while (0)
 end_define
 
 begin_comment
@@ -2593,7 +2625,7 @@ parameter_list|,
 name|LIBNAME
 parameter_list|)
 define|\
-value|do {									\   (CUM).words = 0;							\   (CUM).fp_regs = 0;							\   (CUM).prototype = 1;							\ } while (0)
+value|do {									\   (CUM).words = 0;							\   (CUM).int_regs = 0;							\   (CUM).fp_regs = 0;							\   (CUM).prototype = 1;							\ } while (0)
 end_define
 
 begin_comment
@@ -2839,6 +2871,20 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 value|ia64_epilogue_uses (REGNO)
+end_define
+
+begin_comment
+comment|/* Nonzero for registers used by the exception handling mechanism.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EH_USES
+parameter_list|(
+name|REGNO
+parameter_list|)
+value|ia64_eh_uses (REGNO)
 end_define
 
 begin_comment
@@ -3382,7 +3428,7 @@ value|((CLASS) == GENERAL_REGS || (CLASS) == FR_REGS \    || (CLASS) == GR_AND_F
 end_define
 
 begin_comment
-comment|/* A C expression for the cost of a branch instruction.  A value of 1 is the    default; other values are interpreted relative to that.  Used by the     if-conversion code as max instruction count.  */
+comment|/* A C expression for the cost of a branch instruction.  A value of 1 is the    default; other values are interpreted relative to that.  Used by the    if-conversion code as max instruction count.  */
 end_comment
 
 begin_comment
@@ -4224,7 +4270,7 @@ value|fprintf (FILE, "[.%s%d:]\n", PREFIX, NUM)
 end_define
 
 begin_comment
-comment|/* Use section-relative relocations for debugging offsets.  Unlike other    targets that fake this by putting the section VMA at 0, IA-64 has     proper relocations for them.  */
+comment|/* Use section-relative relocations for debugging offsets.  Unlike other    targets that fake this by putting the section VMA at 0, IA-64 has    proper relocations for them.  */
 end_comment
 
 begin_define
@@ -4669,6 +4715,29 @@ name|IA64_NAND_OP
 block|}
 enum|;
 end_enum
+
+begin_define
+define|#
+directive|define
+name|DONT_USE_BUILTIN_SETJMP
+end_define
+
+begin_comment
+comment|/* Output any profiling code before the prologue.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PROFILE_BEFORE_PROLOGUE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PROFILE_BEFORE_PROLOGUE
+value|1
+end_define
 
 begin_comment
 comment|/* End of ia64.h */

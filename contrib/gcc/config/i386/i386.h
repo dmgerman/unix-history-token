@@ -1005,6 +1005,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
+name|int
+name|x86_arch_always_fancy_math_387
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|x86_prefetch_sse
 decl_stmt|;
@@ -1350,28 +1358,32 @@ name|TARGET_RED_ZONE
 value|(!(target_flags& MASK_NO_RED_ZONE))
 end_define
 
+begin_comment
+comment|/* WARNING: Do not mark empty strings for translation, as calling             gettext on an empty string does NOT return an empty             string. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TARGET_SWITCHES
 define|\
-value|{ { "80387",			 MASK_80387, N_("Use hardware fp") },	      \   { "no-80387",			-MASK_80387, N_("Do not use hardware fp") },  \   { "hard-float",		 MASK_80387, N_("Use hardware fp") },	      \   { "soft-float",		-MASK_80387, N_("Do not use hardware fp") },  \   { "no-soft-float",		 MASK_80387, N_("Use hardware fp") },	      \   { "386",			 0, N_("")
+value|{ { "80387",			 MASK_80387, N_("Use hardware fp") },	      \   { "no-80387",			-MASK_80387, N_("Do not use hardware fp") },  \   { "hard-float",		 MASK_80387, N_("Use hardware fp") },	      \   { "soft-float",		-MASK_80387, N_("Do not use hardware fp") },  \   { "no-soft-float",		 MASK_80387, N_("Use hardware fp") },	      \   { "386",			 0, ""
 comment|/*Deprecated.*/
-value|},		      \   { "486",			 0, N_("")
+value|},		      \   { "486",			 0, ""
 comment|/*Deprecated.*/
-value|},		      \   { "pentium",			 0, N_("")
+value|},		      \   { "pentium",			 0, ""
 comment|/*Deprecated.*/
-value|},		      \   { "pentiumpro",		 0, N_("")
+value|},		      \   { "pentiumpro",		 0, ""
 comment|/*Deprecated.*/
-value|},		      \   { "intel-syntax",		 0, N_("")
+value|},		      \   { "intel-syntax",		 0, ""
 comment|/*Deprecated.*/
-value|},	 	      \   { "no-intel-syntax",		 0, N_("")
+value|},	 	      \   { "no-intel-syntax",		 0, ""
 comment|/*Deprecated.*/
 value|},	 	      \   { "rtd",			 MASK_RTD,				      \     N_("Alternate calling convention") },				      \   { "no-rtd",			-MASK_RTD,				      \     N_("Use normal calling convention") },				      \   { "align-double",		 MASK_ALIGN_DOUBLE,			      \     N_("Align some doubles on dword boundary") },			      \   { "no-align-double",		-MASK_ALIGN_DOUBLE,			      \     N_("Align doubles on word boundary") },				      \   { "svr3-shlib",		 MASK_SVR3_SHLIB,			      \     N_("Uninitialized locals in .bss")  },				      \   { "no-svr3-shlib",		-MASK_SVR3_SHLIB,			      \     N_("Uninitialized locals in .data") },				      \   { "ieee-fp",			 MASK_IEEE_FP,				      \     N_("Use IEEE math for fp comparisons") },				      \   { "no-ieee-fp",		-MASK_IEEE_FP,				      \     N_("Do not use IEEE math for fp comparisons") },			      \   { "fp-ret-in-387",		 MASK_FLOAT_RETURNS,			      \     N_("Return values of functions in FPU registers") },		      \   { "no-fp-ret-in-387",		-MASK_FLOAT_RETURNS ,			      \     N_("Do not return values of functions in FPU registers")},		      \   { "no-fancy-math-387",	 MASK_NO_FANCY_MATH_387,		      \     N_("Do not generate sin, cos, sqrt for FPU") },			      \   { "fancy-math-387",		-MASK_NO_FANCY_MATH_387,		      \      N_("Generate sin, cos, sqrt for FPU")},				      \   { "omit-leaf-frame-pointer",	 MASK_OMIT_LEAF_FRAME_POINTER,		      \     N_("Omit the frame pointer in leaf functions") },			      \   { "no-omit-leaf-frame-pointer",-MASK_OMIT_LEAF_FRAME_POINTER, "" },	      \   { "stack-arg-probe",		 MASK_STACK_PROBE,			      \     N_("Enable stack probing") },					      \   { "no-stack-arg-probe",	-MASK_STACK_PROBE, "" },		      \   { "windows",			0, 0
 comment|/* undocumented */
 value|},		      \   { "dll",			0,  0
 comment|/* undocumented */
-value|},		      \   { "align-stringops",		-MASK_NO_ALIGN_STROPS,			      \     N_("Align destination of the string operations") },			      \   { "no-align-stringops",	 MASK_NO_ALIGN_STROPS,			      \     N_("Do not align destination of the string operations") },		      \   { "inline-all-stringops",	 MASK_INLINE_ALL_STROPS,		      \     N_("Inline all known string operations") },				      \   { "no-inline-all-stringops",	-MASK_INLINE_ALL_STROPS,		      \     N_("Do not inline all known string operations") },			      \   { "push-args",		-MASK_NO_PUSH_ARGS,			      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-push-args",		MASK_NO_PUSH_ARGS,			      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "accumulate-outgoing-args",	(MASK_ACCUMULATE_OUTGOING_ARGS		      \ 				 | MASK_ACCUMULATE_OUTGOING_ARGS_SET),	      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-accumulate-outgoing-args",MASK_ACCUMULATE_OUTGOING_ARGS_SET,	      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "mmx",			 MASK_MMX | MASK_MMX_SET,		      \     N_("Support MMX built-in functions") },				      \   { "no-mmx",			 -MASK_MMX,				      \     N_("Do not support MMX built-in functions") },			      \   { "no-mmx",			 MASK_MMX_SET, N_("") },		      \   { "3dnow",                     MASK_3DNOW | MASK_3DNOW_SET,		      \     N_("Support 3DNow! built-in functions") },				      \   { "no-3dnow",                  -MASK_3DNOW, N_("") },			      \   { "no-3dnow",                  MASK_3DNOW_SET,			      \     N_("Do not support 3DNow! built-in functions") },			      \   { "sse",			 MASK_SSE | MASK_SSE_SET,		      \     N_("Support MMX and SSE built-in functions and code generation") },	      \   { "no-sse",			 -MASK_SSE, N_("") },	 		      \   { "no-sse",			 MASK_SSE_SET,				      \     N_("Do not support MMX and SSE built-in functions and code generation") },\   { "sse2",			 MASK_SSE2 | MASK_SSE2_SET,		      \     N_("Support MMX, SSE and SSE2 built-in functions and code generation") }, \   { "no-sse2",			 -MASK_SSE2, N_("") },			      \   { "no-sse2",			 MASK_SSE2_SET,				      \     N_("Do not support MMX, SSE and SSE2 built-in functions and code generation") },    \   { "128bit-long-double",	 MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 16") },					      \   { "96bit-long-double",	-MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 12") },					      \   { "64",			MASK_64BIT,				      \     N_("Generate 64bit x86-64 code") },					      \   { "32",			-MASK_64BIT,				      \     N_("Generate 32bit i386 code") },					      \   { "red-zone",			-MASK_NO_RED_ZONE,			      \     N_("Use red-zone in the x86-64 code") },				      \   { "no-red-zone",		MASK_NO_RED_ZONE,			      \     N_("Do not use red-zone in the x86-64 code") },			      \   SUBTARGET_SWITCHES							      \   { "", TARGET_DEFAULT, 0 }}
+value|},		      \   { "align-stringops",		-MASK_NO_ALIGN_STROPS,			      \     N_("Align destination of the string operations") },			      \   { "no-align-stringops",	 MASK_NO_ALIGN_STROPS,			      \     N_("Do not align destination of the string operations") },		      \   { "inline-all-stringops",	 MASK_INLINE_ALL_STROPS,		      \     N_("Inline all known string operations") },				      \   { "no-inline-all-stringops",	-MASK_INLINE_ALL_STROPS,		      \     N_("Do not inline all known string operations") },			      \   { "push-args",		-MASK_NO_PUSH_ARGS,			      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-push-args",		MASK_NO_PUSH_ARGS,			      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "accumulate-outgoing-args",	(MASK_ACCUMULATE_OUTGOING_ARGS		      \ 				 | MASK_ACCUMULATE_OUTGOING_ARGS_SET),	      \     N_("Use push instructions to save outgoing arguments") },		      \   { "no-accumulate-outgoing-args",MASK_ACCUMULATE_OUTGOING_ARGS_SET,	      \     N_("Do not use push instructions to save outgoing arguments") },	      \   { "mmx",			 MASK_MMX | MASK_MMX_SET,		      \     N_("Support MMX built-in functions") },				      \   { "no-mmx",			 -MASK_MMX,				      \     N_("Do not support MMX built-in functions") },			      \   { "no-mmx",			 MASK_MMX_SET, "" },			      \   { "3dnow",                     MASK_3DNOW | MASK_3DNOW_SET,		      \     N_("Support 3DNow! built-in functions") },				      \   { "no-3dnow",                  -MASK_3DNOW, "" },			      \   { "no-3dnow",                  MASK_3DNOW_SET,			      \     N_("Do not support 3DNow! built-in functions") },			      \   { "sse",			 MASK_SSE | MASK_SSE_SET,		      \     N_("Support MMX and SSE built-in functions and code generation") },	      \   { "no-sse",			 -MASK_SSE, "" },	 		      \   { "no-sse",			 MASK_SSE_SET,				      \     N_("Do not support MMX and SSE built-in functions and code generation") },\   { "sse2",			 MASK_SSE2 | MASK_SSE2_SET,		      \     N_("Support MMX, SSE and SSE2 built-in functions and code generation") }, \   { "no-sse2",			 -MASK_SSE2, "" },			      \   { "no-sse2",			 MASK_SSE2_SET,				      \     N_("Do not support MMX, SSE and SSE2 built-in functions and code generation") },    \   { "128bit-long-double",	 MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 16") },					      \   { "96bit-long-double",	-MASK_128BIT_LONG_DOUBLE,		      \     N_("sizeof(long double) is 12") },					      \   { "64",			MASK_64BIT,				      \     N_("Generate 64bit x86-64 code") },					      \   { "32",			-MASK_64BIT,				      \     N_("Generate 32bit i386 code") },					      \   { "red-zone",			-MASK_NO_RED_ZONE,			      \     N_("Use red-zone in the x86-64 code") },				      \   { "no-red-zone",		MASK_NO_RED_ZONE,			      \     N_("Do not use red-zone in the x86-64 code") },			      \   SUBTARGET_SWITCHES							      \   { "", TARGET_DEFAULT, 0 }}
 end_define
 
 begin_ifdef
@@ -1480,11 +1492,11 @@ define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{ { "cpu=",&ix86_cpu_string,			\     N_("Schedule code for given CPU")},				\   { "fpmath=",&ix86_fpmath_string,			\     N_("Generate floating point mathematics using given instruction set")},\   { "arch=",&ix86_arch_string,			\     N_("Generate code for given CPU")},				\   { "regparm=",&ix86_regparm_string,			\     N_("Number of registers used to pass integer arguments") },	\   { "align-loops=",&ix86_align_loops_string,		\     N_("Loop code aligned to this power of 2") },		\   { "align-jumps=",&ix86_align_jumps_string,		\     N_("Jump targets are aligned to this power of 2") },	\   { "align-functions=",&ix86_align_funcs_string,		\     N_("Function starts are aligned to this power of 2") },	\   { "preferred-stack-boundary=",				\&ix86_preferred_stack_boundary_string,			\     N_("Attempt to keep stack aligned to this power of 2") },	\   { "branch-cost=",&ix86_branch_cost_string,		\     N_("Branches are this expensive (1-5, arbitrary units)") },	\   { "cmodel=",&ix86_cmodel_string,				\     N_("Use given x86-64 code model") },			\   { "debug-arg",&ix86_debug_arg_string,			\     N_(""
+value|{ { "cpu=",&ix86_cpu_string,			\     N_("Schedule code for given CPU")},				\   { "fpmath=",&ix86_fpmath_string,			\     N_("Generate floating point mathematics using given instruction set")},\   { "arch=",&ix86_arch_string,			\     N_("Generate code for given CPU")},				\   { "regparm=",&ix86_regparm_string,			\     N_("Number of registers used to pass integer arguments") },	\   { "align-loops=",&ix86_align_loops_string,		\     N_("Loop code aligned to this power of 2") },		\   { "align-jumps=",&ix86_align_jumps_string,		\     N_("Jump targets are aligned to this power of 2") },	\   { "align-functions=",&ix86_align_funcs_string,		\     N_("Function starts are aligned to this power of 2") },	\   { "preferred-stack-boundary=",				\&ix86_preferred_stack_boundary_string,			\     N_("Attempt to keep stack aligned to this power of 2") },	\   { "branch-cost=",&ix86_branch_cost_string,		\     N_("Branches are this expensive (1-5, arbitrary units)") },	\   { "cmodel=",&ix86_cmodel_string,				\     N_("Use given x86-64 code model") },			\   { "debug-arg",&ix86_debug_arg_string,			\     ""
 comment|/* Undocumented. */
-value|) },				\   { "debug-addr",&ix86_debug_addr_string,			\     N_(""
+value|},					\   { "debug-addr",&ix86_debug_addr_string,			\     ""
 comment|/* Undocumented. */
-value|) },				\   { "asm=",&ix86_asm_string,					\     N_("Use given assembler dialect") },			\   SUBTARGET_OPTIONS						\ }
+value|},					\   { "asm=",&ix86_asm_string,					\     N_("Use given assembler dialect") },			\   SUBTARGET_OPTIONS						\ }
 end_define
 
 begin_comment
@@ -2016,7 +2028,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPUCOMMON_SPEC
-value|"\ %{march=i386:%{!mcpu*:-D__tune_i386__ }}\ %{march=i486:-D__i486 -D__i486__ %{!mcpu*:-D__tune_i486__ }}\ %{march=pentium|march=i586:-D__i586 -D__i586__ -D__pentium -D__pentium__ \   %{!mcpu*:-D__tune_i586__ -D__tune_pentium__ }}\ %{march=pentium-mmx:-D__i586 -D__i586__ -D__pentium -D__pentium__ \   -D__pentium__mmx__ \   %{!mcpu*:-D__tune_i586__ -D__tune_pentium__ -D__tune_pentium_mmx__}}\ %{march=pentiumpro|march=i686:-D__i686 -D__i686__ \   -D__pentiumpro -D__pentiumpro__ \   %{!mcpu*:-D__tune_i686__ -D__tune_pentiumpro__ }}\ %{march=k6:-D__k6 -D__k6__ %{!mcpu*:-D__tune_k6__ }}\ %{march=k6-2:-D__k6 -D__k6__ -D__k6_2__ \   %{!mcpu*:-D__tune_k6__ -D__tune_k6_2__ }}\ %{march=k6-3:-D__k6 -D__k6__ -D__k6_3__ \   %{!mcpu*:-D__tune_k6__ -D__tune_k6_3__ }}\ %{march=athlon|march=athlon-tbird:-D__athlon -D__athlon__ \   %{!mcpu*:-D__tune_athlon__ }}\ %{march=athlon-4|march=athlon-xp|march=athlon-mp:-D__athlon -D__athlon__ \   -D__athlon_sse__ \   %{!mcpu*:-D__tune_athlon__ -D__tune_athlon_sse__ }}\ %{march=pentium4:-D__pentium4 -D__pentium4__ %{!mcpu*:-D__tune_pentium4__ }}\ %{m386|mcpu=i386:-D__tune_i386__ }\ %{m486|mcpu=i486:-D__tune_i486__ }\ %{mpentium|mcpu=pentium|mcpu=i586|mcpu=pentium-mmx:-D__tune_i586__ -D__tune_pentium__ }\ %{mpentiumpro|mcpu=pentiumpro|mcpu=i686|cpu=pentium2|cpu=pentium3:-D__tune_i686__ \ -D__tune_pentiumpro__ }\ %{mcpu=k6|mcpu=k6-2|mcpu=k6-3:-D__tune_k6__ }\ %{mcpu=athlon|mcpu=athlon-tbird|mcpu=athlon-4|mcpu=athlon-xp|mcpu=athlon-mp:\ -D__tune_athlon__ }\ %{mcpu=athlon-4|mcpu=athlon-xp|mcpu=athlon-mp:\ -D__tune_athlon_sse__ }\ %{mcpu=pentium4:-D__tune_pentium4__ }\ %{march=athlon-tbird|march=athlon-xp|march=athlon-mp|march=pentium3|march=pentium4:\ -D__SSE__ }\ %{march=pentium-mmx|march=k6|march=k6-2|march=k6-3\ march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp|march=pentium2|march=pentium3|march=pentium4: -D__MMX__ }\ %{march=k6-2|march=k6-3\ march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp: -D__3dNOW__ }\ %{march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp: -D__3dNOW_A__ }\ %{march=pentium4: -D__SSE2__ }\ %{!march*:%{!mcpu*:%{!m386:%{!m486:%{!mpentium*:%(cpp_cpu_default)}}}}}"
+value|"\ %{march=i386:%{!mcpu*:-D__tune_i386__ }}\ %{march=i486:-D__i486 -D__i486__ %{!mcpu*:-D__tune_i486__ }}\ %{march=pentium|march=i586:-D__i586 -D__i586__ -D__pentium -D__pentium__ \   %{!mcpu*:-D__tune_i586__ -D__tune_pentium__ }}\ %{march=pentium-mmx:-D__i586 -D__i586__ -D__pentium -D__pentium__ \   -D__pentium__mmx__ \   %{!mcpu*:-D__tune_i586__ -D__tune_pentium__ -D__tune_pentium_mmx__}}\ %{march=pentiumpro|march=i686:-D__i686 -D__i686__ \   -D__pentiumpro -D__pentiumpro__ \   %{!mcpu*:-D__tune_i686__ -D__tune_pentiumpro__ }}\ %{march=k6:-D__k6 -D__k6__ %{!mcpu*:-D__tune_k6__ }}\ %{march=k6-2:-D__k6 -D__k6__ -D__k6_2__ \   %{!mcpu*:-D__tune_k6__ -D__tune_k6_2__ }}\ %{march=k6-3:-D__k6 -D__k6__ -D__k6_3__ \   %{!mcpu*:-D__tune_k6__ -D__tune_k6_3__ }}\ %{march=athlon|march=athlon-tbird:-D__athlon -D__athlon__ \   %{!mcpu*:-D__tune_athlon__ }}\ %{march=athlon-4|march=athlon-xp|march=athlon-mp:-D__athlon -D__athlon__ \   -D__athlon_sse__ \   %{!mcpu*:-D__tune_athlon__ -D__tune_athlon_sse__ }}\ %{march=pentium4:-D__pentium4 -D__pentium4__ %{!mcpu*:-D__tune_pentium4__ }}\ %{m386|mcpu=i386:-D__tune_i386__ }\ %{m486|mcpu=i486:-D__tune_i486__ }\ %{mpentium|mcpu=pentium|mcpu=i586|mcpu=pentium-mmx:-D__tune_i586__ -D__tune_pentium__ }\ %{mpentiumpro|mcpu=pentiumpro|mcpu=i686|cpu=pentium2|cpu=pentium3:-D__tune_i686__ \ -D__tune_pentiumpro__ }\ %{mcpu=k6|mcpu=k6-2|mcpu=k6-3:-D__tune_k6__ }\ %{mcpu=athlon|mcpu=athlon-tbird|mcpu=athlon-4|mcpu=athlon-xp|mcpu=athlon-mp:\ -D__tune_athlon__ }\ %{mcpu=athlon-4|mcpu=athlon-xp|mcpu=athlon-mp:\ -D__tune_athlon_sse__ }\ %{mcpu=pentium4:-D__tune_pentium4__ }\ %{march=athlon-tbird|march=athlon-xp|march=athlon-mp|march=pentium3|march=pentium4:\ -D__SSE__ }\ %{march=pentium-mmx|march=k6|march=k6-2|march=k6-3\ |march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp|march=pentium2|march=pentium3|march=pentium4: -D__MMX__ }\ %{march=k6-2|march=k6-3\ |march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp: -D__3dNOW__ }\ %{march=athlon|march=athlon-tbird|march=athlon-4|march=athlon-xp\ |march=athlon-mp: -D__3dNOW_A__ }\ %{march=pentium4: -D__SSE2__ }\ %{!march*:%{!mcpu*:%{!m386:%{!m486:%{!mpentium*:%(cpp_cpu_default)}}}}}"
 end_define
 
 begin_ifndef
@@ -2746,7 +2758,7 @@ end_define
 
 begin_comment
 unit|\
-comment|/* Order in which to allocate registers.  Each register must be    listed once, even those in FIXED_REGISTERS.  List frame pointer    late and fixed registers last.  Note that, in general, we prefer    registers listed in CALL_USED_REGISTERS, keeping the others    available for storage of persistent values.     Three different versions of REG_ALLOC_ORDER have been tried:     If the order is edx, ecx, eax, ... it produces a slightly faster compiler,    but slower code on simple functions returning values in eax.     If the order is eax, ecx, edx, ... it causes reload to abort when compiling    perl 4.036 due to not being able to create a DImode register (to hold a 2    word union).     If the order is eax, edx, ecx, ... it produces better code for simple    functions, and a slightly slower compiler.  Users complained about the code    generated by allocating edx first, so restore the 'natural' order of things.  */
+comment|/* Order in which to allocate registers.  Each register must be    listed once, even those in FIXED_REGISTERS.  List frame pointer    late and fixed registers last.  Note that, in general, we prefer    registers listed in CALL_USED_REGISTERS, keeping the others    available for storage of persistent values.     The ORDER_REGS_FOR_LOCAL_ALLOC actually overwrite the order,    so this is just empty initializer for array.  */
 end_comment
 
 begin_define
@@ -2754,25 +2766,18 @@ define|#
 directive|define
 name|REG_ALLOC_ORDER
 define|\
-comment|/*ax,dx,cx,*/
-define|\
-value|{  0, 1, 2,							\
-comment|/* bx,si,di,bp,sp,*/
-value|\    3, 4, 5, 6, 7,						\
-comment|/*r8,r9,r10,r11,*/
-value|\   37,38, 39, 40,						\
-comment|/*r12,r15,r14,r13*/
-value|\   41, 44, 43, 42,						\
-comment|/*xmm0,xmm1,xmm2,xmm3,xmm4,xmm5,xmm6,xmm7*/
-value|\     21,  22,  23,  24,  25,  26,  27,  28,			\
-comment|/*xmm8,xmm9,xmm10,xmm11,xmm12,xmm13,xmm14,xmm15*/
-value|\     45,  46,   47,   48,   49,   50,   51,   52,		\
-comment|/*st,st1,st2,st3,st4,st5,st6,st7*/
-value|\    8,  9, 10, 11, 12, 13, 14, 15,				\
-comment|/*,arg,cc,fpsr,dir,frame*/
-value|\      16,17, 18, 19,   20,					\
-comment|/*mmx0,mmx1,mmx2,mmx3,mmx4,mmx5,mmx6,mmx7*/
-value|\     29,  30,  31,  32,  33,  34,  35,  36 }
+value|{  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,\    18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,	\    33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,  \    48, 49, 50, 51, 52 }
+end_define
+
+begin_comment
+comment|/* ORDER_REGS_FOR_LOCAL_ALLOC is a macro which permits reg_alloc_order    to be rearranged based on a particular function.  When using sse math,    we want to allocase SSE before x87 registers and vice vera.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ORDER_REGS_FOR_LOCAL_ALLOC
+value|x86_order_regs_for_local_alloc ()
 end_define
 
 begin_comment
@@ -2784,7 +2789,7 @@ define|#
 directive|define
 name|CONDITIONAL_REGISTER_USAGE
 define|\
-value|do {									\     int i;								\     for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)				\       {									\         fixed_regs[i] = (fixed_regs[i]& (TARGET_64BIT ? 2 : 1)) != 0;	\         call_used_regs[i] = (call_used_regs[i]				\& (TARGET_64BIT ? 2 : 1)) != 0;		\       }									\     if (flag_pic)							\       {									\ 	fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\ 	call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\       }									\     if (! TARGET_MMX)							\       {									\ 	int i;								\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (reg_class_contents[(int)MMX_REGS], i))	\ 	    fixed_regs[i] = call_used_regs[i] = 1;		 	\       }									\     if (! TARGET_SSE)							\       {									\ 	int i;								\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (reg_class_contents[(int)SSE_REGS], i))	\ 	    fixed_regs[i] = call_used_regs[i] = 1;		 	\       }									\     if (! TARGET_80387&& ! TARGET_FLOAT_RETURNS_IN_80387)		\       {									\ 	int i;								\ 	HARD_REG_SET x;							\         COPY_HARD_REG_SET (x, reg_class_contents[(int)FLOAT_REGS]);	\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (x, i)) 				\ 	    fixed_regs[i] = call_used_regs[i] = 1;			\       }									\   } while (0)
+value|do {									\     int i;								\     for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)				\       {									\         fixed_regs[i] = (fixed_regs[i]& (TARGET_64BIT ? 2 : 1)) != 0;	\         call_used_regs[i] = (call_used_regs[i]				\& (TARGET_64BIT ? 2 : 1)) != 0;		\       }									\     if (PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)			\       {									\ 	fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\ 	call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\       }									\     if (! TARGET_MMX)							\       {									\ 	int i;								\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (reg_class_contents[(int)MMX_REGS], i))	\ 	    fixed_regs[i] = call_used_regs[i] = 1;		 	\       }									\     if (! TARGET_SSE)							\       {									\ 	int i;								\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (reg_class_contents[(int)SSE_REGS], i))	\ 	    fixed_regs[i] = call_used_regs[i] = 1;		 	\       }									\     if (! TARGET_80387&& ! TARGET_FLOAT_RETURNS_IN_80387)		\       {									\ 	int i;								\ 	HARD_REG_SET x;							\         COPY_HARD_REG_SET (x, reg_class_contents[(int)FLOAT_REGS]);	\         for (i = 0; i< FIRST_PSEUDO_REGISTER; i++)			\           if (TEST_HARD_REG_BIT (x, i)) 				\ 	    fixed_regs[i] = call_used_regs[i] = 1;			\       }									\   } while (0)
 end_define
 
 begin_comment
@@ -3142,14 +3147,15 @@ value|(TARGET_64BIT ? FIRST_REX_INT_REG + 10 - 8 : 2)
 end_define
 
 begin_comment
-comment|/* Register to hold the addressing base for position independent    code access to data items.    We don't use PIC pointer for 64bit mode.  Define the regnum to    dummy value to prevent gcc from pessimizing code dealing with EBX.  */
+comment|/* Register to hold the addressing base for position independent    code access to data items.  We don't use PIC pointer for 64bit    mode.  Define the regnum to dummy value to prevent gcc from    pessimizing code dealing with EBX.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PIC_OFFSET_TABLE_REGNUM
-value|(TARGET_64BIT ? INVALID_REGNUM : 3)
+define|\
+value|(TARGET_64BIT || !flag_pic ? INVALID_REGNUM : 3)
 end_define
 
 begin_comment
@@ -3609,7 +3615,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|((TARGET_SSE_MATH&& (MODE) == SFmode) || (TARGET_SSE2&& (MODE) == DFmode))
+value|((TARGET_SSE&& (MODE) == SFmode) || (TARGET_SSE2&& (MODE) == DFmode))
 end_define
 
 begin_define
@@ -5395,7 +5401,7 @@ begin_define
 define|#
 directive|define
 name|PROMOTE_PROTOTYPES
-value|1
+value|(!TARGET_64BIT)
 end_define
 
 begin_comment

@@ -124,6 +124,22 @@ comment|/************************[  Target stuff  ]*****************************
 end_comment
 
 begin_comment
+comment|/* All FreeBSD Architectures support the ELF object file format.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|OBJECT_FORMAT_ELF
+end_undef
+
+begin_define
+define|#
+directive|define
+name|OBJECT_FORMAT_ELF
+end_define
+
+begin_comment
 comment|/* Don't assume anything about the header files.  */
 end_comment
 
@@ -137,6 +153,7 @@ begin_define
 define|#
 directive|define
 name|NO_IMPLICIT_EXTERN_C
+value|1
 end_define
 
 begin_comment
@@ -153,6 +170,7 @@ begin_define
 define|#
 directive|define
 name|SCCS_DIRECTIVE
+value|1
 end_define
 
 begin_comment
@@ -185,26 +203,16 @@ name|WCHAR_UNSIGNED
 value|0
 end_define
 
-begin_comment
-comment|/* Code generation parameters.  */
-end_comment
-
-begin_comment
-comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions    (even though the SVR4 ABI for the i386 says that records and unions are    returned in memory).  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DEFAULT_PCC_STRUCT_RETURN
-end_undef
-
 begin_define
 define|#
 directive|define
-name|DEFAULT_PCC_STRUCT_RETURN
-value|0
+name|MATH_LIBRARY_PROFILE
+value|"-lm_p"
 end_define
+
+begin_comment
+comment|/* Code generation parameters.  */
+end_comment
 
 begin_comment
 comment|/* Use periods rather than dollar signs in special g++ assembler names.    This ensures the configuration knows our system correctly so we can link    with libraries compiled with the native cc.  */
@@ -224,109 +232,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_HAS_F_SETLKW
-end_define
-
-begin_comment
-comment|/* The prefix to add to user-visible assembler symbols.    For System V Release 4& ELF the convention is *not* to prepend a leading    underscore onto user-level symbol names. Some CPU files such as    config/sparc/sparc.h set this wrong for ELF.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|USER_LABEL_PREFIX
-end_undef
-
-begin_define
-define|#
-directive|define
-name|USER_LABEL_PREFIX
-value|""
-end_define
-
-begin_comment
-comment|/* Handle #pragma weak and #pragma pack.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HANDLE_SYSV_PRAGMA
-end_undef
-
-begin_define
-define|#
-directive|define
-name|HANDLE_SYSV_PRAGMA
-end_define
-
-begin_comment
-comment|/************************[  Assembler stuff  ]********************************/
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|IDENT_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|IDENT_ASM_OP
-value|"\t.ident\t"
-end_define
-
-begin_comment
-comment|/************************[  Debugger stuff  ]*********************************/
-end_comment
-
-begin_comment
-comment|/* All ELF targets can support DWARF-2.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DWARF2_DEBUGGING_INFO
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DWARF2_DEBUGGING_INFO
-end_define
-
-begin_comment
-comment|/* This is BSD, so we want the DBX format.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DBX_DEBUGGING_INFO
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DBX_DEBUGGING_INFO
-end_define
-
-begin_comment
-comment|/* Even though this is BSD, ELF and the GNU tools operates better with dwarf2    than stabs.  Since we don't have any native tools to be compatible with,    defaulting to dwarf2 is OK.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PREFERRED_DEBUGGING_TYPE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PREFERRED_DEBUGGING_TYPE
-value|DWARF2_DEBUG
+value|1
 end_define
 
 end_unit

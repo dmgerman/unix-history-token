@@ -24,7 +24,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"\   -D__IA64__ -D__ia64 -D__ia64__ -D__hpux -D__hpux__ -Dhpux -Dunix \   -D__BIG_ENDIAN__ -D_LONGLONG -D__ELF__ \   -Asystem=hpux -Asystem=posix -Asystem=unix -Acpu=ia64 -Amachine=ia64 \   -D_UINT128_T"
+value|"\   -D__IA64__ -D__hpux -D__hpux__ -Dhpux -Dunix \   -D__BIG_ENDIAN__ -D_LONGLONG \   -Asystem=hpux -Asystem=posix -Asystem=unix \   -D_UINT128_T"
 end_define
 
 begin_comment
@@ -41,20 +41,20 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\   %{mcpu=itanium:-D__itanium__} \   %{mlp64:-D__LP64__ -D__LONG_MAX__=9223372036854775807L} \   %{!ansi:%{!std=c*:%{!std=i*: -D_HPUX_SOURCE -D__STDC_EXT__}}} \   -D__fpreg=long\\ double \   -D__float80=long\\ double \   -D__float128=long\\ double"
+value|"\   %{mcpu=itanium:-D__itanium__} \   %{mlp64:-D__LP64__ -D_LP64 -D__LONG_MAX__=9223372036854775807L} \   %{!ansi:%{!std=c*:%{!std=i*: -D_HPUX_SOURCE -D__STDC_EXT__}}} \   -D__fpreg=long\\ double \   -D__float80=long\\ double \   -D__float128=long\\ double"
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_SPEC
+name|ASM_EXTRA_SPEC
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_SPEC
-value|"-x %{mconstant-gp} %{mauto-pic} \   %{milp32:-milp32} %{mlp64:-mlp64}"
+name|ASM_EXTRA_SPEC
+value|"%{milp32:-milp32} %{mlp64:-mlp64}"
 end_define
 
 begin_undef
@@ -148,12 +148,6 @@ define|#
 directive|define
 name|POINTERS_EXTEND_UNSIGNED
 value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DONT_USE_BUILTIN_SETJMP
 end_define
 
 begin_define

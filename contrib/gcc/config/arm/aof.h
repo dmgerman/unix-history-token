@@ -202,6 +202,10 @@ define|\
 value|do {					\   func_ptr *ptr = __DTOR_LIST__ + 1;	\   while (*ptr)				\     (*ptr++) ();			\ } while (0)
 end_define
 
+begin_comment
+comment|/* We really want to put Thumb tables in a read-only data section, but    switching to another section during function output is not    possible.  We could however do what the SPARC does and defer the    whole table generation until the end of the function.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -581,7 +585,7 @@ parameter_list|,
 name|REL
 parameter_list|)
 define|\
-value|fprintf ((STREAM), "\tb\t|L..%d|\n", (VALUE))
+value|do {									\     if (TARGET_ARM)							\       fprintf ((STREAM), "\tb\t|L..%d|\n", (VALUE));			\     else								\       fprintf ((STREAM), "\tDCD\t|L..%d| - |L..%d|\n", (VALUE), (REL));	\   } while (0)
 end_define
 
 begin_define

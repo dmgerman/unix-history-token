@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* com.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Contains compiler-specific functions.     Modifications: */
+comment|/* com.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None     Description:       Contains compiler-specific functions.     Modifications: */
 end_comment
 
 begin_comment
@@ -9952,6 +9952,7 @@ condition|)
 return|return
 name|type
 return|;
+comment|/* An array is too large if size is negative or the type_size overflows      or its "upper half" is larger than 3 (which would make the signed      byte size and offset computations overflow).  */
 if|if
 condition|(
 operator|(
@@ -9970,6 +9971,17 @@ operator|(
 operator|!
 name|dummy
 operator|&&
+operator|(
+name|TREE_INT_CST_HIGH
+argument_list|(
+name|TYPE_SIZE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+operator|>
+literal|3
+operator|||
 name|TREE_OVERFLOW
 argument_list|(
 name|TYPE_SIZE
@@ -9977,6 +9989,7 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
@@ -13246,6 +13259,7 @@ operator|==
 name|NULL_TREE
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg
 argument_list|(
 literal|"ASSIGN'ed label cannot fit into `%A' at %0 -- using wider sibling"
@@ -15930,6 +15944,30 @@ case|:
 name|item
 operator|=
 name|ffecom_arg_ptr_to_expr
+argument_list|(
+name|ffebld_left
+argument_list|(
+name|expr
+argument_list|)
+argument_list|,
+operator|&
+name|list
+argument_list|)
+expr_stmt|;
+return|return
+name|convert
+argument_list|(
+name|tree_type
+argument_list|,
+name|item
+argument_list|)
+return|;
+case|case
+name|FFEBLD_opPERCENT_VAL
+case|:
+name|item
+operator|=
+name|ffecom_arg_expr
 argument_list|(
 name|ffebld_left
 argument_list|(
@@ -22910,7 +22948,10 @@ expr_stmt|;
 name|se
 operator|=
 name|expand_start_stmt_expr
-argument_list|()
+argument_list|(
+comment|/*has_scope=*/
+literal|1
+argument_list|)
 expr_stmt|;
 name|ffecom_start_compstmt
 argument_list|()
@@ -46165,7 +46206,7 @@ if|#
 directive|if
 literal|0
 comment|/* This is being fixed, and seems to be working now. */
-block|if ((FLOAT_TYPE_SIZE != 32)       || (TREE_INT_CST_LOW (TYPE_SIZE (TREE_TYPE (null_pointer_node))) != 32))     {       warning ("configuration: REAL, INTEGER, and LOGICAL are %d bits wide,", 	       (int) FLOAT_TYPE_SIZE);       warning ("and pointers are %d bits wide, but g77 doesn't yet work", 	  (int) TREE_INT_CST_LOW (TYPE_SIZE (TREE_TYPE (null_pointer_node))));       warning ("properly unless they all are 32 bits wide");       warning ("Please keep this in mind before you report bugs.  g77 should");       warning ("support non-32-bit machines better as of version 0.6");     }
+block|if ((FLOAT_TYPE_SIZE != 32)       || (TREE_INT_CST_LOW (TYPE_SIZE (TREE_TYPE (null_pointer_node))) != 32))     {       warning ("configuration: REAL, INTEGER, and LOGICAL are %d bits wide,", 	       (int) FLOAT_TYPE_SIZE);       warning ("and pointers are %d bits wide, but g77 doesn't yet work", 	  (int) TREE_INT_CST_LOW (TYPE_SIZE (TREE_TYPE (null_pointer_node))));       warning ("properly unless they all are 32 bits wide");       warning ("Please keep this in mind before you report bugs.");     }
 endif|#
 directive|endif
 if|#
@@ -58087,6 +58128,7 @@ name|str2
 operator|=
 literal|""
 expr_stmt|;
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg
 argument_list|(
 literal|"%A from %B at %0%C"
@@ -59569,6 +59611,7 @@ argument_list|(
 name|FFEBAD_severityWARNING
 argument_list|)
 expr_stmt|;
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg
 argument_list|(
 literal|"At %0, INCLUDE file %A exists, but is not readable"
@@ -59710,6 +59753,7 @@ argument_list|(
 name|FFEBAD_severityFATAL
 argument_list|)
 expr_stmt|;
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg
 argument_list|(
 literal|"At %0, INCLUDE nesting too deep"

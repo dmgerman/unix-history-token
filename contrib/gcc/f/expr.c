@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* expr.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None.     Description:       Handles syntactic and semantic analysis of Fortran expressions.     Modifications: */
+comment|/* expr.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002    Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       None.     Description:       Handles syntactic and semantic analysis of Fortran expressions.     Modifications: */
 end_comment
 
 begin_comment
@@ -35619,6 +35619,7 @@ name|FFEEXPR_operatorprecedenceLOWARITH_
 operator|)
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg
 argument_list|(
 literal|"Two arithmetic operators in a row at %0 and %1 -- use parentheses"
@@ -35787,6 +35788,7 @@ name|prec
 operator|)
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg
 argument_list|(
 literal|"Operator at %0 has lower precedence than that at %1 -- use parentheses"
@@ -39914,6 +39916,7 @@ name|FFEINFO_basictypeLOGICAL
 operator|)
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 if|if
 condition|(
 name|ffebad_start_msg
@@ -41761,6 +41764,7 @@ operator|==
 name|FFEINFO_kindtypeINTEGER4
 condition|)
 block|{
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg
 argument_list|(
 literal|"Unsupported operand for ** at %1 -- converting to default INTEGER"
@@ -64765,7 +64769,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|ffesymbol_basictype
 argument_list|(
 name|sp
@@ -64781,27 +64784,6 @@ name|sp
 argument_list|)
 operator|!=
 name|FFEINFO_basictypeANY
-operator|)
-operator|)
-operator|||
-operator|(
-operator|(
-name|ffesymbol_kindtype
-argument_list|(
-name|sp
-argument_list|)
-operator|!=
-name|FFEINFO_kindtypeINTEGERDEFAULT
-operator|)
-operator|&&
-operator|(
-name|ffesymbol_kindtype
-argument_list|(
-name|sp
-argument_list|)
-operator|!=
-name|FFEINFO_kindtypeANY
-operator|)
 operator|)
 condition|)
 name|ffesymbol_error

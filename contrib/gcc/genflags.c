@@ -859,10 +859,11 @@ control|)
 block|{
 if|if
 condition|(
+name|IS_VSPACE
+argument_list|(
 operator|*
 name|p
-operator|==
-literal|'\n'
+argument_list|)
 condition|)
 name|printf
 argument_list|(

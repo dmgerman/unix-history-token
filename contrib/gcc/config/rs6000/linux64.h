@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for 64 bit powerpc linux.    Copyright (C) 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for 64 bit powerpc linux.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -244,26 +244,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define cutoff for using external functions to save floating point.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FP_SAVE_INLINE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FP_SAVE_INLINE
-parameter_list|(
-name|FIRST_REG
-parameter_list|)
-value|((FIRST_REG) == 62 || (FIRST_REG) == 63)
-end_define
-
-begin_comment
 comment|/* 64-bit PowerPC Linux always has GPR13 fixed.  */
 end_comment
 
@@ -436,12 +416,83 @@ directive|undef
 name|LINK_OS_LINUX_SPEC
 end_undef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_COMPILE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|LINK_OS_LINUX_SPEC
-value|"-m elf64ppc %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib/ld.so.1}}}"
+value|"-m elf64ppc %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib64/ld.so.1}}}"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LINK_OS_LINUX_SPEC
+value|"-m elf64ppc %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker ld.so.1}}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_COMPILE
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|STARTFILE_LINUX_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_LINUX_SPEC
+value|"\ %{!shared: %{pg:/usr/lib64/gcrt1.o%s} %{!pg:%{p:/usr/lib64/gcrt1.o%s} \   %{!p:/usr/lib64/crt1.o%s}}} /usr/lib64/crti.o%s \ %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_COMPILE
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_LINUX_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_LINUX_SPEC
+value|"\ %{!shared:crtend.o%s} %{shared:crtendS.o%s} /usr/lib64/crtn.o%s"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -697,23 +748,6 @@ value|if (TREE_CODE (DECL) == FUNCTION_DECL				\&& (TREE_ASM_WRITTEN (DECL) || !
 end_define
 
 begin_comment
-comment|/* This macro gets just the user-specified name    out of the string in a SYMBOL_REF.  Discard    a leading * or @.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRIP_NAME_ENCODING
-parameter_list|(
-name|VAR
-parameter_list|,
-name|SYMBOL_NAME
-parameter_list|)
-define|\
-value|do {						\   const char *_name = (SYMBOL_NAME);		\   while (*_name == '*' || *_name == '@')	\     _name++;					\   (VAR) = _name;				\ } while (0)
-end_define
-
-begin_comment
 comment|/* This is how to output a reference to a user-level label named NAME.    `assemble_name' uses this.  */
 end_comment
 
@@ -758,7 +792,32 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do									\     {									\       fputs ("\t.section\t\".opd\",\"aw\"\n\t.align 3\n", (FILE));	\       ASM_OUTPUT_LABEL ((FILE), (NAME));				\       fputs (DOUBLE_INT_ASM_OP, (FILE));				\       putc ('.', (FILE));						\       assemble_name ((FILE), (NAME));					\       putc ('\n', (FILE));						\       fputs (DOUBLE_INT_ASM_OP, (FILE));				\       fputs (".TOC.@tocbase, 0\n\t.previous\n", (FILE));		\ 									\       if (TREE_PUBLIC (DECL))						\         {								\ 	  if (DECL_WEAK (DECL))						\ 	    fputs ("\t.weak\t", (FILE));				\ 	  else								\ 	    fputs ("\t.globl\t", (FILE));				\ 	  putc ('.', (FILE));						\ 	  assemble_name ((FILE), (NAME));				\ 	  putc ('\n', (FILE));						\         }								\       fputs (TYPE_ASM_OP, (FILE));					\       putc ('.', (FILE));						\       assemble_name ((FILE), (NAME));					\       putc (',', (FILE));						\       fprintf ((FILE), TYPE_OPERAND_FMT, "function");			\       putc ('\n', (FILE));						\       ASM_DECLARE_RESULT ((FILE), DECL_RESULT (DECL));			\       putc ('.', (FILE));						\       ASM_OUTPUT_LABEL ((FILE), (NAME));				\     }									\   while (0)
+value|do									\     {									\       fputs ("\t.section\t\".opd\",\"aw\"\n\t.align 3\n", (FILE));	\       ASM_OUTPUT_LABEL ((FILE), (NAME));				\       fputs (DOUBLE_INT_ASM_OP, (FILE));				\       putc ('.', (FILE));						\       assemble_name ((FILE), (NAME));					\       fputs (",.TOC.@tocbase,0\n\t.previous\n\t.size\t", (FILE));	\       assemble_name ((FILE), (NAME));					\       fputs (",24\n\t.type\t.", (FILE));				\       assemble_name ((FILE), (NAME));					\       fputs (",@function\n", (FILE));					\       if (TREE_PUBLIC (DECL)&& ! DECL_WEAK (DECL))			\         {								\ 	  fputs ("\t.globl\t.", (FILE));				\ 	  assemble_name ((FILE), (NAME));				\ 	  putc ('\n', (FILE));						\         }								\       ASM_DECLARE_RESULT ((FILE), DECL_RESULT (DECL));			\       putc ('.', (FILE));						\       ASM_OUTPUT_LABEL ((FILE), (NAME));				\     }									\   while (0)
+end_define
+
+begin_comment
+comment|/* This is how to declare the size of a function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_DECLARE_FUNCTION_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_DECLARE_FUNCTION_SIZE
+parameter_list|(
+name|FILE
+parameter_list|,
+name|FNAME
+parameter_list|,
+name|DECL
+parameter_list|)
+define|\
+value|do									\     {									\       if (!flag_inhibit_size_directive)					\ 	{								\ 	  fputs ("\t.size\t.", (FILE));					\ 	  assemble_name ((FILE), (FNAME));				\ 	  fputs (",.-.", (FILE));					\ 	  assemble_name ((FILE), (FNAME));				\ 	  putc ('\n', (FILE));						\ 	}								\     }									\   while (0)
 end_define
 
 begin_comment

@@ -39,6 +39,23 @@ directive|define
 name|GCC_CP_TREE_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC__
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"You should be using 'make bootstrap' -- see installation instructions"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -530,26 +547,6 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_LANG_FLAG_0 (TRY_BLOCK_CHECK (NODE))
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLEANUP_DECL
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_OPERAND (CLEANUP_STMT_CHECK (NODE), 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLEANUP_EXPR
-parameter_list|(
-name|NODE
-parameter_list|)
-value|TREE_OPERAND (CLEANUP_STMT_CHECK (NODE), 1)
 end_define
 
 begin_comment
@@ -1967,10 +1964,10 @@ name|tree
 name|x_saved_tree
 decl_stmt|;
 name|tree
-name|incomplete
+name|lookups
 decl_stmt|;
 name|tree
-name|lookups
+name|last_parms
 decl_stmt|;
 name|HOST_WIDE_INT
 name|x_processing_template_decl
@@ -2135,17 +2132,6 @@ value|scope_chain->x_previous_class_values
 end_define
 
 begin_comment
-comment|/* A list of the declarations with incomplete type at namespace scope.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|namespace_scope_incomplete
-value|scope_chain->incomplete
-end_define
-
-begin_comment
 comment|/* A list of private types mentioned, for deferred access checking.  */
 end_comment
 
@@ -2213,6 +2199,9 @@ name|returns_value
 decl_stmt|;
 name|int
 name|returns_null
+decl_stmt|;
+name|int
+name|returns_abnormally
 decl_stmt|;
 name|int
 name|in_function_try_handler
@@ -2362,6 +2351,18 @@ value|cp_function_chain->returns_null
 end_define
 
 begin_comment
+comment|/* Set to 0 at beginning of a function definition, set to 1 if    a call to a noreturn function is seen.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|current_function_returns_abnormally
+define|\
+value|cp_function_chain->returns_abnormally
+end_define
+
+begin_comment
 comment|/* Non-zero if we should generate RTL for functions that we process.    When this is zero, we just accumulate tree structure, without    interacting with the back end.  */
 end_comment
 
@@ -2473,17 +2474,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_operator_names
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* For cross referencing.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_gnu_xref
 decl_stmt|;
 end_decl_stmt
 
@@ -4645,7 +4635,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(TREE_VIA_VIRTUAL(NODE)			\    ? SET_CLASSTYPE_MARKED (BINFO_TYPE (NODE))	\    : (TREE_LANG_FLAG_0 (NODE) = 1))
+value|(TREE_VIA_VIRTUAL(NODE)			\    ? SET_CLASSTYPE_MARKED (BINFO_TYPE (NODE))	\    : (void)(TREE_LANG_FLAG_0 (NODE) = 1))
 end_define
 
 begin_define
@@ -4656,7 +4646,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(TREE_VIA_VIRTUAL (NODE)			\    ? CLEAR_CLASSTYPE_MARKED (BINFO_TYPE (NODE))	\    : (TREE_LANG_FLAG_0 (NODE) = 0))
+value|(TREE_VIA_VIRTUAL (NODE)			\    ? CLEAR_CLASSTYPE_MARKED (BINFO_TYPE (NODE))	\    : (void)(TREE_LANG_FLAG_0 (NODE) = 0))
 end_define
 
 begin_comment
@@ -4765,7 +4755,7 @@ value|CLEAR_BINFO_VTABLE_PATH_MARKED (NODE)
 end_define
 
 begin_comment
-comment|/* Nonzero if this BINFO is a primary base class.     In the TYPE_BINFO hierarchy, this flag is never set for a base    class of a non-primary virtual base.  This flag is only valid for    paths (given by BINFO_INHERITANCE_CHAIN) that really exist in the    final object.  */
+comment|/* Nonzero if this BINFO is a primary base class.  Note, this can be    set for non-canononical virtual bases. For a virtual primary base    you might also need to check whether it is canonical.  */
 end_comment
 
 begin_define
@@ -8592,42 +8582,62 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Bitmask flags to pass to instantiate_type.  */
+comment|/* Bitmask flags to control type substitution.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 enum|enum
-name|instantiate_type_flags
+name|tsubst_flags_t
 block|{
-name|itf_none
+name|tf_none
 init|=
 literal|0
 block|,
 comment|/* nothing special */
-name|itf_complain
+name|tf_error
 init|=
 literal|1
 operator|<<
 literal|0
 block|,
-comment|/* complain about errors */
-name|itf_no_attributes
+comment|/* give error messages  */
+name|tf_warning
 init|=
 literal|1
 operator|<<
 literal|1
 block|,
-comment|/* ignore attributes on comparisons */
-name|itf_ptrmem_ok
+comment|/* give warnings too  */
+name|tf_no_attributes
 init|=
 literal|1
 operator|<<
 literal|2
 block|,
-comment|/* pointers to member ok (internal use) */
+comment|/* ignore attributes on comparisons 				(instantiate_type use) */
+name|tf_ignore_bad_quals
+init|=
+literal|1
+operator|<<
+literal|3
+block|,
+comment|/* ignore bad cvr qualifiers */
+name|tf_keep_type_decl
+init|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|/* retain typedef type decls 				   (make_typename_type use) */
+name|tf_ptrmem_ok
+init|=
+literal|1
+operator|<<
+literal|5
+comment|/* pointers to member ok (internal 				instantiate_type use) */
 block|}
-name|instantiate_type_flags
+name|tsubst_flags_t
 typedef|;
 end_typedef
 
@@ -11116,8 +11126,7 @@ name|tree
 operator|,
 name|tree
 operator|,
-expr|enum
-name|instantiate_type_flags
+name|tsubst_flags_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12370,7 +12379,7 @@ name|tree
 operator|,
 name|tree
 operator|,
-name|int
+name|tsubst_flags_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -13143,7 +13152,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|hack_incomplete_structures
+name|maybe_register_incomplete_var
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|complete_vars
 name|PARAMS
 argument_list|(
 operator|(
@@ -15209,7 +15231,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|push_base_cleanups
+name|perform_base_cleanups
 name|PARAMS
 argument_list|(
 operator|(
@@ -16033,7 +16055,7 @@ name|tree
 operator|,
 name|tree
 operator|,
-name|int
+name|tsubst_flags_t
 operator|,
 name|tree
 operator|)
@@ -16052,7 +16074,7 @@ name|tree
 operator|,
 name|tree
 operator|,
-name|int
+name|tsubst_flags_t
 operator|,
 name|tree
 operator|)
@@ -16071,7 +16093,7 @@ name|tree
 operator|,
 name|tree
 operator|,
-name|int
+name|tsubst_flags_t
 operator|,
 name|tree
 operator|)
@@ -16329,7 +16351,7 @@ name|tree
 operator|,
 name|int
 operator|,
-name|int
+name|tsubst_flags_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -16506,7 +16528,7 @@ name|tree
 operator|,
 name|tree
 operator|,
-name|int
+name|tsubst_flags_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -17094,32 +17116,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|skip_type_access_control
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|reset_type_access_control
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|accessible_p
 name|PARAMS
@@ -17564,38 +17560,6 @@ begin_decl_stmt
 specifier|extern
 name|tree
 name|unmarkedp
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|dfs_skip_nonprimary_vbases_unmarkedp
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|dfs_skip_nonprimary_vbases_markedp
 name|PARAMS
 argument_list|(
 operator|(
@@ -18566,6 +18530,19 @@ name|PARAMS
 argument_list|(
 operator|(
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|reset_type_access_control
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -19971,7 +19948,7 @@ name|tree
 operator|,
 name|int
 operator|,
-name|int
+name|tsubst_flags_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -19987,9 +19964,7 @@ parameter_list|,
 name|QUALS
 parameter_list|)
 define|\
-value|cp_build_qualified_type_real ((TYPE), (QUALS),
-comment|/*complain=*/
-value|1)
+value|cp_build_qualified_type_real ((TYPE), (QUALS), tf_error | tf_warning)
 end_define
 
 begin_decl_stmt
@@ -21149,6 +21124,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
+name|merge_types
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
 name|check_return_expr
 name|PARAMS
 argument_list|(
@@ -21383,198 +21373,6 @@ begin_decl_stmt
 specifier|extern
 name|tree
 name|merge_exception_specifiers
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in xref.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_begin
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_end
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_file
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_start_scope
-name|PARAMS
-argument_list|(
-operator|(
-name|HOST_WIDE_INT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_end_scope
-name|PARAMS
-argument_list|(
-operator|(
-name|HOST_WIDE_INT
-operator|,
-name|HOST_WIDE_INT
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_ref
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_decl
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_call
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_function
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_assign
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_hier
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|tree
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|GNU_xref_member
 name|PARAMS
 argument_list|(
 operator|(

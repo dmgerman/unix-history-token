@@ -2878,6 +2878,7 @@ name|MD_EXPAND_BUILTIN
 name|ASM_OUTPUT_CONSTRUCTOR
 pragma|\
 name|ASM_OUTPUT_DESTRUCTOR
+name|SIGNED_CHAR_SPEC
 end_pragma
 
 begin_comment
@@ -2913,6 +2914,7 @@ name|ASM_IDENTIFY_GCC_AFTER_SOURCE
 pragma|\
 name|SLOW_ZERO_EXTEND
 name|SUBREG_REGNO_OFFSET
+name|DWARF_LINE_MIN_INSTR_LENGTH
 end_pragma
 
 begin_endif

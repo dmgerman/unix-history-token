@@ -28,7 +28,7 @@ file|"cpplib.h"
 end_include
 
 begin_comment
-comment|/* Usage of TREE_LANG_FLAG_?:    0: COMPOUND_STMT_NO_SCOPE (in COMPOUND_STMT).       TREE_NEGATED_INT (in INTEGER_CST).       IDENTIFIER_MARKED (used by search routines).       SCOPE_BEGIN_P (in SCOPE_STMT)       DECL_PRETTY_FUNCTION_P (in VAR_DECL)       NEW_FOR_SCOPE_P (in FOR_STMT)       ASM_INPUT_P (in ASM_STMT)    1: C_DECLARED_LABEL_FLAG (in LABEL_DECL)       STMT_IS_FULL_EXPR_P (in _STMT)    2: STMT_LINENO_FOR_FN_P (in _STMT)    3: SCOPE_NO_CLEANUPS_P (in SCOPE_STMT)       COMPOUND_STMT_BODY_BLOCK (in COMPOUND_STMT)    4: SCOPE_PARTIAL_P (in SCOPE_STMT) */
+comment|/* Usage of TREE_LANG_FLAG_?:    0: COMPOUND_STMT_NO_SCOPE (in COMPOUND_STMT).       TREE_NEGATED_INT (in INTEGER_CST).       IDENTIFIER_MARKED (used by search routines).       SCOPE_BEGIN_P (in SCOPE_STMT)       DECL_PRETTY_FUNCTION_P (in VAR_DECL)       NEW_FOR_SCOPE_P (in FOR_STMT)       ASM_INPUT_P (in ASM_STMT)       STMT_EXPR_NO_SCOPE (in STMT_EXPR)    1: C_DECLARED_LABEL_FLAG (in LABEL_DECL)       STMT_IS_FULL_EXPR_P (in _STMT)    2: STMT_LINENO_FOR_FN_P (in _STMT)    3: SCOPE_NO_CLEANUPS_P (in SCOPE_STMT)       COMPOUND_STMT_BODY_BLOCK (in COMPOUND_STMT)    4: SCOPE_PARTIAL_P (in SCOPE_STMT) */
 end_comment
 
 begin_comment
@@ -2062,6 +2062,24 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|tree
+name|pointer_int_sum
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|tree_code
+operator|,
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|unsigned
 name|int
 name|min_precision
@@ -2437,7 +2455,7 @@ value|TREE_OPERAND (FOR_STMT_CHECK (NODE), 3)
 end_define
 
 begin_comment
-comment|/* SWITCH_STMT accessors. These give access to the condition and body    of the switch statement, respectively.  */
+comment|/* SWITCH_STMT accessors. These give access to the condition, body and    original condition type (before any compiler conversions)    of the switch statement, respectively.  */
 end_comment
 
 begin_define
@@ -2458,6 +2476,16 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TREE_OPERAND (SWITCH_STMT_CHECK (NODE), 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWITCH_TYPE
+parameter_list|(
+name|NODE
+parameter_list|)
+value|TREE_OPERAND (SWITCH_STMT_CHECK (NODE), 2)
 end_define
 
 begin_comment
@@ -2619,6 +2647,21 @@ value|TREE_OPERAND (STMT_EXPR_CHECK (NODE), 0)
 end_define
 
 begin_comment
+comment|/* Nonzero if this statement-expression does not have an associated scope.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STMT_EXPR_NO_SCOPE
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_LANG_FLAG_0 (STMT_EXPR_CHECK (NODE))
+end_define
+
+begin_comment
 comment|/* LABEL_STMT accessor. This gives access to the label associated with    the given label statement.  */
 end_comment
 
@@ -2761,6 +2804,36 @@ name|NODE
 parameter_list|)
 define|\
 value|(ASM_CV_QUAL (ASM_STMT_CHECK (NODE)) != NULL_TREE)
+end_define
+
+begin_comment
+comment|/* The VAR_DECL to clean up in a CLEANUP_STMT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLEANUP_DECL
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_OPERAND (CLEANUP_STMT_CHECK (NODE), 0)
+end_define
+
+begin_comment
+comment|/* The cleanup to run in a CLEANUP_STMT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLEANUP_EXPR
+parameter_list|(
+name|NODE
+parameter_list|)
+define|\
+value|TREE_OPERAND (CLEANUP_STMT_CHECK (NODE), 1)
 end_define
 
 begin_comment
@@ -3140,8 +3213,6 @@ name|genrtl_decl_cleanup
 name|PARAMS
 argument_list|(
 operator|(
-name|tree
-operator|,
 name|tree
 operator|)
 argument_list|)

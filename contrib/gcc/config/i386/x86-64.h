@@ -167,12 +167,6 @@ begin_comment
 comment|/* A C statement to output to the stdio stream FILE an assembler    command to advance the location counter to a multiple of 1<<LOG    bytes if it is within MAX_SKIP bytes.     This is used to align code labels according to Intel recommendations.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_GAS_MAX_SKIP_P2ALIGN
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -187,11 +181,6 @@ parameter_list|)
 define|\
 value|do {									\     if ((LOG) != 0) {							\       if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\       else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\     }									\   } while (0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* i386 System V Release 4 uses DWARF debugging info.    x86-64 ABI specifies DWARF2.  */

@@ -43,6 +43,8 @@ name|LTI_truncxfdf2
 block|,
 name|LTI_trunctfdf2
 block|,
+name|LTI_abort
+block|,
 name|LTI_memcpy
 block|,
 name|LTI_memmove
@@ -306,6 +308,13 @@ define|#
 directive|define
 name|trunctfdf2_libfunc
 value|(libfunc_table[LTI_trunctfdf2])
+end_define
+
+begin_define
+define|#
+directive|define
+name|abort_libfunc
+value|(libfunc_table[LTI_abort])
 end_define
 
 begin_define

@@ -52,6 +52,13 @@ name|LOOP_PREFETCH
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|LOOP_FIRST_PASS
+value|8
+end_define
+
 begin_comment
 comment|/* Get the loop info pointer of a loop.  */
 end_comment

@@ -21,13 +21,11 @@ directive|ifdef
 name|HANDLE_SYSV_PRAGMA
 end_ifdef
 
-begin_comment
-comment|/* Support #pragma weak iff ASM_WEAKEN_LABEL and ASM_OUTPUT_WEAK_ALIAS are    defined.  */
-end_comment
-
 begin_if
 if|#
 directive|if
+operator|(
+operator|(
 name|defined
 argument_list|(
 name|ASM_WEAKEN_LABEL
@@ -37,6 +35,14 @@ name|defined
 argument_list|(
 name|ASM_OUTPUT_WEAK_ALIAS
 argument_list|)
+operator|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|ASM_WEAKEN_DECL
+argument_list|)
+operator|)
 end_if
 
 begin_define
@@ -177,6 +183,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|maybe_apply_pragma_weak
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|maybe_apply_renaming_pragma
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

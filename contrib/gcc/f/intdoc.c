@@ -3551,6 +3551,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'N'
+case|:
+name|printf
+argument_list|(
+literal|"@code{INTEGER} not wider than the default kind"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|assert
 argument_list|(
@@ -3631,6 +3640,15 @@ name|imp
 argument_list|,
 literal|0
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|printf
+argument_list|(
+literal|"@code{LOGICAL} not wider than the default kind"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3803,6 +3821,15 @@ name|imp
 argument_list|,
 literal|0
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|printf
+argument_list|(
+literal|"@code{INTEGER} or @code{LOGICAL} not wider than the default kind"
 argument_list|)
 expr_stmt|;
 break|break;

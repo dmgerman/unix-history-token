@@ -242,17 +242,6 @@ value|"%{!shared:\    %{mpe:%{pg:/usr/lpp/ppe.poe/lib/gcrt0.o}\          %{!pg:%
 end_define
 
 begin_comment
-comment|/* Since there are separate multilibs for pthreads, determine the    thread model based on the command-line arguments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|THREAD_MODEL_SPEC
-value|"%{pthread:posix}%{!pthread:single}"
-end_define
-
-begin_comment
 comment|/* AIX V5 typedefs ptrdiff_t as "long" while earlier releases used "int".  */
 end_comment
 
@@ -279,21 +268,32 @@ directive|define
 name|NO_BUILTIN_WCHAR_TYPE
 end_define
 
+begin_comment
+comment|/* Type used for wchar_t, as a string used in a declaration.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|WCHAR_TYPE
 end_undef
 
+begin_define
+define|#
+directive|define
+name|WCHAR_TYPE
+value|(!TARGET_64BIT ? "short unsigned int" : "unsigned int")
+end_define
+
+begin_comment
+comment|/* Width of wchar_t in bits.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|WCHAR_TYPE_SIZE
 end_undef
-
-begin_comment
-comment|/* Width of wchar_t in bits.  */
-end_comment
 
 begin_define
 define|#

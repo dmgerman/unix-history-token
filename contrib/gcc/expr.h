@@ -192,7 +192,7 @@ parameter_list|,
 name|INC
 parameter_list|)
 define|\
-value|{ tree inc = (INC);				\   if (host_integerp (inc, 0))			\     (TO).constant += tree_low_cst (inc, 0);	\   else if ((TO).var == 0)			\     (TO).var = inc;				\   else						\     (TO).var = size_binop (PLUS_EXPR, (TO).var, inc); }
+value|do {							\   tree inc = (INC);					\   if (host_integerp (inc, 0))				\     (TO).constant += tree_low_cst (inc, 0);		\   else if ((TO).var == 0)				\     (TO).var = convert (ssizetype, inc);		\   else							\     (TO).var = size_binop (PLUS_EXPR, (TO).var,		\ 			   convert (ssizetype, inc));	\ } while (0)
 end_define
 
 begin_define
@@ -205,7 +205,7 @@ parameter_list|,
 name|DEC
 parameter_list|)
 define|\
-value|{ tree dec = (DEC);				\   if (host_integerp (dec, 0))			\     (TO).constant -= tree_low_cst (dec, 0);	\   else if ((TO).var == 0)			\     (TO).var = size_binop (MINUS_EXPR, ssize_int (0), dec); \   else						\     (TO).var = size_binop (MINUS_EXPR, (TO).var, dec); }
+value|do {							\   tree dec = (DEC);					\   if (host_integerp (dec, 0))				\     (TO).constant -= tree_low_cst (dec, 0);		\   else if ((TO).var == 0)				\     (TO).var = size_binop (MINUS_EXPR, ssize_int (0),	\ 			   convert (ssizetype, dec));	\   else							\     (TO).var = size_binop (MINUS_EXPR, (TO).var,	\ 			   convert (ssizetype, dec));	\ } while (0)
 end_define
 
 begin_comment
@@ -220,7 +220,7 @@ parameter_list|(
 name|SIZE
 parameter_list|)
 define|\
-value|((SIZE).var == 0 ? ssize_int ((SIZE).constant)			\  : size_binop (PLUS_EXPR, (SIZE).var, ssize_int ((SIZE).constant)))
+value|((SIZE).var == 0 ? ssize_int ((SIZE).constant)			\  : size_binop (PLUS_EXPR, convert (ssizetype, (SIZE).var),	\ 	       ssize_int ((SIZE).constant)))
 end_define
 
 begin_comment
@@ -1026,6 +1026,9 @@ name|expand_and
 name|PARAMS
 argument_list|(
 operator|(
+expr|enum
+name|machine_mode
+operator|,
 name|rtx
 operator|,
 name|rtx
@@ -1179,12 +1182,6 @@ begin_comment
 comment|/* Functions from builtins.c:  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TREE_CODE
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|rtx
@@ -1289,11 +1286,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -1341,6 +1333,19 @@ begin_decl_stmt
 specifier|extern
 name|rtx
 name|expand_builtin_saveregs
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|expand_builtin_trap
 name|PARAMS
 argument_list|(
 operator|(

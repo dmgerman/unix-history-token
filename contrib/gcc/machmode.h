@@ -37,6 +37,8 @@ parameter_list|,
 name|UNIT
 parameter_list|,
 name|WIDER
+parameter_list|,
+name|INNER
 parameter_list|)
 value|SYM,
 end_define
@@ -354,6 +356,32 @@ parameter_list|(
 name|MODE
 parameter_list|)
 value|mode_mask_array[(int) (MODE)]
+end_define
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|enum
+name|machine_mode
+name|inner_mode_array
+index|[
+name|NUM_MACHINE_MODES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Return the mode of the inner elements in a vector.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_MODE_INNER
+parameter_list|(
+name|MODE
+parameter_list|)
+value|inner_mode_array[(int) (MODE)]
 end_define
 
 begin_endif

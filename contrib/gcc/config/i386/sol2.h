@@ -45,6 +45,13 @@ define|\
 value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Wa,*:%*} -s"
 end_define
 
+begin_define
+define|#
+directive|define
+name|CMOV_SUN_AS_SYNTAX
+value|1
+end_define
+
 begin_else
 else|#
 directive|else
@@ -145,9 +152,12 @@ name|WINT_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
 
-begin_comment
-comment|/* Add "sun" to the list of symbols defined for SVR4.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|HANDLE_PRAGMA_REDEFINE_EXTNAME
+value|1
+end_define
 
 begin_undef
 undef|#
@@ -160,7 +170,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-Dunix -D__svr4__ -D__SVR4 -Dsun -Asystem=svr4"
+value|"-Dunix -D__svr4__ -D__SVR4 -Dsun -D__PRAGMA_REDEFINE_EXTNAME -Asystem=svr4"
 end_define
 
 begin_comment
@@ -290,6 +300,16 @@ directive|define
 name|LOCAL_LABEL_PREFIX
 value|"."
 end_define
+
+begin_comment
+comment|/* The Solaris assembler does not support .quad.  Do not use it.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_QUAD
+end_undef
 
 end_unit
 

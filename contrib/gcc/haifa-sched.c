@@ -5918,6 +5918,40 @@ block|}
 end_function
 
 begin_comment
+comment|/* Called from backends from targetm.sched.reorder to emit stuff into    the instruction stream.  */
+end_comment
+
+begin_function
+name|rtx
+name|sched_emit_insn
+parameter_list|(
+name|pat
+parameter_list|)
+name|rtx
+name|pat
+decl_stmt|;
+block|{
+name|rtx
+name|insn
+init|=
+name|emit_insn_after
+argument_list|(
+name|pat
+argument_list|,
+name|last_scheduled_insn
+argument_list|)
+decl_stmt|;
+name|last_scheduled_insn
+operator|=
+name|insn
+expr_stmt|;
+return|return
+name|insn
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Use forward list scheduling to rearrange insns of block B in region RGN,    possibly bringing insns from subsequent blocks in the same region.  */
 end_comment
 
@@ -5936,9 +5970,6 @@ name|int
 name|rgn_n_insns
 decl_stmt|;
 block|{
-name|rtx
-name|last
-decl_stmt|;
 name|struct
 name|ready_list
 name|ready
@@ -6143,10 +6174,10 @@ operator|.
 name|veclen
 argument_list|)
 expr_stmt|;
-comment|/* No insns scheduled in this block yet.  */
+comment|/* We start inserting insns after PREV_HEAD.  */
 name|last_scheduled_insn
 operator|=
-literal|0
+name|prev_head
 expr_stmt|;
 comment|/* Initialize INSN_QUEUE.  Q_SIZE is the total number of insns in the      queue.  */
 name|q_ptr
@@ -6183,11 +6214,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* We start inserting insns after PREV_HEAD.  */
-name|last
-operator|=
-name|prev_head
-expr_stmt|;
 comment|/* Loop until all the insns in BB are scheduled.  */
 while|while
 condition|(
@@ -6208,32 +6234,6 @@ name|queue_to_ready
 argument_list|(
 operator|&
 name|ready
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sched_verbose
-operator|&&
-name|targetm
-operator|.
-name|sched
-operator|.
-name|cycle_display
-condition|)
-name|last
-operator|=
-call|(
-modifier|*
-name|targetm
-operator|.
-name|sched
-operator|.
-name|cycle_display
-call|)
-argument_list|(
-name|clock_var
-argument_list|,
-name|last
 argument_list|)
 expr_stmt|;
 if|if
@@ -6317,6 +6317,32 @@ else|else
 name|can_issue_more
 operator|=
 name|issue_rate
+expr_stmt|;
+if|if
+condition|(
+name|sched_verbose
+operator|&&
+name|targetm
+operator|.
+name|sched
+operator|.
+name|cycle_display
+condition|)
+name|last_scheduled_insn
+operator|=
+call|(
+modifier|*
+name|targetm
+operator|.
+name|sched
+operator|.
+name|cycle_display
+call|)
+argument_list|(
+name|clock_var
+argument_list|,
+name|last_scheduled_insn
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6420,15 +6446,11 @@ name|next
 goto|;
 name|last_scheduled_insn
 operator|=
-name|insn
-expr_stmt|;
-name|last
-operator|=
 name|move_insn
 argument_list|(
 name|insn
 argument_list|,
-name|last
+name|last_scheduled_insn
 argument_list|)
 expr_stmt|;
 if|if
@@ -6618,7 +6640,7 @@ argument_list|)
 expr_stmt|;
 name|tail
 operator|=
-name|last
+name|last_scheduled_insn
 expr_stmt|;
 comment|/* Restore-other-notes: NOTE_LIST is the end of a chain of notes      previously found among the insns.  Insert them at the beginning      of the insns.  */
 if|if

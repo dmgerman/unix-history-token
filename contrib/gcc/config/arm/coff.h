@@ -154,11 +154,15 @@ begin_comment
 comment|/* Define this macro if jump tables (for `tablejump' insns) should be    output in the text section, along with the assembler instructions.    Otherwise, the readonly data section is used.  */
 end_comment
 
+begin_comment
+comment|/* We put ARM jump tables in the text section, because it makes the code    more efficient, but for Thumb it's better to put them out of band.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
-value|1
+value|(TARGET_ARM)
 end_define
 
 begin_undef

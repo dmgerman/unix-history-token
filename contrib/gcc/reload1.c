@@ -129,6 +129,12 @@ directive|include
 file|"except.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tree.h"
+end_include
+
 begin_comment
 comment|/* This file contains the reload pass of the compiler, which is    run after register allocation has been done.  It checks that    each insn is valid (operands required to be in registers really    are in registers of the proper class) and fixes up invalid ones    by copying values temporarily into registers for the insns    that need them.     The results of register allocation are described by the vector    reg_renumber; the insns still contain pseudo regs, but reg_renumber    can be used to find which hard reg, if any, a pseudo reg is in.     The technique we always use is to free up a few hard regs that are    called ``reload regs'', and for each place where a pseudo reg    must be in a hard reg, copy it temporarily into one of the reload regs.     Reload regs are allocated locally for every instruction that needs    reloads.  When there are pseudos which are allocated to a register that    has been chosen as a reload reg, such pseudos must be ``spilled''.    This means that they go to other hard regs, or to stack slots if no other    available hard regs can be found.  Spilling can invalidate more    insns, requiring additional need for reloads, so we must keep checking    until the process stabilizes.     For machines with different classes of registers, we must keep track    of the register class needed for each reload, and make sure that    we allocate enough reload registers of each class.     The file reload.c contains the code that checks one insn for    validity and reports the reloads that it needs.  This file    is in charge of scanning the entire rtl code, accumulating the    reload needs, spilling, assigning reload registers to use for    fixing up each insn, and generating the new insns to copy values    into the reload registers.  */
 end_comment
@@ -2115,7 +2121,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|fixup_abnormal_edges
 name|PARAMS
@@ -3417,14 +3422,15 @@ operator|>
 name|LAST_VIRTUAL_REGISTER
 condition|)
 block|{
+comment|/* It can happen that a REG_EQUIV note contains a MEM 		     that is not a legitimate memory operand.  As later 		     stages of reload assume that all addresses found 		     in the reg_equiv_* arrays were originally legitimate, 		     we ignore such REG_EQUIV notes.  */
 if|if
 condition|(
-name|GET_CODE
+name|memory_operand
 argument_list|(
 name|x
+argument_list|,
+name|VOIDmode
 argument_list|)
-operator|==
-name|MEM
 condition|)
 block|{
 comment|/* Always unshare the equivalence, so we can 			 substitute into this insn without touching the 			 equivalence.  */
@@ -5227,6 +5233,12 @@ literal|0
 expr_stmt|;
 name|fixup_abnormal_edges
 argument_list|()
+expr_stmt|;
+comment|/* Replacing pseudos with their memory equivalents might have      created shared rtx.  Subsequent passes would get confused      by this, so unshare everything here.  */
+name|unshare_all_rtl_again
+argument_list|(
+name|first
+argument_list|)
 expr_stmt|;
 return|return
 name|failure
@@ -8612,6 +8624,40 @@ name|i
 argument_list|)
 condition|)
 block|{
+name|rtx
+name|decl
+init|=
+name|DECL_RTL_IF_SET
+argument_list|(
+name|REGNO_DECL
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+decl_stmt|;
+comment|/* We can do this only for the DECLs home pseudo, not for 	     any copies of it, since otherwise when the stack slot 	     is reused, nonoverlapping_memrefs_p might think they 	     cannot overlap.  */
+if|if
+condition|(
+name|decl
+operator|&&
+name|GET_CODE
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+name|REG
+operator|&&
+name|REGNO
+argument_list|(
+name|decl
+argument_list|)
+operator|==
+operator|(
+name|unsigned
+operator|)
+name|i
+condition|)
+block|{
 if|if
 condition|(
 name|from_reg
@@ -8643,6 +8689,7 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Save the stack slot for later.  */
 name|reg_equiv_memory_loc
@@ -9358,6 +9405,9 @@ name|CONST_INT
 case|:
 case|case
 name|CONST_DOUBLE
+case|:
+case|case
+name|CONST_VECTOR
 case|:
 case|case
 name|CONST
@@ -10634,7 +10684,7 @@ condition|)
 return|return
 name|adjust_address_nv
 argument_list|(
-name|x
+name|new
 argument_list|,
 name|GET_MODE
 argument_list|(
@@ -11165,6 +11215,9 @@ name|CONST_INT
 case|:
 case|case
 name|CONST_DOUBLE
+case|:
+case|case
+name|CONST_VECTOR
 case|:
 case|case
 name|CONST
@@ -15672,6 +15725,10 @@ case|:
 case|case
 name|CONST_DOUBLE
 case|:
+case|case
+name|CONST_VECTOR
+case|:
+comment|/* shouldn't happen, but just in case.  */
 case|case
 name|CC0
 case|:
@@ -22919,6 +22976,8 @@ name|i
 operator|==
 name|HARD_FRAME_POINTER_REGNUM
 operator|&&
+name|frame_pointer_needed
+operator|&&
 name|rld
 index|[
 name|r
@@ -23718,9 +23777,14 @@ name|equiv
 operator|!=
 literal|0
 operator|&&
+operator|(
 name|regno
 operator|!=
 name|HARD_FRAME_POINTER_REGNUM
+operator|||
+operator|!
+name|frame_pointer_needed
+operator|)
 condition|)
 block|{
 name|int
@@ -33872,6 +33936,18 @@ decl_stmt|,
 name|value
 decl_stmt|;
 block|{
+name|bool
+name|purge
+init|=
+name|BLOCK_FOR_INSN
+argument_list|(
+name|insn
+argument_list|)
+operator|->
+name|end
+operator|==
+name|insn
+decl_stmt|;
 if|if
 condition|(
 name|value
@@ -33909,6 +33985,18 @@ else|else
 name|delete_insn
 argument_list|(
 name|insn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|purge
+condition|)
+name|purge_dead_edges
+argument_list|(
+name|BLOCK_FOR_INSN
+argument_list|(
+name|insn
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -40368,7 +40456,6 @@ comment|/* This is used by reload pass, that does emit some instructions after  
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|fixup_abnormal_edges
 parameter_list|()
@@ -40618,19 +40705,43 @@ name|insn
 argument_list|)
 condition|)
 block|{
-name|insert_insn_on_edge
-argument_list|(
-name|PATTERN
-argument_list|(
-name|insn
-argument_list|)
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
+name|rtx
+name|seq
+decl_stmt|;
 name|delete_insn
 argument_list|(
 name|insn
+argument_list|)
+expr_stmt|;
+comment|/* We're not deleting it, we're moving it.  */
+name|INSN_DELETED_P
+argument_list|(
+name|insn
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Emit a sequence, rather than scarfing the pattern, so 		     that we don't lose REG_NOTES etc.  */
+comment|/* ??? Could copy the test from gen_sequence, but don't 		     think it's worth the bother.  */
+name|seq
+operator|=
+name|gen_rtx_SEQUENCE
+argument_list|(
+name|VOIDmode
+argument_list|,
+name|gen_rtvec
+argument_list|(
+literal|1
+argument_list|,
+name|insn
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|insert_insn_on_edge
+argument_list|(
+name|seq
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 block|}

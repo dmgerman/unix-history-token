@@ -68,7 +68,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE__INT64
+name|HAVE___INT64
 end_ifdef
 
 begin_define

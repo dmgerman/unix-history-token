@@ -11815,6 +11815,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|fixup_abnormal_edges
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|inserted

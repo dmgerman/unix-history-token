@@ -896,6 +896,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means that we don't want inlining by virtue of -fno-inline,    not just because the tree inliner turned us off.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_really_no_inline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero if we are only using compiler to check syntax errors.  */
 end_comment
 

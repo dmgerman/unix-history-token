@@ -347,17 +347,6 @@ name|return_used_this_function
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Nonzero if the prologue must setup `fp'.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|current_function_anonymous_args
-decl_stmt|;
-end_decl_stmt
-
 begin_escape
 end_escape
 
@@ -1687,7 +1676,7 @@ define|#
 directive|define
 name|CONDITIONAL_REGISTER_USAGE
 define|\
-value|{								\   int regno;							\ 								\   if (TARGET_SOFT_FLOAT || TARGET_THUMB)			\     {								\       for (regno = FIRST_ARM_FP_REGNUM;				\ 	   regno<= LAST_ARM_FP_REGNUM; ++regno)		\ 	fixed_regs[regno] = call_used_regs[regno] = 1;		\     }								\   if (flag_pic)							\     {								\       fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\       call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\     }								\   else if (TARGET_APCS_STACK)					\     {								\       fixed_regs[10]     = 1;					\       call_used_regs[10] = 1;					\     }								\   if (TARGET_APCS_FRAME)					\     {								\       fixed_regs[ARM_HARD_FRAME_POINTER_REGNUM] = 1;		\       call_used_regs[ARM_HARD_FRAME_POINTER_REGNUM] = 1;	\     }								\   SUBTARGET_CONDITIONAL_REGISTER_USAGE				\ }
+value|{								\   int regno;							\ 								\   if (TARGET_SOFT_FLOAT || TARGET_THUMB)			\     {								\       for (regno = FIRST_ARM_FP_REGNUM;				\ 	   regno<= LAST_ARM_FP_REGNUM; ++regno)		\ 	fixed_regs[regno] = call_used_regs[regno] = 1;		\     }								\   if (PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)		\     {								\       fixed_regs[PIC_OFFSET_TABLE_REGNUM] = 1;			\       call_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\     }								\   else if (TARGET_APCS_STACK)					\     {								\       fixed_regs[10]     = 1;					\       call_used_regs[10] = 1;					\     }								\   if (TARGET_APCS_FRAME)					\     {								\       fixed_regs[ARM_HARD_FRAME_POINTER_REGNUM] = 1;		\       call_used_regs[ARM_HARD_FRAME_POINTER_REGNUM] = 1;	\     }								\   SUBTARGET_CONDITIONAL_REGISTER_USAGE				\ }
 end_define
 
 begin_comment
@@ -2052,6 +2041,23 @@ directive|define
 name|REG_ALLOC_ORDER
 define|\
 value|{                                   \      3,  2,  1,  0, 12, 14,  4,  5, \      6,  7,  8, 10,  9, 11, 13, 15, \     16, 17, 18, 19, 20, 21, 22, 23, \     24, 25, 26			    \ }
+end_define
+
+begin_comment
+comment|/* Interrupt functions can only use registers that have already been    saved by the prologue, even if they would normally be    call-clobbered.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HARD_REGNO_RENAME_OK
+parameter_list|(
+name|SRC
+parameter_list|,
+name|DST
+parameter_list|)
+define|\
+value|(! IS_INTERRUPT (cfun->machine->func_type) ||			\ 		regs_ever_live[DST])
 end_define
 
 begin_escape
@@ -2970,6 +2976,10 @@ name|unsigned
 name|long
 name|func_type
 decl_stmt|;
+comment|/* Record if the function has a variable argument list.  */
+name|int
+name|uses_anonymous_args
+decl_stmt|;
 block|}
 name|machine_function
 typedef|;
@@ -3135,7 +3145,7 @@ parameter_list|,
 name|NO_RTL
 parameter_list|)
 define|\
-value|{									\   extern int current_function_anonymous_args;				\   current_function_anonymous_args = 1;					\   if ((CUM).nregs< NUM_ARG_REGS)					\     (PRETEND_SIZE) = (NUM_ARG_REGS - (CUM).nregs) * UNITS_PER_WORD;	\ }
+value|{									\   cfun->machine->uses_anonymous_args = 1;				\   if ((CUM).nregs< NUM_ARG_REGS)					\     (PRETEND_SIZE) = (NUM_ARG_REGS - (CUM).nregs) * UNITS_PER_WORD;	\ }
 end_define
 
 begin_comment
@@ -3649,7 +3659,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(   GET_CODE (X) == CONST_INT		\   || GET_CODE (X) == CONST_DOUBLE	\   || CONSTANT_ADDRESS_P (X))
+value|(   GET_CODE (X) == CONST_INT		\   || GET_CODE (X) == CONST_DOUBLE	\   || CONSTANT_ADDRESS_P (X)		\   || flag_pic)
 end_define
 
 begin_define
@@ -3790,7 +3800,7 @@ parameter_list|(
 name|decl
 parameter_list|)
 define|\
-value|if (TREE_CODE (decl) == FUNCTION_DECL)				\     {									\       if (DECL_WEAK (decl))						\         arm_encode_call_attribute (decl, LONG_CALL_FLAG_CHAR);		\       else if (! TREE_PUBLIC (decl))        				\         arm_encode_call_attribute (decl, SHORT_CALL_FLAG_CHAR);		\     }
+value|if (TREE_CODE_CLASS (TREE_CODE (decl)) == 'd')			\     {									\       if (TREE_CODE (decl) == FUNCTION_DECL&& DECL_WEAK (decl))	\         arm_encode_call_attribute (decl, LONG_CALL_FLAG_CHAR);		\       else if (! TREE_PUBLIC (decl))        				\         arm_encode_call_attribute (decl, SHORT_CALL_FLAG_CHAR);		\     }
 end_define
 
 begin_comment

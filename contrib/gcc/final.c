@@ -479,16 +479,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Assign unique numbers to labels generated for profiling.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|profile_label_no
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Number of unmatched NOTE_INSN_BLOCK_BEG notes we have seen.  */
 end_comment
 
@@ -5892,9 +5882,6 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-name|profile_label_no
-operator|++
-expr_stmt|;
 block|}
 end_function
 
@@ -6026,7 +6013,7 @@ name|file
 argument_list|,
 literal|"LP"
 argument_list|,
-name|profile_label_no
+name|current_function_profile_label_no
 argument_list|)
 expr_stmt|;
 name|assemble_integer
@@ -6157,7 +6144,7 @@ name|FUNCTION_PROFILER
 argument_list|(
 name|file
 argument_list|,
-name|profile_label_no
+name|current_function_profile_label_no
 argument_list|)
 expr_stmt|;
 if|#
@@ -6988,6 +6975,9 @@ name|NOTE_INSN_LOOP_BEG
 case|:
 case|case
 name|NOTE_INSN_LOOP_END
+case|:
+case|case
+name|NOTE_INSN_LOOP_END_TOP_COND
 case|:
 case|case
 name|NOTE_INSN_LOOP_CONT
@@ -11095,18 +11085,88 @@ begin_comment
 comment|/* Report inconsistency between the assembler template and the operands.    In an `asm', it's the user's fault; otherwise, the compiler's fault.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|void
 name|output_operand_lossage
-parameter_list|(
+name|VPARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
 name|msgid
-parameter_list|)
+operator|,
+operator|...
+operator|)
+argument_list|)
+block|{
+name|char
+modifier|*
+name|fmt_string
+decl_stmt|;
+name|char
+modifier|*
+name|new_message
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|msgid
+name|pfx_str
 decl_stmt|;
-block|{
+name|VA_OPEN
+argument_list|(
+name|ap
+argument_list|,
+name|msgid
+argument_list|)
+expr_stmt|;
+name|VA_FIXEDARG
+argument_list|(
+name|ap
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|msgid
+argument_list|)
+expr_stmt|;
+name|pfx_str
+operator|=
+name|this_is_asm_operands
+condition|?
+name|_
+argument_list|(
+literal|"invalid `asm': "
+argument_list|)
+else|:
+literal|"output_operand: "
+expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|fmt_string
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|pfx_str
+argument_list|,
+name|_
+argument_list|(
+name|msgid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|vasprintf
+argument_list|(
+operator|&
+name|new_message
+argument_list|,
+name|fmt_string
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|this_is_asm_operands
@@ -11115,27 +11175,36 @@ name|error_for_asm
 argument_list|(
 name|this_is_asm_operands
 argument_list|,
-literal|"invalid `asm': %s"
+literal|"%s"
 argument_list|,
-name|_
-argument_list|(
-name|msgid
-argument_list|)
+name|new_message
 argument_list|)
 expr_stmt|;
 else|else
 name|internal_error
 argument_list|(
-literal|"output_operand: %s"
+literal|"%s"
 argument_list|,
-name|_
-argument_list|(
-name|msgid
+name|new_message
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|fmt_string
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|new_message
+argument_list|)
+expr_stmt|;
+name|VA_CLOSE
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -11990,7 +12059,7 @@ argument_list|)
 condition|)
 name|output_operand_lossage
 argument_list|(
-literal|"operand number missing after %-letter"
+literal|"operand number missing after %%-letter"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -12437,7 +12506,7 @@ expr_stmt|;
 else|else
 name|output_operand_lossage
 argument_list|(
-literal|"`%l' operand isn't a label"
+literal|"`%%l' operand isn't a label"
 argument_list|)
 expr_stmt|;
 name|assemble_name
@@ -13074,6 +13143,9 @@ name|ZERO_EXTEND
 case|:
 case|case
 name|SIGN_EXTEND
+case|:
+case|case
+name|SUBREG
 case|:
 name|output_addr_const
 argument_list|(

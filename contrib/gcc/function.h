@@ -516,6 +516,10 @@ comment|/* Highest label number in current function.  */
 name|int
 name|inl_max_label_num
 decl_stmt|;
+comment|/* Profile label number.  */
+name|int
+name|profile_label_no
+decl_stmt|;
 comment|/* For md files.  */
 comment|/* tm.h can use this to store whatever it likes.  */
 name|struct
@@ -909,6 +913,13 @@ define|#
 directive|define
 name|current_function_profile
 value|(cfun->profile)
+end_define
+
+begin_define
+define|#
+directive|define
+name|current_function_profile_label_no
+value|(cfun->profile_label_no)
 end_define
 
 begin_define

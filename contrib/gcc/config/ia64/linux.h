@@ -39,24 +39,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"\ -D__ia64 -D__ia64__ -D__linux -D__linux__ -D_LONGLONG -Dlinux -Dunix \ -D__LP64__ -D__ELF__ -Asystem=linux -Acpu=ia64 -Amachine=ia64"
-end_define
-
-begin_comment
-comment|/* ??? ia64 gas doesn't accept standard svr4 assembler options?  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|"-x %{mconstant-gp} %{mauto-pic}"
+value|"\   -D__gnu_linux__ -D__linux -D__linux__ -D_LONGLONG \   -Dlinux -Dunix -Asystem=linux"
 end_define
 
 begin_comment
@@ -115,31 +98,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DONT_USE_BUILTIN_SETJMP
-end_define
-
-begin_define
-define|#
-directive|define
 name|JMP_BUF_SIZE
 value|76
-end_define
-
-begin_comment
-comment|/* Output any profiling code before the prologue.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PROFILE_BEFORE_PROLOGUE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PROFILE_BEFORE_PROLOGUE
-value|1
 end_define
 
 begin_comment
@@ -209,8 +169,10 @@ parameter_list|)
 define|\
 value|if ((CONTEXT)->rp>= IA64_GATE_AREA_START				\&& (CONTEXT)->rp< IA64_GATE_AREA_END)				\     {									\       struct sigframe {							\ 	char scratch[16];						\ 	unsigned long sig_number;					\ 	struct siginfo *info;						\ 	struct sigcontext *sc;						\       } *frame_ = (struct sigframe *)(CONTEXT)->psp;			\       struct sigcontext *sc_ = frame_->sc;				\ 									\
 comment|/* Restore scratch registers in case the unwinder needs to	\ 	 refer to a value stored in one of them.  */
-value|\       {									\ 	int i_;								\ 									\ 	for (i_ = 2; i_< 4; i_++)					\ 	  (CONTEXT)->ireg[i_ - 2].loc =&sc_->sc_gr[i_];		\ 	for (i_ = 8; i_< 12; i_++)					\ 	  (CONTEXT)->ireg[i_ - 2].loc =&sc_->sc_gr[i_];		\ 	for (i_ = 14; i_< 32; i_++)					\ 	  (CONTEXT)->ireg[i_ - 2].loc =&sc_->sc_gr[i_];		\       }									\ 	  								\       (CONTEXT)->pfs_loc =&(sc_->sc_ar_pfs);				\       (CONTEXT)->lc_loc =&(sc_->sc_ar_lc);				\       (CONTEXT)->unat_loc =&(sc_->sc_ar_unat);				\       (CONTEXT)->pr = sc_->sc_pr;					\       (CONTEXT)->psp = sc_->sc_gr[12];					\ 									\
-comment|/* Don't touch the branch registers.  The kernel doesn't		\ 	 pass the preserved branch registers in the sigcontext but	\ 	 leaves them intact, so there's no need to do anything		\ 	 with them here.  */
+value|\       {									\ 	int i_;								\ 									\ 	for (i_ = 2; i_< 4; i_++)					\ 	  (CONTEXT)->ireg[i_ - 2].loc =&sc_->sc_gr[i_];		\ 	for (i_ = 8; i_< 12; i_++)					\ 	  (CONTEXT)->ireg[i_ - 2].loc =&sc_->sc_gr[i_];		\ 	for (i_ = 14; i_< 32; i_++)					\ 	  (CONTEXT)->ireg[i_ - 2].loc =&sc_->sc_gr[i_];		\       }									\ 	  								\       (CONTEXT)->pfs_loc =&(sc_->sc_ar_pfs);				\       (CONTEXT)->lc_loc =&(sc_->sc_ar_lc);				\       (CONTEXT)->unat_loc =&(sc_->sc_ar_unat);				\       (CONTEXT)->br_loc[0] =&(sc_->sc_br[0]);				\       (CONTEXT)->bsp = sc_->sc_ar_bsp;					\       (CONTEXT)->pr = sc_->sc_pr;					\       (CONTEXT)->psp = sc_->sc_gr[12];					\       (CONTEXT)->gp = sc_->sc_gr[1];					\
+comment|/* Signal frame doesn't have an associated reg. stack frame 	\          other than what we adjust for below.	  */
+value|\       (FS) -> no_reg_stack_frame = 1;					\ 									\
+comment|/* Don't touch the branch registers o.t. b0.  The kernel doesn't	\ 	 pass the preserved branch registers in the sigcontext but	\ 	 leaves them intact, so there's no need to do anything		\ 	 with them here.  */
 value|\ 									\       {									\ 	unsigned long sof = sc_->sc_cfm& 0x7f;				\ 	(CONTEXT)->bsp = (unsigned long)				\ 	  ia64_rse_skip_regs ((unsigned long *)(sc_->sc_ar_bsp), -sof); \       }									\ 									\       (FS)->curr.reg[UNW_REG_RP].where = UNW_WHERE_SPREL;		\       (FS)->curr.reg[UNW_REG_RP].val 					\ 	= (unsigned long)&(sc_->sc_ip) - (CONTEXT)->psp;		\       (FS)->curr.reg[UNW_REG_RP].when = -1;				\ 									\       goto SUCCESS;							\     }
 end_define
 

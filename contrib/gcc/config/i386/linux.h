@@ -202,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -Dlinux -Asystem=posix"
+value|"-D__ELF__ -Dunix -D__gnu_linux__ -Dlinux -Asystem=posix"
 end_define
 
 begin_undef

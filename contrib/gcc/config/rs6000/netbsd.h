@@ -153,5 +153,22 @@ name|DRAFT_V4_STRUCT_RET
 value|1
 end_define
 
+begin_comment
+comment|/* Use STABS debugging information by default.  DWARF2 makes a mess of    the 1.5.2 linker.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_DEBUGGING_TYPE
+value|DBX_DEBUG
+end_define
+
 end_unit
 

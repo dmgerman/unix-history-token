@@ -846,9 +846,6 @@ break|break;
 case|case
 name|MATCH_DUP
 case|:
-case|case
-name|MATCH_PAR_DUP
-case|:
 name|duplocs
 index|[
 name|dup_count
@@ -875,6 +872,9 @@ name|dup_count
 operator|++
 expr_stmt|;
 break|break;
+case|case
+name|MATCH_PAR_DUP
+case|:
 case|case
 name|MATCH_OP_DUP
 case|:
@@ -958,7 +958,15 @@ index|[
 name|depth
 index|]
 operator|=
+operator|(
+name|code
+operator|==
+name|MATCH_OP_DUP
+condition|?
 literal|'0'
+else|:
+literal|'a'
+operator|)
 operator|+
 name|i
 expr_stmt|;

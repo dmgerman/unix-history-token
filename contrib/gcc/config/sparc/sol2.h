@@ -1,11 +1,41 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for SPARC running Solaris 2    Copyright 1992, 1995, 1996, 1997, 1998, 1999, 2000,    2001 Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@netcom.com).    Additional changes by David V. Henkel-Wallace (gumby@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for SPARC running Solaris 2    Copyright 1992, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@netcom.com).    Additional changes by David V. Henkel-Wallace (gumby@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
 comment|/* Supposedly the same as vanilla sparc svr4, except for the stuff below: */
 end_comment
+
+begin_comment
+comment|/* Solaris 2 (at least as of 2.5.1) uses a 32-bit wchar_t.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WCHAR_TYPE
+value|"long int"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_TYPE_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WCHAR_TYPE_SIZE
+value|32
+end_define
 
 begin_comment
 comment|/* Solaris 2 uses a wint_t different from the default. This is required    by the SCD 2.4.1, p. 6-83, Figure 6-66.  */
@@ -34,7 +64,14 @@ begin_define
 define|#
 directive|define
 name|WINT_TYPE_SIZE
-value|BITS_PER_WORD
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|HANDLE_PRAGMA_REDEFINE_EXTNAME
+value|1
 end_define
 
 begin_undef
@@ -48,7 +85,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-Dsparc -Dsun -Dunix -D__svr4__ -D__SVR4 \ -Asystem=unix -Asystem=svr4"
+value|"-Dsparc -Dsun -Dunix -D__svr4__ -D__SVR4 -D__PRAGMA_REDEFINE_EXTNAME \ -Asystem=unix -Asystem=svr4"
 end_define
 
 begin_undef
@@ -165,15 +202,15 @@ begin_comment
 comment|/* However it appears that Solaris 2.0 uses the same reg numbering as    the old BSD-style system did.  */
 end_comment
 
+begin_comment
+comment|/* Same as sparc.h */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|DBX_REGISTER_NUMBER
 end_undef
-
-begin_comment
-comment|/* Same as sparc.h */
-end_comment
 
 begin_define
 define|#
@@ -183,11 +220,11 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|(TARGET_FLAT&& REGNO == FRAME_POINTER_REGNUM ? 31 : REGNO)
+value|(TARGET_FLAT&& (REGNO) == HARD_FRAME_POINTER_REGNUM ? 31 : REGNO)
 end_define
 
 begin_comment
-comment|/* We use stabs-in-elf for debugging, because that is what the native    toolchain uses.  */
+comment|/* We use stabs-in-elf by default, because that is what the native    toolchain uses.  */
 end_comment
 
 begin_undef
@@ -224,6 +261,19 @@ name|SIZE
 parameter_list|)
 define|\
 value|fprintf (FILE, "\t.skip %u\n", (SIZE))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LOCAL_LABEL_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL_PREFIX
+value|"."
 end_define
 
 begin_comment
@@ -349,7 +399,8 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"crtend.o%s crtn.o%s"
+define|\
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    crtend.o%s crtn.o%s"
 end_define
 
 begin_comment
@@ -518,7 +569,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|(MASK_EPILOGUE + MASK_FPU + MASK_V8PLUS + MASK_LONG_DOUBLE_128)
+value|(MASK_FPU + MASK_V8PLUS + MASK_LONG_DOUBLE_128)
 end_define
 
 begin_escape
@@ -532,11 +583,19 @@ begin_comment
 comment|/* This declares mprotect (used in TRANSFER_FROM_TRAMPOLINE) for    libgcc2.c.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|L_trampoline
-end_ifdef
+begin_comment
+comment|/* We don't want to include this because sys/mman.h is not present on    some non-Solaris configurations that use sol2.h.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* def L_trampoline */
+end_comment
 
 begin_include
 include|#

@@ -171,7 +171,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"\ -D__ia64 -D__ia64__ -D_AIX -D_AIX64 -D_LONGLONG -Dunix \ -D__LP64__ -D__ELF__ -Asystem=unix -Asystem=aix -Acpu=ia64 -Amachine=ia64 \ -D__64BIT__ -D_LONG_LONG -D_IA64 -D__int128=__size128_t"
+value|"\   -D_AIX -D_AIX64 -D_LONGLONG -Dunix \   -Asystem=unix -Asystem=aix \   -D__64BIT__ -D_LONG_LONG -D_IA64 -D__int128=__size128_t"
 end_define
 
 begin_comment
@@ -190,23 +190,6 @@ directive|define
 name|CPLUSPLUS_CPP_SPEC
 define|\
 value|"-D_XOPEN_SOURCE=500                          \    -D_XOPEN_SOURCE_EXTENDED=1                   \    -D_LARGE_FILE_API                            \    -D_ALL_SOURCE                                \    -D__LONG_MAX__=9223372036854775807L          \    %{cpp_cpu}"
-end_define
-
-begin_comment
-comment|/* ia64-specific options for gas */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|"-x %{mconstant-gp} %{mauto-pic}"
 end_define
 
 begin_comment
@@ -229,31 +212,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DONT_USE_BUILTIN_SETJMP
-end_define
-
-begin_define
-define|#
-directive|define
 name|JMP_BUF_SIZE
 value|85
-end_define
-
-begin_comment
-comment|/* Output any profiling code before the prologue.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PROFILE_BEFORE_PROLOGUE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PROFILE_BEFORE_PROLOGUE
-value|1
 end_define
 
 begin_comment

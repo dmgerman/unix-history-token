@@ -159,7 +159,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|(TARGET_FLAT&& REGNO == FRAME_POINTER_REGNUM ? 31 : REGNO)
+value|(TARGET_FLAT&& (REGNO) == HARD_FRAME_POINTER_REGNUM ? 31 : REGNO)
 end_define
 
 end_unit

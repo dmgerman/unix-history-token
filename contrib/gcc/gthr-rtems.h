@@ -8,7 +8,7 @@ comment|/* Compile this one with gcc.  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -27,63 +27,47 @@ directive|define
 name|GCC_GTHR_RTEMS_H
 end_define
 
-begin_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 define|#
 directive|define
 name|__GTHREADS
 value|1
-end_define
-
-begin_define
 define|#
 directive|define
 name|__GTHREAD_ONCE_INIT
 value|0
-end_define
-
-begin_define
 define|#
 directive|define
 name|__GTHREAD_MUTEX_INIT_FUNCTION
 value|rtems_gxx_mutex_init
-end_define
-
-begin_comment
 comment|/* avoid depedency on rtems specific headers */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|void
 modifier|*
 name|__gthread_key_t
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|int
 name|__gthread_once_t
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|void
 modifier|*
 name|__gthread_mutex_t
 typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * External functions provided by RTEMS. They are very similar to their POSIX   * counterparts. A "Wrapper API" is being use to avoid dependency on any RTEMS  * header files.  */
-end_comment
-
-begin_comment
 comment|/* generic per task variables */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|int
 name|rtems_gxx_once
@@ -97,12 +81,11 @@ function_decl|(
 modifier|*
 name|func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|rtems_gxx_key_create
@@ -122,9 +105,6 @@ modifier|*
 parameter_list|)
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|rtems_gxx_key_dtor
@@ -137,9 +117,6 @@ modifier|*
 name|ptr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|rtems_gxx_key_delete
@@ -148,9 +125,6 @@ name|__gthread_key_t
 name|key
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|void
 modifier|*
@@ -160,9 +134,6 @@ name|__gthread_key_t
 name|key
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|rtems_gxx_setspecific
@@ -176,13 +147,7 @@ modifier|*
 name|ptr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* mutex support */
-end_comment
-
-begin_function_decl
 specifier|extern
 name|void
 name|rtems_gxx_mutex_init
@@ -192,9 +157,6 @@ modifier|*
 name|mutex
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|rtems_gxx_mutex_lock
@@ -204,9 +166,6 @@ modifier|*
 name|mutex
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|rtems_gxx_mutex_trylock
@@ -216,9 +175,6 @@ modifier|*
 name|mutex
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|rtems_gxx_mutex_unlock
@@ -228,13 +184,7 @@ modifier|*
 name|mutex
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* RTEMS threading is always active */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -247,13 +197,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/* Wrapper calls */
-end_comment
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -268,7 +212,9 @@ function_decl|(
 modifier|*
 name|func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 parameter_list|)
 block|{
 return|return
@@ -280,9 +226,6 @@ name|func
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -312,9 +255,6 @@ name|dtor
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -337,9 +277,6 @@ name|ptr
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -356,9 +293,6 @@ name|key
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|void
@@ -376,9 +310,6 @@ name|key
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -402,9 +333,6 @@ name|ptr
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -422,9 +350,6 @@ name|mutex
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -442,9 +367,6 @@ name|mutex
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 specifier|inline
 name|int
@@ -462,7 +384,16 @@ name|mutex
 argument_list|)
 return|;
 block|}
-end_function
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

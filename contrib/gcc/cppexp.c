@@ -1472,12 +1472,26 @@ name|unsigned
 name|int
 name|chars_seen
 decl_stmt|;
-comment|/* This is always a signed type.  */
+if|if
+condition|(
+name|token
+operator|->
+name|type
+operator|==
+name|CPP_CHAR
+condition|)
 name|op
 operator|.
 name|unsignedp
 operator|=
 literal|0
+expr_stmt|;
+else|else
+name|op
+operator|.
+name|unsignedp
+operator|=
+name|WCHAR_UNSIGNED
 expr_stmt|;
 name|op
 operator|.

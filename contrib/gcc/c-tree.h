@@ -354,6 +354,20 @@ value|DECL_LANG_FLAG_1 (EXP)
 end_define
 
 begin_comment
+comment|/* For a FUNCTION_DECL, nonzero if it was defined without an explicit    return type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_FUNCTION_IMPLICIT_INT
+parameter_list|(
+name|EXP
+parameter_list|)
+value|DECL_LANG_FLAG_1 (EXP)
+end_define
+
+begin_comment
 comment|/* Nonzero for a declaration of a built in function if there has been no    occasion that would declare the function in ordinary C.    Using the function draws a pedantic warning in this case.  */
 end_comment
 
@@ -780,6 +794,8 @@ name|finish_function
 name|PARAMS
 argument_list|(
 operator|(
+name|int
+operator|,
 name|int
 operator|)
 argument_list|)
@@ -1868,6 +1884,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|tree
+name|c_convert_parm_for_inlining
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Set to 0 at beginning of a function definition, set to 1 if    a return statement that specifies a return value is seen.  */
 end_comment
@@ -1887,6 +1920,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|current_function_returns_null
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set to 0 at beginning of a function definition, set to 1 if    a call to a noreturn function is seen.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|current_function_returns_abnormally
 decl_stmt|;
 end_decl_stmt
 

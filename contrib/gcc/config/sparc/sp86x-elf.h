@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|(MASK_APP_REGS + MASK_EPILOGUE)
+value|MASK_APP_REGS
 end_define
 
 begin_undef

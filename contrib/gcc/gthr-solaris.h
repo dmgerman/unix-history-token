@@ -256,21 +256,6 @@ begin_comment
 comment|/* This will not actually work in Solaris 2.5, since libc contains    dummy symbols of all thr_* routines.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|__gthread_active_ptr
-init|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|thr_create
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 specifier|inline
@@ -280,6 +265,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+name|void
+modifier|*
+specifier|const
+name|__gthread_active_ptr
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|thr_create
+decl_stmt|;
 return|return
 name|__gthread_active_ptr
 operator|!=

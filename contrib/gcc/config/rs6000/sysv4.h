@@ -405,7 +405,7 @@ define|#
 directive|define
 name|SUBTARGET_OVERRIDE_OPTIONS
 define|\
-value|do {									\   if (!g_switch_set)							\     g_switch_value = SDATA_DEFAULT_SIZE;				\ 									\   if (!strcmp (rs6000_abi_name, "sysv"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "sysv-noeabi"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags&= ~ MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "sysv-eabi")			\ 	   || !strcmp (rs6000_abi_name, "eabi"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags |= MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "aix"))				\     {									\       rs6000_current_abi = ABI_AIX_NODESC;				\       target_flags |= MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "aixdesc"))			\     rs6000_current_abi = ABI_AIX;					\   else if (!strcmp (rs6000_abi_name, "freebsd"))			\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "linux"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "netbsd"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "i960-old"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags |= (MASK_LITTLE_ENDIAN | MASK_EABI			\ 		       | MASK_NO_BITFIELD_WORD);			\       target_flags&= ~MASK_STRICT_ALIGN;				\     }									\   else									\     {									\       rs6000_current_abi = ABI_V4;					\       error ("bad value for -mcall-%s", rs6000_abi_name);		\     }									\ 									\   if (rs6000_sdata_name)						\     {									\       if (!strcmp (rs6000_sdata_name, "none"))				\ 	rs6000_sdata = SDATA_NONE;					\       else if (!strcmp (rs6000_sdata_name, "data"))			\ 	rs6000_sdata = SDATA_DATA;					\       else if (!strcmp (rs6000_sdata_name, "default"))			\ 	rs6000_sdata = (TARGET_EABI) ? SDATA_EABI : SDATA_SYSV;		\       else if (!strcmp (rs6000_sdata_name, "sysv"))			\ 	rs6000_sdata = SDATA_SYSV;					\       else if (!strcmp (rs6000_sdata_name, "eabi"))			\ 	rs6000_sdata = SDATA_EABI;					\       else								\ 	error ("bad value for -msdata=%s", rs6000_sdata_name);		\     }									\   else if (DEFAULT_ABI == ABI_V4)					\     {									\       rs6000_sdata = SDATA_DATA;					\       rs6000_sdata_name = "data";					\     }									\   else									\     {									\       rs6000_sdata = SDATA_NONE;					\       rs6000_sdata_name = "none";					\     }									\ 									\   if (TARGET_RELOCATABLE&&						\       (rs6000_sdata == SDATA_EABI || rs6000_sdata == SDATA_SYSV))	\     {									\       rs6000_sdata = SDATA_DATA;					\       error ("-mrelocatable and -msdata=%s are incompatible",		\ 	     rs6000_sdata_name);					\     }									\ 									\   else if (flag_pic&&							\ 	   (rs6000_sdata == SDATA_EABI || rs6000_sdata == SDATA_SYSV))	\     {									\       rs6000_sdata = SDATA_DATA;					\       error ("-f%s and -msdata=%s are incompatible",			\ 	     (flag_pic> 1) ? "PIC" : "pic",				\ 	     rs6000_sdata_name);					\     }									\ 									\   if (rs6000_sdata != SDATA_NONE&& DEFAULT_ABI != ABI_V4)		\     {									\       rs6000_sdata = SDATA_NONE;					\       error ("-msdata=%s and -mcall-%s are incompatible",		\ 	     rs6000_sdata_name, rs6000_abi_name);			\     }									\ 									\   if (TARGET_RELOCATABLE&& !TARGET_MINIMAL_TOC)			\     {									\       target_flags |= MASK_MINIMAL_TOC;					\       error ("-mrelocatable and -mno-minimal-toc are incompatible");	\     }									\ 									\   if (TARGET_RELOCATABLE&& rs6000_current_abi == ABI_AIX)		\     {									\       target_flags&= ~MASK_RELOCATABLE;				\       error ("-mrelocatable and -mcall-%s are incompatible",		\ 	     rs6000_abi_name);						\     }									\ 									\   if (flag_pic> 1&& rs6000_current_abi == ABI_AIX)			\     {									\       flag_pic = 0;							\       error ("-fPIC and -mcall-%s are incompatible",			\ 	     rs6000_abi_name);						\     }									\ 									\   if (rs6000_current_abi == ABI_AIX&& TARGET_LITTLE_ENDIAN)		\     {									\       target_flags&= ~MASK_LITTLE_ENDIAN;				\       error ("-mcall-aixdesc must be big endian");			\     }									\ 									\
+value|do {									\   if (!g_switch_set)							\     g_switch_value = SDATA_DEFAULT_SIZE;				\ 									\   if (!strcmp (rs6000_abi_name, "sysv"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "sysv-noeabi"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags&= ~ MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "sysv-eabi")			\ 	   || !strcmp (rs6000_abi_name, "eabi"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags |= MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "aix"))				\     {									\       rs6000_current_abi = ABI_AIX_NODESC;				\       target_flags |= MASK_EABI;					\     }									\   else if (!strcmp (rs6000_abi_name, "aixdesc"))			\     rs6000_current_abi = ABI_AIX;					\   else if (!strcmp (rs6000_abi_name, "freebsd"))			\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "linux"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "gnu"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "netbsd"))				\     rs6000_current_abi = ABI_V4;					\   else if (!strcmp (rs6000_abi_name, "i960-old"))			\     {									\       rs6000_current_abi = ABI_V4;					\       target_flags |= (MASK_LITTLE_ENDIAN | MASK_EABI			\ 		       | MASK_NO_BITFIELD_WORD);			\       target_flags&= ~MASK_STRICT_ALIGN;				\     }									\   else									\     {									\       rs6000_current_abi = ABI_V4;					\       error ("bad value for -mcall-%s", rs6000_abi_name);		\     }									\ 									\   if (rs6000_sdata_name)						\     {									\       if (!strcmp (rs6000_sdata_name, "none"))				\ 	rs6000_sdata = SDATA_NONE;					\       else if (!strcmp (rs6000_sdata_name, "data"))			\ 	rs6000_sdata = SDATA_DATA;					\       else if (!strcmp (rs6000_sdata_name, "default"))			\ 	rs6000_sdata = (TARGET_EABI) ? SDATA_EABI : SDATA_SYSV;		\       else if (!strcmp (rs6000_sdata_name, "sysv"))			\ 	rs6000_sdata = SDATA_SYSV;					\       else if (!strcmp (rs6000_sdata_name, "eabi"))			\ 	rs6000_sdata = SDATA_EABI;					\       else								\ 	error ("bad value for -msdata=%s", rs6000_sdata_name);		\     }									\   else if (DEFAULT_ABI == ABI_V4)					\     {									\       rs6000_sdata = SDATA_DATA;					\       rs6000_sdata_name = "data";					\     }									\   else									\     {									\       rs6000_sdata = SDATA_NONE;					\       rs6000_sdata_name = "none";					\     }									\ 									\   if (TARGET_RELOCATABLE&&						\       (rs6000_sdata == SDATA_EABI || rs6000_sdata == SDATA_SYSV))	\     {									\       rs6000_sdata = SDATA_DATA;					\       error ("-mrelocatable and -msdata=%s are incompatible",		\ 	     rs6000_sdata_name);					\     }									\ 									\   else if (flag_pic&&							\ 	   (rs6000_sdata == SDATA_EABI || rs6000_sdata == SDATA_SYSV))	\     {									\       rs6000_sdata = SDATA_DATA;					\       error ("-f%s and -msdata=%s are incompatible",			\ 	     (flag_pic> 1) ? "PIC" : "pic",				\ 	     rs6000_sdata_name);					\     }									\ 									\   if (rs6000_sdata != SDATA_NONE&& DEFAULT_ABI != ABI_V4)		\     {									\       rs6000_sdata = SDATA_NONE;					\       error ("-msdata=%s and -mcall-%s are incompatible",		\ 	     rs6000_sdata_name, rs6000_abi_name);			\     }									\ 									\   if (TARGET_RELOCATABLE&& !TARGET_MINIMAL_TOC)			\     {									\       target_flags |= MASK_MINIMAL_TOC;					\       error ("-mrelocatable and -mno-minimal-toc are incompatible");	\     }									\ 									\   if (TARGET_RELOCATABLE&& rs6000_current_abi == ABI_AIX)		\     {									\       target_flags&= ~MASK_RELOCATABLE;				\       error ("-mrelocatable and -mcall-%s are incompatible",		\ 	     rs6000_abi_name);						\     }									\ 									\   if (flag_pic> 1&& rs6000_current_abi == ABI_AIX)			\     {									\       flag_pic = 0;							\       error ("-fPIC and -mcall-%s are incompatible",			\ 	     rs6000_abi_name);						\     }									\ 									\   if (rs6000_current_abi == ABI_AIX&& TARGET_LITTLE_ENDIAN)		\     {									\       target_flags&= ~MASK_LITTLE_ENDIAN;				\       error ("-mcall-aixdesc must be big endian");			\     }									\ 									\
 comment|/* Treat -fPIC the same as -mrelocatable.  */
 value|\   if (flag_pic> 1)							\     target_flags |= MASK_RELOCATABLE | MASK_MINIMAL_TOC | MASK_NO_FP_IN_TOC; \ 									\   else if (TARGET_RELOCATABLE)						\     flag_pic = 2;							\ 									\ } while (0)
 end_define
@@ -764,7 +764,7 @@ begin_define
 define|#
 directive|define
 name|BIGGEST_ALIGNMENT
-value|(TARGET_EABI ? 64 : 128)
+value|((TARGET_EABI&& !TARGET_ALTIVEC) ? 64 : 128)
 end_define
 
 begin_comment
@@ -800,7 +800,7 @@ parameter_list|,
 name|SPECIFIED
 parameter_list|)
 define|\
-value|((TARGET_ALTIVEC&& TREE_CODE (TYPE) == VECTOR_TYPE)	        \ 	 ? 128 : MAX (COMPUTED, SPECIFIED))
+value|((TARGET_ALTIVEC&& TREE_CODE (TYPE) == VECTOR_TYPE)	        \ 	 ? MAX (MAX ((COMPUTED), (SPECIFIED)), 128)                     \          : MAX (COMPUTED, SPECIFIED))
 end_define
 
 begin_undef
@@ -1559,7 +1559,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"%(asm_cpu) \ %{.s: %{mregnames} %{mno-regnames}} %{.S: %{mregnames} %{mno-regnames}} \ %{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*} \ %{mrelocatable} %{mrelocatable-lib} %{fpic:-K PIC} %{fPIC:-K PIC} \ %{memb} %{!memb: %{msdata: -memb} %{msdata=eabi: -memb}} \ %{mlittle} %{mlittle-endian} %{mbig} %{mbig-endian} \ %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian: \     %{mcall-freebsd: -mbig} \     %{mcall-i960-old: -mlittle} \     %{mcall-linux: -mbig} \     %{mcall-netbsd: -mbig} \ }}}}"
+value|"%(asm_cpu) \ %{.s: %{mregnames} %{mno-regnames}} %{.S: %{mregnames} %{mno-regnames}} \ %{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*} \ %{mrelocatable} %{mrelocatable-lib} %{fpic:-K PIC} %{fPIC:-K PIC} \ %{memb} %{!memb: %{msdata: -memb} %{msdata=eabi: -memb}} \ %{mlittle} %{mlittle-endian} %{mbig} %{mbig-endian} \ %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian: \     %{mcall-freebsd: -mbig} \     %{mcall-i960-old: -mlittle} \     %{mcall-linux: -mbig} \     %{mcall-gnu: -mbig} \     %{mcall-netbsd: -mbig} \ }}}}"
 end_define
 
 begin_define
@@ -1580,7 +1580,7 @@ begin_define
 define|#
 directive|define
 name|CC1_ENDIAN_DEFAULT_SPEC
-value|"%(cc1_endian_big_spec)"
+value|"%(cc1_endian_big)"
 end_define
 
 begin_comment
@@ -1591,7 +1591,7 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"%{G*} \ %{mlittle: %(cc1_endian_little)} %{!mlittle: %{mlittle-endian: %(cc1_endian_little)}} \ %{mbig: %(cc1_endian_big)} %{!mbig: %{mbig-endian: %(cc1_endian_big)}} \ %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian: \     %{mcall-aixdesc: -mbig %(cc1_endian_big) } \     %{mcall-freebsd: -mbig %(cc1_endian_big) } \     %{mcall-i960-old: -mlittle %(cc1_endian_little) } \     %{mcall-linux: -mbig %(cc1_endian_big) } \     %{mcall-netbsd: -mbig %(cc1_endian_big) } \     %{!mcall-aixdesc: %{!mcall-freebsd: %{!mcall-i960-old: %{!mcall-linux: %{!mcall-netbsd: \ 	    %(cc1_endian_default) \     }}}}} \ }}}} \ %{mno-sdata: -msdata=none } \ %{meabi: %{!mcall-*: -mcall-sysv }} \ %{!meabi: %{!mno-eabi: \     %{mrelocatable: -meabi } \     %{mcall-freebsd: -mno-eabi } \     %{mcall-i960-old: -meabi } \     %{mcall-linux: -mno-eabi } \     %{mcall-netbsd: -mno-eabi }}} \ %{msdata: -msdata=default} \ %{mno-sdata: -msdata=none} \ %{profile: -p}"
+value|"%{G*} \ %{mlittle: %(cc1_endian_little)} %{!mlittle: %{mlittle-endian: %(cc1_endian_little)}} \ %{mbig: %(cc1_endian_big)} %{!mbig: %{mbig-endian: %(cc1_endian_big)}} \ %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian: \     %{mcall-aixdesc: -mbig %(cc1_endian_big) } \     %{mcall-freebsd: -mbig %(cc1_endian_big) } \     %{mcall-i960-old: -mlittle %(cc1_endian_little) } \     %{mcall-linux: -mbig %(cc1_endian_big) } \     %{mcall-gnu: -mbig %(cc1_endian_big) } \     %{mcall-netbsd: -mbig %(cc1_endian_big) } \     %{!mcall-aixdesc: %{!mcall-freebsd: %{!mcall-i960-old: %{!mcall-linux: %{!mcall-gnu: %{!mcall-netbsd: \ 	    %(cc1_endian_default) \     }}}}}} \ }}}} \ %{mno-sdata: -msdata=none } \ %{meabi: %{!mcall-*: -mcall-sysv }} \ %{!meabi: %{!mno-eabi: \     %{mrelocatable: -meabi } \     %{mcall-freebsd: -mno-eabi } \     %{mcall-i960-old: -meabi } \     %{mcall-linux: -mno-eabi } \     %{mcall-gnu: -mno-eabi } \     %{mcall-netbsd: -mno-eabi }}} \ %{msdata: -msdata=default} \ %{mno-sdata: -msdata=none} \ %{profile: -p}"
 end_define
 
 begin_comment
@@ -1636,7 +1636,7 @@ begin_define
 define|#
 directive|define
 name|LINK_START_SPEC
-value|"\ %{mads: %(link_start_ads) } \ %{myellowknife: %(link_start_yellowknife) } \ %{mmvme: %(link_start_mvme) } \ %{msim: %(link_start_sim) } \ %{mcall-freebsd: %(link_start_freebsd) } \ %{mcall-linux: %(link_start_linux) } \ %{mcall-netbsd: %(link_start_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-linux: \ 	%{!mcall-netbsd: %{!mcall-freebsd: %(link_start_default) }}}}}}}"
+value|"\ %{mads: %(link_start_ads) } \ %{myellowknife: %(link_start_yellowknife) } \ %{mmvme: %(link_start_mvme) } \ %{msim: %(link_start_sim) } \ %{mcall-freebsd: %(link_start_freebsd) } \ %{mcall-linux: %(link_start_linux) } \ %{mcall-gnu: %(link_start_gnu) } \ %{mcall-netbsd: %(link_start_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-linux: %{!mcall-gnu: \ 	%{!mcall-netbsd: %{!mcall-freebsd: %(link_start_default) }}}}}}}}"
 end_define
 
 begin_define
@@ -1741,7 +1741,7 @@ begin_define
 define|#
 directive|define
 name|LINK_OS_SPEC
-value|"\ %{mads: %(link_os_ads) } \ %{myellowknife: %(link_os_yellowknife) } \ %{mmvme: %(link_os_mvme) } \ %{msim: %(link_os_sim) } \ %{mcall-freebsd: %(link_os_freebsd) } \ %{mcall-linux: %(link_os_linux) } \ %{mcall-netbsd: %(link_os_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-netbsd: %(link_os_default) }}}}}}}"
+value|"\ %{mads: %(link_os_ads) } \ %{myellowknife: %(link_os_yellowknife) } \ %{mmvme: %(link_os_mvme) } \ %{msim: %(link_os_sim) } \ %{mcall-freebsd: %(link_os_freebsd) } \ %{mcall-linux: %(link_os_linux) } \ %{mcall-gnu: %(link_os_gnu) } \ %{mcall-netbsd: %(link_os_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-gnu: %{!mcall-netbsd: %(link_os_default) }}}}}}}}"
 end_define
 
 begin_define
@@ -1807,7 +1807,7 @@ define|#
 directive|define
 name|CPP_ENDIAN_SPEC
 define|\
-value|"%{mlittle: %(cpp_endian_little) } \ %{mlittle-endian: %(cpp_endian_little) } \ %{mbig: %(cpp_endian_big) } \ %{mbig-endian: %(cpp_endian_big) } \ %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian: \     %{mcall-freebsd: %(cpp_endian_big) } \     %{mcall-linux: %(cpp_endian_big) } \     %{mcall-netbsd: %(cpp_endian_big) } \     %{mcall-i960-old: %(cpp_endian_little) } \     %{mcall-aixdesc:  %(cpp_endian_big) } \     %{!mcall-linux: %{!mcall-freebsd: %{!mcall-netbsd: %{!mcall-aixdesc: %(cpp_endian_default) }}}}}}}}"
+value|"%{mlittle: %(cpp_endian_little) } \ %{mlittle-endian: %(cpp_endian_little) } \ %{mbig: %(cpp_endian_big) } \ %{mbig-endian: %(cpp_endian_big) } \ %{!mlittle: %{!mlittle-endian: %{!mbig: %{!mbig-endian: \     %{mcall-freebsd: %(cpp_endian_big) } \     %{mcall-linux: %(cpp_endian_big) } \     %{mcall-gnu: %(cpp_endian_big) } \     %{mcall-netbsd: %(cpp_endian_big) } \     %{mcall-i960-old: %(cpp_endian_little) } \     %{mcall-aixdesc:  %(cpp_endian_big) } \     %{!mcall-linux: %{!mcall-gnu: %{!mcall-freebsd: %{!mcall-netbsd: %{!mcall-aixdesc: %(cpp_endian_default) }}}}}}}}}"
 end_define
 
 begin_define
@@ -1831,7 +1831,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{posix: -D_POSIX_SOURCE} %(cpp_sysv) %(cpp_endian) %(cpp_cpu) \ %{mads: %(cpp_os_ads) } \ %{myellowknife: %(cpp_os_yellowknife) } \ %{mmvme: %(cpp_os_mvme) } \ %{msim: %(cpp_os_sim) } \ %{mcall-freebsd: %(cpp_os_freebsd) } \ %{mcall-linux: %(cpp_os_linux) } \ %{mcall-netbsd: %(cpp_os_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-netbsd: %(cpp_os_default) }}}}}}}"
+value|"%{posix: -D_POSIX_SOURCE} %(cpp_sysv) %(cpp_endian) %(cpp_cpu) \ %{mads: %(cpp_os_ads) } \ %{myellowknife: %(cpp_os_yellowknife) } \ %{mmvme: %(cpp_os_mvme) } \ %{msim: %(cpp_os_sim) } \ %{mcall-freebsd: %(cpp_os_freebsd) } \ %{mcall-linux: %(cpp_os_linux) } \ %{mcall-gnu: %(cpp_os_gnu) } \ %{mcall-netbsd: %(cpp_os_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-gnu: %{!mcall-netbsd: %(cpp_os_default) }}}}}}}}"
 end_define
 
 begin_define
@@ -1855,7 +1855,7 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"\ %{mads: %(startfile_ads) } \ %{myellowknife: %(startfile_yellowknife) } \ %{mmvme: %(startfile_mvme) } \ %{msim: %(startfile_sim) } \ %{mcall-freebsd: %(startfile_freebsd) } \ %{mcall-linux: %(startfile_linux) } \ %{mcall-netbsd: %(startfile_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-netbsd: %(startfile_default) }}}}}}}"
+value|"\ %{mads: %(startfile_ads) } \ %{myellowknife: %(startfile_yellowknife) } \ %{mmvme: %(startfile_mvme) } \ %{msim: %(startfile_sim) } \ %{mcall-freebsd: %(startfile_freebsd) } \ %{mcall-linux: %(startfile_linux) } \ %{mcall-gnu: %(startfile_gnu) } \ %{mcall-netbsd: %(startfile_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-gnu: %{!mcall-netbsd: %(startfile_default) }}}}}}}}"
 end_define
 
 begin_define
@@ -1879,7 +1879,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"\ %{mads: %(lib_ads) } \ %{myellowknife: %(lib_yellowknife) } \ %{mmvme: %(lib_mvme) } \ %{msim: %(lib_sim) } \ %{mcall-freebsd: %(lib_freebsd) } \ %{mcall-linux: %(lib_linux) } \ %{mcall-netbsd: %(lib_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-netbsd: %(lib_default) }}}}}}}"
+value|"\ %{mads: %(lib_ads) } \ %{myellowknife: %(lib_yellowknife) } \ %{mmvme: %(lib_mvme) } \ %{msim: %(lib_sim) } \ %{mcall-freebsd: %(lib_freebsd) } \ %{mcall-linux: %(lib_linux) } \ %{mcall-gnu: %(lib_gnu) } \ %{mcall-netbsd: %(lib_netbsd) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-gnu: %{!mcall-netbsd: %(lib_default) }}}}}}}}"
 end_define
 
 begin_define
@@ -1903,7 +1903,7 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"\ %{mads: %(endfile_ads)} \ %{myellowknife: %(endfile_yellowknife)} \ %{mmvme: %(endfile_mvme)} \ %{msim: %(endfile_sim)} \ %{mcall-freebsd: %(endfile_freebsd) } \ %{mcall-linux: %(endfile_linux) } \ %{mcall-netbsd: %(endfile_netbsd) } \ %{mvxworks: %(endfile_vxworks) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-netbsd: %{!mvxworks: %(endfile_default) }}}}}}}}"
+value|"crtsavres.o%s \ %{mads: %(endfile_ads)} \ %{myellowknife: %(endfile_yellowknife)} \ %{mmvme: %(endfile_mvme)} \ %{msim: %(endfile_sim)} \ %{mcall-freebsd: %(endfile_freebsd) } \ %{mcall-linux: %(endfile_linux) } \ %{mcall-gnu: %(endfile_gnu) } \ %{mcall-netbsd: %(endfile_netbsd) } \ %{mvxworks: %(endfile_vxworks) } \ %{!mads: %{!myellowknife: %{!mmvme: %{!msim: %{!mcall-freebsd: %{!mcall-linux: %{!mcall-gnu: %{!mcall-netbsd: %{!mvxworks: %(endfile_default) }}}}}}}}}"
 end_define
 
 begin_define
@@ -2177,12 +2177,35 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_GNULIBC_1
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|STARTFILE_LINUX_SPEC
 value|"\ %{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \ %{mnewlib: ecrti.o%s} %{!mnewlib: crti.o%s} \ %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_LINUX_SPEC
+value|"\ %{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \ %{mnewlib: ecrti.o%s} %{!mnewlib: crti.o%s} \ %{static:crtbeginT.o%s} \ %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2205,6 +2228,33 @@ name|LINK_OS_LINUX_SPEC
 value|"-m elf32ppclinux %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib/ld.so.1}}}"
 end_define
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|USE_GNULIBC_1
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LD_EH_FRAME_HDR
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LINK_EH_SPEC
+value|"%{!static:--eh-frame-hdr} "
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2215,7 +2265,7 @@ begin_define
 define|#
 directive|define
 name|CPP_OS_LINUX_SPEC
-value|"-D__unix__ -D__linux__		\ %{!undef:							\   %{!ansi:							\     %{!std=*:-Dunix -D__unix -Dlinux -D__linux}			\     %{std=gnu*:-Dunix -D__unix -Dlinux -D__linux}}}		\ -Asystem=unix -Asystem=posix"
+value|"-D__unix__ -D__gnu_linux__ -D__linux__ \ %{!undef:							  \   %{!ansi:							  \     %{!std=*:-Dunix -D__unix -Dlinux -D__linux}	                  \     %{std=gnu*:-Dunix -D__unix -Dlinux -D__linux}}}		  \ -Asystem=unix -Asystem=posix"
 end_define
 
 begin_else
@@ -2227,13 +2277,59 @@ begin_define
 define|#
 directive|define
 name|CPP_OS_LINUX_SPEC
-value|"-D__unix__ -D__linux__		\ %{!undef:							\   %{!ansi:							\     %{!std=*:-Dunix -D__unix -Dlinux -D__linux}			\     %{std=gnu*:-Dunix -D__unix -Dlinux -D__linux}}}		\ -Asystem=unix -Asystem=posix %{pthread:-D_REENTRANT}"
+value|"-D__unix__ -D__gnu_linux__ -D__linux__ \ %{!undef:							  \   %{!ansi:							  \     %{!std=*:-Dunix -D__unix -Dlinux -D__linux}			  \     %{std=gnu*:-Dunix -D__unix -Dlinux -D__linux}}}		  \ -Asystem=unix -Asystem=posix %{pthread:-D_REENTRANT}"
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* GNU/Hurd support.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LIB_GNU_SPEC
+value|"%{mnewlib: --start-group -lgnu -lc --end-group } \ %{!mnewlib: %{shared:-lc} %{!shared: %{pthread:-lpthread } \ %{profile:-lc_p} %{!profile:-lc}}}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_GNU_SPEC
+value|"\ %{!shared: %{!static: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}} \ %{static: %{pg:gcrt0.o%s} %{!pg:%{p:gcrt0.o%s} %{!p:crt0.o%s}}} \ %{mnewlib: ecrti.o%s} %{!mnewlib: crti.o%s} \ %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_GNU_SPEC
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} \ %{mnewlib: ecrtn.o%s} %{!mnewlib: crtn.o%s}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_START_GNU_SPEC
+value|""
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_OS_GNU_SPEC
+value|"-m elf32ppclinux %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib/ld.so.1}}}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_OS_GNU_SPEC
+value|"-D__unix__ -D__gnu_hurd__ -D__GNU__	\ %{!undef:					                \   %{!ansi: -Dunix -D__unix}}			                \ -Asystem=gnu -Asystem=unix -Asystem=posix %{pthread:-D_REENTRANT}"
+end_define
 
 begin_comment
 comment|/* NetBSD support.  */
@@ -2358,7 +2454,7 @@ define|#
 directive|define
 name|SUBTARGET_EXTRA_SPECS
 define|\
-value|{ "cpp_sysv",			CPP_SYSV_SPEC },			\   { "cpp_sysv_default",		CPP_SYSV_DEFAULT_SPEC },		\   { "cpp_endian_default",	CPP_ENDIAN_DEFAULT_SPEC },		\   { "cpp_endian",		CPP_ENDIAN_SPEC },			\   { "lib_ads",			LIB_ADS_SPEC },				\   { "lib_yellowknife",		LIB_YELLOWKNIFE_SPEC },			\   { "lib_mvme",			LIB_MVME_SPEC },			\   { "lib_sim",			LIB_SIM_SPEC },				\   { "lib_freebsd",		LIB_FREEBSD_SPEC },			\   { "lib_linux",		LIB_LINUX_SPEC },			\   { "lib_netbsd",		LIB_NETBSD_SPEC },			\   { "lib_vxworks",		LIB_VXWORKS_SPEC },			\   { "lib_default",		LIB_DEFAULT_SPEC },			\   { "startfile_ads",		STARTFILE_ADS_SPEC },			\   { "startfile_yellowknife",	STARTFILE_YELLOWKNIFE_SPEC },		\   { "startfile_mvme",		STARTFILE_MVME_SPEC },			\   { "startfile_sim",		STARTFILE_SIM_SPEC },			\   { "startfile_freebsd",	STARTFILE_FREEBSD_SPEC },		\   { "startfile_linux",		STARTFILE_LINUX_SPEC },			\   { "startfile_netbsd",		STARTFILE_NETBSD_SPEC },		\   { "startfile_vxworks",	STARTFILE_VXWORKS_SPEC },		\   { "startfile_default",	STARTFILE_DEFAULT_SPEC },		\   { "endfile_ads",		ENDFILE_ADS_SPEC },			\   { "endfile_yellowknife",	ENDFILE_YELLOWKNIFE_SPEC },		\   { "endfile_mvme",		ENDFILE_MVME_SPEC },			\   { "endfile_sim",		ENDFILE_SIM_SPEC },			\   { "endfile_freebsd",		ENDFILE_FREEBSD_SPEC },			\   { "endfile_linux",		ENDFILE_LINUX_SPEC },			\   { "endfile_netbsd",		ENDFILE_NETBSD_SPEC },			\   { "endfile_vxworks",		ENDFILE_VXWORKS_SPEC },			\   { "endfile_default",		ENDFILE_DEFAULT_SPEC },			\   { "link_path",		LINK_PATH_SPEC },			\   { "link_shlib",		LINK_SHLIB_SPEC },			\   { "link_target",		LINK_TARGET_SPEC },			\   { "link_start",		LINK_START_SPEC },			\   { "link_start_ads",		LINK_START_ADS_SPEC },			\   { "link_start_yellowknife",	LINK_START_YELLOWKNIFE_SPEC },		\   { "link_start_mvme",		LINK_START_MVME_SPEC },			\   { "link_start_sim",		LINK_START_SIM_SPEC },			\   { "link_start_freebsd",	LINK_START_FREEBSD_SPEC },		\   { "link_start_linux",		LINK_START_LINUX_SPEC },		\   { "link_start_netbsd",	LINK_START_NETBSD_SPEC },		\   { "link_start_vxworks",	LINK_START_VXWORKS_SPEC },		\   { "link_start_default",	LINK_START_DEFAULT_SPEC },		\   { "link_os",			LINK_OS_SPEC },				\   { "link_os_ads",		LINK_OS_ADS_SPEC },			\   { "link_os_yellowknife",	LINK_OS_YELLOWKNIFE_SPEC },		\   { "link_os_mvme",		LINK_OS_MVME_SPEC },			\   { "link_os_sim",		LINK_OS_SIM_SPEC },			\   { "link_os_freebsd",		LINK_OS_FREEBSD_SPEC },			\   { "link_os_linux",		LINK_OS_LINUX_SPEC },			\   { "link_os_netbsd",		LINK_OS_NETBSD_SPEC },			\   { "link_os_vxworks",		LINK_OS_VXWORKS_SPEC },			\   { "link_os_default",		LINK_OS_DEFAULT_SPEC },			\   { "cc1_endian_big",		CC1_ENDIAN_BIG_SPEC },			\   { "cc1_endian_little",	CC1_ENDIAN_LITTLE_SPEC },		\   { "cc1_endian_default",	CC1_ENDIAN_DEFAULT_SPEC },		\   { "cpp_endian_big",		CPP_ENDIAN_BIG_SPEC },			\   { "cpp_endian_little",	CPP_ENDIAN_LITTLE_SPEC },		\   { "cpp_float_default",	CPP_FLOAT_DEFAULT_SPEC },		\   { "cpp_longdouble_default",	CPP_LONGDOUBLE_DEFAULT_SPEC },		\   { "cpp_os_ads",		CPP_OS_ADS_SPEC },			\   { "cpp_os_yellowknife",	CPP_OS_YELLOWKNIFE_SPEC },		\   { "cpp_os_mvme",		CPP_OS_MVME_SPEC },			\   { "cpp_os_sim",		CPP_OS_SIM_SPEC },			\   { "cpp_os_freebsd",		CPP_OS_FREEBSD_SPEC },			\   { "cpp_os_linux",		CPP_OS_LINUX_SPEC },			\   { "cpp_os_netbsd",		CPP_OS_NETBSD_SPEC },			\   { "cpp_os_vxworks",		CPP_OS_VXWORKS_SPEC },			\   { "cpp_os_default",		CPP_OS_DEFAULT_SPEC },
+value|{ "cpp_sysv",			CPP_SYSV_SPEC },			\   { "cpp_sysv_default",		CPP_SYSV_DEFAULT_SPEC },		\   { "cpp_endian_default",	CPP_ENDIAN_DEFAULT_SPEC },		\   { "cpp_endian",		CPP_ENDIAN_SPEC },			\   { "lib_ads",			LIB_ADS_SPEC },				\   { "lib_yellowknife",		LIB_YELLOWKNIFE_SPEC },			\   { "lib_mvme",			LIB_MVME_SPEC },			\   { "lib_sim",			LIB_SIM_SPEC },				\   { "lib_freebsd",		LIB_FREEBSD_SPEC },			\   { "lib_gnu",			LIB_GNU_SPEC },				\   { "lib_linux",		LIB_LINUX_SPEC },			\   { "lib_netbsd",		LIB_NETBSD_SPEC },			\   { "lib_vxworks",		LIB_VXWORKS_SPEC },			\   { "lib_default",		LIB_DEFAULT_SPEC },			\   { "startfile_ads",		STARTFILE_ADS_SPEC },			\   { "startfile_yellowknife",	STARTFILE_YELLOWKNIFE_SPEC },		\   { "startfile_mvme",		STARTFILE_MVME_SPEC },			\   { "startfile_sim",		STARTFILE_SIM_SPEC },			\   { "startfile_freebsd",	STARTFILE_FREEBSD_SPEC },		\   { "startfile_gnu",		STARTFILE_GNU_SPEC },			\   { "startfile_linux",		STARTFILE_LINUX_SPEC },			\   { "startfile_netbsd",		STARTFILE_NETBSD_SPEC },		\   { "startfile_vxworks",	STARTFILE_VXWORKS_SPEC },		\   { "startfile_default",	STARTFILE_DEFAULT_SPEC },		\   { "endfile_ads",		ENDFILE_ADS_SPEC },			\   { "endfile_yellowknife",	ENDFILE_YELLOWKNIFE_SPEC },		\   { "endfile_mvme",		ENDFILE_MVME_SPEC },			\   { "endfile_sim",		ENDFILE_SIM_SPEC },			\   { "endfile_freebsd",		ENDFILE_FREEBSD_SPEC },			\   { "endfile_gnu",		ENDFILE_GNU_SPEC },			\   { "endfile_linux",		ENDFILE_LINUX_SPEC },			\   { "endfile_netbsd",		ENDFILE_NETBSD_SPEC },			\   { "endfile_vxworks",		ENDFILE_VXWORKS_SPEC },			\   { "endfile_default",		ENDFILE_DEFAULT_SPEC },			\   { "link_path",		LINK_PATH_SPEC },			\   { "link_shlib",		LINK_SHLIB_SPEC },			\   { "link_target",		LINK_TARGET_SPEC },			\   { "link_start",		LINK_START_SPEC },			\   { "link_start_ads",		LINK_START_ADS_SPEC },			\   { "link_start_yellowknife",	LINK_START_YELLOWKNIFE_SPEC },		\   { "link_start_mvme",		LINK_START_MVME_SPEC },			\   { "link_start_sim",		LINK_START_SIM_SPEC },			\   { "link_start_freebsd",	LINK_START_FREEBSD_SPEC },		\   { "link_start_gnu",		LINK_START_GNU_SPEC },			\   { "link_start_linux",		LINK_START_LINUX_SPEC },		\   { "link_start_netbsd",	LINK_START_NETBSD_SPEC },		\   { "link_start_vxworks",	LINK_START_VXWORKS_SPEC },		\   { "link_start_default",	LINK_START_DEFAULT_SPEC },		\   { "link_os",			LINK_OS_SPEC },				\   { "link_os_ads",		LINK_OS_ADS_SPEC },			\   { "link_os_yellowknife",	LINK_OS_YELLOWKNIFE_SPEC },		\   { "link_os_mvme",		LINK_OS_MVME_SPEC },			\   { "link_os_sim",		LINK_OS_SIM_SPEC },			\   { "link_os_freebsd",		LINK_OS_FREEBSD_SPEC },			\   { "link_os_linux",		LINK_OS_LINUX_SPEC },			\   { "link_os_gnu",		LINK_OS_GNU_SPEC },			\   { "link_os_netbsd",		LINK_OS_NETBSD_SPEC },			\   { "link_os_vxworks",		LINK_OS_VXWORKS_SPEC },			\   { "link_os_default",		LINK_OS_DEFAULT_SPEC },			\   { "cc1_endian_big",		CC1_ENDIAN_BIG_SPEC },			\   { "cc1_endian_little",	CC1_ENDIAN_LITTLE_SPEC },		\   { "cc1_endian_default",	CC1_ENDIAN_DEFAULT_SPEC },		\   { "cpp_endian_big",		CPP_ENDIAN_BIG_SPEC },			\   { "cpp_endian_little",	CPP_ENDIAN_LITTLE_SPEC },		\   { "cpp_float_default",	CPP_FLOAT_DEFAULT_SPEC },		\   { "cpp_longdouble_default",	CPP_LONGDOUBLE_DEFAULT_SPEC },		\   { "cpp_os_ads",		CPP_OS_ADS_SPEC },			\   { "cpp_os_yellowknife",	CPP_OS_YELLOWKNIFE_SPEC },		\   { "cpp_os_mvme",		CPP_OS_MVME_SPEC },			\   { "cpp_os_sim",		CPP_OS_SIM_SPEC },			\   { "cpp_os_freebsd",		CPP_OS_FREEBSD_SPEC },			\   { "cpp_os_gnu",		CPP_OS_GNU_SPEC },			\   { "cpp_os_linux",		CPP_OS_LINUX_SPEC },			\   { "cpp_os_netbsd",		CPP_OS_NETBSD_SPEC },			\   { "cpp_os_vxworks",		CPP_OS_VXWORKS_SPEC },			\   { "cpp_os_default",		CPP_OS_DEFAULT_SPEC },
 end_define
 
 begin_comment

@@ -519,7 +519,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");				\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
+value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");				\   if (TARGET_BWX | TARGET_MAX | TARGET_FIX | TARGET_CIX)	\     {								\       fprintf (FILE, "\t.arch %s\n",				\                (TARGET_CPU_EV6 ? "ev6"				\                 : TARGET_MAX ? "pca56" : "ev56"));		\     }								\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
 end_define
 
 begin_define
@@ -931,12 +931,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<libicb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pdscdef.h>
 end_include
 
@@ -952,7 +946,9 @@ parameter_list|,
 name|SUCCESS
 parameter_list|)
 define|\
-value|do {									\   unsigned long handle;							\   PDSCDEF *pv;								\   INVO_CONTEXT_BLK invo;						\ 									\   memset (&invo, 0, sizeof (INVO_CONTEXT_BLK));				\ 									\   invo.libicb$q_ireg [29] = *((long long *) (CONTEXT)->reg [29]);	\   invo.libicb$q_ireg [30] = (long long) (CONTEXT)->cfa;			\   handle = LIB$GET_INVO_HANDLE (&invo);					\   LIB$GET_INVO_CONTEXT (handle,&invo);					\   pv = (PDSCDEF *) invo.libicb$ph_procedure_descriptor;			\ 									\   if (pv&& ((pv->pdsc$w_flags& 0xf) == PDSC$K_KIND_FP_STACK))		\     {									\       int i, j;								\ 									\       (FS)->cfa_offset = pv->pdsc$l_size;				\       (FS)->cfa_reg = pv->pdsc$w_flags& PDSC$M_BASE_REG_IS_FP ? 29 : 30; \       (FS)->retaddr_column = 26;					\       (FS)->cfa_how = CFA_REG_OFFSET;					\       (FS)->regs.reg[27].loc.offset = -pv->pdsc$l_size;			\       (FS)->regs.reg[27].how = REG_SAVED_OFFSET;			\       (FS)->regs.reg[26].loc.offset					\ 	 = -(pv->pdsc$l_size - pv->pdsc$w_rsa_offset);			\       (FS)->regs.reg[26].how = REG_SAVED_OFFSET;			\ 									\       for (i = 0, j = 0; i< 32; i++)					\ 	if (1<<i& pv->pdsc$l_ireg_mask)				\ 	  {								\ 	    (FS)->regs.reg[i].loc.offset				\ 	      = -(pv->pdsc$l_size - pv->pdsc$w_rsa_offset - 8 * ++j);	\ 	    (FS)->regs.reg[i].how = REG_SAVED_OFFSET;			\ 	  }								\ 									\       goto SUCCESS;							\     }									\ } while (0)
+value|do {									\   PDSCDEF *pv = *((PDSCDEF **) (CONTEXT)->reg [29]);                    \ 									\   if (pv&& ((long) pv& 0x7) == 0)
+comment|/* low bits 0 means address */
+value|\     pv = *(PDSCDEF **) pv;                                              \ 									\   if (pv&& ((pv->pdsc$w_flags& 0xf) == PDSC$K_KIND_FP_STACK))		\     {									\       int i, j;								\ 									\       (FS)->cfa_offset = pv->pdsc$l_size;				\       (FS)->cfa_reg = pv->pdsc$w_flags& PDSC$M_BASE_REG_IS_FP ? 29 : 30; \       (FS)->retaddr_column = 26;					\       (FS)->cfa_how = CFA_REG_OFFSET;					\       (FS)->regs.reg[27].loc.offset = -pv->pdsc$l_size;			\       (FS)->regs.reg[27].how = REG_SAVED_OFFSET;			\       (FS)->regs.reg[26].loc.offset					\ 	 = -(pv->pdsc$l_size - pv->pdsc$w_rsa_offset);			\       (FS)->regs.reg[26].how = REG_SAVED_OFFSET;			\ 									\       for (i = 0, j = 0; i< 32; i++)					\ 	if (1<<i& pv->pdsc$l_ireg_mask)				\ 	  {								\ 	    (FS)->regs.reg[i].loc.offset				\ 	      = -(pv->pdsc$l_size - pv->pdsc$w_rsa_offset - 8 * ++j);	\ 	    (FS)->regs.reg[i].how = REG_SAVED_OFFSET;			\ 	  }								\ 									\       goto SUCCESS;							\     }									\   else if (pv&& ((pv->pdsc$w_flags& 0xf) == PDSC$K_KIND_FP_REGISTER))	\     {									\       (FS)->cfa_offset = pv->pdsc$l_size;				\       (FS)->cfa_reg = pv->pdsc$w_flags& PDSC$M_BASE_REG_IS_FP ? 29 : 30; \       (FS)->retaddr_column = 26;					\       (FS)->cfa_how = CFA_REG_OFFSET;					\       (FS)->regs.reg[26].loc.reg = pv->pdsc$b_save_ra;			\       (FS)->regs.reg[26].how = REG_SAVED_REG;			        \       (FS)->regs.reg[29].loc.reg = pv->pdsc$b_save_fp;			\       (FS)->regs.reg[29].how = REG_SAVED_REG;			        \ 									\       goto SUCCESS;							\     }									\ } while (0)
 end_define
 
 begin_endif
@@ -1217,6 +1213,20 @@ name|SYMBOL__MAIN
 value|__gccmain
 end_define
 
+begin_define
+define|#
+directive|define
+name|MD_EXEC_PREFIX
+value|"/gnu/lib/gcc-lib/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_STARTFILE_PREFIX
+value|"/gnu/lib/gcc-lib/"
+end_define
+
 begin_comment
 comment|/* Specify the list of include file directories.  */
 end_comment
@@ -1226,7 +1236,14 @@ define|#
 directive|define
 name|INCLUDE_DEFAULTS
 define|\
-value|{					\   { "/gnu_gxx_include", 0, 1, 1 },	\   { "/gnu_cc_include", 0, 0, 0 },	\   { "/gnu/include", 0, 0, 0 },	        \   { 0, 0, 0, 0 }			\ }
+value|{					   \   { "/gnu/lib/gcc-lib/include", 0, 0, 0 }, \   { "/gnu_gxx_include", 0, 1, 1 },	   \   { "/gnu_cc_include", 0, 0, 0 },	   \   { "/gnu/include", 0, 0, 0 },	           \   { 0, 0, 0, 0 }			   \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|LONGLONG_STANDALONE
+value|1
 end_define
 
 end_unit

@@ -35,7 +35,7 @@ define|#
 directive|define
 name|TARGET_DEFAULT
 define|\
-value|(MASK_V9 + MASK_PTR64 + MASK_64BIT + MASK_HARD_QUAD \  + MASK_APP_REGS + MASK_EPILOGUE + MASK_FPU + MASK_STACK_BIAS + MASK_LONG_DOUBLE_128)
+value|(MASK_V9 + MASK_PTR64 + MASK_64BIT + MASK_HARD_QUAD \  + MASK_APP_REGS + MASK_FPU + MASK_STACK_BIAS + MASK_LONG_DOUBLE_128)
 end_define
 
 begin_undef
@@ -150,7 +150,8 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"crtend.o%s"
+define|\
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s} \    crtend.o%s"
 end_define
 
 begin_comment

@@ -207,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|(MASK_APP_REGS | MASK_EPILOGUE | MASK_FPU \ 			| MASK_LONG_DOUBLE_128 | MASK_64BIT)
+value|(MASK_APP_REGS | MASK_FPU \ 			| MASK_LONG_DOUBLE_128 | MASK_64BIT)
 end_define
 
 begin_undef

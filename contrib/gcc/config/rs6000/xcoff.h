@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for some generic XCOFF file format    Copyright (C) 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for some generic XCOFF file format    Copyright (C) 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -8,16 +8,6 @@ define|#
 directive|define
 name|TARGET_OBJECT_FORMAT
 value|OBJECT_XCOFF
-end_define
-
-begin_comment
-comment|/* The AIX linker will discard static constructors in object files before    collect has a chance to see them, so scan the object files directly.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COLLECT_EXPORT_LIST
 end_define
 
 begin_comment
@@ -386,7 +376,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|{ rtx sym_ref = XEXP (DECL_RTL (DECL), 0);			\   if (!DECL_WEAK (DECL))					\     SYMBOL_REF_FLAG (sym_ref) = 1;				\   if (TREE_PUBLIC (DECL))					\     {								\       if (RS6000_WEAK&& DECL_WEAK (decl))			\ 	{							\ 	  fputs ("\t.weak .", FILE);				\ 	  RS6000_OUTPUT_BASENAME (FILE, NAME);			\ 	  putc ('\n', FILE);					\ 	}							\       else							\ 	{							\ 	  fputs ("\t.globl .", FILE);				\ 	  RS6000_OUTPUT_BASENAME (FILE, NAME);			\ 	  putc ('\n', FILE);					\ 	}							\     }								\   else								\     {								\       fputs ("\t.lglobl .", FILE);				\       RS6000_OUTPUT_BASENAME (FILE, NAME);			\       putc ('\n', FILE);					\     }								\   fputs ("\t.csect ", FILE);					\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (TARGET_32BIT ? "[DS]\n" : "[DS],3\n", FILE);		\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   fputs (TARGET_32BIT ? "\t.long ." : "\t.llong .", FILE);	\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (", TOC[tc0], 0\n", FILE);				\   in_section = no_section;					\   function_section(DECL);					\   putc ('.', FILE);						\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   if (write_symbols == XCOFF_DEBUG)				\     xcoffout_declare_function (FILE, DECL, NAME);		\ }
+value|{ rtx sym_ref = XEXP (DECL_RTL (DECL), 0);			\   if (!DECL_WEAK (DECL))					\     SYMBOL_REF_FLAG (sym_ref) = 1;				\   if (TREE_PUBLIC (DECL))					\     {								\       if (!RS6000_WEAK || !DECL_WEAK (decl))			\ 	{							\ 	  fputs ("\t.globl .", FILE);				\ 	  RS6000_OUTPUT_BASENAME (FILE, NAME);			\ 	  putc ('\n', FILE);					\ 	}							\     }								\   else								\     {								\       fputs ("\t.lglobl .", FILE);				\       RS6000_OUTPUT_BASENAME (FILE, NAME);			\       putc ('\n', FILE);					\     }								\   fputs ("\t.csect ", FILE);					\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (TARGET_32BIT ? "[DS]\n" : "[DS],3\n", FILE);		\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   fputs (TARGET_32BIT ? "\t.long ." : "\t.llong .", FILE);	\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (", TOC[tc0], 0\n", FILE);				\   in_section = no_section;					\   function_section(DECL);					\   putc ('.', FILE);						\   RS6000_OUTPUT_BASENAME (FILE, NAME);				\   fputs (":\n", FILE);						\   if (write_symbols == XCOFF_DEBUG)				\     xcoffout_declare_function (FILE, DECL, NAME);		\ }
 end_define
 
 begin_comment
@@ -583,45 +573,6 @@ parameter_list|)
 define|\
 value|do { fputs ("\t.lcomm ", (FILE));			\        RS6000_OUTPUT_BASENAME ((FILE), (NAME));		\        fprintf ((FILE), ",%d,%s\n", (TARGET_32BIT ? (SIZE) : (ROUNDED)), \ 		xcoff_bss_section_name);		\      } while (0)
 end_define
-
-begin_comment
-comment|/* Output a weak symbol, if weak support present.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_GAS_WEAK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HANDLE_PRAGMA_WEAK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_WEAKEN_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do					\     {					\       fputs ("\t.weak ", (FILE));	\       assemble_name ((FILE), (NAME));	\       fputc ('\n', (FILE));		\     }					\   while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_GAS_WEAK */
-end_comment
 
 begin_comment
 comment|/* This is how we tell the assembler that two symbols have the same value.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Sun Sparc64 running FreeBSD using the ELF format    Copyright (C) 2001 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions for Sun Sparc64 running FreeBSD using the ELF format    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf64_sparc %(link_arch)				\   %{!mno-relax:%{!r:-relax}						\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}			\   %{Wl,*:%*}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}}	\     %{static:-Bstatic}}"
+value|"%(link_arch)						\   %{!mno-relax:%{!r:-relax}}						\   %{p:%e`-p' not supported; use `-pg' and gprof(1)}			\   %{Wl,*:%*}								\   %{assert*} %{R*} %{rpath*} %{defsym*}					\   %{shared:-Bshareable %{h*} %{soname*}}				\   %{symbolic:-Bsymbolic}						\   %{!shared:								\     %{!static:								\       %{rdynamic:-export-dynamic}					\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}}	\     %{static:-Bstatic}}"
 end_define
 
 begin_comment
@@ -217,9 +217,9 @@ define|#
 directive|define
 name|TARGET_DEFAULT
 define|\
-value|(MASK_V9 + MASK_64BIT + MASK_PTR64 + MASK_VIS + MASK_FASTER_STRUCTS \    + MASK_STACK_BIAS + MASK_APP_REGS
-comment|/* + MASK_EPILOGUE */
-value|+ MASK_FPU \    + MASK_LONG_DOUBLE_128
+value|(MASK_V9 + MASK_64BIT + MASK_PTR64
+comment|/* + MASK_FASTER_STRUCTS */
+value|\    + MASK_STACK_BIAS + MASK_APP_REGS + MASK_FPU \    + MASK_LONG_DOUBLE_128
 comment|/* + MASK_HARD_QUAD */
 value|)
 end_define
@@ -238,40 +238,25 @@ begin_define
 define|#
 directive|define
 name|SPARC_DEFAULT_CMODEL
-value|CM_MEDMID
+value|CM_MEDLOW
 end_define
 
 begin_comment
 comment|/************************[  Assembler stuff  ]********************************/
 end_comment
 
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_undef
 undef|#
 directive|undef
-name|ASM_CPU_DEFAULT_SPEC
+name|LOCAL_LABEL_PREFIX
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_CPU_DEFAULT_SPEC
-value|"-Av9a"
+name|LOCAL_LABEL_PREFIX
+value|"."
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* XXX2 */
@@ -392,6 +377,36 @@ end_comment
 begin_comment
 comment|/* #define DWARF_OFFSET_SIZE PTR_SIZE */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ENDFILE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ENDFILE_SPEC
+define|\
+value|"%{ffast-math|funsafe-math-optimizations:crtfastmath.o%s}" \ 	FBSD_ENDFILE_SPEC
+end_define
+
+begin_comment
+comment|/* We use GNU ld so undefine this so that attribute((init_priority)) works.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CTORS_SECTION_ASM_OP
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|DTORS_SECTION_ASM_OP
+end_undef
 
 end_unit
 

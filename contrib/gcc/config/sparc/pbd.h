@@ -150,6 +150,19 @@ begin_comment
 comment|/*  *  Internal labels are prefixed with a period.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|LOCAL_LABEL_PREFIX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LOCAL_LABEL_PREFIX
+value|"."
+end_define
+
 begin_comment
 comment|/* This is how to store into the string LABEL    the symbol_ref name of an internal numbered label where    PREFIX is the class of label and NUM is the number within the class.    This is suitable for output with `assemble_name'.  */
 end_comment

@@ -57,6 +57,16 @@ value|1
 end_define
 
 begin_comment
+comment|/* Handle #pragma weak and #pragma pack.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+end_define
+
+begin_comment
 comment|/* The Darwin ABI always includes AltiVec, can't be (validly) turned    off.  */
 end_comment
 
@@ -124,13 +134,13 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|PIC_OFFSET_TABLE_REGNUM
+name|RS6000_PIC_OFFSET_TABLE_REGNUM
 end_undef
 
 begin_define
 define|#
 directive|define
-name|PIC_OFFSET_TABLE_REGNUM
+name|RS6000_PIC_OFFSET_TABLE_REGNUM
 value|31
 end_define
 
@@ -582,7 +592,7 @@ parameter_list|,
 name|SPECIFIED
 parameter_list|)
 define|\
-value|((TREE_CODE (STRUCT) == RECORD_TYPE			\     || TREE_CODE (STRUCT) == UNION_TYPE			\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)		\&& TYPE_FIELDS (STRUCT) != 0				\&& DECL_MODE (TYPE_FIELDS (STRUCT)) == DFmode	\    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 64)		\    : MAX ((COMPUTED), (SPECIFIED)))
+value|((TREE_CODE (STRUCT) == RECORD_TYPE			\     || TREE_CODE (STRUCT) == UNION_TYPE			\     || TREE_CODE (STRUCT) == QUAL_UNION_TYPE)		\&& TYPE_FIELDS (STRUCT) != 0				\&& DECL_MODE (TYPE_FIELDS (STRUCT)) == DFmode	\    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 64)		\    : (TARGET_ALTIVEC&& TREE_CODE (STRUCT) == VECTOR_TYPE) \    ? MAX (MAX ((COMPUTED), (SPECIFIED)), 128)           \    : MAX ((COMPUTED), (SPECIFIED)))
 end_define
 
 begin_comment
@@ -611,6 +621,17 @@ define|#
 directive|define
 name|MAX_LONG_TYPE_SIZE
 value|32
+end_define
+
+begin_comment
+comment|/* For binary compatibility with 2.95; Darwin C APIs use bool from    stdbool.h, which was an int-sized enum in 2.95.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOL_TYPE_SIZE
+value|INT_TYPE_SIZE
 end_define
 
 end_unit

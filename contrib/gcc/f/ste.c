@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ste.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 2000 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       ste.c     Description:       Implements the various statements and such like.     Modifications: */
+comment|/* ste.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       ste.c     Description:       Implements the various statements and such like.     Modifications: */
 end_comment
 
 begin_comment
@@ -9420,6 +9420,7 @@ name|FFEINFO_basictypeCHARACTER
 condition|)
 block|{
 comment|/* ~~~Someday handle CHARACTER*1, CHARACTER*N */
+comment|/* xgettext:no-c-format */
 name|ffebad_start_msg
 argument_list|(
 literal|"SELECT CASE on CHARACTER type (at %0) not supported -- sorry"

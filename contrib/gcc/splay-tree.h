@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A splay-tree datatype.      Copyright (C) 1998 Free Software Foundation, Inc.    Contributed by Mark Mitchell (mark@markmitchell.com).  This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* A splay-tree datatype.      Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Mark Mitchell (mark@markmitchell.com).  This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -51,7 +51,7 @@ typedef|;
 comment|/* Forward declaration for a node in the tree.  */
 typedef|typedef
 name|struct
-name|splay_tree_node
+name|splay_tree_node_s
 modifier|*
 name|splay_tree_node
 typedef|;
@@ -112,9 +112,44 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* The type of a function used to allocate memory for tree root and    node structures.  The first argument is the number of bytes needed;    the second is a data pointer the splay tree functions pass through    to the allocator.  This function must never return zero.  */
+typedef|typedef
+name|void
+operator|*
+operator|(
+operator|*
+name|splay_tree_allocate_fn
+operator|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* The type of a function used to free memory allocated using the    corresponding splay_tree_allocate_fn.  The first argument is the    memory to be freed; the latter is a data pointer the splay tree    functions pass through to the freer.  */
+typedef|typedef
+name|void
+argument_list|(
+argument|*splay_tree_deallocate_fn
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* The nodes in the splay tree.  */
 struct|struct
-name|splay_tree_node
+name|splay_tree_node_s
 block|{
 comment|/* The key.  */
 name|splay_tree_key
@@ -136,7 +171,7 @@ struct|;
 comment|/* The splay tree itself.  */
 typedef|typedef
 struct|struct
-name|splay_tree
+name|splay_tree_s
 block|{
 comment|/* The root of the tree.  */
 name|splay_tree_node
@@ -153,6 +188,17 @@ decl_stmt|;
 comment|/* The deallocate-value function.  NULL if no cleanup is necessary.  */
 name|splay_tree_delete_value_fn
 name|delete_value
+decl_stmt|;
+comment|/* Allocate/free functions, and a data pointer to pass to them.  */
+name|splay_tree_allocate_fn
+name|allocate
+decl_stmt|;
+name|splay_tree_deallocate_fn
+name|deallocate
+decl_stmt|;
+name|void
+modifier|*
+name|allocate_data
 decl_stmt|;
 block|}
 typedef|*
@@ -173,6 +219,27 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
+name|splay_tree
+name|splay_tree_new_with_allocator
+name|PARAMS
+argument_list|(
+operator|(
+name|splay_tree_compare_fn
+operator|,
+name|splay_tree_delete_key_fn
+operator|,
+name|splay_tree_delete_value_fn
+operator|,
+name|splay_tree_allocate_fn
+operator|,
+name|splay_tree_deallocate_fn
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
 name|void
 name|splay_tree_delete
 name|PARAMS
@@ -183,7 +250,7 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
-name|void
+name|splay_tree_node
 name|splay_tree_insert
 name|PARAMS
 argument_list|(
@@ -197,6 +264,18 @@ operator|)
 argument_list|)
 decl_stmt|;
 specifier|extern
+name|void
+name|splay_tree_remove
+name|PARAMS
+argument_list|(
+operator|(
+name|splay_tree
+operator|,
+name|splay_tree_key
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
 name|splay_tree_node
 name|splay_tree_lookup
 name|PARAMS
@@ -205,6 +284,50 @@ operator|(
 name|splay_tree
 operator|,
 name|splay_tree_key
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|splay_tree_node
+name|splay_tree_predecessor
+name|PARAMS
+argument_list|(
+operator|(
+name|splay_tree
+operator|,
+name|splay_tree_key
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|splay_tree_node
+name|splay_tree_successor
+name|PARAMS
+argument_list|(
+operator|(
+name|splay_tree
+operator|,
+name|splay_tree_key
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|splay_tree_node
+name|splay_tree_max
+name|PARAMS
+argument_list|(
+operator|(
+name|splay_tree
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|splay_tree_node
+name|splay_tree_min
+name|PARAMS
+argument_list|(
+operator|(
+name|splay_tree
 operator|)
 argument_list|)
 decl_stmt|;

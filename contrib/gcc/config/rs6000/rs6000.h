@@ -285,7 +285,7 @@ value|0x00000200
 end_define
 
 begin_comment
-comment|/* Nonzero for the 64bit model: ints, longs, and pointers are 64 bits.  */
+comment|/* Nonzero for the 64bit model: longs and pointers are 64 bits.  */
 end_comment
 
 begin_define
@@ -1340,6 +1340,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Work around rs6000_long_double_type_size dependency in ada/targtyps.c.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WIDEST_HARDWARE_FP_SIZE
+value|64
+end_define
+
+begin_comment
 comment|/* Width in bits of a pointer.    See also the macro `Pmode' defined below.  */
 end_comment
 
@@ -1412,17 +1423,6 @@ value|((TARGET_ALTIVEC&& TREE_CODE (TYPE) == VECTOR_TYPE) ? 128 : ALIGN)
 end_define
 
 begin_comment
-comment|/* Handle #pragma pack.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HANDLE_PRAGMA_PACK
-value|1
-end_define
-
-begin_comment
 comment|/* Alignment of field after `int : 0' in a structure.  */
 end_comment
 
@@ -1456,7 +1456,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Make strings word-aligned so strcpy from constants will be faster.  */
+comment|/* Make strings word-aligned so strcpy from constants will be faster.    Make vector constants quadword aligned.  */
 end_comment
 
 begin_define
@@ -1469,7 +1469,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|(TREE_CODE (EXP) == STRING_CST	\&& (ALIGN)< BITS_PER_WORD ? BITS_PER_WORD : (ALIGN))
+value|(TREE_CODE (EXP) == STRING_CST	                         \&& (ALIGN)< BITS_PER_WORD                                    \    ? BITS_PER_WORD                                               \    : (ALIGN))
 end_define
 
 begin_comment
@@ -1662,7 +1662,7 @@ begin_define
 define|#
 directive|define
 name|TOTAL_ALTIVEC_REGS
-value|(LAST_ALTIVEC_REGNO - FIRST_ALTIVEC_REGNO)
+value|(LAST_ALTIVEC_REGNO - FIRST_ALTIVEC_REGNO + 1)
 end_define
 
 begin_define
@@ -1905,7 +1905,7 @@ define|#
 directive|define
 name|CONDITIONAL_REGISTER_USAGE
 define|\
-value|{									\   int i;								\   if (! TARGET_POWER)							\     fixed_regs[64] = 1;							\   if (TARGET_64BIT)							\     fixed_regs[13] = call_used_regs[13]					\       = call_really_used_regs[13] = 1; 					\   if (TARGET_SOFT_FLOAT)						\     for (i = 32; i< 64; i++)						\       fixed_regs[i] = call_used_regs[i]					\         = call_really_used_regs[i] = 1;					\   if (DEFAULT_ABI == ABI_V4&& flag_pic == 1)				\     fixed_regs[PIC_OFFSET_TABLE_REGNUM]					\       = call_used_regs[PIC_OFFSET_TABLE_REGNUM]				\       = call_really_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\   if (DEFAULT_ABI == ABI_DARWIN&& flag_pic)				\     global_regs[PIC_OFFSET_TABLE_REGNUM]				\       = fixed_regs[PIC_OFFSET_TABLE_REGNUM]				\       = call_used_regs[PIC_OFFSET_TABLE_REGNUM]				\       = call_really_used_regs[PIC_OFFSET_TABLE_REGNUM] = 1;		\   if (! TARGET_ALTIVEC)							\     for (i = FIRST_ALTIVEC_REGNO; i<= LAST_ALTIVEC_REGNO; ++i)		\       fixed_regs[i] = call_used_regs[i] = call_really_used_regs[i] = 1;	\   if (TARGET_ALTIVEC_ABI)						\     for (i = FIRST_ALTIVEC_REGNO; i< FIRST_ALTIVEC_REGNO + 20; ++i)	\       call_used_regs[i] = call_really_used_regs[i] = 1;			\ }
+value|{									\   int i;								\   if (! TARGET_POWER)							\     fixed_regs[64] = 1;							\   if (TARGET_64BIT)							\     fixed_regs[13] = call_used_regs[13]					\       = call_really_used_regs[13] = 1; 					\   if (TARGET_SOFT_FLOAT)						\     for (i = 32; i< 64; i++)						\       fixed_regs[i] = call_used_regs[i]					\         = call_really_used_regs[i] = 1;					\   if (DEFAULT_ABI == ABI_V4						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM			\&& flag_pic == 1)							\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (DEFAULT_ABI == ABI_DARWIN						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)			\     global_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (! TARGET_ALTIVEC)							\     {									\       for (i = FIRST_ALTIVEC_REGNO; i<= LAST_ALTIVEC_REGNO; ++i)	\ 	fixed_regs[i] = call_used_regs[i] = call_really_used_regs[i] = 1; \       call_really_used_regs[VRSAVE_REGNO] = 1;				\     }									\   if (TARGET_ALTIVEC_ABI)						\     for (i = FIRST_ALTIVEC_REGNO; i< FIRST_ALTIVEC_REGNO + 20; ++i)	\       call_used_regs[i] = call_really_used_regs[i] = 1;			\ }
 end_define
 
 begin_comment
@@ -2214,7 +2214,7 @@ value|(  (C) == 'G' ? (num_insns_constant (VALUE, GET_MODE (VALUE))		\ 		   == (
 end_define
 
 begin_comment
-comment|/* Optional extra constraints for this machine.     'Q' means that is a memory operand that is just an offset from a reg.    'R' is for AIX TOC entries.    'S' is a constant that can be placed into a 64-bit mask operand    'T' is a consatnt that can be placed into a 32-bit mask operand    'U' is for V.4 small data references.  */
+comment|/* Optional extra constraints for this machine.     'Q' means that is a memory operand that is just an offset from a reg.    'R' is for AIX TOC entries.    'S' is a constant that can be placed into a 64-bit mask operand    'T' is a constant that can be placed into a 32-bit mask operand    'U' is for V.4 small data references.  */
 end_comment
 
 begin_define
@@ -2227,7 +2227,7 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|((C) == 'Q' ? GET_CODE (OP) == MEM&& GET_CODE (XEXP (OP, 0)) == REG	\    : (C) == 'R' ? LEGITIMATE_CONSTANT_POOL_ADDRESS_P (OP)		\    : (C) == 'S' ? mask64_operand (OP, VOIDmode)				\    : (C) == 'T' ? mask_operand (OP, VOIDmode)				\    : (C) == 'U' ? (DEFAULT_ABI == ABI_V4				\&& small_data_operand (OP, GET_MODE (OP)))		\    : 0)
+value|((C) == 'Q' ? GET_CODE (OP) == MEM&& GET_CODE (XEXP (OP, 0)) == REG	\    : (C) == 'R' ? LEGITIMATE_CONSTANT_POOL_ADDRESS_P (OP)		\    : (C) == 'S' ? mask64_operand (OP, DImode)				\    : (C) == 'T' ? mask_operand (OP, SImode)				\    : (C) == 'U' ? (DEFAULT_ABI == ABI_V4				\&& small_data_operand (OP, GET_MODE (OP)))		\    : 0)
 end_define
 
 begin_comment
@@ -3020,7 +3020,7 @@ parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|((unsigned)(((N) - GP_ARG_MIN_REG)< (unsigned)(GP_ARG_NUM_REG))	\    || (TARGET_ALTIVEC&&						\        (unsigned)((N) - ALTIVEC_ARG_MIN_REG)< (unsigned)(ALTIVEC_ARG_NUM_REG)) \    || ((unsigned)((N) - FP_ARG_MIN_REG)< (unsigned)(FP_ARG_NUM_REG)))
+value|(((unsigned)((N) - GP_ARG_MIN_REG)< (unsigned)(GP_ARG_NUM_REG))	\    || (TARGET_ALTIVEC&&						\        (unsigned)((N) - ALTIVEC_ARG_MIN_REG)< (unsigned)(ALTIVEC_ARG_NUM_REG)) \    || ((unsigned)((N) - FP_ARG_MIN_REG)< (unsigned)(FP_ARG_NUM_REG)))
 end_define
 
 begin_escape
@@ -3108,7 +3108,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|((MODE) != BLKmode							\  ? (GET_MODE_SIZE (MODE) + (UNITS_PER_WORD - 1)) / UNITS_PER_WORD	\  : ((unsigned HOST_WIDE_INT) int_size_in_bytes (TYPE) 			\     + (UNITS_PER_WORD - 1)) / UNITS_PER_WORD)
+value|((MODE) != BLKmode							\  ? (GET_MODE_SIZE (MODE) + (UNITS_PER_WORD - 1)) / UNITS_PER_WORD	\  : (int_size_in_bytes (TYPE) + (UNITS_PER_WORD - 1)) / UNITS_PER_WORD)
 end_define
 
 begin_comment
@@ -3381,6 +3381,17 @@ value|rs6000_va_arg (valist, type)
 end_define
 
 begin_comment
+comment|/* For AIX, the rule is that structures are passed left-aligned in    their stack slot.  However, GCC does not presently do this:    structures which are the same size as integer types are passed    right-aligned, as if they were in fact integers.  This only    matters for structures of size 1 or 2, or 4 when TARGET_64BIT.    ABI_V4 does not use std_expand_builtin_va_arg.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAD_VARARGS_DOWN
+value|(TYPE_MODE (type) != BLKmode)
+end_define
+
+begin_comment
 comment|/* Define this macro to be a nonzero value if the location where a function    argument is passed depends on whether or not it is a named argument.  */
 end_comment
 
@@ -3431,7 +3442,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|((reload_completed&& (REGNO) == LINK_REGISTER_REGNUM)	\    || (REGNO) == VRSAVE_REGNO					\    || (current_function_calls_eh_return				\&& TARGET_AIX						\&& (REGNO) == TOC_REGISTER))
+value|((reload_completed&& (REGNO) == LINK_REGISTER_REGNUM)	\    || (TARGET_ALTIVEC&& (REGNO) == VRSAVE_REGNO)		\    || (current_function_calls_eh_return				\&& TARGET_AIX						\&& (REGNO) == TOC_REGISTER))
 end_define
 
 begin_escape
@@ -3837,7 +3848,7 @@ parameter_list|,
 name|STRICT
 parameter_list|)
 define|\
-value|(GET_CODE (X) == PLUS						\&& GET_CODE (XEXP (X, 0)) == REG				\&& INT_REG_OK_FOR_BASE_P (XEXP (X, 0), (STRICT))		\&& LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 0)		\&& (! ALTIVEC_VECTOR_MODE (MODE) || INTVAL (X) == 0)		\&& (((MODE) != DFmode&& (MODE) != DImode)			\       || (TARGET_32BIT						\ 	  ? LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 4) 	\ 	  : ! (INTVAL (XEXP (X, 1))& 3)))			\&& ((MODE) != TImode						\       || (TARGET_32BIT						\ 	  ? LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 12) 	\ 	  : (LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 8) 	\&& ! (INTVAL (XEXP (X, 1))& 3)))))
+value|(GET_CODE (X) == PLUS						\&& GET_CODE (XEXP (X, 0)) == REG				\&& INT_REG_OK_FOR_BASE_P (XEXP (X, 0), (STRICT))		\&& LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 0)		\&& (! ALTIVEC_VECTOR_MODE (MODE)                            \       || (GET_CODE (XEXP (X,1)) == CONST_INT&& INTVAL (XEXP (X,1)) == 0)) \&& (((MODE) != DFmode&& (MODE) != DImode)			\       || (TARGET_32BIT						\ 	  ? LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 4) 	\ 	  : ! (INTVAL (XEXP (X, 1))& 3)))			\&& ((MODE) != TImode						\       || (TARGET_32BIT						\ 	  ? LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 12) 	\ 	  : (LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 8) 	\&& ! (INTVAL (XEXP (X, 1))& 3)))))
 end_define
 
 begin_define
@@ -3972,8 +3983,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIC_OFFSET_TABLE_REGNUM
+name|RS6000_PIC_OFFSET_TABLE_REGNUM
 value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIC_OFFSET_TABLE_REGNUM
+value|(flag_pic ? RS6000_PIC_OFFSET_TABLE_REGNUM : INVALID_REGNUM)
 end_define
 
 begin_define
@@ -4404,9 +4422,47 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|RS6000_WEAK
+end_if
+
 begin_comment
-comment|/* This implementes the `alias' attribute.  */
+comment|/* Used in lieu of ASM_WEAKEN_LABEL.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_WEAKEN_DECL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|DECL
+parameter_list|,
+name|NAME
+parameter_list|,
+name|VAL
+parameter_list|)
+define|\
+value|do									\     {									\       fputs ("\t.weak\t", (FILE));					\       assemble_name ((FILE), (NAME)); 					\       if ((DECL)&& TREE_CODE (DECL) == FUNCTION_DECL			\&& DEFAULT_ABI == ABI_AIX)					\ 	{								\ 	  fputs ("\n\t.weak\t.", (FILE));				\ 	  assemble_name ((FILE), (NAME)); 				\ 	}								\       fputc ('\n', (FILE));						\       if (VAL)								\ 	{								\ 	  ASM_OUTPUT_DEF ((FILE), (NAME), (VAL));			\ 	  if ((DECL)&& TREE_CODE (DECL) == FUNCTION_DECL		\&& DEFAULT_ABI == ABI_AIX)				\ 	    {								\ 	      fputs ("\t.set\t.", (FILE));				\ 	      assemble_name ((FILE), (NAME));				\ 	      fputs (",.", (FILE));					\ 	      assemble_name ((FILE), (VAL));				\ 	      fputc ('\n', (FILE));					\ 	    }								\ 	}								\     }									\   while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* This implements the `alias' attribute.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_DEF_FROM_DECLS
+end_undef
 
 begin_define
 define|#
@@ -4415,12 +4471,12 @@ name|ASM_OUTPUT_DEF_FROM_DECLS
 parameter_list|(
 name|FILE
 parameter_list|,
-name|decl
+name|DECL
 parameter_list|,
-name|target
+name|TARGET
 parameter_list|)
 define|\
-value|do {							\   const char * alias = XSTR (XEXP (DECL_RTL (decl), 0), 0); \   char * name = IDENTIFIER_POINTER (target);		\   if (TREE_CODE (decl) == FUNCTION_DECL			\&& DEFAULT_ABI == ABI_AIX)			\     {							\       if (TREE_PUBLIC (decl))				\ 	{						\ 	  if (RS6000_WEAK&& DECL_WEAK (decl))		\ 	    {						\ 	      fputs ("\t.weak .", FILE);		\ 	      assemble_name (FILE, alias);		\ 	      putc ('\n', FILE);			\ 	    }						\ 	  else						\ 	    {						\ 	      fputs ("\t.globl .", FILE);		\ 	      assemble_name (FILE, alias);		\ 	      putc ('\n', FILE);			\ 	    }						\ 	}						\       else						\ 	{						\ 	  fputs ("\t.lglobl .", FILE);			\ 	  assemble_name (FILE, alias);			\ 	  putc ('\n', FILE);				\ 	}						\       fputs ("\t.set .", FILE);				\       assemble_name (FILE, alias);			\       fputs (",.", FILE);				\       assemble_name (FILE, name);			\       fputc ('\n', FILE);				\     }							\   ASM_OUTPUT_DEF (FILE, alias, name);			\ } while (0)
+value|do									\     {									\       const char *alias = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		\       const char *name = IDENTIFIER_POINTER (TARGET);			\       if (TREE_CODE (DECL) == FUNCTION_DECL				\&& DEFAULT_ABI == ABI_AIX)					\ 	{								\ 	  if (TREE_PUBLIC (DECL))					\ 	    {								\ 	      if (!RS6000_WEAK || !DECL_WEAK (DECL))			\ 		{							\ 		  fputs ("\t.globl\t.", FILE);				\ 		  assemble_name (FILE, alias);				\ 		  putc ('\n', FILE);					\ 		}							\ 	    }								\ 	  else if (TARGET_XCOFF)					\ 	    {								\ 	      fputs ("\t.lglobl\t.", FILE);				\ 	      assemble_name (FILE, alias);				\ 	      putc ('\n', FILE);					\ 	    }								\ 	  fputs ("\t.set\t.", FILE);					\ 	  assemble_name (FILE, alias);					\ 	  fputs (",.", FILE);						\ 	  assemble_name (FILE, name);					\ 	  fputc ('\n', FILE);						\ 	}								\       ASM_OUTPUT_DEF (FILE, alias, name);				\     }									\    while (0)
 end_define
 
 begin_comment
@@ -4883,7 +4939,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{"short_cint_operand", {CONST_INT}},					   \   {"u_short_cint_operand", {CONST_INT}},				   \   {"non_short_cint_operand", {CONST_INT}},				   \   {"exact_log2_cint_operand", {CONST_INT}},				   \   {"gpc_reg_operand", {SUBREG, REG}},					   \   {"cc_reg_operand", {SUBREG, REG}},					   \   {"cc_reg_not_cr0_operand", {SUBREG, REG}},				   \   {"reg_or_short_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_neg_short_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_u_short_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_arith_cint_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_add_cint64_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_sub_cint64_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_logical_cint_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}}, \   {"got_operand", {SYMBOL_REF, CONST, LABEL_REF}},			   \   {"got_no_const_operand", {SYMBOL_REF, LABEL_REF}},			   \   {"easy_fp_constant", {CONST_DOUBLE}},					   \   {"zero_fp_constant", {CONST_DOUBLE}},					   \   {"reg_or_mem_operand", {SUBREG, MEM, REG}},				   \   {"lwa_operand", {SUBREG, MEM, REG}},					   \   {"volatile_mem_operand", {MEM}},					   \   {"offsettable_mem_operand", {MEM}},					   \   {"mem_or_easy_const_operand", {SUBREG, MEM, CONST_DOUBLE}},		   \   {"add_operand", {SUBREG, REG, CONST_INT}},				   \   {"non_add_cint_operand", {CONST_INT}},				   \   {"and_operand", {SUBREG, REG, CONST_INT}},				   \   {"and64_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		   \   {"logical_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		   \   {"non_logical_cint_operand", {CONST_INT, CONST_DOUBLE}},		   \   {"mask_operand", {CONST_INT}},					   \   {"mask64_operand", {CONST_INT, CONST_DOUBLE}},			   \   {"count_register_operand", {REG}},					   \   {"xer_operand", {REG}},						   \   {"call_operand", {SYMBOL_REF, REG}},					   \   {"current_file_function_operand", {SYMBOL_REF}},			   \   {"input_operand", {SUBREG, MEM, REG, CONST_INT,			   \ 		     CONST_DOUBLE, SYMBOL_REF}},			   \   {"load_multiple_operation", {PARALLEL}},				   \   {"store_multiple_operation", {PARALLEL}},				   \   {"vrsave_operation", {PARALLEL}},					   \   {"branch_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 				  GT, LEU, LTU, GEU, GTU,		   \ 				  UNORDERED, ORDERED,			   \ 				  UNGE, UNLE }},			   \   {"branch_positive_comparison_operator", {EQ, LT, GT, LTU, GTU,	   \ 					   UNORDERED }},		   \   {"scc_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 			       GT, LEU, LTU, GEU, GTU,			   \ 			       UNORDERED, ORDERED,			   \ 			       UNGE, UNLE }},				   \   {"trap_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 				GT, LEU, LTU, GEU, GTU}},		   \   {"boolean_operator", {AND, IOR, XOR}},				   \   {"boolean_or_operator", {IOR, XOR}},					   \   {"min_max_operator", {SMIN, SMAX, UMIN, UMAX}},
+value|{"any_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,		   \ 		   LABEL_REF, SUBREG, REG, MEM, PARALLEL}},		   \   {"zero_constant", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	   \ 		    LABEL_REF, SUBREG, REG, MEM}},			   \   {"short_cint_operand", {CONST_INT}},					   \   {"u_short_cint_operand", {CONST_INT}},				   \   {"non_short_cint_operand", {CONST_INT}},				   \   {"exact_log2_cint_operand", {CONST_INT}},				   \   {"gpc_reg_operand", {SUBREG, REG}},					   \   {"cc_reg_operand", {SUBREG, REG}},					   \   {"cc_reg_not_cr0_operand", {SUBREG, REG}},				   \   {"reg_or_short_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_neg_short_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_aligned_short_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_u_short_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_arith_cint_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_add_cint64_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_sub_cint64_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_logical_cint_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}}, \   {"got_operand", {SYMBOL_REF, CONST, LABEL_REF}},			   \   {"got_no_const_operand", {SYMBOL_REF, LABEL_REF}},			   \   {"easy_fp_constant", {CONST_DOUBLE}},					   \   {"zero_fp_constant", {CONST_DOUBLE}},					   \   {"reg_or_mem_operand", {SUBREG, MEM, REG}},				   \   {"lwa_operand", {SUBREG, MEM, REG}},					   \   {"volatile_mem_operand", {MEM}},					   \   {"offsettable_mem_operand", {MEM}},					   \   {"mem_or_easy_const_operand", {SUBREG, MEM, CONST_DOUBLE}},		   \   {"add_operand", {SUBREG, REG, CONST_INT}},				   \   {"non_add_cint_operand", {CONST_INT}},				   \   {"and_operand", {SUBREG, REG, CONST_INT}},				   \   {"and64_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		   \   {"logical_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		   \   {"non_logical_cint_operand", {CONST_INT, CONST_DOUBLE}},		   \   {"mask_operand", {CONST_INT}},					   \   {"mask64_operand", {CONST_INT, CONST_DOUBLE}},			   \   {"count_register_operand", {REG}},					   \   {"xer_operand", {REG}},						   \   {"call_operand", {SYMBOL_REF, REG}},					   \   {"current_file_function_operand", {SYMBOL_REF}},			   \   {"input_operand", {SUBREG, MEM, REG, CONST_INT,			   \ 		     CONST_DOUBLE, SYMBOL_REF}},			   \   {"load_multiple_operation", {PARALLEL}},				   \   {"store_multiple_operation", {PARALLEL}},				   \   {"vrsave_operation", {PARALLEL}},					   \   {"branch_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 				  GT, LEU, LTU, GEU, GTU,		   \ 				  UNORDERED, ORDERED,			   \ 				  UNGE, UNLE }},			   \   {"branch_positive_comparison_operator", {EQ, LT, GT, LTU, GTU,	   \ 					   UNORDERED }},		   \   {"scc_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 			       GT, LEU, LTU, GEU, GTU,			   \ 			       UNORDERED, ORDERED,			   \ 			       UNGE, UNLE }},				   \   {"trap_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 				GT, LEU, LTU, GEU, GTU}},		   \   {"boolean_operator", {AND, IOR, XOR}},				   \   {"boolean_or_operator", {IOR, XOR}},					   \   {"altivec_register_operand", {REG}},	                                   \   {"min_max_operator", {SMIN, SMAX, UMIN, UMAX}},
 end_define
 
 begin_comment
@@ -5261,32 +5317,6 @@ name|ALTIVEC_BUILTIN_VUPKLPX
 block|,
 name|ALTIVEC_BUILTIN_VUPKLSH
 block|,
-name|ALTIVEC_BUILTIN_VCMPBFP_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPEQFP_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPEQUB_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPEQUH_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPEQUW_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPGEFP_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPGTFP_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPGTSB_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPGTSH_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPGTSW_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPGTUB_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPGTUH_P
-block|,
-name|ALTIVEC_BUILTIN_VCMPGTUW_P
-block|,
 name|ALTIVEC_BUILTIN_MTVSCR
 block|,
 name|ALTIVEC_BUILTIN_MFVSCR
@@ -5326,6 +5356,46 @@ block|,
 name|ALTIVEC_BUILTIN_STVEWX
 block|,
 name|ALTIVEC_BUILTIN_STVXL
+block|,
+name|ALTIVEC_BUILTIN_VCMPBFP_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPEQFP_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPEQUB_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPEQUH_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPEQUW_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPGEFP_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPGTFP_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPGTSB_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPGTSH_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPGTSW_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPGTUB_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPGTUH_P
+block|,
+name|ALTIVEC_BUILTIN_VCMPGTUW_P
+block|,
+name|ALTIVEC_BUILTIN_ABSS_V4SI
+block|,
+name|ALTIVEC_BUILTIN_ABSS_V8HI
+block|,
+name|ALTIVEC_BUILTIN_ABSS_V16QI
+block|,
+name|ALTIVEC_BUILTIN_ABS_V4SI
+block|,
+name|ALTIVEC_BUILTIN_ABS_V4SF
+block|,
+name|ALTIVEC_BUILTIN_ABS_V8HI
+block|,
+name|ALTIVEC_BUILTIN_ABS_V16QI
 block|}
 enum|;
 end_enum

@@ -442,6 +442,11 @@ name|unsigned
 name|char
 name|verbose
 decl_stmt|;
+comment|/* Nonzero means chars are signed.  */
+name|unsigned
+name|char
+name|signed_char
+decl_stmt|;
 comment|/* Nonzero means use extra default include directories for C++.  */
 name|unsigned
 name|char
@@ -1789,6 +1794,28 @@ argument_list|(
 operator|(
 name|cpp_reader
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|unsigned
+name|char
+modifier|*
+name|cpp_quote_string
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|,
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|,
+name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

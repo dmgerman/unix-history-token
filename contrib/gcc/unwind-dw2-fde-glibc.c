@@ -11,6 +11,24 @@ begin_comment
 comment|/* Locate the FDE entry for a given address, using PT_GNU_EH_FRAME ELF    segment and dl_iterate_phdr to avoid register/deregister calls at    DSO load/unload.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GNU_SOURCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_GNU_SOURCE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

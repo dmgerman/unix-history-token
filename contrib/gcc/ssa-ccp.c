@@ -4664,6 +4664,22 @@ argument_list|(
 name|worklist
 argument_list|)
 expr_stmt|;
+comment|/* Update the use-def chains in the df_analyzer as needed.  */
+name|df_analyse
+argument_list|(
+name|df_analyzer
+argument_list|,
+literal|0
+argument_list|,
+name|DF_RD_CHAIN
+operator||
+name|DF_RU_CHAIN
+operator||
+name|DF_REG_INFO
+operator||
+name|DF_HARD_REGS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
