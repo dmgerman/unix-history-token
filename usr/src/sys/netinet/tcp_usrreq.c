@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.8 81/10/23 */
+comment|/* tcp_usrreq.c 1.9 81/10/23 */
 end_comment
 
 begin_include
@@ -1432,7 +1432,7 @@ name|m
 operator|->
 name|m_off
 operator|>
-name|MSIZE
+name|MMAXOFF
 condition|)
 name|up
 operator|->
@@ -1495,7 +1495,7 @@ name|m
 operator|->
 name|m_off
 operator|<=
-name|MSIZE
+name|MMAXOFF
 condition|)
 block|{
 name|last
@@ -1522,10 +1522,10 @@ name|n
 operator|->
 name|m_off
 operator|<=
-name|MSIZE
+name|MMAXOFF
 operator|&&
 operator|(
-name|MSIZE
+name|MMAXOFF
 operator|-
 name|off
 operator|)

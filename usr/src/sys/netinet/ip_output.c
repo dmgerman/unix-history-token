@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_output.c 1.3 81/10/21 */
+comment|/* ip_output.c 1.4 81/10/23 */
 end_comment
 
 begin_include
@@ -395,7 +395,7 @@ name|m
 operator|->
 name|m_off
 operator|=
-name|MSIZE
+name|MMAXOFF
 operator|-
 name|hlen
 operator|-
@@ -847,7 +847,7 @@ name|m
 operator|->
 name|m_off
 operator|=
-name|MSIZE
+name|MMAXOFF
 operator|-
 sizeof|sizeof
 argument_list|(
