@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyname.c	5.4 (Berkeley) %G%"
+literal|"@(#)ttyname.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,7 +254,7 @@ name|sb1
 operator|.
 name|st_ino
 operator|!=
-name|sb1
+name|sb2
 operator|.
 name|st_ino
 condition|)
