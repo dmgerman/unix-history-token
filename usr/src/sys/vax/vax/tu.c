@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.13	83/02/10	*/
+comment|/*	tu.c	4.14	83/05/05	*/
 end_comment
 
 begin_if
@@ -2395,6 +2395,13 @@ block|{
 name|printf
 argument_list|(
 literal|"tu receive state error, state="
+argument_list|)
+expr_stmt|;
+name|printstate
+argument_list|(
+name|tu
+operator|.
+name|tu_state
 argument_list|)
 expr_stmt|;
 name|printf
