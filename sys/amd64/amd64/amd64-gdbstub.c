@@ -387,17 +387,6 @@ name|unsigned
 name|char
 name|ch
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|read_eflags
-argument_list|()
-expr_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
 do|do
 block|{
 comment|/* wait around for the start character, ignore all other characters */
@@ -599,11 +588,6 @@ operator|!=
 name|xmitcsum
 condition|)
 do|;
-name|write_eflags
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -632,18 +616,7 @@ name|unsigned
 name|char
 name|ch
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 comment|/*  $<packet info>#<checksum>. */
-name|s
-operator|=
-name|read_eflags
-argument_list|()
-expr_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
 do|do
 block|{
 comment|/*  * This is a non-standard hack to allow use of the serial console for  * operation as well as debugging.  Simply turn on 'remotechat' in gdb.  *  * This extension is not part of the Cygnus protocol, is kinda gross,  * but gets the job done.  */
@@ -751,11 +724,6 @@ operator|!=
 literal|'+'
 condition|)
 do|;
-name|write_eflags
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1784,11 +1752,10 @@ name|gdbdev
 operator|==
 name|NODEV
 condition|)
-comment|/* somebody's removed it */
 return|return
 literal|1
 return|;
-comment|/* get out of here */
+comment|/* somebody has removed the gdb device */
 name|remcomOutBuffer
 index|[
 literal|0
