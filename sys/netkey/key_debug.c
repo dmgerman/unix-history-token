@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: key_debug.c,v 1.26 2001/06/27 10:46:50 sakane Exp $	*/
+comment|/*	$KAME: key_debug.c,v 1.38 2003/09/06 05:15:44 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -2413,7 +2413,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"secpolicy{ refcnt=%u state=%u policy=%u\n"
+literal|"secpolicy{ refcnt=%u state=%u policy=%u dir=%u\n"
 argument_list|,
 name|sp
 operator|->
@@ -2426,11 +2426,20 @@ argument_list|,
 name|sp
 operator|->
 name|policy
+argument_list|,
+name|sp
+operator|->
+name|dir
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|spidx
+condition|)
 name|kdebug_secpolicyindex
 argument_list|(
-operator|&
 name|sp
 operator|->
 name|spidx
@@ -2589,11 +2598,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"secpolicyindex{ dir=%u prefs=%u prefd=%u ul_proto=%u\n"
-argument_list|,
-name|spidx
-operator|->
-name|dir
+literal|"secpolicyindex{ prefs=%u prefd=%u ul_proto=%u\n"
 argument_list|,
 name|spidx
 operator|->
@@ -3046,8 +3051,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" secreplay{ count=%u wsize=%u seq=%u lastseq=%u"
+literal|" secreplay{ count=%llu wsize=%u seq=%llu lastseq=%llu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rpl
 operator|->
 name|count
@@ -3056,10 +3066,20 @@ name|rpl
 operator|->
 name|wsize
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rpl
 operator|->
 name|seq
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rpl
 operator|->
 name|lastseq
@@ -3242,7 +3262,7 @@ block|{
 name|printf
 argument_list|(
 literal|"  m_ext{ ext_buf:%p ext_free:%p "
-literal|"ext_size:%u ref_cnt:%p }\n"
+literal|"ext_size:%u }\n"
 argument_list|,
 name|m
 operator|->
@@ -3261,12 +3281,6 @@ operator|->
 name|m_ext
 operator|.
 name|ext_size
-argument_list|,
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ref_cnt
 argument_list|)
 expr_stmt|;
 block|}

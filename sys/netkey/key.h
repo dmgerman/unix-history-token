@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key.h,v 1.21 2001/07/27 03:51:30 itojun Exp $	*/
+comment|/*	$KAME: key.h,v 1.32 2003/09/07 05:25:20 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -36,6 +42,30 @@ name|key_cb
 name|key_cb
 decl_stmt|;
 end_decl_stmt
+
+begin_extern
+extern|extern TAILQ_HEAD(_satailq
+operator|,
+extern|secasvar
+end_extern
+
+begin_expr_stmt
+unit|)
+name|satailq
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern TAILQ_HEAD(_sptailq
+operator|,
+extern|secpolicy
+end_extern
+
+begin_expr_stmt
+unit|)
+name|sptailq
+expr_stmt|;
+end_expr_stmt
 
 begin_struct_decl
 struct_decl|struct
@@ -92,6 +122,8 @@ name|secpolicy
 modifier|*
 name|key_allocsp
 parameter_list|(
+name|u_int16_t
+parameter_list|,
 name|struct
 name|secpolicyindex
 modifier|*
@@ -179,18 +211,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|key_freeso
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|key_freesav
 parameter_list|(
 name|struct
@@ -207,7 +227,7 @@ name|secpolicy
 modifier|*
 name|key_newsp
 parameter_list|(
-name|void
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -248,10 +268,30 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|key_ismyaddr
+name|key_cmpspidx_exactly
 parameter_list|(
 name|struct
-name|sockaddr
+name|secpolicyindex
+modifier|*
+parameter_list|,
+name|struct
+name|secpolicyindex
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|key_cmpspidx_withmask
+parameter_list|(
+name|struct
+name|secpolicyindex
+modifier|*
+parameter_list|,
+name|struct
+name|secpolicyindex
 modifier|*
 parameter_list|)
 function_decl|;
@@ -275,16 +315,7 @@ name|void
 name|key_timehandler
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_long
-name|key_random
-parameter_list|(
-name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2271,11 +2271,9 @@ argument_list|)
 comment|/* 	 * Bypass packet filtering for packets from a tunnel (gif). 	 */
 if|if
 condition|(
-name|ipsec_gethist
+name|ipsec_getnhist
 argument_list|(
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 condition|)
 goto|goto

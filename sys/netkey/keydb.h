@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: keydb.h,v 1.14 2000/08/02 17:58:26 sakane Exp $	*/
+comment|/*	$KAME: keydb.h,v 1.24 2003/09/07 15:12:10 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -153,11 +153,23 @@ begin_struct
 struct|struct
 name|secasvar
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|secasvar
+argument_list|)
+name|tailq
+expr_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|secasvar
 argument_list|)
 name|chain
+expr_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|secasvar
+argument_list|)
+name|spihash
 expr_stmt|;
 name|int
 name|refcnt
@@ -239,7 +251,7 @@ modifier|*
 name|lft_s
 decl_stmt|;
 comment|/* SOFT lifetime */
-name|u_int32_t
+name|u_int64_t
 name|seq
 decl_stmt|;
 comment|/* sequence number */
@@ -253,6 +265,10 @@ modifier|*
 name|sah
 decl_stmt|;
 comment|/* back pointer to the secashead */
+name|u_int32_t
+name|id
+decl_stmt|;
+comment|/* SA id */
 block|}
 struct|;
 end_struct
@@ -265,29 +281,30 @@ begin_struct
 struct|struct
 name|secreplay
 block|{
-name|u_int32_t
+name|u_int64_t
 name|count
 decl_stmt|;
 name|u_int
 name|wsize
 decl_stmt|;
 comment|/* window size, i.g. 4 bytes */
-name|u_int32_t
+name|u_int64_t
 name|seq
 decl_stmt|;
 comment|/* used by sender */
-name|u_int32_t
+name|u_int64_t
 name|lastseq
 decl_stmt|;
 comment|/* used by receiver */
-name|caddr_t
+name|u_int8_t
+modifier|*
 name|bitmap
 decl_stmt|;
 comment|/* used by receiver */
 name|int
 name|overflow
 decl_stmt|;
-comment|/* overflow flag */
+comment|/* what round does the counter take. */
 block|}
 struct|;
 end_struct
@@ -397,6 +414,18 @@ begin_comment
 comment|/* secpolicy */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|secpolicy
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|secpolicyindex
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|struct
@@ -411,11 +440,37 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|u_int32_t
+name|keydb_newspid
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|keydb_delsecpolicy
 parameter_list|(
 name|struct
 name|secpolicy
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|keydb_setsecpolicyindex
+parameter_list|(
+name|struct
+name|secpolicy
+modifier|*
+parameter_list|,
+name|struct
+name|secpolicyindex
 modifier|*
 parameter_list|)
 function_decl|;

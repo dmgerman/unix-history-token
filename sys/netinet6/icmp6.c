@@ -248,12 +248,6 @@ directive|include
 file|<netipsec/key.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|IPSEC
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -9729,6 +9723,23 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
+name|IPSEC
+comment|/* Don't lookup socket */
+operator|(
+name|void
+operator|)
+name|ipsec_setsocket
+argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* IPSEC */
+ifdef|#
+directive|ifdef
 name|COMPAT_RFC1885
 name|ip6_output
 argument_list|(
@@ -10986,9 +10997,17 @@ operator|&
 name|sdst
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 name|key_sa_routechange
 argument_list|(
 operator|(
@@ -12416,6 +12435,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* send the packet to outside... */
+ifdef|#
+directive|ifdef
+name|IPSEC
+comment|/* Don't lookup socket */
+operator|(
+name|void
+operator|)
+name|ipsec_setsocket
+argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* IPSEC */
 name|ip6_output
 argument_list|(
 name|m

@@ -346,12 +346,6 @@ directive|include
 file|<netipsec/key.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|IPSEC
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -2681,6 +2675,33 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC
+comment|/* copy old policy into new socket's */
+if|if
+condition|(
+name|ipsec_copy_pcbpolicy
+argument_list|(
+name|sotoinpcb
+argument_list|(
+name|lso
+argument_list|)
+operator|->
+name|inp_sp
+argument_list|,
+name|inp
+operator|->
+name|inp_sp
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"syncache_expand: could not copy policy\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|FAST_IPSEC
 comment|/* copy old policy into new socket's */
 if|if
 condition|(

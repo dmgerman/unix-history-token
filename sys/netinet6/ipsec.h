@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipsec.h,v 1.53 2001/11/20 08:32:38 itojun Exp $	*/
+comment|/*	$KAME: ipsec.h,v 1.69 2003/09/10 23:49:11 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -91,10 +91,6 @@ begin_struct
 struct|struct
 name|secpolicyindex
 block|{
-name|u_int8_t
-name|dir
-decl_stmt|;
-comment|/* direction of packet flow, see blow */
 name|struct
 name|sockaddr_storage
 name|src
@@ -146,25 +142,57 @@ begin_struct
 struct|struct
 name|secpolicy
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|secpolicy
+argument_list|)
+name|tailq
+expr_stmt|;
+comment|/* all SPD entries, both pcb/table */
 name|LIST_ENTRY
 argument_list|(
 argument|secpolicy
 argument_list|)
 name|chain
 expr_stmt|;
+comment|/* SPD entries on table */
+name|u_int8_t
+name|dir
+decl_stmt|;
+comment|/* direction of packet flow */
+name|int
+name|readonly
+decl_stmt|;
+comment|/* write prohibited */
+name|int
+name|persist
+decl_stmt|;
+comment|/* will never be removed */
 name|int
 name|refcnt
 decl_stmt|;
 comment|/* reference count */
 name|struct
 name|secpolicyindex
+modifier|*
 name|spidx
 decl_stmt|;
-comment|/* selector */
+comment|/* selector - NULL if not valid */
 name|u_int32_t
 name|id
 decl_stmt|;
-comment|/* It's unique number on the system. */
+comment|/* it identifies a policy in the SPD. */
+define|#
+directive|define
+name|IPSEC_MANUAL_POLICYID_MAX
+value|0x3fff
+comment|/* 				 * 1 - 0x3fff are reserved for user operation. 				 * 0 are reserved.  Others are for kernel use. 				 */
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+comment|/* backpointer to per-socket policy */
 name|u_int
 name|state
 decl_stmt|;
@@ -177,10 +205,10 @@ define|#
 directive|define
 name|IPSEC_SPSTATE_ALIVE
 value|1
-name|u_int
+name|int
 name|policy
 decl_stmt|;
-comment|/* DISCARD, NONE or IPSEC, see keyv2.h */
+comment|/* DISCARD, NONE or IPSEC, see below */
 name|struct
 name|ipsecrequest
 modifier|*
@@ -212,6 +240,12 @@ end_struct
 begin_comment
 comment|/* Request for IPsec */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ifnet
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -246,6 +280,12 @@ modifier|*
 name|sp
 decl_stmt|;
 comment|/* back pointer to SP */
+name|struct
+name|ifnet
+modifier|*
+name|tunifp
+decl_stmt|;
+comment|/* interface for tunnelling */
 block|}
 struct|;
 end_struct
@@ -272,6 +312,37 @@ name|int
 name|priv
 decl_stmt|;
 comment|/* privileged socket ? */
+comment|/* cached policy */
+comment|/* XXX 3 == IPSEC_DIR_MAX */
+name|struct
+name|secpolicy
+modifier|*
+name|cache
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|struct
+name|secpolicyindex
+name|cacheidx
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int
+name|cachegen
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* cache generation #, the time we filled it */
+name|int
+name|cacheflags
+decl_stmt|;
+define|#
+directive|define
+name|IPSEC_PCBSP_CONNECTED
+value|1
 block|}
 struct|;
 end_struct
@@ -303,6 +374,33 @@ name|count
 decl_stmt|;
 comment|/* for lifetime */
 comment|/* XXX: here is mbuf place holder to be sent ? */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ipsecaux
+block|{
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+name|int
+name|hdrs
+decl_stmt|;
+comment|/* # of ipsec headers */
+name|struct
+name|secpolicy
+modifier|*
+name|sp
+decl_stmt|;
+name|struct
+name|ipsecrequest
+modifier|*
+name|req
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -658,6 +756,12 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|u_quad_t
+name|spdcachelookup
+decl_stmt|;
+name|u_quad_t
+name|spdcachemiss
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -842,6 +946,9 @@ name|sockaddr
 modifier|*
 name|dst
 decl_stmt|;
+name|int
+name|encap
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -867,6 +974,12 @@ name|ipsec_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -879,6 +992,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|secpolicy
+modifier|*
 name|ip4_def_policy
 decl_stmt|;
 end_decl_stmt
@@ -946,6 +1060,11 @@ name|ip4_esp_randpad
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -958,33 +1077,44 @@ comment|/*CONSTCOND*/
 value|0)
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|inpcb
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 specifier|extern
-name|struct
-name|secpolicy
-modifier|*
-name|ipsec4_getpolicybypcb
+name|int
+name|ipsec_pcbconn
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|mbuf
+name|inpcbpolicy
 operator|*
-operator|,
-name|u_int
-operator|,
-expr|struct
-name|inpcb
-operator|*
-operator|,
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
+name|ipsec_pcbdisconn
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcbpolicy
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipsec_invalpcbcacheall
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1042,8 +1172,36 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|secpolicy
+modifier|*
+name|ipsec4_getpolicybytag
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|u_int
+operator|,
 name|int
-name|ipsec_init_policy
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|inpcb
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipsec_init_pcbpolicy
 name|__P
 argument_list|(
 operator|(
@@ -1063,7 +1221,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipsec_copy_policy
+name|ipsec_copy_pcbpolicy
 name|__P
 argument_list|(
 operator|(
@@ -1089,6 +1247,8 @@ operator|(
 expr|struct
 name|ipsecrequest
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1203,6 +1363,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|tcpcb
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|tcp6cb
 struct_decl|;
 end_struct_decl
 
@@ -1412,6 +1578,42 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|ipsec_setsocket
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|socket
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|socket
+modifier|*
+name|ipsec_getsocket
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ipsec_addhist
 name|__P
 argument_list|(
@@ -1423,6 +1625,21 @@ operator|,
 name|int
 operator|,
 name|u_int32_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipsec_getnhist
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1442,6 +1659,21 @@ name|mbuf
 operator|*
 operator|,
 name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipsec_clearhist
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
 operator|*
 operator|)
 argument_list|)
