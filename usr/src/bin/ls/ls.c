@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.3 (Berkeley) %G%"
+literal|"@(#)ls.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3090,7 +3090,7 @@ name|sprintf
 argument_list|(
 name|inumbuf
 argument_list|,
-literal|"%5d "
+literal|"%6d "
 argument_list|,
 name|p
 operator|->
