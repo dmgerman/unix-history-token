@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)isa.c	7.2 (Berkeley) 5/13/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00017  * --------------------         -----   ----------------------  *  * 18 Aug 92	Frank Maclachlan	*See comments below  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)isa.c	7.2 (Berkeley) 5/13/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00117  * --------------------         -----   ----------------------  *  * 18 Aug 92	Frank Maclachlan	*See comments below  * 25 Mar 93	Rodney W. Grimes	Added counter for stray interrupt,  *					turned on logging of stray interrupts,  *					Now prints maddr, msize, and flags  *					after finding a device.  */
 end_comment
 
 begin_decl_stmt
@@ -704,6 +704,10 @@ directive|else
 end_else
 
 begin_comment
+comment|/* notyet */
+end_comment
+
+begin_comment
 comment|/*  * Configure all ISA devices  */
 end_comment
 
@@ -931,6 +935,7 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
+comment|/* 			 * The attach should really be after all the printf's 			 * but until all the drivers are fixed do it here. 			 * There is a comment below that shows where this 			 * really belongs.  Rod Grimes 04/10/93 			 */
 call|(
 modifier|*
 name|dp
@@ -943,13 +948,149 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" at 0x%x "
+literal|" at 0x%x"
 argument_list|,
 name|isdp
 operator|->
 name|id_iobase
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|isdp
+operator|->
+name|id_iobase
+operator|+
+name|isdp
+operator|->
+name|id_alive
+operator|-
+literal|1
+operator|)
+operator|!=
+name|isdp
+operator|->
+name|id_iobase
+condition|)
+name|printf
+argument_list|(
+literal|"-0x%x"
+argument_list|,
+name|isdp
+operator|->
+name|id_iobase
+operator|+
+name|isdp
+operator|->
+name|id_alive
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isdp
+operator|->
+name|id_irq
+condition|)
+name|printf
+argument_list|(
+literal|"irq %d "
+argument_list|,
+name|ffs
+argument_list|(
+name|isdp
+operator|->
+name|id_irq
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isdp
+operator|->
+name|id_drq
+operator|!=
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"drq %d "
+argument_list|,
+name|isdp
+operator|->
+name|id_drq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isdp
+operator|->
+name|id_maddr
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"maddr 0x%x "
+argument_list|,
+name|kvtop
+argument_list|(
+name|isdp
+operator|->
+name|id_maddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isdp
+operator|->
+name|id_msize
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"msize %d "
+argument_list|,
+name|isdp
+operator|->
+name|id_msize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isdp
+operator|->
+name|id_flags
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"flags 0x%x "
+argument_list|,
+name|isdp
+operator|->
+name|id_flags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"on isa\n"
+argument_list|)
+expr_stmt|;
+comment|/* This is the place the attach should be done! */
 if|if
 condition|(
 name|isdp
@@ -970,13 +1111,6 @@ name|id_irq
 argument_list|)
 operator|-
 literal|1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"irq %d "
-argument_list|,
-name|intrno
-argument_list|)
 expr_stmt|;
 name|INTREN
 argument_list|(
@@ -1015,29 +1149,6 @@ name|SEL_KPL
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|isdp
-operator|->
-name|id_drq
-operator|!=
-operator|-
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"drq %d "
-argument_list|,
-name|isdp
-operator|->
-name|id_drq
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"on isa\n"
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1058,6 +1169,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* (!) notyet */
+end_comment
 
 begin_define
 define|#
@@ -2492,22 +2607,44 @@ end_macro
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
 comment|/* DON'T BOTHER FOR NOW! */
 comment|/* for some reason, we get bursts of intr #7, even if not enabled! */
+comment|/* 	 * Well the reason you got bursts of intr #7 is because someone 	 * raised an interrupt line and dropped it before the 8259 could 	 * prioritize it.  This is documented in the intel data book.  This 	 * means you have BAD hardware!  I have changed this so that only 	 * the first 5 get logged, then it quits logging them, and puts 	 * out a special message. rgrimes 3/25/1993 	 */
+specifier|extern
+name|u_long
+name|isa_stray_intrcnt
+decl_stmt|;
+name|isa_stray_intrcnt
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|isa_stray_intrcnt
+operator|<=
+literal|5
+condition|)
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ISA strayintr %x"
+literal|"ISA strayintr %x\n"
 argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+if|if
+condition|(
+name|isa_stray_intrcnt
+operator|==
+literal|5
+condition|)
+name|log
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"Too many ISA strayintr not logging any more\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00091  * --------------------         -----   ----------------------  *  * 27 Feb 93    Chris Demetriou		Add proper flag handling.  *  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00117  * --------------------         -----   ----------------------  *  * 27 Feb 93	Chris Demetriou		Add proper flag handling.  * 08 Aug 93	Phil Sutherland		Add support for devices without irq's  *		Rodney W. Grimes	Cleaned up indents, fixed table formats  *  */
 end_comment
 
 begin_ifndef
@@ -465,7 +465,7 @@ argument_list|,
 literal|"\t0\n};\n\n"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Print the mbsinit structure 		 * Driver Controller Unit Slave 		 */
+comment|/* 		 * Print the mbsinit structure Driver Controller Unit Slave 		 */
 name|fprintf
 argument_list|(
 name|fp
@@ -497,7 +497,7 @@ operator|->
 name|d_next
 control|)
 block|{
-comment|/* 			 * All slaves are connected to something which 			 * is connected to the massbus. 			 */
+comment|/* 			 * All slaves are connected to something which is 			 * connected to the massbus. 			 */
 if|if
 condition|(
 operator|(
@@ -1847,7 +1847,7 @@ name|d_type
 operator|==
 name|DRIVER
 condition|)
-comment|/* devices w/o interrupts */
+comment|/* devices w/o 							 * interrupts */
 name|fprintf
 argument_list|(
 name|fp
@@ -3653,11 +3653,27 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"extern struct isa_driver %sdriver; extern V(%s%d)();\n"
+literal|"extern struct isa_driver %sdriver; "
 argument_list|,
 name|dp
 operator|->
 name|d_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_irq
+operator|>=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"extern V(%s%d)();\n"
 argument_list|,
 name|dp
 operator|->
@@ -3668,6 +3684,17 @@ operator|->
 name|d_unit
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|fprintf
 argument_list|(
@@ -3680,7 +3707,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /* driver 	iobase	irq   drq     maddr    msiz    intr   unit   flags */\n"
+literal|"\ /* driver 	iobase	  irq drq       maddr   msiz    intr   unit   flags */\ \n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3756,7 +3783,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%sdriver,  %8.8s,"
+literal|"{&%3.3sdriver, %8.8s,"
 argument_list|,
 name|dp
 operator|->
@@ -3772,7 +3799,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%sdriver,     0x%03x,"
+literal|"{&%3.3sdriver,    0x%03x,"
 argument_list|,
 name|dp
 operator|->
@@ -3787,7 +3814,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" %5.5s, %2d,  C 0x%05X, %5d, V(%s%d),  %2d,  %#x },\n"
+literal|" %5.5s, %2d,  C 0x%05X, %5d,"
 argument_list|,
 name|sirq
 argument_list|(
@@ -3807,6 +3834,21 @@ argument_list|,
 name|dp
 operator|->
 name|d_msize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_irq
+operator|>=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" V(%s%d),\t"
 argument_list|,
 name|dp
 operator|->
@@ -3815,6 +3857,21 @@ argument_list|,
 name|dp
 operator|->
 name|d_unit
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" NULL,\t"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %2d,  0x%x },\n"
 argument_list|,
 name|dp
 operator|->
@@ -3844,7 +3901,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /* driver 	iobase	irq   drq     maddr    msiz    intr   unit   flags */\n"
+literal|"\ /* driver 	iobase	  irq drq       maddr   msiz    intr   unit   flags */\ \n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3920,7 +3977,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%sdriver,  %8.8s,"
+literal|"{&%3.3sdriver, %8.8s,"
 argument_list|,
 name|dp
 operator|->
@@ -3936,7 +3993,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%sdriver,     0x%03x,"
+literal|"{&%3.3sdriver,    0x%03x,"
 argument_list|,
 name|dp
 operator|->
@@ -3951,7 +4008,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" %5.5s, %2d,  C 0x%05X, %5d, V(%s%d),  %2d,  %#x },\n"
+literal|" %5.5s, %2d,  C 0x%05X, %5d,"
 argument_list|,
 name|sirq
 argument_list|(
@@ -3971,6 +4028,21 @@ argument_list|,
 name|dp
 operator|->
 name|d_msize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_irq
+operator|>=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" V(%s%d),\t"
 argument_list|,
 name|dp
 operator|->
@@ -3979,6 +4051,21 @@ argument_list|,
 name|dp
 operator|->
 name|d_unit
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" NULL,\t"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %2d,  0x%x },\n"
 argument_list|,
 name|dp
 operator|->
@@ -4008,7 +4095,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /* driver 	iobase	irq   drq     maddr    msiz    intr   unit   flags */\n"
+literal|"\ /* driver 	iobase	  irq drq       maddr   msiz    intr   unit   flags */\ \n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4084,7 +4171,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%sdriver,  %8.8s,"
+literal|"{&%3.3sdriver, %8.8s,"
 argument_list|,
 name|dp
 operator|->
@@ -4100,7 +4187,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%sdriver,     0x%03x,"
+literal|"{&%3.3sdriver,    0x%03x,"
 argument_list|,
 name|dp
 operator|->
@@ -4115,7 +4202,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" %5.5s, %2d,  C 0x%05X, %5d, V(%s%d),  %2d,  %#x },\n"
+literal|" %5.5s, %2d,  C 0x%05X, %5d,"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4135,6 +4222,21 @@ argument_list|,
 name|dp
 operator|->
 name|d_msize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_irq
+operator|>=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" V(%s%d),\t"
 argument_list|,
 name|dp
 operator|->
@@ -4143,6 +4245,21 @@ argument_list|,
 name|dp
 operator|->
 name|d_unit
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" NULL,\t"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %2d,  0x%x },\n"
 argument_list|,
 name|dp
 operator|->
@@ -4172,7 +4289,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /* driver 	iobase	irq   drq     maddr    msiz    intr   unit   flags */\n"
+literal|"\ /* driver 	iobase	  irq drq       maddr   msiz    intr   unit   flags */\ \n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4248,7 +4365,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%sdriver,  %8.8s,"
+literal|"{&%3.3sdriver, %8.8s,"
 argument_list|,
 name|dp
 operator|->
@@ -4264,7 +4381,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{&%sdriver,     0x%03x,"
+literal|"{&%3.3sdriver,    0x%03x,"
 argument_list|,
 name|dp
 operator|->
@@ -4279,7 +4396,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" %5.5s, %2d,  C 0x%05X, %5d, V(%s%d),  %2d,  %#x },\n"
+literal|" %5.5s, %2d,  C 0x%05X, %5d,"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4299,6 +4416,21 @@ argument_list|,
 name|dp
 operator|->
 name|d_msize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_irq
+operator|>=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" V(%s%d),\t"
 argument_list|,
 name|dp
 operator|->
@@ -4307,6 +4439,21 @@ argument_list|,
 name|dp
 operator|->
 name|d_unit
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" NULL,\t"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %2d,  0x%x },\n"
 argument_list|,
 name|dp
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)autoconf.c	7.1 (Berkeley) 5/9/91  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)autoconf.c	7.1 (Berkeley) 5/9/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00117  * --------------------         -----   ----------------------  *  * 09 Apr 93	???(From sun-lamp)	Fix to report sd when Julians  *					scsi code is used, allow you to swap  *					root floppies during a boot  */
 end_comment
 
 begin_decl_stmt
@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/src/sys.386bsd/i386/i386/RCS/autoconf.c,v 1.2 92/01/21 14:21:31 william Exp Locker: root $"
+literal|"$Header: /b/source/CVS/src/sys.386bsd/i386/i386/autoconf.c,v 1.3 1993/04/10 21:58:52 cgd Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,6 +361,12 @@ begin_comment
 comment|/* should be dev_t, but not until 32 bits */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"sd.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -391,11 +397,25 @@ block|,
 literal|'t'
 block|,
 comment|/* 3 = wt */
+if|#
+directive|if
+name|NSD
+operator|<
+literal|1
 literal|'a'
 block|,
 literal|'s'
 block|,
 comment|/* 4 = as */
+else|#
+directive|else
+literal|'s'
+block|,
+literal|'d'
+block|,
+comment|/* 4 = sd -- new SCSI system */
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -554,6 +574,53 @@ operator|==
 name|orootdev
 condition|)
 return|return;
+if|if
+condition|(
+name|devname
+index|[
+name|majdev
+index|]
+index|[
+literal|0
+index|]
+operator|==
+literal|'f'
+operator|&&
+name|devname
+index|[
+name|majdev
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'d'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"* insert the floppy you want to have mounted as\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"* root, and hit any key to continue booting:\n"
+argument_list|)
+expr_stmt|;
+name|cngetc
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"changing root device to %c%c%d%c\n"
