@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printw.c	5.6 (Berkeley) %G%"
+literal|"@(#)printw.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,11 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 name|win
 operator|=
 name|va_arg
