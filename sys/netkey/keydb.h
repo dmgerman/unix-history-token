@@ -124,11 +124,23 @@ index|]
 expr_stmt|;
 comment|/* SA chain */
 comment|/* The first of this list is newer SA */
+union|union
+block|{
 name|struct
 name|route
-name|sa_route
+name|sau_route
 decl_stmt|;
-comment|/* route cache */
+name|struct
+name|route_in6
+name|sau_route6
+decl_stmt|;
+block|}
+name|sa_u
+union|;
+define|#
+directive|define
+name|sa_route
+value|sa_u.sau_route
 block|}
 struct|;
 end_struct
