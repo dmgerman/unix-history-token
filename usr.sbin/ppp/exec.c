@@ -607,12 +607,17 @@ expr_stmt|;
 name|timer_TermService
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOSUID
 name|setuid
 argument_list|(
 name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|child_status
 operator|=
 literal|0

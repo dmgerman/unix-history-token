@@ -158,6 +158,23 @@ name|NOKLDLOAD
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOSUID
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -10463,12 +10480,17 @@ argument_list|(
 literal|"session owner"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOSUID
 name|setuid
 argument_list|(
 name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/*          * Hang around for a HUP.  This should happen as soon as the          * ppp that we passed our ctty descriptor to closes it.          * NOTE: If this process dies, the passed descriptor becomes          *       invalid and will give a select() error by setting one          *       of the error fds, aborting the other ppp.  We don't          *       want that to happen !          */
 name|pause
 argument_list|()

@@ -4120,12 +4120,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOSUID
 name|setuid
 argument_list|(
 name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|execvp
 argument_list|(
 name|argv
