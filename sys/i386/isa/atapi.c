@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device-independent level for ATAPI drivers.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.1, Mon Jul 10 21:55:11 MSD 1995  */
+comment|/*  * Device-independent level for ATAPI drivers.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.3, Mon Aug 28 21:44:01 MSD 1995  */
 end_comment
 
 begin_comment
@@ -24,10 +24,6 @@ include|#
 directive|include
 file|"wcd.h"
 end_include
-
-begin_comment
-comment|/* #include "whd.h" -- add your driver here */
-end_comment
 
 begin_comment
 comment|/* #include "wmt.h" -- add your driver here */
@@ -833,7 +829,7 @@ default|default:
 comment|/* unknown ATAPI device */
 name|printf
 argument_list|(
-literal|"wdc%d: unit %d: unknown ATAPI type=%d\n"
+literal|"wdc%d: unit %d: unknown ATAPI device type=%d\n"
 argument_list|,
 name|ctlr
 argument_list|,
@@ -846,6 +842,35 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|AT_TYPE_DIRECT
+case|:
+comment|/* direct-access (magnetic disk) */
+if|#
+directive|if
+name|NWHD
+operator|>
+literal|0
+comment|/* Add your driver here */
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"wdc%d: ATAPI hard disks not supported\n"
+argument_list|,
+name|ctlr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"wdc%d: Could be old ATAPI CDROM, trying...\n"
+argument_list|,
+name|ctlr
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+case|case
 name|AT_TYPE_CDROM
 case|:
 comment|/* CD-ROM device */
@@ -854,7 +879,6 @@ directive|if
 name|NWCD
 operator|>
 literal|0
-comment|/* ATAPI CD-ROM */
 block|{
 name|int
 name|wcdattach
@@ -912,28 +936,6 @@ break|break;
 endif|#
 directive|endif
 case|case
-name|AT_TYPE_DIRECT
-case|:
-comment|/* direct-access (magnetic disk) */
-if|#
-directive|if
-name|NWHD
-operator|>
-literal|0
-comment|/* Add your driver here */
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"wdc%d: ATAPI hard disks not supported\n"
-argument_list|,
-name|ctlr
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-case|case
 name|AT_TYPE_TAPE
 case|:
 comment|/* streaming tape (QIC-121 model) */
@@ -947,7 +949,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"wdc%d: ATAPI streaming tapes not supported yet\n"
+literal|"wdc%d: ATAPI streaming tapes not supported\n"
 argument_list|,
 name|ctlr
 argument_list|)
@@ -969,7 +971,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"wdc%d: ATAPI optical disks not supported yet\n"
+literal|"wdc%d: ATAPI optical disks not supported\n"
 argument_list|,
 name|ctlr
 argument_list|)
@@ -1238,26 +1240,52 @@ expr|*
 name|ap
 argument_list|)
 expr_stmt|;
-comment|/* Shuffle string byte order. */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-sizeof|sizeof
-argument_list|(
+comment|/* 	 * Shuffle string byte order. 	 * Mitsumi and NEC drives don't need this. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+operator|(
 name|ap
 operator|->
 name|model
-argument_list|)
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'N'
+operator|&&
+name|ap
+operator|->
+name|model
+index|[
+literal|1
+index|]
+operator|==
+literal|'E'
+operator|)
+operator|||
+operator|(
+name|ap
+operator|->
+name|model
+index|[
+literal|0
+index|]
+operator|==
+literal|'F'
+operator|&&
+name|ap
+operator|->
+name|model
+index|[
+literal|1
+index|]
+operator|==
+literal|'X'
+operator|)
+operator|)
+condition|)
 block|{
 name|u_short
 modifier|*
@@ -1272,9 +1300,27 @@ name|ap
 operator|->
 name|model
 operator|+
-name|i
+sizeof|sizeof
+argument_list|(
+name|ap
+operator|->
+name|model
+argument_list|)
 operator|)
 decl_stmt|;
+while|while
+condition|(
+operator|--
+name|p
+operator|>=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|ap
+operator|->
+name|model
+condition|)
 operator|*
 name|p
 operator|=
@@ -2555,29 +2601,40 @@ name|ata
 operator|->
 name|port
 argument_list|,
-name|ac
-operator|->
-name|count
-condition|?
-name|ARS_DRQ
-else|:
 literal|0
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"atapi%d.%d: controller not ready\n"
-argument_list|,
-name|ata
-operator|->
-name|ctrlr
-argument_list|,
 name|ac
 operator|->
-name|unit
+name|result
+operator|.
+name|status
+operator|=
+name|inb
+argument_list|(
+name|ata
+operator|->
+name|port
+operator|+
+name|AR_STATUS
+argument_list|)
+expr_stmt|;
+name|ac
+operator|->
+name|result
+operator|.
+name|error
+operator|=
+name|inb
+argument_list|(
+name|ata
+operator|->
+name|port
+operator|+
+name|AR_ERROR
 argument_list|)
 expr_stmt|;
 name|ac
@@ -2588,21 +2645,34 @@ name|code
 operator|=
 name|RES_NOTRDY
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"atapi%d.%d: controller not ready, status=%b, error=%b\n"
+argument_list|,
+name|ata
+operator|->
+name|ctrlr
+argument_list|,
+name|ac
+operator|->
+name|unit
+argument_list|,
 name|ac
 operator|->
 name|result
 operator|.
 name|status
-operator|=
-literal|0
-expr_stmt|;
+argument_list|,
+name|ARS_BITS
+argument_list|,
 name|ac
 operator|->
 name|result
 operator|.
 name|error
-operator|=
-literal|0
+argument_list|,
+name|AER_BITS
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
