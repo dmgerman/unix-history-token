@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.18 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1084,12 +1084,12 @@ if|if
 condition|(
 name|Sent3270TerminalType
 operator|&&
-name|should_I
+name|my_want_state_is_will
 argument_list|(
 name|TELOPT_BINARY
 argument_list|)
 operator|&&
-name|should_he
+name|my_want_state_is_do
 argument_list|(
 name|TELOPT_BINARY
 argument_list|)
@@ -1118,7 +1118,9 @@ argument_list|()
 expr_stmt|;
 comment|/* Start terminal going */
 name|setconnmode
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1143,7 +1145,9 @@ argument_list|()
 expr_stmt|;
 comment|/* Tell 3270 we aren't here anymore */
 name|setconnmode
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1317,7 +1321,7 @@ comment|/*NOTREACHED*/
 block|}
 name|printsub
 argument_list|(
-literal|">"
+literal|'>'
 argument_list|,
 name|sb_terminal
 operator|+

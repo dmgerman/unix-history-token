@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ring.c	1.10 (Berkeley) %G%"
+literal|"@(#)ring.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((((int)(a))-((int)(b))>= 0)? \ 					(a)-(b): (((a)-(b))+(d)->size))
+value|(((a)-(b)>= 0)? \ 					(a)-(b): (((a)-(b))+(d)->size))
 end_define
 
 begin_define

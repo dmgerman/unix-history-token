@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.10 (Berkeley) %G%"
+literal|"@(#)main.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,15 @@ name|tninit
 argument_list|()
 expr_stmt|;
 comment|/* Clear out things */
+ifdef|#
+directive|ifdef
+name|CRAY
+name|_setlist_init
+argument_list|()
+expr_stmt|;
+comment|/* Work around compiler bug */
+endif|#
+directive|endif
 name|TerminalSaveState
 argument_list|()
 expr_stmt|;
@@ -215,16 +224,12 @@ operator|)
 condition|)
 block|{
 comment|/* get file name */
-name|NetTrace
-operator|=
-name|fopen
+name|SetNetTrace
 argument_list|(
 name|argv
 index|[
 literal|2
 index|]
-argument_list|,
-literal|"w"
 argument_list|)
 expr_stmt|;
 name|argv
@@ -233,18 +238,6 @@ expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
-if|if
-condition|(
-name|NetTrace
-operator|==
-name|NULL
-condition|)
-block|{
-name|NetTrace
-operator|=
-name|stdout
-expr_stmt|;
-block|}
 block|}
 block|}
 else|else
@@ -491,6 +484,10 @@ argument_list|)
 name|command
 argument_list|(
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|#
@@ -505,6 +502,10 @@ block|{
 name|command
 argument_list|(
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)defines.h	1.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)defines.h	1.8 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -110,21 +110,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MODE_LINE
-parameter_list|(
-name|m
-parameter_list|)
-value|(modelist[m].modetype& LINE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MODE_LOCAL_CHARS
 parameter_list|(
 name|m
 parameter_list|)
-value|(modelist[m].modetype&  LOCAL_CHARS)
+value|((m)&(MODE_EDIT|MODE_TRAPSIG))
 end_define
 
 begin_define
@@ -134,7 +124,7 @@ name|MODE_LOCAL_ECHO
 parameter_list|(
 name|m
 parameter_list|)
-value|(modelist[m].modetype& LOCAL_ECHO)
+value|((m)&MODE_ECHO)
 end_define
 
 begin_define
@@ -144,52 +134,8 @@ name|MODE_COMMAND_LINE
 parameter_list|(
 name|m
 parameter_list|)
-value|(modelist[m].modetype& COMMAND_LINE)
+value|((m)==-1)
 end_define
-
-begin_define
-define|#
-directive|define
-name|LOCAL_CHARS
-value|0x01
-end_define
-
-begin_comment
-comment|/* Characters processed locally */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINE
-value|0x02
-end_define
-
-begin_comment
-comment|/* Line-by-line mode of operation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCAL_ECHO
-value|0x04
-end_define
-
-begin_comment
-comment|/* Echoing locally */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COMMAND_LINE
-value|0x08
-end_define
-
-begin_comment
-comment|/* Command line mode */
-end_comment
 
 end_unit
 
