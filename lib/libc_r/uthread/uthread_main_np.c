@@ -21,23 +21,13 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_pthread_main_np
-argument_list|,
-name|pthread_main_np
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Provide the equivalent to Solaris thr_main() function  */
 end_comment
 
 begin_function
 name|int
-name|_pthread_main_np
+name|pthread_main_np
 parameter_list|()
 block|{
 if|if
