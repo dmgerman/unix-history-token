@@ -6548,24 +6548,6 @@ name|len
 operator|=
 literal|1
 expr_stmt|;
-name|sbp_targ_status_FIFO
-argument_list|(
-name|orbi
-argument_list|,
-name|orb
-index|[
-literal|6
-index|]
-argument_list|,
-name|orb
-index|[
-literal|7
-index|]
-argument_list|,
-comment|/*dequeue*/
-literal|0
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 comment|/* allocate login */
@@ -6621,24 +6603,6 @@ operator|.
 name|len
 operator|=
 literal|1
-expr_stmt|;
-name|sbp_targ_status_FIFO
-argument_list|(
-name|orbi
-argument_list|,
-name|orb
-index|[
-literal|6
-index|]
-argument_list|,
-name|orb
-index|[
-literal|7
-index|]
-argument_list|,
-comment|/*dequeue*/
-literal|0
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -6780,6 +6744,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+comment|/* XXX return status after loginres is successfully written */
 break|break;
 block|}
 case|case
@@ -6864,7 +6829,7 @@ literal|"%s: reconnection faild id=%d\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-name|login
+name|orb4
 operator|->
 name|id
 argument_list|)
