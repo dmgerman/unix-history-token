@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	4.3	85/08/22	*/
+comment|/*	config.h	4.4	90/02/21	*/
 end_comment
 
 begin_ifndef
@@ -119,7 +119,7 @@ begin_define
 define|#
 directive|define
 name|SYMTSZ
-value|3000
+value|4000
 end_define
 
 begin_comment
@@ -130,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|DIMTABSZ
-value|4200
+value|5000
 end_define
 
 begin_comment
