@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      idp_usrreq.c     6.1     85/05/30     */
+comment|/*      idp_usrreq.c     6.2     85/05/31     */
 end_comment
 
 begin_include
@@ -114,14 +114,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|idp_input_panic
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|idp_input
 argument_list|(
@@ -167,44 +159,15 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|idp_input_panic
-condition|)
-block|{
-if|if
-condition|(
-operator|(
 name|nsp
 operator|==
 literal|0
-operator|)
-operator|||
-operator|(
-operator|(
-name|idp
-operator|->
-name|idp_pt
-operator|==
-literal|5
-operator|)
-operator|&&
-operator|(
-operator|!
-operator|(
-name|nsp
-operator|->
-name|nsp_flags
-operator|&
-name|NSP_RAWIN
-operator|)
-operator|)
-operator|)
 condition|)
 name|panic
 argument_list|(
 literal|"Impossible idp_input"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
 name|idp_ns
 operator|.
@@ -490,11 +453,18 @@ name|m1
 operator|==
 literal|0
 condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
 operator|)
 return|;
+block|}
 name|m1
 operator|->
 name|m_len
@@ -1935,9 +1905,15 @@ name|PRU_ATTACH
 case|:
 if|if
 condition|(
+operator|!
+name|suser
+argument_list|()
+operator|||
+operator|(
 name|nsp
 operator|!=
 name|NULL
+operator|)
 condition|)
 block|{
 name|error
