@@ -5320,6 +5320,11 @@ name|so_qlen
 operator|--
 expr_stmt|;
 comment|/* XXX KNOTE(&head->so_rcv.sb_sel.si_note, 0); */
+name|soref
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|so
 operator|->
 name|so_state
