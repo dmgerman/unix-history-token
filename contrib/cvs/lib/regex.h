@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.     Copyright (C) 1985, 1989, 1990, 1991, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions for data structures and routines for the regular    expression library, version 0.12.     Copyright (C) 1985, 1989, 1990, 1991, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_ifndef
@@ -1100,39 +1100,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 4.2 bsd compatibility.  */
+comment|/* 4.2 bsd compatibility.  System headers may declare the argument as    either "char *" (e.g. Cray unistd.h) or "const char *" (e.g. linux    regex.h), so don't prototype them here.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|re_comp
-name|_RE_ARGS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|re_exec
-name|_RE_ARGS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* POSIX compatibility.  */

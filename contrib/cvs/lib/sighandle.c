@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sighandle.c -- Library routines for manipulating chains of signal handlers    Copyright (C) 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* sighandle.c -- Library routines for manipulating chains of signal handlers    Copyright (C) 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/* Written by Paul Sander, HaL Computer Systems, Inc.<paul@hal.com>    B
 end_comment
 
 begin_comment
-comment|/*************************************************************************  *  * signal.c -- This file contains code that manipulates chains of signal  *             handlers.  *  *             Facilities are provided to register a signal handler for  *             any specific signal.  When a signal is received, all of the  *             registered signal handlers are invoked in the reverse order  *             in which they are registered.  Note that the signal handlers  *             must not themselves make calls to the signal handling  *             facilities.  *  * $CVSid: @(#)sighandle.c 1.13 94/10/07 $  *  *************************************************************************/
+comment|/*************************************************************************  *  * signal.c -- This file contains code that manipulates chains of signal  *             handlers.  *  *             Facilities are provided to register a signal handler for  *             any specific signal.  When a signal is received, all of the  *             registered signal handlers are invoked in the reverse order  *             in which they are registered.  Note that the signal handlers  *             must not themselves make calls to the signal handling  *             facilities.  *  *************************************************************************/
 end_comment
 
 begin_ifdef

@@ -94,6 +94,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* See server.c for description.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|server_pathname_check
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* We have a new Entries line for a file.  TAG or DATE can be NULL.  */
 end_comment
 
@@ -131,6 +149,30 @@ operator|,
 name|char
 operator|*
 name|conflict
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set the modification time of the next file sent.  This must be    followed by a call to server_updated on the same file.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|server_modtime
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|file_info
+operator|*
+name|finfo
+operator|,
+name|Vers_TS
+operator|*
+name|vers_ts
 operator|)
 argument_list|)
 decl_stmt|;
@@ -227,7 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We just successfully updated FILE (bare filename, no directory).  * REPOSITORY is the directory for the repository.  This is called  * after server_register or server_scratch, in the latter case the  * file is to be removed.  UPDATED indicates whether the file is now  * up to date (SERVER_UPDATED, yes, SERVER_MERGED, no, SERVER_PATCHED,  * yes, but file is a diff from user version to repository version).  */
+comment|/* Send the appropriate responses for a file described by FILE,    UPDATE_DIR, REPOSITORY, and VERS.  FILE_INFO is the result of    statting the file, or NULL if it hasn't been statted yet.  This is    called after server_register or server_scratch.  In the latter case    the file is to be removed (and vers can be NULL).  In the former    case, vers must be non-NULL, and UPDATED indicates whether the file    is now up to date (SERVER_UPDATED, yes, SERVER_MERGED, no,    SERVER_PATCHED, yes, but file is a diff from user version to    repository version, SERVER_RCS_DIFF, yes, like SERVER_PATCHED but    with an RCS style diff).  */
 end_comment
 
 begin_enum
@@ -239,6 +281,8 @@ block|,
 name|SERVER_MERGED
 block|,
 name|SERVER_PATCHED
+block|,
+name|SERVER_RCS_DIFF
 block|}
 enum|;
 end_enum
@@ -250,17 +294,14 @@ name|server_updated
 name|PROTO
 argument_list|(
 operator|(
-name|char
+expr|struct
+name|file_info
 operator|*
-name|file
+name|finfo
 operator|,
-name|char
+name|Vers_TS
 operator|*
-name|update_dir
-operator|,
-name|char
-operator|*
-name|repository
+name|vers
 operator|,
 expr|enum
 name|server_updated_arg4
@@ -274,6 +315,23 @@ name|unsigned
 name|char
 operator|*
 name|checksum
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Whether we should send RCS format patches.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|server_use_rcs_diff
+name|PROTO
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -351,6 +409,9 @@ operator|,
 name|char
 operator|*
 name|date
+operator|,
+name|int
+name|nonbranch
 operator|)
 argument_list|)
 decl_stmt|;
@@ -401,6 +462,18 @@ name|server_updated_arg4
 name|updated
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pointer to a malloc'd string which is the directory which    the server should prepend to the pathnames which it sends    to the client.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|server_dir
 decl_stmt|;
 end_decl_stmt
 
@@ -481,6 +554,29 @@ begin_comment
 comment|/* SERVER_FLOWCONTROL */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUTH_SERVER_SUPPORT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|CVS_Username
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* AUTH_SERVER_SUPPORT */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -558,13 +654,6 @@ name|struct
 name|request
 name|requests
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|use_unchanged
 decl_stmt|;
 end_decl_stmt
 

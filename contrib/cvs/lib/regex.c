@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Extended regular expression matching and search library,    version 0.12.    (Implements POSIX draft P10003.2/D11.2, except for    internationalization features.)     Copyright (C) 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Extended regular expression matching and search library,    version 0.12.    (Implements POSIX draft P10003.2/D11.2, except for    internationalization features.)     Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_comment
@@ -762,7 +762,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Should we use malloc or alloca?  If REGEX_MALLOC is not defined, we    use `alloca' instead of `malloc'.  This is because using malloc in    re_search* or re_match* could cause memory leaks when C-g is used in    Emacs; also, malloc is slower and causes storage fragmentation.  On    the other hand, malloc is more portable, and easier to debug.          Because we sometimes use alloca, some routines have to be macros,    not functions -- `alloca'-allocated space disappears at the end of the    function it is called in.  */
+comment|/* Should we use malloc or alloca?  If REGEX_MALLOC is not defined, we    use `alloca' instead of `malloc'.  This is because using malloc in    re_search* or re_match* could cause memory leaks when C-g is used in    Emacs; also, malloc is slower and causes storage fragmentation.  On    the other hand, malloc is more portable, and easier to debug.     Because we sometimes use alloca, some routines have to be macros,    not functions -- `alloca'-allocated space disappears at the end of the    function it is called in.  */
 end_comment
 
 begin_ifdef
@@ -1026,6 +1026,18 @@ name|s2
 parameter_list|)
 value|((strcmp (s1, s2) == 0))
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|MAX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MIN
+end_undef
 
 begin_define
 define|#
@@ -3410,7 +3422,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* `regex_compile' compiles PATTERN (of length SIZE) according to SYNTAX.    Returns one of error codes defined in `regex.h', or zero for success.     Assumes the `allocated' (and perhaps `buffer') and `translate'    fields are set in BUFP on entry.     If it succeeds, results are put in BUFP (if it returns an error, the    contents of BUFP are undefined):      `buffer' is the compiled pattern;      `syntax' is set to SYNTAX;      `used' is set to the length of the compiled pattern;      `fastmap_accurate' is zero;      `re_nsub' is the number of subexpressions in PATTERN;      `not_bol' and `not_eol' are zero;        The `fastmap' and `newline_anchor' fields are neither    examined nor set.  */
+comment|/* `regex_compile' compiles PATTERN (of length SIZE) according to SYNTAX.    Returns one of error codes defined in `regex.h', or zero for success.     Assumes the `allocated' (and perhaps `buffer') and `translate'    fields are set in BUFP on entry.     If it succeeds, results are put in BUFP (if it returns an error, the    contents of BUFP are undefined):      `buffer' is the compiled pattern;      `syntax' is set to SYNTAX;      `used' is set to the length of the compiled pattern;      `fastmap_accurate' is zero;      `re_nsub' is the number of subexpressions in PATTERN;      `not_bol' and `not_eol' are zero;     The `fastmap' and `newline_anchor' fields are neither    examined nor set.  */
 end_comment
 
 begin_function
@@ -3451,7 +3463,7 @@ name|c
 decl_stmt|,
 name|c1
 decl_stmt|;
-comment|/* A random tempory spot in PATTERN.  */
+comment|/* A random temporary spot in PATTERN.  */
 specifier|const
 name|char
 modifier|*
@@ -4038,7 +4050,7 @@ condition|(
 name|many_times_ok
 condition|)
 block|{
-comment|/* More than one repetition is allowed, so put in at the                    end a backward relative jump from `b' to before the next                    jump we're going to put in below (which jumps from                    laststart to after this jump).                       But if we are at the `*' in the exact sequence `.*\n',                    insert an unconditional jump backwards to the .,                    instead of the beginning of the loop.  This way we only                    push a failure point once, instead of every time                    through the loop.  */
+comment|/* More than one repetition is allowed, so put in at the                    end a backward relative jump from `b' to before the next                    jump we're going to put in below (which jumps from                    laststart to after this jump).                     But if we are at the `*' in the exact sequence `.*\n',                    insert an unconditional jump backwards to the .,                    instead of the beginning of the loop.  This way we only                    push a failure point once, instead of every time                    through the loop.  */
 name|assert
 argument_list|(
 name|p
@@ -4625,7 +4637,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* If isn't a word bracketed by `[:' and:`]':                        undo the ending character, the letters, and leave                         the leading `:' and `[' (but set bits for them).  */
+comment|/* If isn't a word bracketed by `[:' and:`]':                        undo the ending character, the letters, and leave                        the leading `:' and `[' (but set bits for them).  */
 if|if
 condition|(
 name|c
@@ -5509,7 +5521,7 @@ name|b
 operator|+=
 literal|3
 expr_stmt|;
-comment|/* The alternative before this one has a jump after it                  which gets executed if it gets matched.  Adjust that                  jump so it will jump to this alternative's analogous                  jump (put in below, which in turn will jump to the next                  (if any) alternative's such jump, etc.).  The last such                  jump jumps to the correct final destination.  A picture:                           _____ _____                            |   | |   |                              |   v |   v                           a | b   | c                      If we are at `b', then fixup_alt_jump right now points to a                  three-byte space after `a'.  We'll put in the jump, set                  fixup_alt_jump to right after `b', and leave behind three                  bytes which we'll fill in when we get to after `c'.  */
+comment|/* The alternative before this one has a jump after it                  which gets executed if it gets matched.  Adjust that                  jump so it will jump to this alternative's analogous                  jump (put in below, which in turn will jump to the next                  (if any) alternative's such jump, etc.).  The last such                  jump jumps to the correct final destination.  A picture:                           _____ _____                           |   | |   |                           |   v |   v                          a | b   | c                   If we are at `b', then fixup_alt_jump right now points to a                  three-byte space after `a'.  We'll put in the jump, set                  fixup_alt_jump to right after `b', and leave behind three                  bytes which we'll fill in when we get to after `c'.  */
 if|if
 condition|(
 name|fixup_alt_jump
@@ -5558,7 +5570,7 @@ name|syntax
 operator|&
 name|RE_INTERVALS
 operator|)
-comment|/* If we're at `\{' and it's not the open-interval                          operator.  */
+comment|/* If we're at `\{' and it's not the open-interval                         operator.  */
 operator|||
 operator|(
 operator|(
@@ -5803,7 +5815,7 @@ operator|+=
 literal|3
 expr_stmt|;
 block|}
-comment|/* Otherwise, we have a nontrivial interval.  When                     we're all done, the pattern will look like:                       set_number_at<jump count><upper bound>                       set_number_at<succeed_n count><lower bound>                       succeed_n<after jump addr><succed_n count><body of loop>                       jump_n<succeed_n addr><jump count>                     (The upper bound and `jump_n' are omitted if                     `upper_bound' is 1, though.)  */
+comment|/* Otherwise, we have a nontrivial interval.  When                     we're all done, the pattern will look like:                       set_number_at<jump count><upper bound>                       set_number_at<succeed_n count><lower bound>                       succeed_n<after jump addr><succeed_n count><body of loop>                       jump_n<succeed_n addr><jump count>                     (The upper bound and `jump_n' are omitted if                     `upper_bound' is 1, though.)  */
 else|else
 block|{
 comment|/* If the upper bound is> 1, we need to insert                         more at the end of the loop.  */
@@ -5851,7 +5863,7 @@ name|b
 operator|+=
 literal|5
 expr_stmt|;
-comment|/* Code to initialize the lower bound.  Insert                          before the `succeed_n'.  The `5' is the last two                         bytes of this `set_number_at', plus 3 bytes of                         the following `succeed_n'.  */
+comment|/* Code to initialize the lower bound.  Insert                         before the `succeed_n'.  The `5' is the last two                         bytes of this `set_number_at', plus 3 bytes of                         the following `succeed_n'.  */
 name|insert_op2
 argument_list|(
 name|set_number_at
@@ -5876,7 +5888,7 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/* More than one repetition is allowed, so                             append a backward jump to the `succeed_n'                             that starts this interval.                                                          When we've reached this during matching,                             we'll have matched the interval once, so                             jump back only `upper_bound - 1' times.  */
+comment|/* More than one repetition is allowed, so                             append a backward jump to the `succeed_n'                             that starts this interval.                              When we've reached this during matching,                             we'll have matched the interval once, so                             jump back only `upper_bound - 1' times.  */
 name|STORE_JUMP2
 argument_list|(
 name|jump_n
@@ -5896,7 +5908,7 @@ name|b
 operator|+=
 literal|5
 expr_stmt|;
-comment|/* The location we want to set is the second                             parameter of the `jump_n'; that is `b-2' as                             an absolute address.  `laststart' will be                             the `set_number_at' we're about to insert;                             `laststart+3' the number to set, the source                             for the relative address.  But we are                             inserting into the middle of the pattern --                             so everything is getting moved up by 5.                             Conclusion: (b - 2) - (laststart + 3) + 5,                             i.e., b - laststart.                                                          We insert this at the beginning of the loop                             so that if we fail during matching, we'll                             reinitialize the bounds.  */
+comment|/* The location we want to set is the second                             parameter of the `jump_n'; that is `b-2' as                             an absolute address.  `laststart' will be                             the `set_number_at' we're about to insert;                             `laststart+3' the number to set, the source                             for the relative address.  But we are                             inserting into the middle of the pattern --                             so everything is getting moved up by 5.                             Conclusion: (b - 2) - (laststart + 3) + 5,                             i.e., b - laststart.                              We insert this at the beginning of the loop                             so that if we fail during matching, we'll                             reinitialize the bounds.  */
 name|insert_op2
 argument_list|(
 name|set_number_at
@@ -7211,12 +7223,26 @@ literal|2000
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-specifier|const
+begin_union
+union|union
+name|fail_stack_elt
+block|{
 name|unsigned
 name|char
 modifier|*
+name|pointer
+decl_stmt|;
+name|int
+name|integer
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_typedef
+typedef|typedef
+name|union
+name|fail_stack_elt
 name|fail_stack_elt_t
 typedef|;
 end_typedef
@@ -7310,37 +7336,83 @@ define|#
 directive|define
 name|PUSH_PATTERN_OP
 parameter_list|(
-name|pattern_op
+name|POINTER
 parameter_list|,
-name|fail_stack
+name|FAIL_STACK
 parameter_list|)
 define|\
-value|((FAIL_STACK_FULL ()							\&& !DOUBLE_FAIL_STACK (fail_stack))					\     ? 0									\     : ((fail_stack).stack[(fail_stack).avail++] = pattern_op,		\        1))
+value|((FAIL_STACK_FULL ()							\&& !DOUBLE_FAIL_STACK (FAIL_STACK))					\    ? 0									\    : ((FAIL_STACK).stack[(FAIL_STACK).avail++].pointer = POINTER,	\       1))
 end_define
 
 begin_comment
-comment|/* This pushes an item onto the failure stack.  Must be a four-byte    value.  Assumes the variable `fail_stack'.  Probably should only    be called from within `PUSH_FAILURE_POINT'.  */
+comment|/* Push a pointer value onto the failure stack.    Assumes the variable `fail_stack'.  Probably should only    be called from within `PUSH_FAILURE_POINT'.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PUSH_FAILURE_ITEM
+name|PUSH_FAILURE_POINTER
 parameter_list|(
 name|item
 parameter_list|)
 define|\
-value|fail_stack.stack[fail_stack.avail++] = (fail_stack_elt_t) item
+value|fail_stack.stack[fail_stack.avail++].pointer = (unsigned char *) (item)
 end_define
 
 begin_comment
-comment|/* The complement operation.  Assumes `fail_stack' is nonempty.  */
+comment|/* This pushes an integer-valued item onto the failure stack.    Assumes the variable `fail_stack'.  Probably should only    be called from within `PUSH_FAILURE_POINT'.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|POP_FAILURE_ITEM
+name|PUSH_FAILURE_INT
+parameter_list|(
+name|item
+parameter_list|)
+define|\
+value|fail_stack.stack[fail_stack.avail++].integer = (item)
+end_define
+
+begin_comment
+comment|/* Push a fail_stack_elt_t value onto the failure stack.    Assumes the variable `fail_stack'.  Probably should only    be called from within `PUSH_FAILURE_POINT'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PUSH_FAILURE_ELT
+parameter_list|(
+name|item
+parameter_list|)
+define|\
+value|fail_stack.stack[fail_stack.avail++] =  (item)
+end_define
+
+begin_comment
+comment|/* These three POP... operations complement the three PUSH... operations.    All assume that `fail_stack' is nonempty.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POP_FAILURE_POINTER
+parameter_list|()
+value|fail_stack.stack[--fail_stack.avail].pointer
+end_define
+
+begin_define
+define|#
+directive|define
+name|POP_FAILURE_INT
+parameter_list|()
+value|fail_stack.stack[--fail_stack.avail].integer
+end_define
+
+begin_define
+define|#
+directive|define
+name|POP_FAILURE_ELT
 parameter_list|()
 value|fail_stack.stack[--fail_stack.avail]
 end_define
@@ -7359,7 +7431,7 @@ begin_define
 define|#
 directive|define
 name|DEBUG_PUSH
-value|PUSH_FAILURE_ITEM
+value|PUSH_FAILURE_INT
 end_define
 
 begin_define
@@ -7369,7 +7441,7 @@ name|DEBUG_POP
 parameter_list|(
 name|item_addr
 parameter_list|)
-value|*(item_addr) = POP_FAILURE_ITEM ()
+value|*(item_addr) = POP_FAILURE_INT ()
 end_define
 
 begin_else
@@ -7401,7 +7473,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Push the information about the state we will need    if we ever fail back to it.          Requires variables fail_stack, regstart, regend, reg_info, and    num_regs be declared.  DOUBLE_FAIL_STACK requires `destination' be    declared.        Does `return FAILURE_CODE' if runs out of memory.  */
+comment|/* Push the information about the state we will need    if we ever fail back to it.     Requires variables fail_stack, regstart, regend, reg_info, and    num_regs be declared.  DOUBLE_FAIL_STACK requires `destination' be    declared.     Does `return FAILURE_CODE' if runs out of memory.  */
 end_comment
 
 begin_define
@@ -7420,9 +7492,9 @@ value|do {									\     char *destination;							\
 comment|/* Must be int, so when we don't save any registers, the arithmetic	\        of 0 + -1 isn't done as unsigned.  */
 value|\     int this_reg;							\     									\     DEBUG_STATEMENT (failure_id++);					\     DEBUG_STATEMENT (nfailure_points_pushed++);				\     DEBUG_PRINT2 ("\nPUSH_FAILURE_POINT #%u:\n", failure_id);		\     DEBUG_PRINT2 ("  Before push, next avail: %d\n", (fail_stack).avail);\     DEBUG_PRINT2 ("                     size: %d\n", (fail_stack).size);\ 									\     DEBUG_PRINT2 ("  slots needed: %d\n", NUM_FAILURE_ITEMS);		\     DEBUG_PRINT2 ("     available: %d\n", REMAINING_AVAIL_SLOTS);	\ 									\
 comment|/* Ensure we have enough space allocated for what we will push.  */
-value|\     while (REMAINING_AVAIL_SLOTS< NUM_FAILURE_ITEMS)			\       {									\         if (!DOUBLE_FAIL_STACK (fail_stack))			\           return failure_code;						\ 									\         DEBUG_PRINT2 ("\n  Doubled stack; size now: %d\n",		\ 		       (fail_stack).size);				\         DEBUG_PRINT2 ("  slots available: %d\n", REMAINING_AVAIL_SLOTS);\       }									\ 									\
+value|\     while (REMAINING_AVAIL_SLOTS< NUM_FAILURE_ITEMS)			\       {									\         if (!DOUBLE_FAIL_STACK (fail_stack))				\           return failure_code;						\ 									\         DEBUG_PRINT2 ("\n  Doubled stack; size now: %d\n",		\ 		       (fail_stack).size);				\         DEBUG_PRINT2 ("  slots available: %d\n", REMAINING_AVAIL_SLOTS);\       }									\ 									\
 comment|/* Push the info, starting with the registers.  */
-value|\     DEBUG_PRINT1 ("\n");						\ 									\     for (this_reg = lowest_active_reg; this_reg<= highest_active_reg;	\          this_reg++)							\       {									\ 	DEBUG_PRINT2 ("  Pushing reg: %d\n", this_reg);			\         DEBUG_STATEMENT (num_regs_pushed++);				\ 									\ 	DEBUG_PRINT2 ("    start: 0x%x\n", regstart[this_reg]);		\         PUSH_FAILURE_ITEM (regstart[this_reg]);				\                                                                         \ 	DEBUG_PRINT2 ("    end: 0x%x\n", regend[this_reg]);		\         PUSH_FAILURE_ITEM (regend[this_reg]);				\ 									\ 	DEBUG_PRINT2 ("    info: 0x%x\n      ", reg_info[this_reg]);	\         DEBUG_PRINT2 (" match_null=%d",					\                       REG_MATCH_NULL_STRING_P (reg_info[this_reg]));	\         DEBUG_PRINT2 (" active=%d", IS_ACTIVE (reg_info[this_reg]));	\         DEBUG_PRINT2 (" matched_something=%d",				\                       MATCHED_SOMETHING (reg_info[this_reg]));		\         DEBUG_PRINT2 (" ever_matched=%d",				\                       EVER_MATCHED_SOMETHING (reg_info[this_reg]));	\ 	DEBUG_PRINT1 ("\n");						\         PUSH_FAILURE_ITEM (reg_info[this_reg].word);			\       }									\ 									\     DEBUG_PRINT2 ("  Pushing  low active reg: %d\n", lowest_active_reg);\     PUSH_FAILURE_ITEM (lowest_active_reg);				\ 									\     DEBUG_PRINT2 ("  Pushing high active reg: %d\n", highest_active_reg);\     PUSH_FAILURE_ITEM (highest_active_reg);				\ 									\     DEBUG_PRINT2 ("  Pushing pattern 0x%x: ", pattern_place);		\     DEBUG_PRINT_COMPILED_PATTERN (bufp, pattern_place, pend);		\     PUSH_FAILURE_ITEM (pattern_place);					\ 									\     DEBUG_PRINT2 ("  Pushing string 0x%x: `", string_place);		\     DEBUG_PRINT_DOUBLE_STRING (string_place, string1, size1, string2,   \ 				 size2);				\     DEBUG_PRINT1 ("'\n");						\     PUSH_FAILURE_ITEM (string_place);					\ 									\     DEBUG_PRINT2 ("  Pushing failure id: %u\n", failure_id);		\     DEBUG_PUSH (failure_id);						\   } while (0)
+value|\     DEBUG_PRINT1 ("\n");						\ 									\     if (1)								\       for (this_reg = lowest_active_reg; this_reg<= highest_active_reg; \ 	   this_reg++)							\ 	{								\ 	  DEBUG_PRINT2 ("  Pushing reg: %d\n", this_reg);		\ 	  DEBUG_STATEMENT (num_regs_pushed++);				\ 									\ 	  DEBUG_PRINT2 ("    start: 0x%x\n", regstart[this_reg]);	\ 	  PUSH_FAILURE_POINTER (regstart[this_reg]);			\ 									\ 	  DEBUG_PRINT2 ("    end: 0x%x\n", regend[this_reg]);		\ 	  PUSH_FAILURE_POINTER (regend[this_reg]);			\ 									\ 	  DEBUG_PRINT2 ("    info: 0x%x\n      ", reg_info[this_reg]);	\ 	  DEBUG_PRINT2 (" match_null=%d",				\ 			REG_MATCH_NULL_STRING_P (reg_info[this_reg]));	\ 	  DEBUG_PRINT2 (" active=%d", IS_ACTIVE (reg_info[this_reg]));	\ 	  DEBUG_PRINT2 (" matched_something=%d",			\ 			MATCHED_SOMETHING (reg_info[this_reg]));	\ 	  DEBUG_PRINT2 (" ever_matched=%d",				\ 			EVER_MATCHED_SOMETHING (reg_info[this_reg]));	\ 	  DEBUG_PRINT1 ("\n");						\ 	  PUSH_FAILURE_ELT (reg_info[this_reg].word);			\ 	}								\ 									\     DEBUG_PRINT2 ("  Pushing  low active reg: %d\n", lowest_active_reg);\     PUSH_FAILURE_INT (lowest_active_reg);				\ 									\     DEBUG_PRINT2 ("  Pushing high active reg: %d\n", highest_active_reg);\     PUSH_FAILURE_INT (highest_active_reg);				\ 									\     DEBUG_PRINT2 ("  Pushing pattern 0x%x: ", pattern_place);		\     DEBUG_PRINT_COMPILED_PATTERN (bufp, pattern_place, pend);		\     PUSH_FAILURE_POINTER (pattern_place);				\ 									\     DEBUG_PRINT2 ("  Pushing string 0x%x: `", string_place);		\     DEBUG_PRINT_DOUBLE_STRING (string_place, string1, size1, string2,   \ 				 size2);				\     DEBUG_PRINT1 ("'\n");						\     PUSH_FAILURE_POINTER (string_place);				\ 									\     DEBUG_PRINT2 ("  Pushing failure id: %u\n", failure_id);		\     DEBUG_PUSH (failure_id);						\   } while (0)
 end_define
 
 begin_comment
@@ -7509,7 +7581,7 @@ value|((fail_stack).size - (fail_stack).avail)
 end_define
 
 begin_comment
-comment|/* Pops what PUSH_FAIL_STACK pushes.     We restore into the parameters, all of which should be lvalues:      STR -- the saved data position.      PAT -- the saved pattern position.      LOW_REG, HIGH_REG -- the highest and lowest active registers.      REGSTART, REGEND -- arrays of string positions.      REG_INFO -- array of information about each subexpression.        Also assumes the variables `fail_stack' and (if debugging), `bufp',    `pend', `string1', `size1', `string2', and `size2'.  */
+comment|/* Pops what PUSH_FAIL_STACK pushes.     We restore into the parameters, all of which should be lvalues:      STR -- the saved data position.      PAT -- the saved pattern position.      LOW_REG, HIGH_REG -- the highest and lowest active registers.      REGSTART, REGEND -- arrays of string positions.      REG_INFO -- array of information about each subexpression.     Also assumes the variables `fail_stack' and (if debugging), `bufp',    `pend', `string1', `size1', `string2', and `size2'.  */
 end_comment
 
 begin_define
@@ -7536,9 +7608,9 @@ value|{									\   DEBUG_STATEMENT (fail_stack_elt_t failure_id;)			\   int thi
 comment|/* Remove failure points and point to how many regs pushed.  */
 value|\   DEBUG_PRINT1 ("POP_FAILURE_POINT:\n");				\   DEBUG_PRINT2 ("  Before pop, next avail: %d\n", fail_stack.avail);	\   DEBUG_PRINT2 ("                    size: %d\n", fail_stack.size);	\ 									\   assert (fail_stack.avail>= NUM_NONREG_ITEMS);			\ 									\   DEBUG_POP (&failure_id);						\   DEBUG_PRINT2 ("  Popping failure id: %u\n", failure_id);		\ 									\
 comment|/* If the saved string location is NULL, it came from an		\      on_failure_keep_string_jump opcode, and we want to throw away the	\      saved NULL, thus retaining our current position in the string.  */
-value|\   string_temp = POP_FAILURE_ITEM ();					\   if (string_temp != NULL)						\     str = (const char *) string_temp;					\ 									\   DEBUG_PRINT2 ("  Popping string 0x%x: `", str);			\   DEBUG_PRINT_DOUBLE_STRING (str, string1, size1, string2, size2);	\   DEBUG_PRINT1 ("'\n");							\ 									\   pat = (unsigned char *) POP_FAILURE_ITEM ();				\   DEBUG_PRINT2 ("  Popping pattern 0x%x: ", pat);			\   DEBUG_PRINT_COMPILED_PATTERN (bufp, pat, pend);			\ 									\
+value|\   string_temp = POP_FAILURE_POINTER ();					\   if (string_temp != NULL)						\     str = (const char *) string_temp;					\ 									\   DEBUG_PRINT2 ("  Popping string 0x%x: `", str);			\   DEBUG_PRINT_DOUBLE_STRING (str, string1, size1, string2, size2);	\   DEBUG_PRINT1 ("'\n");							\ 									\   pat = (unsigned char *) POP_FAILURE_POINTER ();			\   DEBUG_PRINT2 ("  Popping pattern 0x%x: ", pat);			\   DEBUG_PRINT_COMPILED_PATTERN (bufp, pat, pend);			\ 									\
 comment|/* Restore register info.  */
-value|\   high_reg = (unsigned) POP_FAILURE_ITEM ();				\   DEBUG_PRINT2 ("  Popping high active reg: %d\n", high_reg);		\ 									\   low_reg = (unsigned) POP_FAILURE_ITEM ();				\   DEBUG_PRINT2 ("  Popping  low active reg: %d\n", low_reg);		\ 									\   for (this_reg = high_reg; this_reg>= low_reg; this_reg--)		\     {									\       DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);			\ 									\       reg_info[this_reg].word = POP_FAILURE_ITEM ();			\       DEBUG_PRINT2 ("      info: 0x%x\n", reg_info[this_reg]);		\ 									\       regend[this_reg] = (const char *) POP_FAILURE_ITEM ();		\       DEBUG_PRINT2 ("      end: 0x%x\n", regend[this_reg]);		\ 									\       regstart[this_reg] = (const char *) POP_FAILURE_ITEM ();		\       DEBUG_PRINT2 ("      start: 0x%x\n", regstart[this_reg]);		\     }									\ 									\   DEBUG_STATEMENT (nfailure_points_popped++);				\ }
+value|\   high_reg = (unsigned) POP_FAILURE_INT ();				\   DEBUG_PRINT2 ("  Popping high active reg: %d\n", high_reg);		\ 									\   low_reg = (unsigned) POP_FAILURE_INT ();				\   DEBUG_PRINT2 ("  Popping  low active reg: %d\n", low_reg);		\ 									\   if (1)								\     for (this_reg = high_reg; this_reg>= low_reg; this_reg--)		\       {									\ 	DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);		\ 									\ 	reg_info[this_reg].word = POP_FAILURE_ELT ();			\ 	DEBUG_PRINT2 ("      info: 0x%x\n", reg_info[this_reg]);	\ 									\ 	regend[this_reg] = (const char *) POP_FAILURE_POINTER ();	\ 	DEBUG_PRINT2 ("      end: 0x%x\n", regend[this_reg]);		\ 									\ 	regstart[this_reg] = (const char *) POP_FAILURE_POINTER ();	\ 	DEBUG_PRINT2 ("      start: 0x%x\n", regstart[this_reg]);	\       }									\   else									\     {									\       for (this_reg = highest_active_reg; this_reg> high_reg; this_reg--) \ 	{								\ 	  reg_info[this_reg].word.integer = 0;				\ 	  regend[this_reg] = 0;						\ 	  regstart[this_reg] = 0;					\ 	}								\       highest_active_reg = high_reg;					\     }									\ 									\   DEBUG_STATEMENT (nfailure_points_popped++);				\ }
 end_define
 
 begin_comment
@@ -7549,7 +7621,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* re_compile_fastmap computes a ``fastmap'' for the compiled pattern in    BUFP.  A fastmap records which of the (1<< BYTEWIDTH) possible    characters can start a string that matches the pattern.  This fastmap    is used by re_search to skip quickly over impossible starting points.     The caller must supply the address of a (1<< BYTEWIDTH)-byte data    area as BUFP->fastmap.        We set the `fastmap', `fastmap_accurate', and `can_be_null' fields in    the pattern buffer.     Returns 0 if we succeed, -2 if an internal error.   */
+comment|/* re_compile_fastmap computes a ``fastmap'' for the compiled pattern in    BUFP.  A fastmap records which of the (1<< BYTEWIDTH) possible    characters can start a string that matches the pattern.  This fastmap    is used by re_search to skip quickly over impossible starting points.     The caller must supply the address of a (1<< BYTEWIDTH)-byte data    area as BUFP->fastmap.     We set the `fastmap', `fastmap_accurate', and `can_be_null' fields in    the pattern buffer.     Returns 0 if we succeed, -2 if an internal error.   */
 end_comment
 
 begin_function
@@ -7613,7 +7685,6 @@ name|bufp
 operator|->
 name|used
 decl_stmt|;
-specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -7720,6 +7791,8 @@ name|fail_stack
 operator|.
 name|avail
 index|]
+operator|.
+name|pointer
 expr_stmt|;
 block|}
 comment|/* We should never be about to go beyond the end of the pattern.  */
@@ -8281,6 +8354,8 @@ name|avail
 operator|-
 literal|1
 index|]
+operator|.
+name|pointer
 operator|==
 name|p
 condition|)
@@ -8632,7 +8707,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Using the compiled pattern in BUFP->buffer, first tries to match the    virtual concatenation of STRING1 and STRING2, starting first at index    STARTPOS, then at STARTPOS + 1, and so on.        STRING1 and STRING2 have length SIZE1 and SIZE2, respectively.        RANGE is how far to scan while trying to match.  RANGE = 0 means try    only at STARTPOS; in general, the last start tried is STARTPOS +    RANGE.        In REGS, return the indices of the virtual concatenation of STRING1    and STRING2 that matched the entire BUFP->buffer and its contained    subexpressions.        Do not consider matching one past the index STOP in the virtual    concatenation of STRING1 and STRING2.     We return either the position in the strings at which the match was    found, -1 if no match, or -2 if error (such as failure    stack overflow).  */
+comment|/* Using the compiled pattern in BUFP->buffer, first tries to match the    virtual concatenation of STRING1 and STRING2, starting first at index    STARTPOS, then at STARTPOS + 1, and so on.     STRING1 and STRING2 have length SIZE1 and SIZE2, respectively.     RANGE is how far to scan while trying to match.  RANGE = 0 means try    only at STARTPOS; in general, the last start tried is STARTPOS +    RANGE.     In REGS, return the indices of the virtual concatenation of STRING1    and STRING2 that matched the entire BUFP->buffer and its contained    subexpressions.     Do not consider matching one past the index STOP in the virtual    concatenation of STRING1 and STRING2.     We return either the position in the strings at which the match was    found, -1 if no match, or -2 if error (such as failure    stack overflow).  */
 end_comment
 
 begin_function
@@ -8828,6 +8903,55 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|emacs
+comment|/* In a forward search for something that starts with \=.      don't keep searching past point.  */
+if|if
+condition|(
+name|bufp
+operator|->
+name|used
+operator|>
+literal|0
+operator|&&
+operator|(
+name|re_opcode_t
+operator|)
+name|bufp
+operator|->
+name|buffer
+index|[
+literal|0
+index|]
+operator|==
+name|at_dot
+operator|&&
+name|range
+operator|>
+literal|0
+condition|)
+block|{
+name|range
+operator|=
+name|PT
+operator|-
+name|startpos
+expr_stmt|;
+if|if
+condition|(
+name|range
+operator|<=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* emacs */
 comment|/* Update the fastmap now if not correct already.  */
 if|if
 condition|(
@@ -9185,7 +9309,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Structure for per-register (a.k.a. per-group) information.    This must not be longer than one word, because we push this value    onto the failure stack.  Other register information, such as the    starting and ending positions (which are addresses), and the list of    inner groups (which is a bits list) are maintained in separate    variables.          We are making a (strictly speaking) nonportable assumption here: that    the compiler will pack our bit fields into something that fits into    the type of `word', i.e., is something that fits into one item on the    failure stack.  */
+comment|/* Structure for per-register (a.k.a. per-group) information.    Other register information, such as the    starting and ending positions (which are addresses), and the list of    inner groups (which is a bits list) are maintained in separate    variables.     We are making a (strictly speaking) nonportable assumption here: that    the compiler will pack our bit fields into something that fits into    the type of `word', i.e., is something that fits into one item on the    failure stack.  */
 end_comment
 
 begin_typedef
@@ -9567,7 +9691,7 @@ comment|/* not emacs */
 end_comment
 
 begin_comment
-comment|/* re_match_2 matches the compiled pattern in BUFP against the    the (virtual) concatenation of STRING1 and STRING2 (of length SIZE1    and SIZE2, respectively).  We start matching at POS, and stop    matching at STOP.        If REGS is non-null and the `no_sub' field of BUFP is nonzero, we    store offsets for the substring each group matched in REGS.  See the    documentation for exactly how many groups we fill.     We return -1 if no match, -2 if an internal error (such as the    failure stack overflowing).  Otherwise, we return the length of the    matched substring.  */
+comment|/* re_match_2 matches the compiled pattern in BUFP against the    the (virtual) concatenation of STRING1 and STRING2 (of length SIZE1    and SIZE2, respectively).  We start matching at POS, and stop    matching at STOP.     If REGS is non-null and the `no_sub' field of BUFP is nonzero, we    store offsets for the substring each group matched in REGS.  See the    documentation for exactly how many groups we fill.     We return -1 if no match, -2 if an internal error (such as the    failure stack overflowing).  Otherwise, we return the length of the    matched substring.  */
 end_comment
 
 begin_function
@@ -9774,7 +9898,7 @@ name|register_info_type
 modifier|*
 name|reg_info
 decl_stmt|;
-comment|/* The following record the register info as found in the above      variables when we find a match better than any we've seen before.       This happens as we backtrack through the failure points, which in      turn happens only if we have not yet matched the entire string. */
+comment|/* The following record the register info as found in the above      variables when we find a match better than any we've seen before.      This happens as we backtrack through the failure points, which in      turn happens only if we have not yet matched the entire string. */
 name|unsigned
 name|best_regs_set
 init|=
@@ -10175,7 +10299,7 @@ operator|-
 name|size1
 expr_stmt|;
 block|}
-comment|/* `p' scans through the pattern as `d' scans through the data.       `dend' is the end of the input string that `d' points within.  `d'      is advanced into the following input string whenever necessary, but      this happens before fetching; therefore, at the beginning of the      loop, `d' can be pointing at the end of a string, but it cannot      equal `string2'.  */
+comment|/* `p' scans through the pattern as `d' scans through the data.      `dend' is the end of the input string that `d' points within.  `d'      is advanced into the following input string whenever necessary, but      this happens before fetching; therefore, at the beginning of the      loop, `d' can be pointing at the end of a string, but it cannot      equal `string2'.  */
 if|if
 condition|(
 name|size1
@@ -10629,6 +10753,8 @@ return|;
 block|}
 block|}
 else|else
+block|{
+comment|/* These braces fend off a "empty body in an else-statement" 		     warning under GCC when assert expands to nothing.  */
 name|assert
 argument_list|(
 name|bufp
@@ -10638,6 +10764,7 @@ operator|==
 name|REGS_FIXED
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Convert the pointer data in `regstart' and `regend' to                  indices.  Register zero has to be set differently,                  since we haven't kept track of any info for it.  */
 if|if
 condition|(
@@ -11657,7 +11784,7 @@ operator|*
 name|p
 condition|)
 block|{
-comment|/* If this group ever matched anything, then restore                      what its registers were before trying this last                      failed match, e.g., with `(a*)*b' against `ab' for                      regstart[1], and, e.g., with `((a*)*(b*)*)*'                      against `aba' for regend[3].                                            Also restore the registers for inner groups for,                      e.g., `((a*)(b*))*' against `aba' (register 3 would                      otherwise get trashed).  */
+comment|/* If this group ever matched anything, then restore                      what its registers were before trying this last                      failed match, e.g., with `(a*)*b' against `ab' for                      regstart[1], and, e.g., with `((a*)*(b*)*)*'                      against `aba' for regend[3].                       Also restore the registers for inner groups for,                      e.g., `((a*)(b*))*' against `aba' (register 3 would                      otherwise get trashed).  */
 if|if
 condition|(
 name|EVER_MATCHED_SOMETHING
@@ -12130,7 +12257,7 @@ break|break;
 goto|goto
 name|fail
 goto|;
-comment|/* on_failure_keep_string_jump is used to optimize `.*\n'.  It            pushes NULL as the value for the string on the stack.  Then            `pop_failure_point' will keep the current value for the            string, instead of restoring it.  To see why, consider            matching `foo\nbar' against `.*\n'.  The .* matches the foo;            then the . fails against the \n.  But the next thing we want            to do is match the \n against the \n; if we restored the            string value, we would be back at the foo.                        Because this is used only in specific cases, we don't need to            check all the things that `on_failure_jump' does, to make            sure the right things get saved on the stack.  Hence we don't            share its code.  The only reason to push anything on the            stack at all is that otherwise we would have to change            `anychar's code to do something besides goto fail in this            case; that seems worse than this.  */
+comment|/* on_failure_keep_string_jump is used to optimize `.*\n'.  It            pushes NULL as the value for the string on the stack.  Then            `pop_failure_point' will keep the current value for the            string, instead of restoring it.  To see why, consider            matching `foo\nbar' against `.*\n'.  The .* matches the foo;            then the . fails against the \n.  But the next thing we want            to do is match the \n against the \n; if we restored the            string value, we would be back at the foo.             Because this is used only in specific cases, we don't need to            check all the things that `on_failure_jump' does, to make            sure the right things get saved on the stack.  Hence we don't            share its code.  The only reason to push anything on the            stack at all is that otherwise we would have to change            `anychar's code to do something besides goto fail in this            case; that seems worse than this.  */
 case|case
 name|on_failure_keep_string_jump
 case|:
@@ -12170,7 +12297,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Uses of on_failure_jump:                     Each alternative starts with an on_failure_jump that points            to the beginning of the next alternative.  Each alternative            except the last ends with a jump that in effect jumps past            the rest of the alternatives.  (They really jump to the            ending jump of the following alternative, because tensioning            these jumps is a hassle.)             Repeats start with an on_failure_jump that points past both            the repetition text and either the following jump or            pop_failure_jump back to this on_failure_jump.  */
+comment|/* Uses of on_failure_jump:             Each alternative starts with an on_failure_jump that points            to the beginning of the next alternative.  Each alternative            except the last ends with a jump that in effect jumps past            the rest of the alternatives.  (They really jump to the            ending jump of the following alternative, because tensioning            these jumps is a hassle.)             Repeats start with an on_failure_jump that points past both            the repetition text and either the following jump or            pop_failure_jump back to this on_failure_jump.  */
 case|case
 name|on_failure_jump
 case|:
@@ -12316,7 +12443,7 @@ name|p2
 init|=
 name|p
 decl_stmt|;
-comment|/* Compare the beginning of the repeat with what in the                pattern follows its end. If we can establish that there                is nothing that they would both match, i.e., that we                would have to backtrack because of (as in, e.g., `a*a')                then we can change to pop_failure_jump, because we'll                never have to backtrack.                                This is not true in the case of alternatives: in                `(a|ab)*' we do need to backtrack to the `ab' alternative                (e.g., if the string was `ab').  But instead of trying to                detect that here, the alternative has put on a dummy                failure point which is what we will end up popping.  */
+comment|/* Compare the beginning of the repeat with what in the                pattern follows its end. If we can establish that there                is nothing that they would both match, i.e., that we                would have to backtrack because of (as in, e.g., `a*a')                then we can change to pop_failure_jump, because we'll                never have to backtrack.                 This is not true in the case of alternatives: in                `(a|ab)*' we do need to backtrack to the `ab' alternative                (e.g., if the string was `ab').  But instead of trying to                detect that here, the alternative has put on a dummy                failure point which is what we will end up popping.  */
 comment|/* Skip over open/close-group commands.  */
 while|while
 condition|(
@@ -13070,9 +13197,6 @@ goto|;
 ifdef|#
 directive|ifdef
 name|emacs
-ifdef|#
-directive|ifdef
-name|emacs19
 case|case
 name|before_dot
 case|:
@@ -13151,40 +13275,6 @@ goto|goto
 name|fail
 goto|;
 break|break;
-else|#
-directive|else
-comment|/* not emacs19 */
-case|case
-name|at_dot
-case|:
-name|DEBUG_PRINT1
-argument_list|(
-literal|"EXECUTING at_dot.\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|PTR_CHAR_POS
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|d
-argument_list|)
-operator|+
-literal|1
-operator|!=
-name|point
-condition|)
-goto|goto
-name|fail
-goto|;
-break|break;
-endif|#
-directive|endif
-comment|/* not emacs19 */
 case|case
 name|syntaxspec
 case|:
@@ -13242,6 +13332,30 @@ condition|)
 goto|goto
 name|fail
 goto|;
+comment|/* Can't use *d++ here; SYNTAX may be an unsafe macro.  */
+name|d
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|SYNTAX
+argument_list|(
+name|d
+index|[
+operator|-
+literal|1
+index|]
+argument_list|)
+operator|!=
+operator|(
+expr|enum
+name|syntaxcode
+operator|)
+name|mcnt
+condition|)
+goto|goto
+name|fail
+goto|;
 name|SET_REGS_MATCHED
 argument_list|()
 expr_stmt|;
@@ -13285,13 +13399,19 @@ label|:
 name|PREFETCH
 argument_list|()
 expr_stmt|;
+comment|/* Can't use *d++ here; SYNTAX may be an unsafe macro.  */
+name|d
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|SYNTAX
 argument_list|(
-operator|*
 name|d
-operator|++
+index|[
+operator|-
+literal|1
+index|]
 argument_list|)
 operator|==
 operator|(
@@ -13568,7 +13688,7 @@ comment|/* Subroutine definitions for re_match_2.  */
 end_comment
 
 begin_comment
-comment|/* We are passed P pointing to a register number after a start_memory.        Return true if the pattern up to the corresponding stop_memory can    match the empty string, and false otherwise.        If we find the matching stop_memory, sets P to point to one past its number.    Otherwise, sets P to an undefined byte less than or equal to END.     We don't handle duplicates properly (yet).  */
+comment|/* We are passed P pointing to a register number after a start_memory.     Return true if the pattern up to the corresponding stop_memory can    match the empty string, and false otherwise.     If we find the matching stop_memory, sets P to point to one past its number.    Otherwise, sets P to an undefined byte less than or equal to END.     We don't handle duplicates properly (yet).  */
 end_comment
 
 begin_function
@@ -13655,7 +13775,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* Go through the on_failure_jumps of the alternatives,                  seeing if any of the alternatives cannot match nothing.                  The last alternative starts with only a jump,                  whereas the rest start with on_failure_jump and end                  with a jump, e.g., here is the pattern for `a|b|c':                   /on_failure_jump/0/6/exactn/1/a/jump_past_alt/0/6                  /on_failure_jump/0/6/exactn/1/b/jump_past_alt/0/3                  /exactn/1/c						                   So, we have to first go through the first (n-1)                  alternatives and then deal with the last one separately.  */
+comment|/* Go through the on_failure_jumps of the alternatives,                  seeing if any of the alternatives cannot match nothing.                  The last alternative starts with only a jump,                  whereas the rest start with on_failure_jump and end                  with a jump, e.g., here is the pattern for `a|b|c':                   /on_failure_jump/0/6/exactn/1/a/jump_past_alt/0/6                  /on_failure_jump/0/6/exactn/1/b/jump_past_alt/0/3                  /exactn/1/c                   So, we have to first go through the first (n-1)                  alternatives and then deal with the last one separately.  */
 comment|/* Deal with the first (n-1) alternatives, which start                  with an on_failure_jump (see above) that jumps to right                  past a jump_past_alt.  */
 while|while
 condition|(
@@ -13884,7 +14004,7 @@ operator|<
 name|end
 condition|)
 block|{
-comment|/* Skip over opcodes that can match nothing, and break when we get           to one that can't.  */
+comment|/* Skip over opcodes that can match nothing, and break when we get          to one that can't.  */
 switch|switch
 condition|(
 operator|(
@@ -13944,7 +14064,7 @@ comment|/* alt_match_null_string_p */
 end_comment
 
 begin_comment
-comment|/* Deals with the ops common to group_match_null_string_p and    alt_match_null_string_p.          Sets P to one after the op and its arguments, if any.  */
+comment|/* Deals with the ops common to group_match_null_string_p and    alt_match_null_string_p.     Sets P to one after the op and its arguments, if any.  */
 end_comment
 
 begin_function
@@ -14324,7 +14444,7 @@ comment|/* Entry points for GNU code.  */
 end_comment
 
 begin_comment
-comment|/* re_compile_pattern is the GNU regular expression compiler: it    compiles PATTERN (of length SIZE) and puts the result in BUFP.    Returns 0 if the pattern was valid, otherwise an error string.        Assumes the `allocated' (and perhaps `buffer') and `translate' fields    are set in BUFP on entry.        We call regex_compile to do the actual compilation.  */
+comment|/* re_compile_pattern is the GNU regular expression compiler: it    compiles PATTERN (of length SIZE) and puts the result in BUFP.    Returns 0 if the pattern was valid, otherwise an error string.     Assumes the `allocated' (and perhaps `buffer') and `translate' fields    are set in BUFP on entry.     We call regex_compile to do the actual compilation.  */
 end_comment
 
 begin_function
@@ -14831,7 +14951,7 @@ operator|&
 name|REG_NOSUB
 operator|)
 expr_stmt|;
-comment|/* POSIX says a null character in the pattern terminates it, so we       can use strlen here in compiling the pattern.  */
+comment|/* POSIX says a null character in the pattern terminates it, so we      can use strlen here in compiling the pattern.  */
 name|ret
 operator|=
 name|regex_compile
@@ -14869,7 +14989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* regexec searches for a given pattern, specified by PREG, in the    string STRING.        If NMATCH is zero or REG_NOSUB was set in the cflags argument to    `regcomp', we ignore PMATCH.  Otherwise, we assume PMATCH has at    least NMATCH elements, and we set them to the offsets of the    corresponding matched substrings.        EFLAGS specifies `execution flags' which affect matching: if    REG_NOTBOL is set, then ^ does not match at the beginning of the    string; if REG_NOTEOL is set, then $ does not match at the end.        We return 0 if we find a match and REG_NOMATCH if not.  */
+comment|/* regexec searches for a given pattern, specified by PREG, in the    string STRING.     If NMATCH is zero or REG_NOSUB was set in the cflags argument to    `regcomp', we ignore PMATCH.  Otherwise, we assume PMATCH has at    least NMATCH elements, and we set them to the offsets of the    corresponding matched substrings.     EFLAGS specifies `execution flags' which affect matching: if    REG_NOTBOL is set, then ^ does not match at the beginning of the    string; if REG_NOTEOL is set, then $ does not match at the end.     We return 0 if we find a match and REG_NOMATCH if not.  */
 end_comment
 
 begin_function
@@ -15216,7 +15336,7 @@ index|]
 argument_list|)
 operator|)
 condition|)
-comment|/* Only error codes returned by the rest of the code should be passed         to this routine.  If we are given anything else, or if other regex        code generates an invalid error code, then the program has a bug.        Dump core so we can fix it.  */
+comment|/* Only error codes returned by the rest of the code should be passed        to this routine.  If we are given anything else, or if other regex        code generates an invalid error code, then the program has a bug.        Dump core so we can fix it.  */
 name|abort
 argument_list|()
 expr_stmt|;
@@ -15403,13 +15523,6 @@ end_endif
 
 begin_comment
 comment|/* not emacs  */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Local variables: make-backup-files: t version-control: t trim-versions-without-asking: nil End: */
 end_comment
 
 end_unit

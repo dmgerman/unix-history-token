@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implementation for "cvs watch add", "cvs watchers", and related commands     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Implementation for "cvs watch add", "cvs watchers", and related commands     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_include
@@ -36,13 +36,15 @@ name|watch_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [on|off|add|remove] [-l] [-a action] [files...]\n"
+literal|"Usage: %s %s [on|off|add|remove] [-lR] [-a action] [files...]\n"
 block|,
 literal|"on/off: turn on/off read-only checkouts of files\n"
 block|,
 literal|"add/remove: add or remove notification on actions\n"
 block|,
 literal|"-l (on/off/add/remove): Local directory only, not recursive\n"
+block|,
+literal|"-R (on/off/add/remove): Process directories recursively\n"
 block|,
 literal|"-a (add/remove): Specify what actions, one of\n"
 block|,
@@ -914,6 +916,10 @@ name|addremove_fileproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+name|callerdat
+operator|,
 expr|struct
 name|file_info
 operator|*
@@ -928,8 +934,14 @@ specifier|static
 name|int
 name|addremove_fileproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|finfo
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|struct
 name|file_info
 modifier|*
@@ -959,12 +971,18 @@ name|addremove_filesdoneproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|,
 name|int
 operator|,
 name|char
 operator|*
 operator|,
 name|char
+operator|*
+operator|,
+name|List
 operator|*
 operator|)
 argument_list|)
@@ -976,12 +994,20 @@ specifier|static
 name|int
 name|addremove_filesdoneproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|err
 parameter_list|,
 name|repository
 parameter_list|,
 name|update_dir
+parameter_list|,
+name|entries
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -992,6 +1018,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|update_dir
+decl_stmt|;
+name|List
+modifier|*
+name|entries
 decl_stmt|;
 block|{
 if|if
@@ -1089,7 +1119,7 @@ literal|0
 expr_stmt|;
 name|optind
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -1102,7 +1132,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"la:"
+literal|"+lRa:"
 argument_list|)
 operator|)
 operator|!=
@@ -1121,6 +1151,14 @@ case|:
 name|local
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|local
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1414,7 +1452,6 @@ argument_list|,
 name|SEND_EXPAND_WILD
 argument_list|)
 expr_stmt|;
-comment|/* FIXME:  We shouldn't have to send current files, but I'm not sure 	   whether it works.  So send the files -- 	   it's slower but it works.  */
 name|send_files
 argument_list|(
 name|argc
@@ -1424,6 +1461,8 @@ argument_list|,
 name|local
 argument_list|,
 literal|0
+argument_list|,
+name|SEND_NO_CONTENTS
 argument_list|)
 expr_stmt|;
 name|send_to_server
@@ -1486,6 +1525,8 @@ name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -1505,11 +1546,9 @@ operator|)
 name|NULL
 argument_list|,
 literal|1
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|lock_tree_cleanup
+name|Lock_Cleanup
 argument_list|()
 expr_stmt|;
 return|return
@@ -1759,7 +1798,11 @@ name|watchers_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [files...]\n"
+literal|"Usage: %s %s [-lR] [files...]\n"
+block|,
+literal|"\t-l\tProcess this directory only (not recursive).\n"
+block|,
+literal|"\t-R\tProcess directories recursively.\n"
 block|,
 name|NULL
 block|}
@@ -1773,6 +1816,10 @@ name|watchers_fileproc
 name|PROTO
 argument_list|(
 operator|(
+name|void
+operator|*
+name|callerdat
+operator|,
 expr|struct
 name|file_info
 operator|*
@@ -1787,8 +1834,14 @@ specifier|static
 name|int
 name|watchers_fileproc
 parameter_list|(
+name|callerdat
+parameter_list|,
 name|finfo
 parameter_list|)
+name|void
+modifier|*
+name|callerdat
+decl_stmt|;
 name|struct
 name|file_info
 modifier|*
@@ -2027,7 +2080,7 @@ argument_list|)
 expr_stmt|;
 name|optind
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -2040,7 +2093,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"l"
+literal|"+lR"
 argument_list|)
 operator|)
 operator|!=
@@ -2059,6 +2112,14 @@ case|:
 name|local
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|local
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2113,7 +2174,6 @@ argument_list|,
 name|SEND_EXPAND_WILD
 argument_list|)
 expr_stmt|;
-comment|/* FIXME:  We shouldn't have to send current files, but I'm not sure 	   whether it works.  So send the files -- 	   it's slower but it works.  */
 name|send_files
 argument_list|(
 name|argc
@@ -2123,6 +2183,8 @@ argument_list|,
 name|local
 argument_list|,
 literal|0
+argument_list|,
+name|SEND_NO_CONTENTS
 argument_list|)
 expr_stmt|;
 name|send_to_server
@@ -2160,6 +2222,8 @@ name|DIRLEAVEPROC
 operator|)
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|argc
 argument_list|,
 name|argv
@@ -2179,8 +2243,6 @@ operator|)
 name|NULL
 argument_list|,
 literal|1
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
