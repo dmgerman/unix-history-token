@@ -398,8 +398,7 @@ name|int
 name|sig
 decl_stmt|;
 block|{
-comment|/* XXX exit() shouldn't call exit() from a signal handler. */
-name|exit
+name|_exit
 argument_list|(
 name|sig
 operator|==
