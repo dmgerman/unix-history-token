@@ -1219,7 +1219,9 @@ argument_list|)
 expr_stmt|;
 name|stat
 argument_list|(
-name|qfpathname
+name|fs_current
+operator|->
+name|fs_file
 argument_list|,
 operator|&
 name|st
