@@ -767,32 +767,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__INTEL_COMPILER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|memcpy
-value|__builtin_memcpy
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|static
 name|void
@@ -843,11 +817,6 @@ operator|++
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
