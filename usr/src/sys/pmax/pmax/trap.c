@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1729,7 +1729,7 @@ name|code
 condition|)
 block|{
 case|case
-name|SYS_indir
+name|SYS_syscall
 case|:
 comment|/* 			 * Code is first argument, followed by actual args. 			 */
 name|code
@@ -1750,7 +1750,7 @@ operator|=
 operator|&
 name|systab
 index|[
-name|SYS_indir
+name|SYS_syscall
 index|]
 expr_stmt|;
 comment|/* (illegal) */
@@ -1916,9 +1916,9 @@ block|}
 block|}
 break|break;
 case|case
-name|SYS___indir
+name|SYS___syscall
 case|:
-comment|/* 			 * Like indir, but code is a quad, so as to maintain 			 * quad alignment for the rest of the arguments. 			 */
+comment|/* 			 * Like syscall, but code is a quad, so as to maintain 			 * quad alignment for the rest of the arguments. 			 */
 name|code
 operator|=
 name|locr0
@@ -1939,7 +1939,7 @@ operator|=
 operator|&
 name|systab
 index|[
-name|SYS_indir
+name|SYS_syscall
 index|]
 expr_stmt|;
 comment|/* (illegal) */
@@ -2104,7 +2104,7 @@ operator|=
 operator|&
 name|systab
 index|[
-name|SYS_indir
+name|SYS_syscall
 index|]
 expr_stmt|;
 comment|/* (illegal) */
