@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.53 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.54 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4615,18 +4615,21 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|stb
 operator|.
 name|st_mode
 operator|=
 literal|0666
 expr_stmt|;
-block|}
+comment|/* limit the errors to those actually caused in the child */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_OK
+expr_stmt|;
 if|if
 condition|(
 name|bitset
@@ -4849,6 +4852,14 @@ name|q_uid
 argument_list|)
 expr_stmt|;
 block|}
+name|FileName
+operator|=
+name|filename
+expr_stmt|;
+name|LineNumber
+operator|=
+literal|0
+expr_stmt|;
 name|f
 operator|=
 name|dfopen
@@ -4864,11 +4875,18 @@ name|f
 operator|==
 name|NULL
 condition|)
+block|{
+name|message
+argument_list|(
+literal|"cannot open"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_CANTCREAT
 argument_list|)
 expr_stmt|;
+block|}
 name|putfromline
 argument_list|(
 name|f
@@ -4922,6 +4940,25 @@ argument_list|,
 name|ProgMailer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|f
+argument_list|)
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"I/O error"
+argument_list|)
+expr_stmt|;
+name|setstat
+argument_list|(
+name|EX_IOERR
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -4956,7 +4993,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+name|ExitStat
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
