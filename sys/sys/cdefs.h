@@ -1347,7 +1347,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-  * The following definitions are an extension of the behavior originally  * implemented in<sys/_posix.h>, but with a different level of granularity.  * POSIX.1 requires that the macros we test be defined before any standard  * header file is included.  *  * Here's a quick run-down of the versions:  *  defined(_POSIX_SOURCE)		1003.1-1988  *  _POSIX_C_SOURCE == 1		1003.1-1990  *  _POSIX_C_SOURCE == 199309		1003.1b-1993  *  _POSIX_C_SOURCE == 199506		1003.1c-1995, 1003.1i-1995,  *					and the omnibus ISO/IEC 9945-1: 1996  *  _POSIX_C_SOURCE == 200112		1003.1-2001  *  * In addition, the X/Open Portability Guide, which is now the Single UNIX  * Specification, defines a feature-test macro which indicates the version of  * that specification, and which subsumes _POSIX_C_SOURCE.  *  * Our macros begin with two underscores to avoid namespace screwage.  */
+comment|/*-  * The following definitions are an extension of the behavior originally  * implemented in<sys/_posix.h>, but with a different level of granularity.  * POSIX.1 requires that the macros we test be defined before any standard  * header file is included.  *  * Here's a quick run-down of the versions:  *  defined(_POSIX_SOURCE)		1003.1-1988  *  _POSIX_C_SOURCE == 1		1003.1-1990  *  _POSIX_C_SOURCE == 2		1003.2-1992 C Language Binding Option  *  _POSIX_C_SOURCE == 199309		1003.1b-1993  *  _POSIX_C_SOURCE == 199506		1003.1c-1995, 1003.1i-1995,  *					and the omnibus ISO/IEC 9945-1: 1996  *  _POSIX_C_SOURCE == 200112		1003.1-2001  *  * In addition, the X/Open Portability Guide, which is now the Single UNIX  * Specification, defines a feature-test macro which indicates the version of  * that specification, and which subsumes _POSIX_C_SOURCE.  *  * Our macros begin with two underscores to avoid namespace screwage.  */
 end_comment
 
 begin_comment
@@ -1357,14 +1357,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|_POSIX_C_SOURCE
-argument_list|)
-operator|&&
-name|_POSIX_C_SOURCE
-operator|<
-literal|199309
+operator|==
+literal|1
 end_if
 
 begin_undef
@@ -1382,6 +1377,36 @@ define|#
 directive|define
 name|_POSIX_C_SOURCE
 value|199009
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Deal with IEEE Std. 1003.2-1992, in which _POSIX_C_SOURCE == 2. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_POSIX_C_SOURCE
+operator|==
+literal|2
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|_POSIX_C_SOURCE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_C_SOURCE
+value|199209
 end_define
 
 begin_endif
@@ -1563,6 +1588,28 @@ define|#
 directive|define
 name|__POSIX_VISIBLE
 value|199309
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ISO_C_VISIBLE
+value|1990
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|_POSIX_C_SOURCE
+operator|>=
+literal|199209
+end_elif
+
+begin_define
+define|#
+directive|define
+name|__POSIX_VISIBLE
+value|199209
 end_define
 
 begin_define
