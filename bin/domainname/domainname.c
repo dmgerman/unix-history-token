@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: domainname.c,v 1.2 1994/09/20 06:20:39 phk Exp $"
+literal|"$Id: domainname.c,v 1.3 1994/09/21 22:30:55 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,9 +111,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|int
-name|sflag
-decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -123,9 +120,11 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-name|sflag
-operator|=
-literal|0
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -175,26 +174,6 @@ literal|1
 argument_list|,
 literal|"getdomainname"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sflag
-operator|&&
-operator|(
-name|p
-operator|=
-name|strchr
-argument_list|(
-name|domainname
-argument_list|,
-literal|'.'
-argument_list|)
-operator|)
-condition|)
-operator|*
-name|p
-operator|=
-literal|'\0'
 expr_stmt|;
 operator|(
 name|void
