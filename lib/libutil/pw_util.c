@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -453,6 +454,7 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strrchr
@@ -461,6 +463,7 @@ name|path
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 operator|++
 name|p
@@ -696,6 +699,7 @@ name|_PATH_VI
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strrchr
@@ -704,6 +708,7 @@ name|editor
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 operator|++
 name|p
