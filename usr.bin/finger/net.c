@@ -595,10 +595,6 @@ operator|!=
 name|EOF
 condition|)
 block|{
-name|c
-operator|&=
-literal|0x7f
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -639,10 +635,16 @@ argument_list|(
 name|c
 argument_list|)
 condition|)
+block|{
+name|c
+operator|&=
+literal|0x7f
+expr_stmt|;
 name|c
 operator||=
 literal|0x40
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|lastc
