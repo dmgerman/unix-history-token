@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.35 (Berkeley) %G%"
+literal|"@(#)cp.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1242,6 +1242,29 @@ expr_stmt|;
 name|exit_val
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|S_ISDIR
+argument_list|(
+name|curr
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|fts_set
+argument_list|(
+name|ftsp
+argument_list|,
+name|curr
+argument_list|,
+name|FTS_SKIP
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
