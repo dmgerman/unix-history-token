@@ -9011,9 +9011,9 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|_PATH_DEV
+argument_list|)
 operator|-
 literal|1
-argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
