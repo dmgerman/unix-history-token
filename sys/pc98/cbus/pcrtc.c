@@ -191,12 +191,6 @@ directive|include
 file|<pc98/pc98/pc98_machdep.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
