@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.10 (Berkeley) 83/12/01"
+literal|"@(#)server.c	4.11 (Berkeley) 83/12/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -4837,12 +4837,17 @@ begin_comment
 comment|/*  * Check the current directory (initialized by the 'T' command to server())  * for extraneous files and remove them.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|clean
 argument_list|(
-argument|opts
+name|cp
 argument_list|)
-end_macro
+specifier|register
+name|char
+operator|*
+name|cp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -4855,11 +4860,6 @@ name|struct
 name|direct
 modifier|*
 name|dp
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 name|struct
 name|stat
