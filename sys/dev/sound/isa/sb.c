@@ -6909,6 +6909,10 @@ case|case
 literal|0x69187316
 case|:
 comment|/* ESS1869 */
+case|case
+literal|0xacb0110e
+case|:
+comment|/* Compaq's Presario 1621 ESS1869 */
 name|s
 operator|=
 literal|"ESS1869"
