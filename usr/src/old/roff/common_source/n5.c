@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n5.c	4.1 %G%"
+literal|"@(#)n5.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3713,11 +3713,6 @@ index|[
 name|i
 index|]
 operator|=
-name|max
-argument_list|(
-name|hnumb
-argument_list|(
-operator|&
 name|tabtab
 index|[
 name|max
@@ -3728,6 +3723,23 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+index|]
+operator|&
+name|TMASK
+expr_stmt|;
+name|tabtab
+index|[
+name|i
+index|]
+operator|=
+name|max
+argument_list|(
+name|hnumb
+argument_list|(
+operator|&
+name|tabtab
+index|[
+name|i
 index|]
 argument_list|)
 argument_list|,
