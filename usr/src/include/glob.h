@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,18 @@ directive|define
 name|_GLOB_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_struct_decl
+struct_decl|struct
+name|stat
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -22,76 +34,118 @@ block|{
 name|int
 name|gl_pathc
 decl_stmt|;
-comment|/* count of total paths so far */
+comment|/* Count of total paths so far. */
 name|int
 name|gl_matchc
 decl_stmt|;
-comment|/* count of paths matching pattern */
+comment|/* Count of paths matching pattern. */
 name|int
 name|gl_offs
 decl_stmt|;
-comment|/* reserved at beginning of gl_pathv */
+comment|/* Reserved at beginning of gl_pathv. */
 name|int
 name|gl_flags
 decl_stmt|;
-comment|/* copy of flags parameter to glob() */
-name|int
-function_decl|(
-modifier|*
-name|gl_errfunc
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* copy of errfunc parameter to glob() */
-name|void
-modifier|*
-function_decl|(
-modifier|*
-name|gl_opendir
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* alternate opendir() function for glob() */
-name|struct
-name|dirent
-modifier|*
-function_decl|(
-modifier|*
-name|gl_readdir
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* alternate readdir() function */
-name|void
-function_decl|(
-modifier|*
-name|gl_closedir
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* alternate closedir() function for glob() */
-name|int
-function_decl|(
-modifier|*
-name|gl_lstat
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* alternate lstat() function for glob() */
-name|int
-function_decl|(
-modifier|*
-name|gl_stat
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* alternate stat() function for glob() */
+comment|/* Copy of flags parameter to glob. */
 name|char
 modifier|*
 modifier|*
 name|gl_pathv
 decl_stmt|;
-comment|/* list of paths matching pattern */
+comment|/* List of paths matching pattern. */
+comment|/* Copy of errfunc parameter to glob. */
+name|int
+argument_list|(
+argument|*gl_errfunc
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Alternate filesystem access methods for glob; replacement 	 * versions of closedir(3), readdir(3), opendir(3), stat(2) 	 * and lstat(2). 	 */
+name|void
+argument_list|(
+argument|*gl_closedir
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|struct
+name|dirent
+modifier|*
+argument_list|(
+operator|*
+name|gl_readdir
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+name|void
+operator|*
+operator|(
+operator|*
+name|gl_opendir
+operator|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*gl_lstat
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+expr|struct
+name|stat
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*gl_stat
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+expr|struct
+name|stat
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 name|glob_t
 typedef|;
@@ -101,66 +155,66 @@ begin_define
 define|#
 directive|define
 name|GLOB_APPEND
-value|0x001
+value|0x0001
 end_define
 
 begin_comment
-comment|/* append to output from previous call */
+comment|/* Append to output from previous call. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GLOB_DOOFFS
-value|0x002
+value|0x0002
 end_define
 
 begin_comment
-comment|/* use gl_offs */
+comment|/* Use gl_offs. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GLOB_ERR
-value|0x004
+value|0x0004
 end_define
 
 begin_comment
-comment|/* return on error */
+comment|/* Return on error. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GLOB_MARK
-value|0x008
+value|0x0008
 end_define
 
 begin_comment
-comment|/* append / to matching directories */
+comment|/* Append / to matching directories. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GLOB_NOCHECK
-value|0x010
+value|0x0010
 end_define
 
 begin_comment
-comment|/* return pattern itself if nothing matches */
+comment|/* Return pattern itself if nothing matches. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GLOB_NOSORT
-value|0x020
+value|0x0020
 end_define
 
 begin_comment
-comment|/* don't sort */
+comment|/* Don't sort. */
 end_comment
 
 begin_ifndef
@@ -172,45 +226,67 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|GLOB_MAGCHAR
-value|0x040
+name|GLOB_ALTDIRFUNC
+value|0x0040
 end_define
 
 begin_comment
-comment|/* pattern had globbing characters */
+comment|/* Use alternately specified directory funcs. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_BRACE
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Expand braces ala csh. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_MAGCHAR
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Pattern had globbing characters. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GLOB_NOMAGIC
-value|0x080
+value|0x0200
 end_define
 
 begin_comment
-comment|/* GLOB_NOCHECK without magic chars (csh) */
+comment|/* GLOB_NOCHECK without magic chars (csh). */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GLOB_QUOTE
-value|0x100
+value|0x0400
 end_define
 
 begin_comment
-comment|/* quote special chars with \ */
+comment|/* Quote special chars with \. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|GLOB_ALTDIRFUNC
-value|0x200
+name|GLOB_TILDE
+value|0x0800
 end_define
 
 begin_comment
-comment|/* use alternately specified directory funcs */
+comment|/* Expand tilde names from the passwd file. */
 end_comment
 
 begin_endif
@@ -226,7 +302,7 @@ value|(-1)
 end_define
 
 begin_comment
-comment|/* malloc call failed */
+comment|/* Malloc call failed. */
 end_comment
 
 begin_define
@@ -237,14 +313,8 @@ value|(-2)
 end_define
 
 begin_comment
-comment|/* unignored error */
+comment|/* Unignored error. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
@@ -264,6 +334,7 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
+specifier|const
 name|char
 operator|*
 argument_list|,
