@@ -1980,9 +1980,8 @@ name|ssh_add_identity
 argument_list|(
 name|ac
 argument_list|,
+operator|&
 name|key
-operator|.
-name|rsa
 argument_list|,
 name|comment
 argument_list|)
