@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved  *  * This code is derived from software contributed to The NetBSD Foundation  * by Heiko W.Rupp<hwr@pilhuhn.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *      * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved  *  * This code is derived from software contributed to The NetBSD Foundation  * by Heiko W.Rupp<hwr@pilhuhn.de>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -112,8 +112,8 @@ comment|/* GRE flags */
 name|u_int16_t
 name|ptype
 decl_stmt|;
-comment|/* protocol type of payload typically  				   Ether protocol type*/
-comment|/*   *  from here on: fields are optional, presence indicated by flags   * 	u_int_16 checksum	checksum (one-complements of GRE header 				and payload 				Present if (ck_pres | rt_pres == 1). 				Valid if (ck_pres == 1). 	u_int_16 offset		offset from start of routing filed to 				first octet of active SRE (see below). 				Present if (ck_pres | rt_pres == 1). 				Valid if (rt_pres == 1). 	u_int_32 key		inserted by encapsulator e.g. for 				authentication 				Present if (key_pres ==1 ). 	u_int_32 seq_num	Sequence number to allow for packet order 				Present if (seq_pres ==1 ). 	struct gre_sre[] routing Routing fileds (see below) 				Present if (rt_pres == 1)  */
+comment|/* protocol type of payload typically 				   Ether protocol type*/
+comment|/*  *  from here on: fields are optional, presence indicated by flags  * 	u_int_16 checksum	checksum (one-complements of GRE header 				and payload 				Present if (ck_pres | rt_pres == 1). 				Valid if (ck_pres == 1). 	u_int_16 offset		offset from start of routing filed to 				first octet of active SRE (see below). 				Present if (ck_pres | rt_pres == 1). 				Valid if (rt_pres == 1). 	u_int_32 key		inserted by encapsulator e.g. for 				authentication 				Present if (key_pres ==1 ). 	u_int_32 seq_num	Sequence number to allow for packet order 				Present if (seq_pres ==1 ). 	struct gre_sre[] routing Routing fileds (see below) 				Present if (rt_pres == 1)  */
 block|}
 name|__attribute__
 argument_list|(
@@ -273,7 +273,7 @@ comment|/* offset to first octet of active entry */
 name|u_char
 name|sre_length
 decl_stmt|;
-comment|/* number of octets in the SRE.  				   sre_lengthl==0 -> last entry. */
+comment|/* number of octets in the SRE. 				   sre_lengthl==0 -> last entry. */
 name|u_char
 modifier|*
 name|sre_rtinfo
@@ -392,7 +392,7 @@ comment|/* _KERNEL */
 end_comment
 
 begin_comment
-comment|/*   * ioctls needed to manipulate the interface   */
+comment|/*  * ioctls needed to manipulate the interface  */
 end_comment
 
 begin_define
