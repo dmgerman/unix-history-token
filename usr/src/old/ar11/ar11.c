@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ar11.c	4.3 (Berkeley) %G%"
+literal|"@(#)ar11.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,11 +144,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|mc68000
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -3466,11 +3474,19 @@ expr_stmt|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|mc68000
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_function
 name|struct
