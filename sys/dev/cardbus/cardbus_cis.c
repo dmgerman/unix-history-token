@@ -2410,21 +2410,12 @@ argument_list|(
 name|bar
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|reg
-operator|&
-name|TPL_BAR_REG_BELOW1MB
-condition|)
-name|dinfo
-operator|->
-name|mbelow1mb
-operator||=
-name|BARBIT
-argument_list|(
-name|bar
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (reg& TPL_BAR_REG_BELOW1MB) 			dinfo->mbelow1mb |= BARBIT(bar);
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Sanity check the BAR length reported in the CIS with the length 	 * encoded in the PCI BAR.  The latter seems to be more reliable. 	 * XXX - This probably belongs elsewhere. 	 */
 name|pci_write_config
