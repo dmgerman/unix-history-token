@@ -1065,77 +1065,77 @@ begin_define
 define|#
 directive|define
 name|LINUX_TCGETS
-value|0x5401
+value|0x7413
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCSETS
-value|0x5402
+value|0x7414
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCSETSW
-value|0x5403
+value|0x7415
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCSETSF
-value|0x5404
+value|0x7416
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCGETA
-value|0x5405
+value|0x7417
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCSETA
-value|0x5406
+value|0x7418
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCSETAW
-value|0x5407
+value|0x7419
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCSETAF
-value|0x5408
+value|0x741c
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCSBRK
-value|0x5409
+value|0x741d
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCXONC
-value|0x540A
+value|0x741e
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TCFLSH
-value|0x540B
+value|0x741f
 end_define
 
 begin_define
@@ -1163,14 +1163,14 @@ begin_define
 define|#
 directive|define
 name|LINUX_TIOCGPGRP
-value|0x540F
+value|0x7477
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TIOCSPGRP
-value|0x5410
+value|0x7476
 end_define
 
 begin_define
@@ -1191,14 +1191,14 @@ begin_define
 define|#
 directive|define
 name|LINUX_TIOCGWINSZ
-value|0x5413
+value|0x7468
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TIOCSWINSZ
-value|0x5414
+value|0x7467
 end_define
 
 begin_define
@@ -1247,7 +1247,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_FIONREAD
-value|0x541B
+value|0x667f
 end_define
 
 begin_define
@@ -1296,7 +1296,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_FIONBIO
-value|0x5421
+value|0x667e
 end_define
 
 begin_define
@@ -1337,22 +1337,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_FIONCLEX
-value|0x5450
+name|LINUX_FIOCLEX
+value|0x6601
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_FIOCLEX
-value|0x5451
+name|LINUX_FIONCLEX
+value|0x6602
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_FIOASYNC
-value|0x5452
+value|0x667d
 end_define
 
 begin_define
@@ -1394,14 +1394,14 @@ begin_define
 define|#
 directive|define
 name|LINUX_IOCTL_TERMIO_MIN
-value|LINUX_TCGETS
+value|LINUX_TIOCEXCL
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_IOCTL_TERMIO_MAX
-value|LINUX_TIOCSLCKTRMIOS
+value|LINUX_TIOCGPGRP
 end_define
 
 begin_comment
@@ -1501,49 +1501,49 @@ begin_define
 define|#
 directive|define
 name|LINUX_VINTR
-value|0
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_VQUIT
-value|1
+value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_VERASE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_VKILL
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_VEOF
+name|LINUX_VWERASE
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_VTIME
+name|LINUX_VKILL
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
+name|LINUX_VEOF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_VTIME
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_VMIN
-value|6
+value|16
 end_define
 
 begin_define
@@ -1557,7 +1557,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_NCC
-value|8
+value|19
 end_define
 
 begin_comment
@@ -1568,14 +1568,14 @@ begin_define
 define|#
 directive|define
 name|LINUX_VSTART
-value|8
+value|12
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_VSTOP
-value|9
+value|13
 end_define
 
 begin_define
@@ -1589,42 +1589,42 @@ begin_define
 define|#
 directive|define
 name|LINUX_VEOL
-value|11
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_VREPRINT
-value|12
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_VDISCARD
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_VWERASE
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_VLNEXT
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
+name|LINUX_VERASE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_VLNEXT
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_VEOL2
-value|16
+value|2
 end_define
 
 begin_define
@@ -1670,77 +1670,77 @@ begin_define
 define|#
 directive|define
 name|LINUX_PARMRK
-value|0x0000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_INPCK
 value|0x0000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_ISTRIP
+name|LINUX_INPCK
 value|0x0000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_INLCR
+name|LINUX_ISTRIP
 value|0x0000040
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_IGNCR
-value|0x0000080
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_ICRNL
+name|LINUX_INLCR
 value|0x0000100
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_IUCLC
+name|LINUX_IGNCR
 value|0x0000200
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_IXON
+name|LINUX_ICRNL
 value|0x0000400
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_IXANY
-value|0x0000800
+name|LINUX_IUCLC
+value|0x0010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_IXOFF
+name|LINUX_IXON
 value|0x0001000
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_IMAXBEL
+name|LINUX_IXANY
+value|0x0004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IXOFF
 value|0x0002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_IMAXBEL
+value|0x0020000
 end_define
 
 begin_comment
@@ -1772,42 +1772,42 @@ begin_define
 define|#
 directive|define
 name|LINUX_OCRNL
-value|0x0000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_ONOCR
 value|0x0000010
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_ONLRET
+name|LINUX_ONOCR
 value|0x0000020
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_OFILL
+name|LINUX_ONLRET
 value|0x0000040
 end_define
 
 begin_define
 define|#
 directive|define
+name|LINUX_OFILL
+value|0x0000100
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_OFDEL
-value|0x0000080
+value|0x0000200
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_NLDLY
-value|0x0000100
+value|0x0001400
 end_define
 
 begin_define
@@ -1821,154 +1821,172 @@ begin_define
 define|#
 directive|define
 name|LINUX_NL1
-value|0x0000100
+value|00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CRDLY
-value|0x0000600
+value|00030000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CR0
-value|0x0000000
+value|00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CR1
-value|0x0000200
+value|00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CR2
-value|0x0000400
+value|00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CR3
-value|0x0000600
+value|00030000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TABDLY
-value|0x0001800
+value|00006000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TAB0
-value|0x0000000
+value|00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TAB1
-value|0x0000800
+value|00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TAB2
-value|0x0001000
+value|00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TAB3
-value|0x0001800
+value|00006000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_XTABS
-value|0x0001800
+value|01000000
 end_define
+
+begin_comment
+comment|/* Hmm.. Linux/i386 considers this part of TABDLY.. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|LINUX_BSDLY
-value|0x0002000
+value|00100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_BS0
-value|0x0000000
+value|00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_BS1
-value|0x0002000
+value|00100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_VTDLY
-value|0x0004000
+value|00200000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_VT0
-value|0x0000000
+value|00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_VT1
-value|0x0004000
+value|00200000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_FFDLY
-value|0x0008000
+value|00040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_FF0
-value|0x0000000
+value|00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_FF1
-value|0x0008000
+value|00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_NL2
+value|00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_NL3
+value|00001400
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CBAUD
-value|0x0000100f
+value|0000037
 end_define
 
 begin_define
@@ -2101,28 +2119,119 @@ begin_define
 define|#
 directive|define
 name|LINUX_CBAUDEX
-value|0x00001000
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_B57600
-value|0x00001001
+value|00020
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_B115200
-value|0x00001002
+value|00021
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B230400
+value|00022
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B460800
+value|00023
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B500000
+value|00024
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B576000
+value|00025
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B921600
+value|00026
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B1000000
+value|00027
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B1152000
+value|00030
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B1500000
+value|00031
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B2000000
+value|00032
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B2500000
+value|00033
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B3000000
+value|00034
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B3500000
+value|00035
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_B4000000
+value|00036
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CSIZE
-value|0x00000030
+value|00001400
 end_define
 
 begin_define
@@ -2136,70 +2245,70 @@ begin_define
 define|#
 directive|define
 name|LINUX_CS6
-value|0x00000010
+value|00000400
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CS7
-value|0x00000020
+value|00001000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CS8
-value|0x00000030
+value|00001400
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CSTOPB
-value|0x00000040
+value|00002000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CREAD
-value|0x00000080
+value|00004000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_PARENB
-value|0x00000100
+value|00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_PARODD
-value|0x00000200
+value|00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_HUPCL
-value|0x00000400
+value|00040000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CLOCAL
-value|0x00000800
+value|00100000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_CRTSCTS
-value|0x80000000
+value|020000000000
 end_define
 
 begin_comment
@@ -2210,21 +2319,21 @@ begin_define
 define|#
 directive|define
 name|LINUX_ISIG
-value|0x00000001
+value|0x00000080
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_ICANON
-value|0x00000002
+value|0x00000100
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_XCASE
-value|0x00000004
+value|0x00004000
 end_define
 
 begin_define
@@ -2238,77 +2347,77 @@ begin_define
 define|#
 directive|define
 name|LINUX_ECHOE
-value|0x00000010
+value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_ECHOK
-value|0x00000020
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_ECHONL
-value|0x00000040
+value|0x00000010
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_NOFLSH
-value|0x00000080
+value|0x80000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_TOSTOP
-value|0x00000100
+value|0x00400000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_ECHOCTL
-value|0x00000200
+value|0x00000040
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_ECHOPRT
-value|0x00000400
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_ECHOKE
-value|0x00000800
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_FLUSHO
-value|0x00001000
+value|0x00800000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_PENDIN
-value|0x00002000
+value|0x20000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_IEXTEN
-value|0x00008000
+value|0x00000400
 end_define
 
 begin_comment

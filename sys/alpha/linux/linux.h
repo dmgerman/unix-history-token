@@ -6,19 +6,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_LINUX_LINUX_H_
+name|_ALPHA_LINUX_LINUX_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_LINUX_LINUX_H_
+name|_ALPHA_LINUX_LINUX_H_
 end_define
 
 begin_include
 include|#
 directive|include
-file|<i386/linux/linux_syscall.h>
+file|<alpha/linux/linux_syscall.h>
 end_include
 
 begin_ifdef
@@ -133,33 +133,33 @@ begin_define
 define|#
 directive|define
 name|LINUX_RLIMIT_NPROC
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_RLIMIT_NOFILE
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_RLIMIT_MEMLOCK
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
+name|LINUX_RLIMIT_NOFILE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_RLIMIT_AS
-value|9
+value|7
 end_define
 
 begin_comment
 comment|/* address space limit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_RLIMIT_MEMLOCK
+value|9
+end_define
 
 begin_define
 define|#
@@ -190,21 +190,21 @@ begin_define
 define|#
 directive|define
 name|LINUX_MAP_FIXED
-value|0x0010
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_MAP_ANON
-value|0x0020
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_MAP_GROWSDOWN
-value|0x0100
+value|0x1000
 end_define
 
 begin_typedef
@@ -282,12 +282,9 @@ name|linux_pid_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|u_int
-name|linux_size_t
-typedef|;
-end_typedef
+begin_comment
+comment|/*typedef u_int	linux_size_t; */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -307,7 +304,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|long
+name|int
 name|val
 index|[
 literal|2
@@ -619,21 +616,21 @@ begin_define
 define|#
 directive|define
 name|LINUX_SA_NOCLDSTOP
-value|0x00000001
+value|0x00000004
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_SA_NOCLDWAIT
-value|0x00000002
+value|0x00000020
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_SA_SIGINFO
-value|0x00000004
+value|0x00000040
 end_define
 
 begin_define
@@ -647,14 +644,14 @@ begin_define
 define|#
 directive|define
 name|LINUX_SA_ONSTACK
-value|0x08000000
+value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_SA_RESTART
-value|0x10000000
+value|0x00000002
 end_define
 
 begin_define
@@ -668,14 +665,28 @@ begin_define
 define|#
 directive|define
 name|LINUX_SA_NOMASK
-value|0x40000000
+value|LINUX_SA_NODEFER
 end_define
 
 begin_define
 define|#
 directive|define
 name|LINUX_SA_ONESHOT
-value|0x80000000
+value|LINUX_SA_RESETHAND
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SA_NODEFER
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_SA_RESETHAND
+value|0x00000010
 end_define
 
 begin_comment
@@ -741,17 +752,6 @@ parameter_list|)
 value|SIGADDSET(set, sig)
 end_define
 
-begin_comment
-comment|/* sigaltstack */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LINUX_MINSIGSTKSZ
-value|2048
-end_define
-
 begin_typedef
 typedef|typedef
 name|void
@@ -782,6 +782,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+comment|/*	u_long	__bits[1];*/
 block|}
 name|linux_sigset_t
 typedef|;
@@ -841,98 +842,88 @@ name|linux_sigaction_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|void
-modifier|*
-name|ss_sp
-decl_stmt|;
-name|int
-name|ss_flags
-decl_stmt|;
-name|linux_size_t
-name|ss_size
-decl_stmt|;
-block|}
-name|linux_stack_t
-typedef|;
-end_typedef
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|typedef struct { 	void	*ss_sp; 	int	ss_flags; 	linux_size_t ss_size; } linux_stack_t;
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* The Linux sigcontext, pretty much a standard 386 trapframe. */
+comment|/*  * The Linux sigcontext  */
 end_comment
 
 begin_struct
 struct|struct
 name|linux_sigcontext
 block|{
-name|int
-name|sc_gs
+name|long
+name|sc_onstack
 decl_stmt|;
-name|int
-name|sc_fs
-decl_stmt|;
-name|int
-name|sc_es
-decl_stmt|;
-name|int
-name|sc_ds
-decl_stmt|;
-name|int
-name|sc_edi
-decl_stmt|;
-name|int
-name|sc_esi
-decl_stmt|;
-name|int
-name|sc_ebp
-decl_stmt|;
-name|int
-name|sc_esp
-decl_stmt|;
-name|int
-name|sc_ebx
-decl_stmt|;
-name|int
-name|sc_edx
-decl_stmt|;
-name|int
-name|sc_ecx
-decl_stmt|;
-name|int
-name|sc_eax
-decl_stmt|;
-name|int
-name|sc_trapno
-decl_stmt|;
-name|int
-name|sc_err
-decl_stmt|;
-name|int
-name|sc_eip
-decl_stmt|;
-name|int
-name|sc_cs
-decl_stmt|;
-name|int
-name|sc_eflags
-decl_stmt|;
-name|int
-name|sc_esp_at_signal
-decl_stmt|;
-name|int
-name|sc_ss
-decl_stmt|;
-name|int
-name|sc_387
-decl_stmt|;
-name|int
+name|long
 name|sc_mask
 decl_stmt|;
-name|int
-name|sc_cr2
+name|long
+name|sc_pc
+decl_stmt|;
+name|long
+name|sc_ps
+decl_stmt|;
+name|long
+name|sc_regs
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|long
+name|sc_ownedfp
+decl_stmt|;
+name|long
+name|sc_fpregs
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u_long
+name|sc_fpcr
+decl_stmt|;
+name|u_long
+name|sc_fp_control
+decl_stmt|;
+name|u_long
+name|sc_reserved1
+decl_stmt|,
+name|sc_reserved2
+decl_stmt|;
+name|u_long
+name|sc_ssize
+decl_stmt|;
+name|char
+modifier|*
+name|sc_sbase
+decl_stmt|;
+name|u_long
+name|sc_traparg_a0
+decl_stmt|;
+name|u_long
+name|sc_traparg_a1
+decl_stmt|;
+name|u_long
+name|sc_traparg_a2
+decl_stmt|;
+name|u_long
+name|sc_fp_trap_pc
+decl_stmt|;
+name|u_long
+name|sc_fp_trigger_sum
+decl_stmt|;
+name|u_long
+name|sc_fp_trigger_inst
 decl_stmt|;
 block|}
 struct|;
@@ -959,22 +950,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bsd_to_linux_signal
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|linux_to_bsd_signal
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1124,42 +1099,42 @@ begin_define
 define|#
 directive|define
 name|LINUX_O_CREAT
-value|0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_O_EXCL
-value|0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_O_NOCTTY
-value|0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_O_TRUNC
 value|01000
 end_define
 
 begin_define
 define|#
 directive|define
-name|LINUX_O_APPEND
+name|LINUX_O_EXCL
+value|04000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_O_NOCTTY
+value|010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_O_TRUNC
 value|02000
 end_define
 
 begin_define
 define|#
 directive|define
+name|LINUX_O_APPEND
+value|010
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_O_NONBLOCK
-value|04000
+value|04
 end_define
 
 begin_define
@@ -1173,7 +1148,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_O_SYNC
-value|010000
+value|040000
 end_define
 
 begin_define
@@ -1960,7 +1935,8 @@ name|LINUX_IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* Just fits the size */
-name|linux_caddr_t
+comment|/* linux_caddr_t ifru_data; */
+name|caddr_t
 name|ifru_data
 decl_stmt|;
 block|}
@@ -1992,13 +1968,59 @@ begin_comment
 comment|/* MAC address */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|linux_sigcode
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|linux_szsigcode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*extern const char linux_emul_path[];*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sysent
+name|linux_sysent
+index|[
+name|LINUX_SYS_MAXSYSCALL
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dummy struct definitions */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|image_params
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !_I386_LINUX_LINUX_H_ */
+comment|/* !_ALPHA_LINUX_LINUX_H_ */
 end_comment
 
 end_unit
