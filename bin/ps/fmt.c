@@ -131,10 +131,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * XXX  * This is a stub until marc does the real one.  */
-end_comment
-
 begin_function
 specifier|static
 name|char
