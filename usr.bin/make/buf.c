@@ -75,8 +75,7 @@ name|bp
 parameter_list|,
 name|nb
 parameter_list|)
-define|\
-value|if (bp->left< (nb)+1) {\ 	    int newSize = (bp)->size + max((nb) + 1, BUF_ADD_INC); \ 	    Byte  *newBuf = erealloc((bp)->buffer, newSize); \ 	    \ 	    (bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer); \ 	    (bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);\ 	    (bp)->buffer = newBuf;\ 	    (bp)->size = newSize;\ 	    (bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);\ 	}
+value|do {						\  	if (bp->left< (nb) + 1) {					\ 		int newSize = (bp)->size + max((nb) + 1, BUF_ADD_INC);	\ 		Byte  *newBuf = erealloc((bp)->buffer, newSize);	\ 									\ 		(bp)->inPtr = newBuf + ((bp)->inPtr - (bp)->buffer);	\ 		(bp)->outPtr = newBuf + ((bp)->outPtr - (bp)->buffer);	\ 		(bp)->buffer = newBuf;					\ 		(bp)->size = newSize;					\ 		(bp)->left = newSize - ((bp)->inPtr - (bp)->buffer);	\ 	}								\     } while (0)
 end_define
 
 begin_define
@@ -153,7 +152,7 @@ operator|->
 name|left
 operator|--
 expr_stmt|;
-comment|/*      * Null-terminate      */
+comment|/* 	 * Null-terminate 	 */
 operator|*
 name|bp
 operator|->
@@ -214,7 +213,7 @@ name|left
 operator|-=
 name|numBytes
 expr_stmt|;
-comment|/*      * Null-terminate      */
+comment|/* 	 * Null-terminate 	 */
 operator|*
 name|bp
 operator|->
@@ -303,7 +302,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * Yech. have to expand the buffer to stuff this thing in. 	 * We use a different expansion constant because people don't 	 * usually push back many bytes when they're doing it a byte at 	 * a time... 	 */
+comment|/* 		 * Yech. have to expand the buffer to stuff this thing in. 		 * We use a different expansion constant because people don't 		 * usually push back many bytes when they're doing it a byte at 		 * a time... 		 */
 name|int
 name|numBytes
 init|=
@@ -643,15 +642,11 @@ name|bp
 operator|->
 name|outPtr
 condition|)
-block|{
 return|return
 operator|(
 name|BUF_ERROR
 operator|)
 return|;
-block|}
-else|else
-block|{
 name|res
 operator|=
 operator|(
@@ -713,7 +708,6 @@ name|res
 operator|)
 return|;
 block|}
-block|}
 end_function
 
 begin_comment
@@ -747,7 +741,6 @@ name|outPtr
 operator|<
 name|numBytes
 condition|)
-block|{
 name|numBytes
 operator|=
 name|bp
@@ -758,7 +751,6 @@ name|bp
 operator|->
 name|outPtr
 expr_stmt|;
-block|}
 name|memcpy
 argument_list|(
 name|bytesPtr
@@ -846,7 +838,6 @@ name|numBytesPtr
 operator|!=
 name|NULL
 condition|)
-block|{
 operator|*
 name|numBytesPtr
 operator|=
@@ -858,7 +849,6 @@ name|bp
 operator|->
 name|outPtr
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|bp
@@ -926,14 +916,12 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-block|{
 name|bp
 operator|->
 name|outPtr
 operator|+=
 name|numBytes
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -996,12 +984,10 @@ name|size
 operator|<=
 literal|0
 condition|)
-block|{
 name|size
 operator|=
 name|BUF_DEF_SIZE
 expr_stmt|;
-block|}
 name|bp
 operator|->
 name|left
@@ -1067,7 +1053,6 @@ if|if
 condition|(
 name|freeData
 condition|)
-block|{
 name|free
 argument_list|(
 name|buf
@@ -1075,7 +1060,6 @@ operator|->
 name|buffer
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|buf
