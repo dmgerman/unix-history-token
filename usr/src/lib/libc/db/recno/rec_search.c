@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_search.c	5.2 (Berkeley) %G%"
+literal|"@(#)rec_search.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ file|"recno.h"
 end_include
 
 begin_comment
-comment|/*  * __REC_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	key:	key to find  *	op: 	search operation  *	exactp:	pointer to exact match flag  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Warnings:  *	The EPG returned is in static memory, and will be overwritten by the  *	next search of any kind in any tree.  */
+comment|/*  * __REC_SEARCH -- Search a btree for a key.  *  * Parameters:  *	t:	tree to search  *	recno:	key to find  *	op: 	search operation  *  * Returns:  *	EPG for matching record, if any, or the EPG for the location of the  *	key, if it were inserted into the tree.  *  * Warnings:  *	The EPG returned is in static memory, and will be overwritten by the  *	next search of any kind in any tree.  */
 end_comment
 
 begin_function
@@ -249,6 +249,8 @@ argument_list|,
 name|pg
 argument_list|,
 name|index
+operator|-
+literal|1
 argument_list|)
 operator|==
 name|RET_ERROR
