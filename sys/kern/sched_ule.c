@@ -168,6 +168,12 @@ name|KTR_ULE
 value|KTR_NFS
 end_define
 
+begin_error
+error|#
+directive|error
+literal|"The SCHED_ULE scheduler is broken.  Please use SCHED_4BSD"
+end_error
+
 begin_comment
 comment|/* decay 95% of `p_pctcpu' in 60 seconds; see CCPU_SHIFT before changing */
 end_comment
