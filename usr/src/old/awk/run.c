@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)run.c	4.7 %G%"
+literal|"@(#)run.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"sys/param.h"
+end_include
 
 begin_include
 include|#
@@ -61,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|FILENUM
-value|10
+value|NOFILE
 end_define
 
 begin_struct
