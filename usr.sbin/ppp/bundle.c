@@ -6278,8 +6278,12 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"\n Queued:        %u of %u\n"
+literal|"\n Queued:        %lu of %u\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ip_QueueLen
 argument_list|(
 operator|&

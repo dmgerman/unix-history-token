@@ -2111,6 +2111,37 @@ if|if
 condition|(
 name|modfind
 argument_list|(
+literal|"ng_ether"
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|ID0kldload
+argument_list|(
+literal|"ng_ether"
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/*        * Don't treat this as an error as older kernels have this stuff        * built in as part of the netgraph node itself.        */
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"kldload: ng_ether: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|modfind
+argument_list|(
 literal|"ng_socket"
 argument_list|)
 operator|==

@@ -327,7 +327,7 @@ name|execdevice
 operator|.
 name|name
 argument_list|,
-name|PHYSICAL_FORCE_ASYNC
+name|PHYSICAL_NOFORCE
 argument_list|)
 expr_stmt|;
 return|return
