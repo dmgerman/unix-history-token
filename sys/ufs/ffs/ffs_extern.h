@@ -396,10 +396,6 @@ name|inode
 modifier|*
 parameter_list|,
 name|struct
-name|malloc_type
-modifier|*
-parameter_list|,
-name|struct
 name|fs
 modifier|*
 parameter_list|,
