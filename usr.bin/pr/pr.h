@@ -112,8 +112,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TIMEFMT
-value|"%Ef %H:%M %Y"
+name|TIMEFMTD
+value|"%e %b %H:%M %Y"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIMEFMTM
+value|"%b %e %H:%M %Y"
 end_define
 
 begin_define
