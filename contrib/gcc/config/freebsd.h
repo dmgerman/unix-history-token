@@ -84,7 +84,7 @@ value|"%{!shared:%{!pg:%{!pthread:%{!kthread:-lc}%{kthread:-lpthread -lc}}%{pthr
 end_define
 
 begin_comment
-comment|/* Let gcc locate this for us according to the -m rules.  */
+comment|/* Tell gcc to locate libgcc.a for us according to the -m rules.  */
 end_comment
 
 begin_undef
@@ -106,7 +106,7 @@ comment|/* Code generation parameters.  */
 end_comment
 
 begin_comment
-comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions      (even though the svr4 ABI for the i386 says that records and unions are    returned in memory).  */
+comment|/* Don't default to pcc-struct-return, because gcc is the only compiler, and    we want to retain compatibility with older gcc versions    (even though the svr4 ABI for the i386 says that records and unions are    returned in memory).  */
 end_comment
 
 begin_undef
@@ -150,17 +150,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Our malloc can allocte pagesized blocks efficiently.  The default size     of 4072 bytes is not optimal on the i386 nor the Alpha.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OBSTACK_CHUNK_SIZE
-value|(getpagesize())
-end_define
-
-begin_comment
 comment|/* Miscellaneous parameters.  */
 end_comment
 
@@ -172,6 +161,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_ATEXIT
+end_define
+
+begin_comment
+comment|/* Our malloc can allocte pagesized blocks efficiently.  The default size     of 4072 bytes is not optimal on the i386 nor the Alpha.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBSTACK_CHUNK_SIZE
+value|(getpagesize())
 end_define
 
 end_unit
