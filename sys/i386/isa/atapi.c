@@ -34,7 +34,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"acd.h"
+file|"wcd.h"
 end_include
 
 begin_include
@@ -1097,7 +1097,7 @@ case|:
 comment|/* CD-ROM device */
 if|#
 directive|if
-name|NACD
+name|NWCD
 operator|>
 literal|0
 comment|/* ATAPI CD-ROM& CD-R/RW drives */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-cd.c,v 1.10 1999/01/31 23:08:47 sos Exp $  */
+comment|/*-  * Copyright (c) 1998, 1999 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: atapi-cd.c,v 1.11 1999/02/10 00:03:32 ken Exp $  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acd.h"
+file|"wcd.h"
 end_include
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NACD
+name|NWCD
 operator|>
 literal|0
 operator|&&
@@ -236,7 +236,7 @@ name|nommap
 block|,
 name|acdstrategy
 block|,
-literal|"acd"
+literal|"wcd"
 block|,
 name|NULL
 block|,
@@ -944,7 +944,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0640
 argument_list|,
-literal|"racd%da"
+literal|"rwcd%da"
 argument_list|,
 name|lun
 argument_list|)
@@ -956,7 +956,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|acd_cdevsw
+name|wcd_cdevsw
 argument_list|,
 name|dkmakeminor
 argument_list|(
@@ -975,7 +975,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0640
 argument_list|,
-literal|"racd%dc"
+literal|"rwcd%dc"
 argument_list|,
 name|lun
 argument_list|)
@@ -987,7 +987,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|acd_cdevsw
+name|wcd_cdevsw
 argument_list|,
 name|dkmakeminor
 argument_list|(
@@ -1006,7 +1006,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0640
 argument_list|,
-literal|"acd%da"
+literal|"wcd%da"
 argument_list|,
 name|lun
 argument_list|)
@@ -1018,7 +1018,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|acd_cdevsw
+name|wcd_cdevsw
 argument_list|,
 name|dkmakeminor
 argument_list|(
@@ -1037,7 +1037,7 @@ name|GID_OPERATOR
 argument_list|,
 literal|0640
 argument_list|,
-literal|"acd%dc"
+literal|"wcd%dc"
 argument_list|,
 name|lun
 argument_list|)
@@ -1108,7 +1108,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd: too many units\n"
+literal|"wcd: too many units\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1123,7 +1123,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd: configuration error, ATAPI code not present!\n"
+literal|"wcd: configuration error, ATAPI code not present!\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1154,7 +1154,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd: out of memory\n"
+literal|"wcd: out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1477,7 +1477,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd: out of memory\n"
+literal|"wcd: out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1678,7 +1678,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd: out of memory\n"
+literal|"wcd: out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1700,7 +1700,7 @@ name|chp
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acd%d: changer slot %d %s\n"
+literal|"wcd%d: changer slot %d %s\n"
 argument_list|,
 name|acdnlun
 argument_list|,
@@ -1740,7 +1740,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd: too many units\n"
+literal|"wcd: too many units\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1752,7 +1752,7 @@ name|sprintf
 argument_list|(
 name|string
 argument_list|,
-literal|"acd%d-"
+literal|"wcd%d-"
 argument_list|,
 name|cdp
 operator|->
@@ -1794,7 +1794,7 @@ name|cdp
 operator|->
 name|device_stats
 argument_list|,
-literal|"acd"
+literal|"wcd"
 argument_list|,
 name|cdp
 operator|->
@@ -1837,7 +1837,7 @@ name|mechanism
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"acd%d: drive speed "
+literal|"wcd%d: drive speed "
 argument_list|,
 name|cdp
 operator|->
@@ -1909,7 +1909,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acd%d: supported read types:"
+literal|"wcd%d: supported read types:"
 argument_list|,
 name|cdp
 operator|->
@@ -2025,7 +2025,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nacd%d: supported write types:"
+literal|"\nwcd%d: supported write types:"
 argument_list|,
 name|cdp
 operator|->
@@ -2117,7 +2117,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nacd%d: Audio: "
+literal|"\nwcd%d: Audio: "
 argument_list|,
 name|cdp
 operator|->
@@ -2159,7 +2159,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\nacd%d: Mechanism: "
+literal|"\nwcd%d: Mechanism: "
 argument_list|,
 name|cdp
 operator|->
@@ -2270,7 +2270,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nacd%d: Medium: "
+literal|"\nwcd%d: Medium: "
 argument_list|,
 name|cdp
 operator|->
@@ -2693,7 +2693,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd%d: rezero failed\n"
+literal|"wcd%d: rezero failed\n"
 argument_list|,
 name|lun
 argument_list|)
@@ -2718,7 +2718,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd%d: read_toc failed\n"
+literal|"wcd%d: read_toc failed\n"
 argument_list|,
 name|lun
 argument_list|)
@@ -3229,7 +3229,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd%d: sequence error\n"
+literal|"wcd%d: sequence error\n"
 argument_list|,
 name|cdp
 operator|->
@@ -6902,7 +6902,7 @@ name|EINVAL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acd%d: sequence error (PREP_TRACK)\n"
+literal|"wcd%d: sequence error (PREP_TRACK)\n"
 argument_list|,
 name|cdp
 operator|->
@@ -7737,7 +7737,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"acd%d: "
+literal|"wcd%d: "
 argument_list|,
 name|cdp
 operator|->
@@ -8335,7 +8335,7 @@ name|lbolt
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"acdej1"
+literal|"wcdej1"
 argument_list|,
 literal|0
 argument_list|)
@@ -8350,7 +8350,7 @@ name|lbolt
 argument_list|,
 name|PRIBIO
 argument_list|,
-literal|"acdej2"
+literal|"wcdej2"
 argument_list|,
 literal|0
 argument_list|)
@@ -9791,7 +9791,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACD_MODULE
+name|WCD_MODULE
 end_ifdef
 
 begin_include
@@ -10222,7 +10222,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ACD_MODULE */
+comment|/* WCD_MODULE */
 end_comment
 
 begin_expr_stmt
@@ -10288,7 +10288,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NACD&& NWDC&& ATAPI */
+comment|/* NWCD&& NWDC&& ATAPI */
 end_comment
 
 end_unit
