@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	7.1 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	7.2 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -2395,7 +2395,11 @@ argument_list|(
 name|xdvp
 argument_list|)
 expr_stmt|;
-comment|/*VREF(dvp);*/
+name|VREF
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|VOP_MKDIR
@@ -2426,7 +2430,11 @@ name|a_vpp
 operator|=
 name|NULLVP
 expr_stmt|;
-comment|/*vrele(xdvp);*/
+name|vrele
+argument_list|(
+name|xdvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
