@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinummemory.c,v 1.22 1999/10/12 04:35:48 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -64,6 +64,18 @@ name|rqip
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|rqinfo_size
+init|=
+name|RQINFO_SIZE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for debugger */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -85,7 +97,7 @@ name|int
 name|retval
 parameter_list|)
 block|{
-comment|/*    * longjmp is not documented, not even jmp_buf.    * This is what's in i386/i386/support.s:    * ENTRY(longjmp)    *    movl    4(%esp),%eax    *    movl    (%eax),%ebx                      restore ebx     *    movl    4(%eax),%esp                     restore esp     *    movl    8(%eax),%ebp                     restore ebp     *    movl    12(%eax),%esi                    restore esi     *    movl    16(%eax),%edi                    restore edi     *    movl    20(%eax),%edx                    get rta     *    movl    %edx,(%esp)                      put in return frame     *    xorl    %eax,%eax                        return(1);     *    incl    %eax    *    ret    *    * from which we deduce the structure of jmp_buf:  */
+comment|/*    * longjmp is not documented, not even jmp_buf.    * This is what's in i386/i386/support.s:    * ENTRY(longjmp)    *    movl    4(%esp),%eax    *    movl    (%eax),%ebx                      restore ebx    *    movl    4(%eax),%esp                     restore esp    *    movl    8(%eax),%ebp                     restore ebp    *    movl    12(%eax),%esi                    restore esi    *    movl    16(%eax),%edi                    restore edi    *    movl    20(%eax),%edx                    get rta    *    movl    %edx,(%esp)                      put in return frame    *    xorl    %eax,%eax                        return(1);    *    incl    %eax    *    ret    *    * from which we deduce the structure of jmp_buf:  */
 struct|struct
 name|JmpBuf
 block|{
@@ -390,6 +402,18 @@ end_define
 
 begin_decl_stmt
 name|int
+name|freecount
+init|=
+name|FREECOUNT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for debugger */
+end_comment
+
+begin_decl_stmt
+name|int
 name|lastfree
 init|=
 literal|0
@@ -436,14 +460,14 @@ name|int
 name|line
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
 name|caddr_t
 name|result
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 if|if
 condition|(
@@ -465,6 +489,7 @@ literal|0
 return|;
 comment|/* can't continue */
 block|}
+comment|/* Wait for malloc if we can */
 name|result
 operator|=
 name|malloc
@@ -473,7 +498,13 @@ name|size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
+name|intr_nesting_level
+operator|==
+literal|0
+condition|?
 name|M_WAITOK
+else|:
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -635,7 +666,7 @@ name|f
 argument_list|,
 name|malloced
 index|[
-name|i
+name|lastfree
 index|]
 operator|.
 name|file
@@ -646,12 +677,26 @@ name|strlen
 argument_list|(
 name|f
 argument_list|)
-operator|+
-literal|1
 argument_list|,
-literal|16
+name|MCFILENAMELEN
+operator|-
+literal|1
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|malloced
+index|[
+name|lastfree
+index|]
+operator|.
+name|file
+index|[
+name|MCFILENAMELEN
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 if|if
@@ -693,10 +738,10 @@ name|line
 parameter_list|)
 block|{
 name|int
-name|i
+name|s
 decl_stmt|;
 name|int
-name|s
+name|i
 decl_stmt|;
 name|s
 operator|=
@@ -874,12 +919,26 @@ name|strlen
 argument_list|(
 name|f
 argument_list|)
-operator|+
-literal|1
 argument_list|,
-literal|16
+name|MCFILENAMELEN
+operator|-
+literal|1
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|freeinfo
+index|[
+name|lastfree
+index|]
+operator|.
+name|file
+index|[
+name|MCFILENAMELEN
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -1108,7 +1167,7 @@ name|m
 operator|->
 name|file
 argument_list|,
-literal|16
+name|MCFILENAMELEN
 argument_list|)
 expr_stmt|;
 return|return
@@ -1118,7 +1177,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * return the nth request trace buffer entry.  This  * is indexed back from the current entry (which  * has index 0)   */
+comment|/*  * return the nth request trace buffer entry.  This  * is indexed back from the current entry (which  * has index 0)  */
 end_comment
 
 begin_function
