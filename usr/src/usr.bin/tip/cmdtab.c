@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.1 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,9 @@ name|help
 argument_list|()
 decl_stmt|,
 name|pipefile
+argument_list|()
+decl_stmt|,
+name|pipeout
 argument_list|()
 decl_stmt|,
 name|consh
@@ -152,6 +155,16 @@ block|,
 literal|"pipe remote file"
 block|,
 name|pipefile
+block|}
+block|,
+block|{
+literal|'$'
+block|,
+name|NORM
+block|,
+literal|"pipe local command to remote host"
+block|,
+name|pipeout
 block|}
 block|,
 ifdef|#
