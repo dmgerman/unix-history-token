@@ -128,6 +128,9 @@ define|#
 directive|define
 name|adler32
 value|z_adler32
+if|#
+directive|if
+literal|0
 define|#
 directive|define
 name|crc32
@@ -136,6 +139,8 @@ define|#
 directive|define
 name|get_crc_table
 value|z_get_crc_table
+endif|#
+directive|endif
 define|#
 directive|define
 name|Byte
@@ -1327,27 +1332,13 @@ operator|)
 argument_list|)
 decl_stmt|;
 comment|/*      Update a running Adler-32 checksum with the bytes buf[0..len-1] and    return the updated checksum. If buf is NULL, this function returns    the required initial value for the checksum.    An Adler-32 checksum is almost as reliable as a CRC32 but can be computed    much faster. Usage example:       uLong adler = adler32(0L, Z_NULL, 0);       while (read_buffer(buffer, length) != EOF) {        adler = adler32(adler, buffer, length);      }      if (adler != original_adler) error(); */
-specifier|extern
-name|uLong
-name|EXPORT
-name|crc32
-name|OF
-argument_list|(
-operator|(
-name|uLong
-name|crc
-operator|,
-specifier|const
-name|Bytef
-operator|*
-name|buf
-operator|,
-name|uInt
-name|len
-operator|)
-argument_list|)
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|extern uLong EXPORT crc32   OF((uLong crc, const Bytef *buf, uInt len));
 comment|/*      Update a running crc with the bytes buf[0..len-1] and return the updated    crc. If buf is NULL, this function returns the required initial value    for the crc. Pre- and post-conditioning (one's complement) is performed    within this function so it shouldn't be done by the application.    Usage example:       uLong crc = crc32(0L, Z_NULL, 0);       while (read_buffer(buffer, length) != EOF) {        crc = crc32(crc, buffer, length);      }      if (crc != original_crc) error(); */
+endif|#
+directive|endif
 comment|/* various hacks, don't look :) */
 comment|/* deflateInit and inflateInit are macros to allow checking the zlib version  * and the compiler's view of z_stream:  */
 specifier|extern
