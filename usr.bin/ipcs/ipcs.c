@@ -1401,7 +1401,7 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"   STIME    RTIME    CTIME"
+literal|"    STIME    RTIME    CTIME"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1640,7 +1640,7 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"%s %s %s"
+literal|" %s %s %s"
 argument_list|,
 name|stime_buf
 argument_list|,
@@ -1872,7 +1872,7 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"   ATIME    DTIME    CTIME"
+literal|"    ATIME    DTIME    CTIME"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2109,7 +2109,7 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"%s %s %s"
+literal|" %s %s %s"
 argument_list|,
 name|atime_buf
 argument_list|,
@@ -2364,7 +2364,7 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"   OTIME    CTIME"
+literal|"    OTIME    CTIME"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2557,7 +2557,7 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"%s %s"
+literal|" %s %s"
 argument_list|,
 name|otime_buf
 argument_list|,
