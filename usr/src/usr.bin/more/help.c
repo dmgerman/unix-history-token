@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)help.c	5.2 (Berkeley) %G%"
+literal|"@(#)help.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,11 +67,6 @@ expr_stmt|;
 name|lsystem
 argument_list|(
 name|cmd
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"End of help"
 argument_list|)
 expr_stmt|;
 block|}
