@@ -27,63 +27,11 @@ directive|include
 file|<sys/_posix.h>
 end_include
 
-begin_comment
-comment|/*  * sigset_t macros.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_SIG_WORDS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SIG_MAXSIG
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SIG_IDX
-parameter_list|(
-name|sig
-parameter_list|)
-value|((sig) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SIG_WORD
-parameter_list|(
-name|sig
-parameter_list|)
-value|(_SIG_IDX(sig)>> 5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SIG_BIT
-parameter_list|(
-name|sig
-parameter_list|)
-value|(1<< (_SIG_IDX(sig)& 31))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_SIG_VALID
-parameter_list|(
-name|sig
-parameter_list|)
-value|((sig)<= _SIG_MAXSIG&& (sig)> 0)
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/_sigset.h>
+end_include
 
 begin_comment
 comment|/*  * System defined signals.  */
@@ -714,25 +662,8 @@ begin_comment
 comment|/* _P1003_1B_VISIBLE */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|__sigset
-block|{
-name|unsigned
-name|int
-name|__bits
-index|[
-name|_SIG_WORDS
-index|]
-decl_stmt|;
-block|}
-name|sigset_t
-typedef|;
-end_typedef
-
 begin_comment
-comment|/*  * XXX - there are some nasty dependencies on include file order. Now that  * sigset_t has been defined we can include the MD header.  */
+comment|/*  * XXX - there are some nasty dependencies on include file order.  *<sys/_sigset.h> must be included before<machine/signal.h>.  */
 end_comment
 
 begin_include
