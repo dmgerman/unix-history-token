@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * nfs version 2 and 3 server calls to vnode ops  * - these routines generally have 3 phases  *   1 - break down and validate rpc request in mbuf list  *   2 - do the vnode ops for the request  *       (surprisingly ?? many are very similar to syscalls in vfs_syscalls.c)  *   3 - build the rpc reply in an mbuf list  *   nb:  *	- do not mix the phases, since the nfsm_?? macros can return failures  *	  on a bad rpc or similar and do not do any vrele() or vput()'s  *  *      - the nfsm_reply() macro generates an nfs rpc reply with the nfs  *	error number iff error != 0 whereas  *	returning an error from the server function implies a fatal error  *	such as a badly constructed rpc request that should be dropped without  *	a reply.  *	For Version 3, nfsm_reply() does not return for the error case, since  *	most version 3 rpcs return more than the status for error cases.  *  * Other notes:  *	Warning: always pay careful attention to resource cleanup on return  *	and note that nfsm_*() macros can terminate a procedure on certain  *	errors.  *  *	VOP_ABORTOP() only frees the path component if HASBUF is set and  *	SAVESTART is *not* set.  *  *	Various VOP_*() routines tend to free the path component if an   *	error occurs.  If no error occurs, the VOP_*() routines only free  *	the path component if SAVESTART is NOT set.  *  *	Certain VOP calls (VOP_SYMLINK, VOP_MKNOD), lookup(), and namei()  *	may return garbage in various structural fields/return elements  *	if an error is returned, and may garbage up nd.ni_dvp even if no  *	error is returned and you did not request LOCKPARENT or WANTPARENT.  *	VOP_SYMLINK/VOP_MKNOD return garbage in their return vnode (i.e. not  *	something we need to release) even if no error occurs.  Our cleanup  *	code is sensitive to garbage, so we have to carefully clear it out.  *  *	We use the ni_cnd.cn_flags 'HASBUF' flag to track whether the name  *	buffer has been freed or not.  This is unique to nfs_serv.c for  *	the moment, the rest of the system sets HASBUF but never clears it.  */
+comment|/*  * nfs version 2 and 3 server calls to vnode ops  * - these routines generally have 3 phases  *   1 - break down and validate rpc request in mbuf list  *   2 - do the vnode ops for the request  *       (surprisingly ?? many are very similar to syscalls in vfs_syscalls.c)  *   3 - build the rpc reply in an mbuf list  *   nb:  *	- do not mix the phases, since the nfsm_?? macros can return failures  *	  on a bad rpc or similar and do not do any vrele() or vput()'s  *  *      - the nfsm_reply() macro generates an nfs rpc reply with the nfs  *	error number iff error != 0 whereas  *	returning an error from the server function implies a fatal error  *	such as a badly constructed rpc request that should be dropped without  *	a reply.  *	For Version 3, nfsm_reply() does not return for the error case, since  *	most version 3 rpcs return more than the status for error cases.  *  * Other notes:  *	Warning: always pay careful attention to resource cleanup on return  *	and note that nfsm_*() macros can terminate a procedure on certain  *	errors.  *  *	VOP_ABORTOP() only frees the path component if HASBUF is set and  *	SAVESTART is *not* set.  *  *	Various VOP_*() routines tend to free the path component if an   *	error occurs.  If no error occurs, the VOP_*() routines only free  *	the path component if SAVESTART is NOT set.  *  *	VOP_SYMLINK, lookup(), and namei()  *	may return garbage in various structural fields/return elements  *	if an error is returned, and may garbage up nd.ni_dvp even if no  *	error is returned and you did not request LOCKPARENT or WANTPARENT.  *	VOP_SYMLINK return garbage in its return vnode (i.e. not  *	something we need to release) even if no error occurs.  Our cleanup  *	code is sensitive to garbage, so we have to carefully clear it out.  *  *	We use the ni_cnd.cn_flags 'HASBUF' flag to track whether the name  *	buffer has been freed or not.  This is unique to nfs_serv.c for  *	the moment, the rest of the system sets HASBUF but never clears it.  */
 end_comment
 
 begin_include
@@ -8836,7 +8836,6 @@ argument_list|,
 name|ND_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* 			 * VOP_MKNOD returns nd.ni_vp but already releases it, 			 * so we just NULL the pointer. 			 */
 name|error
 operator|=
 name|VOP_MKNOD
@@ -8858,12 +8857,6 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|nd
-operator|.
-name|ni_vp
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -8882,6 +8875,20 @@ goto|goto
 name|nfsmreply0
 goto|;
 block|}
+comment|/* 			 * release vp we do not use 			 */
+name|vput
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|)
+expr_stmt|;
+name|nd
+operator|.
+name|ni_vp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 			 * release dvp prior to lookup 			 */
 name|vput
 argument_list|(
@@ -9999,7 +10006,6 @@ argument_list|,
 name|ND_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * VOP_MKNOD does not return a referenced or locked nd.ni_vp, 		 * but it may set it to (in my view) garbage. 		 */
 name|error
 operator|=
 name|VOP_MKNOD
@@ -10021,12 +10027,6 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
-name|nd
-operator|.
-name|ni_vp
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -10045,6 +10045,20 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 		 * release vp we do not use 		 */
+name|vput
+argument_list|(
+name|nd
+operator|.
+name|ni_vp
+argument_list|)
+expr_stmt|;
+name|nd
+operator|.
+name|ni_vp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 		 * Release dvp prior to lookup 		 */
 name|vput
 argument_list|(

@@ -2844,8 +2844,9 @@ name|VOP_MKNOD
 argument_list|(
 name|dvp
 argument_list|,
-operator|&
-name|vp
+name|ap
+operator|->
+name|a_vpp
 argument_list|,
 name|cnp
 argument_list|,
@@ -2854,7 +2855,6 @@ operator|->
 name|a_vap
 argument_list|)
 expr_stmt|;
-comment|/* vp is garbage whether an error occurs or not */
 name|union_unlock_upper
 argument_list|(
 name|dvp
