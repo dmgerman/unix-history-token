@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_stats.c,v 8.32 2000/11/29 06:56:05 marka Exp $"
+literal|"$Id: ns_stats.c,v 8.32.2.1 2001/08/09 14:04:49 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1793,6 +1793,8 @@ name|ns_info
 argument_list|(
 name|ns_log_statistics
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
@@ -1816,6 +1818,8 @@ block|}
 name|ns_info
 argument_list|(
 name|ns_log_statistics
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buffer
 argument_list|)
@@ -1912,6 +1916,8 @@ name|ns_info
 argument_list|(
 name|ns_log_statistics
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
@@ -1934,6 +1940,8 @@ block|}
 name|ns_info
 argument_list|(
 name|ns_log_statistics
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buffer
 argument_list|)

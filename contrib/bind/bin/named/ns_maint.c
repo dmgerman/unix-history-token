@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_maint.c,v 8.122 2001/03/01 06:26:31 marka Exp $"
+literal|"$Id: ns_maint.c,v 8.122.2.4 2001/08/10 03:00:11 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4354,6 +4354,8 @@ argument_list|(
 name|ns_log_xfer_in
 argument_list|,
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buffer
 argument_list|)

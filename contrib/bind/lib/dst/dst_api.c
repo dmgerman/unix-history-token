@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/dst_api.c,v 1.17 2001/04/05 22:00:02 bwelling Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/dst_api.c,v 1.17.2.2 2001/07/26 01:58:06 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1574,7 +1574,7 @@ literal|"dst_write_private_key(): Write failure on %s %d != %d errno=%d\n"
 operator|,
 name|file
 operator|,
-name|out_len
+name|len
 operator|,
 name|nn
 operator|,

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ixfr.c,v 8.26 2001/03/12 01:48:58 marka Exp $"
+literal|"$Id: ns_ixfr.c,v 8.26.2.2 2001/08/10 03:00:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3014,6 +3014,8 @@ argument_list|(
 name|ns_log_db
 argument_list|,
 literal|"can't make tmpfile (%s): %s"
+argument_list|,
+name|tmpname
 argument_list|,
 name|strerror
 argument_list|(

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_req.c,v 8.138.2.1 2001/04/27 07:44:05 marka Exp $"
+literal|"$Id: ns_req.c,v 8.138.2.4 2001/08/10 03:00:14 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -656,8 +656,6 @@ argument_list|,
 literal|1
 argument_list|,
 literal|"ns_req: bad TSIG key name"
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 name|error
