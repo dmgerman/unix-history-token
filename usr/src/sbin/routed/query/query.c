@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.5 (Berkeley) %G%"
+literal|"@(#)query.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +87,18 @@ value|5
 end_define
 
 begin_comment
-comment|/* Time to wait for responses */
+comment|/* Time to wait for all responses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STIME
+value|500000
+end_define
+
+begin_comment
+comment|/* usec to wait for another response */
 end_comment
 
 begin_decl_stmt
@@ -146,8 +157,6 @@ block|{
 name|int
 name|cc
 decl_stmt|,
-name|count
-decl_stmt|,
 name|bits
 decl_stmt|;
 name|struct
@@ -164,7 +173,7 @@ argument_list|)
 decl_stmt|;
 name|struct
 name|timeval
-name|notime
+name|shorttime
 decl_stmt|;
 if|if
 condition|(
@@ -262,10 +271,6 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
-name|count
-operator|=
-name|argc
-expr_stmt|;
 while|while
 condition|(
 name|argc
@@ -296,13 +301,19 @@ expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
-name|notime
+name|shorttime
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|notime
+name|shorttime
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|shorttime
+operator|.
+name|tv_usec
+operator|=
+name|STIME
 expr_stmt|;
 name|signal
 argument_list|(
@@ -339,7 +350,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|notime
+name|shorttime
 argument_list|)
 operator|>
 literal|0
