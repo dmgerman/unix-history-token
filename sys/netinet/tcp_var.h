@@ -1789,8 +1789,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCPCTL_MAXID
+name|TCPCTL_DROP
 value|15
+end_define
+
+begin_comment
+comment|/* drop tcp connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPCTL_MAXID
+value|16
 end_define
 
 begin_define
