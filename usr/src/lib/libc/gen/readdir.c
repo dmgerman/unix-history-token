@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readdir.c	5.4 (Berkeley) %G%"
+literal|"@(#)readdir.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
 
 begin_comment
@@ -55,7 +55,7 @@ end_comment
 
 begin_function
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|readdir
 parameter_list|(
@@ -69,7 +69,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
@@ -140,7 +140,7 @@ name|dp
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 operator|(

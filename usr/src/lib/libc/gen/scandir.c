@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scandir.c	5.3 (Berkeley) %G%"
+literal|"@(#)scandir.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * Scan the directory dirname calling select to make a list of selected  * directory entries then sort using qsort and compare routine dcomp.  * Returns the number of entries and a pointer to a list of pointers to  * struct direct (through namelist). Returns -1 if there were any errors.  */
+comment|/*  * Scan the directory dirname calling select to make a list of selected  * directory entries then sort using qsort and compare routine dcomp.  * Returns the number of entries and a pointer to a list of pointers to  * struct dirent (through namelist). Returns -1 if there were any errors.  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
 
 begin_macro
@@ -81,7 +81,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|direct
+name|dirent
 modifier|*
 argument_list|(
 operator|*
@@ -111,7 +111,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|d
 decl_stmt|,
@@ -199,7 +199,7 @@ name|names
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|*
 operator|)
@@ -210,7 +210,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 argument_list|)
 argument_list|)
@@ -267,7 +267,7 @@ name|p
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|)
 name|malloc
@@ -380,7 +380,7 @@ name|names
 operator|=
 operator|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 operator|*
 operator|)
@@ -397,7 +397,7 @@ operator|*
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 argument_list|)
 argument_list|)
@@ -447,7 +447,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|direct
+name|dirent
 operator|*
 argument_list|)
 argument_list|,
@@ -482,7 +482,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|direct
+name|dirent
 modifier|*
 modifier|*
 name|d1

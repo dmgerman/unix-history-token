@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)seekdir.c	5.3 (Berkeley) %G%"
+literal|"@(#)seekdir.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
 
 begin_comment
@@ -78,7 +78,7 @@ decl_stmt|,
 name|offset
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dp
 decl_stmt|;
