@@ -320,7 +320,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|driver_t
 name|iicbb_driver
 init|=
@@ -339,7 +338,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|devclass_t
 name|iicbb_devclass
 decl_stmt|;

@@ -676,6 +676,20 @@ name|IICBUS_PREFVER
 value|IICBUS_MODVER
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|driver_t
+name|iicbb_driver
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|iicbb_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
