@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -172,6 +172,9 @@ operator|(
 name|vm_pager_t
 operator|,
 name|vm_page_t
+operator|*
+operator|,
+name|int
 operator|,
 name|boolean_t
 operator|)
@@ -217,6 +220,9 @@ operator|(
 name|vm_pager_t
 operator|,
 name|vm_page_t
+operator|*
+operator|,
+name|int
 operator|,
 name|boolean_t
 operator|)
@@ -267,6 +273,8 @@ block|,
 name|dev_pager_putpage
 block|,
 name|dev_pager_haspage
+block|,
+name|vm_pager_clusternull
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -607,6 +615,12 @@ name|PG_DEVICE
 expr_stmt|;
 name|pager
 operator|->
+name|pg_flags
+operator|=
+literal|0
+expr_stmt|;
+name|pager
+operator|->
 name|pg_data
 operator|=
 name|devp
@@ -924,7 +938,9 @@ name|dev_pager_getpage
 parameter_list|(
 name|pager
 parameter_list|,
-name|m
+name|mlist
+parameter_list|,
+name|npages
 parameter_list|,
 name|sync
 parameter_list|)
@@ -932,7 +948,11 @@ name|vm_pager_t
 name|pager
 decl_stmt|;
 name|vm_page_t
-name|m
+modifier|*
+name|mlist
+decl_stmt|;
+name|int
+name|npages
 decl_stmt|;
 name|boolean_t
 name|sync
@@ -962,6 +982,9 @@ argument_list|()
 decl_stmt|,
 name|prot
 decl_stmt|;
+name|vm_page_t
+name|m
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -973,15 +996,35 @@ name|DDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"dev_pager_getpage(%x, %x)\n"
+literal|"dev_pager_getpage(%x, %x, %x, %x)\n"
 argument_list|,
 name|pager
 argument_list|,
-name|m
+name|mlist
+argument_list|,
+name|npages
+argument_list|,
+name|sync
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|npages
+operator|!=
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"dev_pager_getpage: cannot handle multiple pages"
+argument_list|)
+expr_stmt|;
+name|m
+operator|=
+operator|*
+name|mlist
+expr_stmt|;
 name|object
 operator|=
 name|m
@@ -1181,7 +1224,9 @@ name|dev_pager_putpage
 parameter_list|(
 name|pager
 parameter_list|,
-name|m
+name|mlist
+parameter_list|,
+name|npages
 parameter_list|,
 name|sync
 parameter_list|)
@@ -1189,7 +1234,11 @@ name|vm_pager_t
 name|pager
 decl_stmt|;
 name|vm_page_t
-name|m
+modifier|*
+name|mlist
+decl_stmt|;
+name|int
+name|npages
 decl_stmt|;
 name|boolean_t
 name|sync
@@ -1206,11 +1255,15 @@ name|DDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"dev_pager_putpage(%x, %x)\n"
+literal|"dev_pager_putpage(%x, %x, %x, %x)\n"
 argument_list|,
 name|pager
 argument_list|,
-name|m
+name|mlist
+argument_list|,
+name|npages
+argument_list|,
+name|sync
 argument_list|)
 expr_stmt|;
 endif|#
