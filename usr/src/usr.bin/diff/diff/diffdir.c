@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffdir.c 4.2 %G%"
+literal|"@(#)diffdir.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1878,6 +1878,8 @@ literal|"pr"
 block|,
 literal|"-h"
 block|,
+literal|0
+block|,
 literal|"-f"
 block|,
 literal|0
@@ -1917,7 +1919,7 @@ index|]
 decl_stmt|;
 name|prargs
 index|[
-literal|3
+literal|2
 index|]
 operator|=
 name|wantpr
@@ -2017,7 +2019,7 @@ argument_list|,
 name|prargs
 argument_list|)
 expr_stmt|;
-name|execl
+name|execv
 argument_list|(
 name|pr
 argument_list|,
