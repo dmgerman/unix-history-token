@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.24 1995/02/02 05:49:06 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.25 1995/02/13 06:52:10 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -995,7 +995,7 @@ argument_list|()
 expr_stmt|;
 name|TellEm
 argument_list|(
-literal|"cd /stand ; gunzip< /dev/fd0 | cpio -idum"
+literal|"gunzip< /dev/fd0 | cpio -idum"
 argument_list|)
 expr_stmt|;
 name|pipe
@@ -1134,11 +1134,6 @@ argument_list|,
 name|O_WRONLY
 argument_list|)
 expr_stmt|;
-name|chdir
-argument_list|(
-literal|"/stand"
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|exec
@@ -1254,7 +1249,7 @@ if|if
 condition|(
 name|access
 argument_list|(
-literal|"/stand/OK"
+literal|"/OK"
 argument_list|,
 name|R_OK
 argument_list|)
@@ -1279,21 +1274,12 @@ goto|;
 block|}
 name|unlink
 argument_list|(
-literal|"/stand/OK"
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|rename
-argument_list|(
-literal|"/stand/kernel"
-argument_list|,
-literal|"/kernel"
+literal|"/OK"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|i
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
