@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: igmp.c,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: igmp.c,v 3.6 1995/06/25 18:52:55 fenner Exp $  */
 end_comment
 
 begin_include
@@ -84,6 +84,49 @@ end_decl_stmt
 begin_comment
 comment|/* IGMP generation id          */
 end_comment
+
+begin_comment
+comment|/*  * Local function definitions.  */
+end_comment
+
+begin_comment
+comment|/* u_char promoted to u_int */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|packet_kind
+name|__P
+argument_list|(
+operator|(
+name|u_int
+name|type
+operator|,
+name|u_int
+name|code
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|igmp_log_level
+name|__P
+argument_list|(
+operator|(
+name|u_int
+name|type
+operator|,
+name|u_int
+name|code
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Open and initialize the igmp socket, and fill in the non-changing  * IP header fields in the output packet buffer.  */
@@ -307,7 +350,7 @@ name|type
 parameter_list|,
 name|code
 parameter_list|)
-name|u_char
+name|u_int
 name|type
 decl_stmt|,
 name|code
@@ -901,7 +944,7 @@ argument_list|,
 name|dst
 argument_list|,
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|(
@@ -926,7 +969,7 @@ argument_list|,
 name|dst
 argument_list|,
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|(
@@ -1107,6 +1150,61 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Some IGMP messages are more important than others.  This routine  * determines the logging level at which to log a send error (often  * "No route to host").  This is important when there is asymmetric  * reachability and someone is trying to, i.e., mrinfo me periodically.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|igmp_log_level
+parameter_list|(
+name|type
+parameter_list|,
+name|code
+parameter_list|)
+name|u_int
+name|type
+decl_stmt|,
+name|code
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|IGMP_MTRACE_RESP
+case|:
+return|return
+name|LOG_INFO
+return|;
+case|case
+name|IGMP_DVMRP
+case|:
+switch|switch
+condition|(
+name|code
+condition|)
+block|{
+case|case
+name|DVMRP_NEIGHBORS
+case|:
+case|case
+name|DVMRP_NEIGHBORS2
+case|:
+return|return
+name|LOG_INFO
+return|;
+block|}
+block|}
+return|return
+name|LOG_WARNING
+return|;
 block|}
 end_function
 
@@ -1372,7 +1470,12 @@ expr_stmt|;
 else|else
 name|log
 argument_list|(
-name|LOG_WARNING
+name|igmp_log_level
+argument_list|(
+name|type
+argument_list|,
+name|code
+argument_list|)
 argument_list|,
 name|errno
 argument_list|,

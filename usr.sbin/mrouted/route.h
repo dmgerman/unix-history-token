@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: route.h,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: route.h,v 3.6 1995/06/25 19:21:05 fenner Exp $  */
 end_comment
 
 begin_comment
@@ -63,12 +63,12 @@ modifier|*
 name|rt_subordinates
 decl_stmt|;
 comment|/* per vif subordinate gateways     */
-name|u_long
+name|u_int
 modifier|*
 name|rt_leaf_timers
 decl_stmt|;
 comment|/* per vif leaf confirmation timers */
-name|u_long
+name|u_int
 name|rt_timer
 decl_stmt|;
 comment|/* for timing out the route entry   */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: vif.h,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: vif.h,v 3.6 1995/06/25 19:53:22 fenner Exp $  */
 end_comment
 
 begin_comment
@@ -157,12 +157,18 @@ name|phaddr
 modifier|*
 name|pa_next
 decl_stmt|;
-name|u_long
-name|pa_addr
+name|u_int32
+name|pa_subnet
 decl_stmt|;
-name|u_long
-name|pa_mask
+comment|/* extra subnet			*/
+name|u_int32
+name|pa_subnetmask
 decl_stmt|;
+comment|/* netmask of extra subnet	*/
+name|u_int32
+name|pa_subnetbcast
+decl_stmt|;
+comment|/* broadcast of extra subnet	*/
 block|}
 struct|;
 end_struct

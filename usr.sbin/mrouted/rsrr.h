@@ -118,7 +118,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* RSRR Initial Reply (Vif) Status bits.  * Each definition represents the position of the bit from right to left.  *  * Right-most bit is the disabled bit, set if the vif is administratively  * disabled.  */
+comment|/* RSRR Initial Reply (Vif) Status bits  * Each definition represents the position of the bit from right to left.  *  * Right-most bit is the disabled bit, set if the vif is administratively  * disabled.  */
 end_comment
 
 begin_define
@@ -133,7 +133,7 @@ comment|/* All other bits are zeroes */
 end_comment
 
 begin_comment
-comment|/* RSRR Route Query/Reply flag bits.  * Each definition represents the position of the bit from right to left.  *  * Right-most bit is the Route Change Notification bit, set if the  * reservation protocol wishes to receive notification of  * a route change for the source-destination pair listed in the query.  * Notification is in the form of an unsolicitied Route Reply.  */
+comment|/* RSRR Route Query/Reply flag bits  * Each definition represents the position of the bit from right to left.  *  * Right-most bit is the Route Change Notification bit, set if the  * reservation protocol wishes to receive notification of  * a route change for the source-destination pair listed in the query.  * Notification is in the form of an unsolicitied Route Reply.  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 3.5 1995/05/09 01:00:39 fenner Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: callout.c,v 3.6 1995/06/25 18:47:29 fenner Exp $  */
 end_comment
 
 begin_include
@@ -46,17 +46,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|cfunc_t
-function_decl|)
-parameter_list|()
-function_decl|;
-end_typedef
-
 begin_struct
 struct|struct
 name|timeout_q
@@ -87,13 +76,41 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IGMP_DEBUG
+end_ifdef
+
+begin_decl_stmt
 specifier|static
 name|void
 name|print_Q
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|print_Q
 parameter_list|()
-function_decl|;
-end_function_decl
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -209,7 +226,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|IGMP_DEBUG
+comment|/* IGMP_DEBUG */
 name|in_callout
 operator|=
 literal|0
@@ -504,22 +521,16 @@ condition|(
 name|in_callout
 condition|)
 return|return;
-name|in_callout
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|timer_id
 condition|)
-block|{
+return|return;
 name|in_callout
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-return|return;
-block|}
 name|prev
 operator|=
 name|ptr
@@ -630,6 +641,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IGMP_DEBUG
+end_ifdef
+
 begin_comment
 comment|/*  * debugging utility  */
 end_comment
@@ -640,9 +657,6 @@ name|void
 name|print_Q
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|IGMP_DEBUG
 name|struct
 name|timeout_q
 modifier|*
@@ -679,11 +693,17 @@ operator|->
 name|time
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|IGMP_DEBUG
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IGMP_DEBUG */
+end_comment
 
 end_unit
 

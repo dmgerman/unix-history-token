@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 1.6 1995/06/13 18:04:57 wollman Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.c,v 3.6 1995/06/25 19:18:43 fenner Exp $  */
 end_comment
 
 begin_include
@@ -29,6 +29,13 @@ name|struct
 name|rtentry
 modifier|*
 name|routing_table
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|phys_vif
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +142,163 @@ end_comment
 begin_comment
 comment|/****************************************************************************                        Functions that are local to prune.c ****************************************************************************/
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|prun_add_ttls
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|gtable
+operator|*
+name|gt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pruning_neighbor
+name|__P
+argument_list|(
+operator|(
+name|vifi_t
+name|vifi
+operator|,
+name|u_int32
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|can_mtrace
+name|__P
+argument_list|(
+operator|(
+name|vifi_t
+name|vifi
+operator|,
+name|u_int32
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ptable
+modifier|*
+name|find_prune_entry
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+name|vr
+operator|,
+expr|struct
+name|ptable
+operator|*
+name|pt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|send_prune
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|gtable
+operator|*
+name|gt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|send_graft
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|gtable
+operator|*
+name|gt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|send_graft_ack
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+name|src
+operator|,
+name|u_int32
+name|dst
+operator|,
+name|u_int32
+name|origin
+operator|,
+name|u_int32
+name|grp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|update_kernel
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|gtable
+operator|*
+name|g
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|scaletime
+name|__P
+argument_list|(
+operator|(
+name|u_long
+name|t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*   * Updates the ttl values for each vif.  */
@@ -1343,6 +1507,7 @@ comment|/*  * Send an ack that a graft was received  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|send_graft_ack
 parameter_list|(
@@ -3041,12 +3206,17 @@ name|gt_route
 operator|=
 name|r
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RSRR
 name|gt
 operator|->
 name|gt_rsrr_cache
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|r
@@ -5448,7 +5618,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* RSRR */
-comment|/* 	     * If there are no more members of this particular group, 	     *  send prune upstream 	     */
+comment|/* 		 * If there are no more members of this particular group, 		 *  send prune upstream 		 */
 if|if
 condition|(
 operator|!
@@ -8300,7 +8470,7 @@ name|pt_next
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * If the cache entry has expired, check for downstream prunes. 	 * 	 * If there are downstream prunes, refresh the cache entry's timer. 	 * Otherwise, check for traffic.  If no traffic, delete this 	 * entry. 	     */
+comment|/* 	 * If the cache entry has expired, check for downstream prunes. 	 * 	 * If there are downstream prunes, refresh the cache entry's timer. 	 * Otherwise, check for traffic.  If no traffic, delete this 	 * entry. 	 */
 if|if
 condition|(
 name|gt
@@ -8625,11 +8795,15 @@ expr_stmt|;
 comment|/* free all the source entries */
 while|while
 condition|(
+operator|(
 name|st
 operator|=
 name|gt
 operator|->
 name|gt_srctbl
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|log
@@ -8721,9 +8895,15 @@ block|}
 comment|/* free all the prune list entries */
 while|while
 condition|(
+operator|(
+name|pt
+operator|=
 name|gt
 operator|->
 name|gt_pruntbl
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|gt
@@ -9040,6 +9220,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|scaletime
@@ -9186,6 +9367,9 @@ name|p
 argument_list|,
 literal|"%3d%c"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|t
 argument_list|,
 name|s
@@ -9678,9 +9862,10 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
-name|u_char
+name|u_int
 name|no
 decl_stmt|;
+comment|/* promoted u_char */
 name|int
 name|datalen
 decl_stmt|;
@@ -9772,7 +9957,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"Traceroute query rcvd from %s to %s"
+literal|"Initial traceroute query rcvd from %s to %s"
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -9814,7 +9999,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"Traceroute response rcvd from %s to %s"
+literal|"In-transit traceroute query rcvd from %s to %s"
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -9831,11 +10016,14 @@ name|s2
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if IN_MULTICAST
+if|if
 condition|(
+name|IN_MULTICAST
+argument_list|(
 name|ntohl
 argument_list|(
 name|dst
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -9861,7 +10049,7 @@ literal|0
 argument_list|,
 literal|"%s from %s to %s"
 argument_list|,
-literal|"Non decipherable tracer request recieved"
+literal|"Non decipherable traceroute request recieved"
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -9910,13 +10098,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
-name|oqid
-operator|=
-name|qry
-operator|->
-name|tr_qid
-expr_stmt|;
 comment|/*      * if it is a packet with all reports filled, drop it      */
 if|if
 condition|(
@@ -10008,9 +10189,13 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"rcount:%d"
+literal|"rcount:%d, qid:%06x"
 argument_list|,
 name|rcount
+argument_list|,
+name|qry
+operator|->
+name|tr_qid
 argument_list|)
 expr_stmt|;
 comment|/* determine the routing table entry for this traceroute */
@@ -10281,6 +10466,13 @@ name|TR_WRONG_IF
 expr_stmt|;
 block|}
 block|}
+comment|/* Now that we've decided to send a response, save the qid */
+name|oqid
+operator|=
+name|qry
+operator|->
+name|tr_qid
+expr_stmt|;
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -10685,6 +10877,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|rt
+operator|&&
 operator|!
 name|VIFM_ISSET
 argument_list|(
@@ -10974,37 +11168,6 @@ operator|=
 name|IGMP_MTRACE
 expr_stmt|;
 block|}
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|0
-argument_list|,
-literal|"Sending %s to %s from %s"
-argument_list|,
-name|resptype
-operator|==
-name|IGMP_MTRACE_RESP
-condition|?
-literal|"response"
-else|:
-literal|"request on"
-argument_list|,
-name|inet_fmt
-argument_list|(
-name|dst
-argument_list|,
-name|s1
-argument_list|)
-argument_list|,
-name|inet_fmt
-argument_list|(
-name|src
-argument_list|,
-name|s2
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|IN_MULTICAST
@@ -11016,6 +11179,43 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+comment|/* 	 * Send the reply on a known multicast capable vif. 	 * If we don't have one, we can't source any multicasts anyway. 	 */
+if|if
+condition|(
+name|phys_vif
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|"Sending reply to %s from %s"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|dst
+argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|uvifs
+index|[
+name|phys_vif
+index|]
+operator|.
+name|uv_lcl_addr
+argument_list|,
+name|s2
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|k_set_ttl
 argument_list|(
 name|qry
@@ -11023,10 +11223,14 @@ operator|->
 name|tr_rttl
 argument_list|)
 expr_stmt|;
-comment|/* Let the kernel pick the source address, since we might have picked 	 * a disabled phyint to multicast on. 	 */
 name|send_igmp
 argument_list|(
-name|INADDR_ANY
+name|uvifs
+index|[
+name|phys_vif
+index|]
+operator|.
+name|uv_lcl_addr
 argument_list|,
 name|dst
 argument_list|,
@@ -11046,6 +11250,51 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|0
+argument_list|,
+literal|"No enabled phyints -- %s"
+argument_list|,
+literal|"dropping traceroute reply"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|"Sending %s to %s from %s"
+argument_list|,
+name|resptype
+operator|==
+name|IGMP_MTRACE_RESP
+condition|?
+literal|"reply"
+else|:
+literal|"request on"
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|dst
+argument_list|,
+name|s1
+argument_list|)
+argument_list|,
+name|inet_fmt
+argument_list|(
+name|src
+argument_list|,
+name|s2
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|send_igmp
 argument_list|(
 name|src
@@ -11061,6 +11310,7 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function

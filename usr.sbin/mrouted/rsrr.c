@@ -29,11 +29,33 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|199103
+operator|)
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<stddef.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Taken from prune.c */
@@ -119,40 +141,91 @@ begin_comment
 comment|/*  * Procedure definitions needed internally.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|void
 name|rsrr_accept
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+name|recvlen
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|void
 name|rsrr_accept_iq
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|int
 name|rsrr_accept_rq
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|rsrr_rq
+operator|*
+name|route_query
+operator|,
+name|int
+name|flags
+operator|,
+expr|struct
+name|gtable
+operator|*
+name|gt_notify
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|int
 name|rsrr_send
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+name|sendlen
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|void
 name|rsrr_cache
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|gtable
+operator|*
+name|gt
+operator|,
+expr|struct
+name|rsrr_rq
+operator|*
+name|route_query
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Initialize RSRR socket */
@@ -233,9 +306,18 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+operator|(
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
 name|BSD
 operator|>=
 literal|199103
+operator|)
+operator|)
 name|servlen
 operator|=
 name|offsetof
@@ -337,7 +419,13 @@ end_comment
 begin_function
 name|void
 name|rsrr_read
-parameter_list|()
+parameter_list|(
+name|rfd
+parameter_list|)
+name|fd_set
+modifier|*
+name|rfd
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -445,6 +533,7 @@ comment|/* Accept a message from the reservation protocol and take  * appropriat
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rsrr_accept
 parameter_list|(
@@ -683,6 +772,7 @@ comment|/* Send an Initial Reply to the reservation protocol. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rsrr_accept_iq
 parameter_list|()
@@ -892,6 +982,7 @@ comment|/* Send a Route Reply to the reservation protocol.  The Route Query  * c
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rsrr_accept_rq
 parameter_list|(
@@ -1417,6 +1508,7 @@ comment|/* Send an RSRR message. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rsrr_send
 parameter_list|(
@@ -1470,10 +1562,8 @@ argument_list|,
 literal|"Failed send on RSRR socket"
 argument_list|)
 expr_stmt|;
-return|return
-name|error
-return|;
 block|}
+elseif|else
 if|if
 condition|(
 name|error
@@ -1494,10 +1584,10 @@ argument_list|,
 name|sendlen
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|error
 return|;
-block|}
 block|}
 end_function
 
@@ -1506,6 +1596,7 @@ comment|/* Cache a message being sent to a client.  Currently only used for  * c
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rsrr_cache
 parameter_list|(
@@ -1530,7 +1621,8 @@ modifier|*
 name|rc
 decl_stmt|,
 modifier|*
-name|rc_prev
+modifier|*
+name|rcnp
 decl_stmt|;
 name|struct
 name|rsrr_header
@@ -1546,15 +1638,23 @@ operator|*
 operator|)
 name|rsrr_send_buf
 expr_stmt|;
-name|rc
+name|rcnp
 operator|=
+operator|&
 name|gt
 operator|->
 name|gt_rsrr_cache
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|rc
+operator|=
+operator|*
+name|rcnp
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1623,27 +1723,8 @@ argument_list|)
 condition|)
 block|{
 comment|/* Delete cache entry. */
-if|if
-condition|(
-name|rc
-operator|==
-name|gt
-operator|->
-name|gt_rsrr_cache
-condition|)
-comment|/* Deleting first entry. */
-name|gt
-operator|->
-name|gt_rsrr_cache
-operator|=
-name|rc
-operator|->
-name|next
-expr_stmt|;
-else|else
-name|rc_prev
-operator|->
-name|next
+operator|*
+name|rcnp
 operator|=
 name|rc
 operator|->
@@ -1668,9 +1749,13 @@ name|route_query
 operator|->
 name|query_id
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
-literal|"Update cached query id %d from client %s\n"
+name|LOG_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|"Update cached query id %ld from client %s\n"
 argument_list|,
 name|rc
 operator|->
@@ -1688,12 +1773,9 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-name|rc_prev
+name|rcnp
 operator|=
-name|rc
-expr_stmt|;
-name|rc
-operator|=
+operator|&
 name|rc
 operator|->
 name|next
@@ -1802,9 +1884,13 @@ name|gt_rsrr_cache
 operator|=
 name|rc
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
-literal|"Cached query id %d from client %s\n"
+name|LOG_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|"Cached query id %ld from client %s\n"
 argument_list|,
 name|rc
 operator|->
@@ -1849,33 +1935,14 @@ modifier|*
 name|rc
 decl_stmt|,
 modifier|*
-name|rc_next
-decl_stmt|,
 modifier|*
-name|rc_prev
+name|rcnp
 decl_stmt|;
 name|int
 name|flags
 init|=
 literal|0
 decl_stmt|;
-name|rc
-operator|=
-name|gt
-operator|->
-name|gt_rsrr_cache
-expr_stmt|;
-while|while
-condition|(
-name|rc
-condition|)
-block|{
-name|rc_next
-operator|=
-name|rc
-operator|->
-name|next
-expr_stmt|;
 if|if
 condition|(
 name|notify
@@ -1887,6 +1954,25 @@ argument_list|,
 name|RSRR_NOTIFICATION_BIT
 argument_list|)
 expr_stmt|;
+name|rcnp
+operator|=
+operator|&
+name|gt
+operator|->
+name|gt_rsrr_cache
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|rc
+operator|=
+operator|*
+name|rcnp
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|rsrr_accept_rq
@@ -1904,9 +1990,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
-literal|"Deleting cached query id %d from client %s\n"
+name|LOG_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|"Deleting cached query id %ld from client %s\n"
 argument_list|,
 name|rc
 operator|->
@@ -1922,27 +2012,12 @@ name|sun_path
 argument_list|)
 expr_stmt|;
 comment|/* Delete cache entry. */
-if|if
-condition|(
-name|rc
-operator|==
-name|gt
-operator|->
-name|gt_rsrr_cache
-condition|)
-comment|/* Deleting first entry. */
-name|gt
-operator|->
-name|gt_rsrr_cache
+operator|*
+name|rcnp
 operator|=
-name|rc_next
-expr_stmt|;
-else|else
-name|rc_prev
+name|rc
 operator|->
 name|next
-operator|=
-name|rc_next
 expr_stmt|;
 name|free
 argument_list|(
@@ -1952,15 +2027,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|rc_prev
+name|rcnp
 operator|=
+operator|&
 name|rc
+operator|->
+name|next
 expr_stmt|;
 block|}
-name|rc
-operator|=
-name|rc_next
-expr_stmt|;
 block|}
 block|}
 end_function
