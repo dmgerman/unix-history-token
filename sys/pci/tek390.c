@@ -46,32 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
+begin_comment
+comment|/* XXX this doesn't actually compile unless KERNEL is defined. */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -106,29 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_comment
-comment|/* bootverbose */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
+file|<vm/pmap.h>
 end_include
 
 begin_endif
@@ -155,12 +119,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<scsi/scsiconf.h>
 end_include
 
@@ -173,7 +131,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pci/tek390.h"
+file|<pci/tek390.h>
 end_include
 
 begin_define
@@ -188,13 +146,6 @@ define|#
 directive|define
 name|U_INT32
 value|u_int32
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIMEOUT
-value|(timeout_func_t)
 end_define
 
 begin_define
@@ -3987,7 +3938,7 @@ end_function
 begin_include
 include|#
 directive|include
-file|"pci/scsiiom.c"
+file|<pci/scsiiom.c>
 end_include
 
 begin_comment
