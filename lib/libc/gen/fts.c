@@ -1198,10 +1198,6 @@ modifier|*
 name|sp
 decl_stmt|;
 block|{
-name|struct
-name|stat
-name|sb
-decl_stmt|;
 name|FTSENT
 modifier|*
 name|p
