@@ -10,13 +10,21 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/cdefs.h>
 end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -29,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -70,18 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap-int.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -107,6 +97,18 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pcap-int.h>
 end_include
 
 begin_include
@@ -315,6 +317,24 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|NSIG
+condition|;
+name|i
+operator|++
+control|)
+else|#
+directive|else
 for|for
 control|(
 name|i
@@ -328,6 +348,8 @@ condition|;
 name|i
 operator|++
 control|)
+endif|#
+directive|endif
 name|signal
 argument_list|(
 name|i

@@ -10,6 +10,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -17,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -1617,6 +1637,34 @@ operator|&
 name|PF_OPT_VERBOSE2
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printf
+argument_list|(
+literal|"   id: %016llx creatorid: %08x\n"
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|be64toh
+argument_list|(
+name|s
+operator|->
+name|id
+argument_list|)
+argument_list|,
+name|ntohl
+argument_list|(
+name|s
+operator|->
+name|creatorid
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"   id: %016llx creatorid: %08x\n"
@@ -1636,6 +1684,8 @@ name|creatorid
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
