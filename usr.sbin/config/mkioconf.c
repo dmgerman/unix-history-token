@@ -3704,7 +3704,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" extern %s();"
+literal|" extern void %s();"
 argument_list|,
 name|shandler
 argument_list|(
