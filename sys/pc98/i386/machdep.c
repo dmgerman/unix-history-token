@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/callout.h>
 end_include
 
@@ -366,23 +372,6 @@ include|#
 directive|include
 file|<machine/intrcnt.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2114,11 +2103,14 @@ argument_list|(
 name|GLOBALDATA
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+else|#
+directive|else
+comment|/* For SMP, we delay the cpu_setregs() until after SMP startup. */
 name|cpu_setregs
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -8266,7 +8258,7 @@ literal|1024
 argument_list|)
 expr_stmt|;
 comment|/* look for the MP hardware - needed for apic addresses */
-name|mp_probe
+name|i386_mp_probe
 argument_list|()
 expr_stmt|;
 endif|#
