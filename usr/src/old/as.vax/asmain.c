@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.3 %G%"
+literal|"@(#)asmain.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +229,18 @@ begin_comment
 comment|/* in jxxxes that branch too far, use jmp instead of brw */
 end_comment
 
+begin_decl_stmt
+name|int
+name|readonlydata
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* initialzed data -> text space */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -320,7 +332,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC
-value|0410
+value|0407
 end_define
 
 begin_decl_stmt
@@ -1019,6 +1031,14 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'R'
+case|:
+name|readonlydata
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 comment|/*end of the switch*/
 block|}
@@ -1737,7 +1757,7 @@ name|round
 argument_list|(
 name|tsize
 argument_list|,
-name|PAGRND
+name|FW
 argument_list|)
 expr_stmt|;
 for|for
@@ -2219,6 +2239,40 @@ name|a_drsize
 operator|=
 name|drsize
 expr_stmt|;
+if|if
+condition|(
+name|readonlydata
+condition|)
+block|{
+name|hdr
+operator|.
+name|a_text
+operator|+=
+name|hdr
+operator|.
+name|a_data
+expr_stmt|;
+name|hdr
+operator|.
+name|a_data
+operator|=
+literal|0
+expr_stmt|;
+name|hdr
+operator|.
+name|a_trsize
+operator|+=
+name|hdr
+operator|.
+name|a_drsize
+expr_stmt|;
+name|hdr
+operator|.
+name|a_drsize
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 *	Output the symbol table 	 *	and if FLEXNAMES is set, the string pool 	 */
 name|symwrite
 argument_list|(
