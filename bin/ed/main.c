@@ -6821,7 +6821,7 @@ name|addr_last
 argument_list|)
 expr_stmt|;
 block|}
-name|_exit
+name|quit
 argument_list|(
 literal|2
 argument_list|)
@@ -6844,7 +6844,7 @@ condition|(
 operator|!
 name|sigactive
 condition|)
-name|_exit
+name|quit
 argument_list|(
 literal|1
 argument_list|)
