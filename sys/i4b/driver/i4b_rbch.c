@@ -69,23 +69,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -480,48 +463,6 @@ end_expr_stmt
 begin_comment
 comment|/*===========================================================================*  *			DEVICE DRIVER ROUTINES  *===========================================================================*/
 end_comment
-
-begin_comment
-comment|/*---------------------------------------------------------------------------*  *	initialization at kernel load time  *---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|i4brbchinit
-parameter_list|(
-name|void
-modifier|*
-name|unused
-parameter_list|)
-block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|i4brbch_cdevsw
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|i4brbchdev
-argument_list|,
-name|SI_SUB_DRIVERS
-argument_list|,
-name|SI_ORDER_MIDDLE
-operator|+
-name|CDEV_MAJOR
-argument_list|,
-operator|&
-name|i4brbchinit
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	interface attach routine  *---------------------------------------------------------------------------*/
