@@ -713,16 +713,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ng_cutlinks
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ng_con_nodes
 parameter_list|(
@@ -2595,7 +2585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Forceably start the shutdown process on a node. Either call  * it's shutdown method, or do the default shutdown if there is  * no type-specific method.  *  * We can only be called form a shutdown message, so we know we have  * a writer lock, and therefore exclusive access.  *  * Persistent node types must have a type-specific method which  * Allocates a new node. This one is irretrievably going away.  */
+comment|/*  * Forceably start the shutdown process on a node. Either call  * it's shutdown method, or do the default shutdown if there is  * no type-specific method.  *  * We can only be called form a shutdown message, so we know we have  * a writer lock, and therefore exclusive access. It also means  * that we should not be on the work queue, but we check anyhow.  *  * Persistent node types must have a type-specific method which  * Allocates a new node in which case, this one is irretrievably going away,  * or cleans up anything it needs, and just makes the node valid again,  * in which case we allow the node to survive.   *  * XXX We need to think of how to tell a persistant node that we  * REALLY need to go away because the hardware has gone or we  * are rebooting.... etc.  */
 end_comment
 
 begin_function
@@ -2606,6 +2596,9 @@ name|node_p
 name|node
 parameter_list|)
 block|{
+name|hook_p
+name|hook
+decl_stmt|;
 comment|/* Check if it's already shutting down */
 if|if
 condition|(
@@ -2635,9 +2628,26 @@ name|NG_INVALID
 operator||
 name|NG_CLOSING
 expr_stmt|;
-name|ng_cutlinks
+comment|/* Notify all remaining connected nodes to disconnect */
+while|while
+condition|(
+operator|(
+name|hook
+operator|=
+name|LIST_FIRST
 argument_list|(
+operator|&
 name|node
+operator|->
+name|nd_hooks
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|ng_destroy_hook
+argument_list|(
+name|hook
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Drain the input queue forceably. 	 * it has no hooks so what's it going to do, bleed on someone? 	 * Theoretically we came here from a queue entry that was added 	 * Just before the queue was closed, so it should be empty anyway. 	 */
@@ -2712,62 +2722,6 @@ comment|/* 	 * Remove extra reference, possibly the last 	 * Possible other hold
 name|NG_NODE_UNREF
 argument_list|(
 name|node
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Called by the destructor to remove any STANDARD external references  * May one day have it's own message to call it..  */
-end_comment
-
-begin_function
-name|void
-name|ng_cutlinks
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-block|{
-name|hook_p
-name|hook
-decl_stmt|;
-comment|/* Make sure that this is set to stop infinite loops */
-name|node
-operator|->
-name|nd_flags
-operator||=
-name|NG_INVALID
-expr_stmt|;
-comment|/* 	 * Drain the input queue forceably. 	 * We also do this in ng_rmnode 	 * to make sure we get all code paths. 	 */
-name|ng_flush_input_queue
-argument_list|(
-operator|&
-name|node
-operator|->
-name|nd_input_queue
-argument_list|)
-expr_stmt|;
-comment|/* Notify all remaining connected nodes to disconnect */
-while|while
-condition|(
-operator|(
-name|hook
-operator|=
-name|LIST_FIRST
-argument_list|(
-operator|&
-name|node
-operator|->
-name|nd_hooks
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|ng_destroy_hook
-argument_list|(
-name|hook
 argument_list|)
 expr_stmt|;
 block|}
@@ -3467,7 +3421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/************************************************************************ 			Hook routines  Names are not optional. Hooks are always connected, except for a  brief moment within these routines. ************************************************************************/
+comment|/************************************************************************ 			Hook routines  Names are not optional. Hooks are always connected, except for a  brief moment within these routines. On invalidation or during creation  they are connected to the 'dead' hook. ************************************************************************/
 end_comment
 
 begin_comment
@@ -3555,7 +3509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add an unconnected hook to a node. Only used internally.  */
+comment|/*  * Add an unconnected hook to a node. Only used internally.  * Assumes node is locked. (XXX not yet true )  */
 end_comment
 
 begin_function
@@ -3647,12 +3601,21 @@ name|hk_refs
 operator|=
 literal|1
 expr_stmt|;
+comment|/* add a reference for us to return */
 name|hook
 operator|->
 name|hk_flags
 operator|=
 name|HK_INVALID
 expr_stmt|;
+name|hook
+operator|->
+name|hk_peer
+operator|=
+operator|&
+name|ng_deadhook
+expr_stmt|;
+comment|/* start off this way */
 name|hook
 operator|->
 name|hk_node
@@ -3665,7 +3628,20 @@ name|node
 argument_list|)
 expr_stmt|;
 comment|/* each hook counts as a reference */
-comment|/* Check if the node type code has something to say about it */
+comment|/* Set hook name */
+name|strncpy
+argument_list|(
+name|NG_HOOK_NAME
+argument_list|(
+name|hook
+argument_list|)
+argument_list|,
+name|name
+argument_list|,
+name|NG_HOOKLEN
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Check if the node type code has something to say about it 	 * If it fails, the unref of the hook will also unref the node. 	 */
 if|if
 condition|(
 name|node
@@ -3713,7 +3689,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * The 'type' agrees so far, so go ahead and link it in. 	 * We'll ask again later when we actually connect the hooks. 	 * The reference we have is for this linkage. 	 */
+comment|/* 	 * The 'type' agrees so far, so go ahead and link it in. 	 * We'll ask again later when we actually connect the hooks. 	 */
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -3731,19 +3707,12 @@ operator|->
 name|nd_numhooks
 operator|++
 expr_stmt|;
-comment|/* Set hook name */
-name|strncpy
-argument_list|(
-name|NG_HOOK_NAME
+name|NG_HOOK_REF
 argument_list|(
 name|hook
 argument_list|)
-argument_list|,
-name|name
-argument_list|,
-name|NG_HOOKLEN
-argument_list|)
 expr_stmt|;
+comment|/* one for the node */
 if|if
 condition|(
 name|hookp
@@ -3755,14 +3724,14 @@ name|hook
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Connect a pair of hooks. Only used internally.  */
+comment|/*  * Connect a pair of hooks. Only used internally.  * Assume whoever called us has the nodes locked  * and is holding refs on the hooks.  * XXX This may have to change to be SMP safe.  */
 end_comment
 
 begin_function
@@ -3792,7 +3761,18 @@ name|hk_peer
 operator|=
 name|hook1
 expr_stmt|;
-comment|/* Give each node the opportunity to veto the impending connection */
+comment|/* Each hook is referenced by the other */
+name|NG_HOOK_REF
+argument_list|(
+name|hook1
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_REF
+argument_list|(
+name|hook2
+argument_list|)
+expr_stmt|;
+comment|/* Give each node the opportunity to veto the pending connection */
 if|if
 condition|(
 name|hook1
@@ -3883,6 +3863,7 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* As a last act, allow the hooks to be used */
 name|hook1
 operator|->
 name|hk_flags
@@ -3906,7 +3887,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a hook  *  * Node types may supply their own optimized routines for finding  * hooks.  If none is supplied, we just do a linear search.  */
+comment|/*  * Find a hook  *  * Node types may supply their own optimized routines for finding  * hooks.  If none is supplied, we just do a linear search.  * XXX Possibly we should add a reference to the hook?  */
 end_comment
 
 begin_function
@@ -3995,7 +3976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroy a hook  *  * As hooks are always attached, this really destroys two hooks.  * The one given, and the one attached to it. Disconnect the hooks  * from each other first.  */
+comment|/*  * Destroy a hook  *  * As hooks are always attached, this really destroys two hooks.  * The one given, and the one attached to it. Disconnect the hooks  * from each other first. We reconnect the peer hook to the 'dead'  * hook so that it can still exist after we depart. We then  * send the peer its own destroy message. This ensures that we only  * interact with the peer's structures when it is locked processing that   * message. We hold a reference to the peer hook so we are guaranteed that  * the peer hook and node are still going to exist until  * we are finished there as the hook holds a ref on the node.  * We run this same code again on the peer hook, but that time it is already   * attached to the 'dead' hook.   */
 end_comment
 
 begin_function
@@ -4024,43 +4005,55 @@ comment|/* as soon as possible */
 if|if
 condition|(
 name|peer
+operator|&&
+operator|(
+name|peer
+operator|!=
+operator|&
+name|ng_deadhook
+operator|)
 condition|)
 block|{
+comment|/* 		 * Set the peer to point to ng_deadhook 		 * from this moment on we are effectively independent it. 		 * send it an rmhook message of it's own. 		 */
 name|peer
 operator|->
-name|hk_flags
-operator||=
-name|HK_INVALID
+name|hk_peer
+operator|=
+operator|&
+name|ng_deadhook
 expr_stmt|;
-comment|/* as soon as possible */
+comment|/* They no longer know us */
 name|hook
 operator|->
 name|hk_peer
 operator|=
-name|NULL
+operator|&
+name|ng_deadhook
 expr_stmt|;
-name|peer
-operator|->
-name|hk_peer
-operator|=
-name|NULL
-expr_stmt|;
-name|ng_disconnect_hook
+comment|/* Nor us, them */
+name|ng_rmhook_self
 argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
+comment|/* Give it a surprise */
 block|}
 name|ng_disconnect_hook
 argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
+name|NG_HOOK_UNREF
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+comment|/* account for peer link */
 block|}
 end_function
 
 begin_comment
-comment|/*  * Notify the node of the hook's demise. This may result in more actions  * (e.g. shutdown) but we don't do that ourselves and don't know what  * happens there. If there is no appropriate handler, then just remove it  * (and decrement the reference count of it's node which in turn might  * make something happen).  */
+comment|/*  * Notify the node of the hook's demise. This may result in more actions  * (e.g. shutdown) but we don't do that ourselves and don't know what  * happens there. If there is no appropriate handler, then just remove it  * and decrement the reference count. When it's freed it will decrement  * the reference count of it's node which in turn might make something happen.  */
 end_comment
 
 begin_function
@@ -4121,6 +4114,7 @@ argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
+comment|/* Account for linkage to node */
 block|}
 end_function
 
@@ -4177,19 +4171,21 @@ name|hook1
 operator|->
 name|hk_peer
 expr_stmt|;
-comment|/* XXX If we ever cache methods on hooks update them as well */
 name|hook1
 operator|->
 name|hk_peer
 operator|=
-name|NULL
+operator|&
+name|ng_deadhook
 expr_stmt|;
 name|hook2
 operator|->
 name|hk_peer
 operator|=
-name|NULL
+operator|&
+name|ng_deadhook
 expr_stmt|;
+comment|/* XXX If we ever cache methods on hooks update them as well */
 name|ng_destroy_hook
 argument_list|(
 name|hook1
@@ -4401,7 +4397,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Make a peer and connect. The order is arranged to minimise  * the work needed to back out in case of error.  */
+comment|/*  * Make a peer and connect. The order is arranged to minimise  * the work needed to back out in case of error.  * We assume that the local node is locked.  * The new node probably doesn't need a lock until  * it has a hook, but we should think about it a bit more.  */
 end_comment
 
 begin_function
@@ -4454,6 +4450,7 @@ name|hook
 argument_list|)
 operator|)
 condition|)
+comment|/* gives us a ref */
 return|return
 operator|(
 name|error
@@ -4475,6 +4472,11 @@ operator|)
 condition|)
 block|{
 name|ng_destroy_hook
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_UNREF
 argument_list|(
 name|hook
 argument_list|)
@@ -4512,6 +4514,11 @@ argument_list|(
 name|hook
 argument_list|)
 expr_stmt|;
+name|NG_HOOK_UNREF
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4537,6 +4544,17 @@ argument_list|(
 name|node2
 argument_list|)
 expr_stmt|;
+comment|/* 	 * drop the references we were holding on the two hooks. 	 */
+name|NG_HOOK_UNREF
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_UNREF
+argument_list|(
+name|hook2
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4546,7 +4564,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Connect two nodes using the specified hooks  */
+comment|/*  * Connect two nodes using the specified hooks  * XXX need to think of a SMP safe way of doing this.  */
 end_comment
 
 begin_function
@@ -4595,6 +4613,7 @@ name|hook
 argument_list|)
 operator|)
 condition|)
+comment|/* gives us a ref */
 return|return
 operator|(
 name|error
@@ -4617,7 +4636,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* we get a ref */
 name|ng_destroy_hook
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_UNREF
 argument_list|(
 name|hook
 argument_list|)
@@ -4628,14 +4653,29 @@ name|error
 operator|)
 return|;
 block|}
-return|return
-operator|(
+name|error
+operator|=
 name|ng_connect
 argument_list|(
 name|hook
 argument_list|,
 name|hook2
 argument_list|)
+expr_stmt|;
+comment|/* 	 * drop the references we were holding on the two hooks. 	 */
+name|NG_HOOK_UNREF
+argument_list|(
+name|hook
+argument_list|)
+expr_stmt|;
+name|NG_HOOK_UNREF
+argument_list|(
+name|hook2
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
