@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.3 (Berkeley) %G%"
+literal|"@(#)cron.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|LISTS
-value|512
+value|BUFSIZ
 end_define
 
 begin_define
@@ -321,6 +321,21 @@ name|tm_mon
 operator|++
 expr_stmt|;
 comment|/* 1-12 for month */
+if|if
+condition|(
+name|loct
+operator|->
+name|tm_day
+operator|==
+literal|0
+condition|)
+name|loct
+operator|->
+name|tm_day
+operator|==
+literal|7
+expr_stmt|;
+comment|/* sunday is 7, not 0 */
 for|for
 control|(
 name|cp
@@ -798,7 +813,7 @@ name|list
 operator|+
 name|listsize
 operator|-
-literal|100
+name|BUFSIZ
 condition|)
 block|{
 name|char
