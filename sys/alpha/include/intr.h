@@ -38,6 +38,9 @@ parameter_list|,
 name|int
 name|pri
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|void
 modifier|*
 modifier|*
