@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* @(#)tmscpreg.h	5.1 (Berkeley) %G% */
+end_comment
+
+begin_comment
 comment|/*	@(#)tmscpreg.h	1.1	11/2/84	84/09/25	*/
 end_comment
 
@@ -123,7 +127,7 @@ value|0000200
 end_define
 
 begin_comment
-comment|/* port allows odd host addr's in the b uffer descriptor */
+comment|/* port allows odd host addr's in the buffer descriptor */
 end_comment
 
 begin_define
@@ -156,7 +160,7 @@ value|0000002
 end_define
 
 begin_comment
-comment|/* host requests last fail response pac ket */
+comment|/* host requests last fail response packet */
 end_comment
 
 begin_define
@@ -167,7 +171,7 @@ value|0000001
 end_define
 
 begin_comment
-comment|/* host requests adapter purge interrup ts */
+comment|/* host requests adapter purge interrupts */
 end_comment
 
 begin_define
@@ -253,7 +257,18 @@ value|0x40000000
 end_define
 
 begin_comment
-comment|/* allow interrupt on ring transition * /   #define	TMSCP_MAP	0x80000000	/* modifier for mapped buffer descripto rs */
+comment|/* allow interrupt on ring transition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TMSCP_MAP
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* modifier for mapped buffer descriptors */
 end_comment
 
 begin_comment
