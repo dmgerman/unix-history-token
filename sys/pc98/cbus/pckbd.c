@@ -1552,23 +1552,12 @@ expr_stmt|;
 comment|/* if the driver is disabled, unregister the keyboard if any */
 if|if
 condition|(
-name|resource_int_value
+name|resource_disabled
 argument_list|(
 name|DRIVER_NAME
 argument_list|,
 literal|0
-argument_list|,
-literal|"disabled"
-argument_list|,
-operator|&
-name|i
 argument_list|)
-operator|==
-literal|0
-operator|&&
-name|i
-operator|!=
-literal|0
 condition|)
 block|{
 name|i

@@ -2404,21 +2404,12 @@ decl_stmt|;
 comment|/* See if this driver is disabled in probe hint. */
 if|if
 condition|(
-name|resource_int_value
+name|resource_disabled
 argument_list|(
 literal|"vt"
 argument_list|,
 name|unit
-argument_list|,
-literal|"disabled"
-argument_list|,
-operator|&
-name|i
 argument_list|)
-operator|==
-literal|0
-operator|&&
-name|i
 condition|)
 block|{
 name|cp
