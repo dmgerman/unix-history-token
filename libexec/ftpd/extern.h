@@ -73,7 +73,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|fatal
+name|fatalerror
 name|__P
 argument_list|(
 operator|(

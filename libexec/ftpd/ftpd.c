@@ -498,7 +498,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|debug
+name|ftpdebug
 decl_stmt|;
 end_decl_stmt
 
@@ -1600,7 +1600,7 @@ break|break;
 case|case
 literal|'d'
 case|:
-name|debug
+name|ftpdebug
 operator|++
 expr_stmt|;
 break|break;
@@ -1764,7 +1764,7 @@ break|break;
 case|case
 literal|'v'
 case|:
-name|debug
+name|ftpdebug
 operator|=
 literal|1
 expr_stmt|;
@@ -3018,7 +3018,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatalerror
 argument_list|(
 literal|"Ran out of memory."
 argument_list|)
@@ -3090,7 +3090,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|debug
+name|ftpdebug
 condition|)
 name|syslog
 argument_list|(
@@ -3198,7 +3198,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatalerror
 argument_list|(
 literal|"Ran out of memory."
 argument_list|)
@@ -6834,7 +6834,7 @@ name|ident
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatalerror
 argument_list|(
 literal|"Ran out of memory."
 argument_list|)
@@ -10452,7 +10452,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|fatal
+name|fatalerror
 parameter_list|(
 name|s
 parameter_list|)
@@ -10581,7 +10581,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|ftpdebug
 condition|)
 block|{
 name|syslog
@@ -10701,7 +10701,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|ftpdebug
 condition|)
 block|{
 name|syslog
