@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.41 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3254,12 +3254,12 @@ name|stderr
 argument_list|,
 literal|"fstat: %s: %s\n"
 argument_list|,
+name|filename
+argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|,
-name|filename
 argument_list|)
 expr_stmt|;
 return|return
