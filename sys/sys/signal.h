@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_sigset.h>
 end_include
 
