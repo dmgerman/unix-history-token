@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.53 2003/06/17 12:29:20 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.54 2003/07/11 09:15:21 imp Exp   */
 end_comment
 
 begin_comment
@@ -582,6 +582,17 @@ end_define
 
 begin_comment
 comment|/* I-O DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_ASUS
+value|0x02aa
+end_define
+
+begin_comment
+comment|/* ASUS */
 end_comment
 
 begin_define
@@ -1309,6 +1320,31 @@ define|#
 directive|define
 name|PCMCIA_STR_ARTEM_ONAIR
 value|"ARtem OnAir"
+end_define
+
+begin_comment
+comment|/* ASUS WL-100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ASUS_WL
+value|-100	{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ASUS_WL
+value|-100	0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ASUS_WL
+value|-100	"ASUS ASUS SpaceLink WL-100 Wireless LAN"
 end_define
 
 begin_comment
