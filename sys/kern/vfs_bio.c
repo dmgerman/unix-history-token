@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.169 1998/08/13 08:09:07 dfr Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.170 1998/08/24 08:39:38 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -2154,22 +2154,6 @@ name|B_INVAL
 condition|)
 block|{
 name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_TAPE
-condition|)
-block|{
-name|bawrite
 argument_list|(
 name|bp
 argument_list|)
