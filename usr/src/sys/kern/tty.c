@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.47 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1441,9 +1441,9 @@ define|#
 directive|define
 name|flushq
 parameter_list|(
-name|qq
+name|q
 parameter_list|)
-value|{ \ 	register struct clist *q = qq; \ 	if (q->c_cc) \ 		ndflush(q, q->c_cc); \ }
+value|{ \ 	if ((q)->c_cc) \ 		ndflush(q, (q)->c_cc); \ }
 end_define
 
 begin_comment
@@ -1465,11 +1465,18 @@ name|tp
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|rw
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
+name|int
 name|s
-expr_stmt|;
+decl_stmt|;
 name|s
 operator|=
 name|spltty
@@ -1537,6 +1544,24 @@ operator|&=
 operator|~
 name|TS_TTSTOP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun4c
+comment|/* XXX */
+call|(
+modifier|*
+name|tp
+operator|->
+name|t_stop
+call|)
+argument_list|(
+name|tp
+argument_list|,
+name|rw
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 operator|*
 name|cdevsw
@@ -1557,6 +1582,8 @@ operator|,
 name|rw
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 name|flushq
 argument_list|(
 operator|&
@@ -1827,6 +1854,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|s
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1843,6 +1873,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|tp
 operator|->
 name|t_state
@@ -1853,6 +1888,11 @@ expr_stmt|;
 name|ttstart
 argument_list|(
 name|tp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -1886,8 +1926,20 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+name|int
+name|com
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|caddr_t
 name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -1941,9 +1993,17 @@ case|:
 case|case
 name|TIOCSETAF
 case|:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_43
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
 case|case
 name|TIOCSETP
 case|:
@@ -2247,16 +2307,31 @@ comment|/* prevent more opens on channel */
 case|case
 name|TIOCEXCL
 case|:
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|tp
 operator|->
 name|t_state
 operator||=
 name|TS_XCLUDE
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|TIOCNXCL
 case|:
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|tp
 operator|->
 name|t_state
@@ -2264,10 +2339,23 @@ operator|&=
 operator|~
 name|TS_XCLUDE
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|TIOCHPCL
 case|case
 name|TIOCHPCL
 case|:
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|tp
 operator|->
 name|t_cflag
@@ -2275,6 +2363,8 @@ operator||=
 name|HUPCL
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|TIOCFLUSH
 case|:
@@ -2321,6 +2411,11 @@ block|}
 case|case
 name|FIOASYNC
 case|:
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -2343,6 +2438,11 @@ name|t_state
 operator|&=
 operator|~
 name|TS_ASYNC
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2411,6 +2511,24 @@ name|t_state
 operator||=
 name|TS_TTSTOP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun4c
+comment|/* XXX */
+call|(
+modifier|*
+name|tp
+operator|->
+name|t_stop
+call|)
+argument_list|(
+name|tp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 operator|*
 name|cdevsw
@@ -2431,6 +2549,8 @@ operator|,
 literal|0
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|splx
 argument_list|(
@@ -3203,9 +3323,17 @@ argument_list|)
 operator|)
 return|;
 default|default:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_43
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
 return|return
 operator|(
 name|ttcompat
@@ -3808,6 +3936,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|s
+init|=
+name|spltty
+argument_list|()
+decl_stmt|;
 name|tp
 operator|->
 name|t_dev
@@ -3860,6 +3994,11 @@ argument_list|)
 expr_stmt|;
 comment|/* 		 * CHANGE: used to do a ttywflush() if it was the 		 *  old (old) line discipline. 		 */
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4009,6 +4148,12 @@ name|tp
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
@@ -4071,6 +4216,24 @@ name|t_state
 operator||=
 name|TS_TTSTOP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun4c
+comment|/* XXX */
+call|(
+modifier|*
+name|tp
+operator|->
+name|t_stop
+call|)
+argument_list|(
+name|tp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 operator|*
 name|cdevsw
@@ -4091,6 +4254,8 @@ operator|,
 literal|0
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 elseif|else
@@ -5735,6 +5900,12 @@ name|uio
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -6211,6 +6382,11 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Look to unblock output now that (presumably) 	 * the input queue has gone down. 	 */
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -6269,6 +6445,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -6331,15 +6512,15 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|wait
-condition|)
 name|oldsig
 operator|=
+name|wait
+condition|?
 name|curproc
 operator|->
 name|p_sig
+else|:
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -6470,6 +6651,12 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -8156,16 +8343,19 @@ block|}
 comment|/*  * Look up a code for a specified speed in a conversion table;  * used by drivers to map software speed values to hardware parameters.  */
 name|ttspeedtab
 argument_list|(
-name|speed
+argument|speed
 argument_list|,
-name|table
+argument|table
 argument_list|)
+name|int
+name|speed
+decl_stmt|;
 specifier|register
-expr|struct
+name|struct
 name|speedtab
-operator|*
+modifier|*
 name|table
-expr_stmt|;
+decl_stmt|;
 block|{
 for|for
 control|(
@@ -8587,6 +8777,20 @@ name|tmp
 operator|/
 literal|100
 argument_list|,
+name|pick
+operator|->
+name|p_stat
+operator|==
+name|SIDL
+operator|||
+name|pick
+operator|->
+name|p_stat
+operator|==
+name|SZOMB
+condition|?
+literal|0
+else|:
 name|pgtok
 argument_list|(
 name|pick
