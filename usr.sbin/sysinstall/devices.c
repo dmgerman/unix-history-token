@@ -2814,6 +2814,23 @@ literal|2
 argument_list|)
 condition|)
 continue|continue;
+comment|/* 	     * XXX  	     *  Due to unknown reasons, Disk_Names() returns SCSI CDROM as a 	     * valid disk. This is main reason why sysinstall presents SCSI 	     * CDROM to available disks in Fdisk/Label menu. In addition, 	     * adding a blank SCSI CDROM to the menu generates floating point 	     * exception in sparc64. Disk_Names() just extracts sysctl 	     * "kern.disks". Why GEOM treats SCSI CDROM as a disk is beyond 	     * me and that should be investigated. 	     * For temporary workaround, ignore SCSI CDROM device. 	     */
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|names
+index|[
+name|i
+index|]
+argument_list|,
+literal|"cd"
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+continue|continue;
 name|d
 operator|=
 name|Open_Disk
