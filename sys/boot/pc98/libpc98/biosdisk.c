@@ -1793,8 +1793,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|beak
-expr_stmt|;
+break|break;
 block|}
 block|}
 else|#
