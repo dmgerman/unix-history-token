@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.12	%G%	*/
+comment|/*	kern_proc.c	3.13	%G%	*/
 end_comment
 
 begin_include
@@ -1724,7 +1724,7 @@ name|mtpr
 argument_list|(
 name|TBIA
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * set SUID/SGID protections, if no tracing 		 */
