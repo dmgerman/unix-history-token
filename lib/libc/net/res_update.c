@@ -104,6 +104,13 @@ name|NSMAX
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAXPACKET
+value|65536
+end_define
+
 begin_struct
 struct|struct
 name|ns1
@@ -192,7 +199,7 @@ index|]
 decl_stmt|,
 name|answer
 index|[
-name|PACKETSZ
+name|MAXPACKET
 index|]
 decl_stmt|,
 name|packet
