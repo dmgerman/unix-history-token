@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Public Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * $Id: is_tar.c,v 1.13 2000/08/05 17:36:48 christos Exp $  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
+comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Public Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * $Id: is_tar.c,v 1.17 2002/07/03 18:26:38 christos Exp $  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"file.h"
+end_include
 
 begin_include
 include|#
@@ -27,12 +33,6 @@ directive|include
 file|"tar.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"file.h"
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -42,7 +42,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: is_tar.c,v 1.13 2000/08/05 17:36:48 christos Exp $"
+literal|"@(#)$Id: is_tar.c,v 1.17 2002/07/03 18:26:38 christos Exp $"
 argument_list|)
 end_macro
 
@@ -61,21 +61,18 @@ parameter_list|)
 value|( ((c)>= '0')&& ((c)<= '7') )
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|from_oct
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Decode octal number */
@@ -89,18 +86,14 @@ begin_function
 name|int
 name|is_tar
 parameter_list|(
-name|buf
-parameter_list|,
-name|nbytes
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 name|nbytes
-decl_stmt|;
+parameter_list|)
 block|{
 name|union
 name|record
@@ -278,17 +271,13 @@ specifier|static
 name|int
 name|from_oct
 parameter_list|(
-name|digs
-parameter_list|,
-name|where
-parameter_list|)
 name|int
 name|digs
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|where
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|value
