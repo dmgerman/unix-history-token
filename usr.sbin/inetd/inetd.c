@@ -997,7 +997,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|log
+name|dolog
 init|=
 literal|0
 decl_stmt|;
@@ -1578,7 +1578,7 @@ break|break;
 case|case
 literal|'l'
 case|:
-name|log
+name|dolog
 operator|=
 literal|1
 expr_stmt|;
@@ -3040,7 +3040,7 @@ name|se_fd
 expr_stmt|;
 if|if
 condition|(
-name|log
+name|dolog
 operator|&&
 operator|!
 name|ISWRAP
@@ -3708,7 +3708,7 @@ block|}
 block|}
 if|if
 condition|(
-name|log
+name|dolog
 condition|)
 block|{
 name|syslog
