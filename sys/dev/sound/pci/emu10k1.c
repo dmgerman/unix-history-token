@@ -6652,6 +6652,9 @@ call|(
 name|u_int32_t
 call|)
 argument_list|(
+name|u_long
+argument_list|)
+argument_list|(
 operator|(
 name|u_int8_t
 operator|*
