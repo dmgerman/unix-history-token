@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.7 (Berkeley) %G%"
+literal|"@(#)init.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -768,7 +768,7 @@ name|char
 name|shutfailm
 index|[]
 init|=
-literal|"WARNING: Something is hung (wont die); ps axl advised\n"
+literal|"WARNING: Something is hung (won't die); ps axl advised\n"
 decl_stmt|;
 name|shutreset
 argument_list|()
@@ -1040,6 +1040,11 @@ name|char
 operator|*
 operator|)
 literal|0
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|shell
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1377,7 +1382,10 @@ name|omask
 operator|=
 name|sigblock
 argument_list|(
+name|sigmask
+argument_list|(
 name|SIGHUP
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1593,6 +1601,12 @@ argument_list|,
 name|t
 operator|->
 name|ty_window
+condition|?
+name|t
+operator|->
+name|ty_window
+else|:
+literal|""
 argument_list|)
 condition|)
 block|{
@@ -1731,6 +1745,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|t
+operator|->
+name|ty_window
+operator|&&
 name|strcmp
 argument_list|(
 name|t
@@ -1948,9 +1966,6 @@ name|SIGHUP
 argument_list|)
 expr_stmt|;
 block|}
-include|#
-directive|include
-file|<sys/ioctl.h>
 name|dfork
 argument_list|(
 argument|p
