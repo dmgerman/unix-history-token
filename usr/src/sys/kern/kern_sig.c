@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -107,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"wait.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ktrace.h"
 end_include
 
 begin_include
@@ -1511,12 +1517,10 @@ operator|&
 operator|~
 name|sigcantmask
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1524,10 +1528,21 @@ operator|)
 operator|&
 name|u
 argument_list|,
-name|PSLEP
+name|PPAUSE
+operator||
+name|PCATCH
+argument_list|,
+literal|"pause"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* always return EINTR rather than ERESTART... */
+name|RETURN
+argument_list|(
+name|EINTR
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2142,7 +2157,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Send the specified signal to  * all processes with 'pgid' as  * process group.  */
+comment|/* XXX - to be removed, as soon as sockets are changed to operate on pgrps  * Send the specified signal to  * all processes with 'pgid' as  * process group.  */
 end_comment
 
 begin_macro
@@ -2184,6 +2199,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Send sig to all all members of the process group  */
+end_comment
+
 begin_macro
 name|pgsignal
 argument_list|(
@@ -2209,6 +2228,10 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|pgrp
+condition|)
 for|for
 control|(
 name|p
@@ -2218,6 +2241,8 @@ operator|->
 name|pg_mem
 init|;
 name|p
+operator|!=
+name|NULL
 condition|;
 name|p
 operator|=
@@ -2320,6 +2345,42 @@ operator|.
 name|ru_nsignals
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTRACE
+if|if
+condition|(
+name|KTRPOINT
+argument_list|(
+name|p
+argument_list|,
+name|KTR_PSIG
+argument_list|)
+condition|)
+name|ktrpsig
+argument_list|(
+name|p
+operator|->
+name|p_tracep
+argument_list|,
+name|sig
+argument_list|,
+name|u
+operator|.
+name|u_signal
+index|[
+name|sig
+index|]
+argument_list|,
+name|p
+operator|->
+name|p_sigmask
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sendsig
 argument_list|(
 name|u
@@ -2376,7 +2437,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Send the specified signal to  * the specified process.  */
+comment|/*  * Send the specified signal to the specified process.  * Most signals do not do anything directly to a process;  * they set a flag that asks the process to do something to itself.  * Exceptions:  *   o When a stop signal is sent to a sleeping process that takes the default  *     action, the process is stopped without awakening it.  *   o SIGCONT restarts stopped processes (or puts them back to sleep)  *     regardless of the signal action (eg, blocked or ignored).  * Other ignored signals are discarded immediately.  */
 end_comment
 
 begin_expr_stmt
@@ -2432,31 +2493,6 @@ argument_list|(
 literal|"psignal sig"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|p_pgrp
-operator|->
-name|pg_jobc
-operator|==
-literal|0
-operator|&&
-operator|(
-name|sig
-operator|==
-name|SIGTTIN
-operator|||
-name|sig
-operator|==
-name|SIGTTOU
-operator|||
-name|sig
-operator|==
-name|SIGTSTP
-operator|)
-condition|)
-return|return;
 name|mask
 operator|=
 name|sigmask
@@ -2515,10 +2551,37 @@ operator|=
 name|SIG_CATCH
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|p_pgrp
+operator|->
+name|pg_jobc
+operator|==
+literal|0
+operator|&&
+operator|(
+name|sig
+operator|==
+name|SIGTTIN
+operator|||
+name|sig
+operator|==
+name|SIGTTOU
+operator|||
+name|sig
+operator|==
+name|SIGTSTP
+operator|)
+condition|)
+return|return;
 name|action
 operator|=
 name|SIG_DFL
 expr_stmt|;
+block|}
 block|}
 switch|switch
 condition|(
@@ -2638,14 +2701,18 @@ block|{
 case|case
 name|SSLEEP
 case|:
-comment|/* 		 * If process is sleeping at negative priority 		 * we can't interrupt the sleep... the signal will 		 * be noticed when the process returns through 		 * trap() or syscall(). 		 */
+comment|/* 		 * If process is sleeping uninterruptibly 		 * we can't interrupt the sleep... the signal will 		 * be noticed when the process returns through 		 * trap() or syscall(). 		 */
 if|if
 condition|(
+operator|(
 name|p
 operator|->
-name|p_pri
-operator|<=
-name|PZERO
+name|p_flag
+operator|&
+name|SSINTR
+operator|)
+operator|==
+literal|0
 condition|)
 goto|goto
 name|out
@@ -2846,7 +2913,7 @@ goto|goto
 name|out
 goto|;
 default|default:
-comment|/* 			 * If process is sleeping interruptibly, then 			 * unstick it so that when it is continued 			 * it can look at the signal. 			 * But don't setrun the process as its not to 			 * be unstopped by the signal alone. 			 */
+comment|/* 			 * If process is sleeping interruptibly, then 			 * simulate a wakeup so that when it is continued, 			 * it will be made runnable and can look at the signal. 			 * But don't setrun the process, leave it stopped. 			 */
 if|if
 condition|(
 name|p
@@ -2855,9 +2922,9 @@ name|p_wchan
 operator|&&
 name|p
 operator|->
-name|p_pri
-operator|>
-name|PZERO
+name|p_flag
+operator|&
+name|SSINTR
 condition|)
 name|unsleep
 argument_list|(
@@ -2925,7 +2992,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Returns true if the current  * process has a signal to process.  * The signal to process is put in p_cursig.  * This is asked at least once each time a process enters the  * system (though this can usually be done without actually  * calling issig by checking the pending signal masks.)  * Most signals do not do anything  * directly to a process; they set  * a flag that asks the process to  * do something to itself.  */
+comment|/*  * If the current process has a signal to process (should be caught  * or cause termination, should interrupt current syscall),  * return the signal number.  Stop signals with default action  * are processed immediately, then cleared; they aren't returned.  * This is asked at least once each time a process enters the  * system (though this can usually be done without actually  * calling issig by checking the pending signal masks.)  */
 end_comment
 
 begin_macro
@@ -2989,7 +3056,12 @@ name|mask
 operator|==
 literal|0
 condition|)
-break|break;
+comment|/* no signal to send */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|sig
 operator|=
 name|ffs
@@ -3007,14 +3079,7 @@ argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_sig
-operator|&=
-operator|~
-name|mask
-expr_stmt|;
-comment|/* take the signal! */
+comment|/* 		 * We should see pending but ignored signals 		 * only if STRC was on when they were posted. 		 */
 if|if
 condition|(
 name|mask
@@ -3033,14 +3098,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-continue|continue;
-comment|/* only if STRC was on when posted */
+block|{
 name|p
 operator|->
-name|p_cursig
-operator|=
-name|sig
+name|p_sig
+operator|&=
+operator|~
+name|mask
 expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|p
@@ -3061,6 +3128,12 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * If traced, always stop, and stay 			 * stopped until released by the parent. 			 */
+name|p
+operator|->
+name|p_cursig
+operator|=
+name|sig
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
@@ -3094,7 +3167,7 @@ operator|&
 name|STRC
 condition|)
 do|;
-comment|/* 			 * If the traced bit got turned off, 			 * then put the signal taken above back into p_sig 			 * and go back up to the top to rescan signals. 			 * This ensures that p_sig* and u_signal are consistent. 			 */
+comment|/* 			 * If the traced bit got turned off, 			 * go back up to the top to rescan signals. 			 * This ensures that p_sig* and u_signal are consistent. 			 */
 if|if
 condition|(
 operator|(
@@ -3107,16 +3180,16 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
+continue|continue;
+comment|/* 			 * If parent wants us to take the signal, 			 * then it will leave it in p->p_cursig; 			 * otherwise we just look for signals again. 			 */
 name|p
 operator|->
 name|p_sig
-operator||=
+operator|&=
+operator|~
 name|mask
 expr_stmt|;
-continue|continue;
-block|}
-comment|/* 			 * If parent wants us to take the signal, 			 * then it will leave it in p->p_cursig; 			 * otherwise we just look for signals again. 			 */
+comment|/* clear the old signal */
 name|sig
 operator|=
 name|p
@@ -3130,13 +3203,19 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 			 * If signal is being masked put it back 			 * into p_sig and look for other signals. 			 */
+comment|/* 			 * Put the new signal into p_sig. 			 * If signal is being masked, 			 * look for other signals. 			 */
 name|mask
 operator|=
 name|sigmask
 argument_list|(
 name|sig
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_sig
+operator||=
+name|mask
 expr_stmt|;
 if|if
 condition|(
@@ -3146,16 +3225,9 @@ name|p_sigmask
 operator|&
 name|mask
 condition|)
-block|{
-name|p
-operator|->
-name|p_sig
-operator||=
-name|mask
-expr_stmt|;
 continue|continue;
 block|}
-block|}
+comment|/* 		 * Decide whether the signal should be returned. 		 * Return the signal's number, or fall through 		 * to clear it from the pending mask. 		 */
 switch|switch
 condition|(
 operator|(
@@ -3181,7 +3253,9 @@ name|p_ppid
 operator|==
 literal|0
 condition|)
-continue|continue;
+break|break;
+comment|/* == ignore */
+comment|/* 			 * If there is a pending stop signal to process 			 * with default action, stop here, 			 * then clear the signal. 			 */
 if|if
 condition|(
 name|mask
@@ -3197,7 +3271,14 @@ name|p_flag
 operator|&
 name|STRC
 condition|)
-continue|continue;
+break|break;
+comment|/* == ignore */
+name|p
+operator|->
+name|p_cursig
+operator|=
+name|sig
+expr_stmt|;
 name|stop
 argument_list|(
 name|p
@@ -3229,7 +3310,7 @@ expr_stmt|;
 name|swtch
 argument_list|()
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
 elseif|else
 if|if
@@ -3240,13 +3321,15 @@ name|defaultignmask
 condition|)
 block|{
 comment|/* 				 * Except for SIGCONT, shouldn't get here. 				 * Default action is to ignore; drop it. 				 */
-continue|continue;
+break|break;
 comment|/* == ignore */
 block|}
 else|else
-goto|goto
-name|send
-goto|;
+return|return
+operator|(
+name|sig
+operator|)
+return|;
 comment|/*NOTREACHED*/
 case|case
 name|SIG_IGN
@@ -3273,40 +3356,31 @@ argument_list|(
 literal|"issig\n"
 argument_list|)
 expr_stmt|;
-continue|continue;
+break|break;
+comment|/* == ignore */
 default|default:
 comment|/* 			 * This signal has an action, let 			 * psig process it. 			 */
-goto|goto
-name|send
-goto|;
-block|}
-comment|/*NOTREACHED*/
-block|}
-comment|/* 	 * Didn't find a signal to send. 	 */
-name|p
-operator|->
-name|p_cursig
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|send
-label|:
-comment|/* 	 * Let psig process the signal. 	 */
 return|return
 operator|(
 name|sig
 operator|)
 return|;
 block|}
+name|p
+operator|->
+name|p_sig
+operator|&=
+operator|~
+name|mask
+expr_stmt|;
+comment|/* take the signal! */
+block|}
+comment|/* NOTREACHED */
+block|}
 end_block
 
 begin_comment
-comment|/*  * Put the argument process into the stopped  * state and notify the parent via wakeup.  * Signals are handled elsewhere.  */
+comment|/*  * Put the argument process into the stopped  * state and notify the parent via wakeup.  * Signals are handled elsewhere.  * The process must not be on the run queue.  */
 end_comment
 
 begin_expr_stmt
@@ -3351,13 +3425,19 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Perform the action specified by  * the current signal.  * The usual sequence is:  *	if (p->p_cursig || ISSIG(p))  *		psig();  * The signal bit has already been cleared by issig,  * and the current signal number stored in p->p_cursig.  */
+comment|/*  * Perform the action specified by the current signal.  * The usual sequence is:  *	if (sig = CURSIG(p))  *		psig(sig);  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|psig
-argument_list|()
-end_macro
+argument_list|(
+name|sig
+argument_list|)
+specifier|register
+name|int
+name|sig
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -3371,10 +3451,6 @@ name|u
 operator|.
 name|u_procp
 decl_stmt|;
-specifier|register
-name|int
-name|sig
-decl_stmt|;
 name|int
 name|mask
 decl_stmt|,
@@ -3386,19 +3462,9 @@ name|action
 decl_stmt|;
 do|do
 block|{
-name|sig
-operator|=
-name|p
-operator|->
-name|p_cursig
-expr_stmt|;
-name|mask
-operator|=
-name|sigmask
-argument_list|(
-name|sig
-argument_list|)
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|sig
@@ -3410,6 +3476,22 @@ argument_list|(
 literal|"psig"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|mask
+operator|=
+name|sigmask
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_sig
+operator|&=
+operator|~
+name|mask
+expr_stmt|;
 name|action
 operator|=
 name|u
@@ -3419,6 +3501,47 @@ index|[
 name|sig
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTRACE
+if|if
+condition|(
+name|KTRPOINT
+argument_list|(
+name|p
+argument_list|,
+name|KTR_PSIG
+argument_list|)
+condition|)
+name|ktrpsig
+argument_list|(
+name|p
+operator|->
+name|p_tracep
+argument_list|,
+name|sig
+argument_list|,
+name|action
+argument_list|,
+name|p
+operator|->
+name|p_flag
+operator|&
+name|SOMASK
+condition|?
+name|u
+operator|.
+name|u_oldmask
+else|:
+name|p
+operator|->
+name|p_sigmask
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|action
@@ -3530,12 +3653,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_cursig
-operator|=
-literal|0
-expr_stmt|;
 continue|continue;
 block|}
 name|u
@@ -3611,7 +3728,9 @@ comment|/* NOTREACHED */
 block|}
 do|while
 condition|(
-name|ISSIG
+name|sig
+operator|=
+name|CURSIG
 argument_list|(
 name|p
 argument_list|)
