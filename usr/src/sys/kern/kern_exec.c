@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exec.c	6.1	83/07/29	*/
+comment|/*	kern_exec.c	6.2	83/08/23	*/
 end_comment
 
 begin_include
@@ -2327,6 +2327,14 @@ operator|.
 name|u_ssize
 operator|=
 name|ss
+expr_stmt|;
+name|u
+operator|.
+name|u_prof
+operator|.
+name|pr_scale
+operator|=
+literal|0
 expr_stmt|;
 name|bad
 label|:
