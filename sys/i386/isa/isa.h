@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.h	5.7 (Berkeley) 5/9/91  *	$Id: isa.h,v 1.14 1995/02/25 20:26:14 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.h	5.7 (Berkeley) 5/9/91  *	$Id: isa.h,v 1.15 1995/06/14 07:38:31 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -254,6 +254,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_ASC2
+value|0x22B
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_GSC1
 value|0x270
 end_define
@@ -271,6 +282,28 @@ end_define
 
 begin_comment
 comment|/* Parallel Port #2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ASC3
+value|0x26B
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ASC4
+value|0x2AB
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 4 */
 end_comment
 
 begin_comment
@@ -306,12 +339,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_ASC5
+value|0x2EB
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 5 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_COM2
 value|0x2F8
 end_define
 
 begin_comment
 comment|/* COM2 i/o address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ASC6
+value|0x32B
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 6 */
 end_comment
 
 begin_comment
@@ -380,6 +435,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_ASC7
+value|0x36B
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 7 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_GSC3
 value|0x370
 end_define
@@ -412,6 +478,17 @@ end_comment
 
 begin_comment
 comment|/* 0x380 - 0x3AF Open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ASC8
+value|0x3AB
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 8 */
 end_comment
 
 begin_define
@@ -478,6 +555,17 @@ end_define
 
 begin_comment
 comment|/* COM3 i/o address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ASC1
+value|0x3EB
+end_define
+
+begin_comment
+comment|/* AmiScan addr.grp. 1 */
 end_comment
 
 begin_define
