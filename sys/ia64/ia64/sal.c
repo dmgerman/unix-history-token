@@ -346,6 +346,9 @@ name|sal_ap_wakeup_descriptor
 modifier|*
 name|dp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
 name|struct
 name|ia64_sal_result
 name|sal
@@ -364,6 +367,8 @@ decl_stmt|;
 name|int
 name|ipi
 decl_stmt|;
+endif|#
+directive|endif
 name|dp
 operator|=
 operator|(
