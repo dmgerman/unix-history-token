@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: users.c,v 1.3 1997/08/22 06:50:33 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc

@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.6 1997/08/13 06:45:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,7 +266,7 @@ comment|/* one line window for load average */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc

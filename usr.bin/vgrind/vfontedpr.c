@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vfontedpr.c,v 1.8 1997/08/25 06:36:03 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -709,7 +709,7 @@ value|printf("%s", x)
 end_define
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
