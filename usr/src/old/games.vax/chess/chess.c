@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	chess.c	4.1	82/10/24	"
+literal|"	chess.c	4.2	88/10/19	"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,22 +30,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|execl
-argument_list|(
-literal|"/usr/games/DUNGEON"
-argument_list|,
-literal|"chess"
-argument_list|,
-literal|"/usr/games/lib/chess"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Sorry, not today\n"
+literal|"chess: can't find /usr/games/lib/compat.\n"
 argument_list|)
 expr_stmt|;
 name|exit
