@@ -1388,6 +1388,11 @@ name|zfreecnt
 operator|+=
 name|nitems
 expr_stmt|;
+name|z
+operator|->
+name|znalloc
+operator|++
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1469,6 +1474,11 @@ name|z
 operator|->
 name|zfreecnt
 operator|--
+expr_stmt|;
+name|z
+operator|->
+name|znalloc
+operator|++
 expr_stmt|;
 block|}
 else|else
