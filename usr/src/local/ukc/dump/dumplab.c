@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumplab.c	1.1 (UKC) %G%"
+literal|"@(#)dumplab.c	1.2 (UKC) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,25 +22,13 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  *	This file included by Peter Collinson  *	to handle tape labelling   *	There are two dump parameters which are used to specify labels  *	-l	Give the basic label format string - this may contain   *		a single %s to insert the volume number string  *	-m	Map string - used to map volume numbers into a string  *  *	Routines are:  *	storelabel(arg)		- called from main() to store a label format  *  *	storelabelmap(arg)	- called from main() to process a map argument  *				- which is  *					string		simple string  *					string-string	expanded by incrementing  *					string,string,..list of the above  *	char *  *	createlabel(volno)	- returns a label appropriate for the volume  *					  *	initialtape()		- called to print an operator message asking for  *				- the 1st tape   *	  *	labelest(etapes)	- checks if there are enough tape labels  *				- specified for a given dump  *  *	labelcheck()		- reads one record from tape  *				- checks that the labels match  *				- backspace one record back  *				- so that multi-volume dumps work  *  *	log_volume()		- write a logfile entry for the volume  *	  *	This file also contains the rewind_offline() routine so that  *	the tape can be dismounted at the end of each volume write  *  */
+comment|/*  *	This file included by Peter Collinson  *	to handle tape labelling   *	There are two dump parameters which are used to specify labels  *	-l	Give the basic label format string - this may contain   *		a single %s to insert the volume number string  *	-m	Map string - used to map volume numbers into a string  *  *	Routines are:  *	storelabel(arg)		- called from main() to store a label format  *  *	storelabelmap(arg)	- called from main() to process a map argument  *				- which is  *					string		simple string  *					string-string	expanded by incrementing  *					string,string,..list of the above  *	char *  *	createlabel(volno)	- returns a label appropriate for the volume  *					  *	initialtape()		- called to print an operator message asking for  *				- the 1st tape   *	  *	labelest(etapes)	- checks if there are enough tape labels  *				- specified for a given dump  *  *	labelcheck()		- reads one record from tape  *				- checks that the labels match  *				- backspace one record back  *				- so that multi-volume dumps work  *  *	log_volume()		- write a logfile entry for the volume  *	  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"dump.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mtio.h>
 end_include
 
 begin_include
@@ -101,6 +89,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|userlabel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if user has given a label */
+end_comment
+
+begin_decl_stmt
+name|int
 name|labchk
 decl_stmt|;
 end_decl_stmt
@@ -142,9 +140,13 @@ end_decl_stmt
 
 begin_block
 block|{
-name|labelarg
+name|labfmt
 operator|=
 name|arg
+expr_stmt|;
+name|userlabel
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_block
@@ -193,6 +195,15 @@ modifier|*
 name|labskip
 parameter_list|()
 function_decl|;
+name|char
+modifier|*
+name|strstore
+parameter_list|()
+function_decl|;
+name|userlabel
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 *	Parse the argument looking for a single string 	 */
 for|for
 control|(
@@ -206,9 +217,6 @@ condition|;
 name|ss
 operator|=
 name|es
-operator|,
-name|labct
-operator|++
 control|)
 block|{
 name|es
@@ -244,7 +252,19 @@ argument_list|,
 name|LABMAX
 argument_list|)
 expr_stmt|;
-name|lablist
+if|if
+condition|(
+operator|*
+name|ss
+operator|==
+literal|'\0'
+condition|)
+name|labfatal
+argument_list|(
+literal|"Zero length tape label found\n"
+argument_list|)
+expr_stmt|;
+name|labarg
 index|[
 name|labct
 operator|++
@@ -257,7 +277,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lastch
+name|lastc
 operator|==
 literal|0
 condition|)
@@ -265,7 +285,7 @@ break|break;
 comment|/* end of list */
 if|if
 condition|(
-name|lastch
+name|lastc
 operator|==
 literal|'-'
 condition|)
@@ -298,13 +318,18 @@ argument_list|(
 literal|"Range has the format<string>-<string>\n"
 argument_list|)
 expr_stmt|;
-name|lastch
+name|lastc
 operator|=
 operator|*
 name|es
 expr_stmt|;
+if|if
+condition|(
+name|lastc
+condition|)
 operator|*
 name|es
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -405,15 +430,11 @@ condition|;
 control|)
 block|{
 comment|/* start incrementing */
-for|for
-control|(
 name|carry
 operator|=
 literal|0
-init|;
-name|carry
-condition|;
-control|)
+expr_stmt|;
+do|do
 block|{
 if|if
 condition|(
@@ -443,8 +464,10 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+operator|(
 operator|*
 name|incr
+operator|)
 operator|++
 expr_stmt|;
 block|}
@@ -477,8 +500,10 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+operator|(
 operator|*
 name|incr
+operator|)
 operator|++
 expr_stmt|;
 block|}
@@ -511,8 +536,10 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+operator|(
 operator|*
 name|incr
+operator|)
 operator|++
 expr_stmt|;
 block|}
@@ -543,6 +570,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+do|while
+condition|(
+name|carry
+condition|)
+do|;
 if|if
 condition|(
 name|labct
@@ -556,7 +588,7 @@ argument_list|,
 name|LABMAX
 argument_list|)
 expr_stmt|;
-name|lablist
+name|labarg
 index|[
 name|labct
 operator|++
@@ -606,6 +638,11 @@ name|char
 modifier|*
 name|dest
 decl_stmt|;
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
 name|dest
 operator|=
 name|malloc
@@ -642,7 +679,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Create a tape label from a volume number  *	if have not had a -l or -m parameter - return none  *	if have not had a -l parameter - set format to %s  *	if have not had a -m paramter - pass the volume number as a string  */
+comment|/*  *	Create a tape label from a volume number  */
 end_comment
 
 begin_function
@@ -666,15 +703,14 @@ name|LBLSIZE
 index|]
 decl_stmt|;
 specifier|static
+name|int
+name|lastvol
+decl_stmt|;
 name|char
 name|volbuf
 index|[
 literal|8
 index|]
-decl_stmt|;
-specifier|static
-name|int
-name|lastvol
 decl_stmt|;
 specifier|register
 name|char
@@ -683,11 +719,7 @@ name|arg
 decl_stmt|;
 if|if
 condition|(
-name|labfmt
-operator|==
-name|NULL
-operator|&&
-name|labct
+name|userlabel
 operator|==
 literal|0
 condition|)
@@ -703,18 +735,23 @@ name|volno
 operator|==
 name|lastvol
 condition|)
+comment|/* cache */
 return|return
 operator|(
 name|buf
 operator|)
 return|;
+name|lastvol
+operator|=
+name|volno
+expr_stmt|;
 if|if
 condition|(
-name|labelfmt
+name|labfmt
 operator|==
 name|NULL
 condition|)
-name|labelfmt
+name|labfmt
 operator|=
 literal|"%s"
 expr_stmt|;
@@ -745,11 +782,14 @@ block|}
 else|else
 name|arg
 operator|=
-name|lablist
+name|labarg
 index|[
 name|volno
+operator|-
+literal|1
 index|]
 expr_stmt|;
+comment|/* volumes run 1-> */
 operator|(
 name|void
 operator|)
@@ -757,17 +797,11 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-name|labelfmt
+name|labfmt
 argument_list|,
-name|lablist
-index|[
-name|volno
-operator|-
-literal|1
-index|]
+name|arg
 argument_list|)
 expr_stmt|;
-comment|/* volumes run 1-> */
 name|buf
 index|[
 name|LBLSIZE
@@ -777,6 +811,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* Truncate to correct size */
 return|return
 operator|(
 name|buf
@@ -934,10 +969,6 @@ name|s_spcl
 operator|.
 name|c_label
 decl_stmt|;
-name|struct
-name|mtop
-name|mtop
-decl_stmt|;
 if|if
 condition|(
 name|labchk
@@ -1025,55 +1056,15 @@ literal|0
 condition|)
 block|{
 comment|/* skip back one record */
-name|mtop
-operator|.
-name|mt_op
-operator|=
-name|MTBSR
-expr_stmt|;
-name|mtop
-operator|.
-name|mt_count
-operator|=
-literal|1
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RDUMP
 if|if
 condition|(
-name|rmtioctl
+name|backone
 argument_list|(
 name|fd
-argument_list|,
-name|MTIOCTOP
-argument_list|,
-operator|&
-name|mtop
 argument_list|)
 operator|<
 literal|0
 condition|)
-else|#
-directive|else
-else|RDUMP
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|MTIOCTOP
-argument_list|,
-operator|&
-name|mtop
-argument_list|)
-operator|<
-literal|0
-condition|)
-endif|#
-directive|endif
-endif|RDUMP
 name|labfatal
 argument_list|(
 literal|"Label check cannot backspace tape\n"
@@ -1114,8 +1105,17 @@ end_comment
 
 begin_macro
 name|log_volume
-argument_list|()
+argument_list|(
+argument|tlabel
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tlabel
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1146,7 +1146,7 @@ name|logfd
 operator|=
 name|fopen
 argument_list|(
-name|dumpvolume
+name|dumpvolumes
 argument_list|,
 literal|"a"
 argument_list|)
@@ -1312,129 +1312,6 @@ argument_list|)
 expr_stmt|;
 name|dumpabort
 argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  *	put a tape drive offline  */
-end_comment
-
-begin_macro
-name|rewind_offline
-argument_list|(
-argument|fd
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|struct
-name|mtop
-name|mtop
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|RDUMP
-define|#
-directive|define
-name|ioctl
-value|rmtioctl
-endif|#
-directive|endif
-endif|RDUMP
-name|mtop
-operator|.
-name|mt_op
-operator|=
-name|MTWEOF
-expr_stmt|;
-name|mtop
-operator|.
-name|mt_count
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|MTIOCTOP
-argument_list|,
-operator|&
-name|mtop
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|perror
-argument_list|(
-literal|"Cannot write end of file record"
-argument_list|)
-expr_stmt|;
-name|mtop
-operator|.
-name|mt_op
-operator|=
-name|MTWEOF
-expr_stmt|;
-name|mtop
-operator|.
-name|mt_count
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|MTIOCTOP
-argument_list|,
-operator|&
-name|mtop
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|perror
-argument_list|(
-literal|"Cannot write end of file record"
-argument_list|)
-expr_stmt|;
-name|mtop
-operator|.
-name|mt_op
-operator|=
-name|MTOFFL
-expr_stmt|;
-name|mtop
-operator|.
-name|mt_count
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|MTIOCTOP
-argument_list|,
-operator|&
-name|mtop
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|perror
-argument_list|(
-literal|"Cannot put the tape offline"
-argument_list|)
 expr_stmt|;
 block|}
 end_block

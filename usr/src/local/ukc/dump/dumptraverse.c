@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumptraverse.c	5.3 (Berkeley) 1/9/86"
+literal|"@(#)dumptraverse.c	1.2 (UKC) %G%	5.3 (Berkeley) 1/9/86"
 decl_stmt|;
 end_decl_stmt
 
@@ -1430,6 +1430,23 @@ operator|.
 name|c_magic
 operator|=
 name|NFS_MAGIC
+expr_stmt|;
+if|if
+condition|(
+name|newtape
+condition|)
+comment|/* add label */
+name|strcpy
+argument_list|(
+name|spcl
+operator|.
+name|c_label
+argument_list|,
+name|createlabel
+argument_list|(
+name|tapeno
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|spcl
 operator|.

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpmain.c	5.6 (Berkeley) 2/23/87"
+literal|"@(#)dumpmain.c	1.3 (UKC) %G%	5.6 (Berkeley) 2/23/87"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,27 @@ end_decl_stmt
 
 begin_comment
 comment|/* Assume non-cartridge tape */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|labchk
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* check labels */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rewindoffline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* put tape offline after every write */
 end_comment
 
 begin_ifdef
@@ -504,6 +525,72 @@ name|notify
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'l'
+case|:
+comment|/* set a label format */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|storelabel
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'m'
+case|:
+comment|/* set a label map */
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|storelabelmap
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'t'
+case|:
+name|labchk
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|rewindoffline
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 name|fprintf
 argument_list|(
@@ -882,7 +969,10 @@ name|spcl
 operator|.
 name|c_label
 argument_list|,
-literal|"none"
+name|createlabel
+argument_list|(
+literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|gethostname
@@ -985,6 +1075,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|initialtape
+argument_list|()
+expr_stmt|;
+comment|/* print label message if required */
 name|fi
 operator|=
 name|open
@@ -1334,6 +1428,12 @@ argument_list|,
 name|fetapes
 argument_list|)
 expr_stmt|;
+name|labelest
+argument_list|(
+name|fetapes
+argument_list|)
+expr_stmt|;
+comment|/* check we have enough labels */
 name|alloctape
 argument_list|()
 expr_stmt|;
