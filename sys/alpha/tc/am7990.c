@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -157,6 +151,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
+end_include
 
 begin_include
 include|#
@@ -851,11 +851,6 @@ argument_list|)
 expr_stmt|;
 name|bpfattach
 argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_bpf
-argument_list|,
 name|ifp
 argument_list|,
 name|DLT_EN10MB
@@ -2562,8 +2557,6 @@ block|{
 name|bpf_mtap
 argument_list|(
 name|ifp
-operator|->
-name|if_bpf
 argument_list|,
 name|m
 argument_list|)
@@ -4111,8 +4104,6 @@ condition|)
 name|bpf_mtap
 argument_list|(
 name|ifp
-operator|->
-name|if_bpf
 argument_list|,
 name|m
 argument_list|)
