@@ -444,9 +444,11 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
+name|__restrict
 parameter_list|,
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|socklen_t
 parameter_list|)
@@ -462,9 +464,11 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
