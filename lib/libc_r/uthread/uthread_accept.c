@@ -71,7 +71,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-comment|/* Lock teh file descriptor: */
+comment|/* Lock the file descriptor: */
 if|if
 condition|(
 operator|(
@@ -150,6 +150,26 @@ operator|.
 name|fd
 operator|=
 name|fd
+expr_stmt|;
+name|_thread_run
+operator|->
+name|data
+operator|.
+name|fd
+operator|.
+name|fname
+operator|=
+name|__FILE__
+expr_stmt|;
+name|_thread_run
+operator|->
+name|data
+operator|.
+name|fd
+operator|.
+name|branch
+operator|=
+name|__LINE__
 expr_stmt|;
 comment|/* Set the timeout: */
 name|_thread_kern_set_timeout

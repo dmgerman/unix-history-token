@@ -40,8 +40,8 @@ file|"pthread_private.h"
 end_include
 
 begin_function
-name|int
-name|_thread_cleanup_push
+name|void
+name|pthread_cleanup_push
 parameter_list|(
 name|void
 function_decl|(
@@ -62,9 +62,6 @@ name|struct
 name|pthread_cleanup
 modifier|*
 name|new
-decl_stmt|;
-name|int
-name|ret
 decl_stmt|;
 if|if
 condition|(
@@ -115,29 +112,13 @@ name|cleanup
 operator|=
 name|new
 expr_stmt|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
 block|}
-else|else
-block|{
-name|ret
-operator|=
-name|ENOMEM
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 name|void
-name|_thread_cleanup_pop
+name|pthread_cleanup_pop
 parameter_list|(
 name|int
 name|execute

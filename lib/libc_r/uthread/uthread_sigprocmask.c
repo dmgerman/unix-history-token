@@ -141,12 +141,9 @@ break|break;
 comment|/* Trap invalid actions: */
 default|default:
 comment|/* Return an invalid argument: */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EINVAL
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=

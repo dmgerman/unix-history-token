@@ -101,11 +101,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Suspend the thread. */
+name|PTHREAD_NEW_STATE
+argument_list|(
 name|pthread
-operator|->
-name|state
-operator|=
+argument_list|,
 name|PS_SUSPENDED
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -123,12 +124,9 @@ literal|1
 condition|)
 block|{
 comment|/* No such thread */
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|ESRCH
-argument_list|)
 expr_stmt|;
 block|}
 return|return

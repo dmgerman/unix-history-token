@@ -37,6 +37,7 @@ begin_function
 name|int
 name|nanosleep
 parameter_list|(
+specifier|const
 name|struct
 name|timespec
 modifier|*

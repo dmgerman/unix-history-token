@@ -42,6 +42,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+comment|/* Check for invalid arguments: */
 if|if
 condition|(
 name|attr
@@ -57,19 +58,13 @@ name|stacksize
 operator|<
 name|PTHREAD_STACK_MIN
 condition|)
-block|{
-name|errno
+name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 else|else
 block|{
+comment|/* Save the stack size: */
 operator|(
 operator|*
 name|attr

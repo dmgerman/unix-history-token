@@ -73,6 +73,17 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_thread_autoinit_dummy_decl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Threaded process initialization  */
+end_comment
+
 begin_function
 name|void
 name|_thread_init
@@ -90,16 +101,59 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
+comment|/* Ensure that the auto-initialization routine is linked in: */
+name|_thread_autoinit_dummy_decl
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
 condition|(
 name|_thread_initial
 condition|)
-block|{
 comment|/* Only initialise the threaded application once. */
-block|}
+return|return;
+comment|/* Get the standard I/O flags before messing with them : */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|(
+name|_pthread_stdio_flags
+index|[
+name|i
+index|]
+operator|=
+name|_thread_sys_fcntl
+argument_list|(
+name|i
+argument_list|,
+name|F_GETFL
+argument_list|,
+name|NULL
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot get stdio flags"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create a pipe that is written to by the signal handler to prevent 	 * signals being missed in calls to _thread_sys_select:  	 */
-elseif|else
 if|if
 condition|(
 name|_thread_sys_pipe

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_writev.c,v 1.3 1997/04/01 22:44:18 jb Exp $  *  */
 end_comment
 
 begin_include
@@ -69,63 +69,14 @@ name|iovcnt
 parameter_list|)
 block|{
 name|int
-name|nonblock
-decl_stmt|;
-name|int
 name|ret
 decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+comment|/* Lock the file descriptor for read and write: */
 if|if
 condition|(
-name|fd
-operator|<
-literal|0
-operator|||
-name|fd
-operator|>
-name|_thread_dtablesize
-operator|||
-name|_thread_fd_table
-index|[
-name|fd
-index|]
-operator|==
-name|NULL
-condition|)
-block|{
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
-name|EBADF
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|nonblock
-operator|=
-name|_thread_fd_table
-index|[
-name|fd
-index|]
-operator|->
-name|flags
-operator|&
-name|O_NONBLOCK
-operator|)
-operator|==
-literal|0
-operator|&&
 operator|(
 name|ret
 operator|=
@@ -142,14 +93,11 @@ argument_list|,
 name|__LINE__
 argument_list|)
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
-comment|/* Cannot lock file descriptor. */
-block|}
-else|else
-block|{
+comment|/* Perform a non-blocking writev syscall: */
 while|while
 condition|(
 operator|(
@@ -170,7 +118,16 @@ condition|)
 block|{
 if|if
 condition|(
-name|nonblock
+operator|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|flags
+operator|&
+name|O_NONBLOCK
+operator|)
 operator|==
 literal|0
 operator|&&
@@ -206,6 +163,13 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Reset the interrupted operation flag: */
+name|_thread_run
+operator|->
+name|interrupted
+operator|=
+literal|0
+expr_stmt|;
 name|_thread_kern_sched_state
 argument_list|(
 name|PS_FDW_WAIT
@@ -215,11 +179,12 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Check if the operation was 				 * interrupted by a signal 				 */
 if|if
 condition|(
-name|errno
-operator|==
-name|EINTR
+name|_thread_run
+operator|->
+name|interrupted
 condition|)
 block|{
 name|ret
@@ -235,13 +200,6 @@ block|{
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|nonblock
-operator|==
-literal|0
-condition|)
-block|{
 name|_thread_fd_unlock
 argument_list|(
 name|fd
@@ -249,7 +207,6 @@ argument_list|,
 name|FD_RDWR
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(

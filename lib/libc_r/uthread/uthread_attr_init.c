@@ -54,6 +54,7 @@ decl_stmt|;
 name|pthread_attr_t
 name|pattr
 decl_stmt|;
+comment|/* Allocate memory for the attribute object: */
 if|if
 condition|(
 operator|(
@@ -74,19 +75,14 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|errno
+comment|/* Insufficient memory: */
+name|ret
 operator|=
 name|ENOMEM
 expr_stmt|;
-name|ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 else|else
 block|{
+comment|/* Initialise the attribute object with the defaults: */
 name|memcpy
 argument_list|(
 name|pattr
@@ -101,6 +97,7 @@ name|pthread_attr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Return a pointer to the attribute object: */
 operator|*
 name|attr
 operator|=

@@ -309,7 +309,7 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"--------------------\nThread %p prio %3d state %s\n"
+literal|"--------------------\nThread %p prio %3d state %s [%s:%d]\n"
 argument_list|,
 name|pthread
 argument_list|,
@@ -323,6 +323,14 @@ name|j
 index|]
 operator|.
 name|name
+argument_list|,
+name|pthread
+operator|->
+name|fname
+argument_list|,
+name|pthread
+operator|->
+name|lineno
 argument_list|)
 expr_stmt|;
 name|_thread_sys_write
@@ -406,6 +414,15 @@ block|{
 comment|/* File descriptor read lock wait: */
 case|case
 name|PS_FDLR_WAIT
+case|:
+case|case
+name|PS_FDLW_WAIT
+case|:
+case|case
+name|PS_FDR_WAIT
+case|:
+case|case
+name|PS_FDW_WAIT
 case|:
 comment|/* Write the lock details: */
 name|sprintf
@@ -577,13 +594,21 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"Thread %p prio %3d\n"
+literal|"Thread %p prio %3d [%s:%d]\n"
 argument_list|,
 name|pthread
 argument_list|,
 name|pthread
 operator|->
 name|pthread_priority
+argument_list|,
+name|pthread
+operator|->
+name|fname
+argument_list|,
+name|pthread
+operator|->
+name|lineno
 argument_list|)
 expr_stmt|;
 name|_thread_sys_write
@@ -600,6 +625,26 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Output a header for file descriptors: */
+name|strcpy
+argument_list|(
+name|s
+argument_list|,
+literal|"\n\n=============\nFILE DESCRIPTOR TABLE\n\n"
+argument_list|)
+expr_stmt|;
+name|_thread_sys_write
+argument_list|(
+name|fd
+argument_list|,
+name|s
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Enter a loop to report file descriptor lock usage: */
 for|for
 control|(

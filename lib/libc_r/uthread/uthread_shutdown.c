@@ -188,12 +188,9 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|_thread_seterrno
-argument_list|(
-name|_thread_run
-argument_list|,
+name|errno
+operator|=
 name|EBADF
-argument_list|)
 expr_stmt|;
 name|ret
 operator|=
