@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)disklabel.h	8.1 (Berkeley) 6/2/93  * $Id: disklabel.h,v 1.15 1995/05/16 07:52:17 davidg Exp $  */
+comment|/*  * Copyright (c) 1987, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)disklabel.h	8.1 (Berkeley) 6/2/93  * $Id: disklabel.h,v 1.16 1995/05/30 08:14:17 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -42,10 +42,6 @@ comment|/*  * Each disk has a label which includes information about the hardwar
 end_comment
 
 begin_comment
-comment|/*  * XXX the following will go away when conversion to the slice version is  * complete: OURPART, RAWPART, readMSPtolabel, readMBRtolabel, dkminor,  * the DOSified readdisklabel, DOS stuff in this file.  */
-end_comment
-
-begin_comment
 comment|/* XXX these should be defined per controller (or drive) elsewhere, not here! */
 end_comment
 
@@ -75,125 +71,6 @@ end_define
 
 begin_comment
 comment|/* offset of label in sector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OURPART
-value|2
-end_define
-
-begin_comment
-comment|/* partition is 'all BSD' */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAWPART
-value|3
-end_define
-
-begin_comment
-comment|/* partition is 'all device' */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|readMSPtolabel
-value|readMBRtolabel
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|readMSPtolabel
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|readMSPtolabel
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* zap calls if irrelevant */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|tahoe
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RAWPART
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RAWPART
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RAWPART
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OURPART
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|OURPART
-value|RAWPART
-end_define
-
-begin_comment
-comment|/* by default it's all ours */
 end_comment
 
 begin_endif
@@ -666,25 +543,6 @@ directive|define
 name|DTYPE_FLOPPY
 value|10
 comment|/* floppy */
-comment|/* d_subtype values: */
-define|#
-directive|define
-name|DSTYPE_INDOSPART
-value|0x8
-comment|/* is inside dos partition */
-define|#
-directive|define
-name|DSTYPE_DOSPART
-parameter_list|(
-name|s
-parameter_list|)
-value|((s)& 3)
-comment|/* dos partition number */
-define|#
-directive|define
-name|DSTYPE_GEOMETRY
-value|0x10
-comment|/* drive params in label */
 ifdef|#
 directive|ifdef
 name|DKTYPENAMES
@@ -1184,17 +1042,6 @@ begin_comment
 comment|/* 386BSD partition type */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MBR_PTYPE_FreeBSD
-value|0xa5
-end_define
-
-begin_comment
-comment|/* FreeBSD partition type */
-end_comment
-
 begin_struct
 struct|struct
 name|dos_partition
@@ -1252,17 +1099,6 @@ comment|/* partition size in sectors */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|dos_partition
-name|dos_partitions
-index|[
-name|NDOSPART
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -1445,18 +1281,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|dkminor
-parameter_list|(
-name|unit
-parameter_list|,
-name|part
-parameter_list|)
-value|dkmakeminor((unit), 0, (part))
-end_define
-
-begin_define
-define|#
-directive|define
 name|dkmodpart
 parameter_list|(
 name|dev
@@ -1558,51 +1382,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|correct_readdisklabel
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-name|dev
-operator|,
-name|d_strategy_t
-operator|*
-name|strat
-operator|,
-expr|struct
-name|disklabel
-operator|*
-name|lp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|correct_writedisklabel
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-name|dev
-operator|,
-name|d_strategy_t
-operator|*
-name|strat
-operator|,
-expr|struct
-name|disklabel
-operator|*
-name|lp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|diskerr
 name|__P
@@ -1671,12 +1450,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|dkbad
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -1695,63 +1468,10 @@ expr|struct
 name|disklabel
 operator|*
 name|lp
-operator|,
-expr|struct
-name|dos_partition
-operator|*
-name|dp
-operator|,
-expr|struct
-name|dkbad
-operator|*
-name|bdp
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|readMBRtolabel
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-name|dev
-operator|,
-name|d_strategy_t
-operator|*
-name|strat
-operator|,
-expr|struct
-name|disklabel
-operator|*
-name|lp
-operator|,
-expr|struct
-name|dos_partition
-operator|*
-name|dp
-operator|,
-name|int
-operator|*
-name|cyl
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
