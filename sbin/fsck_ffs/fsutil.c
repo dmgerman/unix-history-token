@@ -2655,7 +2655,7 @@ name|void
 name|slowio_start
 parameter_list|()
 block|{
-comment|/* Delay one in every 8 operations by 16 times the average IO delay */
+comment|/* Delay one in every 8 operations */
 name|slowio_pollcnt
 operator|=
 operator|(
@@ -2673,13 +2673,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|usleep
-argument_list|(
-name|slowio_delay_usec
-operator|*
-literal|16
-argument_list|)
-expr_stmt|;
 name|gettimeofday
 argument_list|(
 operator|&
@@ -2758,11 +2751,11 @@ if|if
 condition|(
 name|delay_usec
 operator|>
-literal|1000000
+literal|2500000
 condition|)
 name|delay_usec
 operator|=
-literal|1000000
+literal|2500000
 expr_stmt|;
 name|slowio_delay_usec
 operator|=
@@ -2775,6 +2768,20 @@ name|delay_usec
 operator|)
 operator|>>
 literal|6
+expr_stmt|;
+comment|/* delay by 8 times the average IO delay */
+if|if
+condition|(
+name|slowio_delay_usec
+operator|>
+literal|64
+condition|)
+name|usleep
+argument_list|(
+name|slowio_delay_usec
+operator|*
+literal|8
+argument_list|)
 expr_stmt|;
 block|}
 end_function
