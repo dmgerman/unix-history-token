@@ -160,7 +160,7 @@ end_include
 
 begin_decl_stmt
 name|struct
-name|sockaddr_in
+name|sockaddr
 name|hisctladdr
 decl_stmt|;
 end_decl_stmt
@@ -176,7 +176,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sockaddr_in
+name|sockaddr
 name|myctladdr
 decl_stmt|;
 end_decl_stmt
@@ -658,6 +658,63 @@ block|}
 end_function
 
 begin_macro
+name|login_incorrect
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|char
+name|passwd
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"Password: "
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|readline
+argument_list|(
+name|passwd
+argument_list|,
+sizeof|sizeof
+name|passwd
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"passwd read\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Login incorrect.\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|doit
 argument_list|(
 argument|sinp
@@ -725,6 +782,8 @@ name|user
 argument_list|,
 sizeof|sizeof
 name|user
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -761,12 +820,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"user unknown\n"
-argument_list|)
+name|login_incorrect
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -782,12 +837,8 @@ name|_PATH_UUCICO
 argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Login incorrect."
-argument_list|)
+name|login_incorrect
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -823,6 +874,8 @@ name|passwd
 argument_list|,
 sizeof|sizeof
 name|passwd
+argument_list|,
+literal|1
 argument_list|)
 operator|<
 literal|0
@@ -864,7 +917,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Login incorrect."
+literal|"Login incorrect.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -934,7 +987,7 @@ directive|ifdef
 name|BSD4_2
 name|execl
 argument_list|(
-name|UUCICO
+name|_PATH_UUCICO
 argument_list|,
 literal|"uucico"
 argument_list|,
@@ -956,24 +1009,29 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|readline
 argument_list|(
-name|p
+argument|start
 argument_list|,
-name|n
+argument|num
+argument_list|,
+argument|pass
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|p
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|char
+name|start
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|n
+name|num
+decl_stmt|,
+name|pass
 decl_stmt|;
 end_decl_stmt
 
@@ -981,6 +1039,19 @@ begin_block
 block|{
 name|char
 name|c
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|start
+decl_stmt|;
+specifier|register
+name|int
+name|n
+init|=
+name|num
 decl_stmt|;
 while|while
 condition|(
@@ -1025,6 +1096,20 @@ operator|==
 literal|'\r'
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|==
+name|start
+operator|&&
+name|pass
+condition|)
+block|{
+name|n
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 operator|*
 name|p
 operator|=
@@ -1035,6 +1120,23 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|c
+operator|==
+literal|025
+condition|)
+block|{
+name|n
+operator|=
+name|num
+expr_stmt|;
+name|p
+operator|=
+name|start
+expr_stmt|;
+continue|continue;
 block|}
 operator|*
 name|p

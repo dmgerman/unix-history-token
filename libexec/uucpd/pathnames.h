@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_UUCICO
-value|"/usr/lib/uucp/uucico"
+value|"/usr/libexec/uucp/uucico"
 end_define
 
 end_unit
