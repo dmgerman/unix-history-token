@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)buf.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)buf.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -58,6 +58,16 @@ modifier|*
 name|av_back
 decl_stmt|;
 comment|/* position on free list if not BUSY */
+name|struct
+name|buf
+modifier|*
+name|b_blockf
+decl_stmt|,
+modifier|*
+modifier|*
+name|b_blockb
+decl_stmt|;
+comment|/* associated vnode */
 define|#
 directive|define
 name|b_actf
@@ -132,6 +142,10 @@ comment|/* indirect block */
 block|}
 name|b_un
 union|;
+name|daddr_t
+name|b_lblkno
+decl_stmt|;
+comment|/* logical block number */
 name|daddr_t
 name|b_blkno
 decl_stmt|;
@@ -901,6 +915,17 @@ end_define
 
 begin_comment
 comment|/* request allocated buffer be cleared */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_SYNC
+value|0x2
+end_define
+
+begin_comment
+comment|/* do all allocations synchronously */
 end_comment
 
 end_unit
