@@ -10978,14 +10978,6 @@ name|th
 operator|->
 name|th_ack
 expr_stmt|;
-name|tp
-operator|->
-name|snd_cwnd
-operator|=
-name|tp
-operator|->
-name|t_maxseg
-expr_stmt|;
 comment|/* 		 * Set snd_cwnd to one segment beyond acknowledged offset 		 * (tp->snd_una has not yet been updated when this function  		 *  is called) 		 */
 name|tp
 operator|->
