@@ -3732,6 +3732,8 @@ name|int
 name|off
 decl_stmt|,
 name|icmp6len
+decl_stmt|,
+name|code
 decl_stmt|;
 block|{
 name|struct

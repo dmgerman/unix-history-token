@@ -2298,6 +2298,9 @@ name|am79c930_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|int
+name|how
+decl_stmt|;
 block|{
 comment|/* zero the bank select register, and leave it that way.. */
 name|bus_space_write_1

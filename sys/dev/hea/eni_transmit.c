@@ -237,6 +237,9 @@ name|Eni_unit
 modifier|*
 name|eup
 decl_stmt|;
+name|int
+name|rx
+decl_stmt|;
 name|u_long
 modifier|*
 name|dma_list

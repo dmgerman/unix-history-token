@@ -6641,6 +6641,9 @@ name|icmphdr_t
 modifier|*
 name|icmp
 decl_stmt|;
+name|int
+name|rev
+decl_stmt|;
 block|{
 if|if
 condition|(

@@ -9173,6 +9173,9 @@ decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
+name|int
+name|is_syn
+decl_stmt|;
 block|{
 name|int
 name|opt

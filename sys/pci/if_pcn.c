@@ -1047,6 +1047,9 @@ decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
+name|int
+name|val
+decl_stmt|;
 block|{
 name|CSR_WRITE_4
 argument_list|(
@@ -1168,6 +1171,9 @@ name|sc
 decl_stmt|;
 name|int
 name|reg
+decl_stmt|;
+name|int
+name|val
 decl_stmt|;
 block|{
 name|CSR_WRITE_4
