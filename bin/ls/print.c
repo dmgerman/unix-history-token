@@ -177,6 +177,7 @@ specifier|static
 name|void
 name|printlink
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 parameter_list|)
@@ -400,7 +401,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
-name|int
+name|unit_t
 name|unitp
 index|[]
 init|=
@@ -2580,7 +2581,7 @@ decl_stmt|;
 name|int
 name|j
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -2964,6 +2965,7 @@ specifier|static
 name|void
 name|printlink
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 name|p
@@ -3213,6 +3215,7 @@ comment|/*  * Output in "human-readable" format.  Uses 3 digits max and puts  * 
 end_comment
 
 begin_function
+specifier|static
 name|unit_t
 name|unit_adjust
 parameter_list|(
@@ -3227,8 +3230,7 @@ decl_stmt|;
 name|unit_t
 name|unit
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|unit_sz
 decl_stmt|;
 name|abval
@@ -3243,6 +3245,9 @@ name|unit_sz
 operator|=
 name|abval
 condition|?
+operator|(
+name|u_int
+operator|)
 name|ilogb
 argument_list|(
 name|abval
@@ -3256,6 +3261,9 @@ if|if
 condition|(
 name|unit_sz
 operator|>=
+operator|(
+name|u_int
+operator|)
 name|UNIT_MAX
 condition|)
 block|{
