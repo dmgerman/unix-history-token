@@ -151,6 +151,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|int
 name|fputchar
 parameter_list|()
