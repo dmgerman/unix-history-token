@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/asi.h>
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<machine/metadata.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
 end_include
 
 begin_include
