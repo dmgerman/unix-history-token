@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sync.c,v 1.1 1998/01/10 00:31:07 tom Exp $"
+literal|"$Id: sync.c,v 1.2 2000/03/04 20:28:16 tom Exp $"
 argument_list|)
 end_macro
 
@@ -660,7 +660,7 @@ argument_list|)
 expr_stmt|;
 name|ptext
 argument_list|(
-literal|"ACK recieved: "
+literal|"ACK received: "
 argument_list|)
 expr_stmt|;
 name|putln
@@ -1489,7 +1489,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	sync_symmary(test_list, status, ch) ** **	Print out the test results. */
+comment|/* **	sync_summary(test_list, status, ch) ** **	Print out the test results. */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** Thi
 end_comment
 
 begin_comment
-comment|/*  * Operating system dependant functions.  We assume the POSIX API.  * Note: on strict-POSIX systems (including BSD/OS) the select_delay_type  * global has no effect.  */
+comment|/*  * Operating system dependent functions.  We assume the POSIX API.  * Note: on strict-POSIX systems (including BSD/OS) the select_delay_type  * global has no effect.  */
 end_comment
 
 begin_if
@@ -101,7 +101,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: sysdep.c,v 1.6 1999/09/04 13:45:00 tom Exp $"
+literal|"$Id: sysdep.c,v 1.7 2000/03/04 21:02:11 tom Exp $"
 argument_list|)
 end_macro
 

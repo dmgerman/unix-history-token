@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_setup.c,v 1.55 1999/08/21 23:06:08 tom Exp $"
+literal|"$Id: lib_setup.c,v 1.59 2000/02/13 01:01:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -289,10 +289,16 @@ end_function
 begin_decl_stmt
 name|int
 name|LINES
+init|=
+literal|0
 decl_stmt|,
 name|COLS
+init|=
+literal|0
 decl_stmt|,
 name|TABSIZE
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -347,8 +353,8 @@ name|columns
 expr_stmt|;
 block|}
 else|else
-comment|/* usually want to query LINES and COLUMNS from environment */
 block|{
+comment|/* usually want to query LINES and COLUMNS from environment */
 name|int
 name|value
 decl_stmt|;
@@ -540,7 +546,7 @@ operator|==
 name|EINTR
 condition|)
 do|;
-comment|/* 		     * Solaris lets users override either dimension with an 		     * environment variable. 		     */
+comment|/* 		 * Solaris lets users override either dimension with an 		 * environment variable. 		 */
 if|if
 condition|(
 operator|*
@@ -646,7 +652,7 @@ operator|=
 literal|80
 expr_stmt|;
 block|}
-comment|/* 	     * Put the derived values back in the screen-size caps, so 	     * tigetnum() and tgetnum() will do the right thing. 	     */
+comment|/* 	 * Put the derived values back in the screen-size caps, so 	 * tigetnum() and tgetnum() will do the right thing. 	 */
 name|lines
 operator|=
 call|(
@@ -683,10 +689,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|VALID_NUMERIC
+argument_list|(
 name|init_tabs
-operator|!=
-operator|-
-literal|1
+argument_list|)
 condition|)
 name|TABSIZE
 operator|=
@@ -831,7 +837,7 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-comment|/* 	 * $TERM shouldn't contain pathname delimiters. 	 */
+comment|/*      * $TERM shouldn't contain pathname delimiters.      */
 if|if
 condition|(
 name|strchr
@@ -865,7 +871,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|PURE_TERMINFO
-comment|/* 		 * Try falling back on the termcap file. 		 * Note:  allowing this call links the entire terminfo/termcap 		 * compiler into the startup code.  It's preferable to build a 		 * real terminfo database and use that. 		 */
+comment|/* 	 * Try falling back on the termcap file. 	 * Note:  allowing this call links the entire terminfo/termcap 	 * compiler into the startup code.  It's preferable to build a 	 * real terminfo database and use that. 	 */
 name|status
 operator|=
 name|_nc_read_termcap_entry
@@ -879,7 +885,7 @@ endif|#
 directive|endif
 comment|/* PURE_TERMINFO */
 block|}
-comment|/* 	 * If we have an entry, force all of the cancelled strings to null 	 * pointers so we don't have to test them in the rest of the library. 	 * (The terminfo compiler bypasses this logic, since it must know if 	 * a string is cancelled, for merging entries). 	 */
+comment|/*      * If we have an entry, force all of the cancelled strings to null      * pointers so we don't have to test them in the rest of the library.      * (The terminfo compiler bypasses this logic, since it must know if      * a string is cancelled, for merging entries).      */
 if|if
 condition|(
 name|status
@@ -964,6 +970,8 @@ name|ttytype
 index|[
 name|NAMESIZE
 index|]
+init|=
+literal|""
 decl_stmt|;
 end_decl_stmt
 
@@ -1200,7 +1208,7 @@ name|tname
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Improve on SVr4 curses.  If an application mixes curses and termcap 	 * calls, it may call both initscr and tgetent.  This is not really a 	 * good thing to do, but can happen if someone tries using ncurses with 	 * the readline library.  The problem we are fixing is that when 	 * tgetent calls setupterm, the resulting Ottyb struct in cur_term is 	 * zeroed.  A subsequent call to endwin uses the zeroed terminal 	 * settings rather than the ones saved in initscr.  So we check if 	 * cur_term appears to contain terminal settings for the same output 	 * file as our current call - and copy those terminal settings.  (SVr4 	 * curses does not do this, however applications that are working 	 * around the problem will still work properly with this feature). 	 */
+comment|/*      * Improve on SVr4 curses.  If an application mixes curses and termcap      * calls, it may call both initscr and tgetent.  This is not really a      * good thing to do, but can happen if someone tries using ncurses with      * the readline library.  The problem we are fixing is that when      * tgetent calls setupterm, the resulting Ottyb struct in cur_term is      * zeroed.  A subsequent call to endwin uses the zeroed terminal      * settings rather than the ones saved in initscr.  So we check if      * cur_term appears to contain terminal settings for the same output      * file as our current call - and copy those terminal settings.  (SVr4      * curses does not do this, however applications that are working      * around the problem will still work properly with this feature).      */
 if|if
 condition|(
 name|cur_term
@@ -1266,7 +1274,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Allow output redirection.  This is what SVr3 does. 	 * If stdout is directed to a file, screen updates go 	 * to standard error. 	 */
+comment|/*      * Allow output redirection.  This is what SVr3 does.      * If stdout is directed to a file, screen updates go      * to standard error.      */
 if|if
 condition|(
 name|Filedes

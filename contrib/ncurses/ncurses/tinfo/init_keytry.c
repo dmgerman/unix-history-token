@@ -36,7 +36,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: init_keytry.c,v 1.2 1999/09/11 17:32:57 Jeffrey.Honig Exp $"
+literal|"$Id: init_keytry.c,v 1.3 2000/03/12 02:55:50 Todd.C.Miller Exp $"
 argument_list|)
 end_macro
 
@@ -44,11 +44,11 @@ begin_comment
 comment|/* **      _nc_init_keytry() ** **      Construct the try for the current terminal's keypad keys. ** */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|BROKEN_LINKER
-end_ifdef
+end_if
 
 begin_undef
 undef|#
@@ -75,11 +75,11 @@ begin_comment
 comment|/* LINT_PREPRO #endif*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|BROKEN_LINKER
-end_ifdef
+end_if
 
 begin_function
 name|struct

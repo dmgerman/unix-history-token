@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: edit.c,v 1.3 1999/06/16 00:43:43 tom Exp $"
+literal|"$Id: edit.c,v 1.5 2000/03/25 17:26:12 tom Exp $"
 argument_list|)
 end_macro
 
@@ -528,7 +528,7 @@ comment|/* number of lines displayed */
 end_comment
 
 begin_comment
-comment|/* **	send_info_string(str) ** **	Return the terminfo string prefixed by the correct seperator */
+comment|/* **	send_info_string(str) ** **	Return the terminfo string prefixed by the correct separator */
 end_comment
 
 begin_function
@@ -912,7 +912,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	save_info_string(str, fp) ** **	Write the terminfo string prefixed by the correct seperator */
+comment|/* **	save_info_string(str, fp) ** **	Write the terminfo string prefixed by the correct separator */
 end_comment
 
 begin_function
@@ -1776,6 +1776,13 @@ expr_stmt|;
 name|_nc_trans_string
 argument_list|(
 name|tmp
+argument_list|,
+name|tmp
+operator|+
+sizeof|sizeof
+argument_list|(
+name|tmp
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|s
@@ -2745,7 +2752,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	can_test(name-list, flags) ** **	Scan the name list and get the names. **	Enter each name into the can-test data base. **<space> ( and ) may be used as seperators. */
+comment|/* **	can_test(name-list, flags) ** **	Scan the name list and get the names. **	Enter each name into the can-test data base. **<space> ( and ) may be used as separators. */
 end_comment
 
 begin_function
@@ -2868,7 +2875,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	cap_index(name-list, index-list) ** **	Scan the name list and return a list of indexes. **<space> ( and ) may be used as seperators. **	This list is terminated with -1. */
+comment|/* **	cap_index(name-list, index-list) ** **	Scan the name list and return a list of indexes. **<space> ( and ) may be used as separators. **	This list is terminated with -1. */
 end_comment
 
 begin_function
@@ -3027,7 +3034,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	cap_match(name-list, cap) ** **	Scan the name list and see if the cap is in the list. **	Return TRUE if we find an exact match. **<space> ( and ) may be used as seperators. */
+comment|/* **	cap_match(name-list, cap) ** **	Scan the name list and see if the cap is in the list. **	Return TRUE if we find an exact match. **<space> ( and ) may be used as separators. */
 end_comment
 
 begin_function
@@ -4359,6 +4366,13 @@ expr_stmt|;
 name|_nc_trans_string
 argument_list|(
 name|pad
+argument_list|,
+name|pad
+operator|+
+sizeof|sizeof
+argument_list|(
+name|pad
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|t

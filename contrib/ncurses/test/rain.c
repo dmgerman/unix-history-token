@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: rain.c,v 1.13 1999/10/23 01:31:26 tom Exp $  */
+comment|/*  * $Id: rain.c,v 1.14 1999/11/13 23:39:07 tom Exp $  */
 end_comment
 
 begin_include
@@ -210,7 +210,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NCURSES_VERSION
+name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(
 name|use_default_colors

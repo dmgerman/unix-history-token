@@ -4,7 +4,7 @@ comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** Thi
 end_comment
 
 begin_comment
-comment|/* $Id: tack.h,v 1.5 1999/06/26 22:14:07 tom Exp $ */
+comment|/* $Id: tack.h,v 1.6 2000/03/04 21:10:07 tom Exp $ */
 end_comment
 
 begin_ifndef
@@ -896,7 +896,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lines or columns effected (repitition 				   factor) */
+comment|/* lines or columns effected (repetition 				   factor) */
 end_comment
 
 begin_decl_stmt
@@ -965,7 +965,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lines or columns effected (repitition 				   factor) */
+comment|/* lines or columns effected (repetition 				   factor) */
 end_comment
 
 begin_decl_stmt

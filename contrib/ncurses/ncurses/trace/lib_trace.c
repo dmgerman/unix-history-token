@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -9,10 +9,6 @@ end_comment
 
 begin_comment
 comment|/*  *	lib_trace.c - Tracing/Debugging routines  */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -27,35 +23,18 @@ directive|include
 file|<tic.h>
 end_include
 
-begin_macro
-name|MODULE_ID
-argument_list|(
-literal|"$Id: lib_trace.c,v 1.30 1998/10/03 23:41:42 tom Exp $"
-argument_list|)
-end_macro
-
 begin_include
 include|#
 directive|include
 file|<ctype.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|HAVE_FCNTL_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_macro
+name|MODULE_ID
+argument_list|(
+literal|"$Id: lib_trace.c,v 1.34 2000/04/01 20:25:47 tom Exp $"
+argument_list|)
+end_macro
 
 begin_decl_stmt
 name|unsigned
@@ -88,6 +67,8 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|_nc_outchars
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -103,14 +84,9 @@ begin_comment
 comment|/* default to writing to stderr */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
-name|_nc_trace
+name|trace
 parameter_list|(
 specifier|const
 name|unsigned
@@ -119,9 +95,6 @@ name|tracelevel
 name|GCC_UNUSED
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|TRACE
 specifier|static
 name|bool
 name|been_here
@@ -187,7 +160,7 @@ name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Try to set line-buffered mode, or (failing that) unbuffered, 		 * so that the trace-output gets flushed automatically at the 		 * end of each line.  This is useful in case the program dies.  		 */
+comment|/* Try to set line-buffered mode, or (failing that) unbuffered, 	 * so that the trace-output gets flushed automatically at the 	 * end of each line.  This is useful in case the program dies.  	 */
 if|#
 directive|if
 name|HAVE_SETVBUF
@@ -240,10 +213,13 @@ name|NCURSES_VERSION_PATCH
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|const
@@ -294,6 +270,9 @@ operator|(
 literal|"(cancelled)"
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|TRACE
 name|tp
 operator|=
 name|vbuf
@@ -314,6 +293,53 @@ operator|+
 literal|5
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+block|{
+specifier|static
+name|char
+modifier|*
+name|mybuf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|mybuf
+index|[
+name|bufnum
+index|]
+operator|=
+name|_nc_doalloc
+argument_list|(
+name|mybuf
+index|[
+name|bufnum
+index|]
+argument_list|,
+operator|(
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|*
+literal|4
+operator|)
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+name|vbuf
+operator|=
+name|mybuf
+index|[
+name|bufnum
+index|]
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 operator|*
 name|tp
 operator|++

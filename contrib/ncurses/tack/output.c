@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: output.c,v 1.4 1999/06/16 00:46:53 tom Exp $"
+literal|"$Id: output.c,v 1.5 2000/03/04 21:06:57 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1547,7 +1547,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **	ptext(string) ** **	Output a string but do not assume the terminal will wrap to a **	new line.  Break the line at a word boundry then send a CR LF. **	This is more estetic on 40 column terminals. */
+comment|/* **	ptext(string) ** **	Output a string but do not assume the terminal will wrap to a **	new line.  Break the line at a word boundary then send a CR LF. **	This is more esthetic on 40 column terminals. */
 end_comment
 
 begin_function

@@ -368,7 +368,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: xmas.c,v 1.12 1998/01/18 01:13:47 tom Exp $  */
+comment|/*  * $Id: xmas.c,v 1.13 1999/11/13 23:39:01 tom Exp $  */
 end_comment
 
 begin_include
@@ -901,7 +901,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|NCURSES_VERSION
+name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(
 name|use_default_colors

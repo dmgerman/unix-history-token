@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,27 +35,10 @@ directive|include
 file|<term_entry.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|HAVE_FCNTL_H
-end_if
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: read_termcap.c,v 1.43 1999/04/10 20:52:52 tom Exp $"
+literal|"$Id: read_termcap.c,v 1.47 2000/04/15 16:53:19 Todd.C.Miller Exp $"
 argument_list|)
 end_macro
 
@@ -215,7 +198,6 @@ modifier|*
 modifier|*
 parameter_list|,
 name|unsigned
-name|int
 modifier|*
 parameter_list|,
 name|int
@@ -509,7 +491,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Skip past the current capability field - it's either the 		 * name field if this is the first time through the loop, or 		 * the remainder of a field whose name failed to match cap. 		 */
+comment|/* 	 * Skip past the current capability field - it's either the 	 * name field if this is the first time through the loop, or 	 * the remainder of a field whose name failed to match cap. 	 */
 for|for
 control|(
 init|;
@@ -539,7 +521,7 @@ literal|':'
 condition|)
 break|break;
 block|}
-comment|/* 		 * Try to match (cap, type) in buf. 		 */
+comment|/* 	 * Try to match (cap, type) in buf. 	 */
 for|for
 control|(
 name|cp
@@ -668,7 +650,6 @@ name|name
 parameter_list|)
 block|{
 name|unsigned
-name|int
 name|dummy
 decl_stmt|;
 return|return
@@ -726,7 +707,6 @@ name|cap
 parameter_list|,
 comment|/* termcap-content */
 name|unsigned
-name|int
 modifier|*
 name|len
 parameter_list|,
@@ -790,7 +770,7 @@ decl_stmt|;
 name|int
 name|lineno
 decl_stmt|;
-comment|/* 	 * Return with ``loop detected'' error if we've recurred more than 	 * MAX_RECURSION times. 	 */
+comment|/*      * Return with ``loop detected'' error if we've recurred more than      * MAX_RECURSION times.      */
 if|if
 condition|(
 name|depth
@@ -802,7 +782,7 @@ operator|(
 name|TC_REF_LOOP
 operator|)
 return|;
-comment|/* 	 * Check if we have a top record from cgetset(). 	 */
+comment|/*      * Check if we have a top record from cgetset().      */
 if|if
 condition|(
 name|depth
@@ -883,7 +863,7 @@ block|{
 name|int
 name|foundit
 decl_stmt|;
-comment|/* 		 * Allocate first chunk of memory. 		 */
+comment|/* 	 * Allocate first chunk of memory. 	 */
 if|if
 condition|(
 operator|(
@@ -920,7 +900,7 @@ name|foundit
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 		 * Loop through database array until finding the record. 		 */
+comment|/* 	 * Loop through database array until finding the record. 	 */
 for|for
 control|(
 name|current
@@ -943,7 +923,7 @@ name|eof
 init|=
 name|FALSE
 decl_stmt|;
-comment|/* 			 * Open database if not already open. 			 */
+comment|/* 	     * Open database if not already open. 	     */
 if|if
 condition|(
 name|fd
@@ -1033,7 +1013,7 @@ name|lineno
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Find the requested capability record ... 			 */
+comment|/* 	     * Find the requested capability record ... 	     */
 block|{
 name|char
 name|buf
@@ -1059,7 +1039,7 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-comment|/* 				 * Loop invariants: 				 *	There is always room for one more character in record. 				 *	R_end always points just past end of record. 				 *	Rp always points just past last character in record. 				 *	B_end always points just past last character in buf. 				 *	Bp always points at next character in buf. 				 */
+comment|/* 		 * Loop invariants: 		 *      There is always room for one more character in record. 		 *      R_end always points just past end of record. 		 *      Rp always points just past last character in record. 		 *      B_end always points just past last character in buf. 		 *      Bp always points at next character in buf. 		 */
 for|for
 control|(
 init|;
@@ -1073,7 +1053,7 @@ name|lineno
 operator|+
 literal|1
 decl_stmt|;
-comment|/* 					 * Read in a line implementing (\, newline) 					 * line continuation. 					 */
+comment|/* 		     * Read in a line implementing (\, newline) 		     * line continuation. 		     */
 name|rp
 operator|=
 name|record
@@ -1206,7 +1186,7 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
-comment|/* 						 * Enforce loop invariant: if no room 						 * left in record buffer, try to get 						 * some more. 						 */
+comment|/* 			 * Enforce loop invariant: if no room 			 * left in record buffer, try to get 			 * some more. 			 */
 if|if
 condition|(
 name|rp
@@ -1215,7 +1195,6 @@ name|r_end
 condition|)
 block|{
 name|unsigned
-name|int
 name|pos
 decl_stmt|;
 name|size_t
@@ -1292,13 +1271,13 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 					 * If encountered eof check next file. 					 */
+comment|/* 		     * If encountered eof check next file. 		     */
 if|if
 condition|(
 name|eof
 condition|)
 break|break;
-comment|/* 					 * Toss blank lines and comments. 					 */
+comment|/* 		     * Toss blank lines and comments. 		     */
 if|if
 condition|(
 operator|*
@@ -1312,7 +1291,7 @@ operator|==
 literal|'#'
 condition|)
 continue|continue;
-comment|/* 					 * See if this is the record we want ... 					 */
+comment|/* 		     * See if this is the record we want ... 		     */
 if|if
 condition|(
 name|_nc_cgetmatch
@@ -1370,7 +1349,7 @@ name|TC_NOT_FOUND
 operator|)
 return|;
 block|}
-comment|/* 	 * Got the capability record, but now we have to expand all tc=name 	 * references in it ... 	 */
+comment|/*      * Got the capability record, but now we have to expand all tc=name      * references in it ...      */
 block|{
 specifier|register
 name|char
@@ -1385,7 +1364,6 @@ name|int
 name|newilen
 decl_stmt|;
 name|unsigned
-name|int
 name|ilen
 decl_stmt|;
 name|int
@@ -1413,7 +1391,7 @@ decl_stmt|,
 modifier|*
 name|tcend
 decl_stmt|;
-comment|/* 		 * Loop invariants: 		 *	There is room for one more character in record. 		 *	R_end points just past end of record. 		 *	Rp points just past last character in record. 		 *	Scan points at remainder of record that needs to be 		 *	scanned for tc=name constructs. 		 */
+comment|/* 	 * Loop invariants: 	 *      There is room for one more character in record. 	 *      R_end points just past end of record. 	 *      Rp points just past last character in record. 	 *      Scan points at remainder of record that needs to be 	 *      scanned for tc=name constructs. 	 */
 name|scan
 operator|=
 name|record
@@ -1446,7 +1424,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* 			 * Find end of tc=name and stomp on the trailing `:' 			 * (if present) so we can use it to call ourselves. 			 */
+comment|/* 	     * Find end of tc=name and stomp on the trailing `:' 	     * (if present) so we can use it to call ourselves. 	     */
 name|s
 operator|=
 name|tc
@@ -1667,7 +1645,7 @@ name|newilen
 operator|++
 expr_stmt|;
 block|}
-comment|/* 			 * Make sure there's enough room to insert the 			 * new record. 			 */
+comment|/* 	     * Make sure there's enough room to insert the 	     * new record. 	     */
 name|diff
 operator|=
 name|newilen
@@ -1684,7 +1662,6 @@ name|rp
 condition|)
 block|{
 name|unsigned
-name|int
 name|pos
 decl_stmt|,
 name|tcpos
@@ -1788,7 +1765,7 @@ operator|+
 name|tcposend
 expr_stmt|;
 block|}
-comment|/* 			 * Insert tc'ed record into our record. 			 */
+comment|/* 	     * Insert tc'ed record into our record. 	     */
 name|s
 operator|=
 name|tcstart
@@ -1832,7 +1809,7 @@ argument_list|(
 name|icap
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Start scan on `:' so next cgetcap works properly 			 * (cgetcap always skips first field). 			 */
+comment|/* 	     * Start scan on `:' so next cgetcap works properly 	     * (cgetcap always skips first field). 	     */
 name|scan
 operator|=
 name|s
@@ -1841,7 +1818,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Close file (if we opened it), give back any extra memory, and 	 * return capability, length and success. 	 */
+comment|/*      * Close file (if we opened it), give back any extra memory, and      * return capability, length and success.      */
 if|if
 condition|(
 name|myfd
@@ -1955,7 +1932,7 @@ name|char
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* 	 * Start search at beginning of record. 	 */
+comment|/*      * Start search at beginning of record.      */
 name|bp
 operator|=
 name|buf
@@ -1966,7 +1943,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Try to match a record name. 		 */
+comment|/* 	 * Try to match a record name. 	 */
 name|np
 operator|=
 name|name
@@ -2025,7 +2002,7 @@ block|{
 break|break;
 block|}
 block|}
-comment|/* 		 * Match failed, skip to next name in record. 		 */
+comment|/* 	 * Match failed, skip to next name in record. 	 */
 name|bp
 operator|--
 expr_stmt|;
@@ -2616,7 +2593,7 @@ argument_list|(
 literal|"TERMCAP"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * TERMCAP can have one of two things in it.  It can be the name of a 	 * file to use instead of /etc/termcap.  In this case it better start 	 * with a "/".  Or it can be an entry to use so we don't have to read 	 * the file.  In this case it has to already have the newlines crunched 	 * out.  If TERMCAP does not hold a file name then a path of names is 	 * searched instead.  The path is found in the TERMPATH variable, or 	 * becomes "$HOME/.termcap /etc/termcap" if no TERMPATH exists. 	 */
+comment|/*      * TERMCAP can have one of two things in it.  It can be the name of a file      * to use instead of /etc/termcap.  In this case it better start with a      * "/".  Or it can be an entry to use so we don't have to read the file.       * In this case it has to already have the newlines crunched out.  If      * TERMCAP does not hold a file name then a path of names is searched      * instead.  The path is found in the TERMPATH variable, or becomes      * "$HOME/.termcap /etc/termcap" if no TERMPATH exists.      */
 if|if
 condition|(
 operator|!
@@ -2878,7 +2855,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* ncurses' termcap-parsing routines cannot handle multiple adjacent 	 * empty fields, and mistakenly use the last valid cap entry instead of 	 * the first (breaks tc= includes) 	 */
+comment|/* ncurses' termcap-parsing routines cannot handle multiple adjacent      * empty fields, and mistakenly use the last valid cap entry instead of      * the first (breaks tc= includes)      */
 if|if
 condition|(
 name|i
@@ -3078,7 +3055,7 @@ name|the_source
 operator|=
 literal|0
 expr_stmt|;
-comment|/* This is not related to the BSD cgetent(), but to fake up a suitable 	 * filename for ncurses' error reporting.  (If we are not using BSD 	 * cgetent, then it is the actual filename). 	 */
+comment|/* This is not related to the BSD cgetent(), but to fake up a suitable      * filename for ncurses' error reporting.  (If we are not using BSD      * cgetent, then it is the actual filename).      */
 if|if
 condition|(
 name|i
@@ -3267,6 +3244,9 @@ if|#
 directive|if
 name|USE_GETCAP
 name|char
+modifier|*
+name|p
+decl_stmt|,
 name|tc
 index|[
 name|TBUFSIZ
@@ -3281,6 +3261,70 @@ specifier|static
 name|int
 name|lineno
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"TERMCAP"
+argument_list|)
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|is_pathname
+argument_list|(
+name|p
+argument_list|)
+operator|&&
+name|_nc_name_match
+argument_list|(
+name|p
+argument_list|,
+name|tn
+argument_list|,
+literal|"|:"
+argument_list|)
+condition|)
+block|{
+comment|/* TERMCAP holds a termcap entry */
+name|strncpy
+argument_list|(
+name|tc
+argument_list|,
+name|p
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tc
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|tc
+index|[
+sizeof|sizeof
+argument_list|(
+name|tc
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|_nc_set_source
+argument_list|(
+literal|"TERMCAP"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* we're using getcap(3) */
 if|if
 condition|(
@@ -3313,6 +3357,7 @@ argument_list|(
 name|source
 argument_list|)
 expr_stmt|;
+block|}
 name|_nc_read_entry_source
 argument_list|(
 operator|(
@@ -3332,7 +3377,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 	 * Here is what the 4.4BSD termcap(3) page prescribes: 	 * 	 * It will look in the environment for a TERMCAP variable.  If found, 	 * and the value does not begin with a slash, and the terminal type 	 * name is the same as the environment string TERM, the TERMCAP string 	 * is used instead of reading a termcap file.  If it does begin with a 	 * slash, the string is used as a path name of the termcap file to 	 * search.  If TERMCAP does not begin with a slash and name is 	 * different from TERM, tgetent() searches the files $HOME/.termcap and 	 * /usr/share/misc/termcap, in that order, unless the environment 	 * variable TERMPATH exists, in which case it specifies a list of file 	 * pathnames (separated by spaces or colons) to be searched instead. 	 * 	 * It goes on to state: 	 * 	 * Whenever multiple files are searched and a tc field occurs in the 	 * requested entry, the entry it names must be found in the same file 	 * or one of the succeeding files. 	 * 	 * However, this restriction is relaxed in ncurses; tc references to 	 * previous files are permitted. 	 * 	 * This routine returns 1 if an entry is found, 0 if not found, and -1 	 * if the database is not accessible. 	 */
+comment|/*      * Here is what the 4.4BSD termcap(3) page prescribes:      *      * It will look in the environment for a TERMCAP variable.  If found, and      * the value does not begin with a slash, and the terminal type name is the      * same as the environment string TERM, the TERMCAP string is used instead      * of reading a termcap file.  If it does begin with a slash, the string is      * used as a path name of the termcap file to search.  If TERMCAP does not      * begin with a slash and name is different from TERM, tgetent() searches      * the files $HOME/.termcap and /usr/share/misc/termcap, in that order,      * unless the environment variable TERMPATH exists, in which case it      * specifies a list of file pathnames (separated by spaces or colons) to be      * searched instead.      *      * It goes on to state:      *      * Whenever multiple files are searched and a tc field occurs in the      * requested entry, the entry it names must be found in the same file or      * one of the succeeding files.      *      * However, this restriction is relaxed in ncurses; tc references to      * previous files are permitted.      *      * This routine returns 1 if an entry is found, 0 if not found, and -1 if      * the database is not accessible.      */
 name|FILE
 modifier|*
 name|fp
@@ -3397,8 +3442,8 @@ argument_list|(
 name|tc
 argument_list|)
 condition|)
-comment|/* interpret as a filename */
 block|{
+comment|/* interpret as a filename */
 name|ADD_TC
 argument_list|(
 name|tc
@@ -3419,8 +3464,8 @@ argument_list|,
 literal|"|:"
 argument_list|)
 condition|)
-comment|/* treat as a capability file */
 block|{
+comment|/* treat as a capability file */
 name|use_buffer
 operator|=
 name|TRUE
@@ -3520,8 +3565,8 @@ block|}
 block|}
 block|}
 else|else
-comment|/* normal case */
 block|{
+comment|/* normal case */
 name|char
 name|envhome
 index|[
@@ -3535,7 +3580,7 @@ name|filecount
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Probably /etc/termcap is a symlink to /usr/share/misc/termcap. 		 * Avoid reading the same file twice. 		 */
+comment|/* 	 * Probably /etc/termcap is a symlink to /usr/share/misc/termcap. 	 * Avoid reading the same file twice. 	 */
 if|if
 condition|(
 name|_nc_access
@@ -3637,7 +3682,7 @@ argument_list|(
 literal|"TERMCAP"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We don't suppress warning messages here.  The presumption is 		 * that since it's just a single entry, they won't be a pain. 		 */
+comment|/* 	 * We don't suppress warning messages here.  The presumption is 	 * that since it's just a single entry, they won't be a pain. 	 */
 name|_nc_read_entry_source
 argument_list|(
 operator|(
@@ -3720,7 +3765,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Suppress warning messages.  Otherwise you 				 * get 400 lines of crap from archaic termcap 				 * files as ncurses complains about all the 				 * obsolete capabilities. 				 */
+comment|/* 		 * Suppress warning messages.  Otherwise you get 400 lines of 		 * crap from archaic termcap files as ncurses complains about 		 * all the obsolete capabilities. 		 */
 name|_nc_read_entry_source
 argument_list|(
 name|fp
@@ -3765,7 +3810,9 @@ operator|)
 return|;
 comment|/* resolve all use references */
 name|_nc_resolve_uses
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|)
 expr_stmt|;
 comment|/* find a terminal matching tn, if we can */
 if|#
@@ -3819,7 +3866,7 @@ literal|"|:"
 argument_list|)
 condition|)
 block|{
-comment|/* 				 * Make a local copy of the terminal 				 * capabilities.  Free all entry storage except 				 * the string table for the loaded type (which 				 * we disconnected from the list by NULLing out 				 * ep->tterm.str_table above). 				 */
+comment|/* 		 * Make a local copy of the terminal capabilities.  Free all 		 * entry storage except the string table for the loaded type 		 * (which we disconnected from the list by NULLing out 		 * ep->tterm.str_table above). 		 */
 operator|*
 name|tp
 operator|=
@@ -3839,7 +3886,7 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-comment|/* 				 * OK, now try to write the type to user's 				 * terminfo directory.  Next time he loads 				 * this, it will come through terminfo. 				 * 				 * Advantage:  Second and subsequent fetches of 				 * this entry will be very fast. 				 * 				 * Disadvantage:  After the first time a 				 * termcap type is loaded by its user, editing 				 * it in the /etc/termcap file, or in TERMCAP, 				 * or in a local ~/.termcap, will be 				 * ineffective unless the terminfo entry is 				 * explicitly removed. 				 */
+comment|/* 		 * OK, now try to write the type to user's terminfo directory.  		 * Next time he loads this, it will come through terminfo. 		 * 		 * Advantage:  Second and subsequent fetches of this entry will 		 * be very fast. 		 * 		 * Disadvantage:  After the first time a termcap type is loaded 		 * by its user, editing it in the /etc/termcap file, or in 		 * TERMCAP, or in a local ~/.termcap, will be ineffective 		 * unless the terminfo entry is explicitly removed. 		 */
 if|#
 directive|if
 name|USE_GETCAP_CACHE

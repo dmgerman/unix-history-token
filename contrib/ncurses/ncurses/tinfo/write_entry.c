@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/*nothing*/
+comment|/*nothing */
 end_comment
 
 begin_endif
@@ -98,7 +98,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: write_entry.c,v 1.47 1999/07/10 20:29:22 tom Exp $"
+literal|"$Id: write_entry.c,v 1.52 2000/03/11 12:23:42 tom Exp $"
 argument_list|)
 end_macro
 
@@ -972,7 +972,7 @@ argument_list|,
 name|first_name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Has this primary name been written since the first call to 	 * write_entry()?  If so, the newer write will step on the older, 	 * so warn the user. 	 */
+comment|/*      * Has this primary name been written since the first call to      * write_entry()?  If so, the newer write will step on the older,      * so warn the user.      */
 if|if
 condition|(
 name|start_time
@@ -1341,7 +1341,7 @@ endif|#
 directive|endif
 comment|/* USE_SYMLINKS */
 block|{
-comment|/* 			     * If there wasn't anything there, and we cannot 			     * link to the target because it is the same as the 			     * target, then the source must be on a filesystem 			     * that uses caseless filenames, such as Win32, etc. 			     */
+comment|/* 		 * If there wasn't anything there, and we cannot 		 * link to the target because it is the same as the 		 * target, then the source must be on a filesystem 		 * that uses caseless filenames, such as Win32, etc. 		 */
 if|if
 condition|(
 name|code
@@ -1643,8 +1643,7 @@ index|[
 name|i
 index|]
 operator|==
-operator|-
-literal|1
+name|ABSENT_NUMERIC
 condition|)
 block|{
 comment|/* HI/LO won't work */
@@ -1675,8 +1674,7 @@ index|[
 name|i
 index|]
 operator|==
-operator|-
-literal|2
+name|CANCELLED_NUMERIC
 condition|)
 block|{
 comment|/* HI/LO won't work */
@@ -1800,6 +1798,45 @@ index|[
 name|MAX_ENTRY_SIZE
 index|]
 decl_stmt|;
+name|unsigned
+name|last_bool
+init|=
+name|BOOLWRITE
+decl_stmt|;
+name|unsigned
+name|last_num
+init|=
+name|NUMWRITE
+decl_stmt|;
+name|unsigned
+name|last_str
+init|=
+name|STRWRITE
+decl_stmt|;
+if|#
+directive|if
+name|NCURSES_XNAMES
+comment|/*      * Normally we limit the list of values to exclude the "obsolete"      * capabilities.  However, if we are accepting extended names, add      * these as well, since they are used for supporting translation      * to/from termcap.      */
+if|if
+condition|(
+name|_nc_user_definable
+condition|)
+block|{
+name|last_bool
+operator|=
+name|BOOLCOUNT
+expr_stmt|;
+name|last_num
+operator|=
+name|NUMCOUNT
+expr_stmt|;
+name|last_str
+operator|=
+name|STRCOUNT
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|namelist
 operator|=
 name|tp
@@ -1815,7 +1852,6 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* 	 * BOOLWRITE, etc., are less than BOOLCOUNT because we store some 	 * values internally. 	 */
 name|boolmax
 operator|=
 literal|0
@@ -1828,7 +1864,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|BOOLWRITE
+name|last_bool
 condition|;
 name|i
 operator|++
@@ -1842,6 +1878,8 @@ name|Booleans
 index|[
 name|i
 index|]
+operator|==
+name|TRUE
 condition|)
 name|boolmax
 operator|=
@@ -1862,7 +1900,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUMWRITE
+name|last_num
 condition|;
 name|i
 operator|++
@@ -1898,7 +1936,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|STRWRITE
+name|last_str
 condition|;
 name|i
 operator|++
@@ -2040,12 +2078,56 @@ name|fp
 argument_list|)
 operator|!=
 name|namelen
-operator|||
-name|fwrite
-argument_list|(
+condition|)
+return|return
+operator|(
+name|ERR
+operator|)
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|boolmax
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
 name|tp
 operator|->
 name|Booleans
+index|[
+name|i
+index|]
+operator|==
+name|TRUE
+condition|)
+name|buf
+index|[
+name|i
+index|]
+operator|=
+name|TRUE
+expr_stmt|;
+else|else
+name|buf
+index|[
+name|i
+index|]
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|fwrite
+argument_list|(
+name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2311,7 +2393,7 @@ name|ext_Strings
 operator|+
 name|extcnt
 expr_stmt|;
-comment|/* 	     * Write the extended header 	     */
+comment|/* 	 * Write the extended header 	 */
 name|LITTLE_ENDIAN
 argument_list|(
 name|buf
@@ -2523,7 +2605,7 @@ name|ERR
 operator|)
 return|;
 block|}
-comment|/* 	     * Convert the offsets for the ext_Strings and ext_Names tables, 	     * in that order. 	     */
+comment|/* 	 * Convert the offsets for the ext_Strings and ext_Names tables, 	 * in that order. 	 */
 name|convert_shorts
 argument_list|(
 name|buf
@@ -2565,7 +2647,7 @@ operator|(
 name|ERR
 operator|)
 return|;
-comment|/* 	     * Write the string table after the offset tables so we do not 	     * have to do anything about alignment. 	     */
+comment|/* 	 * Write the string table after the offset tables so we do not 	 * have to do anything about alignment. 	 */
 for|for
 control|(
 name|i
@@ -2640,7 +2722,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	     * Write the extended names 	     */
+comment|/* 	 * Write the extended names 	 */
 for|for
 control|(
 name|i

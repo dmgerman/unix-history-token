@@ -58,7 +58,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tstp.c,v 1.20 1999/10/22 23:11:09 tom Exp $"
+literal|"$Id: lib_tstp.c,v 1.21 2000/05/20 23:28:56 tom Exp $"
 argument_list|)
 end_macro
 
@@ -584,6 +584,12 @@ operator|->
 name|_cleanup
 operator|=
 name|TRUE
+expr_stmt|;
+name|SP
+operator|->
+name|_outch
+operator|=
+name|_nc_outch
 expr_stmt|;
 block|}
 name|set_term

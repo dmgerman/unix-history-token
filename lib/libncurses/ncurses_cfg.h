@@ -12,7 +12,11 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Id: ncurses_cfg.hin,v 1.2 1998/02/11 12:13:46 tom Exp  *  * This is a template-file used to generate the "ncurses_cfg.h" file.  *  * Rather than list every definition, the configuration script substitutes  * the definitions that it finds using 'sed'.  You need a patch (971222)  * to autoconf 2.12 to do this.  */
+comment|/*  * $Id: ncurses_cfg.hin,v 1.2 1998/02/11 12:13:46 tom Exp $  *  * This is a template-file used to generate the "ncurses_cfg.h" file.  *  * Rather than list every definition, the configuration script substitutes  * the definitions that it finds using 'sed'.  You need a patch (971222)  * to autoconf 2.12 to do this.  */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -51,7 +55,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ETIP_NEEDS_
+name|CPP_HAS_PARAM_INIT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETIP_NEEDS_MATH_H
 value|1
 end_define
 
@@ -149,6 +160,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_HAS_KEY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_ISASCII
 value|1
 end_define
@@ -219,6 +237,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_MKSTEMP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_NANOSLEEP
 value|1
 end_define
@@ -262,6 +287,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_REMOVE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_REMOVE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_RESIZETERM
 value|1
 end_define
 
@@ -352,6 +391,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_SYS_POLL_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYS_SELECT_H
 value|1
 end_define
@@ -429,7 +475,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_USLEEP
+name|HAVE_UNLINK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_USE_DEFAULT_COLORS
 value|1
 end_define
 
@@ -451,6 +504,20 @@ begin_define
 define|#
 directive|define
 name|NCURSES_EXT_FUNCS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_WORKING_POLL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_WRESIZE
 value|1
 end_define
 

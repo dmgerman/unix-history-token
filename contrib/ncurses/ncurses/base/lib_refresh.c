@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_refresh.c,v 1.24 1999/07/31 11:36:37 juergen Exp $"
+literal|"$Id: lib_refresh.c,v 1.25 2000/04/29 21:17:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -99,7 +99,7 @@ operator|=
 name|doupdate
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Reset the clearok() flag in case it was set for the special 		 * case in hardscroll.c (if we don't reset it here, we'll get 2 		 * refreshes because the flag is copied from stdscr to newscr). 		 * Resetting the flag shouldn't do any harm, anyway. 		 */
+comment|/* 	 * Reset the clearok() flag in case it was set for the special 	 * case in hardscroll.c (if we don't reset it here, we'll get 2 	 * refreshes because the flag is copied from stdscr to newscr). 	 * Resetting the flag shouldn't do any harm, anyway. 	 */
 name|win
 operator|->
 name|_clear
@@ -124,21 +124,21 @@ modifier|*
 name|win
 parameter_list|)
 block|{
-name|short
+name|NCURSES_SIZE_T
 name|limit_x
 decl_stmt|;
-name|short
+name|NCURSES_SIZE_T
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|short
+name|NCURSES_SIZE_T
 name|begx
 decl_stmt|;
-name|short
+name|NCURSES_SIZE_T
 name|begy
 decl_stmt|;
-name|short
+name|NCURSES_SIZE_T
 name|m
 decl_stmt|,
 name|n
@@ -177,7 +177,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TRACE */
-comment|/* 	 * This function will break badly if we try to refresh a pad. 	 */
+comment|/*      * This function will break badly if we try to refresh a pad.      */
 if|if
 condition|(
 operator|(
@@ -234,7 +234,7 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For pure efficiency, we'd want to transfer scrolling information 	 * from the window to newscr whenever the window is wide enough that 	 * its update will dominate the cost of the update for the horizontal 	 * band of newscr that it occupies.  Unfortunately, this threshold 	 * tends to be complex to estimate, and in any case scrolling the 	 * whole band and rewriting the parts outside win's image would look 	 * really ugly.  So.  What we do is consider the window "wide" if it 	 * either (a) occupies the whole width of newscr, or (b) occupies 	 * all but at most one column on either vertical edge of the screen 	 * (this caters to fussy people who put boxes around full-screen 	 * windows).  Note that changing this formula will not break any code, 	 * merely change the costs of various update cases. 	 */
+comment|/*      * For pure efficiency, we'd want to transfer scrolling information      * from the window to newscr whenever the window is wide enough that      * its update will dominate the cost of the update for the horizontal      * band of newscr that it occupies.  Unfortunately, this threshold      * tends to be complex to estimate, and in any case scrolling the      * whole band and rewriting the parts outside win's image would look      * really ugly.  So.  What we do is consider the window "wide" if it      * either (a) occupies the whole width of newscr, or (b) occupies      * all but at most one column on either vertical edge of the screen      * (this caters to fussy people who put boxes around full-screen      * windows).  Note that changing this formula will not break any code,      * merely change the costs of various update cases.      */
 name|wide
 operator|=
 operator|(
@@ -262,7 +262,7 @@ operator|&=
 operator|~
 name|_HASMOVED
 expr_stmt|;
-comment|/* 	 * Microtweaking alert!  This double loop is one of the genuine 	 * hot spots in the code.  Even gcc doesn't seem to do enough 	 * common-subexpression chunking to make it really tense, 	 * so we'll force the issue. 	 */
+comment|/*      * Microtweaking alert!  This double loop is one of the genuine      * hot spots in the code.  Even gcc doesn't seem to do enough      * common-subexpression chunking to make it really tense,      * so we'll force the issue.      */
 comment|/* limit(n) */
 name|limit_x
 operator|=

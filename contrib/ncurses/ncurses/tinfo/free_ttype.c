@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: free_ttype.c,v 1.2 1999/03/01 00:30:35 tom Exp $"
+literal|"$Id: free_ttype.c,v 1.3 2000/03/19 02:03:07 tom Exp $"
 argument_list|)
 end_macro
 
@@ -127,6 +127,18 @@ init|=
 name|TRUE
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|_nc_disable_period
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used by tic -a option */
+end_comment
 
 begin_function
 name|int
