@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	5.5 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.2.4 1992/05/31 16:36:36 jsp Exp $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	5.6 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.2.4 1992/05/31 16:36:36 jsp Exp $  *  */
 end_comment
 
 begin_include
@@ -571,6 +571,24 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* HOSTNAMESZ */
+ifdef|#
+directive|ifdef
+name|NFSMNT_DUMBTIMR
+name|nfs_args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_DUMBTIMR
+expr_stmt|;
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"defeating nfs window computation"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Parse a subset of the standard nfs options.  The 	 * others are probably irrelevant for this application 	 */
 if|if
 condition|(
