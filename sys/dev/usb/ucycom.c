@@ -129,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|UCYCOM_MAX_IOLEN
-value|32
+value|32U
 end_define
 
 begin_struct
@@ -1178,7 +1178,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"I/O report size too big (%d, %d, %d)\n"
+literal|"I/O report size too big (%zu, %zu, %u)\n"
 argument_list|,
 name|sc
 operator|->
