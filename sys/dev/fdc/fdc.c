@@ -7851,9 +7851,7 @@ name|bp
 operator|->
 name|bio_pblkno
 operator|=
-name|bp
-operator|->
-name|bio_blkno
+name|blknum
 expr_stmt|;
 name|s
 operator|=
