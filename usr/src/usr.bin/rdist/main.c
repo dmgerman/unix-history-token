@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.14 (Berkeley) 85/02/04"
+literal|"@(#)main.c	4.15 (Berkeley) 85/05/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 modifier|*
 name|distfile
 init|=
-literal|"distfile"
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -675,8 +675,41 @@ condition|(
 name|fin
 operator|==
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|distfile
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 operator|(
+name|fin
+operator|=
+name|fopen
+argument_list|(
+literal|"distfile"
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fin
+operator|=
+name|fopen
+argument_list|(
+literal|"Distfile"
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|fin
 operator|=
 name|fopen
@@ -685,7 +718,10 @@ name|distfile
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fin
 operator|==
 name|NULL
 condition|)
@@ -693,6 +729,10 @@ block|{
 name|perror
 argument_list|(
 name|distfile
+condition|?
+name|distfile
+else|:
+literal|"distfile"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -700,6 +740,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|yyparse
 argument_list|()
