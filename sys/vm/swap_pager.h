@@ -95,6 +95,24 @@ begin_comment
 comment|/*  * SWB_NPAGES must be a power of 2.  It may be set to 1, 2, 4, 8, or 16  * pages per allocation.  We recommend you stick with the default of 8.  * The 16-page limit is due to the radix code (kern/subr_blist.c).  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX_PAGEOUT_CLUSTER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX_PAGEOUT_CLUSTER
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -109,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|SWB_NPAGES
-value|8
+value|MAX_PAGEOUT_CLUSTER
 end_define
 
 begin_endif
