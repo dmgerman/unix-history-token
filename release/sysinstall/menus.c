@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41 1995/05/30 08:28:49 rgrimes Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.1 1995/05/31 07:13:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ block|,
 literal|"Welcome to FreeBSD 2.0.5!"
 block|,
 comment|/* title */
-literal|"This is the main menu of the FreeBSD installation system.  Please\n\ select one of the options below by using the arrow keys or typing the\n\ first character of the option name you're interested in.  Invoke an\n\ option by pressing enter.  If you'd like a shell, press ESC"
+literal|"This is the main menu of the FreeBSD installation system.  Please\n\ select one of the options below by using the arrow keys or typing the\n\ first character of the option name you're interested in.  Invoke an\n\ option by pressing [ENTER].  If you'd like a shell, press [ESC]"
 block|,
 comment|/* prompt */
 literal|"Press F1 for usage instructions"
@@ -119,7 +119,7 @@ block|,
 block|{
 literal|"Quit"
 block|,
-literal|"Exit this installation utility"
+literal|"Exit this menu (and the installation)"
 block|,
 comment|/* Q */
 name|DMENU_CANCEL
@@ -153,7 +153,7 @@ block|,
 literal|"Documentation for FreeBSD 2.0.5"
 block|,
 comment|/* Title */
-literal|"If you are at all unsure about the configuration of your hardware\n\ or are looking to build a system specifically for FreeBSD, read the\n\ Hardware guide!  New users should also read the Install document for\n\ a step-by-step tutorial on installing FreeBSD.  For general information,\n\ consult the README file.  If you're having other problems, you may find\n\ answers in the FAQ."
+literal|"If you are at all unsure about the configuration of your hardware\n\ or are looking to build a system specifically for FreeBSD, read the\n\ Hardware guide!  New users should also read the Install document for\n\ a step-by-step tutorial on installing FreeBSD.  For general information,\n\ consult the README file.  If you are having other problems, you may find\n\ answers in the FAQ."
 block|,
 literal|"Confused?  Press F1 for help."
 block|,
@@ -260,7 +260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The language selection menu.  *  * Note:  The RADIO menus use a slightly different syntax.  If an item  * name starts with `*', it's considered to be "ON" by default,  * otherwise off.  */
+comment|/*  * The language selection menu.  *  * Note:  The RADIO menus use a slightly different syntax.  If an item  * name starts with `*', it is considered to be "ON" by default,  * otherwise off.  */
 end_comment
 
 begin_decl_stmt
@@ -275,7 +275,7 @@ block|,
 literal|"Natural language selection"
 block|,
 comment|/* title */
-literal|"Please specify the language you'd like to use by default.\n\n\ While almost all of the system's documentation is still written\n\ in english (and may never be translated), there are a few guides\n\ and types of system documentation that may be written in your\n\ preferred language.  When such are found, they will be used instead\n\ of the english versions.  This feature is nonetheless considered\n\ to be in experimental status at this time."
+literal|"Please specify the language you would like to use by default.\n\n\ While almost all of the system's documentation is still written\n\ in english (and may never be translated), there are a few guides\n\ and types of system documentation that may be written in your\n\ preferred language.  When such are found, they will be used instead\n\ of the english versions.  This feature is nonetheless considered\n\ to be in experimental status at this time."
 block|,
 comment|/* prompt */
 literal|"Press F1 for more information"
@@ -469,7 +469,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a CDROM type"
 block|,
-literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD 2.0.5 distribution.  If you are seeing this menu it's because\n\ more than one CDROM drive on your system was found.  Please select one\n\ of the following CDROM drives as your installation drive."
+literal|"FreeBSD can be installed directly from a CDROM containing a valid\n\ FreeBSD 2.0.5 distribution.  If you are seeing this menu it is because\n\ more than one CDROM drive was found on your system.  Please select one\n\ of the following CDROM drives as your installation drive."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -495,7 +495,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a Floppy drive"
 block|,
-literal|"You have more than one floppy drive.  Please chose the floppy\n\ drive you'd like to use for this operation"
+literal|"You have more than one floppy drive.  Please chose the drive\n\ you would like to use for this operation"
 block|,
 name|NULL
 block|,
@@ -521,7 +521,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a DOS partition"
 block|,
-literal|"FreeBSD can be installed directly from a DOS partition,\n\ assuming of course that you've copied the relevant distributions\n\ into your DOS partition before starting this installation.  If\n\ such is not the case, then you should reboot DOS at this time\n\ and copy the distributions you want to install into a subdirectory\n\ on one of your DOS partitions.  Otherwise, please select the\n\ DOS partition containing the FreeBSD distribution files."
+literal|"FreeBSD can be installed directly from a DOS partition\n\ assuming, of course, that you have copied the relevant\n\ distributions into your DOS partition before starting this\n\ installation.  If this is not the case then you should reboot\n\ DOS at this time and copy the distributions you wish to install\n\ into a \"FREEBSD\" subdirectory on one of your DOS partitions.\n\ Otherwise, please select the DOS partition containing the FreeBSD\n\ distribution files."
 block|,
 literal|"Press F1 to read the installation guide"
 block|,
@@ -2260,7 +2260,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select Drive(s)"
 block|,
-literal|"Please select the drive, or drives, on which you wish to install\n\ FreeBSD.  You need to select at least one drive containing some free\n\ space, though FreeBSD can be installed across several drives if you do\n\ not have the required space on a single drive.  If you wish to boot\n\ off a drive that's not a `zero drive', or have multiple operating\n\ systems on your machine, you will have the option to install a boot\n\ manager later."
+literal|"Please select the drive, or drives, on which you wish to install\n\ FreeBSD.  You need to select at least one drive containing some free\n\ space, though FreeBSD can be installed across several drives if you do\n\ not have the required space on a single drive.  If you wish to boot\n\ off a drive that's not a `zero drive', or have multiple operating\n\ systems on your machine, you will have the option to install a boot\n\ manager later.  To select a drive, use the arrow keys to move to it\n\ and press [SPACE]."
 block|,
 literal|"Press F1 for important information regarding geometry!"
 block|,
