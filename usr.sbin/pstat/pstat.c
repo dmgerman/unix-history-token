@@ -684,6 +684,12 @@ literal|"async"
 block|}
 block|,
 block|{
+name|MNT_NOATIME
+block|,
+literal|"noatime"
+block|}
+block|,
+block|{
 name|MNT_EXRDONLY
 block|,
 literal|"exrdonly"
@@ -732,6 +738,12 @@ literal|"rootfs"
 block|}
 block|,
 block|{
+name|MNT_USER
+block|,
+literal|"user"
+block|}
+block|,
+block|{
 name|MNT_UPDATE
 block|,
 literal|"update"
@@ -765,28 +777,16 @@ block|,
 literal|"force"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ MNT_MLOCK, "mlock" },
-endif|#
-directive|endif
-block|{
-name|MNT_WAIT
-block|,
-literal|"wait"
-block|}
-block|,
-if|#
-directive|if
-literal|0
-block|{ MNT_MPBUSY, "mpbusy" }, 	{ MNT_MPWANT, "mpwant" },
-endif|#
-directive|endif
 block|{
 name|MNT_UNMOUNT
 block|,
 literal|"unmount"
+block|}
+block|,
+block|{
+name|MNT_MWAIT
+block|,
+literal|"mwait"
 block|}
 block|,
 block|{
@@ -2285,13 +2285,6 @@ name|ip
 operator|->
 name|i_flag
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX */
-block|if (flag& IN_LOCKED) 		*flags++ = 'L'; 	if (flag& IN_WANTED) 		*flags++ = 'W';
-endif|#
-directive|endif
 if|if
 condition|(
 name|flag
@@ -2376,12 +2369,6 @@ operator|++
 operator|=
 literal|'E'
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (flag& IN_LWAIT) 		*flags++ = 'Z';
-endif|#
-directive|endif
 if|if
 condition|(
 name|flag
@@ -3402,6 +3389,9 @@ modifier|*
 name|mp
 decl_stmt|,
 name|mount
+decl_stmt|,
+modifier|*
+name|mp_next
 decl_stmt|;
 name|struct
 name|vnode
@@ -3409,6 +3399,9 @@ modifier|*
 name|vp
 decl_stmt|,
 name|vnode
+decl_stmt|,
+modifier|*
+name|vp_next
 decl_stmt|;
 name|char
 modifier|*
@@ -3512,11 +3505,7 @@ init|;
 condition|;
 name|mp
 operator|=
-name|mp
-operator|->
-name|mnt_list
-operator|.
-name|cqe_next
+name|mp_next
 control|)
 block|{
 name|KGET2
@@ -3534,6 +3523,14 @@ argument_list|,
 literal|"mount entry"
 argument_list|)
 expr_stmt|;
+name|mp_next
+operator|=
+name|mount
+operator|.
+name|mnt_list
+operator|.
+name|cqe_next
+expr_stmt|;
 for|for
 control|(
 name|vp
@@ -3550,11 +3547,7 @@ name|NULL
 condition|;
 name|vp
 operator|=
-name|vp
-operator|->
-name|v_mntvnodes
-operator|.
-name|le_next
+name|vp_next
 control|)
 block|{
 name|KGET2
@@ -3571,6 +3564,14 @@ argument_list|)
 argument_list|,
 literal|"vnode"
 argument_list|)
+expr_stmt|;
+name|vp_next
+operator|=
+name|vnode
+operator|.
+name|v_mntvnodes
+operator|.
+name|le_next
 expr_stmt|;
 if|if
 condition|(
