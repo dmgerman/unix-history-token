@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stty.c	4.11 (Berkeley) %G%"
+literal|"@(#)stty.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3057,12 +3057,6 @@ literal|0
 condition|)
 break|break;
 block|}
-if|if
-condition|(
-name|first
-operator|==
-literal|0
-condition|)
 name|fprintf
 argument_list|(
 name|stderr
