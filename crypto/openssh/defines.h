@@ -12,7 +12,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.92 2002/06/24 16:26:49 stevesk Exp $ */
+comment|/* $Id: defines.h,v 1.96 2002/09/26 00:38:48 tim Exp $ */
 end_comment
 
 begin_comment
@@ -610,7 +610,7 @@ begin_define
 define|#
 directive|define
 name|INADDR_LOOPBACK
-value|((ulong)0x7f000001)
+value|((u_long)0x7f000001)
 end_define
 
 begin_endif
@@ -714,7 +714,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 end_ifdef
 
 begin_if
@@ -768,7 +768,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CRAY */
+comment|/* _UNICOS */
 end_comment
 
 begin_endif
@@ -801,7 +801,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 end_ifdef
 
 begin_typedef
@@ -828,7 +828,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CRAY */
+comment|/* _UNICOS */
 end_comment
 
 begin_endif
@@ -951,7 +951,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 end_ifdef
 
 begin_if
@@ -1037,7 +1037,7 @@ end_else
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 end_ifdef
 
 begin_typedef
@@ -1300,6 +1300,28 @@ end_endif
 
 begin_comment
 comment|/* HAVE_U_CHAR */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SIZE_T_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SIZE_T_MAX
+value|ULONG_MAX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SIZE_T_MAX */
 end_comment
 
 begin_ifndef

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: packet.c,v 1.96 2002/06/23 21:10:02 deraadt Exp $"
+literal|"$OpenBSD: packet.c,v 1.97 2002/07/04 08:12:15 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

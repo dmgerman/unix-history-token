@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.10 2002/06/23 09:30:14 deraadt Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.11 2002/09/11 22:41:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -98,24 +98,6 @@ name|char
 modifier|*
 parameter_list|,
 name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* List contents of directory 'path' to stdout */
-end_comment
-
-begin_function_decl
-name|int
-name|do_ls
-parameter_list|(
-name|struct
-name|sftp_conn
-modifier|*
-parameter_list|,
-name|char
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

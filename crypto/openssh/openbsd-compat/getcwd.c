@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"includes.h"
 end_include
 
 begin_if

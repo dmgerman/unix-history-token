@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: radix.c,v 1.21 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: radix.c,v 1.22 2002/09/09 14:54:15 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -360,23 +360,24 @@ block|{
 name|Buffer
 name|b
 decl_stmt|;
+name|u_char
+modifier|*
+name|space
+decl_stmt|;
 name|char
 name|c
 decl_stmt|,
 name|version
 decl_stmt|,
 modifier|*
-name|space
-decl_stmt|,
-modifier|*
 name|p
 decl_stmt|;
 name|u_int
 name|endTime
+decl_stmt|,
+name|len
 decl_stmt|;
 name|int
-name|len
-decl_stmt|,
 name|blen
 decl_stmt|,
 name|ret

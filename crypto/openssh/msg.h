@@ -21,7 +21,7 @@ end_define
 
 begin_function_decl
 name|void
-name|msg_send
+name|ssh_msg_send
 parameter_list|(
 name|int
 parameter_list|,
@@ -35,7 +35,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|msg_recv
+name|ssh_msg_recv
 parameter_list|(
 name|int
 parameter_list|,

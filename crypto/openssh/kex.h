@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: kex.h,v 1.31 2002/05/16 22:02:50 markus Exp $	*/
+comment|/*	$OpenBSD: kex.h,v 1.32 2002/09/09 14:54:14 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -263,7 +263,7 @@ name|u_char
 modifier|*
 name|session_id
 decl_stmt|;
-name|int
+name|u_int
 name|session_id_len
 decl_stmt|;
 name|Newkeys

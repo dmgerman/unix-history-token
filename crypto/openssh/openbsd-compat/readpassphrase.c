@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readpassphrase.c,v 1.12 2001/12/15 05:41:00 millert Exp $	*/
+comment|/*	$OpenBSD: readpassphrase.c,v 1.14 2002/06/28 01:43:58 millert Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000 Todd C. Miller<Todd.Miller@courtesan.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000-2002 Todd C. Miller<Todd.Miller@courtesan.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL  * THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: readpassphrase.c,v 1.12 2001/12/15 05:41:00 millert Exp $"
+literal|"$OpenBSD: readpassphrase.c,v 1.14 2002/06/28 01:43:58 millert Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,8 @@ name|struct
 name|sigaction
 name|sa
 decl_stmt|,
+name|savealrm
+decl_stmt|,
 name|saveint
 decl_stmt|,
 name|savehup
@@ -210,6 +212,8 @@ decl_stmt|,
 name|savettin
 decl_stmt|,
 name|savettou
+decl_stmt|,
+name|savepipe
 decl_stmt|;
 comment|/* I suppose we could alloc on demand in this case (XXX). */
 if|if
@@ -231,9 +235,19 @@ return|;
 block|}
 name|restart
 label|:
+name|signo
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Read and write to /dev/tty if available.  If not, read from 	 * stdin and write to stderr unless a tty is required. 	 */
 if|if
 condition|(
+operator|(
+name|flags
+operator|&
+name|RPP_STDIN
+operator|)
+operator|||
 operator|(
 name|input
 operator|=
@@ -277,7 +291,7 @@ operator|=
 name|STDERR_FILENO
 expr_stmt|;
 block|}
-comment|/* 	 * Catch signals that would otherwise cause the user to end 	 * up with echo turned off in the shell.  Don't worry about 	 * things like SIGALRM and SIGPIPE for now. 	 */
+comment|/* 	 * Catch signals that would otherwise cause the user to end 	 * up with echo turned off in the shell.  Don't worry about 	 * things like SIGXCPU and SIGVTALRM for now. 	 */
 name|sigemptyset
 argument_list|(
 operator|&
@@ -304,13 +318,13 @@ name|void
 operator|)
 name|sigaction
 argument_list|(
-name|SIGINT
+name|SIGALRM
 argument_list|,
 operator|&
 name|sa
 argument_list|,
 operator|&
-name|saveint
+name|savealrm
 argument_list|)
 expr_stmt|;
 operator|(
@@ -325,6 +339,34 @@ name|sa
 argument_list|,
 operator|&
 name|savehup
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+operator|&
+name|saveint
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGPIPE
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+operator|&
+name|savepipe
 argument_list|)
 expr_stmt|;
 operator|(
@@ -400,6 +442,10 @@ expr_stmt|;
 comment|/* Turn off echo if possible. */
 if|if
 condition|(
+name|input
+operator|!=
+name|STDIN_FILENO
+operator|&&
 name|tcgetattr
 argument_list|(
 name|input
@@ -499,6 +545,12 @@ name|term
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|term
+operator|.
+name|c_lflag
+operator||=
+name|ECHO
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -512,7 +564,22 @@ name|oterm
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|oterm
+operator|.
+name|c_lflag
+operator||=
+name|ECHO
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|RPP_STDIN
+operator|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -703,10 +770,10 @@ name|void
 operator|)
 name|sigaction
 argument_list|(
-name|SIGINT
+name|SIGALRM
 argument_list|,
 operator|&
-name|saveint
+name|savealrm
 argument_list|,
 name|NULL
 argument_list|)
@@ -729,10 +796,36 @@ name|void
 operator|)
 name|sigaction
 argument_list|(
+name|SIGINT
+argument_list|,
+operator|&
+name|saveint
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
 name|SIGQUIT
 argument_list|,
 operator|&
 name|savequit
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGPIPE
+argument_list|,
+operator|&
+name|savepipe
 argument_list|,
 name|NULL
 argument_list|)
@@ -772,19 +865,6 @@ name|SIGTTIN
 argument_list|,
 operator|&
 name|savettin
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaction
-argument_list|(
-name|SIGTTOU
-argument_list|,
-operator|&
-name|savettou
 argument_list|,
 name|NULL
 argument_list|)
@@ -831,10 +911,6 @@ case|:
 case|case
 name|SIGTTOU
 case|:
-name|signo
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|restart
 goto|;

@@ -12,16 +12,10 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-options.c,v 1.24 2002/05/13 20:44:58 markus Exp $"
+literal|"$OpenBSD: auth-options.c,v 1.26 2002/07/30 17:03:55 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|"packet.h"
-end_include
 
 begin_include
 include|#
@@ -63,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|"servconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bufaux.h"
 end_include
 
 begin_include
@@ -625,6 +613,10 @@ literal|"environment=\""
 expr_stmt|;
 if|if
 condition|(
+name|options
+operator|.
+name|permit_user_env
+operator|&&
 name|strncasecmp
 argument_list|(
 name|opts

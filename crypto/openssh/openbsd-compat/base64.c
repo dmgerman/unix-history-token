@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: base64.c,v 1.3 1997/11/08 20:46:55 deraadt Exp $	*/
+comment|/*	$OpenBSD: base64.c,v 1.4 2002/01/02 23:00:10 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"includes.h"
 end_include
 
 begin_if
@@ -92,6 +92,10 @@ include|#
 directive|include
 file|"base64.h"
 end_include
+
+begin_comment
+comment|/* XXX abort illegal in library */
+end_comment
 
 begin_define
 define|#

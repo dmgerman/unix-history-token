@@ -4095,6 +4095,12 @@ expr_stmt|;
 name|SSLeay_add_all_algorithms
 argument_list|()
 expr_stmt|;
+name|init_rng
+argument_list|()
+expr_stmt|;
+name|seed_rng
+argument_list|()
+expr_stmt|;
 comment|/* we need this for the home * directory.  */
 name|pw
 operator|=
@@ -4424,6 +4430,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|change_comment
+condition|)
+name|do_change_comment
+argument_list|(
+name|pw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|convert_to_ssh2
 condition|)
 name|do_convert_to_ssh2
@@ -4433,9 +4448,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|change_comment
+name|convert_from_ssh2
 condition|)
-name|do_change_comment
+name|do_convert_from_ssh2
 argument_list|(
 name|pw
 argument_list|)
@@ -4490,23 +4505,8 @@ endif|#
 directive|endif
 comment|/* SMARTCARD */
 block|}
-name|init_rng
-argument_list|()
-expr_stmt|;
-name|seed_rng
-argument_list|()
-expr_stmt|;
 name|arc4random_stir
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|convert_from_ssh2
-condition|)
-name|do_convert_from_ssh2
-argument_list|(
-name|pw
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

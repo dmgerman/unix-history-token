@@ -45,7 +45,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$OpenBSD: realpath.c,v 1.6 2002/01/12 16:24:35 millert Exp $"
+literal|"$OpenBSD: realpath.c,v 1.7 2002/05/24 21:22:37 deraadt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,11 +205,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|resolved
 argument_list|,
 literal|"."
+argument_list|,
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
 return|return
@@ -448,11 +450,14 @@ comment|/* 	 * Save the last component name and get the full pathname of 	 * the
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|wbuf
 argument_list|,
 name|p
+argument_list|,
+sizeof|sizeof
+name|wbuf
 argument_list|)
 expr_stmt|;
 if|if

@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"openbsd-compat/tree.h"
+file|"openbsd-compat/sys-tree.h"
 end_include
 
 begin_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readpassphrase.h,v 1.1 2000/11/21 00:48:38 millert Exp $	*/
+comment|/*	$OpenBSD: readpassphrase.h,v 1.3 2002/06/28 12:32:22 millert Exp $	*/
 end_comment
 
 begin_comment
@@ -95,6 +95,17 @@ end_define
 
 begin_comment
 comment|/* Strip the high bit from input. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RPP_STDIN
+value|0x20
+end_define
+
+begin_comment
+comment|/* Read from stdin, not /dev/tty */
 end_comment
 
 begin_function_decl

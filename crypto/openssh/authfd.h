@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: authfd.h,v 1.30 2002/06/19 00:27:55 deraadt Exp $	*/
+comment|/*	$OpenBSD: authfd.h,v 1.31 2002/09/11 18:27:25 stevesk Exp $	*/
 end_comment
 
 begin_comment
@@ -252,6 +252,15 @@ block|}
 name|AuthenticationConnection
 typedef|;
 end_typedef
+
+begin_function_decl
+name|int
+name|ssh_agent_present
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
