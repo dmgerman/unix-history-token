@@ -3068,23 +3068,6 @@ name|OBJT_SWAP
 operator|)
 condition|)
 return|return;
-name|KASSERT
-argument_list|(
-operator|(
-name|source
-operator|->
-name|flags
-operator|&
-name|OBJ_ONEMAPPING
-operator|)
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"vm_object_shadow: source object has OBJ_ONEMAPPING set.\n"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allocate a new object with the given length 	 */
 if|if
 condition|(
