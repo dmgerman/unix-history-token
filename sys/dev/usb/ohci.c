@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.23 1999/01/07 02:06:05 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: ohci.c,v 1.7 1999/01/07 23:31:29 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: ohci.c,v 1.8 1999/01/10 18:42:51 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -6373,7 +6373,7 @@ operator|->
 name|physaddr
 argument_list|,
 operator|(
-name|u_long
+name|int
 operator|)
 name|LE
 argument_list|(
@@ -6524,7 +6524,7 @@ argument_list|)
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
+name|int
 operator|)
 name|LE
 argument_list|(
@@ -6550,7 +6550,7 @@ name|ed_tailp
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
+name|int
 operator|)
 name|LE
 argument_list|(
