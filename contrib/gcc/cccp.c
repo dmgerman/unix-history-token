@@ -14635,6 +14635,12 @@ condition|(
 name|output_marks
 condition|)
 block|{
+name|op
+operator|->
+name|bufp
+operator|=
+name|obp
+expr_stmt|;
 name|check_expand
 argument_list|(
 name|op
@@ -14645,6 +14651,12 @@ name|ibp
 operator|+
 literal|2
 argument_list|)
+expr_stmt|;
+name|obp
+operator|=
+name|op
+operator|->
+name|bufp
 expr_stmt|;
 operator|*
 name|obp
