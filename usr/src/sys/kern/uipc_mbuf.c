@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.39	82/10/21	*/
+comment|/*	uipc_mbuf.c	1.40	82/10/21	*/
 end_comment
 
 begin_include
@@ -161,6 +161,9 @@ name|rmalloc
 argument_list|(
 name|mbmap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|npg
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.10	82/10/21	*/
+comment|/*	vm_swap.c	4.11	82/10/21	*/
 end_comment
 
 begin_include
@@ -576,12 +576,20 @@ name|rminit
 argument_list|(
 name|argmap
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|blk
 operator|/
 literal|2
 operator|-
 name|CLSIZE
+argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|CLSIZE
 argument_list|,
 literal|"argmap"
@@ -594,10 +602,16 @@ name|rminit
 argument_list|(
 name|swapmap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blk
 operator|/
 literal|2
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blk
 operator|/
 literal|2

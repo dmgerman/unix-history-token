@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.59	82/10/21	*/
+comment|/*	conf.c	4.60	82/10/21	*/
 end_comment
 
 begin_include
@@ -3046,24 +3046,24 @@ name|nodev
 block|,
 endif|#
 directive|endif
-name|nodev
+name|udopen
 block|,
-name|nodev
+name|nulldev
 block|,
-name|nodev
+name|udread
 block|,
-name|nodev
+name|udwrite
 block|,
 comment|/*9*/
-name|nodev
+name|udioctl
 block|,
 name|nodev
 block|,
-name|nodev
+name|udreset
 block|,
 literal|0
 block|,
-name|nodev
+name|seltrue
 block|,
 name|vaopen
 block|,

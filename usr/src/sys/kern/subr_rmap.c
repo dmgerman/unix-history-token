@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_rmap.c	4.7	82/10/21	*/
+comment|/*	subr_rmap.c	4.8	82/10/21	*/
 end_comment
 
 begin_include
@@ -81,7 +81,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|size
 decl_stmt|,
 name|addr

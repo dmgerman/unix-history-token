@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.66	82/10/20	*/
+comment|/*	machdep.c	4.67	82/10/21	*/
 end_comment
 
 begin_include
@@ -952,8 +952,14 @@ name|rminit
 argument_list|(
 name|kernelmap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|USRPTSIZE
 argument_list|,
+operator|(
+name|long
+operator|)
 literal|1
 argument_list|,
 literal|"usrpt"
@@ -965,6 +971,10 @@ name|rminit
 argument_list|(
 name|mbmap
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 operator|(
 name|nmbclusters
 operator|-
@@ -972,7 +982,11 @@ literal|1
 operator|)
 operator|*
 name|CLSIZE
+argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|CLSIZE
 argument_list|,
 literal|"mbclusters"
