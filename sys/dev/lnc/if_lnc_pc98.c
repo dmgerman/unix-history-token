@@ -108,7 +108,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|cnet98s_probe
 name|__P
@@ -328,7 +327,6 @@ comment|/* Collision */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|cnet98s_probe
 parameter_list|(
