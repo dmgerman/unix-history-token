@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sleepqueue.h>
 end_include
 
@@ -9352,11 +9358,12 @@ name|td_priority
 operator|>
 name|PUSER
 condition|)
+name|sched_prio
+argument_list|(
 name|td
-operator|->
-name|td_priority
-operator|=
+argument_list|,
 name|PUSER
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -9445,11 +9452,12 @@ name|td_priority
 operator|>
 name|PUSER
 condition|)
+name|sched_prio
+argument_list|(
 name|td
-operator|->
-name|td_priority
-operator|=
+argument_list|,
 name|PUSER
+argument_list|)
 expr_stmt|;
 block|}
 name|sleepq_abort
