@@ -8975,13 +8975,6 @@ literal|0
 expr_stmt|;
 name|newsp
 operator|->
-name|refcnt
-operator|=
-literal|1
-expr_stmt|;
-comment|/* do not reclaim until I say I do */
-name|newsp
-operator|->
 name|state
 operator|=
 name|IPSEC_SPSTATE_ALIVE
@@ -33661,6 +33654,7 @@ argument_list|(
 name|sp
 argument_list|)
 condition|)
+block|{
 name|LIST_REMOVE
 argument_list|(
 name|sp
@@ -33673,6 +33667,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
