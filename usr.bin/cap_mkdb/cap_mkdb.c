@@ -219,11 +219,17 @@ index|[]
 parameter_list|)
 block|{
 name|int
+name|byteorder
+decl_stmt|,
 name|c
 decl_stmt|;
 name|capname
 operator|=
 name|NULL
+expr_stmt|;
+name|byteorder
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -236,7 +242,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:v"
+literal|"bf:lv"
 argument_list|)
 operator|)
 operator|!=
@@ -249,6 +255,32 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'b'
+case|:
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+name|byteorder
+operator|!=
+literal|0
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|byteorder
+operator|=
+name|c
+operator|==
+literal|'b'
+condition|?
+literal|4321
+else|:
+literal|1234
+expr_stmt|;
+break|break;
 case|case
 literal|'f'
 case|:
@@ -291,6 +323,13 @@ name|NULL
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+comment|/* Set byte order. */
+name|openinfo
+operator|.
+name|lorder
+operator|=
+name|byteorder
 expr_stmt|;
 comment|/* 	 * The database file is the first argument if no name is specified. 	 * Make arrangements to unlink it if exit badly. 	 */
 operator|(
@@ -1068,7 +1107,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cap_mkdb [-v] [-f outfile] file [file ...]\n"
+literal|"usage: cap_mkdb [-b | -l] [-v] [-f outfile] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
