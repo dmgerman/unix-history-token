@@ -2691,6 +2691,11 @@ name|v_data
 operator|=
 literal|0
 expr_stmt|;
+name|vnode_destroy_vobject
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

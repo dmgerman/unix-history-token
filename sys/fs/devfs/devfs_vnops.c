@@ -5043,6 +5043,11 @@ name|v_rdev
 argument_list|)
 expr_stmt|;
 block|}
+name|vnode_destroy_vobject
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

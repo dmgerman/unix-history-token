@@ -1623,6 +1623,12 @@ name|v_data
 operator|=
 name|NULL
 expr_stmt|;
+name|vp
+operator|->
+name|v_object
+operator|=
+name|NULL
+expr_stmt|;
 name|vrele
 argument_list|(
 name|lowervp

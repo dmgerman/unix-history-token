@@ -2432,6 +2432,12 @@ name|NULL
 expr_stmt|;
 name|vp
 operator|->
+name|v_object
+operator|=
+name|NULL
+expr_stmt|;
+name|vp
+operator|->
 name|v_vnlock
 operator|=
 operator|&
