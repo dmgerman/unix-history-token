@@ -4311,7 +4311,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|iommu_dvamamp_load_mbuf_sg
+name|iommu_dvmamap_load_mbuf_sg
 parameter_list|(
 name|bus_dma_tag_t
 name|dt
@@ -5396,7 +5396,7 @@ name|iommu_dvmamap_load
 block|,
 name|iommu_dvmamap_load_mbuf
 block|,
-name|iommu_dvamamp_load_mbuf_sg
+name|iommu_dvmamap_load_mbuf_sg
 block|,
 name|iommu_dvmamap_load_uio
 block|,
