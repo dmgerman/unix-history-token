@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.22 83/04/18"
+literal|"@(#)login.c	4.23 83/05/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,14 +385,6 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|stypeof
 parameter_list|()
 function_decl|;
@@ -743,23 +735,28 @@ name|user
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|user
+operator|=
 name|index
 argument_list|(
 name|ahost
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 operator|*
-name|index
-argument_list|(
-name|ahost
-argument_list|,
-literal|'\n'
-argument_list|)
+name|user
+operator|++
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|user
 operator|=
 name|index
@@ -768,16 +765,15 @@ name|ahost
 argument_list|,
 literal|' '
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|user
+operator|)
+operator|!=
+literal|0
 condition|)
 operator|*
 name|user
 operator|++
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -884,11 +880,6 @@ block|{
 name|printf
 argument_list|(
 literal|"login: .rhosts is a soft link.\r\n"
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|hostf
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2424,15 +2415,6 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|rflag
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 if|if
 condition|(
 operator|(
