@@ -7424,13 +7424,7 @@ name|tp
 operator|->
 name|t_outq
 expr_stmt|;
-name|scp
-operator|->
-name|status
-operator|&=
-operator|~
-name|CURSOR_ENABLED
-expr_stmt|;
+comment|/* scp->status&= ~CURSOR_ENABLED; */
 while|while
 condition|(
 name|rbp
@@ -7459,15 +7453,12 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* scp->status |= (CURSOR_ENABLED | UPDATE_SCREEN); */
 name|scp
 operator|->
 name|status
 operator||=
-operator|(
-name|CURSOR_ENABLED
-operator||
 name|UPDATE_SCREEN
-operator|)
 expr_stmt|;
 name|s
 operator|=
@@ -13689,7 +13680,7 @@ name|init_done
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	 * Crtat initialized to point to MONO buffer, if not present change 	 * to CGA_BUF offset. ONLY ADD the difference since locore.s adds 	 * in the remapped offset at the "right" time 	 */
+comment|/* 	 * Crtat initialized to point to MONO buffer, if not present change 	 * to CGA_BUF offset. ONLY add the difference since locore.s adds 	 * in the remapped offset at the "right" time 	 */
 name|was
 operator|=
 operator|*
@@ -14375,6 +14366,12 @@ literal|0
 expr_stmt|;
 name|scp
 operator|->
+name|status
+operator||=
+name|CURSOR_ENABLED
+expr_stmt|;
+name|scp
+operator|->
 name|pid
 operator|=
 literal|0
@@ -14456,12 +14453,20 @@ operator|=
 operator|&
 name|kernel_default
 expr_stmt|;
+if|if
+condition|(
 name|scp
 operator|->
-name|status
-operator|&=
-operator|~
-name|CURSOR_ENABLED
+name|scr_buf
+operator|==
+name|Crtat
+condition|)
+name|draw_cursor
+argument_list|(
+name|scp
+argument_list|,
+name|FALSE
+argument_list|)
 expr_stmt|;
 name|ansi_put
 argument_list|(
@@ -14477,11 +14482,7 @@ name|scp
 operator|->
 name|status
 operator||=
-operator|(
-name|CURSOR_ENABLED
-operator||
 name|UPDATE_SCREEN
-operator|)
 expr_stmt|;
 name|kernel_console
 operator|=
@@ -14502,19 +14503,19 @@ name|save
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|scp
+operator|==
+name|cur_console
+comment|/*&& scrn_timer not running */
+condition|)
+block|{
+if|if
+condition|(
 name|scp
 operator|->
 name|scr_buf
 operator|!=
 name|Crtat
-operator|)
-operator|&&
-operator|(
-name|scp
-operator|==
-name|cur_console
-operator|)
 condition|)
 block|{
 name|bcopyw
@@ -14525,6 +14526,7 @@ name|scr_buf
 argument_list|,
 name|Crtat
 argument_list|,
+operator|(
 name|scp
 operator|->
 name|xsize
@@ -14532,6 +14534,7 @@ operator|*
 name|scp
 operator|->
 name|ysize
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -14546,12 +14549,20 @@ operator|&=
 operator|~
 name|CURSOR_SHOWN
 expr_stmt|;
+block|}
 name|draw_cursor
 argument_list|(
 name|scp
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+name|scp
+operator|->
+name|status
+operator|&=
+operator|~
+name|UPDATE_SCREEN
 expr_stmt|;
 block|}
 block|}
