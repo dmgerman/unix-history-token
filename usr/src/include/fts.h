@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)fts.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)fts.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -11,50 +11,50 @@ block|{
 name|struct
 name|ftsent
 modifier|*
-name|cur
+name|fts_cur
 decl_stmt|;
 comment|/* current node */
 name|struct
 name|ftsent
 modifier|*
-name|child
+name|fts_child
 decl_stmt|;
 comment|/* linked list of children */
 name|struct
 name|ftsent
 modifier|*
-name|savelink
+name|fts_savelink
 decl_stmt|;
 comment|/* saved link if node had a cycle */
 name|struct
 name|ftsent
 modifier|*
 modifier|*
-name|array
+name|fts_array
 decl_stmt|;
 comment|/* sort array */
 name|char
 modifier|*
-name|path
+name|fts_path
 decl_stmt|;
 comment|/* path for this descent */
 name|char
 modifier|*
-name|wd
+name|fts_wd
 decl_stmt|;
 comment|/* starting directory */
 name|int
-name|pathlen
+name|fts_pathlen
 decl_stmt|;
 comment|/* sizeof(path) */
 name|int
-name|nitems
+name|fts_nitems
 decl_stmt|;
 comment|/* elements in the sort array */
 name|int
 function_decl|(
 modifier|*
-name|compar
+name|fts_compar
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -95,7 +95,7 @@ name|FTS_SEEDOT
 value|0x040
 comment|/* user: return dot and dot-dot */
 name|int
-name|options
+name|fts_options
 decl_stmt|;
 comment|/* openfts() options */
 block|}
@@ -111,13 +111,13 @@ block|{
 name|struct
 name|ftsent
 modifier|*
-name|parent
+name|fts_parent
 decl_stmt|;
 comment|/* parent directory */
 name|struct
 name|ftsent
 modifier|*
-name|link
+name|fts_link
 decl_stmt|;
 comment|/* next/cycle node */
 union|union
@@ -132,28 +132,28 @@ name|pointer
 decl_stmt|;
 comment|/* local address value */
 block|}
-name|local
+name|fts_local
 union|;
 name|char
 modifier|*
-name|accpath
+name|fts_accpath
 decl_stmt|;
 comment|/* path from current directory */
 name|char
 modifier|*
-name|path
+name|fts_path
 decl_stmt|;
 comment|/* path from starting directory */
 name|short
-name|pathlen
+name|fts_pathlen
 decl_stmt|;
 comment|/* strlen(path) */
 name|short
-name|namelen
+name|fts_namelen
 decl_stmt|;
 comment|/* strlen(name) */
 name|short
-name|level
+name|fts_level
 decl_stmt|;
 comment|/* depth (-1 to N) */
 define|#
@@ -212,7 +212,7 @@ name|FTS_DEFAULT
 value|11
 comment|/* none of the above */
 name|u_short
-name|info
+name|fts_info
 decl_stmt|;
 comment|/* file information */
 define|#
@@ -231,16 +231,16 @@ name|FTS_FOLLOW
 value|3
 comment|/* user: follow symbolic link */
 name|short
-name|instr
+name|fts_instr
 decl_stmt|;
 comment|/* setfts() instructions */
 name|struct
 name|stat
-name|statb
+name|fts_statb
 decl_stmt|;
 comment|/* stat(2) information */
 name|char
-name|name
+name|fts_name
 index|[
 literal|1
 index|]
@@ -251,35 +251,110 @@ name|FTSENT
 typedef|;
 end_typedef
 
-begin_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
 name|FTS
 modifier|*
 name|ftsopen
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+argument_list|(
+specifier|const
+name|char
+operator|*
+operator|*
+argument_list|,
+name|int
+argument_list|,
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+specifier|const
 name|FTSENT
-modifier|*
+operator|*
+argument_list|,
+specifier|const
+name|FTSENT
+operator|*
+argument_list|)
+argument_list|;
+specifier|extern
+name|FTSENT
+operator|*
+name|ftsread
+argument_list|(
+name|FTS
+operator|*
+argument_list|)
+argument_list|;
+specifier|extern
+name|FTSENT
+operator|*
+name|ftschildren
+argument_list|(
+name|FTS
+operator|*
+argument_list|)
+argument_list|;
+specifier|extern
+name|int
+name|ftsset
+argument_list|(
+name|FTS
+operator|*
+argument_list|,
+name|FTSENT
+operator|*
+argument_list|,
+name|int
+argument_list|)
+argument_list|;
+specifier|extern
+name|int
+name|ftsclose
+argument_list|(
+name|FTS
+operator|*
+argument_list|)
+argument_list|;
+else|#
+directive|else
+specifier|extern
+name|FTS
+operator|*
+name|ftsopen
+argument_list|()
+argument_list|;
+specifier|extern
+name|FTSENT
+operator|*
 name|ftschildren
 argument_list|()
-decl_stmt|,
-modifier|*
+argument_list|,
+operator|*
 name|ftsread
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+argument_list|;
+specifier|extern
 name|int
 name|ftsclose
 argument_list|()
-decl_stmt|,
+argument_list|,
 name|ftsset
 argument_list|()
-decl_stmt|;
+argument_list|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
