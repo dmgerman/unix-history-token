@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)inode.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -138,17 +138,12 @@ name|i_gid
 value|i_din.di_gid
 end_define
 
-begin_comment
-comment|/* ugh! -- must be fixed */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
 operator|||
 name|defined
 argument_list|(
@@ -156,11 +151,31 @@ name|tahoe
 argument_list|)
 end_if
 
+begin_comment
+comment|/* ugh! -- must be fixed */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|i_size
 value|i_din.di_qsize.val[0]
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* BYTE_ORDER == BIG_ENDIAN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|i_size
+value|i_din.di_qsize.val[1]
 end_define
 
 begin_endif
