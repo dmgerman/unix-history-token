@@ -2797,6 +2797,7 @@ name|timeval
 modifier|*
 name|t1
 parameter_list|,
+specifier|const
 name|struct
 name|timeval
 modifier|*
@@ -2836,6 +2837,7 @@ name|timeval
 modifier|*
 name|t1
 parameter_list|,
+specifier|const
 name|struct
 name|timeval
 modifier|*
