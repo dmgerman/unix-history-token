@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.8 (Berkeley) %G%"
+literal|"@(#)io.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,6 @@ begin_include
 include|#
 directive|include
 file|"indent_globs.h"
-include|;
 end_include
 
 begin_include
@@ -2210,6 +2209,12 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_decl_stmt
+name|int
+name|found_err
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|diag
 argument_list|(
@@ -2225,6 +2230,14 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|level
+condition|)
+name|found_err
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|output
