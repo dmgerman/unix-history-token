@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c 4.2 %G%"
+literal|"@(#)canfield.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1824,6 +1824,8 @@ argument_list|,
 argument|b
 argument_list|,
 argument|cp
+argument_list|,
+argument|inverse
 argument_list|)
 end_macro
 
@@ -1835,6 +1837,12 @@ name|cp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|inverse
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|move
@@ -1843,6 +1851,26 @@ name|b
 argument_list|,
 name|a
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|->
+name|rank
+operator|!=
+literal|10
+condition|)
+name|addch
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inverse
+condition|)
+name|standout
+argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -1880,7 +1908,7 @@ literal|10
 case|:
 name|printw
 argument_list|(
-literal|"%2d"
+literal|"%d"
 argument_list|,
 name|cp
 operator|->
@@ -1891,39 +1919,46 @@ break|break;
 case|case
 name|Ace
 case|:
-name|printw
+name|addch
 argument_list|(
-literal|" A"
+literal|'A'
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|Jack
 case|:
-name|printw
+name|addch
 argument_list|(
-literal|" J"
+literal|'J'
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|Queen
 case|:
-name|printw
+name|addch
 argument_list|(
-literal|" Q"
+literal|'Q'
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|King
 case|:
-name|printw
+name|addch
 argument_list|(
-literal|" K"
+literal|'K'
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|inverse
+condition|)
+name|standend
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
@@ -1994,6 +2029,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|bool
+name|inverse
+init|=
+operator|(
+name|cp
+operator|->
+name|suit
+operator|==
+literal|'d'
+operator|||
+name|cp
+operator|->
+name|suit
+operator|==
+literal|'h'
+operator|)
+decl_stmt|;
 name|printrank
 argument_list|(
 name|a
@@ -2001,7 +2053,16 @@ argument_list|,
 name|b
 argument_list|,
 name|cp
+argument_list|,
+name|inverse
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inverse
+condition|)
+name|standout
+argument_list|()
 expr_stmt|;
 name|addch
 argument_list|(
@@ -2009,6 +2070,13 @@ name|cp
 operator|->
 name|suit
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inverse
+condition|)
+name|standend
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -2749,6 +2817,8 @@ name|found
 index|[
 literal|0
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
