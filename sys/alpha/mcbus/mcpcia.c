@@ -3685,43 +3685,6 @@ name|long
 operator|)
 name|arg
 decl_stmt|;
-if|if
-condition|(
-name|vec
-operator|>=
-name|MCPCIA_VEC_EISA
-operator|&&
-name|vec
-operator|<
-name|MCPCIA_VEC_PCI
-condition|)
-block|{
-if|#
-directive|if
-name|NSIO
-operator|>
-literal|0
-name|sio_iointr
-argument_list|(
-name|framep
-argument_list|,
-name|vec
-argument_list|)
-expr_stmt|;
-return|return;
-else|#
-directive|else
-name|panic
-argument_list|(
-literal|"mcpcia_intr: (E)ISA interrupt support not configured "
-literal|"for vector 0x%lx"
-argument_list|,
-name|vec
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 comment|/* 	 * Check for I2C interrupts.  These are technically within 	 * the PCI vector range, but no PCI device should ever map 	 * to them. 	 */
 if|if
 condition|(
