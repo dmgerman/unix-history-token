@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.36	81/04/15	*/
+comment|/*	tm.c	4.37	81/04/28	*/
 end_comment
 
 begin_include
@@ -975,6 +975,9 @@ name|timeout
 argument_list|(
 name|tmtimer
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|dev
 argument_list|,
 literal|5
@@ -1705,7 +1708,7 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/* 		 * Set next state; give 5 minutes to complete 		 * rewind, or 10 seconds per iteration (minimum 60 		 * seconds and max 5 minute) to complete other ops. 		 */
+comment|/* 		 * Set next state; give 5 minutes to complete 		 * rewind, or 10 seconds per iteration (minimum 60 		 * seconds and max 5 minutes) to complete other ops. 		 */
 if|if
 condition|(
 name|bp
@@ -1746,9 +1749,9 @@ name|sc
 operator|->
 name|sc_timo
 operator|=
-name|min
+name|imin
 argument_list|(
-name|max
+name|imax
 argument_list|(
 literal|10
 operator|*
@@ -2085,9 +2088,9 @@ name|sc
 operator|->
 name|sc_timo
 operator|=
-name|min
+name|imin
 argument_list|(
-name|max
+name|imax
 argument_list|(
 literal|10
 operator|*
@@ -3000,6 +3003,9 @@ name|timeout
 argument_list|(
 name|tmtimer
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|dev
 argument_list|,
 literal|5
