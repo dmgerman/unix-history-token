@@ -903,7 +903,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Extra precision variant, returning struct {double a, b;};  * log(x) = a+b to 63 bits, with a is rounded to 26 bits.  */
+comment|/*  * Extra precision variant, returning struct {double a, b;};  * log(x) = a+b to 63 bits, with a rounded to 26 bits.  */
 end_comment
 
 begin_function

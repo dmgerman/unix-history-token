@@ -4,7 +4,7 @@ comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
 end_comment
 
 begin_comment
-comment|/*  * warmstart.c  * Allows for gathering of registrations from a earlier dumped file.  *  * Copyright (c) 1990 by Sun Microsystems, Inc.  */
+comment|/*  * warmstart.c  * Allows for gathering of registrations from an earlier dumped file.  *  * Copyright (c) 1990 by Sun Microsystems, Inc.  */
 end_comment
 
 begin_comment

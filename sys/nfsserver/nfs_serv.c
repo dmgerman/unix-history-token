@@ -17034,7 +17034,7 @@ operator|+=
 name|tsiz
 expr_stmt|;
 block|}
-comment|/* And null pad to a int32_t boundary */
+comment|/* And null pad to an int32_t boundary. */
 for|for
 control|(
 name|i
@@ -18758,7 +18758,7 @@ operator|+=
 name|tsiz
 expr_stmt|;
 block|}
-comment|/* And null pad to a int32_t boundary */
+comment|/* And null pad to an int32_t boundary. */
 for|for
 control|(
 name|i

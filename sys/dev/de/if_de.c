@@ -18186,7 +18186,7 @@ name|total_len
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	     * Dequeue the first buffer for the start of the packet.  Hopefully 	     * this will be the only one we need to dequeue.  However, if the 	     * packet consumed multiple descriptors, then we need to dequeue 	     * those buffers and chain to the starting mbuf.  All buffers but 	     * the last buffer have the same length so we can set that now. 	     * (we add to last_offset instead of multiplying since we normally 	     * won't go into the loop and thereby saving a ourselves from 	     * doing a multiplication by 0 in the normal case). 	     */
+comment|/* 	     * Dequeue the first buffer for the start of the packet.  Hopefully 	     * this will be the only one we need to dequeue.  However, if the 	     * packet consumed multiple descriptors, then we need to dequeue 	     * those buffers and chain to the starting mbuf.  All buffers but 	     * the last buffer have the same length so we can set that now. 	     * (we add to last_offset instead of multiplying since we normally 	     * won't go into the loop and thereby saving ourselves from 	     * doing a multiplication by 0 in the normal case). 	     */
 name|_IF_DEQUEUE
 argument_list|(
 operator|&
@@ -20943,7 +20943,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * This is a experimental idea to alleviate problems due to interrupt  * livelock.  What is interrupt livelock?  It's when you spend all your  * time servicing device interrupts and never drop below device ipl  * to do "useful" work.  *  * So what we do here is see if the device needs service and if so,  * disable interrupts (dismiss the interrupt), place it in a list of devices  * needing service, and issue a network software interrupt.  *  * When our network software interrupt routine gets called, we simply  * walk done the list of devices that we have created and deal with them  * at splnet/splsoftnet.  *  */
+comment|/*  * This is an experimental idea to alleviate problems due to interrupt  * livelock.  What is interrupt livelock?  It's when you spend all your  * time servicing device interrupts and never drop below device ipl  * to do "useful" work.  *  * So what we do here is see if the device needs service and if so,  * disable interrupts (dismiss the interrupt), place it in a list of devices  * needing service, and issue a network software interrupt.  *  * When our network software interrupt routine gets called, we simply  * walk done the list of devices that we have created and deal with them  * at splnet/splsoftnet.  *  */
 end_comment
 
 begin_function

@@ -8,7 +8,7 @@ comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
 end_comment
 
 begin_comment
-comment|/*  * auth.h, Authentication interface.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * The data structures are completely opaque to the client.  The client  * is required to pass a AUTH * to routines that create rpc  * "sessions".  */
+comment|/*  * auth.h, Authentication interface.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * The data structures are completely opaque to the client.  The client  * is required to pass an AUTH * to routines that create rpc  * "sessions".  */
 end_comment
 
 begin_ifndef

@@ -3330,7 +3330,7 @@ literal|0
 block|print_ip("IPFIREWALL_FORWARD: New dst ip: ", 			    dst->sin_addr, "\n");
 endif|#
 directive|endif
-comment|/* 			 * We need to figure out if we have been forwarded 			 * to a local socket. If so, then we should somehow  			 * "loop back" to ip_input, and get directed to the 			 * PCB as if we had received this packet. This is 			 * because it may be dificult to identify the packets 			 * you want to forward until they are being output 			 * and have selected an interface. (e.g. locally 			 * initiated packets) If we used the loopback inteface, 			 * we would not be able to control what happens  			 * as the packet runs through ip_input() as 			 * it is done through a ISR. 			 */
+comment|/* 			 * We need to figure out if we have been forwarded 			 * to a local socket. If so, then we should somehow  			 * "loop back" to ip_input, and get directed to the 			 * PCB as if we had received this packet. This is 			 * because it may be dificult to identify the packets 			 * you want to forward until they are being output 			 * and have selected an interface. (e.g. locally 			 * initiated packets) If we used the loopback inteface, 			 * we would not be able to control what happens  			 * as the packet runs through ip_input() as 			 * it is done through an ISR. 			 */
 name|LIST_FOREACH
 argument_list|(
 argument|ia

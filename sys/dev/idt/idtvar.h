@@ -496,7 +496,7 @@ value|iu_pif.pif_cmderrors
 end_define
 
 begin_comment
-comment|/*  * Device VCC Entry  *   * Contains the common and IDT-specific information for each VCC  * which is opened through a IDT device.  */
+comment|/*  * Device VCC Entry  *   * Contains the common and IDT-specific information for each VCC  * which is opened through an IDT device.  */
 end_comment
 
 begin_struct

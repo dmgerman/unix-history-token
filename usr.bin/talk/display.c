@@ -83,7 +83,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * max HAS to be a function, it is called with  * a argument of the form --foo at least once.  */
+comment|/*  * max HAS to be a function, it is called with  * an argument of the form --foo at least once.  */
 end_comment
 
 begin_function

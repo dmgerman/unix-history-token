@@ -2211,7 +2211,7 @@ name|spidx
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* make a index to look for a policy */
+comment|/* Make an index to look for a policy. */
 operator|*
 name|error
 operator|=
@@ -2962,7 +2962,7 @@ name|spidx
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* make a index to look for a policy */
+comment|/* Make an index to look for a policy. */
 operator|*
 name|error
 operator|=

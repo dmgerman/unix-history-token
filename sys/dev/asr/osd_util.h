@@ -1153,7 +1153,7 @@ parameter_list|(
 name|SEMAPHORE_T
 parameter_list|)
 function_decl|;
-comment|/* wait for a event to happen */
+comment|/* wait for an event to happen */
 name|uLONG
 name|osdWaitForEventSemaphore
 parameter_list|(

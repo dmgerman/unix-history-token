@@ -8280,7 +8280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Buffer for error messages and a pointer that is set to point to the buffer  * when a error occurs.  It acts as a last error flag, being set to NULL  * after an error is returned.  */
+comment|/*  * Buffer for error messages and a pointer that is set to point to the buffer  * when an error occurs.  It acts as a last error flag, being set to NULL  * after an error is returned.  */
 end_comment
 
 begin_define

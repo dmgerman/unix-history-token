@@ -3815,7 +3815,7 @@ comment|/* ASR_queue_s */
 end_comment
 
 begin_comment
-comment|/*  *	Send a message synchronously to a Asr_softc_t  */
+comment|/*  *	Send a message synchronously to an Asr_softc_t.  */
 end_comment
 
 begin_function

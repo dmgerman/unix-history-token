@@ -3624,7 +3624,7 @@ expr|*
 name|ump
 argument_list|)
 expr_stmt|;
-comment|/* I don't know whether this is the right strategy. Note that 	   we dynamically allocate both a ext2_sb_info and a ext2_super_block 	   while Linux keeps the super block in a locked buffer 	 */
+comment|/* I don't know whether this is the right strategy. Note that 	   we dynamically allocate both an ext2_sb_info and an ext2_super_block 	   while Linux keeps the super block in a locked buffer 	 */
 name|ump
 operator|->
 name|um_e2fs
@@ -5085,7 +5085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up a EXT2FS dinode number to find its incore vnode, otherwise read it  * in from disk.  If it is in core, wait for the lock bit to clear, then  * return the inode locked.  Detection and handling of mount points must be  * done by the calling routine.  */
+comment|/*  * Look up an EXT2FS dinode number to find its incore vnode, otherwise read it  * in from disk.  If it is in core, wait for the lock bit to clear, then  * return the inode locked.  Detection and handling of mount points must be  * done by the calling routine.  */
 end_comment
 
 begin_function

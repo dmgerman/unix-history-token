@@ -356,7 +356,7 @@ parameter_list|()
 function_decl|;
 comment|/* end write. write the trailer and do any */
 comment|/* other format specific functions needed */
-comment|/* at the end of a archive write */
+comment|/* at the end of an archive write */
 name|int
 function_decl|(
 modifier|*

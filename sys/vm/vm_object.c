@@ -1313,7 +1313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * handle deallocating a object of type OBJT_VNODE  */
+comment|/*  * Handle deallocating an object of type OBJT_VNODE.  */
 end_comment
 
 begin_function

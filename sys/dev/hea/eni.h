@@ -1504,7 +1504,7 @@ comment|/* Number of data words per cell */
 end_comment
 
 begin_comment
-comment|/*  * Access to Serial EEPROM [as opposed to expansion (E)PROM].  *  * This is a ATMEL AT24C01 serial EEPROM part.  * See http://www.atmel.com/atmel/products/prod162.htm for timimg diagrams  * for START/STOP/ACK/READ cycles.  */
+comment|/*  * Access to Serial EEPROM [as opposed to expansion (E)PROM].  *  * This is an ATMEL AT24C01 serial EEPROM part.  * See http://www.atmel.com/atmel/products/prod162.htm for timimg diagrams  * for START/STOP/ACK/READ cycles.  */
 end_comment
 
 begin_define
@@ -1593,7 +1593,7 @@ comment|/*  * Host protocol control blocks  *  */
 end_comment
 
 begin_comment
-comment|/*  * Device VCC Entry  *  * Contains the common and ENI-specific information for each VCC  * which is opened through a ENI device.  */
+comment|/*  * Device VCC Entry  *  * Contains the common and ENI-specific information for each VCC  * which is opened through an ENI device.  */
 end_comment
 
 begin_struct

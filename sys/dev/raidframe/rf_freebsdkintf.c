@@ -6611,7 +6611,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* this is the callback function associated with a I/O invoked from    kernel code.  */
+comment|/* This is the callback function associated with an I/O invoked from    kernel code.  */
 end_comment
 
 begin_function

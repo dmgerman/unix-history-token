@@ -1230,7 +1230,7 @@ decl_stmt|,
 name|loop_end
 decl_stmt|;
 comment|/* Byte offsets from the beginning */
-comment|/*  * The base_freq and base_note fields are used when computing the  * playback speed for a note. The base_note defines the tone frequency  * which is heard if the sample is played using the base_freq as the  * playback speed.  *  * The low_note and high_note fields define the minimum and maximum note  * frequencies for which this sample is valid. It is possible to define  * more than one samples for a instrument number at the same time. The  * low_note and high_note fields are used to select the most suitable one.  *  * The fields base_note, high_note and low_note should contain  * the note frequency multiplied by 1000. For example value for the  * middle A is 440*1000.  */
+comment|/*  * The base_freq and base_note fields are used when computing the  * playback speed for a note. The base_note defines the tone frequency  * which is heard if the sample is played using the base_freq as the  * playback speed.  *  * The low_note and high_note fields define the minimum and maximum note  * frequencies for which this sample is valid. It is possible to define  * more than one samples for an instrument number at the same time. The  * low_note and high_note fields are used to select the most suitable one.  *  * The fields base_note, high_note and low_note should contain  * the note frequency multiplied by 1000. For example value for the  * middle A is 440*1000.  */
 name|u_int
 name|base_freq
 decl_stmt|;
@@ -1424,7 +1424,7 @@ define|#
 directive|define
 name|PM_K_COMMAND
 value|2
-comment|/* Request from a application */
+comment|/* Request from an application */
 define|#
 directive|define
 name|PM_K_RESPONSE

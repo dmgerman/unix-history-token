@@ -673,7 +673,7 @@ argument_list|,
 name|fn
 argument_list|)
 expr_stmt|;
-comment|/* 	 * first check whether this is an object file - read a object 	 * header, and skip back to the beginning 	 */
+comment|/* 	 * First check whether this is an object file - read an object 	 * header, and skip back to the beginning. 	 */
 if|if
 condition|(
 name|fread

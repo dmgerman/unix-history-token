@@ -403,7 +403,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * XDR routine to handle a accepted rpc reply.  * xdr_accepted_reply(xdrs, rej)  * 	XDR *xdrs;  * 	struct accepted_reply *rej;  */
+comment|/*  * XDR routine to handle an accepted rpc reply.  * xdr_accepted_reply(xdrs, rej)  * 	XDR *xdrs;  * 	struct accepted_reply *rej;  */
 end_comment
 
 begin_function_decl

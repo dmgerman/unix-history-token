@@ -735,7 +735,7 @@ value|xdr_u_int32(xdrs, portp)
 end_define
 
 begin_comment
-comment|/*  * Support struct for discriminated unions.  * You create an array of xdrdiscrim structures, terminated with  * a entry with a null procedure pointer.  The xdr_union routine gets  * the discriminant value and then searches the array of structures  * for a matching value.  If a match is found the associated xdr routine  * is called to handle that part of the union.  If there is  * no match, then a default routine may be called.  * If there is no match and no default routine it is an error.  */
+comment|/*  * Support struct for discriminated unions.  * You create an array of xdrdiscrim structures, terminated with  * an entry with a null procedure pointer.  The xdr_union routine gets  * the discriminant value and then searches the array of structures  * for a matching value.  If a match is found the associated xdr routine  * is called to handle that part of the union.  If there is  * no match, then a default routine may be called.  * If there is no match and no default routine it is an error.  */
 end_comment
 
 begin_define

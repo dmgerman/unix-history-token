@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2001 Orion Hodson<oho@acm.org>  * All rights reserve
 end_comment
 
 begin_comment
-comment|/*  * als4000.c - driver for the Avance Logic ALS 4000 chipset.  *  * The ALS4000 is a effectively an SB16 with a PCI interface.  *  * This driver derives from ALS4000a.PDF, Bart Hartgers alsa driver, and  * SB16 register descriptions.  */
+comment|/*  * als4000.c - driver for the Avance Logic ALS 4000 chipset.  *  * The ALS4000 is effectively an SB16 with a PCI interface.  *  * This driver derives from ALS4000a.PDF, Bart Hartgers alsa driver, and  * SB16 register descriptions.  */
 end_comment
 
 begin_include

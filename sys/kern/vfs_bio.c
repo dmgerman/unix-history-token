@@ -10649,7 +10649,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	bufwait:  *  *	Wait for buffer I/O completion, returning error status.  The buffer  *	is left locked and B_DONE on return.  B_EINTR is converted into a EINTR  *	error and cleared.  */
+comment|/*  *	bufwait:  *  *	Wait for buffer I/O completion, returning error status.  The buffer  *	is left locked and B_DONE on return.  B_EINTR is converted into an EINTR  *	error and cleared.  */
 end_comment
 
 begin_function

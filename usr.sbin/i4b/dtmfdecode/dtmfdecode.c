@@ -38,7 +38,7 @@ value|(0x80)
 end_define
 
 begin_comment
-comment|/* Sign bit for a A-law byte. */
+comment|/* Sign bit for an A-law byte. */
 end_comment
 
 begin_define

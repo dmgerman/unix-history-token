@@ -4582,7 +4582,7 @@ comment|/*  * Routines for the ATI Inport bus mouse.  */
 end_comment
 
 begin_comment
-comment|/*  * Test for a ATI Inport bus mouse and return 1 if it is.  * (do not enable interrupts)  */
+comment|/*  * Test for an ATI Inport bus mouse and return 1 if it is.  * (do not enable interrupts)  */
 end_comment
 
 begin_function

@@ -4972,7 +4972,7 @@ name|pipe_nr
 operator|&=
 literal|0xffff
 expr_stmt|;
-comment|/*      * this is a dummynet rule, so we expect a O_PIPE or O_QUEUE rule      */
+comment|/*      * This is a dummynet rule, so we expect an O_PIPE or O_QUEUE rule.      */
 name|fs
 operator|=
 name|locate_flowset

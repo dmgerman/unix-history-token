@@ -3171,7 +3171,7 @@ argument_list|,
 name|ED_NOVELL_RESET
 argument_list|)
 expr_stmt|;
-comment|/* 	 * I don't know if this is necessary; probably cruft leftover from 	 * Clarkson packet driver code. Doesn't do a thing on the boards I've 	 * tested. -DG [note that a outb(0x84, 0) seems to work here, and is 	 * non-invasive...but some boards don't seem to reset and I don't have 	 * complete documentation on what the 'right' thing to do is...so we 	 * do the invasive thing for now. Yuck.] 	 */
+comment|/* 	 * I don't know if this is necessary; probably cruft leftover from 	 * Clarkson packet driver code. Doesn't do a thing on the boards I've 	 * tested. -DG [note that an outb(0x84, 0) seems to work here, and is 	 * non-invasive...but some boards don't seem to reset and I don't have 	 * complete documentation on what the 'right' thing to do is...so we 	 * do the invasive thing for now. Yuck.] 	 */
 name|ed_asic_outb
 argument_list|(
 name|sc

@@ -976,7 +976,7 @@ literal|"\nThis command will read the value for the difference between the\n"
 expr|\
 literal|"measured Received Signal Strength Indication (RSSI) and the limits of\n"
 expr|\
-literal|"the Golden Receive Power Range for a ACL connection handle to another\n"
+literal|"the Golden Receive Power Range for an ACL connection handle to another\n"
 expr|\
 literal|"Bluetooth device. Any positive RSSI value returned by the Host Controller\n"
 expr|\

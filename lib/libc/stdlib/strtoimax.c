@@ -76,7 +76,7 @@ file|<inttypes.h>
 end_include
 
 begin_comment
-comment|/*  * Convert a string to a intmax_t integer.  *  * Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
+comment|/*  * Convert a string to an intmax_t integer.  *  * Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
 end_comment
 
 begin_function

@@ -1079,7 +1079,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  * pat_sel()  *	the archive member which matches a pattern was selected. Mark the  *	pattern as having selected an archive member. arcn->pat points at the  *	pattern that was matched. arcn->pat is set in pat_match()  *  *	NOTE: When the -c option is used, we are called when there was no match  *	by pat_match() (that means we did match before the inverted sense of  *	the logic). Now this seems really strange at first, but with -c  we  *	need to keep track of those patterns that cause a archive member to NOT  *	be selected (it found an archive member with a specified pattern)  * Return:  *	0 if the pattern pointed at by arcn->pat was tagged as creating a  *	match, -1 otherwise.  */
+comment|/*  * pat_sel()  *	the archive member which matches a pattern was selected. Mark the  *	pattern as having selected an archive member. arcn->pat points at the  *	pattern that was matched. arcn->pat is set in pat_match()  *  *	NOTE: When the -c option is used, we are called when there was no match  *	by pat_match() (that means we did match before the inverted sense of  *	the logic). Now this seems really strange at first, but with -c  we  *	need to keep track of those patterns that cause an archive member to NOT  *	be selected (it found an archive member with a specified pattern)  * Return:  *	0 if the pattern pointed at by arcn->pat was tagged as creating a  *	match, -1 otherwise.  */
 name|int
 name|pat_sel
 parameter_list|(
@@ -1595,7 +1595,7 @@ else|:
 literal|1
 operator|)
 return|;
-comment|/* 	 * we had a match, now when we invert the sense (-c) we reject this 	 * member. However we have to tag the pattern a being successful, (in a 	 * match, not in selecting a archive member) so we call pat_sel() here. 	 */
+comment|/* 	 * We had a match, now when we invert the sense (-c) we reject this 	 * member. However we have to tag the pattern a being successful, (in a 	 * match, not in selecting an archive member) so we call pat_sel() here. 	 */
 name|arcn
 operator|->
 name|pat

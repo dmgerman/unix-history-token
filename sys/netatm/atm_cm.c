@@ -6211,7 +6211,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find Shareable LLC VCC  *   * Given a endpoint-supplied connection attribute using LLC multiplexing,  * this function will attempt to locate an existing connection which meets  * the requirements of the supplied attributes.  *  * Called at splnet.  *  * Arguments:  *	ap	pointer to requested attributes  *  * Returns:  *	addr	shareable LLC connection VCC  *	0	no shareable VCC available  *  */
+comment|/*  * Find Shareable LLC VCC  *   * Given an endpoint-supplied connection attribute using LLC multiplexing,  * this function will attempt to locate an existing connection which meets  * the requirements of the supplied attributes.  *  * Called at splnet.  *  * Arguments:  *	ap	pointer to requested attributes  *  * Returns:  *	addr	shareable LLC connection VCC  *	0	no shareable VCC available  *  */
 end_comment
 
 begin_function

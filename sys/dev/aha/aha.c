@@ -1193,7 +1193,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 	 * Get the board ID.  We use this to see if we're dealing with 	 * a buslogic card or a aha card (or clone). 	 */
+comment|/* 	 * Get the board ID.  We use this to see if we're dealing with 	 * a buslogic card or an aha card (or clone). 	 */
 name|error
 operator|=
 name|aha_cmd
@@ -3458,7 +3458,7 @@ name|aha_hccb
 modifier|*
 name|hccb
 decl_stmt|;
-comment|/* 		 * get a accb to use. 		 */
+comment|/* 		 * Get an accb to use. 		 */
 if|if
 condition|(
 operator|(

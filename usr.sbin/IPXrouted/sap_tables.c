@@ -474,7 +474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a entry to the SAP table.  *  * If the malloc fail, the entry will silently be thrown away.  */
+comment|/*  * Add an entry to the SAP table.  *  * If the malloc fail, the entry will silently be thrown away.  */
 end_comment
 
 begin_function

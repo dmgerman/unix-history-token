@@ -12289,7 +12289,7 @@ modifier|*
 name|rcmdlen
 parameter_list|)
 block|{
-comment|/* A ATAPI command is always 12 bytes in length */
+comment|/* An ATAPI command is always 12 bytes in length. */
 name|KASSERT
 argument_list|(
 operator|*

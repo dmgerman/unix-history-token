@@ -596,7 +596,7 @@ name|type
 operator|=
 name|DELETE
 expr_stmt|;
-comment|/* 	 * This is just a extra clean up, so just send it 	 * and don't wait for an answer 	 */
+comment|/* 	 * This is just an extra clean up, so just send it 	 * and don't wait for an answer 	 */
 name|msg
 operator|.
 name|id_num

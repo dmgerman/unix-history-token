@@ -127,7 +127,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* then do a EOF */
+comment|/* then do an EOF */
 name|term__flush
 argument_list|()
 expr_stmt|;

@@ -3179,7 +3179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pull read data off a interface.  * Len is length of data, with local net header stripped.  */
+comment|/*  * Pull read data off an interface.  * Len is length of data, with local net header stripped.  */
 end_comment
 
 begin_function

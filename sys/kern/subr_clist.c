@@ -502,7 +502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the cblock allocation policy for a a clist.  * Must be called in process context at spltty().  */
+comment|/*  * Set the cblock allocation policy for a clist.  * Must be called in process context at spltty().  */
 end_comment
 
 begin_function

@@ -21512,7 +21512,7 @@ name|cp
 operator|->
 name|lun
 expr_stmt|;
-comment|/* 		 *  If we want to abort an untagged command, we  		 *  will send a IDENTIFY + M_ABORT. 		 *  Otherwise (tagged command), we will send  		 *  a IDENTITFY + task attributes + ABORT TAG. 		 */
+comment|/* 		 *  If we want to abort an untagged command, we  		 *  will send an IDENTIFY + M_ABORT. 		 *  Otherwise (tagged command), we will send  		 *  an IDENTIFY + task attributes + ABORT TAG. 		 */
 if|if
 condition|(
 name|cp

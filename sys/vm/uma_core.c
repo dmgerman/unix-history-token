@@ -3676,7 +3676,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * If we're putting the slab header in the actual page we need to 	 * figure out where in each page it goes.  This calculates a right  	 * justified offset into the memory on a ALIGN_PTR boundary. 	 */
+comment|/* 	 * If we're putting the slab header in the actual page we need to 	 * figure out where in each page it goes.  This calculates a right  	 * justified offset into the memory on an ALIGN_PTR boundary. 	 */
 if|if
 condition|(
 operator|!

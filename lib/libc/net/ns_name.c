@@ -502,7 +502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ns_name_pton(src, dst, dstsiz)  *	Convert a ascii string into an encoded domain name as per RFC1035.  * return:  *	-1 if it fails  *	1 if string was fully qualified  *	0 is string was not fully qualified  * notes:  *	Enforces label and domain length limits.  */
+comment|/*  * ns_name_pton(src, dst, dstsiz)  *	Convert an ascii string into an encoded domain name as per RFC1035.  * return:  *	-1 if it fails  *	1 if string was fully qualified  *	0 is string was not fully qualified  * notes:  *	Enforces label and domain length limits.  */
 end_comment
 
 begin_function

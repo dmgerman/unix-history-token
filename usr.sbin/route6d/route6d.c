@@ -309,7 +309,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* Wait to submit a initial riprequest */
+comment|/* Wait to submit an initial riprequest. */
 end_comment
 
 begin_endif
@@ -9593,7 +9593,7 @@ name|trace
 argument_list|(
 literal|1
 argument_list|,
-literal|"\t%s is a interface route, guessing prefixlen\n"
+literal|"\t%s is an interface route, guessing prefixlen\n"
 argument_list|,
 name|inet6_n2p
 argument_list|(

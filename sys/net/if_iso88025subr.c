@@ -1379,7 +1379,7 @@ name|iso88025_sockaddr_data
 modifier|*
 name|sd
 decl_stmt|;
-comment|/* 		 * For AF_UNSPEC sockaddr.sa_data must contain all of the 		 * mac information needed to send the packet.  This allows 		 * full mac, llc, and source routing function to be controlled. 		 * llc and source routing information must already be in the 		 * mbuf provided, ac/fc are set in sa_data.  sockaddr.sa_data 		 * should be a iso88025_sockaddr_data structure see iso88025.h 		 */
+comment|/* 		 * For AF_UNSPEC sockaddr.sa_data must contain all of the 		 * mac information needed to send the packet.  This allows 		 * full mac, llc, and source routing function to be controlled. 		 * llc and source routing information must already be in the 		 * mbuf provided, ac/fc are set in sa_data.  sockaddr.sa_data 		 * should be an iso88025_sockaddr_data structure see iso88025.h 		 */
 name|loop_copy
 operator|=
 operator|-

@@ -1944,7 +1944,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Massage in place to make a iBCS2-shaped dirent (otherwise 		 * we have to worry about touching user memory outside of 		 * the copyout() call). 		 */
+comment|/* 		 * Massage in place to make an iBCS2-shaped dirent (otherwise 		 * we have to worry about touching user memory outside of 		 * the copyout() call). 		 */
 name|idb
 operator|.
 name|d_ino
@@ -2788,7 +2788,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Massage in place to make a iBCS2-shaped dirent (otherwise 		 * we have to worry about touching user memory outside of 		 * the copyout() call). 		 * 		 * TODO: if length(filename)> 14, then break filename into 		 * multiple entries and set inode = 0xffff except last 		 */
+comment|/* 		 * Massage in place to make an iBCS2-shaped dirent (otherwise 		 * we have to worry about touching user memory outside of 		 * the copyout() call). 		 * 		 * TODO: if length(filename)> 14, then break filename into 		 * multiple entries and set inode = 0xffff except last 		 */
 name|idb
 operator|.
 name|ino

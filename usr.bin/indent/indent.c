@@ -3109,7 +3109,7 @@ name|scase
 operator|=
 name|false
 expr_stmt|;
-comment|/* these will only need resetting in a error */
+comment|/* these will only need resetting in an error */
 name|squest
 operator|=
 literal|0
@@ -3250,7 +3250,7 @@ condition|(
 name|sp_sw
 condition|)
 block|{
-comment|/* this is a check for a if, while, etc. with 				 * unbalanced parens */
+comment|/* this is a check for an if, while, etc. with 				 * unbalanced parens */
 name|sp_sw
 operator|=
 name|false
@@ -3305,7 +3305,7 @@ name|force_nl
 operator|=
 name|true
 expr_stmt|;
-comment|/* force newline after a end of stmt */
+comment|/* force newline after an end of stmt */
 block|}
 break|break;
 case|case

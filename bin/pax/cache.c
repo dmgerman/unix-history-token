@@ -553,7 +553,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * name_uid()  *	caches the name (if any) for the uid. If frc set, we always return the  *	the stored name (if valid or invalid match). We use a simple hash table.  * Return  *	Pointer to stored name (or a empty string)  */
+comment|/*  * name_uid()  *	caches the name (if any) for the uid. If frc set, we always return the  *	the stored name (if valid or invalid match). We use a simple hash table.  * Return  *	Pointer to stored name (or an empty string).  */
 end_comment
 
 begin_function
@@ -866,7 +866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * name_gid()  *	caches the name (if any) for the gid. If frc set, we always return the  *	the stored name (if valid or invalid match). We use a simple hash table.  * Return  *	Pointer to stored name (or a empty string)  */
+comment|/*  * name_gid()  *	caches the name (if any) for the gid. If frc set, we always return the  *	the stored name (if valid or invalid match). We use a simple hash table.  * Return  *	Pointer to stored name (or an empty string).  */
 end_comment
 
 begin_function

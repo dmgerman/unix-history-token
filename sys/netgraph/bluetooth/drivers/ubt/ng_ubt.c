@@ -5800,7 +5800,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* Initialize a isoc-in USB transfer and then schedule it */
+comment|/* Initialize an isoc-in USB transfer and then schedule it. */
 for|for
 control|(
 name|i
@@ -6800,7 +6800,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* Initialize a isoc-out USB transfer and then schedule it */
+comment|/* Initialize an isoc-out USB transfer and then schedule it. */
 name|usbd_setup_isoc_xfer
 argument_list|(
 name|sc

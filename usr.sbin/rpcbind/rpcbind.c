@@ -347,7 +347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Grab a old copy of registrations */
+comment|/* Grab an old copy of registrations. */
 end_comment
 
 begin_endif
@@ -1605,7 +1605,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Skip if we have a AF_INET6 adress 					 */
+comment|/* 					 * Skip if we have an AF_INET6 adress. 					 */
 if|if
 condition|(
 name|inet_pton
@@ -1654,7 +1654,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Skip if we have a AF_INET adress 					 */
+comment|/* 					 * Skip if we have an AF_INET adress. 					 */
 if|if
 condition|(
 name|inet_pton

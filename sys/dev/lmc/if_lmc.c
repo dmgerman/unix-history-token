@@ -2457,7 +2457,7 @@ name|total_len
 operator|++
 expr_stmt|;
 block|}
-comment|/* 			 * Dequeue the first buffer for the start of the 			 * packet.  Hopefully this will be the only one we 			 * need to dequeue.  However, if the packet consumed 			 * multiple descriptors, then we need to dequeue 			 * those buffers and chain to the starting mbuf. 			 * All buffers but the last buffer have the same 			 * length so we can set that now. (we add to 			 * last_offset instead of multiplying since we 			 * normally won't go into the loop and thereby 			 * saving a ourselves from doing a multiplication 			 * by 0 in the normal case). 			 */
+comment|/* 			 * Dequeue the first buffer for the start of the 			 * packet.  Hopefully this will be the only one we 			 * need to dequeue.  However, if the packet consumed 			 * multiple descriptors, then we need to dequeue 			 * those buffers and chain to the starting mbuf. 			 * All buffers but the last buffer have the same 			 * length so we can set that now. (we add to 			 * last_offset instead of multiplying since we 			 * normally won't go into the loop and thereby 			 * saving ourselves from doing a multiplication 			 * by 0 in the normal case). 			 */
 name|_IF_DEQUEUE
 argument_list|(
 operator|&

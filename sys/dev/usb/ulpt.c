@@ -3488,7 +3488,7 @@ comment|/* XXX This does not belong here. */
 end_comment
 
 begin_comment
-comment|/*  * Print select parts of a IEEE 1284 device ID.  */
+comment|/*  * Print select parts of an IEEE 1284 device ID.  */
 end_comment
 
 begin_comment

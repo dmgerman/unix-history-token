@@ -1982,7 +1982,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*  * This is a IP packet.  */
+comment|/*  * This is an IP packet.  */
 name|ip
 operator|=
 operator|(

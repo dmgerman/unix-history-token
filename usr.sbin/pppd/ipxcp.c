@@ -3931,7 +3931,7 @@ name|ucp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If we aren't rejecting this packet, and we want to negotiate      * their address, and they didn't send their address, then we      * send a NAK with a IPX_NODE_NUMBER option appended. We assume the      * input buffer is long enough that we can append the extra      * option safely.      */
+comment|/*      * If we aren't rejecting this packet, and we want to negotiate      * their address, and they didn't send their address, then we      * send a NAK with an IPX_NODE_NUMBER option appended. We assume the      * input buffer is long enough that we can append the extra      * option safely.      */
 if|if
 condition|(
 name|rc

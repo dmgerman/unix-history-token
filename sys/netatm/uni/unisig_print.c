@@ -754,7 +754,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print an ATM address  *  * Arguments:  *	p	pointer to a Atm_address  *  * Returns:  *	none  *  */
+comment|/*  * Print an ATM address  *  * Arguments:  *	p	pointer to an Atm_address  *  * Returns:  *	none  *  */
 end_comment
 
 begin_function

@@ -7817,7 +7817,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*            * Otherwise they have it right (this time) so we send a ack packet            * back confirming it... end of story            */
+comment|/*            * Otherwise they have it right (this time) so we send an ack packet            * back confirming it... end of story            */
 name|fsm_ack
 argument_list|(
 name|dec

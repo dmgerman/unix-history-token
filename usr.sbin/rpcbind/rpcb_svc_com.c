@@ -6917,7 +6917,7 @@ name|IPPROTO_TCP
 expr_stmt|;
 block|}
 else|else
-comment|/* Not a IP protocol */
+comment|/* Not an IP protocol */
 return|return
 operator|(
 literal|0
@@ -7188,7 +7188,7 @@ comment|/* Remove all occurrences */
 block|}
 else|else
 block|{
-comment|/* Not a IP protocol */
+comment|/* Not an IP protocol */
 return|return
 operator|(
 literal|0

@@ -1517,7 +1517,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* First, find a a.out-header */
+comment|/* First, find an a.out-header. */
 if|if
 condition|(
 name|gz

@@ -4339,7 +4339,7 @@ name|PG_FRAME
 operator|)
 condition|)
 block|{
-comment|/* 			 * Do a invltlb to make the invalidated mapping 			 * take effect immediately. 			 */
+comment|/* 			 * Do an invltlb to make the invalidated mapping 			 * take effect immediately. 			 */
 name|pteva
 operator|=
 name|VM_MAXUSER_ADDRESS

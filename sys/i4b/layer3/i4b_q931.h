@@ -428,7 +428,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* length of a alert message */
+comment|/* length of an alert message */
 end_comment
 
 begin_endif

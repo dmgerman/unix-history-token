@@ -1444,7 +1444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* See if a IP address looks reasonable as a destination  */
+comment|/* See if an IP address looks reasonable as a destination.  */
 end_comment
 
 begin_function

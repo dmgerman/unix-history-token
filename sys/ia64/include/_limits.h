@@ -273,7 +273,7 @@ value|LONG_MAX
 end_define
 
 begin_comment
-comment|/* max value for a off_t */
+comment|/* max value for an off_t */
 end_comment
 
 begin_define
@@ -284,7 +284,7 @@ value|LONG_MIN
 end_define
 
 begin_comment
-comment|/* min value for a off_t */
+comment|/* min value for an off_t */
 end_comment
 
 begin_comment

@@ -2564,7 +2564,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* A open conflicts with an existing open */
+comment|/* An open conflicts with an existing open */
 end_comment
 
 begin_define

@@ -306,7 +306,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* The number of bytes in a int.  */
+comment|/* The number of bytes in an int.  */
 end_comment
 
 begin_define

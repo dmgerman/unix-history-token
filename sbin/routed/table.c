@@ -6041,7 +6041,7 @@ operator||
 name|AGS_CORS_GATE
 operator|)
 expr_stmt|;
-comment|/* If it is not an interface, or an alias for an interface, 		 * it must be a "gateway." 		 * 		 * If it is a "remote" interface, it is also a "gateway" to 		 * the kernel if is not a alias. 		 */
+comment|/* If it is not an interface, or an alias for an interface, 		 * it must be a "gateway." 		 * 		 * If it is a "remote" interface, it is also a "gateway" to 		 * the kernel if is not an alias. 		 */
 if|if
 condition|(
 name|RT

@@ -1009,7 +1009,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Doing a IP address and Port number Translation */
+comment|/* Doing an IP address and Port number Translation */
 if|if
 condition|(
 name|uh

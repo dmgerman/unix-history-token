@@ -3655,7 +3655,7 @@ operator|&
 name|acpi_pci_link_entries
 argument_list|)
 expr_stmt|;
-comment|/* find a entry which have the highest priority. */
+comment|/* find an entry which has the highest priority. */
 name|TAILQ_FOREACH
 argument_list|(
 argument|link_pri

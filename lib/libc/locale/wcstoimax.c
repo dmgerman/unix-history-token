@@ -85,7 +85,7 @@ file|<wctype.h>
 end_include
 
 begin_comment
-comment|/*  * Convert a wide character string to a intmax_t integer.  */
+comment|/*  * Convert a wide character string to an intmax_t integer.  */
 end_comment
 
 begin_function

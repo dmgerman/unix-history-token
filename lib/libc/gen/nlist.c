@@ -850,7 +850,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * __elf_is_okay__ - Determine if ehdr really  * is ELF and valid for the target platform.  *  * WARNING:  This is NOT a ELF ABI function and  * as such it's use should be restricted.  */
+comment|/*  * __elf_is_okay__ - Determine if ehdr really  * is ELF and valid for the target platform.  *  * WARNING:  This is NOT an ELF ABI function and  * as such its use should be restricted.  */
 end_comment
 
 begin_function

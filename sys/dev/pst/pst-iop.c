@@ -735,7 +735,7 @@ name|phys_obase
 operator|)
 operator|)
 expr_stmt|;
-comment|/* if this is a event register reply, shout! */
+comment|/* If this is an event register reply, shout! */
 if|if
 condition|(
 name|reply

@@ -1264,7 +1264,7 @@ argument_list|(
 name|pcfdev
 argument_list|)
 decl_stmt|;
-comment|/* 	 * Send STOP condition iff the START condition was previously sent. 	 * STOP is sent only once even if a iicbus_stop() is called after 	 * an iicbus_read()... see pcf_read(): the pcf needs to send the stop 	 * before the last char is read. 	 */
+comment|/* 	 * Send STOP condition iff the START condition was previously sent. 	 * STOP is sent only once even if an iicbus_stop() is called after 	 * an iicbus_read()... see pcf_read(): the pcf needs to send the stop 	 * before the last char is read. 	 */
 if|if
 condition|(
 name|pcf

@@ -1383,7 +1383,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* The sizes (in bytes) of a ethernet packet */
+comment|/* The sizes (in bytes) of an ethernet packet */
 end_comment
 
 begin_define

@@ -7121,7 +7121,7 @@ operator|>=
 literal|10
 condition|)
 block|{
-comment|/* Not a AD1848 */
+comment|/* Not an AD1848 */
 name|BVDDB
 argument_list|(
 name|printf

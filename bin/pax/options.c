@@ -4379,7 +4379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * opt_add()  *	breaks the value supplied to -o into a option name and value. options  *	are given to -o in the form -o name-value,name=value  *	multiple -o may be specified.  * Return:  *	0 if format in name=value format, -1 if -o is passed junk  */
+comment|/*  * opt_add()  *	breaks the value supplied to -o into an option name and value. Options  *	are given to -o in the form -o name-value,name=value  *	multiple -o may be specified.  * Return:  *	0 if format in name=value format, -1 if -o is passed junk.  */
 end_comment
 
 begin_function

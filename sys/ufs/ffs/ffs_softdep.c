@@ -4845,7 +4845,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Look up a inodedep. Return 1 if found, 0 if not found.  * If not found, allocate if DEPALLOC flag is passed.  * Found or allocated entry is returned in inodedeppp.  * This routine must be called with splbio interrupts blocked.  */
+comment|/*  * Look up an inodedep. Return 1 if found, 0 if not found.  * If not found, allocate if DEPALLOC flag is passed.  * Found or allocated entry is returned in inodedeppp.  * This routine must be called with splbio interrupts blocked.  */
 end_comment
 
 begin_function

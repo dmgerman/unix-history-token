@@ -88,7 +88,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * Return a string for a regular expression error passed.  This is a overkill,  * because of the silly semantics of regerror (we can never know the size of  * the buffer).  */
+comment|/*  * Return a string for a regular expression error passed.  This is overkill,  * because of the silly semantics of regerror (we can never know the size of  * the buffer).  */
 end_comment
 
 begin_function

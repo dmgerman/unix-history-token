@@ -10749,7 +10749,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * free a ubsec_q  * It is assumed that the caller is within spimp()  */
+comment|/*  * Free an ubsec_q.  * It is assumed that the caller is within spimp().  */
 end_comment
 
 begin_function

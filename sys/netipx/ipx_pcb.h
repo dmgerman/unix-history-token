@@ -179,7 +179,7 @@ value|((struct ipxpcb *)((so)->so_pcb))
 end_define
 
 begin_comment
-comment|/*  * Nominal space allocated to a IPX socket.  */
+comment|/*  * Nominal space allocated to an IPX socket.  */
 end_comment
 
 begin_define

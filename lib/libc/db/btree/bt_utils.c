@@ -866,7 +866,7 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
-comment|/* 	 * XXX 	 * If a size_t doesn't fit in an int, this routine can lose. 	 * What we need is a integral type which is guaranteed to be 	 * larger than a size_t, and there is no such thing. 	 */
+comment|/* 	 * XXX 	 * If a size_t doesn't fit in an int, this routine can lose. 	 * What we need is an integral type which is guaranteed to be 	 * larger than a size_t, and there is no such thing. 	 */
 name|len
 operator|=
 name|MIN

@@ -345,7 +345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *      free a calldescriptor  *      ---------------------  *      free a unused calldescriptor by giving address of calldescriptor  *      and writing a 0 into the cdid field marking it as unused.  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *      free a calldescriptor  *      ---------------------  *      free an unused calldescriptor by giving address of calldescriptor  *      and writing a 0 into the cdid field marking it as unused.  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function

@@ -949,7 +949,7 @@ decl_stmt|;
 name|Port_t
 name|rsabase
 decl_stmt|;
-comment|/* iobase address of a I/O-DATA RSA board */
+comment|/* Iobase address of an I/O-DATA RSA board. */
 name|int
 name|intr_enable
 decl_stmt|;

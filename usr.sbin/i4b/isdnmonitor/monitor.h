@@ -541,7 +541,7 @@ comment|/* no parameters */
 end_comment
 
 begin_comment
-comment|/*  * in response to a I4B_MON_DUMPRIGHTS_CODE command, the daemon sends  * this event:  */
+comment|/*  * In response to an I4B_MON_DUMPRIGHTS_CODE command, the daemon sends  * this event:  */
 end_comment
 
 begin_define
@@ -662,7 +662,7 @@ comment|/* no parameters */
 end_comment
 
 begin_comment
-comment|/*  * in response to a I4B_MON_DUMPMCONS_CODE command, the daemon sends  * this event:  */
+comment|/*  * In response to an I4B_MON_DUMPMCONS_CODE command, the daemon sends  * this event:  */
 end_comment
 
 begin_define

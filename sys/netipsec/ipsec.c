@@ -2118,7 +2118,7 @@ name|dir
 argument_list|)
 condition|)
 block|{
-comment|/* make a index to look for a policy */
+comment|/* Make an index to look for a policy. */
 operator|*
 name|error
 operator|=

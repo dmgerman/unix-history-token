@@ -3333,7 +3333,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create the following runq entries to bring the card up. 	 * 	 *		init_download	- download the network to the card 	 *		init_mcast	- reset multicast list 	 *		init_sj		- find or start a BSS 	 *		init_auth	- authenticate with a ESSID if needed 	 *		init_assoc	- associate with a ESSID if needed 	 * 	 * They are only actually executed if the card is not running. 	 * We may enter this routine from a simple change of IP 	 * address and do not need to get the card to do these things. 	 * However, we cannot perform the check here as there may be 	 * commands in the runq that change the IFF_RUNNING state of 	 * the interface. 	 */
+comment|/* 	 * Create the following runq entries to bring the card up. 	 * 	 *		init_download	- download the network to the card 	 *		init_mcast	- reset multicast list 	 *		init_sj		- find or start a BSS 	 *		init_auth	- authenticate with an ESSID if needed 	 *		init_assoc	- associate with an ESSID if needed 	 * 	 * They are only actually executed if the card is not running. 	 * We may enter this routine from a simple change of IP 	 * address and do not need to get the card to do these things. 	 * However, we cannot perform the check here as there may be 	 * commands in the runq that change the IFF_RUNNING state of 	 * the interface. 	 */
 name|ncom
 operator|=
 literal|0

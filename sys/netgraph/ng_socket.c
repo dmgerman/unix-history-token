@@ -2393,7 +2393,7 @@ name|NOTYET
 end_ifdef
 
 begin_comment
-comment|/*  * File descriptors can be passed into a AF_NETGRAPH socket.  * Note, that file descriptors cannot be passed OUT.  * Only character device descriptors are accepted.  * Character devices are useful to connect a graph to a device,  * which after all is the purpose of this whole system.  */
+comment|/*  * File descriptors can be passed into an AF_NETGRAPH socket.  * Note, that file descriptors cannot be passed OUT.  * Only character device descriptors are accepted.  * Character devices are useful to connect a graph to a device,  * which after all is the purpose of this whole system.  */
 end_comment
 
 begin_function
@@ -2545,7 +2545,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Depending on what kind of resource it is, act differently. For 	 * devices, we treat it as a file. For a AF_NETGRAPH socket, 	 * shortcut straight to the node. */
+comment|/* Depending on what kind of resource it is, act differently. For 	 * devices, we treat it as a file. For an AF_NETGRAPH socket, 	 * shortcut straight to the node. */
 switch|switch
 condition|(
 name|fp

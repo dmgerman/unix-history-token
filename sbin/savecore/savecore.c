@@ -914,7 +914,7 @@ name|mediasize
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * XXX On ia64 something breaks when the buffer is put on the 	 * stack. When the buffer is roughly larger than 128K the read() 	 * below simply fails with errno=14 (EFAULT). We work around 	 * this by doing a on-time allocation... 	 */
+comment|/* 	 * XXX On ia64 something breaks when the buffer is put on the 	 * stack. When the buffer is roughly larger than 128K the read() 	 * below simply fails with errno=14 (EFAULT). We work around 	 * this by doing a one-time allocation... 	 */
 if|if
 condition|(
 name|buf

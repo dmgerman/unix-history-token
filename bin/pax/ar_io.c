@@ -2444,7 +2444,7 @@ name|struct
 name|mtop
 name|mb
 decl_stmt|;
-comment|/* 	 * Fail resync attempts at user request (done) or this is going to be 	 * an update/append to a existing archive. if last i/o hit media end, 	 * we need to go to the next volume not try a resync 	 */
+comment|/* 	 * Fail resync attempts at user request (done) or this is going to be 	 * an update/append to an existing archive. If last i/o hit media end, 	 * we need to go to the next volume not try a resync. 	 */
 if|if
 condition|(
 operator|(

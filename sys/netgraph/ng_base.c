@@ -3352,7 +3352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Decode a ID name, eg. "[f03034de]". Returns 0 if the  * string is not valid, otherwise returns the value.  */
+comment|/*  * Decode an ID name, eg. "[f03034de]". Returns 0 if the  * string is not valid, otherwise returns the value.  */
 end_comment
 
 begin_function

@@ -2418,7 +2418,7 @@ literal|"calloc"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We want to get the file systems in the reverse order 	 * that they were mounted. Mounted and unmounted file systems 	 * are marked or unmarked in a table called 'mntcheck'. 	 * Unmount(const char *dir, int flags) does only take the 	 * mountpoint as argument, not the destination. If we don't pay 	 * attention to the order, it can happen that a overlaying 	 * file system get's unmounted instead of the one the user 	 * has choosen. 	 */
+comment|/* 	 * We want to get the file systems in the reverse order 	 * that they were mounted. Mounted and unmounted file systems 	 * are marked or unmarked in a table called 'mntcheck'. 	 * Unmount(const char *dir, int flags) does only take the 	 * mountpoint as argument, not the destination. If we don't pay 	 * attention to the order, it can happen that an overlaying 	 * file system gets unmounted instead of the one the user 	 * has choosen. 	 */
 switch|switch
 condition|(
 name|mark

@@ -1119,7 +1119,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* get_extended_line: get a an extended line from stdin */
+comment|/* get_extended_line: get an extended line from stdin */
 end_comment
 
 begin_function

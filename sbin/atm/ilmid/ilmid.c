@@ -2327,7 +2327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Utility to print a object identifier  *  * Arguments:  *	objid	- pointer to objid representation  *  * Returns:  *	none  *  */
+comment|/*  * Utility to print an object identifier.  *  * Arguments:  *	objid	- pointer to objid representation  *  * Returns:  *	none  *  */
 end_comment
 
 begin_function
@@ -3956,7 +3956,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Find the index of a OBJID which matches this Variable instance   *  * Arguments:  *	var	- pointer to Variable instance  *  * Returns:  *	idx	- index of matched Variable instance  *	-1	- no matching Variable found  *  */
+comment|/*  * Find the index of an OBJID which matches this Variable instance.  *  * Arguments:  *	var	- pointer to Variable instance  *  * Returns:  *	idx	- index of matched Variable instance  *	-1	- no matching Variable found  *  */
 end_comment
 
 begin_function
@@ -4327,7 +4327,7 @@ operator|->
 name|reqid
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Check to see if all the vaiables were resolved - we do this 	     * by looking for something which still has a ASN_NULL value. 	     */
+comment|/* 	     * Check to see if all the vaiables were resolved - we do this 	     * by looking for something which still has an ASN_NULL value. 	     */
 name|var
 operator|=
 name|hdr

@@ -6554,7 +6554,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * If the last TD is still active we need to check whether there 	 * is a an error somewhere in the middle, or whether there was a 	 * short packet (SPD and not ACTIVE). 	 */
+comment|/* 	 * If the last TD is still active we need to check whether there 	 * is an error somewhere in the middle, or whether there was a 	 * short packet (SPD and not ACTIVE). 	 */
 if|if
 condition|(
 name|le32toh

@@ -34,7 +34,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* A ArNet board can have 4 ports or */
+comment|/* An ArNet board can have 4 ports or */
 end_comment
 
 begin_comment

@@ -76,7 +76,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Shell interpreter image activator. A interpreter name beginning  *	at imgp->stringbase is the minimal successful exit requirement.  */
+comment|/*  * Shell interpreter image activator. An interpreter name beginning  *	at imgp->stringbase is the minimal successful exit requirement.  */
 end_comment
 
 begin_function

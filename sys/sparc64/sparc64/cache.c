@@ -1115,7 +1115,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Invalidate a I$ physical range using diagnostic accesses.  * NOTE: there is a race between checking the tag and invalidating it. It  * cannot be closed by disabling interrupts, since the fetch for the next  * instruction may be in that line, so we don't even bother.  * Since blasting a line does not discard data, this has no ill effect except  * a minor slowdown.  */
+comment|/*  * Invalidate an I$ physical range using diagnostic accesses.  * NOTE: there is a race between checking the tag and invalidating it. It  * cannot be closed by disabling interrupts, since the fetch for the next  * instruction may be in that line, so we don't even bother.  * Since blasting a line does not discard data, this has no ill effect except  * a minor slowdown.  */
 end_comment
 
 begin_function
@@ -1718,7 +1718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Flush a E$ physical range using block commit stores. */
+comment|/* Flush an E$ physical range using block commit stores. */
 end_comment
 
 begin_function
@@ -1841,7 +1841,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Invalidate a E$ range using diagnostic accesses.  * This is disabled: it suffers from the same races as dcache_blast() and  * icache_blast_phys(), but they may be fatal here because blasting an E$ line  * can discard modified data.  * There is no really use for this anyway.  */
+comment|/*  * Invalidate an E$ range using diagnostic accesses.  * This is disabled: it suffers from the same races as dcache_blast() and  * icache_blast_phys(), but they may be fatal here because blasting an E$ line  * can discard modified data.  * There is no really use for this anyway.  */
 end_comment
 
 begin_comment

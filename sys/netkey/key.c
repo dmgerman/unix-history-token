@@ -7523,7 +7523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SADB_X_SPDADD, SADB_X_SPDSETIDX or SADB_X_SPDUPDATE processing  * add a entry to SP database, when received  *<base, address(SD), (lifetime(H),) policy>  * from the user(?).  * Adding to SP database,  * and send  *<base, address(SD), (lifetime(H),) policy>  * to the socket which was send.  *  * SPDADD set a unique policy entry.  * SPDSETIDX like SPDADD without a part of policy requests.  * SPDUPDATE replace a unique policy entry.  *  * m will always be freed.  */
+comment|/*  * SADB_X_SPDADD, SADB_X_SPDSETIDX or SADB_X_SPDUPDATE processing  * add an entry to SP database, when received  *<base, address(SD), (lifetime(H),) policy>  * from the user(?).  * Adding to SP database,  * and send  *<base, address(SD), (lifetime(H),) policy>  * to the socket which was send.  *  * SPDADD set a unique policy entry.  * SPDSETIDX like SPDADD without a part of policy requests.  * SPDUPDATE replace a unique policy entry.  *  * m will always be freed.  */
 end_comment
 
 begin_function
@@ -10152,7 +10152,7 @@ argument_list|(
 literal|"key_spdacquire: policy mismathed. IPsec is expected.\n"
 argument_list|)
 expr_stmt|;
-comment|/* get a entry to check whether sent message or not. */
+comment|/* Get an entry to check whether sent message or not. */
 if|if
 condition|(
 operator|(
@@ -22261,7 +22261,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * SADB_ADD processing  * add a entry to SA database, when received  *<base, SA, (SA2), (lifetime(HSC),) address(SD), (address(P),)  *       key(AE), (identity(SD),) (sensitivity)>  * from the ikmpd,  * and send  *<base, SA, (SA2), (lifetime(HSC),) address(SD), (address(P),)  *       (identity(SD),) (sensitivity)>  * to the ikmpd.  *  * IGNORE identity and sensitivity messages.  *  * m will always be freed.  */
+comment|/*  * SADB_ADD processing  * add an entry to SA database, when received  *<base, SA, (SA2), (lifetime(HSC),) address(SD), (address(P),)  *       key(AE), (identity(SD),) (sensitivity)>  * from the ikmpd,  * and send  *<base, SA, (SA2), (lifetime(HSC),) address(SD), (address(P),)  *       (identity(SD),) (sensitivity)>  * to the ikmpd.  *  * IGNORE identity and sensitivity messages.  *  * m will always be freed.  */
 end_comment
 
 begin_function
@@ -26196,7 +26196,7 @@ ifndef|#
 directive|ifndef
 name|IPSEC_NONBLOCK_ACQUIRE
 comment|/* 	 * We never do anything about acquirng SA.  There is anather 	 * solution that kernel blocks to send SADB_ACQUIRE message until 	 * getting something message from IKEd.  In later case, to be 	 * managed with ACQUIRING list. 	 */
-comment|/* get a entry to check whether sending message or not. */
+comment|/* Get an entry to check whether sending message or not. */
 if|if
 condition|(
 operator|(

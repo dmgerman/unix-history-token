@@ -938,7 +938,7 @@ operator|->
 name|fname
 expr_stmt|;
 block|}
-comment|/* 		 * watch it, fts wants the file arg stored in a array of char 		 * ptrs, with the last one a null. we use a two element array 		 * and set farray[0] to point at the buffer with the file name 		 * in it. We cannot pass all the file args to fts at one shot 		 * as we need to keep a handle on which file arg generates what 		 * files (the -n and -d flags need this). If the open is 		 * successful, return a 0. 		 */
+comment|/* 		 * Watch it, fts wants the file arg stored in an array of char 		 * ptrs, with the last one a null. We use a two element array 		 * and set farray[0] to point at the buffer with the file name 		 * in it. We cannot pass all the file args to fts at one shot 		 * as we need to keep a handle on which file arg generates what 		 * files (the -n and -d flags need this). If the open is 		 * successful, return a 0. 		 */
 if|if
 condition|(
 operator|(

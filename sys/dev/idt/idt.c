@@ -7354,7 +7354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  *    nicstar_add_buf    ( card, mbuf1, mbuf2, which_queue)  *  *    This adds two buffers to the specified queue. This uses the  *    mbuf address as handle and the buffer physical address must be  *    the DMA address.  *  *    returns -1 if queue is full, the address is not word aligned, or  *    a invalid queue is specified  *    returns 0 if parameters were acceptable  */
+comment|/*******************************************************************************  *  *    nicstar_add_buf    ( card, mbuf1, mbuf2, which_queue)  *  *    This adds two buffers to the specified queue. This uses the  *    mbuf address as handle and the buffer physical address must be  *    the DMA address.  *  *    returns -1 if queue is full, the address is not word aligned, or  *    an invalid queue is specified.  *    returns 0 if parameters were acceptable.  */
 end_comment
 
 begin_function

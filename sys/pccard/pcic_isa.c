@@ -549,7 +549,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * Prescan for the broken VLSI chips. 	 * 	 * According to the Linux PCMCIA code from David Hinds, 	 * working chipsets return 0x84 from their (correct) ID ports, 	 * while the broken ones would need to be probed at the new 	 * offset we set after we assume it's broken. 	 * 	 * Note: because of this, we may incorrectly detect a single 	 * slot vlsi chip as a i82365sl step D.  I cannot find a 	 * datasheet for the affected chip, so that's the best we can 	 * do for now. 	 */
+comment|/* 	 * Prescan for the broken VLSI chips. 	 * 	 * According to the Linux PCMCIA code from David Hinds, 	 * working chipsets return 0x84 from their (correct) ID ports, 	 * while the broken ones would need to be probed at the new 	 * offset we set after we assume it's broken. 	 * 	 * Note: because of this, we may incorrectly detect a single 	 * slot vlsi chip as an i82365sl step D.  I cannot find a 	 * datasheet for the affected chip, so that's the best we can 	 * do for now. 	 */
 name|sp0
 operator|=
 operator|&
@@ -879,7 +879,7 @@ operator|=
 name|PCIC_RF5C296
 expr_stmt|;
 break|break;
-comment|/* 		 *	Intel i82365sl-DF step or maybe a vlsi 82c146 		 * we detected the vlsi case earlier, so if the controller 		 * isn't set, we know it is a i82365sl step D. 		 */
+comment|/* 		 *	Intel i82365sl-DF step or maybe a vlsi 82c146 		 * we detected the vlsi case earlier, so if the controller 		 * isn't set, we know it is an i82365sl step D. 		 */
 case|case
 name|PCIC_INTEL2
 case|:

@@ -647,7 +647,7 @@ define|#
 directive|define
 name|E_IS_LIBRARY
 value|1
-comment|/* File is a an archive */
+comment|/* File is an archive */
 define|#
 directive|define
 name|E_HEADER_VALID

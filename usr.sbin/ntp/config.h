@@ -2885,7 +2885,7 @@ comment|/* #undef SCO5_CLOCK */
 end_comment
 
 begin_comment
-comment|/* The size of a `int', as computed by sizeof. */
+comment|/* The size of an `int', as computed by sizeof. */
 end_comment
 
 begin_define
