@@ -118,6 +118,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__arm__
+end_if
+
+begin_include
+include|#
+directive|include
+file|"arm.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*      * booleans      */
 end_comment
