@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.23 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,20 +219,20 @@ operator|*
 literal|1024
 block|,
 comment|/* 8192 */
-literal|2
-operator|^
+literal|1
+operator|<<
 literal|31
 block|,
 comment|/* 16 K */
-literal|2
-operator|^
+literal|1
+operator|<<
 literal|31
 block|,
 comment|/* 32 K */
-literal|2
-operator|^
+literal|1
+operator|<<
 literal|31
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
