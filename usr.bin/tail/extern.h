@@ -113,26 +113,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-name|int
-name|fatal
-operator|,
-specifier|const
-name|char
-operator|*
-name|fmt
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|ierr
 name|__P
 argument_list|(

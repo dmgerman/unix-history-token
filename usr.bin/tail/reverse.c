@@ -307,18 +307,17 @@ operator|>
 name|SIZE_T_MAX
 condition|)
 block|{
+name|errno
+operator|=
+name|EFBIG
+expr_stmt|;
 name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|fname
-argument_list|,
-name|strerror
-argument_list|(
-name|EFBIG
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -364,14 +363,9 @@ name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|fname
-argument_list|,
-name|strerror
-argument_list|(
-name|EFBIG
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -479,14 +473,9 @@ name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|fname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -621,12 +610,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|tl

@@ -198,7 +198,7 @@ name|forward
 parameter_list|,
 name|backward
 parameter_list|)
-value|{					\ 	if (style)							\ 		usage();						\ 	off = strtol(optarg,&p, 10) * (units);				\ 	if (*p)								\ 		err(1, "illegal offset -- %s", optarg);			\ 	switch(optarg[0]) {						\ 	case '+':							\ 		if (off)						\ 			off -= (units);					\ 			style = (forward);				\ 		break;							\ 	case '-':							\ 		off = -off;						\
+value|{					\ 	if (style)							\ 		usage();						\ 	off = strtol(optarg,&p, 10) * (units);				\ 	if (*p)								\ 		errx(1, "illegal offset -- %s", optarg);		\ 	switch(optarg[0]) {						\ 	case '+':							\ 		if (off)						\ 			off -= (units);					\ 			style = (forward);				\ 		break;							\ 	case '-':							\ 		off = -off;						\
 comment|/* FALLTHROUGH */
 value|\ 	default:							\ 		style = (backward);					\ 		break;							\ 	}								\ }
 name|obsolete
@@ -311,7 +311,7 @@ name|argc
 operator|>
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -758,12 +758,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -892,7 +887,7 @@ literal|'n'
 expr_stmt|;
 break|break;
 default|default:
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
