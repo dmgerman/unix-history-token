@@ -867,9 +867,6 @@ expr_stmt|;
 comment|/* fall through */
 name|foundit
 label|:
-name|totalreads
-operator|++
-expr_stmt|;
 name|bp
 operator|->
 name|b_prev
@@ -952,6 +949,9 @@ block|{
 name|ufs_daddr_t
 name|dblk
 decl_stmt|;
+name|totalreads
+operator|++
+expr_stmt|;
 name|dblk
 operator|=
 name|fsbtodb

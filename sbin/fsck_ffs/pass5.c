@@ -1118,6 +1118,16 @@ operator|->
 name|fs_ncg
 operator|-
 literal|1
+operator|&&
+name|fs
+operator|->
+name|fs_ncyl
+operator|%
+name|fs
+operator|->
+name|fs_cpg
+operator|>
+literal|0
 condition|)
 name|newcg
 operator|->
