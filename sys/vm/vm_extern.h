@@ -631,6 +631,30 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vslock
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vsunlock
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_object_print
 parameter_list|(
 comment|/* db_expr_t */
