@@ -2227,7 +2227,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INVARIANTS_SUPPORT
+name|INVARIANT_SUPPORT
 end_ifdef
 
 begin_function
