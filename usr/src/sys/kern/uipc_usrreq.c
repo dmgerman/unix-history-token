@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	6.1	83/07/29	*/
+comment|/*	uipc_usrreq.c	6.2	83/09/08	*/
 end_comment
 
 begin_include
@@ -2154,6 +2154,7 @@ name|int
 operator|*
 operator|)
 name|rp
+operator|++
 operator|=
 name|f
 expr_stmt|;
