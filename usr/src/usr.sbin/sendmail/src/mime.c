@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.3 (Berkeley) %G%"
+literal|"@(#)mime.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,12 +194,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|hvalue
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.20 (Berkeley) %G%"
+literal|"@(#)collect.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,12 +272,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|hvalue
-parameter_list|()
-function_decl|;
 specifier|extern
 name|bool
 name|isheader
