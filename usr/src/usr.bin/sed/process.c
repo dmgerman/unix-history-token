@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.11 (Berkeley) %G%"
+literal|"@(#)process.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2810,6 +2810,7 @@ name|len
 operator|+
 name|len
 operator|+
+operator|(
 name|spflag
 operator|==
 name|APPENDNL
@@ -2817,6 +2818,7 @@ condition|?
 literal|2
 else|:
 literal|1
+operator|)
 expr_stmt|;
 if|if
 condition|(
