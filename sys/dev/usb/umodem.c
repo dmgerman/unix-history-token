@@ -165,7 +165,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UMODEM_DEBUG
 end_ifdef
 
 begin_define
@@ -175,7 +175,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (umodemdebug) printf x
+value|if (umodemdebug) logprintf x
 end_define
 
 begin_define
@@ -187,7 +187,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (umodemdebug>(n)) printf x
+value|if (umodemdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt

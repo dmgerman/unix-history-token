@@ -216,7 +216,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UMS_DEBUG
 end_ifdef
 
 begin_define
@@ -226,7 +226,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (umsdebug) printf x
+value|if (umsdebug) logprintf x
 end_define
 
 begin_define
@@ -238,7 +238,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (umsdebug>(n)) printf x
+value|if (umsdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
@@ -1544,7 +1544,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UMS_DEBUG
 name|DPRINTF
 argument_list|(
 operator|(
@@ -2815,7 +2815,7 @@ name|packetsize
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UMS_DEBUG
 if|if
 condition|(
 name|sc
@@ -3154,11 +3154,6 @@ literal|0
 expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|USBVERBOSE
-argument_list|)
-operator|&&
 name|defined
 argument_list|(
 name|__FreeBSD__

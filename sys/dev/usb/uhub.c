@@ -145,15 +145,6 @@ name|usbdebug
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|usbd_error_strs
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_else
 else|#
 directive|else
@@ -577,7 +568,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: configuration failed, error=%d(%s)\n"
+literal|"%s: configuration failed, %s\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -586,12 +577,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -744,7 +733,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: getting hub descriptor failed, error=%d(%s)\n"
+literal|"%s: getting hub descriptor failed, %s\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -753,12 +742,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1712,16 +1699,14 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"uhub_explore: get port %d status failed error=%d(%s)\n"
+literal|"uhub_explore: get port %d status failed, %s\n"
 operator|,
 name|port
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1789,7 +1774,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: illegal enable change, port %d\n"
+literal|"%s: port %d illegal enable change\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1817,8 +1802,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: port error, restarting "
-literal|"port %d\n"
+literal|"%s: port %d error, restarting\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1838,8 +1822,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s: port error, giving up "
-literal|"port %d\n"
+literal|"%s: port %d error, giving up\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -2051,15 +2034,12 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"uhub_explore: usb_new_device failed, "
-literal|"error=%d(%s)\n"
+literal|"uhub_explore: usb_new_device failed, %s\n"
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

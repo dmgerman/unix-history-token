@@ -182,6 +182,72 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|if (ohcidebug) logprintf x
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
+value|if (ohcidebug>(n)) logprintf x
+end_define
+
+begin_decl_stmt
+name|int
+name|ohcidebug
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The OHCI controller is little endian, so on big endian machines  * the data strored in memory needs to be swapped.  */
 end_comment
@@ -825,7 +891,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -2509,7 +2575,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 name|thesc
 operator|=
 name|sc
@@ -2715,7 +2781,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -2810,7 +2876,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 end_ifdef
 
 begin_function_decl
@@ -3505,7 +3571,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -3637,7 +3703,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -5003,7 +5069,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -5783,7 +5849,7 @@ name|stat
 expr_stmt|;
 if|#
 directive|if
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -5910,7 +5976,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -6335,7 +6401,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 end_ifdef
 
 begin_function
@@ -10556,7 +10622,7 @@ name|xfer
 expr_stmt|;
 if|#
 directive|if
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -10634,7 +10700,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug

@@ -186,7 +186,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UKBD_DEBUG
 end_ifdef
 
 begin_define
@@ -4647,7 +4647,7 @@ literal|0
 return|;
 if|#
 directive|if
-name|USB_DEBUG
+name|UKBD_DEBUG
 for|for
 control|(
 name|i
@@ -4767,7 +4767,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* USB_DEBUG */
+comment|/* UKBD_DEBUG */
 if|if
 condition|(
 name|state
@@ -7363,7 +7363,6 @@ name|usb_interface_descriptor_t
 modifier|*
 name|id
 decl_stmt|;
-comment|/* Check that this is a keyboard that speaks the boot protocol. */
 if|if
 condition|(
 operator|!
@@ -7374,6 +7373,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* Check that this is a keyboard that speaks the boot protocol. */
 name|id
 operator|=
 name|usbd_get_interface_descriptor
@@ -7386,28 +7386,30 @@ expr_stmt|;
 if|if
 condition|(
 name|id
+operator|&&
+name|id
 operator|->
 name|bInterfaceClass
-operator|!=
+operator|==
 name|UCLASS_HID
-operator|||
+operator|&&
 name|id
 operator|->
 name|bInterfaceSubClass
-operator|!=
+operator|==
 name|USUBCLASS_BOOT
-operator|||
+operator|&&
 name|id
 operator|->
 name|bInterfaceProtocol
-operator|!=
+operator|==
 name|UPROTO_BOOT_KEYBOARD
 condition|)
 return|return
-name|EINVAL
+literal|0
 return|;
 return|return
-literal|0
+name|EINVAL
 return|;
 block|}
 end_function

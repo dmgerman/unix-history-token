@@ -163,7 +163,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UGEN_DEBUG
 end_ifdef
 
 begin_define
@@ -173,7 +173,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (ugendebug) printf x
+value|if (ugendebug) logprintf x
 end_define
 
 begin_define
@@ -185,7 +185,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (ugendebug>(n)) printf x
+value|if (ugendebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
@@ -3801,7 +3801,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UGEN_DEBUG
 case|case
 name|USB_SETDEBUG
 case|:

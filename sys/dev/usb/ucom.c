@@ -181,7 +181,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UCOM_DEBUG
 end_ifdef
 
 begin_define
@@ -191,7 +191,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (ucomdebug) printf x
+value|if (ucomdebug) logprintf x
 end_define
 
 begin_define
@@ -203,7 +203,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (ucomdebug>(n)) printf x
+value|if (ucomdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
@@ -346,24 +346,24 @@ operator|&&
 name|id
 operator|->
 name|bInterfaceClass
-operator|!=
+operator|==
 name|UCLASS_CDC
 operator|)
-operator|||
+operator|&&
 name|id
 operator|->
 name|bInterfaceSubClass
-operator|!=
+operator|==
 name|USUBCLASS_ABSTRACT_CONTROL_MODEL
 condition|)
 return|return
 operator|(
-name|UMATCH_NONE
+name|UMATCH_IFACECLASS_IFACESUBCLASS
 operator|)
 return|;
 return|return
 operator|(
-name|UMATCH_IFACECLASS_IFACESUBCLASS
+name|UMATCH_NONE
 operator|)
 return|;
 block|}

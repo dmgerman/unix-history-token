@@ -176,6 +176,72 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|if (uhcidebug) logprintf x
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
+value|if (uhcidebug>(n)) logprintf x
+end_define
+
+begin_decl_stmt
+name|int
+name|uhcidebug
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1169,7 +1235,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -2119,7 +2185,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 end_ifdef
 
 begin_function
@@ -3082,7 +3148,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
@@ -3306,7 +3372,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
@@ -3407,7 +3473,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
@@ -4051,7 +4117,7 @@ name|tst
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 operator|(
@@ -6231,7 +6297,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -6386,7 +6452,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -6950,7 +7016,7 @@ name|UHCI_TD_IOC
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -7099,7 +7165,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -8082,7 +8148,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -8209,7 +8275,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -8469,7 +8535,7 @@ name|pipe
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 name|usbd_device_handle
 name|dev
 init|=
@@ -9582,7 +9648,7 @@ name|UHCI_TD_IOC
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -10285,7 +10351,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(

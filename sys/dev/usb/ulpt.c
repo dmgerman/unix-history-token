@@ -177,7 +177,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|ULPT_DEBUG
 end_ifdef
 
 begin_define
@@ -187,7 +187,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (ulptdebug) printf x
+value|if (ulptdebug) logprintf x
 end_define
 
 begin_define
@@ -199,7 +199,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (ulptdebug>(n)) printf x
+value|if (ulptdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
@@ -1377,7 +1377,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|ULPT_DEBUG
 argument_list|)
 operator|&&
 name|defined

@@ -174,7 +174,13 @@ block|,
 name|USBD_INTERRUPTED
 block|,
 name|USBD_XXX
-block|, }
+block|,
+define|#
+directive|define
+name|USBD_ERROR_MAX
+value|21
+comment|/* used for usbd_error_strs */
+block|}
 name|usbd_status
 typedef|;
 end_typedef
@@ -1307,6 +1313,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|usbd_errstr
+parameter_list|(
+name|usbd_status
+name|err
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
