@@ -3334,7 +3334,7 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
-name|icps_badaddr
+name|icps_noroute
 argument_list|,
 literal|"\t%lu no return route%s\n"
 argument_list|)
