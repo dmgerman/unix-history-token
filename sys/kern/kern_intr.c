@@ -405,9 +405,9 @@ name|it_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ithd
+name|p
 operator|->
-name|it_name
+name|p_comm
 argument_list|)
 argument_list|)
 expr_stmt|;
