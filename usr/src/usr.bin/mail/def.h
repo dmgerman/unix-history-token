@@ -6,12 +6,6 @@ end_empty
 begin_include
 include|#
 directive|include
-file|"local.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -33,6 +27,12 @@ directive|include
 file|<sgtty.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -46,7 +46,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.5 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.6 %G%";  */
 end_comment
 
 begin_comment
