@@ -3597,6 +3597,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|mver
 decl_stmt|;
 name|u_int32_t
 name|reg
@@ -3626,6 +3628,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* OHCI version */
 name|reg
 operator|=
 name|OREAD
@@ -3635,12 +3638,8 @@ argument_list|,
 name|OHCI_VERSION
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"OHCI version %x.%x (ROM=%d)\n"
-argument_list|,
+name|mver
+operator|=
 operator|(
 name|reg
 operator|>>
@@ -3648,6 +3647,14 @@ literal|16
 operator|)
 operator|&
 literal|0xff
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"OHCI version %x.%x (ROM=%d)\n"
+argument_list|,
+name|mver
 argument_list|,
 name|reg
 operator|&
@@ -3664,17 +3671,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
-name|reg
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xff
-operator|)
+name|mver
 operator|<
 literal|1
+operator|||
+name|mver
+operator|>
+literal|9
 condition|)
 block|{
 name|device_printf
