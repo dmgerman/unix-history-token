@@ -3416,11 +3416,6 @@ argument_list|(
 literal|"pmap_dispose_thread: kstack already missing?"
 argument_list|)
 expr_stmt|;
-name|vm_page_busy
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|ptek
 index|[
 name|i
@@ -3441,6 +3436,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
+expr_stmt|;
+name|vm_page_busy
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|vm_page_unwire
 argument_list|(
