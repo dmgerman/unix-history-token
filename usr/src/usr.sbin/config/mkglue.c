@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkglue.c	5.10 (Berkeley) %G%"
+literal|"@(#)mkglue.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1880,7 +1880,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ 	.globl	_hardclock\n\ VEC(clk)\n\ 	INTR(0, _highmask, 0)\n\ 	call	_hardclock \n\ 	INTREXIT1\n\n\n"
+literal|"\ 	.globl	_hardclock\n\ VEC(clk)\n\ 	INTR1(0, _highmask, 0)\n\ 	call	_hardclock \n\ 	INTREXIT1\n\n\n"
 argument_list|)
 expr_stmt|;
 name|count
@@ -2024,7 +2024,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"VEC(%s%d)\n\tINTR(%d, "
+literal|"VEC(%s%d)\n\tINTR%d(%d, "
 argument_list|,
 name|dp
 operator|->
@@ -2033,6 +2033,14 @@ argument_list|,
 name|dp
 operator|->
 name|d_unit
+argument_list|,
+name|dp
+operator|->
+name|d_irq
+operator|/
+literal|8
+operator|+
+literal|1
 argument_list|,
 name|dp
 operator|->
