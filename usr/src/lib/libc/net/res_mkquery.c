@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	5.3 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +212,9 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -233,6 +236,8 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize header fields. 	 */
 name|hp
 operator|=
@@ -424,9 +429,20 @@ operator|&
 name|RES_INIT
 operator|)
 condition|)
+if|if
+condition|(
 name|res_init
 argument_list|()
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|_res

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	5.4 (Berkeley) %G%"
+literal|"@(#)res_send.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,9 @@ operator|*
 operator|)
 name|answer
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -194,6 +197,8 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -205,9 +210,22 @@ operator|&
 name|RES_INIT
 operator|)
 condition|)
+if|if
+condition|(
 name|res_init
 argument_list|()
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|s
 operator|=
 operator|-
@@ -294,6 +312,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -309,6 +330,8 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -364,6 +387,9 @@ operator|!=
 name|buflen
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -379,6 +405,8 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -444,6 +472,9 @@ operator|<=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -459,6 +490,8 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -530,6 +563,9 @@ operator|<=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -545,6 +581,8 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -609,6 +647,9 @@ operator|!=
 name|buflen
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -624,6 +665,8 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 			 * Wait for reply  			 */
 name|timeout
@@ -672,6 +715,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -687,6 +733,8 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 if|if
@@ -697,6 +745,9 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * timeout 				 */
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -710,6 +761,8 @@ argument_list|(
 literal|"timeout\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 if|if
@@ -736,6 +789,9 @@ operator|<=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -751,6 +807,8 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 if|if
@@ -763,6 +821,9 @@ name|id
 condition|)
 block|{
 comment|/* 				 * response from old query, ignore it 				 */
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -783,6 +844,8 @@ name|answer
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 continue|continue;
 block|}
 if|if
@@ -802,6 +865,9 @@ name|tc
 condition|)
 block|{
 comment|/* 				 * get rest of answer 				 */
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -815,6 +881,8 @@ argument_list|(
 literal|"truncated answer\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -841,6 +909,9 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -861,6 +932,8 @@ name|answer
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
