@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic Host Adapter Inline Functions  *  * Copyright (c) 1999, 2000 by Matthew Jacob  * Feral Software  * All rights reserved.  * mjacob@feral.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Qlogic Host Adapter Inline Functions  *  * Copyright (c) 1999, 2000, 2001 by Matthew Jacob  * Feral Software  * All rights reserved.  * mjacob@feral.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,7 @@ operator|,
 name|XS_T
 operator|*
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|*
 operator|)
 argument_list|)
@@ -58,7 +58,7 @@ expr|struct
 name|ispsoftc
 operator|*
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -67,7 +67,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|INLINE
-name|u_int32_t
+name|u_int16_t
 name|isp_find_handle
 name|__P
 argument_list|(
@@ -91,7 +91,7 @@ name|isp_handle_index
 name|__P
 argument_list|(
 operator|(
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -109,7 +109,7 @@ expr|struct
 name|ispsoftc
 operator|*
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -155,7 +155,7 @@ name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 modifier|*
 name|handlep
 decl_stmt|;
@@ -298,7 +298,7 @@ name|ispsoftc
 modifier|*
 name|isp
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|handle
 decl_stmt|;
 block|{
@@ -311,7 +311,7 @@ operator|||
 name|handle
 operator|>
 operator|(
-name|u_int32_t
+name|u_int16_t
 operator|)
 name|isp
 operator|->
@@ -345,7 +345,7 @@ end_function
 begin_function
 specifier|static
 name|INLINE
-name|u_int32_t
+name|u_int16_t
 name|isp_find_handle
 parameter_list|(
 name|isp
@@ -403,7 +403,7 @@ block|{
 return|return
 operator|(
 operator|(
-name|u_int32_t
+name|u_int16_t
 operator|)
 name|i
 operator|+
@@ -429,7 +429,7 @@ name|isp_handle_index
 parameter_list|(
 name|handle
 parameter_list|)
-name|u_int32_t
+name|u_int16_t
 name|handle
 decl_stmt|;
 block|{
@@ -458,7 +458,7 @@ name|ispsoftc
 modifier|*
 name|isp
 decl_stmt|;
-name|u_int32_t
+name|u_int16_t
 name|handle
 decl_stmt|;
 block|{
@@ -471,7 +471,7 @@ operator|&&
 name|handle
 operator|<=
 operator|(
-name|u_int32_t
+name|u_int16_t
 operator|)
 name|isp
 operator|->
