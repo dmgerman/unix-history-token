@@ -2643,7 +2643,7 @@ name|report
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"bad addr len from from %s address %s"
+literal|"bad addr len from %s address %s"
 argument_list|,
 name|netname
 argument_list|(
@@ -3911,7 +3911,7 @@ decl_stmt|,
 name|haf
 decl_stmt|;
 comment|/* 	 * XXX - Should honor bp_flags "broadcast" bit here. 	 * Temporary workaround: use the :ra=ADDR: option to 	 * set the reply address to the broadcast address. 	 */
-comment|/* 	 * If the destination address was specified explicitly 	 * (i.e. the broadcast address for HP compatiblity) 	 * then send the response to that address.  Otherwise, 	 * act in accordance with RFC951: 	 *   If the client IP address is specified, use that 	 * else if gateway IP address is specified, use that 	 * else make a temporary arp cache entry for the client's 	 * NEW IP/hardware address and use that. 	 */
+comment|/* 	 * If the destination address was specified explicitly 	 * (i.e. the broadcast address for HP compatibility) 	 * then send the response to that address.  Otherwise, 	 * act in accordance with RFC951: 	 *   If the client IP address is specified, use that 	 * else if gateway IP address is specified, use that 	 * else make a temporary arp cache entry for the client's 	 * NEW IP/hardware address and use that. 	 */
 if|if
 condition|(
 name|dst_override
