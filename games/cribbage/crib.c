@@ -795,12 +795,8 @@ expr_stmt|;
 block|}
 name|i
 operator|=
-operator|(
-name|rand
+name|random
 argument_list|()
-operator|>>
-literal|4
-operator|)
 operator|%
 name|CARDS
 expr_stmt|;
@@ -810,12 +806,8 @@ block|{
 comment|/* comp cuts deck */
 name|j
 operator|=
-operator|(
-name|rand
+name|random
 argument_list|()
-operator|>>
-literal|4
-operator|)
 operator|%
 name|CARDS
 expr_stmt|;
@@ -1609,12 +1601,8 @@ expr_stmt|;
 block|}
 name|i
 operator|=
-operator|(
-name|rand
+name|random
 argument_list|()
-operator|>>
-literal|4
-operator|)
 operator|%
 operator|(
 name|CARDS
@@ -1680,12 +1668,8 @@ else|else
 block|{
 name|i
 operator|=
-operator|(
-name|rand
+name|random
 argument_list|()
-operator|>>
-literal|4
-operator|)
 operator|%
 operator|(
 name|CARDS
