@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.58
+literal|3.59
 operator|%
 name|G
 operator|%
@@ -1222,6 +1222,12 @@ operator|&&
 name|LogLevel
 operator|>
 literal|8
+operator|&&
+name|h
+operator|->
+name|h_value
+operator|!=
+name|NULL
 operator|&&
 name|strcmp
 argument_list|(
