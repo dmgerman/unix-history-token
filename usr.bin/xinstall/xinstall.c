@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.13 1996/09/24 04:15:02 imp Exp $"
+literal|"$Id: xinstall.c,v 1.14 1996/09/24 17:29:42 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,13 +156,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<sysexits.h>
 end_include
 
 begin_include
@@ -863,9 +863,10 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 comment|/* can't do file1 file2 directory/file */
 if|if
@@ -982,9 +983,10 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|EX_OK
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -2932,6 +2934,7 @@ argument_list|(
 name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 block|}
 block|}
@@ -2958,9 +2961,10 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
