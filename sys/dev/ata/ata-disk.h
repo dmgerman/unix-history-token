@@ -164,6 +164,10 @@ define|#
 directive|define
 name|AD_F_TAG_ENABLED
 value|0x0008
+define|#
+directive|define
+name|AD_F_DETACHING
+value|0x0010
 name|struct
 name|ad_request
 modifier|*

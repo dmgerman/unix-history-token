@@ -558,6 +558,12 @@ name|u_int16_t
 name|cur_write_speed
 decl_stmt|;
 comment|/* current data rate in bytes/1000  */
+name|u_int16_t
+name|copy_protect_rev
+decl_stmt|;
+name|u_int16_t
+name|reserved4
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1060,9 +1066,9 @@ value|0x0001
 comment|/* this unit is locked */
 name|struct
 name|bio_queue_head
-name|bio_queue
+name|queue
 decl_stmt|;
-comment|/* Queue of i/o requests */
+comment|/* queue of i/o requests */
 name|struct
 name|toc
 name|toc

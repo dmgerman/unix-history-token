@@ -1029,6 +1029,10 @@ define|#
 directive|define
 name|ATAPI_F_MEDIA_CHANGED
 value|0x0001
+define|#
+directive|define
+name|ATAPI_F_DETACHING
+value|0x0002
 block|}
 struct|;
 end_struct

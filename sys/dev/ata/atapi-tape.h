@@ -510,7 +510,7 @@ decl_stmt|;
 comment|/* block size (512 | 1024) */
 name|struct
 name|bio_queue_head
-name|bio_queue
+name|queue
 decl_stmt|;
 comment|/* queue of i/o requests */
 name|struct

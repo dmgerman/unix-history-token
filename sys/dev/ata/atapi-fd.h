@@ -184,7 +184,7 @@ decl_stmt|;
 comment|/* max size of each transfer */
 name|struct
 name|bio_queue_head
-name|bio_queue
+name|queue
 decl_stmt|;
 comment|/* queue of i/o requests */
 name|struct
