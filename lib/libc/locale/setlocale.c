@@ -912,6 +912,12 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* Just in case...*/
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 

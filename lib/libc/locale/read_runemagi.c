@@ -47,10 +47,6 @@ name|data
 decl_stmt|;
 name|void
 modifier|*
-name|np
-decl_stmt|;
-name|void
-modifier|*
 name|lastp
 decl_stmt|;
 name|_RuneLocale
