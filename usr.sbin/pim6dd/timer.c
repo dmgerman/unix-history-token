@@ -4,7 +4,7 @@ comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights re
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: timer.c,v 1.5 2000/05/18 16:09:39 itojun Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: timer.c,v 1.6 2000/10/05 22:20:38 itojun Exp $  */
 end_comment
 
 begin_comment
@@ -633,7 +633,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"Refreshing src %s, dst %s after %d bytes forwarded"
+literal|"Refreshing src %s, dst %s after %ld bytes forwarded"
 argument_list|,
 name|inet6_fmt
 argument_list|(

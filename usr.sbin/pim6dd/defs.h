@@ -4,7 +4,7 @@ comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights re
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: defs.h,v 1.7 2000/04/30 13:01:36 itojun Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: defs.h,v 1.9 2000/10/05 22:20:38 itojun Exp $  */
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -1615,6 +1621,19 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__format__
+argument_list|(
+name|__printf__
+argument_list|,
+literal|3
+argument_list|,
+literal|4
+argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;

@@ -8,7 +8,7 @@ comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights re
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: mld6_proto.c,v 1.4 2000/05/05 12:38:30 jinmei Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: mld6_proto.c,v 1.5 2000/10/05 22:20:38 itojun Exp $  */
 end_comment
 
 begin_comment
@@ -741,7 +741,7 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"timer for grp %s on mif %d "
-literal|"set to %d"
+literal|"set to %ld"
 argument_list|,
 name|inet6_fmt
 argument_list|(
@@ -891,7 +891,7 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"accepting multicast listener report: "
-literal|"src %s, dst% s, grp %s"
+literal|"src %s, dst %s, grp %s"
 argument_list|,
 name|inet6_fmt
 argument_list|(
@@ -1263,7 +1263,7 @@ name|LOG_INFO
 argument_list|,
 literal|0
 argument_list|,
-literal|"accepting listener done message: src %s, dst% s, grp %s"
+literal|"accepting listener done message: src %s, dst %s, grp %s"
 argument_list|,
 name|inet6_fmt
 argument_list|(
@@ -1371,7 +1371,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"[accept_done_message] %d %d \n"
+literal|"[accept_done_message] %d %ld\n"
 argument_list|,
 name|g
 operator|->

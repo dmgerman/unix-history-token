@@ -8,7 +8,7 @@ comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to   *  Pavlin Ivanov Radoslavov (pavlin@catarina.usc.edu)  *  *  $Id: mld6.c,v 1.13 2000/04/12 07:34:38 jinmei Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Pavlin Ivanov Radoslavov (pavlin@catarina.usc.edu)  *  *  $Id: mld6.c,v 1.14 2000/10/05 22:20:38 itojun Exp $  */
 end_comment
 
 begin_comment
@@ -1449,6 +1449,19 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"RECV %s with an invalid scope: %s from %s"
+argument_list|,
+name|packet_kind
+argument_list|(
+name|IPPROTO_ICMPV6
+argument_list|,
+name|mldh
+operator|->
+name|mld6_type
+argument_list|,
+name|mldh
+operator|->
+name|mld6_code
+argument_list|)
 argument_list|,
 name|inet6_fmt
 argument_list|(

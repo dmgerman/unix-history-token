@@ -4,7 +4,7 @@ comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to   *  Pavlin Ivanov Radoslavov (pavlin@catarina.usc.edu)  *  *  $Id: debug.c,v 1.8 2000/05/18 12:47:59 itojun Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Pavlin Ivanov Radoslavov (pavlin@catarina.usc.edu)  *  *  $Id: debug.c,v 1.10 2000/10/05 22:27:07 itojun Exp $  */
 end_comment
 
 begin_comment

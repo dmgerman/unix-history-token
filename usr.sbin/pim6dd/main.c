@@ -4,7 +4,7 @@ comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights re
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: main.c,v 1.3 2000/03/26 19:11:41 sumikawa Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: main.c,v 1.4 2000/10/05 22:20:38 itojun Exp $  */
 end_comment
 
 begin_comment
@@ -2799,7 +2799,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|0
 argument_list|,
-literal|"% restart"
+literal|"%s restart"
 argument_list|,
 name|versionstring
 argument_list|)

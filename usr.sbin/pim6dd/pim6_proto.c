@@ -8,7 +8,7 @@ comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights re
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: pim6_proto.c,v 1.5 2000/04/30 10:50:31 jinmei Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: pim6_proto.c,v 1.6 2000/10/05 22:20:38 itojun Exp $  */
 end_comment
 
 begin_comment
@@ -1768,7 +1768,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"Scheduling join for src %s, grp %s, delay %d"
+literal|"Scheduling join for src %s, grp %s, delay %ld"
 argument_list|,
 name|inet6_fmt
 argument_list|(
