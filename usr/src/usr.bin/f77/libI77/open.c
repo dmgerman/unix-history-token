@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)open.c	5.1	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)open.c	5.2	%G%  */
 end_comment
 
 begin_comment
@@ -247,11 +247,29 @@ argument_list|,
 name|tmplate
 argument_list|)
 expr_stmt|;
+comment|/* make a new temp file name, err if mktemp fails */
+if|if
+condition|(
+name|strcmp
+argument_list|(
 name|mktemp
 argument_list|(
 name|buf
 argument_list|)
-expr_stmt|;
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|F_ERSYS
+argument_list|,
+literal|"open"
+argument_list|)
 block|}
 else|else
 block|{
