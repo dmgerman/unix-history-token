@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.11	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.12	%G% */
 end_comment
 
 begin_include
@@ -346,8 +346,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_FULLNAME
+value|040000
+end_define
+
+begin_comment
+comment|/* want Full-Name field */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_ARPAFMT
-value|(M_NEEDDATE|M_NEEDFROM)
+value|(M_NEEDDATE|M_NEEDFROM|M_NEEDDATE)
 end_define
 
 begin_decl_stmt
@@ -507,6 +518,17 @@ end_define
 
 begin_comment
 comment|/* check h_mflags against m_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_ACHECK
+value|00040
+end_define
+
+begin_comment
+comment|/* ditto, but always (not just default) */
 end_comment
 
 begin_comment

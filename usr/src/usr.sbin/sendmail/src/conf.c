@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.11	%G%"
+literal|"@(#)conf.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,7 +410,9 @@ literal|"/usr/net/bin/sendberkmail"
 block|,
 name|M_FOPT
 operator||
-name|M_ARPAFMT
+name|M_NEEDDATE
+operator||
+name|M_FULLNAME
 operator||
 name|M_STRIPQ
 block|,
@@ -518,7 +520,9 @@ name|M_ROPT
 operator||
 name|M_STRIPQ
 operator||
-name|M_ARPAFMT
+name|M_NEEDDATE
+operator||
+name|M_FULLNAME
 operator||
 name|M_MUSER
 block|,
@@ -623,6 +627,12 @@ block|,
 name|H_CHECK
 block|,
 name|M_NEEDFROM
+block|,
+literal|"full-name"
+block|,
+name|H_ACHECK
+block|,
+name|M_FULLNAME
 block|,
 literal|"to"
 block|,

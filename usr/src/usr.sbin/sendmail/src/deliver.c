@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.9	%G%"
+literal|"@(#)deliver.c	3.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2007,16 +2007,21 @@ if|if
 condition|(
 name|bitset
 argument_list|(
-name|H_CHECK
+name|H_DELETE
 argument_list|,
 name|h
 operator|->
 name|h_flags
 argument_list|)
-operator|&&
+condition|)
+continue|continue;
+if|if
+condition|(
 name|bitset
 argument_list|(
-name|H_DEFAULT
+name|H_CHECK
+operator||
+name|H_ACHECK
 argument_list|,
 name|h
 operator|->
@@ -2076,6 +2081,14 @@ name|h
 operator|->
 name|h_value
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
 name|fprintf
 argument_list|(
 name|fp
