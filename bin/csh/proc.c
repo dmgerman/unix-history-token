@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: proc.c,v 1.5 1997/08/07 21:42:15 steve Exp $"
+literal|"$Id: proc.c,v 1.6 1997/08/08 00:54:05 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -340,6 +340,11 @@ specifier|extern
 name|int
 name|insource
 decl_stmt|;
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 name|union
 name|wait
 name|w
@@ -415,6 +420,10 @@ name|pid
 operator|==
 operator|-
 literal|1
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 return|return;
 block|}
