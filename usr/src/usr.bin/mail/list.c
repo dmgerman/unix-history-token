@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	5.15 (Berkeley) %G%"
+literal|"@(#)list.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2880,6 +2880,55 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* 	 * Now look, ignoring case, for the word in the string. 	 */
+if|if
+condition|(
+name|value
+argument_list|(
+literal|"searchheaders"
+argument_list|)
+operator|&&
+operator|(
+name|cp
+operator|=
+name|index
+argument_list|(
+name|str
+argument_list|,
+literal|':'
+argument_list|)
+operator|)
+condition|)
+block|{
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|cp2
+operator|=
+name|hfield
+argument_list|(
+name|str
+argument_list|,
+name|mp
+argument_list|)
+expr_stmt|;
+name|cp
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|':'
+expr_stmt|;
+name|str
+operator|=
+name|cp
+expr_stmt|;
+block|}
+else|else
+block|{
 name|cp
 operator|=
 name|str
@@ -2893,6 +2942,7 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cp2
