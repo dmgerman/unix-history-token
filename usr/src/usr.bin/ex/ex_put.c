@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_put.c	7.2	%G%"
+literal|"@(#)ex_put.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2935,7 +2935,11 @@ operator|.
 name|c_oflag
 operator|&=
 operator|~
+operator|(
 name|TAB3
+operator||
+name|ONLCR
+operator|)
 expr_stmt|;
 name|tty
 operator|.
