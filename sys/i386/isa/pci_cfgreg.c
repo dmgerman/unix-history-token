@@ -418,7 +418,7 @@ if|if
 condition|(
 name|pcireg_cfgopen
 argument_list|()
-operator|!=
+operator|==
 literal|0
 condition|)
 return|return
