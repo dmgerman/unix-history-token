@@ -755,7 +755,7 @@ block|}
 comment|/* Enable interrupt. */
 if|if
 condition|(
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -763,7 +763,7 @@ name|resp
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|csa_intr
 argument_list|,

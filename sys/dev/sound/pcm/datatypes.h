@@ -321,7 +321,7 @@ decl_stmt|;
 name|snd_dbuf
 name|buffer
 decl_stmt|,
-name|buffer2nd
+name|bufsoft
 decl_stmt|;
 name|snddev_info
 modifier|*

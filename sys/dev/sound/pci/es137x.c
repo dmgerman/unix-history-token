@@ -144,10 +144,12 @@ name|es_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -371,6 +373,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|es_playcaps
 init|=
@@ -412,6 +415,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|es_reccaps
 init|=
@@ -665,6 +669,7 @@ specifier|static
 name|int
 name|es1370_mixinit
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -769,6 +774,7 @@ specifier|static
 name|int
 name|es1370_mixset
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -961,6 +967,7 @@ specifier|static
 name|int
 name|es1370_mixsetrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -1294,10 +1301,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -2375,6 +2384,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|eschan_getcaps
@@ -5307,7 +5317,7 @@ name|es
 operator|->
 name|irq
 operator|||
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -5315,7 +5325,7 @@ name|es
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|es_intr
 argument_list|,
@@ -5736,6 +5746,7 @@ name|es_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }

@@ -219,10 +219,12 @@ name|cmi_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -326,6 +328,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|cmi_caps
 init|=
@@ -1558,10 +1561,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -2512,6 +2517,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|cmichan_getcaps
@@ -2971,6 +2977,7 @@ specifier|static
 name|int
 name|cmimix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3124,6 +3131,7 @@ specifier|static
 name|int
 name|cmimix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3463,6 +3471,7 @@ specifier|static
 name|int
 name|cmimix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3812,6 +3821,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
 name|snddev_info
 modifier|*
 name|d
@@ -4033,7 +4043,7 @@ name|cmi
 operator|->
 name|irq
 operator|||
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -4041,7 +4051,7 @@ name|cmi
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|cmi_intr
 argument_list|,
@@ -4514,6 +4524,7 @@ name|cmi_methods
 block|,
 expr|sizeof
 operator|(
+expr|struct
 name|snddev_info
 operator|)
 block|}

@@ -85,10 +85,12 @@ name|dir
 decl_stmt|,
 name|fmt
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
@@ -406,6 +408,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|nm_caps
 init|=
@@ -1571,10 +1574,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -1682,11 +1687,12 @@ literal|"play"
 else|:
 literal|"rec"
 argument_list|,
+name|sndbuf_getbuf
+argument_list|(
 name|ch
 operator|->
 name|buffer
-operator|->
-name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ch
@@ -2210,6 +2216,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|nmchan_getcaps
@@ -3346,7 +3353,7 @@ name|sc
 operator|->
 name|irq
 operator|||
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -3354,7 +3361,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|nm_intr
 argument_list|,
@@ -3803,6 +3810,7 @@ name|nm_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }

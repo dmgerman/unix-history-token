@@ -7,6 +7,7 @@ begin_function_decl
 name|int
 name|dsp_open
 parameter_list|(
+name|struct
 name|snddev_info
 modifier|*
 name|d
@@ -27,6 +28,7 @@ begin_function_decl
 name|int
 name|dsp_close
 parameter_list|(
+name|struct
 name|snddev_info
 modifier|*
 name|d
@@ -44,6 +46,7 @@ begin_function_decl
 name|int
 name|dsp_read
 parameter_list|(
+name|struct
 name|snddev_info
 modifier|*
 name|d
@@ -66,6 +69,7 @@ begin_function_decl
 name|int
 name|dsp_write
 parameter_list|(
+name|struct
 name|snddev_info
 modifier|*
 name|d
@@ -88,6 +92,7 @@ begin_function_decl
 name|int
 name|dsp_ioctl
 parameter_list|(
+name|struct
 name|snddev_info
 modifier|*
 name|d
@@ -108,6 +113,7 @@ begin_function_decl
 name|int
 name|dsp_poll
 parameter_list|(
+name|struct
 name|snddev_info
 modifier|*
 name|d
@@ -130,6 +136,7 @@ begin_function_decl
 name|int
 name|dsp_mmap
 parameter_list|(
+name|struct
 name|snddev_info
 modifier|*
 name|d

@@ -74,6 +74,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|au_playcaps
 init|=
@@ -115,6 +116,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|au_reccaps
 init|=
@@ -149,10 +151,12 @@ name|au_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -185,6 +189,10 @@ index|]
 decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dmat
+decl_stmt|;
+name|void
+modifier|*
+name|lock
 decl_stmt|;
 name|u_int32_t
 name|x
@@ -1729,10 +1737,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -2116,6 +2126,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|auchan_getcaps
@@ -3714,13 +3725,13 @@ condition|(
 operator|!
 name|irq
 operator|||
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|au_intr
 argument_list|,
@@ -4072,6 +4083,7 @@ name|au_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }

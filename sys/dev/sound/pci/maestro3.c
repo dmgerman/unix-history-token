@@ -236,10 +236,12 @@ decl_stmt|;
 name|u_int32_t
 name|fmt
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
@@ -275,10 +277,12 @@ decl_stmt|;
 name|u_int32_t
 name|fmt
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
@@ -405,9 +409,11 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 parameter_list|,
@@ -504,6 +510,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|m3_pchan_getcaps
@@ -531,9 +538,11 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 parameter_list|,
@@ -630,6 +639,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|m3_rchan_getcaps
@@ -891,6 +901,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|m3_playcaps
 init|=
@@ -1012,6 +1023,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|m3_reccaps
 init|=
@@ -1554,7 +1566,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|21
+literal|50
 argument_list|)
 expr_stmt|;
 comment|/* ac97 cycle = 20.8 usec */
@@ -1669,6 +1681,12 @@ operator|&
 literal|0x7f
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|50
+argument_list|)
+expr_stmt|;
+comment|/* ac97 cycle = 20.8 usec */
 return|return
 literal|0
 return|;
@@ -1716,10 +1734,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -3285,6 +3305,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|m3_pchan_getcaps
@@ -3345,10 +3366,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -4871,6 +4894,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|m3_rchan_getcaps
@@ -6162,7 +6186,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -6170,7 +6194,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|m3_intr
 argument_list|,
@@ -6499,6 +6523,11 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|mixer_hwvol_init
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* Create the buffer for saving the card state during suspend */
 name|len
 operator|=
@@ -8139,6 +8168,7 @@ name|m3_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }

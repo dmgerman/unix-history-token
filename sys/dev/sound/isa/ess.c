@@ -102,6 +102,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|ess_playcaps
 init|=
@@ -155,6 +156,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|ess_reccaps
 init|=
@@ -185,10 +187,12 @@ name|ess_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -217,6 +221,9 @@ begin_struct
 struct|struct
 name|ess_info
 block|{
+name|device_t
+name|parent_dev
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -525,6 +532,54 @@ end_decl_stmt
 begin_comment
 comment|/*  * Common code for the midi and pcm functions  *  * ess_cmd write a single byte to the CMD port.  * ess_cmd1 write a CMD + 1 byte arg  * ess_cmd2 write a CMD + 2 byte arg  * ess_get_byte returns a single byte from the DSP data port  *  * ess_write is actually ess_cmd1  * ess_read access ext. regs via ess_cmd(0xc0, reg) followed by ess_get_byte  */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|ess_lock
+parameter_list|(
+name|struct
+name|ess_info
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|sbc_lock
+argument_list|(
+name|device_get_softc
+argument_list|(
+name|sc
+operator|->
+name|parent_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ess_unlock
+parameter_list|(
+name|struct
+name|ess_info
+modifier|*
+name|sc
+parameter_list|)
+block|{
+name|sbc_unlock
+argument_list|(
+name|device_get_softc
+argument_list|(
+name|sc
+operator|->
+name|parent_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -869,20 +924,12 @@ name|u_int
 name|value
 parameter_list|)
 block|{
-name|u_long
-name|flags
-decl_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
 literal|"ess_setmixer: reg=%x, val=%x\n"
 argument|, port, value);
 argument_list|)
-name|flags
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|ess_wr
 argument_list|(
 name|sc
@@ -926,11 +973,6 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -951,14 +993,6 @@ block|{
 name|int
 name|val
 decl_stmt|;
-name|u_long
-name|flags
-decl_stmt|;
-name|flags
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|ess_wr
 argument_list|(
 name|sc
@@ -993,11 +1027,6 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|10
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|flags
 argument_list|)
 expr_stmt|;
 return|return
@@ -1648,6 +1677,11 @@ name|pirq
 decl_stmt|,
 name|rirq
 decl_stmt|;
+name|ess_lock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|src
 operator|=
 literal|0
@@ -1931,6 +1965,11 @@ argument_list|(
 name|sc
 argument_list|,
 name|DSP_DATA_AVAIL
+argument_list|)
+expr_stmt|;
+name|ess_unlock
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2719,6 +2758,11 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
+name|ess_lock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ess_setupch
 argument_list|(
 name|sc
@@ -2802,6 +2846,11 @@ argument_list|,
 name|DSP_CMD_SPKON
 argument_list|)
 expr_stmt|;
+name|ess_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2843,6 +2892,11 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
+name|ess_lock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ch
 operator|->
 name|stopping
@@ -2903,6 +2957,11 @@ argument_list|,
 name|DSP_CMD_SPKOFF
 argument_list|)
 expr_stmt|;
+name|ess_unlock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2930,10 +2989,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -3329,6 +3390,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|esschan_getcaps
@@ -3448,6 +3510,7 @@ specifier|static
 name|int
 name|essmix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3518,6 +3581,7 @@ specifier|static
 name|int
 name|essmix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3830,6 +3894,7 @@ specifier|static
 name|int
 name|essmix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -4122,6 +4187,15 @@ expr|*
 name|sc
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|parent_dev
+operator|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ess_alloc_resources
@@ -4304,7 +4378,7 @@ argument_list|,
 literal|0x22
 argument_list|)
 expr_stmt|;
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -4312,7 +4386,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+name|INTR_MPSAFE
 argument_list|,
 name|ess_intr
 argument_list|,
@@ -4628,6 +4702,7 @@ name|ess_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }
@@ -4664,6 +4739,22 @@ argument_list|,
 name|PCM_PREFVER
 argument_list|,
 name|PCM_MAXVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|snd_ess
+argument_list|,
+name|snd_sbc
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4966,6 +5057,7 @@ name|esscontrol_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }

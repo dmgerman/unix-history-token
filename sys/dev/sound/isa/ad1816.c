@@ -36,10 +36,12 @@ name|ad1816_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -98,6 +100,10 @@ name|ih
 decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dmat
+decl_stmt|;
+name|void
+modifier|*
+name|lock
 decl_stmt|;
 name|struct
 name|ad1816_chinfo
@@ -238,6 +244,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|ad1816_caps
 init|=
@@ -263,6 +270,44 @@ end_define
 begin_comment
 comment|/* value for mute */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|ad1816_lock
+parameter_list|(
+name|struct
+name|ad1816_info
+modifier|*
+name|ad1816
+parameter_list|)
+block|{
+name|snd_mtxlock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ad1816_unlock
+parameter_list|(
+name|struct
+name|ad1816_info
+modifier|*
+name|ad1816
+parameter_list|)
+block|{
+name|snd_mtxunlock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -437,6 +482,11 @@ name|served
 init|=
 literal|0
 decl_stmt|;
+name|ad1816_lock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 comment|/* get interupt status */
 name|c
 operator|=
@@ -600,6 +650,11 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+name|ad1816_unlock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -688,20 +743,11 @@ name|int
 name|reg
 parameter_list|)
 block|{
-name|int
-name|flags
-decl_stmt|;
 name|u_short
 name|x
 init|=
 literal|0
 decl_stmt|;
-comment|/* we don't want to be blocked here */
-name|flags
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ad1816_wait_init
@@ -774,11 +820,6 @@ argument_list|,
 name|AD1816_LOW
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 return|return
 name|x
 return|;
@@ -804,14 +845,6 @@ name|short
 name|data
 parameter_list|)
 block|{
-name|int
-name|flags
-decl_stmt|;
-name|flags
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|ad1816_wait_init
@@ -866,11 +899,6 @@ operator|>>
 literal|8
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -883,6 +911,7 @@ specifier|static
 name|int
 name|ad1816mix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -913,6 +942,7 @@ specifier|static
 name|int
 name|ad1816mix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -997,6 +1027,11 @@ condition|)
 name|reg
 operator||=
 literal|0x0080
+expr_stmt|;
+name|ad1816_lock
+argument_list|(
+name|ad1816
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -1156,6 +1191,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|ad1816_unlock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 name|left
 operator|=
 operator|(
@@ -1201,6 +1241,7 @@ specifier|static
 name|int
 name|ad1816mix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -1268,6 +1309,11 @@ name|dev
 operator|<<
 literal|8
 expr_stmt|;
+name|ad1816_lock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 name|ad1816_write
 argument_list|(
 name|ad1816
@@ -1287,6 +1333,11 @@ literal|0x7070
 operator|)
 operator||
 name|dev
+argument_list|)
+expr_stmt|;
+name|ad1816_unlock
+argument_list|(
+name|ad1816
 argument_list|)
 expr_stmt|;
 return|return
@@ -1361,10 +1412,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -1550,6 +1603,11 @@ name|AD1816_U8
 decl_stmt|,
 name|reg
 decl_stmt|;
+name|ad1816_lock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ch
@@ -1677,6 +1735,11 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
+name|ad1816_unlock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 return|return
 name|format
 return|;
@@ -1724,6 +1787,11 @@ argument_list|,
 literal|55200
 argument_list|)
 expr_stmt|;
+name|ad1816_lock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 name|ad1816_write
 argument_list|(
 name|ad1816
@@ -1741,6 +1809,11 @@ else|:
 literal|3
 argument_list|,
 name|speed
+argument_list|)
+expr_stmt|;
+name|ad1816_unlock
+argument_list|(
+name|ad1816
 argument_list|)
 expr_stmt|;
 return|return
@@ -1862,6 +1935,11 @@ condition|?
 name|AD1816_PLAY
 else|:
 name|AD1816_CAPT
+expr_stmt|;
+name|ad1816_lock
+argument_list|(
+name|ad1816
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -2105,6 +2183,11 @@ comment|/* reset cur cnt */
 block|}
 break|break;
 block|}
+name|ad1816_unlock
+argument_list|(
+name|ad1816
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2144,6 +2227,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|ad1816chan_getcaps
@@ -2417,6 +2501,19 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ad1816
+operator|->
+name|lock
+condition|)
+name|snd_mtxfree
+argument_list|(
+name|ad1816
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ad1816
@@ -2892,6 +2989,18 @@ argument_list|)
 expr_stmt|;
 name|ad1816
 operator|->
+name|lock
+operator|=
+name|snd_mtxcreate
+argument_list|(
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ad1816
+operator|->
 name|io_rid
 operator|=
 literal|2
@@ -2949,7 +3058,7 @@ condition|)
 goto|goto
 name|no
 goto|;
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -2957,7 +3066,7 @@ name|ad1816
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+name|INTR_MPSAFE
 argument_list|,
 name|ad1816_intr
 argument_list|,
@@ -3254,6 +3363,7 @@ name|ad1816_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }

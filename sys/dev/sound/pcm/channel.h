@@ -3,6 +3,100 @@ begin_comment
 comment|/*  * Copyright (c) 1999 Cameron Grant<gandalf@vilnya.demon.co.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_struct
+struct|struct
+name|pcmchan_caps
+block|{
+name|u_int32_t
+name|minspeed
+decl_stmt|,
+name|maxspeed
+decl_stmt|;
+name|u_int32_t
+modifier|*
+name|fmtlist
+decl_stmt|;
+name|u_int32_t
+name|caps
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CHN_NAMELEN
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|pcm_channel
+block|{
+name|kobj_t
+name|methods
+decl_stmt|;
+name|struct
+name|pcm_feeder
+modifier|*
+name|feeder
+decl_stmt|;
+name|u_int32_t
+name|align
+decl_stmt|;
+name|int
+name|volume
+decl_stmt|;
+name|u_int32_t
+name|speed
+decl_stmt|;
+name|u_int32_t
+name|format
+decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
+name|u_int32_t
+name|feederflags
+decl_stmt|;
+name|u_int32_t
+name|blocks
+decl_stmt|;
+name|int
+name|direction
+decl_stmt|;
+name|struct
+name|snd_dbuf
+modifier|*
+name|bufhard
+decl_stmt|,
+modifier|*
+name|bufsoft
+decl_stmt|;
+name|struct
+name|snddev_info
+modifier|*
+name|parent
+decl_stmt|;
+name|void
+modifier|*
+name|devinfo
+decl_stmt|;
+name|char
+name|name
+index|[
+name|CHN_NAMELEN
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|lock
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_include
 include|#
 directive|include
@@ -13,6 +107,7 @@ begin_function_decl
 name|int
 name|chn_reinit
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -24,6 +119,7 @@ begin_function_decl
 name|int
 name|chn_write
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -40,6 +136,7 @@ begin_function_decl
 name|int
 name|chn_read
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -56,6 +153,7 @@ begin_function_decl
 name|u_int32_t
 name|chn_start
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -70,6 +168,7 @@ begin_function_decl
 name|int
 name|chn_sync
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -84,6 +183,7 @@ begin_function_decl
 name|int
 name|chn_flush
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -95,6 +195,7 @@ begin_function_decl
 name|int
 name|chn_poll
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -114,6 +215,7 @@ begin_function_decl
 name|int
 name|chn_init
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -132,6 +234,7 @@ begin_function_decl
 name|int
 name|chn_kill
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -143,6 +246,7 @@ begin_function_decl
 name|int
 name|chn_setdir
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -157,6 +261,7 @@ begin_function_decl
 name|int
 name|chn_reset
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -171,6 +276,7 @@ begin_function_decl
 name|int
 name|chn_setvolume
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -188,6 +294,7 @@ begin_function_decl
 name|int
 name|chn_setspeed
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -202,6 +309,7 @@ begin_function_decl
 name|int
 name|chn_setformat
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -216,6 +324,7 @@ begin_function_decl
 name|int
 name|chn_setblocksize
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -233,6 +342,7 @@ begin_function_decl
 name|int
 name|chn_trigger
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -247,6 +357,7 @@ begin_function_decl
 name|int
 name|chn_getptr
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -255,10 +366,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
 name|pcmchan_caps
 modifier|*
 name|chn_getcaps
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -270,6 +383,7 @@ begin_function_decl
 name|u_int32_t
 name|chn_getformats
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -281,6 +395,7 @@ begin_function_decl
 name|void
 name|chn_resetbuf
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -292,17 +407,7 @@ begin_function_decl
 name|void
 name|chn_intr
 parameter_list|(
-name|pcm_channel
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|chn_checkunderflow
-parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -314,6 +419,7 @@ begin_function_decl
 name|int
 name|chn_wrfeed
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -325,6 +431,7 @@ begin_function_decl
 name|int
 name|chn_rdfeed
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -336,12 +443,66 @@ begin_function_decl
 name|int
 name|chn_abort
 parameter_list|(
+name|struct
 name|pcm_channel
 modifier|*
 name|c
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|chn_wrupdate
+parameter_list|(
+name|struct
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|chn_rdupdate
+parameter_list|(
+name|struct
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|CHN_LOCK
+parameter_list|(
+name|c
+parameter_list|)
+value|mtx_lock((struct mtx *)((c)->lock))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_UNLOCK
+parameter_list|(
+name|c
+parameter_list|)
+value|mtx_unlock((struct mtx *)((c)->lock))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHN_LOCKASSERT
+parameter_list|(
+name|c
+parameter_list|)
+end_define
 
 begin_function_decl
 name|int
@@ -409,28 +570,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CHN_F_READING
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* have a pending read */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHN_F_WRITING
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* have a pending write */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CHN_F_CLOSING
 value|0x00000004
 end_define
@@ -449,13 +588,6 @@ end_define
 begin_comment
 comment|/* a pending abort */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CHN_F_PENDING_IO
-value|(CHN_F_READING | CHN_F_WRITING)
-end_define
 
 begin_define
 define|#
@@ -518,17 +650,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CHN_F_INIT
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* changed parameters. need init */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CHN_F_MAPPED
 value|0x00010000
 end_define
@@ -570,7 +691,7 @@ value|(2 * 1024)
 end_define
 
 begin_comment
-comment|/* The total number of blocks per secondary buffer. */
+comment|/* The total number of blocks per secondary bufhard. */
 end_comment
 
 begin_define
@@ -581,7 +702,7 @@ value|(32)
 end_define
 
 begin_comment
-comment|/* The size of a whole secondary buffer. */
+comment|/* The size of a whole secondary bufhard. */
 end_comment
 
 begin_define

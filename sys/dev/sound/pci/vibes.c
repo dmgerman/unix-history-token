@@ -116,10 +116,12 @@ name|sc_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -251,6 +253,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|sc_caps
 init|=
@@ -706,10 +709,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -830,6 +835,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|svchan_getcaps
@@ -2632,6 +2638,7 @@ specifier|static
 name|int
 name|sv_mix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2735,6 +2742,7 @@ specifier|static
 name|int
 name|sv_mix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2779,6 +2787,7 @@ specifier|static
 name|int
 name|sv_mix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3611,6 +3620,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
 name|snddev_info
 modifier|*
 name|d
@@ -4927,6 +4937,7 @@ name|sc_methods
 block|,
 expr|sizeof
 operator|(
+expr|struct
 name|snddev_info
 operator|)
 block|}
