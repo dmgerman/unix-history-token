@@ -1017,6 +1017,9 @@ return|return
 literal|"Promise ATA33 controller"
 return|;
 case|case
+literal|0x0d38105a
+case|:
+case|case
 literal|0x4d38105a
 case|:
 return|return
@@ -1653,14 +1656,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|0x4d38105a
+literal|0x0d30105a
 case|:
 comment|/* Promise 66& 100 (before TX2) need the clock changed */
 case|case
 literal|0x4d30105a
 case|:
 case|case
-literal|0x0d30105a
+literal|0x0d38105a
+case|:
+case|case
+literal|0x4d38105a
 case|:
 name|ATA_OUTB
 argument_list|(
@@ -2499,17 +2505,21 @@ literal|0x4d33105a
 case|:
 comment|/* Promise Ultra/Fasttrak 33 */
 case|case
+literal|0x0d38105a
+case|:
+comment|/* Promise Fasttrak 66 */
+case|case
 literal|0x4d38105a
 case|:
 comment|/* Promise Ultra/Fasttrak 66 */
 case|case
-literal|0x4d30105a
-case|:
-comment|/* Promise Ultra/Fasttrak 100 */
-case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 */
+case|case
+literal|0x4d30105a
+case|:
+comment|/* Promise Ultra/Fasttrak 100 */
 if|if
 condition|(
 operator|!

@@ -6371,13 +6371,13 @@ block|}
 block|}
 break|break;
 case|case
-literal|0x4d30105a
-case|:
-comment|/* Promise Ultra/FastTrak 100 controllers */
-case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 controllers */
+case|case
+literal|0x4d30105a
+case|:
+comment|/* Promise Ultra/FastTrak 100 controllers */
 if|if
 condition|(
 operator|!
@@ -6479,6 +6479,10 @@ return|return;
 block|}
 block|}
 comment|/* FALLTHROUGH */
+case|case
+literal|0x0d38105a
+case|:
+comment|/* Promise FastTrak 66 controllers */
 case|case
 literal|0x4d38105a
 case|:
@@ -8789,17 +8793,21 @@ break|break;
 block|}
 break|break;
 case|case
+literal|0x0d38105a
+case|:
+comment|/* Promise Fasttrak 66 */
+case|case
 literal|0x4d38105a
 case|:
 comment|/* Promise Ultra/Fasttrak 66 */
 case|case
-literal|0x4d30105a
-case|:
-comment|/* Promise Ultra/Fasttrak 100 */
-case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA 100 */
+case|case
+literal|0x4d30105a
+case|:
+comment|/* Promise Ultra/Fasttrak 100 */
 switch|switch
 condition|(
 name|mode
