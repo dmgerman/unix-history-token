@@ -870,6 +870,9 @@ case|:
 case|case
 literal|0xa0
 case|:
+case|case
+literal|0xb0
+case|:
 name|strcat
 argument_list|(
 name|cpu_model
