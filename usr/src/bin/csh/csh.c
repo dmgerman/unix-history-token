@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.29 (Berkeley) %G%"
+literal|"@(#)csh.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3758,12 +3758,8 @@ condition|(
 name|gointr
 condition|)
 block|{
-name|search
+name|gotolab
 argument_list|(
-name|T_GOTO
-argument_list|,
-literal|0
-argument_list|,
 name|gointr
 argument_list|)
 expr_stmt|;
