@@ -63,6 +63,7 @@ begin_function
 name|void
 name|check_list
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|home
@@ -72,12 +73,14 @@ modifier|*
 name|pkg
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|where
 init|=
 name|home
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|there
@@ -358,7 +361,7 @@ name|TOOBIG
 parameter_list|(
 name|str
 parameter_list|)
-value|strlen(str) + 6 + strlen(home) + where_count> maxargs
+value|(int)strlen(str) + 6 + (int)strlen(home) + where_count> maxargs
 end_define
 
 begin_define
@@ -368,7 +371,7 @@ name|PUSHOUT
 parameter_list|()
 comment|/* push out string */
 define|\
-value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) { \ 			cleanup(0); \ 			errx(2, __FUNCTION__ ": can't invoke tar pipeline"); \ 		    } \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
+value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xpf -"); \ 		    if (system(where_args)) { \ 			cleanup(0); \ 			errx(2, __FUNCTION__ ": can't invoke tar pipeline"); \ 		    } \ 		    memset(where_args, 0, maxargs); \  		    last_chdir = NULL; \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	}
 end_define
 
 begin_comment
@@ -379,6 +382,7 @@ begin_function
 name|void
 name|copy_plist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|home
@@ -395,12 +399,14 @@ name|plist
 operator|->
 name|head
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|where
 init|=
 name|home
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|there
@@ -413,7 +419,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|where_args
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|last_chdir
 decl_stmt|,

@@ -264,9 +264,11 @@ specifier|extern
 name|void
 name|show_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -278,6 +280,7 @@ specifier|extern
 name|void
 name|show_plist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -285,6 +288,8 @@ name|Package
 modifier|*
 parameter_list|,
 name|plist_t
+parameter_list|,
+name|Boolean
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -294,6 +299,7 @@ specifier|extern
 name|void
 name|show_files
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -308,9 +314,11 @@ specifier|extern
 name|void
 name|show_index
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -322,6 +330,7 @@ specifier|extern
 name|void
 name|show_size
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -336,6 +345,7 @@ specifier|extern
 name|void
 name|show_cksum
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -350,6 +360,7 @@ specifier|extern
 name|void
 name|show_origin
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

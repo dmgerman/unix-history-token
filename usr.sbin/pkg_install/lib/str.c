@@ -36,10 +36,12 @@ name|char
 modifier|*
 name|strconcat
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s1
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s2
@@ -163,6 +165,7 @@ name|char
 modifier|*
 name|copy_string
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -191,10 +194,12 @@ begin_function
 name|Boolean
 name|suffix
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|suff

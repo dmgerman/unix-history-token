@@ -202,10 +202,12 @@ begin_function
 name|int
 name|chkifdepends
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pkgname1
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pkgname2

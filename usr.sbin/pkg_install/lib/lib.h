@@ -540,7 +540,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|size_t
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -568,6 +568,7 @@ begin_function_decl
 name|off_t
 name|min_free
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -595,6 +596,7 @@ name|char
 modifier|*
 name|copy_string
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -605,9 +607,11 @@ begin_function_decl
 name|Boolean
 name|suffix
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -639,9 +643,11 @@ name|char
 modifier|*
 name|strconcat
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -672,6 +678,7 @@ begin_function_decl
 name|Boolean
 name|fexists
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -682,6 +689,7 @@ begin_function_decl
 name|Boolean
 name|isdir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -692,6 +700,7 @@ begin_function_decl
 name|Boolean
 name|isemptydir
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -703,6 +712,7 @@ begin_function_decl
 name|Boolean
 name|isemptyfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -714,6 +724,7 @@ begin_function_decl
 name|Boolean
 name|isfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -724,6 +735,7 @@ begin_function_decl
 name|Boolean
 name|isempty
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -734,6 +746,7 @@ begin_function_decl
 name|Boolean
 name|issymlink
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -744,6 +757,7 @@ begin_function_decl
 name|Boolean
 name|isURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -755,9 +769,11 @@ name|char
 modifier|*
 name|fileGetURL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -769,9 +785,11 @@ name|char
 modifier|*
 name|fileFindByPath
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -783,6 +801,7 @@ name|char
 modifier|*
 name|fileGetContents
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -793,9 +812,11 @@ begin_function_decl
 name|void
 name|write_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -806,12 +827,15 @@ begin_function_decl
 name|void
 name|copy_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -822,12 +846,15 @@ begin_function_decl
 name|void
 name|move_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -838,9 +865,11 @@ begin_function_decl
 name|void
 name|copy_hierarchy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -853,6 +882,7 @@ begin_function_decl
 name|int
 name|delete_hierarchy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -867,9 +897,11 @@ begin_function_decl
 name|int
 name|unpack
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -883,12 +915,15 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -994,6 +1029,7 @@ parameter_list|(
 name|Package
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1012,6 +1048,7 @@ name|Boolean
 parameter_list|,
 name|plist_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1059,6 +1096,7 @@ modifier|*
 parameter_list|,
 name|plist_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1074,6 +1112,7 @@ modifier|*
 parameter_list|,
 name|plist_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1094,6 +1133,7 @@ parameter_list|,
 name|plist_t
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1131,6 +1171,7 @@ begin_function_decl
 name|int
 name|plist_cmd
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1164,9 +1205,11 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1229,9 +1272,11 @@ begin_function_decl
 name|int
 name|chkifdepends
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

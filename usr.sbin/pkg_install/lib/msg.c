@@ -54,7 +54,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|err
+name|message
 parameter_list|)
 block|{
 name|cleanup
@@ -68,7 +68,7 @@ literal|1
 argument_list|,
 literal|"fatal error during execution: %s"
 argument_list|,
-name|err
+name|message
 argument_list|)
 expr_stmt|;
 block|}

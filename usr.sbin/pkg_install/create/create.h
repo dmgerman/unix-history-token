@@ -180,6 +180,7 @@ begin_function_decl
 name|void
 name|check_list
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -204,6 +205,7 @@ begin_function_decl
 name|void
 name|copy_plist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
