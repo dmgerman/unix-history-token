@@ -152,17 +152,13 @@ literal|0
 condition|)
 block|{
 comment|/* can't open? */
-name|set_drive_state
-argument_list|(
 name|drive
 operator|->
-name|driveno
-argument_list|,
+name|state
+operator|=
 name|drive_down
-argument_list|,
-name|setstate_force
-argument_list|)
 expr_stmt|;
+comment|/* just force it down */
 name|drive
 operator|->
 name|lasterror
@@ -898,13 +894,22 @@ name|drive
 argument_list|)
 expr_stmt|;
 comment|/* and close it */
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|>
+name|drive_down
+condition|)
+comment|/* if it's up, */
 name|drive
 operator|->
 name|state
 operator|=
 name|drive_down
 expr_stmt|;
-comment|/* don't tell the system about this one at all */
+comment|/* go down directly, do not pass daemon */
 name|unlockdrive
 argument_list|(
 name|drive
