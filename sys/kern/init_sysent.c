@@ -2936,7 +2936,10 @@ block|}
 block|,
 comment|/* 209 = poll */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2947,7 +2950,10 @@ block|}
 block|,
 comment|/* 210 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2958,7 +2964,10 @@ block|}
 block|,
 comment|/* 211 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2969,7 +2978,10 @@ block|}
 block|,
 comment|/* 212 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2980,7 +2992,10 @@ block|}
 block|,
 comment|/* 213 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -2991,7 +3006,10 @@ block|}
 block|,
 comment|/* 214 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -3002,7 +3020,10 @@ block|}
 block|,
 comment|/* 215 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -3013,7 +3034,10 @@ block|}
 block|,
 comment|/* 216 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -3024,7 +3048,10 @@ block|}
 block|,
 comment|/* 217 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -3035,7 +3062,10 @@ block|}
 block|,
 comment|/* 218 = lkmnosys */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
@@ -5090,7 +5120,10 @@ block|}
 block|,
 comment|/* 369 = __cap_set_file */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|nosys_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
