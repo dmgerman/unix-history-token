@@ -755,7 +755,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* flags kept in td_flags */
+comment|/* Flags kept in td_flags: */
 end_comment
 
 begin_define
@@ -876,7 +876,7 @@ value|0x004000
 end_define
 
 begin_comment
-comment|/* Stat clock hits in userland. */
+comment|/* Finish user statclock hit at next AST. */
 end_comment
 
 begin_define
@@ -957,7 +957,7 @@ comment|/* Lock aquisition - deadlock treatment. */
 end_comment
 
 begin_comment
-comment|/* "private" flags kept in td_pflags */
+comment|/* "Private" flags kept in td_pflags: */
 end_comment
 
 begin_define
