@@ -5723,21 +5723,11 @@ name|struct
 name|simplelock
 name|intr_lock
 decl_stmt|;
-comment|/* lock regions around the clock hardware */
-name|struct
-name|simplelock
-name|clock_lock
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SIMPLE_MPINTRLOCK
 comment|/* lock regions protected in UP kernel via cli/sti */
 name|struct
 name|simplelock
 name|mpintr_lock
 decl_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|USE_COMLOCK
@@ -5749,6 +5739,17 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* USE_COMLOCK */
+ifdef|#
+directive|ifdef
+name|USE_CLOCKLOCK
+comment|/* lock regions around the clock hardware */
+name|struct
+name|simplelock
+name|clock_lock
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* USE_CLOCKLOCK */
 specifier|static
 name|void
 name|init_locks
@@ -5766,9 +5767,6 @@ name|isr_lock
 operator|=
 name|FREE_LOCK
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIMPLE_MPINTRLOCK
 name|s_lock_init
 argument_list|(
 operator|(
@@ -5778,19 +5776,6 @@ operator|*
 operator|)
 operator|&
 name|mpintr_lock
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|s_lock_init
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-operator|&
-name|clock_lock
 argument_list|)
 expr_stmt|;
 name|s_lock_init
@@ -5854,6 +5839,23 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_COMLOCK */
+ifdef|#
+directive|ifdef
+name|USE_CLOCKLOCK
+name|s_lock_init
+argument_list|(
+operator|(
+expr|struct
+name|simplelock
+operator|*
+operator|)
+operator|&
+name|clock_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* USE_CLOCKLOCK */
 block|}
 comment|/*  * start each AP in our list  */
 specifier|static
