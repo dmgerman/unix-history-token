@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.12	81/04/15	*/
+comment|/*	kern_synch.c	4.13	81/04/17	*/
 end_comment
 
 begin_include
@@ -808,10 +808,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|runout
-operator|!=
-literal|0
-operator|&&
 operator|(
 name|p
 operator|->
@@ -820,6 +816,13 @@ operator|&
 name|SLOAD
 operator|)
 operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|runout
+operator|!=
 literal|0
 condition|)
 block|{
@@ -835,6 +838,10 @@ operator|)
 operator|&
 name|runout
 argument_list|)
+expr_stmt|;
+block|}
+name|wantin
+operator|++
 expr_stmt|;
 block|}
 comment|/* END INLINE EXPANSION */
@@ -1028,10 +1035,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|runout
-operator|!=
-literal|0
-operator|&&
 operator|(
 name|p
 operator|->
@@ -1040,6 +1043,13 @@ operator|&
 name|SLOAD
 operator|)
 operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|runout
+operator|!=
 literal|0
 condition|)
 block|{
@@ -1055,6 +1065,10 @@ operator|)
 operator|&
 name|runout
 argument_list|)
+expr_stmt|;
+block|}
+name|wantin
+operator|++
 expr_stmt|;
 block|}
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	4.10	81/03/09	*/
+comment|/*	tty_subr.c	4.11	81/04/17	*/
 end_comment
 
 begin_include
@@ -78,7 +78,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if
@@ -355,7 +355,7 @@ operator|)
 return|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if
@@ -619,7 +619,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if
@@ -806,7 +806,7 @@ name|s
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if
@@ -1115,7 +1115,7 @@ name|s
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if
@@ -1367,7 +1367,7 @@ name|cc
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if
@@ -1668,7 +1668,7 @@ name|obp
 decl_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if
@@ -2056,7 +2056,7 @@ name|s
 expr_stmt|;
 name|s
 operator|=
-name|spl6
+name|spl5
 argument_list|()
 expr_stmt|;
 if|if

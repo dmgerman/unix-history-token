@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.4	81/03/09	*/
+comment|/*	vm_meter.c	4.5	81/04/17	*/
 end_comment
 
 begin_include
@@ -299,11 +299,9 @@ decl_stmt|;
 comment|/* 	 * Check if paging rate is too high, or average of 	 * free list very low and if so, adjust multiprogramming 	 * load by swapping someone out. 	 * 	 * Avoid glitches: don't hard swap the only process, 	 * and don't swap based on paging rate if there is a reasonable 	 * amount of free memory. 	 */
 name|loop
 label|:
-operator|(
-name|void
-operator|)
-name|spl6
-argument_list|()
+name|wantin
+operator|=
+literal|0
 expr_stmt|;
 name|deservin
 operator|=
@@ -526,7 +524,13 @@ name|rp
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * Kick out deadwood. 			 * FOLLOWING 3 LINES MUST BE AT spl6(). 			 */
+comment|/* 			 * Kick out deadwood. 			 */
+operator|(
+name|void
+operator|)
+name|spl6
+argument_list|()
+expr_stmt|;
 name|rp
 operator|->
 name|p_flag
@@ -546,6 +550,12 @@ name|remrq
 argument_list|(
 name|rp
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -578,6 +588,35 @@ operator|-
 literal|20000
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|spl6
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|wantin
+condition|)
+block|{
+name|wantin
+operator|=
+literal|0
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|lbolt
+argument_list|,
+name|PSWP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|runout
 operator|++
 expr_stmt|;
@@ -592,9 +631,6 @@ argument_list|,
 name|PSWP
 argument_list|)
 expr_stmt|;
-goto|goto
-name|loop
-goto|;
 block|}
 operator|(
 name|void
@@ -602,6 +638,10 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
 comment|/* 	 * Decide how deserving this guy is.  If he is deserving 	 * we will be willing to work harder to bring him in. 	 * Needs is an estimate of how much core he will need. 	 * If he has been out for a while, then we will 	 * bring him in with 1/2 the core he will need, otherwise 	 * we are conservative. 	 */
 name|deservin
 operator|=
@@ -695,12 +735,6 @@ block|}
 name|hardswap
 label|:
 comment|/* 	 * Need resources (kernel map or memory), swap someone out. 	 * Select the nbig largest jobs, then the oldest of these 	 * is ``most likely to get booted.'' 	 */
-operator|(
-name|void
-operator|)
-name|spl6
-argument_list|()
-expr_stmt|;
 name|inp
 operator|=
 name|p
@@ -1071,6 +1105,12 @@ operator|>
 name|maxslp
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|spl6
+argument_list|()
+expr_stmt|;
 name|p
 operator|->
 name|p_flag
@@ -1090,6 +1130,12 @@ name|remrq
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1184,6 +1230,12 @@ name|runin
 argument_list|,
 name|PSWP
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
 expr_stmt|;
 goto|goto
 name|loop
