@@ -4731,7 +4731,7 @@ name|cam_periph_bus_settle
 argument_list|(
 name|periph
 argument_list|,
-name|SCSI_DELAY
+name|scsi_delay
 argument_list|)
 expr_stmt|;
 break|break;

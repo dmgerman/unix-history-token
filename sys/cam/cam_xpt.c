@@ -23394,7 +23394,7 @@ name|bus
 operator|->
 name|last_reset
 argument_list|,
-name|SCSI_DELAY
+name|scsi_delay
 argument_list|)
 expr_stmt|;
 name|probeschedule
@@ -29336,7 +29336,7 @@ name|busses_to_reset
 operator|>
 literal|0
 operator|&&
-name|SCSI_DELAY
+name|scsi_delay
 operator|>=
 literal|2000
 condition|)
@@ -29346,7 +29346,7 @@ argument_list|(
 literal|"Waiting %d seconds for SCSI "
 literal|"devices to settle\n"
 argument_list|,
-name|SCSI_DELAY
+name|scsi_delay
 operator|/
 literal|1000
 argument_list|)
