@@ -89,13 +89,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vfs_start_t
-name|umapfs_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|vfs_root_t
 name|umapfs_root
 decl_stmt|;
@@ -901,44 +894,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * VFS start.  Nothing needed here - the start routine  * on the underlying filesystem will have been called  * when that filesystem was mounted.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|umapfs_start
-parameter_list|(
-name|mp
-parameter_list|,
-name|flags
-parameter_list|,
-name|td
-parameter_list|)
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* return (VFS_START(MOUNTTOUMAPMOUNT(mp)->umapm_vfs, flags, td)); */
 block|}
 end_function
 
@@ -1829,11 +1784,6 @@ operator|.
 name|vfs_root
 operator|=
 name|umapfs_root
-block|,
-operator|.
-name|vfs_start
-operator|=
-name|umapfs_start
 block|,
 operator|.
 name|vfs_statfs

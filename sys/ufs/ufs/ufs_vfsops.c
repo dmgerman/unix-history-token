@@ -149,46 +149,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Make a filesystem operational.  * Nothing to do at the moment.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-name|int
-name|ufs_start
-parameter_list|(
-name|mp
-parameter_list|,
-name|flags
-parameter_list|,
-name|td
-parameter_list|)
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Return the root of a filesystem.  */
 end_comment
 

@@ -559,12 +559,6 @@ name|ufs_root
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|vfs_start_t
-name|ufs_start
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|int
 name|ufs_uninit

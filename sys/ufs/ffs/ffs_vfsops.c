@@ -381,11 +381,6 @@ operator|=
 name|ufs_root
 block|,
 operator|.
-name|vfs_start
-operator|=
-name|ufs_start
-block|,
-operator|.
 name|vfs_statfs
 operator|=
 name|ffs_statfs
