@@ -7840,9 +7840,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|rootdev
+name|rootvnode
 operator|==
-name|NODEV
+name|NULL
 condition|)
 name|pathname
 operator|=
