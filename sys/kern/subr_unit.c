@@ -531,6 +531,12 @@ name|low
 parameter_list|,
 name|u_int
 name|high
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mutex
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2424,6 +2430,8 @@ argument_list|,
 name|NN
 operator|-
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|memset

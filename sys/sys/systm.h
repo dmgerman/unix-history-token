@@ -2707,6 +2707,11 @@ name|low
 parameter_list|,
 name|u_int
 name|high
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mutex
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1508,6 +1508,8 @@ name|minor2unit
 argument_list|(
 name|MAXMINOR
 argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|mtx_init

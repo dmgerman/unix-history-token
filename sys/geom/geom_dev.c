@@ -278,14 +278,18 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-comment|/* XXX: should have a #define MAX_UNIT_MINOR */
 name|unithdr
 operator|=
 name|new_unrhdr
 argument_list|(
 literal|0
 argument_list|,
-literal|0xffffff
+name|minor2unit
+argument_list|(
+name|MAXMINOR
+argument_list|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
