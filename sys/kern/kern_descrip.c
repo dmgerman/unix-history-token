@@ -6157,12 +6157,6 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-name|cdevsw_add
-argument_list|(
-operator|&
-name|fildesc_cdevsw
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|fd
