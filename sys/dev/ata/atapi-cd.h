@@ -1097,9 +1097,14 @@ name|dev_t
 name|dev
 decl_stmt|;
 comment|/* device place holders */
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|eventhandler_tag
 name|clone_evh
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
