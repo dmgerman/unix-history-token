@@ -23,7 +23,7 @@ value|x
 end_define
 
 begin_comment
-comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  *  * Most important Changes:  *  * 000601: WF2Q+ support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
+comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by splimp()/splx()  *    pairs. One would think that splnet() is enough as for most of  *    the netinet code, but it is not so because when used with  *    bridging, dummynet is invoked at splimp().  *  * Most important Changes:  *  * 010122: Fixed spl protection.  * 000601: WF2Q+ support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
 end_comment
 
 begin_include
@@ -1035,6 +1035,23 @@ define|\
 value|if (heap->offset> 0) \ 	    *((int *)((char *)(heap->p[node].object) + heap->offset)) = node ;
 end_define
 
+begin_comment
+comment|/*  * RESET_OFFSET is used for sanity checks. It sets offset to an invalid value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESET_OFFSET
+parameter_list|(
+name|heap
+parameter_list|,
+name|node
+parameter_list|)
+define|\
+value|if (heap->offset> 0) \ 	*((int *)((char *)(heap->p[node].object) + heap->offset)) = -1 ;
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -1313,6 +1330,43 @@ operator|->
 name|offset
 operator|)
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|father
+operator|<
+literal|0
+operator|||
+name|father
+operator|>=
+name|h
+operator|->
+name|elements
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"dummynet: heap_extract, father %d out of bound 0..%d\n"
+argument_list|,
+name|father
+argument_list|,
+name|h
+operator|->
+name|elements
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"heap_extract"
+argument_list|)
+expr_stmt|;
+block|}
+name|RESET_OFFSET
+argument_list|(
+name|h
+argument_list|,
+name|father
+argument_list|)
 expr_stmt|;
 block|}
 name|child
@@ -3107,10 +3161,10 @@ expr_stmt|;
 comment|/* delay line */
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* avoid network interrupts... */
+comment|/* see note on top, splnet() is not enough */
 name|curr_time
 operator|++
 expr_stmt|;
@@ -4802,7 +4856,6 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* XXX might be unnecessary, we are already at splnet() */
 name|pipe_nr
 operator|&=
 literal|0xffff
@@ -5220,10 +5273,37 @@ name|head
 operator|!=
 name|pkt
 condition|)
+block|{
 comment|/* flow was not idle, we are done */
+specifier|static
+name|int
+name|errors
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|blh_pos
+operator|>=
+literal|0
+condition|)
+comment|/* good... */
 goto|goto
 name|done
 goto|;
+name|printf
+argument_list|(
+literal|"+++ hey [%d] flow 0x%08x not idle but not in heap\n"
+argument_list|,
+operator|++
+name|errors
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * The flow was previously idle, so we need to schedule it.      */
 if|if
 condition|(
@@ -5862,7 +5942,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* remove all references to pipes ...*/
@@ -7206,7 +7286,7 @@ return|;
 block|}
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|x
@@ -7471,7 +7551,7 @@ return|;
 block|}
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|x
@@ -7970,7 +8050,7 @@ return|;
 comment|/* not found */
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* unlink from list of pipes */
@@ -8206,7 +8286,7 @@ return|;
 comment|/* not found */
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 if|if
@@ -8593,10 +8673,9 @@ literal|0
 decl_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* to avoid thing change while we work! */
 comment|/*      * compute size of data structures: list of pipes and flow_sets.      */
 for|for
 control|(
@@ -9133,11 +9212,18 @@ name|elements
 operator|=
 literal|0
 expr_stmt|;
+comment|/* ready_heap.offset = 0 ; */
 name|ready_heap
 operator|.
 name|offset
 operator|=
-literal|0
+name|OFFSET_OF
+argument_list|(
+expr|struct
+name|dn_flow_queue
+argument_list|,
+name|blh_pos
+argument_list|)
 expr_stmt|;
 name|wfq_ready_heap
 operator|.
@@ -9149,11 +9235,18 @@ name|elements
 operator|=
 literal|0
 expr_stmt|;
+comment|/* wfq_ready_heap.offset = 0 ; */
 name|wfq_ready_heap
 operator|.
 name|offset
 operator|=
-literal|0
+name|OFFSET_OF
+argument_list|(
+expr|struct
+name|dn_flow_queue
+argument_list|,
+name|blh_pos
+argument_list|)
 expr_stmt|;
 name|extract_heap
 operator|.
@@ -9224,7 +9317,7 @@ name|MOD_LOAD
 case|:
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|old_dn_ctl_ptr
@@ -9245,7 +9338,7 @@ name|MOD_UNLOAD
 case|:
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|ip_dn_ctl_ptr
