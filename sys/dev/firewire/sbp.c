@@ -1507,7 +1507,7 @@ name|M_SBP
 argument_list|,
 literal|"sbp"
 argument_list|,
-literal|"SBP-II/Firewire"
+literal|"SBP-II/FireWire"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6402,7 +6402,7 @@ block|{
 case|case
 name|T_DIRECT
 case|:
-comment|/*  		 * XXX Convert Direct Access device to RBC. 		 * I've never seen Firewire DA devices which support READ_6. 		 */
+comment|/*  		 * XXX Convert Direct Access device to RBC. 		 * I've never seen FireWire DA devices which support READ_6. 		 */
 if|#
 directive|if
 literal|1

@@ -140,7 +140,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-literal|"Firewire Subsystem"
+literal|"FireWire Subsystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -161,7 +161,7 @@ name|firewire_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|"Firewire driver debug flag"
+literal|"FireWire driver debug flag"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2579,7 +2579,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"IEEE1394(Firewire) bus"
+literal|"IEEE1394(FireWire) bus"
 argument_list|)
 expr_stmt|;
 return|return
