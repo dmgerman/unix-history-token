@@ -1232,17 +1232,11 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: link addr 0x%02x(%d)\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"link addr 0x%02x(%d)\n"
 argument_list|,
 name|linkaddress
 argument_list|,
@@ -1378,17 +1372,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CM_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: reset\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"reset\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1439,17 +1427,11 @@ name|CM_DEBUG
 operator|>
 literal|2
 operator|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: reset: card reset, link addr = 0x%02x (%d)\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"reset: card reset, link addr = 0x%02x (%d)\n"
 argument_list|,
 name|linkaddress
 argument_list|,
@@ -1502,17 +1484,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CM_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: reset: chip configured, status=0x%02x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"reset: chip configured, status=0x%02x\n"
 argument_list|,
 name|GETREG
 argument_list|(
@@ -1537,17 +1513,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CM_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: reset: bits cleared, status=0x%02x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"reset: bits cleared, status=0x%02x\n"
 argument_list|,
 name|GETREG
 argument_list|(
@@ -1604,17 +1574,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CM_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: reset: started receiver, status=0x%02x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"reset: started receiver, status=0x%02x\n"
 argument_list|,
 name|GETREG
 argument_list|(
@@ -1773,17 +1737,11 @@ name|CM_DEBUG
 operator|>
 literal|3
 operator|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: start(%p)\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"start(%p)\n"
 argument_list|,
 name|ifp
 argument_list|)
@@ -1886,17 +1844,11 @@ name|ARC_HDRLEN
 argument_list|)
 expr_stmt|;
 comment|/* gcc does structure padding */
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: start: filling %d from %d to %d type %d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"start: filling %d from %d to %d type %d\n"
 argument_list|,
 name|buffer
 argument_list|,
@@ -2209,17 +2161,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|CM_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: start: starting transmitter on buffer %d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"start: starting transmitter on buffer %d\n"
 argument_list|,
 name|buffer
 argument_list|)
@@ -2702,17 +2648,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CM_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: srint: restarted rx on buf %d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"srint: restarted rx on buf %d\n"
 argument_list|,
 name|buffer
 argument_list|)
@@ -2912,17 +2852,11 @@ name|CM_DEBUG
 operator|>
 literal|1
 operator|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: tint: starting tx on buffer %d, status 0x%02x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"tint: starting tx on buffer %d, status 0x%02x\n"
 argument_list|,
 name|buffer
 argument_list|,
@@ -2964,17 +2898,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CM_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: tint: no more buffers to send, status 0x%02x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"tint: no more buffers to send, status 0x%02x\n"
 argument_list|,
 name|GETREG
 argument_list|(
@@ -3090,17 +3018,11 @@ name|CM_DEBUG
 operator|>
 literal|1
 operator|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: intr: status 0x%02x, intmask 0x%02x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"intr: status 0x%02x, intmask 0x%02x\n"
 argument_list|,
 name|isr
 argument_list|,
@@ -3270,17 +3192,11 @@ name|CM_DEBUG
 operator|>
 literal|1
 operator|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: intr: hard rint, act %d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"intr: hard rint, act %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -3393,18 +3309,12 @@ comment|/* in RX intr, so mask is ok for RX */
 ifdef|#
 directive|ifdef
 name|CM_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: strt rx for buf %d, "
+name|ifp
+argument_list|,
+literal|"strt rx for buf %d, "
 literal|"stat 0x%02x\n"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
 argument_list|,
 name|sc
 operator|->
@@ -3490,17 +3400,11 @@ name|CM_DEBUG
 operator|>
 literal|1
 operator|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: intr (exit): status 0x%02x, intmask 0x%02x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"intr (exit): status 0x%02x, intmask 0x%02x\n"
 argument_list|,
 name|isr
 argument_list|,
@@ -3675,17 +3579,11 @@ name|CM_DEBUG
 operator|>
 literal|2
 operator|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: ioctl() called, cmd = 0x%lx\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"ioctl() called, cmd = 0x%lx\n"
 argument_list|,
 name|command
 argument_list|)
