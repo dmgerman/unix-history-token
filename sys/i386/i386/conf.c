@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.48 1995/01/07 14:51:52 jkh Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.49 1995/01/07 23:20:08 jkh Exp $  */
 end_comment
 
 begin_include
@@ -3391,6 +3391,33 @@ name|suioctl
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|d_rdwr_t
+name|suread
+decl_stmt|,
+name|suwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|suselect
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|summap
+value|(d_mmap_t *)enxio
+end_define
+
+begin_decl_stmt
+name|d_strategy_t
+name|sustrategy
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -3415,6 +3442,41 @@ define|#
 directive|define
 name|suioctl
 value|(d_ioctl_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|suread
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|suwrite
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|suselect
+value|(d_select_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|summap
+value|(d_mmap_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|sustrategy
+value|(d_strategy_t *)enxio
 end_define
 
 begin_endif
@@ -3703,6 +3765,131 @@ define|#
 directive|define
 name|ctxioctl
 value|(d_ioctl_t *)enxio
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"ssc.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NSSC
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|d_open_t
+name|sscopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
+name|sscclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|sscioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
+name|sscread
+decl_stmt|,
+name|sscwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|sscselect
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|sscmmap
+value|(d_mmap_t *)enxio
+end_define
+
+begin_decl_stmt
+name|d_strategy_t
+name|sscstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|sscopen
+value|(d_open_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|sscclose
+value|(d_close_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|sscioctl
+value|(d_ioctl_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|sscread
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|sscwrite
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|sscselect
+value|(d_select_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|sscmmap
+value|(d_mmap_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|sscstrategy
+value|(d_strategy_t *)enxio
 end_define
 
 begin_endif
@@ -4571,9 +4758,9 @@ name|suopen
 block|,
 name|suclose
 block|,
-name|noread
+name|suread
 block|,
-name|nowrite
+name|suwrite
 block|,
 comment|/*18*/
 name|suioctl
@@ -4585,11 +4772,11 @@ block|,
 name|NULL
 block|,
 comment|/* scsi */
-name|seltrue
+name|suselect
 block|,
-name|nommap
+name|summap
 block|,
-name|nostrat
+name|sustrategy
 block|}
 block|,
 comment|/* 'generic' */
@@ -5439,6 +5626,32 @@ operator|)
 name|enxio
 block|,
 name|NULL
+block|}
+block|,
+block|{
+name|sscopen
+block|,
+name|sscclose
+block|,
+name|sscread
+block|,
+name|sscwrite
+block|,
+comment|/*49*/
+name|sscioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|NULL
+block|,
+comment|/* scsi super */
+name|sscselect
+block|,
+name|sscmmap
+block|,
+name|sscstrategy
 block|}
 block|, }
 decl_stmt|;
