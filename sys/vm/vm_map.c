@@ -4825,6 +4825,9 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 define|#
 directive|define
 name|MASK
@@ -4859,6 +4862,9 @@ expr_stmt|;
 undef|#
 directive|undef
 name|MASK
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -8321,6 +8327,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_protect
 argument_list|(
 name|src_map
@@ -8342,6 +8351,9 @@ operator|&
 operator|~
 name|VM_PROT_WRITE
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 		 * Make a copy of the object. 		 */
