@@ -1192,12 +1192,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_USTATCLOCK
+name|TDP_UNUSED10
 value|0x00000400
 end_define
 
 begin_comment
-comment|/* Finish user statclock hit at next AST. */
+comment|/* -- available-- */
 end_comment
 
 begin_define
