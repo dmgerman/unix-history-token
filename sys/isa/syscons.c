@@ -3658,6 +3658,23 @@ name|EINVAL
 return|;
 comment|/* NOT REACHED */
 case|case
+name|VT_GETACTIVE
+case|:
+comment|/* return number of active virtual console */
+operator|*
+name|data
+operator|=
+name|get_scr_num
+argument_list|(
+name|scp
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
 name|VT_ACTIVATE
 case|:
 comment|/* switch to screen *data */
