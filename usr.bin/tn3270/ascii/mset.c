@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)mset.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mset.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,6 +236,19 @@ end_decl_stmt
 begin_comment
 comment|/* number of chars in envir. var */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -1492,15 +1519,6 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-name|char
-modifier|*
-name|commandName
-init|=
-name|argv
-index|[
-literal|0
-index|]
-decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -1572,19 +1590,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s [-picky] [-shell] [keyboardname]\n"
-argument_list|,
-name|commandName
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
@@ -1618,19 +1625,8 @@ operator|>
 literal|2
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s [-picky] [-shell] [keyboardname]\n"
-argument_list|,
-name|commandName
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
@@ -1808,6 +1804,27 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: mset [-picky] [-shell] [keyboardname]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
