@@ -998,7 +998,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
+comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible disk device. 	 */
 name|NDINIT
 argument_list|(
 name|ndp
@@ -1482,6 +1482,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|VOP_UNLOCK
 argument_list|(
 name|devvp
@@ -1491,15 +1496,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|ronly
 operator|=
 operator|(
@@ -1511,17 +1513,6 @@ name|MNT_RDONLY
 operator|)
 operator|!=
 literal|0
-expr_stmt|;
-name|vn_lock
-argument_list|(
-name|devvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: open the device with read and write access even if only 	 * read access is needed now.  Write access is needed if the 	 * filesystem is ever mounted read/write, and we don't change the 	 * access mode for remounts. 	 */
 ifdef|#

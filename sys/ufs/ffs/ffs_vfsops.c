@@ -1356,7 +1356,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible block device. 	 */
+comment|/* 	 * Not an update, or updating the name: look up the name 	 * and verify that it refers to a sensible disk device. 	 */
 name|NDINIT
 argument_list|(
 name|ndp
@@ -1769,8 +1769,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|vinvalbuf
 argument_list|(
 name|devvp
@@ -1785,26 +1785,15 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|devvp
-argument_list|,
+operator|!=
 literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 condition|)
 name|panic
 argument_list|(
 literal|"ffs_reload: dirty1"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * block device. 	 */
+comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * disk device.  See ffs_mountfs() for more details. 	 */
 if|if
 condition|(
 name|vn_isdisk
@@ -1814,18 +1803,6 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-block|{
-name|vn_lock
-argument_list|(
-name|devvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|vfs_object_create
 argument_list|(
 name|devvp
@@ -1846,7 +1823,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Step 2: re-read superblock from disk. 	 */
 name|fs
 operator|=
@@ -2689,6 +2665,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|VOP_UNLOCK
 argument_list|(
 name|devvp
@@ -2698,16 +2679,13 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * block device. 	 * Note that it is optional that the backing device be VMIOed.  This 	 * increases the opportunity for metadata caching. 	 */
+block|}
+comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * disk device. 	 * Note that it is optional that the backing device be VMIOed.  This 	 * increases the opportunity for metadata caching. 	 */
 if|if
 condition|(
 name|vn_isdisk
@@ -2717,18 +2695,6 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-block|{
-name|vn_lock
-argument_list|(
-name|devvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|vfs_object_create
 argument_list|(
 name|devvp
@@ -2738,16 +2704,6 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|devvp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-block|}
 name|ronly
 operator|=
 operator|(
@@ -2759,17 +2715,6 @@ name|MNT_RDONLY
 operator|)
 operator|!=
 literal|0
-expr_stmt|;
-name|vn_lock
-argument_list|(
-name|devvp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|td
-argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: open the device with read and write access even if only 	 * read access is needed now.  Write access is needed if the 	 * filesystem is ever mounted read/write, and we don't change the 	 * access mode for remounts. 	 */
 ifdef|#
