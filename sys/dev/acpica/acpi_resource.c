@@ -186,13 +186,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_RESOURCES
 operator|,
-literal|"%s - got %d bytes of resources\n"
+literal|"%s - got %ld bytes of resources\n"
 operator|,
 name|acpi_name
 argument_list|(
 name|handle
 argument_list|)
 operator|,
+operator|(
+name|long
+operator|)
 name|buf
 operator|.
 name|Length
