@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	scb.h	6.1	83/07/29	*/
+comment|/*	scb.h	4.4	83/08/01	*/
 end_comment
 
 begin_comment
@@ -345,6 +345,17 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* Unibus device intr */
+name|int
+function_decl|(
+modifier|*
+name|scb_uba1int
+index|[
+literal|128
+index|]
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* Unibus 1 device intr */
 block|}
 struct|;
 end_struct

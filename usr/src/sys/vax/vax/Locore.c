@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	6.1	83/07/29	*/
+comment|/*	Locore.c	4.26	83/08/01	*/
 end_comment
 
 begin_include
@@ -134,6 +134,32 @@ function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|NUBA
+operator|>
+literal|1
+end_if
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|UNI1vec
+index|[
+literal|128
+index|]
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -402,6 +428,22 @@ index|]
 call|)
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|NUBA
+operator|>
+literal|1
+call|(
+modifier|*
+name|UNI1vec
+index|[
+literal|0
+index|]
+call|)
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|ubaerror
 argument_list|(
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nexus.h	6.1	83/07/29	*/
+comment|/*	nexus.h	4.12	83/08/01	*/
 end_comment
 
 begin_comment
@@ -454,6 +454,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NEX_CI
+value|0x38
+end_define
+
+begin_comment
+comment|/* CI adaptor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NEX_MPM0
 value|0x40
 end_define
@@ -486,6 +497,61 @@ directive|define
 name|NEX_MPM3
 value|0x43
 end_define
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM64L
+value|0x68
+end_define
+
+begin_comment
+comment|/* 64K chips, non-interleaved, lower */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM64LI
+value|0x69
+end_define
+
+begin_comment
+comment|/* 64K chips, ext-interleaved, lower */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM64U
+value|0x6a
+end_define
+
+begin_comment
+comment|/* 64K chips, non-interleaved, upper */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM64UI
+value|0x6b
+end_define
+
+begin_comment
+comment|/* 64K chips, ext-interleaved, upper */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEX_MEM64I
+value|0x6c
+end_define
+
+begin_comment
+comment|/* 64K chips, interleaved */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	6.1	83/07/29	*/
+comment|/*	autoconf.c	4.49	83/08/01	*/
 end_comment
 
 begin_comment
@@ -312,7 +312,7 @@ argument_list|(
 name|ocp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Write protect the scb.  It is strange 			 * that this code is here, but this is as soon 			 * as we are done mucking with it, and the 			 * write-enable was done in assembly language 			 * to which we will never return. 			 */
+comment|/* 			 * Write protect the scb and UNIBUS interrupt vectors. 			 * It is strange that this code is here, but this is 			 * as soon as we are done mucking with it, and the 			 * write-enable was done in assembly language 			 * to which we will never return. 			 */
 name|ip
 operator|=
 operator|(
@@ -332,6 +332,41 @@ name|ip
 operator||=
 name|PG_KR
 expr_stmt|;
+name|ip
+operator|++
+expr_stmt|;
+operator|*
+name|ip
+operator|&=
+operator|~
+name|PG_PROT
+expr_stmt|;
+operator|*
+name|ip
+operator||=
+name|PG_KR
+expr_stmt|;
+if|#
+directive|if
+name|NUBA
+operator|>
+literal|1
+name|ip
+operator|++
+expr_stmt|;
+operator|*
+name|ip
+operator|&=
+operator|~
+name|PG_PROT
+expr_stmt|;
+operator|*
+name|ip
+operator||=
+name|PG_KR
+expr_stmt|;
+endif|#
+directive|endif
 name|mtpr
 argument_list|(
 name|TBIS
@@ -738,6 +773,21 @@ case|:
 case|case
 name|NEX_MEM16I
 case|:
+case|case
+name|NEX_MEM64L
+case|:
+case|case
+name|NEX_MEM64LI
+case|:
+case|case
+name|NEX_MEM64U
+case|:
+case|case
+name|NEX_MEM64UI
+case|:
+case|case
+name|NEX_MEM64I
+case|:
 name|printf
 argument_list|(
 literal|"mcr%d at tr%d\n"
@@ -792,6 +842,17 @@ case|:
 name|printf
 argument_list|(
 literal|"mpm"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|unsupp
+goto|;
+case|case
+name|NEX_CI
+case|:
+name|printf
+argument_list|(
+literal|"ci"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1839,7 +1900,6 @@ name|uh_physuba
 operator|=
 name|pubp
 expr_stmt|;
-comment|/* HAVE TO DO SOMETHING SPECIAL FOR SECOND UNIBUS ON COMETS HERE */
 if|if
 condition|(
 name|numuba
@@ -1852,7 +1912,46 @@ name|uh_vec
 operator|=
 name|UNIvec
 expr_stmt|;
+if|#
+directive|if
+name|NUBA
+operator|>
+literal|1
+elseif|else
+if|if
+condition|(
+name|numuba
+operator|==
+literal|1
+condition|)
+name|uhp
+operator|->
+name|uh_vec
+operator|=
+name|UNI1vec
+expr_stmt|;
 else|else
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX_750
+argument_list|)
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_750
+condition|)
+name|printf
+argument_list|(
+literal|"More than 2 UBA's not supported\n"
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|uhp
 operator|->
 name|uh_vec
@@ -1870,6 +1969,9 @@ argument_list|(
 literal|512
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|i
