@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.c,v 1.4 1997/09/01 00:51:46 bde Exp $  *  */
+comment|/*-  * Copyright (c) 1997, 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppbconf.c,v 1.6 1998/08/03 19:14:31 msmith Exp $  *  */
 end_comment
 
 begin_include
@@ -276,7 +276,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * search_token()  *  * Search the first occurence of a token within a string  */
+comment|/*  * search_token()  *  * Search the first occurence of a token within a string  *  * XXX should use strxxx() calls  */
 end_comment
 
 begin_function
@@ -554,23 +554,12 @@ literal|1
 operator|)
 return|;
 block|}
-name|ppb_wctr
-argument_list|(
-operator|&
-name|pnpdev
-argument_list|,
-name|nINIT
-operator||
-name|SELECTIN
-argument_list|)
-expr_stmt|;
-comment|/* select NIBBLE_1284_REQUEST_ID mode */
 if|if
 condition|(
 operator|(
 name|error
 operator|=
-name|nibble_1284_mode
+name|ppb_1284_negociate
 argument_list|(
 operator|&
 name|pnpdev
@@ -586,7 +575,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ppb:<PnP> nibble_1284_mode()=%d\n"
+literal|"ppb:<PnP> ppb_1284_negociate()=%d\n"
 argument_list|,
 name|error
 argument_list|)
@@ -613,7 +602,7 @@ operator|&
 name|pnpdev
 argument_list|)
 operator|&
-name|ERROR
+name|PERROR
 operator|)
 condition|;
 name|q
@@ -639,6 +628,21 @@ if|if
 condition|(
 name|bootverbose
 condition|)
+block|{
+operator|*
+name|q
+operator|=
+literal|'\0'
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ppb:<PnP> len=%d, %s\n"
+argument_list|,
+name|len
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"ppb:<PnP> nibble_1284_inbyte()=%d\n"
@@ -646,6 +650,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+block|}
 goto|goto
 name|end_detect
 goto|;
@@ -1047,6 +1052,29 @@ name|PPB_PnP_UNKNOWN
 expr_stmt|;
 name|end_detect
 label|:
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|ppb_1284_terminate
+argument_list|(
+operator|&
+name|pnpdev
+argument_list|,
+name|VALID_STATE
+argument_list|)
+operator|)
+operator|&&
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ppb: ppb_1284_terminate()=%d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|ppb_release_bus
 argument_list|(
 operator|&

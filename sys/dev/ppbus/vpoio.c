@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vpoio.c,v 1.1.2.4 1998/06/16 23:35:52 son Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vpoio.c,v 1.1.2.6 1998/08/07 01:59:49 son Exp $  *  */
 end_comment
 
 begin_ifdef
@@ -223,14 +223,14 @@ begin_define
 define|#
 directive|define
 name|H_ERR
-value|ERROR
+value|PERROR
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_nERR
-value|n(ERROR)
+value|n(PERROR)
 end_define
 
 begin_define
@@ -293,14 +293,28 @@ begin_comment
 comment|/*  * Microcode to execute very fast I/O sequences at the lowest bus level.  */
 end_comment
 
+begin_comment
+comment|/* call this macro to initialize connect/disconnect microsequences */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INIT_TRIG_MICROSEQ
+value|{						\ 	int i;								\ 	for (i=1; i<= 7; i+=2) {					\ 		disconnect_microseq[i].arg[2] = (void *)d_pulse;	\ 		connect_epp_microseq[i].arg[2] = 			\ 		connect_spp_microseq[i].arg[2] = (void *)c_pulse;	\ 	}								\ }
+end_define
+
 begin_define
 define|#
 directive|define
 name|trig_d_pulse
-value|MS_TRIG(MS_REG_CTR,5,(int)d_pulse)
+value|MS_TRIG(MS_REG_CTR,5,MS_UNKNOWN
+comment|/* d_pulse */
+value|)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|d_pulse
 index|[]
@@ -363,10 +377,13 @@ begin_define
 define|#
 directive|define
 name|trig_c_pulse
-value|MS_TRIG(MS_REG_CTR,5,(int)c_pulse)
+value|MS_TRIG(MS_REG_CTR,5,MS_UNKNOWN
+comment|/* c_pulse */
+value|)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|c_pulse
 index|[]
@@ -426,6 +443,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ppb_microseq
 name|disconnect_microseq
@@ -469,6 +487,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ppb_microseq
 name|connect_epp_microseq
@@ -512,6 +531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ppb_microseq
 name|connect_spp_microseq
@@ -618,7 +638,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Macro used to initialize each vpoio_data structure during  * low level attachment  */
+comment|/*  * Macro used to initialize each vpoio_data structure during  * low level attachment  *  * XXX should be converted to ppb_MS_init_msq()  */
 end_comment
 
 begin_define
@@ -636,6 +656,7 @@ comment|/*  * This is the sub-microseqence for MS_GET in NIBBLE mode  * Retrieve
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ppb_microseq
 name|nibble_inbyte_submicroseq
@@ -731,6 +752,7 @@ comment|/*  * This is the sub-microseqence for MS_GET in PS2 mode  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ppb_microseq
 name|ps2_inbyte_submicroseq
@@ -817,6 +839,7 @@ comment|/*  * This is the sub-microsequence for MS_PUT in both NIBBLE and PS2 mo
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ppb_microseq
 name|spp_outbyte_submicroseq
@@ -879,6 +902,7 @@ comment|/* EPP 1.7 microsequences, ptr and len set at runtime */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ppb_microseq
 name|epp17_outstr_body
@@ -957,6 +981,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ppb_microseq
 name|epp17_instr_body
@@ -1034,6 +1059,77 @@ operator||
 name|H_STROBE
 argument_list|)
 block|,
+name|MS_RET
+argument_list|(
+literal|1
+argument_list|)
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ppb_microseq
+name|in_disk_mode
+index|[]
+init|=
+block|{
+name|MS_CASS
+argument_list|(
+name|H_AUTO
+operator||
+name|H_nSELIN
+operator||
+name|H_INIT
+operator||
+name|H_STROBE
+argument_list|)
+block|,
+name|MS_CASS
+argument_list|(
+name|H_nAUTO
+operator||
+name|H_nSELIN
+operator||
+name|H_INIT
+operator||
+name|H_STROBE
+argument_list|)
+block|,
+name|MS_BRCLEAR
+argument_list|(
+name|H_FLT
+argument_list|,
+literal|4
+comment|/* error */
+argument_list|)
+block|,
+name|MS_CASS
+argument_list|(
+name|H_AUTO
+operator||
+name|H_nSELIN
+operator||
+name|H_INIT
+operator||
+name|H_STROBE
+argument_list|)
+block|,
+name|MS_BRSET
+argument_list|(
+name|H_FLT
+argument_list|,
+literal|2
+comment|/* error */
+argument_list|)
+block|,
+name|MS_RET
+argument_list|(
+literal|0
+argument_list|)
+block|,
+comment|/* error: */
 name|MS_RET
 argument_list|(
 literal|1
@@ -1172,123 +1268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vpoio_in_disk_mode()  *  * Check if we are in disk mode  *  * XXX should be ported to microseq with MS_ASSERT()  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|vpoio_in_disk_mode
-parameter_list|(
-name|struct
-name|vpoio_data
-modifier|*
-name|vpo
-parameter_list|)
-block|{
-comment|/* first, set H_AUTO high */
-name|ppb_wctr
-argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
-argument_list|,
-name|H_AUTO
-operator||
-name|H_nSELIN
-operator||
-name|H_INIT
-operator||
-name|H_STROBE
-argument_list|)
-expr_stmt|;
-comment|/* when H_AUTO is set low, H_FLT should be high */
-name|ppb_wctr
-argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
-argument_list|,
-name|H_nAUTO
-operator||
-name|H_nSELIN
-operator||
-name|H_INIT
-operator||
-name|H_STROBE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ppb_rstr
-argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
-argument_list|)
-operator|&
-name|H_FLT
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* when H_AUTO is set high, H_FLT should be low */
-name|ppb_wctr
-argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
-argument_list|,
-name|H_AUTO
-operator||
-name|H_nSELIN
-operator||
-name|H_INIT
-operator||
-name|H_STROBE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ppb_rstr
-argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
-argument_list|)
-operator|&
-name|H_FLT
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * vpoio_reset()  *  * SCSI reset signal, the drive must be in disk mode  *  * XXX should be ported to microseq with MS_TRIG()  */
+comment|/*  * vpoio_reset()  *  * SCSI reset signal, the drive must be in disk mode  */
 end_comment
 
 begin_function
@@ -1302,28 +1282,26 @@ modifier|*
 name|vpo
 parameter_list|)
 block|{
-comment|/* 	 * SCSI reset signal. 	 */
-name|ppb_wdtr
+name|int
+name|ret
+decl_stmt|;
+name|struct
+name|ppb_microseq
+name|reset_microseq
+index|[]
+init|=
+block|{
+define|#
+directive|define
+name|INITIATOR
+value|MS_PARAM(0, 1, MS_TYP_INT)
+name|MS_DASS
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
-argument_list|,
-operator|(
-literal|1
-operator|<<
-name|VP0_INITIATOR
-operator|)
+name|MS_UNKNOWN
 argument_list|)
-expr_stmt|;
-name|ppb_wctr
+block|,
+name|MS_CASS
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
-argument_list|,
 name|H_AUTO
 operator||
 name|H_nSELIN
@@ -1332,19 +1310,14 @@ name|H_nINIT
 operator||
 name|H_STROBE
 argument_list|)
-expr_stmt|;
-name|DELAY
+block|,
+name|MS_DELAY
 argument_list|(
 literal|25
 argument_list|)
-expr_stmt|;
-name|ppb_wctr
+block|,
+name|MS_CASS
 argument_list|(
-operator|&
-name|vpo
-operator|->
-name|vpo_dev
-argument_list|,
 name|H_AUTO
 operator||
 name|H_nSELIN
@@ -1353,8 +1326,79 @@ name|H_INIT
 operator||
 name|H_STROBE
 argument_list|)
+block|,
+name|MS_RET
+argument_list|(
+literal|0
+argument_list|)
+block|}
+decl_stmt|;
+name|ppb_MS_init_msq
+argument_list|(
+name|reset_microseq
+argument_list|,
+literal|1
+argument_list|,
+name|INITIATOR
+argument_list|,
+literal|1
+operator|<<
+name|VP0_INITIATOR
+argument_list|)
+expr_stmt|;
+name|ppb_MS_microseq
+argument_list|(
+operator|&
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|,
+name|reset_microseq
+argument_list|,
+operator|&
+name|ret
+argument_list|)
 expr_stmt|;
 return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*  * vpoio_in_disk_mode()  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|vpoio_in_disk_mode
+parameter_list|(
+name|struct
+name|vpoio_data
+modifier|*
+name|vpo
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|ppb_MS_microseq
+argument_list|(
+operator|&
+name|vpo
+operator|->
+name|vpo_dev
+argument_list|,
+name|in_disk_mode
+argument_list|,
+operator|&
+name|ret
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
@@ -1363,6 +1407,7 @@ comment|/*  * vpoio_detect()  *  * Detect and initialise the VP0 adapter.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|vpoio_detect
 parameter_list|(
@@ -1386,7 +1431,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|vpoio_in_disk_mode
 argument_list|(
 name|vpo
@@ -1415,8 +1459,10 @@ argument_list|(
 name|vpo
 argument_list|)
 expr_stmt|;
+comment|/* ensure we are disconnected or daisy chained peripheral  	 * may cause serious problem to the disk */
 if|if
 condition|(
+operator|!
 name|vpoio_in_disk_mode
 argument_list|(
 name|vpo
@@ -1874,6 +1920,9 @@ name|ppb
 operator|=
 name|ppb
 expr_stmt|;
+comment|/* 	 * Initialize microsequence code 	 */
+name|INIT_TRIG_MICROSEQ
+expr_stmt|;
 comment|/* now, try to initialise the drive */
 if|if
 condition|(
@@ -1920,7 +1969,7 @@ decl_stmt|;
 comment|/* 	 * Report ourselves 	 */
 name|printf
 argument_list|(
-literal|"vpo%d:<Iomega VPI0 Parallel to SCSI adapter> on ppbus %d\n"
+literal|"vpo%d:<Iomega VPI0 Parallel to SCSI interface> on ppbus %d\n"
 argument_list|,
 name|vpo
 operator|->
@@ -1939,7 +1988,6 @@ operator|->
 name|adapter_unit
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize microsequence code 	 */
 name|vpo
 operator|->
 name|vpo_nibble_inbyte_msq
@@ -2347,14 +2395,10 @@ operator||
 name|PPB_INTR
 argument_list|)
 operator|||
-operator|(
 name|vpoio_in_disk_mode
 argument_list|(
 name|vpo
 argument_list|)
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 comment|/* release ppbus */
@@ -2480,7 +2524,6 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 name|vpoio_in_disk_mode
 argument_list|(
 name|vpo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppb_msq.h,v 1.1.2.6 1998/06/17 00:37:12 son Exp $  *  */
+comment|/*-  * Copyright (c) 1998 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppb_msq.h,v 1.1.2.7 1998/06/20 19:03:47 son Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -324,23 +324,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MS_RESERVED_1
+name|MS_OP_ADELAY
 value|13
 end_define
 
 begin_comment
-comment|/* reserved				*/
+comment|/* adelay<val>				*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MS_RESERVED_2
+name|MS_OP_BRSTAT
 value|14
 end_define
 
 begin_comment
-comment|/* reserved				*/
+comment|/* brstat<mask>,<mask>,<offset>	*/
 end_comment
 
 begin_define
@@ -437,9 +437,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MS_UNKNOWN
+name|MS_NULL
 value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|MS_UNKNOWN
+value|MS_NULL
+end_define
+
+begin_comment
+comment|/* predifined parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MS_ACCUM
+value|-1
+end_define
+
+begin_comment
+comment|/* use accum previously set by MS_OP_SET */
+end_comment
 
 begin_comment
 comment|/* these are register numbers according to our PC-like parallel port model */
@@ -630,9 +652,9 @@ define|#
 directive|define
 name|MS_SET
 parameter_list|(
-name|offset
+name|accum
 parameter_list|)
-value|{ MS_OP_SET, { offset } }
+value|{ MS_OP_SET, { accum } }
 end_define
 
 begin_define
@@ -655,6 +677,33 @@ parameter_list|(
 name|offset
 parameter_list|)
 value|{ MS_OP_DBRA, { offset } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MS_BRCLEAR
+parameter_list|(
+name|mask
+parameter_list|,
+name|offset
+parameter_list|)
+value|{ MS_OP_BRCLEAR, { mask, offset } }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MS_BRSTAT
+parameter_list|(
+name|mask_set
+parameter_list|,
+name|mask_clr
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|{ MS_OP_BRSTAT, { mask_set, mask_clr, offset } }
 end_define
 
 begin_comment
@@ -721,9 +770,23 @@ define|#
 directive|define
 name|MS_DELAY
 parameter_list|(
-name|delay
+name|udelay
 parameter_list|)
-value|{ MS_OP_DELAY, { delay } }
+value|{ MS_OP_DELAY, { udelay } }
+end_define
+
+begin_comment
+comment|/* asynchroneous delay in ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MS_ADELAY
+parameter_list|(
+name|mdelay
+parameter_list|)
+value|{ MS_OP_ADELAY, { mdelay } }
 end_define
 
 begin_comment
