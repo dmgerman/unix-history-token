@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1544,6 +1544,12 @@ begin_comment
 comment|/*  * Reallocate a sequence of blocks into a contiguous sequence of blocks.  *  * The vnode and an array of buffer pointers for a range of sequential  * logical blocks to be made contiguous is given. The allocator attempts  * to find a range of sequential blocks starting as close as possible to  * an fs_rotdelay offset from the end of the allocation for the logical  * block immediately preceeding the current range. If successful, the  * physical block numbers in the buffer pointers and in the inode are  * changed to reflect the new allocation. If unsuccessful, the allocation  * is left unchanged. The success in doing the reallocation is returned.  * Note that the error return is not reflected back to the user. Rather  * the previous block allocation will be used.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -1557,12 +1563,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
 
 begin_decl_stmt
 name|struct
@@ -1599,6 +1599,18 @@ name|prtrealloc
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|doasyncfree
+value|1
+end_define
 
 begin_endif
 endif|#
@@ -2155,7 +2167,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
 name|blkno
 operator|=
 name|newblk
