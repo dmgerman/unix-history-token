@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Scott Long<scottl@freebsd.org>  * Copyright (c) 2001 Darrell Anderson<anderson@cs.duke.edu>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Scott Long<scottl@freebsd.org>  * Copyright (c) 2001 Darrell Anderson<anderson@cs.duke.edu>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -42,6 +42,14 @@ include|#
 directive|include
 file|<gnu/dev/sound/pci/maestro3_dsp.h>
 end_include
+
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* -------------------------------------------------------------------- */
@@ -198,7 +206,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|M3_BUFSIZE
+name|M3_BUFSIZE_DEFAULT
 value|4096
 end_define
 
@@ -206,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|M3_PCHANS
-value|1
+value|4
 end_define
 
 begin_comment
@@ -388,6 +396,10 @@ name|rch_cnt
 decl_stmt|;
 name|int
 name|pch_active_cnt
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|u_int16_t
 modifier|*
@@ -1993,7 +2005,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|M3_BUFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -2752,7 +2766,7 @@ operator|=
 name|format
 expr_stmt|;
 return|return
-name|format
+literal|0
 return|;
 block|}
 end_function
@@ -3629,7 +3643,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|M3_BUFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -4356,7 +4372,7 @@ operator|=
 name|format
 expr_stmt|;
 return|return
-name|format
+literal|0
 return|;
 block|}
 end_function
@@ -5022,15 +5038,6 @@ block|{
 name|u_int8_t
 name|event
 decl_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"Hardware Volume Interrupt\n"
-argument_list|)
-expr_stmt|;
 name|event
 operator|=
 name|m3_rd_1
@@ -6225,6 +6232,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|1024
+argument_list|,
+name|M3_BUFSIZE_DEFAULT
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -6251,7 +6273,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|M3_BUFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -7013,8 +7037,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-name|index
 operator|++
+name|index
 index|]
 operator|=
 name|m3_rd_assp_code
@@ -7041,8 +7065,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-name|index
 operator|++
+name|index
 index|]
 operator|=
 name|m3_rd_assp_data
@@ -7153,8 +7177,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-name|index
 operator|++
+name|index
 index|]
 argument_list|)
 expr_stmt|;
@@ -7181,8 +7205,8 @@ name|sc
 operator|->
 name|savemem
 index|[
-name|index
 operator|++
+name|index
 index|]
 argument_list|)
 expr_stmt|;
@@ -7458,7 +7482,56 @@ parameter_list|)
 block|{
 name|u_int32_t
 name|data
+decl_stmt|,
+name|hv_cfg
 decl_stmt|;
+name|int
+name|hint
+decl_stmt|;
+comment|/* 	 * The volume buttons can be wired up via two different sets of pins. 	 * This presents a problem since we can't tell which way it's 	 * configured.  Allow the user to set a hint in order to twiddle 	 * the proper bits. 	 */
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+name|device_get_name
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+argument_list|,
+literal|"hwvol_config"
+argument_list|,
+operator|&
+name|hint
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|hv_cfg
+operator|=
+operator|(
+name|hint
+operator|>
+literal|0
+operator|)
+condition|?
+name|HV_BUTTON_FROM_GD
+else|:
+literal|0
+expr_stmt|;
+else|else
+name|hv_cfg
+operator|=
+name|HV_BUTTON_FROM_GD
+expr_stmt|;
 name|data
 operator|=
 name|pci_read_config
@@ -7474,7 +7547,15 @@ argument_list|)
 expr_stmt|;
 name|data
 operator|&=
+name|HV_BUTTON_FROM_GD
+expr_stmt|;
+name|data
+operator||=
 name|REDUCED_DEBOUNCE
+operator||
+name|HV_CTRL_ENABLE
+operator||
+name|hv_cfg
 expr_stmt|;
 name|data
 operator||=
@@ -8200,11 +8281,7 @@ literal|"pcm"
 block|,
 name|m3_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
+name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt

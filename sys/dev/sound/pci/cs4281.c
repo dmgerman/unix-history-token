@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  * The order of pokes in the initiation sequence is based on Linux  * driver by Thomas Sailer, gw boynton (wesb@crystal.cirrus.com), tom  * woller (twoller@crystal.cirrus.com).  Shingo Watanabe (nabe@nabechan.org)  * contributed towards power management.  */
+comment|/*  * Copyright (c) 2000 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * The order of pokes in the initiation sequence is based on Linux  * driver by Thomas Sailer, gw boynton (wesb@crystal.cirrus.com), tom  * woller (twoller@crystal.cirrus.com).  Shingo Watanabe (nabe@nabechan.org)  * contributed towards power management.  */
 end_comment
 
 begin_include
@@ -33,10 +33,18 @@ directive|include
 file|<dev/sound/pci/cs4281.h>
 end_include
 
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
-name|CS4281_BUFFER_SIZE
+name|CS4281_DEFAULT_BUFSZ
 value|16384
 end_define
 
@@ -238,6 +246,10 @@ name|ih
 decl_stmt|;
 name|int
 name|power
+decl_stmt|;
+name|unsigned
+name|long
+name|bufsz
 decl_stmt|;
 name|struct
 name|sc_chinfo
@@ -1401,7 +1413,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|CS4281_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|!=
 literal|0
@@ -1513,6 +1527,15 @@ name|ch
 init|=
 name|data
 decl_stmt|;
+name|struct
+name|sc_info
+modifier|*
+name|sc
+init|=
+name|ch
+operator|->
+name|parent
+decl_stmt|;
 name|u_int32_t
 name|go
 decl_stmt|;
@@ -1534,7 +1557,9 @@ name|MIN
 argument_list|(
 name|blocksize
 argument_list|,
-name|CS4281_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 operator|/
 literal|2
 argument_list|)
@@ -1574,7 +1599,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"cs4281chan_setblocksize: bufsz %d Setting %d\n"
+literal|"cs4281chan_setblocksize: blksz %d Setting %d\n"
 argument_list|,
 name|blocksize
 argument_list|,
@@ -3784,6 +3809,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|CS4281_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -3810,7 +3850,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|CS4281_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -4569,11 +4611,7 @@ literal|"pcm"
 block|,
 name|cs4281_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
+name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt

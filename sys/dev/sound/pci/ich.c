@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Katsurajima Naoto<raven@katsurajima.seya.yokohama.jp>  * Copyright (c) 2001 Cameron Grant<cg@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2000 Katsurajima Naoto<raven@katsurajima.seya.yokohama.jp>  * Copyright (c) 2001 Cameron Grant<cg@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -32,6 +32,14 @@ include|#
 directive|include
 file|<pci/pcivar.h>
 end_include
+
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* -------------------------------------------------------------------- */
@@ -2222,30 +2230,23 @@ block|{
 ifdef|#
 directive|ifdef
 name|SND_DYNSYSCTL
-name|struct
-name|snddev_info
-modifier|*
-name|d
-init|=
-name|device_get_softc
+name|SYSCTL_ADD_INT
+argument_list|(
+name|snd_sysctl_tree
 argument_list|(
 name|sc
 operator|->
 name|dev
 argument_list|)
-decl_stmt|;
-name|SYSCTL_ADD_INT
-argument_list|(
-operator|&
-name|d
-operator|->
-name|sysctl_tree
 argument_list|,
 name|SYSCTL_CHILDREN
 argument_list|(
-name|d
+name|snd_sysctl_tree_top
+argument_list|(
+name|sc
 operator|->
-name|sysctl_tree_top
+name|dev
+argument_list|)
 argument_list|)
 argument_list|,
 name|OID_AUTO
@@ -2977,6 +2978,19 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+case|case
+literal|0x01b110de
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Nvidia nForce AC97 controller"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 default|default:
 return|return
 name|ENXIO
@@ -3277,7 +3291,16 @@ name|sc
 operator|->
 name|bufsz
 operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
 name|ICH_DEFAULT_BUFSZ
+argument_list|,
+name|ICH_MAX_BUFSZ
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -4169,11 +4192,7 @@ literal|"pcm"
 block|,
 name|ich_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
+name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This card has the annoying habit of "clicking" when attached and  * detached, haven't been able to remedy this with any combination of  * muting.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2001 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This card has the annoying habit of "clicking" when attached and  * detached, haven't been able to remedy this with any combination of  * muting.  */
 end_comment
 
 begin_include
@@ -33,6 +33,14 @@ directive|include
 file|"mixer_if.h"
 end_include
 
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* ------------------------------------------------------------------------- */
 end_comment
@@ -51,14 +59,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|SV_MAX_BUFFER
-value|8192
+name|SV_DEFAULT_BUFSZ
+value|16384
 end_define
 
 begin_define
 define|#
 directive|define
-name|SV_MIN_BUFFER
+name|SV_MIN_BLKSZ
 value|128
 end_define
 
@@ -213,6 +221,11 @@ decl_stmt|;
 name|void
 modifier|*
 name|ih
+decl_stmt|;
+comment|/* User configurable buffer size */
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|struct
 name|sc_chinfo
@@ -781,7 +794,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|SV_MAX_BUFFER
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|!=
 literal|0
@@ -878,14 +893,25 @@ name|ch
 init|=
 name|data
 decl_stmt|;
+name|struct
+name|sc_info
+modifier|*
+name|sc
+init|=
+name|ch
+operator|->
+name|parent
+decl_stmt|;
 comment|/* user has requested interrupts every blocksize bytes */
 name|RANGE
 argument_list|(
 name|blocksize
 argument_list|,
-name|SV_MIN_BUFFER
+name|SV_MIN_BLKSZ
 argument_list|,
-name|SV_MAX_BUFFER
+name|sc
+operator|->
+name|bufsz
 operator|/
 name|SV_INTR_PER_BUFFER
 argument_list|)
@@ -3995,6 +4021,21 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|SV_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -4021,7 +4062,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|SV_MAX_BUFFER
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -4964,11 +5007,7 @@ literal|"pcm"
 block|,
 name|sc_methods
 block|,
-expr|sizeof
-operator|(
-expr|struct
-name|snddev_info
-operator|)
+name|PCM_SOFTC_SIZE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4976,7 +5015,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|snd_sonicvibes
+name|snd_vibes
 argument_list|,
 name|pci
 argument_list|,
@@ -4994,7 +5033,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|snd_sonicvibes
+name|snd_vibes
 argument_list|,
 name|snd_pcm
 argument_list|,
@@ -5010,7 +5049,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|snd_sonicvibes
+name|snd_vibes
 argument_list|,
 literal|1
 argument_list|)

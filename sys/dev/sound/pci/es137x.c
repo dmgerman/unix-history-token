@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Support the ENSONIQ AudioPCI board and Creative Labs SoundBlaster PCI  * boards based on the ES1370, ES1371 and ES1373 chips.  *  * Copyright (c) 1999 Russell Cattelan<cattelan@thebarn.com>  * Copyright (c) 1999 Cameron Grant<gandalf@vilnya.demon.co.uk>  * Copyright (c) 1998 by Joachim Kuebart. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgement:  *	This product includes software developed by Joachim Kuebart.  *  * 4. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Support the ENSONIQ AudioPCI board and Creative Labs SoundBlaster PCI  * boards based on the ES1370, ES1371 and ES1373 chips.  *  * Copyright (c) 1999 Russell Cattelan<cattelan@thebarn.com>  * Copyright (c) 1999 Cameron Grant<gandalf@vilnya.demon.co.uk>  * Copyright (c) 1998 by Joachim Kuebart. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgement:  *	This product includes software developed by Joachim Kuebart.  *  * 4. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -48,6 +48,14 @@ include|#
 directive|include
 file|"mixer_if.h"
 end_include
+
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -177,7 +185,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ES_BUFFSIZE
+name|ES_DEFAULT_BUFSZ
 value|4096
 end_define
 
@@ -263,6 +271,10 @@ name|dev
 decl_stmt|;
 name|int
 name|num
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 comment|/* Contents of board's registers */
 name|u_long
@@ -1421,7 +1433,9 @@ name|ch
 operator|->
 name|bufsz
 operator|=
-name|ES_BUFFSIZE
+name|es
+operator|->
+name|bufsz
 expr_stmt|;
 name|ch
 operator|->
@@ -3719,6 +3733,8 @@ name|unsigned
 name|t
 decl_stmt|,
 name|x
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|es_info
@@ -5363,6 +5379,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|es
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|ES_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pci_get_devid
@@ -5611,7 +5642,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|ES_BUFFSIZE
+name|es
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -5980,11 +6013,7 @@ literal|"pcm"
 block|,
 name|es_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
+name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt

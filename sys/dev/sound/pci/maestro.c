@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Taku YAMAMOTO<taku@cent.saitama-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: maestro.c,v 1.12 2000/09/06 03:32:34 taku Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Taku YAMAMOTO<taku@cent.saitama-u.ac.jp>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: maestro.c,v 1.12 2000/09/06 03:32:34 taku Exp $  */
 end_comment
 
 begin_comment
@@ -36,6 +36,14 @@ include|#
 directive|include
 file|<dev/sound/pci/maestro_reg.h>
 end_include
+
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -112,7 +120,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|AGG_BUFSIZ
+name|AGG_DEFAULT_BUFSZ
 value|0x4000
 end_define
 
@@ -219,6 +227,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|lock
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|u_int
 name|playchns
@@ -2680,7 +2692,7 @@ modifier|*
 name|ch
 parameter_list|)
 block|{
-name|u_int
+name|bus_addr_t
 name|wpwa
 init|=
 name|APU_USE_SYSMEM
@@ -2696,7 +2708,11 @@ decl_stmt|;
 name|u_int
 name|size
 init|=
-name|AGG_BUFSIZ
+name|ch
+operator|->
+name|parent
+operator|->
+name|bufsz
 operator|>>
 literal|1
 decl_stmt|;
@@ -2707,7 +2723,7 @@ name|ch
 operator|->
 name|speed
 decl_stmt|;
-name|u_int
+name|bus_addr_t
 name|offset
 init|=
 name|ch
@@ -3160,7 +3176,11 @@ name|diff
 decl_stmt|,
 name|halfsize
 init|=
-name|AGG_BUFSIZ
+name|ch
+operator|->
+name|parent
+operator|->
+name|bufsz
 operator|>>
 literal|2
 decl_stmt|;
@@ -3506,7 +3526,9 @@ name|dma_malloc
 argument_list|(
 name|ess
 argument_list|,
-name|AGG_BUFSIZ
+name|ess
+operator|->
+name|bufsz
 argument_list|,
 operator|&
 name|physaddr
@@ -3527,7 +3549,9 @@ name|b
 argument_list|,
 name|p
 argument_list|,
-name|AGG_BUFSIZ
+name|ess
+operator|->
+name|bufsz
 argument_list|)
 expr_stmt|;
 name|ch
@@ -3561,8 +3585,12 @@ name|ess
 operator|->
 name|dev
 argument_list|,
-literal|"offset %#x exceeds limit. "
+literal|"offset %#llx exceeds limit. "
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ch
 operator|->
 name|offset
@@ -3616,12 +3644,16 @@ name|ess
 operator|->
 name|dev
 argument_list|,
-literal|"pch[%d].offset = %#x\n"
+literal|"pch[%d].offset = %#llx\n"
 argument_list|,
 name|ch
 operator|->
 name|num
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ch
 operator|->
 name|offset
@@ -3639,8 +3671,12 @@ name|ess
 operator|->
 name|dev
 argument_list|,
-literal|"rch.offset = %#x\n"
+literal|"rch.offset = %#llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ch
 operator|->
 name|offset
@@ -3819,7 +3855,7 @@ operator|=
 name|aputype
 expr_stmt|;
 return|return
-name|format
+literal|0
 return|;
 block|}
 end_function
@@ -4972,6 +5008,21 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+name|ess
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|AGG_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -5002,9 +5053,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|AGG_BUFSIZ
-operator|*
-literal|2
+name|ess
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -5043,7 +5094,9 @@ name|dma_malloc
 argument_list|(
 name|ess
 argument_list|,
-name|AGG_BUFSIZ
+name|ess
+operator|->
+name|bufsz
 argument_list|,
 operator|&
 name|ess
@@ -5079,8 +5132,12 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Maestro DMA base: %#x\n"
+literal|"Maestro DMA base: %#llx\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ess
 operator|->
 name|baseaddr
@@ -6151,11 +6208,7 @@ literal|"pcm"
 block|,
 name|agg_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
+name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt

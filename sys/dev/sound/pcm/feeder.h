@@ -60,6 +60,8 @@ name|struct
 name|pcm_feederdesc
 modifier|*
 name|desc
+decl_stmt|,
+name|desc_static
 decl_stmt|;
 name|void
 modifier|*
@@ -74,6 +76,9 @@ name|struct
 name|pcm_feeder
 modifier|*
 name|source
+decl_stmt|,
+modifier|*
+name|parent
 decl_stmt|;
 block|}
 struct|;

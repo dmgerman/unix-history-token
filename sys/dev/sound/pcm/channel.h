@@ -56,6 +56,9 @@ block|{
 name|kobj_t
 name|methods
 decl_stmt|;
+name|int
+name|num
+decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
@@ -91,6 +94,12 @@ decl_stmt|;
 name|int
 name|direction
 decl_stmt|;
+name|unsigned
+name|int
+name|interrupts
+decl_stmt|,
+name|xruns
+decl_stmt|;
 name|struct
 name|snd_dbuf
 modifier|*
@@ -112,6 +121,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|devinfo
+decl_stmt|;
+name|device_t
+name|dev
 decl_stmt|;
 name|char
 name|name
@@ -858,13 +870,6 @@ define|#
 directive|define
 name|CHN_2NDBUFMAXSIZE
 value|(131072)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHN_DEFAULT_HZ
-value|50
 end_define
 
 begin_define

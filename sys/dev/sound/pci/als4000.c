@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Orion Hodson<oho@acm.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2001 Orion Hodson<oho@acm.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -43,6 +43,14 @@ directive|include
 file|"mixer_if.h"
 end_include
 
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Debugging macro's */
 end_comment
@@ -80,6 +88,13 @@ end_endif
 begin_comment
 comment|/* DEB */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ALS_DEFAULT_BUFSZ
+value|16384
+end_define
 
 begin_comment
 comment|/* ------------------------------------------------------------------------- */
@@ -174,6 +189,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|ih
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|struct
 name|sc_chinfo
@@ -908,7 +927,9 @@ name|sc
 operator|->
 name|parent_dmat
 argument_list|,
-name|ALS_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|!=
 literal|0
@@ -1071,18 +1092,31 @@ name|ch
 init|=
 name|data
 decl_stmt|;
+name|struct
+name|sc_info
+modifier|*
+name|sc
+init|=
+name|ch
+operator|->
+name|parent
+decl_stmt|;
 if|if
 condition|(
 name|blocksize
 operator|>
-name|ALS_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 operator|/
 literal|2
 condition|)
 block|{
 name|blocksize
 operator|=
-name|ALS_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 operator|/
 literal|2
 expr_stmt|;
@@ -3616,7 +3650,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+name|INTR_TYPE_AV
 argument_list|,
 name|als_intr
 argument_list|,
@@ -3640,6 +3674,21 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|ALS_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -3666,7 +3715,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|ALS_BUFFER_SIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -4358,11 +4409,7 @@ literal|"pcm"
 block|,
 name|als_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
+name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -4370,7 +4417,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|snd_als
+name|snd_als4000
 argument_list|,
 name|pci
 argument_list|,
@@ -4388,7 +4435,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|snd_als
+name|snd_als4000
 argument_list|,
 name|snd_pcm
 argument_list|,
@@ -4404,7 +4451,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|snd_als
+name|snd_als4000
 argument_list|,
 literal|1
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 Cameron Grant<gandalf@vilnya.demon.co.uk>  * Copyright 1997,1998 Luigi Rizzo.  *  * Derived from files in the Voxware 3.5 distribution,  * Copyright by Hannu Savolainen 1994, under the same copyright  * conditions.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1999 Cameron Grant<gandalf@vilnya.demon.co.uk>  * Copyright 1997,1998 Luigi Rizzo.  *  * Derived from files in the Voxware 3.5 distribution,  * Copyright by Hannu Savolainen 1994, under the same copyright  * conditions.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,10 +27,18 @@ directive|include
 file|"mixer_if.h"
 end_include
 
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
-name|SB_BUFFSIZE
+name|SB_DEFAULT_BUFSZ
 value|4096
 end_define
 
@@ -242,6 +250,10 @@ name|ih
 decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dmat
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsize
 decl_stmt|;
 name|int
 name|bd_id
@@ -1154,7 +1166,7 @@ literal|"sb_reset_dsp 0x%lx failed\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
-name|d
+name|sb
 operator|->
 name|io_base
 argument_list|)
@@ -1239,6 +1251,16 @@ operator|->
 name|drq
 condition|)
 block|{
+name|isa_dma_release
+argument_list|(
+name|rman_get_start
+argument_list|(
+name|sb
+operator|->
+name|drq
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bus_release_resource
 argument_list|(
 name|dev
@@ -1451,11 +1473,6 @@ operator|->
 name|irq
 condition|)
 block|{
-name|int
-name|bs
-init|=
-name|SB_BUFFSIZE
-decl_stmt|;
 name|isa_dma_acquire
 argument_list|(
 name|rman_get_start
@@ -1475,7 +1492,9 @@ operator|->
 name|drq
 argument_list|)
 argument_list|,
-name|bs
+name|sb
+operator|->
+name|bufsize
 argument_list|)
 expr_stmt|;
 return|return
@@ -1606,7 +1625,7 @@ name|dev
 condition|)
 block|{
 case|case
-name|SOUND_MASK_PCM
+name|SOUND_MIXER_PCM
 case|:
 name|reg
 operator|=
@@ -1614,7 +1633,7 @@ literal|0x04
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_MIC
+name|SOUND_MIXER_MIC
 case|:
 name|reg
 operator|=
@@ -1626,7 +1645,7 @@ literal|3
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_VOLUME
+name|SOUND_MIXER_VOLUME
 case|:
 name|reg
 operator|=
@@ -1634,7 +1653,7 @@ literal|0x22
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_SYNTH
+name|SOUND_MIXER_SYNTH
 case|:
 name|reg
 operator|=
@@ -1642,7 +1661,7 @@ literal|0x26
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_CD
+name|SOUND_MIXER_CD
 case|:
 name|reg
 operator|=
@@ -1650,7 +1669,7 @@ literal|0x28
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_LINE
+name|SOUND_MIXER_LINE
 case|:
 name|reg
 operator|=
@@ -1996,7 +2015,7 @@ name|dev
 condition|)
 block|{
 case|case
-name|SOUND_MASK_VOLUME
+name|SOUND_MIXER_VOLUME
 case|:
 name|reg
 operator|=
@@ -2004,7 +2023,7 @@ literal|0x2
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_SYNTH
+name|SOUND_MIXER_SYNTH
 case|:
 name|reg
 operator|=
@@ -2012,7 +2031,7 @@ literal|0x6
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_CD
+name|SOUND_MIXER_CD
 case|:
 name|reg
 operator|=
@@ -2020,7 +2039,7 @@ literal|0x8
 expr_stmt|;
 break|break;
 case|case
-name|SOUND_MASK_PCM
+name|SOUND_MIXER_PCM
 case|:
 name|reg
 operator|=
@@ -2803,7 +2822,9 @@ name|sb
 operator|->
 name|parent_dmat
 argument_list|,
-name|SB_BUFFSIZE
+name|sb
+operator|->
+name|bufsize
 argument_list|)
 operator|==
 operator|-
@@ -3362,11 +3383,6 @@ index|[
 name|SND_STATUSLEN
 index|]
 decl_stmt|;
-name|int
-name|bs
-init|=
-name|SB_BUFFSIZE
-decl_stmt|;
 name|uintptr_t
 name|ver
 decl_stmt|;
@@ -3441,6 +3457,21 @@ literal|0xffff0000
 operator|)
 operator|>>
 literal|16
+expr_stmt|;
+name|sb
+operator|->
+name|bufsize
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|SB_DEFAULT_BUFSZ
+argument_list|,
+literal|65536
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3553,7 +3584,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-name|bs
+name|sb
+operator|->
+name|bufsize
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -3590,7 +3623,7 @@ name|status
 argument_list|,
 name|SND_STATUSLEN
 argument_list|,
-literal|"at io 0x%lx irq %ld drq %ld"
+literal|"at io 0x%lx irq %ld drq %ld bufsz %u"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -3612,6 +3645,10 @@ name|sb
 operator|->
 name|drq
 argument_list|)
+argument_list|,
+name|sb
+operator|->
+name|bufsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -3778,11 +3815,7 @@ literal|"pcm"
 block|,
 name|sb_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
+name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt

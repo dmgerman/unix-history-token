@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 Cameron Grant<cg@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2000 Cameron Grant<cg@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHERIN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THEPOSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -39,6 +39,14 @@ directive|include
 file|<dev/sound/pci/ds1-fw.h>
 end_include
 
+begin_expr_stmt
+name|SND_DECLARE_FILE
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* -------------------------------------------------------------------- */
 end_comment
@@ -54,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|DS1_RECPRIMARY
-value|1
+value|0
 end_define
 
 begin_define
@@ -347,7 +355,9 @@ name|bus_space_handle_t
 name|sh
 decl_stmt|;
 name|bus_dma_tag_t
-name|parent_dmat
+name|buffer_dmat
+decl_stmt|,
+name|control_dmat
 decl_stmt|;
 name|bus_dmamap_t
 name|map
@@ -410,6 +420,10 @@ decl_stmt|,
 name|pchn
 decl_stmt|,
 name|rchn
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsz
 decl_stmt|;
 name|struct
 name|sc_pchinfo
@@ -2728,9 +2742,11 @@ name|buffer
 argument_list|,
 name|sc
 operator|->
-name|parent_dmat
+name|buffer_dmat
 argument_list|,
-name|DS1_BUFFSIZE
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -3412,9 +3428,11 @@ name|buffer
 argument_list|,
 name|sc
 operator|->
-name|parent_dmat
+name|buffer_dmat
 argument_list|,
-literal|4096
+name|sc
+operator|->
+name|bufsz
 argument_list|)
 operator|==
 operator|-
@@ -4654,11 +4672,47 @@ condition|)
 block|{
 if|if
 condition|(
+name|bus_dma_tag_create
+argument_list|(
+name|NULL
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+name|BUS_SPACE_MAXADDR_32BIT
+argument_list|,
+name|BUS_SPACE_MAXADDR
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|memsz
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|control_dmat
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
 name|bus_dmamem_alloc
 argument_list|(
 name|sc
 operator|->
-name|parent_dmat
+name|control_dmat
 argument_list|,
 operator|&
 name|buf
@@ -4681,7 +4735,7 @@ name|bus_dmamap_load
 argument_list|(
 name|sc
 operator|->
-name|parent_dmat
+name|control_dmat
 argument_list|,
 name|sc
 operator|->
@@ -5168,7 +5222,7 @@ name|bus_dmamap_unload
 argument_list|(
 name|sc
 operator|->
-name|parent_dmat
+name|control_dmat
 argument_list|,
 name|sc
 operator|->
@@ -5179,7 +5233,7 @@ name|bus_dmamem_free
 argument_list|(
 name|sc
 operator|->
-name|parent_dmat
+name|control_dmat
 argument_list|,
 name|sc
 operator|->
@@ -5423,6 +5477,8 @@ name|device_get_nameunit
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+literal|"sound softc"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -5585,6 +5641,21 @@ operator|->
 name|reg
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|bufsz
+operator|=
+name|pcm_getbuffersize
+argument_list|(
+name|dev
+argument_list|,
+literal|4096
+argument_list|,
+name|DS1_BUFFSIZE
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_dma_tag_create
@@ -5611,7 +5682,9 @@ comment|/*filterarg*/
 name|NULL
 argument_list|,
 comment|/*maxsize*/
-literal|65536
+name|sc
+operator|->
+name|bufsz
 argument_list|,
 comment|/*nsegments*/
 literal|1
@@ -5625,7 +5698,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|parent_dmat
+name|buffer_dmat
 argument_list|)
 operator|!=
 literal|0
@@ -5947,13 +6020,26 @@ if|if
 condition|(
 name|sc
 operator|->
-name|parent_dmat
+name|buffer_dmat
 condition|)
 name|bus_dma_tag_destroy
 argument_list|(
 name|sc
 operator|->
-name|parent_dmat
+name|buffer_dmat
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|control_dmat
+condition|)
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|control_dmat
 argument_list|)
 expr_stmt|;
 if|if
@@ -6143,7 +6229,14 @@ name|bus_dma_tag_destroy
 argument_list|(
 name|sc
 operator|->
-name|parent_dmat
+name|buffer_dmat
+argument_list|)
+expr_stmt|;
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|control_dmat
 argument_list|)
 expr_stmt|;
 name|snd_mtxfree
@@ -6221,11 +6314,7 @@ literal|"pcm"
 block|,
 name|ds1_methods
 block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|snddev_info
-argument_list|)
+name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt
