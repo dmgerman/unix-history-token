@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. **  ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces  ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.1 1995/01/31 08:58:53 wpaul Exp $ ** */
+comment|/* ** server.c			YP server routines. ** ** Copyright (c) 1993 Signum Support AB, Sweden ** ** This file is part of the NYS YP Server. ** ** The NYS YP Server is free software; you can redistribute it and/or ** modify it under the terms of the GNU General Public License as ** published by the Free Software Foundation; either version 2 of the ** License, or (at your option) any later version. ** ** The NYS YP Server is distributed in the hope that it will be useful, ** but WITHOUT ANY WARRANTY; without even the implied warranty of ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU ** General Public License for more details. **  ** You should have received a copy of the GNU General Public ** License along with the NYS YP Server; see the file COPYING.  If ** not, write to the Free Software Foundation, Inc., 675 Mass Ave, ** Cambridge, MA 02139, USA. ** ** Author: Peter Eriksson<pen@signum.se> ** Ported to FreeBSD and hacked all to pieces  ** by Bill Paul<wpaul@ctr.columbia.edu> ** **	$Id: server.c,v 1.2 1995/02/04 21:32:02 wpaul Exp $ ** */
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -3236,6 +3242,36 @@ block|}
 end_function
 
 begin_comment
+comment|/* ** Clean up after ypxfr child processes signal their termination. */
+end_comment
+
+begin_function
+name|void
+name|reapchild
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
+block|{
+name|int
+name|st
+decl_stmt|;
+name|wait3
+argument_list|(
+operator|&
+name|st
+argument_list|,
+name|WNOHANG
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* ** Stole the ypxfr implementation from the yps package. */
 end_comment
 
@@ -3538,20 +3574,11 @@ name|YPXFR_XFRERR
 expr_stmt|;
 default|default:
 block|{
-name|int
-name|st
-decl_stmt|;
-name|wait4
+name|signal
 argument_list|(
-operator|-
-literal|1
+name|SIGCHLD
 argument_list|,
-operator|&
-name|st
-argument_list|,
-name|WNOHANG
-argument_list|,
-name|NULL
+name|reapchild
 argument_list|)
 expr_stmt|;
 name|result
