@@ -4480,7 +4480,7 @@ if|if
 condition|(
 name|type
 operator|==
-name|SYS_RES_IOPORT
+name|SYS_RES_MEMORY
 operator|&&
 operator|!
 name|pci_memen
