@@ -511,11 +511,6 @@ name|defined
 argument_list|(
 name|INVARIANTS
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 if|if
 condition|(
 name|flags
