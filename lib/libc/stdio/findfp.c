@@ -529,7 +529,7 @@ if|if
 condition|(
 operator|(
 name|g
-operator|==
+operator|=
 name|moreglue
 argument_list|(
 name|NDYNAMIC
