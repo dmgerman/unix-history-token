@@ -4533,7 +4533,10 @@ name|FTP_SYNTAX_ERROR
 condition|)
 return|return
 operator|(
+name|_fetch_ref
+argument_list|(
 name|cached_connection
+argument_list|)
 operator|)
 return|;
 block|}
