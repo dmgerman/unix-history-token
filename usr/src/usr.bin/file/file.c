@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	5.1 (Berkeley) %G%"
+literal|"@(#)file.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -948,29 +948,9 @@ argument_list|)
 case|case
 name|MID_HPUX
 case|:
-if|if
-condition|(
-operator|(
-operator|(
-expr|struct
-name|hpux_exec
-operator|*
-operator|)
-name|buf
-operator|)
-operator|->
-name|ha_version
-operator|==
-name|BSDVNUM
-condition|)
 name|printf
 argument_list|(
-literal|"BSD generated "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"HP-UX series 200/300 "
+literal|"HP-UX series [234]00 "
 argument_list|)
 expr_stmt|;
 name|ishpux300
@@ -1229,6 +1209,40 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+if|if
+condition|(
+name|ishpux300
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
+name|buf
+operator|)
+index|[
+literal|2
+index|]
+operator|&
+literal|0x40000000
+condition|)
+name|printf
+argument_list|(
+literal|"dynamically-linked "
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"executable"
@@ -1320,6 +1334,34 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|hp300
+argument_list|)
+case|case
+literal|0x10e
+case|:
+name|printf
+argument_list|(
+literal|"shared library, version %d\n"
+argument_list|,
+operator|(
+operator|(
+name|short
+operator|*
+operator|)
+name|buf
+operator|)
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+return|return;
+endif|#
+directive|endif
 block|}
 switch|switch
 condition|(
