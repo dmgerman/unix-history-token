@@ -61,6 +61,9 @@ name|byte
 modifier|*
 name|Bitmap
 decl_stmt|;
+name|int
+name|PixelBytes
+decl_stmt|;
 block|}
 name|VGLBitmap
 typedef|;
@@ -128,6 +131,72 @@ directive|define
 name|VIDBUF4S
 value|5
 end_define
+
+begin_define
+define|#
+directive|define
+name|VIDBUF16
+value|6
+end_define
+
+begin_comment
+comment|/* Direct Color linear buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIDBUF24
+value|7
+end_define
+
+begin_comment
+comment|/* Direct Color linear buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIDBUF32
+value|8
+end_define
+
+begin_comment
+comment|/* Direct Color linear buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIDBUF16S
+value|9
+end_define
+
+begin_comment
+comment|/* Direct Color segmented buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIDBUF24S
+value|10
+end_define
+
+begin_comment
+comment|/* Direct Color segmented buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIDBUF32S
+value|11
+end_define
+
+begin_comment
+comment|/* Direct Color segmented buffer */
+end_comment
 
 begin_define
 define|#
@@ -683,14 +752,14 @@ parameter_list|,
 name|int
 name|y
 parameter_list|,
-name|byte
+name|u_long
 name|color
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|byte
+name|u_long
 name|VGLGetXY
 parameter_list|(
 name|VGLBitmap
@@ -726,7 +795,7 @@ parameter_list|,
 name|int
 name|y2
 parameter_list|,
-name|byte
+name|u_long
 name|color
 parameter_list|)
 function_decl|;
@@ -752,7 +821,7 @@ parameter_list|,
 name|int
 name|y2
 parameter_list|,
-name|byte
+name|u_long
 name|color
 parameter_list|)
 function_decl|;
@@ -778,7 +847,7 @@ parameter_list|,
 name|int
 name|y2
 parameter_list|,
-name|byte
+name|u_long
 name|color
 parameter_list|)
 function_decl|;
@@ -804,7 +873,7 @@ parameter_list|,
 name|int
 name|b
 parameter_list|,
-name|byte
+name|u_long
 name|color
 parameter_list|)
 function_decl|;
@@ -830,7 +899,7 @@ parameter_list|,
 name|int
 name|b
 parameter_list|,
-name|byte
+name|u_long
 name|color
 parameter_list|)
 function_decl|;
@@ -844,7 +913,7 @@ name|VGLBitmap
 modifier|*
 name|object
 parameter_list|,
-name|byte
+name|u_long
 name|color
 parameter_list|)
 function_decl|;
