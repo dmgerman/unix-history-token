@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.2 1995/05/31 09:05:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.3 1995/05/31 10:17:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -656,14 +656,58 @@ block|,
 block|{
 literal|"Germany"
 block|,
-literal|"ftp.uni-duisburg.de"
+literal|"ftp.fb9dv.uni-duisburg.de"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.uni-duisburg.de/pub/unix/FreeBSD/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.fb9dv.uni-duisburg.de/pub/unix/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
-block|,		}
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Germany #2"
+block|,
+literal|"gil.physik.rwth-aachen.de"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+literal|"ftp=ftp://gil.physik.rwth-aachen.de/pub/FreeBSD/2.0.5-ALPHA"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Germany #3"
+block|,
+literal|"ftp.uni-paderborn.de"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+literal|"ftp=ftp://ftp.uni-paderborn.de/freebsd/2.0.5-ALPHA"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Hong Kong"
+block|,
+literal|"ftp.hk.super.net"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+literal|"ftp=ftp://ftp.hk.super.net/pub/FreeBSD/2.0.5-ALPHA"
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|,
 block|{
 literal|"Israel"
@@ -686,7 +730,7 @@ literal|"ftp.sra.co.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.sra.co.jp/pub/os/FreeBSD/distribution/2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.sra.co.jp/pub/os/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -752,11 +796,11 @@ block|,
 block|{
 literal|"Japan #6"
 block|,
-literal|"tutserver.tutcc.tut.ac.jp"
+literal|"ftp.tut.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://tutserver.tutcc.tut.ac.jp/FreeBSD/FreeBSD-2.0.5-ALPHA"
+literal|"ftp://ftp.tut.ac.jp/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
@@ -770,7 +814,21 @@ literal|"ftp.ee.uec.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.ee.uec.ac.jp/pub/os/FreeBSD.other/FreeBSD-2.0.5-ALPHA"
+literal|"ftp=ftp://ftp.ee.uec.ac.jp/pub/os/mirror/ftp.freebsd.org/2.0.5-ALPHA"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Japan #8"
+block|,
+literal|"ftp.tokyonet.ad.jp"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+literal|"ftp://ftp.tokyonet.ad.jp/pub/FreeBSD/2.0.5-ALPHA"
 block|,
 literal|0
 block|,
