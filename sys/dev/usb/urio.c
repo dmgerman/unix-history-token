@@ -828,6 +828,16 @@ argument_list|)
 operator|==
 name|USB_VENDOR_DIAMOND2
 operator|&&
+operator|(
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idProduct
+argument_list|)
+operator|==
+name|USB_PRODUCT_DIAMOND2_RIO600USB
+operator|||
 name|UGETW
 argument_list|(
 name|dd
@@ -836,6 +846,7 @@ name|idProduct
 argument_list|)
 operator|==
 name|USB_PRODUCT_DIAMOND2_RIO800USB
+operator|)
 operator|)
 operator|)
 condition|)
