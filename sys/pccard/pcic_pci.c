@@ -12,7 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -21,11 +39,13 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+end_if
 
 begin_include
 include|#
@@ -39,11 +59,27 @@ directive|include
 file|<pci/pcivar.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
+file|<dev/pci/pcireg.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -55,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|<pccard/i82365.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/cardinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/slot.h>
 end_include
 
 begin_include
@@ -73,6 +121,18 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pccard/pccardvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"card_if.h"
 end_include
 
 begin_define
