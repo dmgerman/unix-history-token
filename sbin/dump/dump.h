@@ -543,18 +543,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|set_operators
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|timeest
 name|__P
 argument_list|(
@@ -1041,17 +1029,6 @@ end_define
 
 begin_comment
 comment|/* group entry to notify */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIALUP
-value|"ttyd"
-end_define
-
-begin_comment
-comment|/* prefix for dialups */
 end_comment
 
 begin_decl_stmt
