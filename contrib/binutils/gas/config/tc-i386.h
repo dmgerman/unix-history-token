@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright (C) 1989, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 2001    Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -615,6 +615,84 @@ end_endif
 begin_comment
 comment|/* ! BFD_ASSEMBLER */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LEX_AT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TC_PARSE_CONS_EXPRESSION
+parameter_list|(
+name|EXP
+parameter_list|,
+name|NBYTES
+parameter_list|)
+value|x86_cons (EXP, NBYTES)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|x86_cons
+name|PARAMS
+argument_list|(
+operator|(
+name|expressionS
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TC_CONS_FIX_NEW
+parameter_list|(
+name|FRAG
+parameter_list|,
+name|OFF
+parameter_list|,
+name|LEN
+parameter_list|,
+name|EXP
+parameter_list|)
+value|x86_cons_fix_new(FRAG, OFF, LEN, EXP)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|x86_cons_fix_new
+name|PARAMS
+argument_list|(
+operator|(
+name|fragS
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|,
+name|unsigned
+name|int
+operator|,
+name|expressionS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
