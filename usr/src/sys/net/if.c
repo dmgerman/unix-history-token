@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -276,6 +276,9 @@ decl_stmt|,
 name|unitlen
 decl_stmt|,
 name|masklen
+decl_stmt|,
+name|ether_output
+argument_list|()
 decl_stmt|;
 name|char
 name|workbuf
@@ -314,15 +317,11 @@ name|if_indexlim
 init|=
 literal|8
 decl_stmt|;
-extern|extern link_rtrequest(
-block|)
-operator|,
-function|ether_output
+specifier|extern
+name|void
+name|link_rtrequest
 parameter_list|()
-function|;
-end_function
-
-begin_while
+function_decl|;
 while|while
 condition|(
 operator|*
@@ -340,17 +339,11 @@ operator|->
 name|if_next
 operator|)
 expr_stmt|;
-end_while
-
-begin_expr_stmt
 operator|*
 name|p
 operator|=
 name|ifp
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ifp
 operator|->
 name|if_index
@@ -358,9 +351,6 @@ operator|=
 operator|++
 name|if_index
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ifnet_addrs
@@ -445,13 +435,7 @@ operator|=
 name|q
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	 * create a Link Level name for this device 	 */
-end_comment
-
-begin_expr_stmt
 name|unitname
 operator|=
 name|sprint_d
@@ -471,9 +455,6 @@ name|workbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|namelen
 operator|=
 name|strlen
@@ -483,9 +464,6 @@ operator|->
 name|if_name
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|unitlen
 operator|=
 name|strlen
@@ -493,9 +471,6 @@ argument_list|(
 name|unitname
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_define
 define|#
 directive|define
 name|_offsetof
@@ -505,9 +480,6 @@ parameter_list|,
 name|m
 parameter_list|)
 value|((int)((caddr_t)&((t *)0)->m))
-end_define
-
-begin_expr_stmt
 name|masklen
 operator|=
 name|_offsetof
@@ -525,9 +497,6 @@ name|unitlen
 operator|+
 name|namelen
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|socksize
 operator|=
 name|masklen
@@ -536,9 +505,6 @@ name|ifp
 operator|->
 name|if_addrlen
 expr_stmt|;
-end_expr_stmt
-
-begin_define
 define|#
 directive|define
 name|ROUNDUP
@@ -546,9 +512,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(1 + (((a) - 1) | (sizeof(long) - 1)))
-end_define
-
-begin_expr_stmt
 name|socksize
 operator|=
 name|ROUNDUP
@@ -556,9 +519,6 @@ argument_list|(
 name|socksize
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|socksize
@@ -577,9 +537,6 @@ operator|*
 name|sdl
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|ifasize
 operator|=
 sizeof|sizeof
@@ -592,9 +549,6 @@ literal|2
 operator|*
 name|socksize
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ifa
@@ -800,13 +754,7 @@ operator|=
 literal|0xff
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* XXX -- Temporary fix before changing 10 ethernet drivers */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|ifp
@@ -820,10 +768,10 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-end_if
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Locate an interface based on a complete address.  */
 end_comment
 
@@ -832,7 +780,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-unit|struct
+name|struct
 name|ifaddr
 modifier|*
 name|ifa_ifwithaddr
@@ -1672,41 +1620,30 @@ begin_comment
 comment|/*  * Default action when installing a route with a Link Level gateway.  * Lookup an appropriate real ifa to point to.  * This should be moved to /sys/net/link.c eventually.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|link_rtrequest
-argument_list|(
-argument|cmd
-argument_list|,
-argument|rt
-argument_list|,
-argument|sa
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|rt
+parameter_list|,
+name|sa
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1816,7 +1753,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Mark an interface down and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
@@ -2700,6 +2637,66 @@ operator|->
 name|ifr_metric
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|MULTICAST
+case|case
+name|SIOCADDMULTI
+case|:
+case|case
+name|SIOCDELMULTI
+case|:
+if|if
+condition|(
+name|error
+operator|=
+name|suser
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_acflag
+argument_list|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_ioctl
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+return|return
+operator|(
+call|(
+modifier|*
+name|ifp
+operator|->
+name|if_ioctl
+call|)
+argument_list|(
+name|ifp
+argument_list|,
+name|cmd
+argument_list|,
+name|data
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 default|default:
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.h	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -110,6 +110,10 @@ name|int
 name|if_pcount
 decl_stmt|;
 comment|/* number of promiscuous listeners */
+name|caddr_t
+name|if_bpf
+decl_stmt|;
+comment|/* packet filter structure */
 name|u_short
 name|if_index
 decl_stmt|;
@@ -130,10 +134,6 @@ struct|struct
 name|if_data
 block|{
 comment|/* generic interface information */
-name|short
-name|ifi_mtu
-decl_stmt|;
-comment|/* maximum transmission unit */
 name|u_char
 name|ifi_type
 decl_stmt|;
@@ -146,56 +146,60 @@ name|u_char
 name|ifi_hdrlen
 decl_stmt|;
 comment|/* media header length */
-name|int
+name|u_long
+name|ifi_mtu
+decl_stmt|;
+comment|/* maximum transmission unit */
+name|u_long
 name|ifi_metric
 decl_stmt|;
 comment|/* routing metric (external only) */
-name|int
+name|u_long
 name|ifi_baudrate
 decl_stmt|;
 comment|/* linespeed */
 comment|/* volatile statistics */
-name|int
+name|u_long
 name|ifi_ipackets
 decl_stmt|;
 comment|/* packets received on interface */
-name|int
+name|u_long
 name|ifi_ierrors
 decl_stmt|;
 comment|/* input errors on interface */
-name|int
+name|u_long
 name|ifi_opackets
 decl_stmt|;
 comment|/* packets sent on interface */
-name|int
+name|u_long
 name|ifi_oerrors
 decl_stmt|;
 comment|/* output errors on interface */
-name|int
+name|u_long
 name|ifi_collisions
 decl_stmt|;
 comment|/* collisions on csma interfaces */
-name|int
+name|u_long
 name|ifi_ibytes
 decl_stmt|;
 comment|/* total number of octets received */
-name|int
+name|u_long
 name|ifi_obytes
 decl_stmt|;
 comment|/* total number of octets sent */
-name|int
+name|u_long
 name|ifi_imcasts
 decl_stmt|;
 comment|/* packets received via multicast */
-name|int
+name|u_long
 name|ifi_omcasts
 decl_stmt|;
 comment|/* packets sent via multicast */
-name|int
+name|u_long
 name|ifi_iqdrops
 decl_stmt|;
 comment|/* dropped on input, this interface */
-name|int
+name|u_long
 name|ifi_noproto
 decl_stmt|;
 comment|/* destined for unsupported protocol */
@@ -297,12 +301,9 @@ name|int
 argument_list|(
 argument|*if_reset
 argument_list|)
-comment|/* XXX; Unibus reset routine for vax */
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
 name|int
 operator|)
 argument_list|)
@@ -564,10 +565,6 @@ begin_comment
 comment|/* no address resolution protocol */
 end_comment
 
-begin_comment
-comment|/* next two not supported now, but reserved: */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -645,6 +642,17 @@ begin_comment
 comment|/* per link layer defined bit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_MULTICAST
+value|0x8000
+end_define
+
+begin_comment
+comment|/* supports multicast */
+end_comment
+
 begin_comment
 comment|/* flags set internally only: */
 end_comment
@@ -654,7 +662,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|IFF_SIMPLEX)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST)
 end_define
 
 begin_comment
@@ -778,7 +786,7 @@ modifier|*
 name|ifa_next
 decl_stmt|;
 comment|/* next address for interface */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|ifa_rtrequest
@@ -798,7 +806,17 @@ name|int
 name|ifa_metric
 decl_stmt|;
 comment|/* cost of going out this interface */
-comment|/*	struct	rtentry *ifa_rt;	/* XXXX for ROUTETOIF ????? */
+ifdef|#
+directive|ifdef
+name|notdef
+name|struct
+name|rtentry
+modifier|*
+name|ifa_rt
+decl_stmt|;
+comment|/* XXXX for ROUTETOIF ????? */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_lereg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_lereg.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -169,13 +169,12 @@ index|]
 decl_stmt|;
 comment|/* +0x0002 */
 name|u_long
-name|ler2_ladrf0
+name|ler2_ladrf
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* +0x0008 */
-name|u_long
-name|ler2_ladrf1
-decl_stmt|;
-comment|/* +0x000C */
 name|u_short
 name|ler2_rdra
 decl_stmt|;
