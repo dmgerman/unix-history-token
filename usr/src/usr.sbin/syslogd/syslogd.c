@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.12 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,12 +100,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -143,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -326,6 +326,17 @@ begin_comment
 comment|/* the "no priority" priority */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOG_MARK
+value|(LOG_NFACILITIES<< 3)
+end_define
+
+begin_comment
+comment|/* mark "facility" */
+end_comment
+
 begin_comment
 comment|/*  * Flags to logmsg().  */
 end_comment
@@ -409,6 +420,8 @@ name|u_char
 name|f_pmask
 index|[
 name|LOG_NFACILITIES
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* priority mask */
@@ -2744,6 +2757,16 @@ operator|)
 operator|>>
 literal|3
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|MARK
+condition|)
+name|fac
+operator|=
+name|LOG_NFACILITIES
+expr_stmt|;
 name|prilev
 operator|=
 name|pri
@@ -3892,8 +3915,6 @@ literal|0
 condition|)
 name|logmsg
 argument_list|(
-name|LOG_SYSLOG
-operator||
 name|LOG_INFO
 argument_list|,
 literal|"-- MARK --"
@@ -4420,7 +4441,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|LOG_NFACILITIES
 condition|;
 name|i
@@ -4697,7 +4718,7 @@ name|LOG_AUTH
 block|,
 literal|"mark"
 block|,
-name|LOG_SYSLOG
+name|LOG_MARK
 block|,
 literal|"syslog"
 block|,
@@ -4834,7 +4855,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
+operator|<=
 name|LOG_NFACILITIES
 condition|;
 name|i
