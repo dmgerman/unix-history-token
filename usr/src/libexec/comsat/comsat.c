@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.13 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -301,7 +307,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"/usr/spool/mail"
+name|_PATH_MAIL
 argument_list|)
 condition|)
 block|{
@@ -309,7 +315,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chdir: /usr/spool/mail"
+literal|"chdir: %s: %m"
+argument_list|,
+name|_PATH_MAIL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -325,7 +333,7 @@ name|uf
 operator|=
 name|open
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -340,7 +348,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|".main: /etc/utmp: %m"
+literal|".main: %s: %m"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 operator|(
