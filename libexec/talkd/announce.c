@@ -521,6 +521,8 @@ argument_list|,
 name|localclock
 operator|->
 name|tm_mon
+operator|+
+literal|1
 argument_list|,
 name|localclock
 operator|->
