@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	1.1	86/01/12	*/
-end_comment
-
-begin_comment
-comment|/*	srt0.c	4.8	81/04/03	*/
-end_comment
-
-begin_comment
-comment|/*  Tahoe version.	82/11/09	*/
+comment|/*	srt0.c	1.2	86/07/13	*/
 end_comment
 
 begin_include
@@ -31,9 +23,6 @@ begin_expr_stmt
 operator|.
 name|globl
 name|_end
-operator|.
-name|globl
-name|_edata
 operator|.
 name|globl
 name|_main
@@ -74,42 +63,8 @@ end_for
 begin_case
 case|case
 name|movl
-name|$
-argument_list|(
-name|RELOC
-argument_list|)
+name|$RELOC
 operator|,
-name|sp
-name|movl
-name|$RELOC
-decl_stmt|,
-name|r0
-name|subl2
-name|aedata
-decl_stmt|,
-name|r0
-name|shar
-name|$2
-decl_stmt|,
-name|r0
-decl_stmt|,
-name|r0
-name|clrl
-name|r1
-comment|/* used to clear the memory */
-name|clr
-range|:
-name|pushl
-name|r1
-name|decl
-name|r0
-comment|/* decrement counter */
-name|jgeq
-name|clr
-comment|/* more to clear */
-name|movl
-name|$RELOC
-decl_stmt|,
 name|sp
 name|movl
 name|$0x800
@@ -126,14 +81,20 @@ name|aend
 decl_stmt|,
 name|r2
 comment|/* length */
-name|subl2
-name|$0x800
-decl_stmt|,
+name|addl2
 name|r2
-empty|#	movblk
-empty|# simple loop replaces movblk - until hardware people are ready
+decl_stmt|,
+name|r0
+name|addl2
+name|r2
+decl_stmt|,
+name|r1
 name|mvloop
 range|:
+name|decl
+name|r0
+name|decl
+name|r1
 name|movb
 argument_list|(
 name|r0
@@ -142,30 +103,14 @@ decl_stmt|,
 argument_list|(
 name|r1
 argument_list|)
-name|incl
-name|r0
-name|incl
-name|r1
 name|decl
 name|r2
-name|bneq
+name|bgeq
 name|mvloop
-operator|.
-name|globl
-name|goup
 name|mtpr
 name|$0
 decl_stmt|,
 name|$PACC
-name|jumphigh
-range|:
-operator|.
-name|set
-name|goup
-decl_stmt|,
-name|jumphigh
-decl|+0x800-
-name|RELOC
 name|jmp
 modifier|*
 name|abegin
@@ -205,7 +150,7 @@ name|long
 name|_end
 operator|-
 name|RELOC
-operator|+
+operator|-
 literal|0x800
 name|aedata
 operator|:
@@ -214,7 +159,7 @@ name|long
 name|_edata
 operator|-
 name|RELOC
-operator|+
+operator|-
 literal|0x800
 operator|.
 name|globl
