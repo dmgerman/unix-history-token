@@ -2756,6 +2756,24 @@ block|{
 case|case
 name|ISA
 case|:
+ifndef|#
+directive|ifndef
+name|PC98
+if|if
+condition|(
+name|elcr_found
+condition|)
+return|return
+operator|(
+name|elcr_read_trigger
+argument_list|(
+name|src_bus_irq
+argument_list|)
+operator|)
+return|;
+else|else
+endif|#
+directive|endif
 return|return
 operator|(
 name|INTR_TRIGGER_EDGE
@@ -2785,6 +2803,15 @@ operator|(
 literal|"Invalid EISA IRQ %d"
 operator|,
 name|src_bus_irq
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|elcr_found
+argument_list|,
+operator|(
+literal|"Missing ELCR"
 operator|)
 argument_list|)
 expr_stmt|;

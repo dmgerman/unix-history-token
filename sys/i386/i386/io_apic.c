@@ -1803,7 +1803,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * EISA interrupts always use active high polarity, so don't allow 	 * them to be set to active low. 	 * 	 * XXX: Should we write to the ELCR if the trigger mode changes for 	 * an EISA IRQ? 	 */
+comment|/* 	 * EISA interrupts always use active high polarity, so don't allow 	 * them to be set to active low. 	 * 	 * XXX: Should we write to the ELCR if the trigger mode changes for 	 * an EISA IRQ or an ISA IRQ with the ELCR present? 	 */
 if|if
 condition|(
 name|intpin
