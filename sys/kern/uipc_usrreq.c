@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)uipc_usrreq.c	8.3 (Berkeley) 1/4/94  *	$Id: uipc_usrreq.c,v 1.14 1996/03/11 02:17:11 hsu Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)uipc_usrreq.c	8.3 (Berkeley) 1/4/94  *	$Id: uipc_usrreq.c,v 1.15 1996/03/11 15:12:47 davidg Exp $  */
 end_comment
 
 begin_include
@@ -3078,6 +3078,7 @@ decl_stmt|;
 name|int
 name|f
 decl_stmt|;
+comment|/* 	 * if the new FD's will not fit, then we free them all 	 */
 if|if
 condition|(
 operator|!
@@ -3126,6 +3127,7 @@ name|EMSGSIZE
 operator|)
 return|;
 block|}
+comment|/* 	 * now change each pointer to an fd in the global table to  	 * an integer that is the index to the local fd table entry 	 * that we set up to point to the global one we are transferring. 	 * XXX this assumes a pointer and int are the same size...! 	 */
 for|for
 control|(
 name|i
@@ -3312,6 +3314,7 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
+comment|/* 	 * check that all the FDs passed in refer to legal OPEN files 	 * If not, reject the entire operation. 	 */
 name|rp
 operator|=
 operator|(
@@ -3376,6 +3379,7 @@ name|EBADF
 operator|)
 return|;
 block|}
+comment|/* 	 * Now replace the integer FDs with pointers to 	 * the associated global file table entry.. 	 * XXX this assumes a pointer and an int are the same size! 	 */
 name|rp
 operator|=
 operator|(
@@ -3504,6 +3508,7 @@ name|unp_defer
 operator|=
 literal|0
 expr_stmt|;
+comment|/*  	 * before going through all this, set all FDs to  	 * be NOT defered and NOT externally accessible 	 */
 for|for
 control|(
 name|fp
@@ -3558,6 +3563,7 @@ operator|.
 name|le_next
 control|)
 block|{
+comment|/* 			 * If the file is not open, skip it 			 */
 if|if
 condition|(
 name|fp
@@ -3567,6 +3573,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/* 			 * If we already marked it as 'defer'  in a 			 * previous pass, then try process it this time 			 * and un-mark it 			 */
 if|if
 condition|(
 name|fp
@@ -3589,6 +3596,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 				 * if it's not defered, then check if it's 				 * already marked.. if so skip it 				 */
 if|if
 condition|(
 name|fp
@@ -3598,6 +3606,7 @@ operator|&
 name|FMARK
 condition|)
 continue|continue;
+comment|/*  				 * If all references are from messages 				 * in transit, then skip it. it's not  				 * externally accessible. 				 */
 if|if
 condition|(
 name|fp
@@ -3609,6 +3618,7 @@ operator|->
 name|f_msgcount
 condition|)
 continue|continue;
+comment|/*  				 * If it got this far then it must be 				 * externally accessible. 				 */
 name|fp
 operator|->
 name|f_flag
@@ -3616,6 +3626,7 @@ operator||=
 name|FMARK
 expr_stmt|;
 block|}
+comment|/* 			 * either it was defered, or it is externally  			 * accessible and not already marked so. 			 * Now check if it is possibly one of OUR sockets. 			 */
 if|if
 condition|(
 name|fp
@@ -3696,6 +3707,7 @@ goto|;
 block|}
 endif|#
 directive|endif
+comment|/* 			 * So, Ok, it's one of our sockets and it IS externally 			 * accessible (or was defered). Now we look 			 * to see if we hold any file descriptors in it's 			 * message buffers. Follow those links and mark them  			 * as accessible too. 			 */
 name|unp_scan
 argument_list|(
 name|so
@@ -3766,6 +3778,7 @@ name|f_list
 operator|.
 name|le_next
 expr_stmt|;
+comment|/*  		 * If it's not open, skip it 		 */
 if|if
 condition|(
 name|fp
@@ -3775,6 +3788,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+comment|/*  		 * If all refs are from msgs, and it's not marked accessible 		 * then it must be referenced from some unreachable cycle 		 * of (shut-down) FDs, so include it in our 		 * list of FDs to remove 		 */
 if|if
 condition|(
 name|fp
@@ -3811,6 +3825,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/*  	 * for each FD on our hit list, do the following two things 	 */
 for|for
 control|(
 name|i

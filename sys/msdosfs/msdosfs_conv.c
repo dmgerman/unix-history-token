@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.9 1996/04/05 18:59:06 ache Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.10 1996/09/19 18:20:43 nate Exp $ */
 end_comment
 
 begin_comment
@@ -367,7 +367,7 @@ operator|=
 literal|0
 init|;
 name|days
-operator|>
+operator|>=
 name|months
 index|[
 name|month
