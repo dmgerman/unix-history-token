@@ -3401,13 +3401,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-name|acd_eject
-argument_list|(
-name|cdp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|flags
