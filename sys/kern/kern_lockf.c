@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -79,13 +73,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/quota.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_decl_stmt
