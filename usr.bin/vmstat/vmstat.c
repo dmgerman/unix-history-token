@@ -5437,7 +5437,7 @@ name|stderr
 argument_list|,
 literal|"%s%s"
 argument_list|,
-literal|"usage: vmstat [-aimsz] [-c count] [-M core] [-N system] [-w wait]\n"
+literal|"usage: vmstat [-aimsz] [-c count] [-M core [-N system]] [-w wait]\n"
 argument_list|,
 literal|"              [-n devs] [disks]\n"
 argument_list|)
