@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.13 (Berkeley) %G%"
+literal|"@(#)inode.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,12 +65,9 @@ file|"fsck.h"
 end_include
 
 begin_decl_stmt
-name|struct
-name|bufarea
-modifier|*
-name|pbp
-init|=
-literal|0
+specifier|static
+name|ino_t
+name|startinum
 decl_stmt|;
 end_decl_stmt
 
@@ -1065,12 +1062,6 @@ block|{
 name|daddr_t
 name|iblk
 decl_stmt|;
-specifier|static
-name|ino_t
-name|startinum
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|inumber
@@ -1353,6 +1344,10 @@ end_macro
 
 begin_block
 block|{
+name|startinum
+operator|=
+literal|0
+expr_stmt|;
 name|nextino
 operator|=
 literal|0
