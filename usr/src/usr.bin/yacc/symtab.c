@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	5.1 (Berkeley) %G%"
+literal|"@(#)symtab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,6 +213,17 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|name
+operator|==
+literal|0
+condition|)
+name|no_space
+argument_list|()
+expr_stmt|;
 name|bp
 operator|->
 name|tag
@@ -406,8 +417,18 @@ operator|*
 sizeof|sizeof
 argument_list|(
 name|bucket
+operator|*
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|symbol_table
+operator|==
+literal|0
+condition|)
+name|no_space
+argument_list|()
 expr_stmt|;
 for|for
 control|(

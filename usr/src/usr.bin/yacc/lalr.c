@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lalr.c	5.1 (Berkeley) %G%"
+literal|"@(#)lalr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1942,6 +1942,13 @@ condition|;
 name|i
 operator|++
 control|)
+if|if
+condition|(
+name|includes
+index|[
+name|i
+index|]
+condition|)
 name|FREE
 argument_list|(
 name|includes
@@ -2386,6 +2393,9 @@ specifier|register
 name|shorts
 modifier|*
 name|sp
+decl_stmt|,
+modifier|*
+name|next
 decl_stmt|;
 specifier|register
 name|unsigned
@@ -2501,15 +2511,21 @@ name|sp
 condition|;
 name|sp
 operator|=
+name|next
+control|)
+block|{
+name|next
+operator|=
 name|sp
 operator|->
 name|next
-control|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+block|}
 name|FREE
 argument_list|(
 name|lookback

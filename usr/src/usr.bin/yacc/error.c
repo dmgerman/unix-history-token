@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)error.c	5.1 (Berkeley) %G%"
+literal|"@(#)error.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,9 +80,6 @@ end_macro
 
 begin_block
 block|{
-name|abort
-argument_list|()
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr

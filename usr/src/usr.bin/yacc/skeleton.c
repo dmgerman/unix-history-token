@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)skeleton.c	5.1 (Berkeley) %G%"
+literal|"@(#)skeleton.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,8 @@ name|body
 index|[]
 init|=
 block|{
+literal|"#define YYABORT goto yyabort"
+block|,
 literal|"#define YYACCEPT goto yyaccept"
 block|,
 literal|"#define YYERROR goto yyerrlab"
@@ -273,9 +275,21 @@ literal|"    }"
 block|,
 literal|"    if (yyerrflag) goto yyinrecovery;"
 block|,
+literal|"#ifdef lint"
+block|,
+literal|"    goto yynewerror;"
+block|,
+literal|"#endif"
+block|,
 literal|"yynewerror:"
 block|,
 literal|"    yyerror(\"syntax error\");"
+block|,
+literal|"#ifdef lint"
+block|,
+literal|"    goto yyerrlab;"
+block|,
+literal|"#endif"
 block|,
 literal|"yyerrlab:"
 block|,

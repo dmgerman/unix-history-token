@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.1 (Berkeley) %G%"
+literal|"@(#)output.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,9 +173,6 @@ expr_stmt|;
 name|output_stored_text
 argument_list|()
 expr_stmt|;
-name|output_yyconst
-argument_list|()
-expr_stmt|;
 name|output_rule_data
 argument_list|()
 expr_stmt|;
@@ -219,27 +216,6 @@ block|}
 end_block
 
 begin_macro
-name|output_yyconst
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|outline
-operator|+=
-literal|3
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|output_file
-argument_list|,
-literal|"#ifndef YYCONST\n#define YYCONST /* const */\n\ #endif\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
 name|output_rule_data
 argument_list|()
 end_macro
@@ -258,7 +234,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"YYCONST short yylhs[] = {%34d,"
+literal|"short yylhs[] = {%42d,"
 argument_list|,
 name|symbol_value
 index|[
@@ -341,7 +317,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"YYCONST short yylen[] = {%34d,"
+literal|"short yylen[] = {%42d,"
 argument_list|,
 literal|2
 argument_list|)
@@ -443,7 +419,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"YYCONST short yydefred[] = {%31d,"
+literal|"short yydefred[] = {%39d,"
 argument_list|,
 operator|(
 name|defred
@@ -1200,7 +1176,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"YYCONST short yydgoto[] = {%32d,"
+literal|"short yydgoto[] = {%40d,"
 argument_list|,
 name|k
 argument_list|)
@@ -2024,6 +2000,13 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|froms
+index|[
+name|i
+index|]
+condition|)
 name|FREE
 argument_list|(
 name|froms
@@ -2032,6 +2015,13 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tos
+index|[
+name|i
+index|]
+condition|)
 name|FREE
 argument_list|(
 name|tos
@@ -2748,7 +2738,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"YYCONST short yysindex[] = {%31d,"
+literal|"short yysindex[] = {%39d,"
 argument_list|,
 name|base
 index|[
@@ -2821,7 +2811,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"\n};\nYYCONST short yyrindex[] = {%31d,"
+literal|"\n};\nshort yyrindex[] = {%39d,"
 argument_list|,
 name|base
 index|[
@@ -2898,7 +2888,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"\n};\nYYCONST short yygindex[] = {%31d,"
+literal|"\n};\nshort yygindex[] = {%39d,"
 argument_list|,
 name|base
 index|[
@@ -3012,7 +3002,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"#define\tYYTABLESIZE\t\t%d\n"
+literal|"#define YYTABLESIZE %d\n"
 argument_list|,
 name|high
 argument_list|)
@@ -3021,7 +3011,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"YYCONST short yytable[] = {%32d,"
+literal|"short yytable[] = {%40d,"
 argument_list|,
 name|table
 index|[
@@ -3124,7 +3114,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"YYCONST short yycheck[] = {%32d,"
+literal|"short yycheck[] = {%40d,"
 argument_list|,
 name|check
 index|[
@@ -3867,7 +3857,11 @@ operator|*
 operator|)
 name|MALLOC
 argument_list|(
+operator|(
 name|max
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3947,7 +3941,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"#if YYDEBUG\nYYCONST char *yyname[] = {"
+literal|"#if YYDEBUG\nchar *yyname[] = {"
 argument_list|)
 expr_stmt|;
 name|j
@@ -4488,7 +4482,7 @@ name|fprintf
 argument_list|(
 name|output_file
 argument_list|,
-literal|"YYCONST char *yyrule[] = {\n"
+literal|"char *yyrule[] = {\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4791,6 +4785,10 @@ if|if
 condition|(
 operator|!
 name|unionized
+operator|&&
+name|ntags
+operator|==
+literal|0
 condition|)
 block|{
 name|outline
@@ -5197,6 +5195,9 @@ specifier|register
 name|core
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|next
 decl_stmt|;
 name|FREE
 argument_list|(
@@ -5213,15 +5214,21 @@ name|cp
 condition|;
 name|cp
 operator|=
+name|next
+control|)
+block|{
+name|next
+operator|=
 name|cp
 operator|->
 name|next
-control|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -5236,6 +5243,9 @@ specifier|register
 name|shifts
 modifier|*
 name|sp
+decl_stmt|,
+modifier|*
+name|next
 decl_stmt|;
 name|FREE
 argument_list|(
@@ -5252,15 +5262,21 @@ name|sp
 condition|;
 name|sp
 operator|=
+name|next
+control|)
+block|{
+name|next
+operator|=
 name|sp
 operator|->
 name|next
-control|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -5275,6 +5291,9 @@ specifier|register
 name|reductions
 modifier|*
 name|rp
+decl_stmt|,
+modifier|*
+name|next
 decl_stmt|;
 name|FREE
 argument_list|(
@@ -5291,15 +5310,21 @@ name|rp
 condition|;
 name|rp
 operator|=
+name|next
+control|)
+block|{
+name|next
+operator|=
 name|rp
 operator|->
 name|next
-control|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|rp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

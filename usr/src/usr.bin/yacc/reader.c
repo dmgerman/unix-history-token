@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reader.c	5.1 (Berkeley) %G%"
+literal|"@(#)reader.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1642,6 +1642,28 @@ operator|)
 operator|!=
 literal|'\n'
 condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'*'
+operator|&&
+name|cptr
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"* "
+argument_list|)
+expr_stmt|;
+else|else
 name|putc
 argument_list|(
 name|c
@@ -1649,6 +1671,7 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|f
@@ -2030,17 +2053,6 @@ argument_list|,
 literal|" YYSTYPE;\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dflag
-condition|)
-name|fprintf
-argument_list|(
-name|text_file
-argument_list|,
-literal|" YYSTYPE;\n"
-argument_list|)
-expr_stmt|;
 name|FREE
 argument_list|(
 name|u_line
@@ -2255,6 +2267,41 @@ operator|!=
 literal|'\n'
 condition|)
 block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'*'
+operator|&&
+name|cptr
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|text_file
+argument_list|,
+literal|"* "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dflag
+condition|)
+name|fprintf
+argument_list|(
+name|union_file
+argument_list|,
+literal|"* "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|putc
 argument_list|(
 name|c
@@ -2273,6 +2320,7 @@ argument_list|,
 name|union_file
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|fprintf
 argument_list|(
@@ -2347,6 +2395,9 @@ argument_list|,
 name|union_file
 argument_list|)
 expr_stmt|;
+operator|++
+name|cptr
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2356,8 +2407,8 @@ block|{
 name|c
 operator|=
 operator|*
-operator|++
 name|cptr
+operator|++
 expr_stmt|;
 name|putc
 argument_list|(
@@ -2383,10 +2434,8 @@ name|c
 operator|==
 literal|'*'
 operator|&&
+operator|*
 name|cptr
-index|[
-literal|1
-index|]
 operator|==
 literal|'/'
 condition|)
@@ -2409,9 +2458,8 @@ argument_list|,
 name|union_file
 argument_list|)
 expr_stmt|;
+operator|++
 name|cptr
-operator|+=
-literal|2
 expr_stmt|;
 name|FREE
 argument_list|(
@@ -6323,6 +6371,28 @@ operator|)
 operator|!=
 literal|'\n'
 condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'*'
+operator|&&
+name|cptr
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"* "
+argument_list|)
+expr_stmt|;
+else|else
 name|putc
 argument_list|(
 name|c
@@ -6330,6 +6400,7 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|f
@@ -6381,6 +6452,9 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+operator|++
+name|cptr
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -6390,8 +6464,8 @@ block|{
 name|c
 operator|=
 operator|*
-operator|++
 name|cptr
+operator|++
 expr_stmt|;
 name|putc
 argument_list|(
@@ -6406,10 +6480,8 @@ name|c
 operator|==
 literal|'*'
 operator|&&
+operator|*
 name|cptr
-index|[
-literal|1
-index|]
 operator|==
 literal|'/'
 condition|)
@@ -6421,9 +6493,8 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+operator|++
 name|cptr
-operator|+=
-literal|2
 expr_stmt|;
 name|FREE
 argument_list|(
