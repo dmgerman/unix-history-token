@@ -3282,28 +3282,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* crc.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|crc
-parameter_list|(
-name|int
-parameter_list|,
-name|unsigned
-name|long
-modifier|*
-parameter_list|,
-name|unsigned
-name|long
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* devices.c */
 end_comment
 
