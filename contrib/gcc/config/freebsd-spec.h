@@ -186,7 +186,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_LIB_SPEC
-value|"							\   %{!shared:								\     %{!pg: %{pthread:-lc_r} -lc}					\     %{pg:  %{pthread:-lc_r_p} -lc_p}					\   }"
+value|"							\   %{!shared:								\     %{!pg: %{pthread:-lpthread} -lc}					\     %{pg:  %{pthread:-lpthread_p} -lc_p}					\   }"
 end_define
 
 begin_else
