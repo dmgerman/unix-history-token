@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	5.6 (Berkeley) %G%"
+literal|"@(#)nfsd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1451,7 +1451,7 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"Nfssvc STREAM Failed"
 argument_list|)
