@@ -6082,6 +6082,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|__stdcall
 name|ndis_status
 function_decl|(
 modifier|*

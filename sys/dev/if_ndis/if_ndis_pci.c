@@ -865,14 +865,9 @@ goto|;
 block|}
 if|if
 condition|(
-name|rle
+name|sc
 operator|->
-name|rid
-operator|==
-name|PCIR_BAR
-argument_list|(
-literal|2
-argument_list|)
+name|ndis_res_mem
 condition|)
 block|{
 name|sc

@@ -2764,7 +2764,7 @@ define|#
 directive|define
 name|NDIS_LOADED
 value|htonl(0x42534F44)
-argument|int ndis_load_driver(img, arg) 	vm_offset_t		img; 	void			*arg; { 	__stdcall driver_entry	entry; 	image_optional_header	opt_hdr; 	image_import_descriptor imp_desc; 	ndis_unicode_string	dummystr;         ndis_miniport_block     *block; 	ndis_status		status; 	int			idx; 	uint32_t		*ptr; 	struct ndis_softc	*sc;  	sc = arg;
+argument|int ndis_load_driver(img, arg) 	vm_offset_t		img; 	void			*arg; { 	driver_entry		entry; 	image_optional_header	opt_hdr; 	image_import_descriptor imp_desc; 	ndis_unicode_string	dummystr;         ndis_miniport_block     *block; 	ndis_status		status; 	int			idx; 	uint32_t		*ptr; 	struct ndis_softc	*sc;  	sc = arg;
 comment|/* 	 * Only perform the relocation/linking phase once 	 * since the binary image may be shared among multiple 	 * device instances. 	 */
 argument|ptr = (uint32_t *)(img +
 literal|8
