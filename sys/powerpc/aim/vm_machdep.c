@@ -473,8 +473,6 @@ literal|0
 argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
-name|IO_NODELOCKED
-operator||
 name|IO_UNIT
 argument_list|,
 name|cred
