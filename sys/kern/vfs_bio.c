@@ -3327,24 +3327,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-operator|(
-name|bp
-operator|->
-name|b_xflags
-operator|&
-name|BX_BKGRDWRITE
-operator|)
-argument_list|,
-operator|(
-literal|"FFS background buffer should not get here %p"
-operator|,
-name|bp
-operator|)
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_flags
