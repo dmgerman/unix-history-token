@@ -2561,6 +2561,8 @@ condition|)
 block|{
 name|caddr_t
 name|va
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
