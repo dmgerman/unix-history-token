@@ -462,8 +462,7 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
-name|unsigned
-name|long
+name|size_t
 name|len
 decl_stmt|;
 block|{
