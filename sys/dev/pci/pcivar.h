@@ -934,11 +934,18 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_INVALID_IRQ
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_INTERRUPT_VALID
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) != 0)&& ((x) != 255))
+value|(((x) != 0)&& ((x) != PCI_INVALID_IRQ))
 end_define
 
 begin_comment
