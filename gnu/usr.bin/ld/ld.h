@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ld.h,v 1.2 1993/11/09 04:18:59 paul Exp $	*/
+comment|/*	$Id: ld.h,v 1.3 1993/11/18 20:52:34 jkh Exp $	*/
 end_comment
 
 begin_comment
@@ -962,7 +962,7 @@ comment|/* 	 * Nonzero means a definition of this global symbol has been found 	
 name|char
 name|so_defined
 decl_stmt|;
-comment|/* Size of symbol as determined by N_SIZE 'nlist's in object files */
+comment|/* Size of symbol as determined by N_SIZE symbols in object files */
 name|int
 name|size
 decl_stmt|;
@@ -1361,6 +1361,12 @@ decl_stmt|;
 name|char
 name|gotslot_claimed
 decl_stmt|;
+name|char
+name|rename
+decl_stmt|;
+name|int
+name|symbolnum
+decl_stmt|;
 block|}
 modifier|*
 name|symbols
@@ -1475,6 +1481,10 @@ decl_stmt|;
 comment|/* This entry is a shared object */
 name|char
 name|is_dynamic
+decl_stmt|;
+comment|/* 1 if this entry is not a major player anymore */
+name|char
+name|scrapped
 decl_stmt|;
 block|}
 struct|;
@@ -2471,7 +2481,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|rrs_add_shobj
 name|__P
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md.c,v 1.3 1993/11/06 19:15:31 pk Exp $  */
+comment|/*  * $Id: md.c,v 1.2 1993/11/09 04:19:33 paul Exp $  */
 end_comment
 
 begin_include
@@ -1086,6 +1086,44 @@ literal|0
 expr_stmt|;
 block|}
 end_block
+
+begin_function
+name|void
+name|md_set_breakpoint
+parameter_list|(
+name|where
+parameter_list|,
+name|savep
+parameter_list|)
+name|long
+name|where
+decl_stmt|;
+name|long
+modifier|*
+name|savep
+decl_stmt|;
+block|{
+operator|*
+name|savep
+operator|=
+operator|*
+operator|(
+name|long
+operator|*
+operator|)
+name|where
+expr_stmt|;
+operator|*
+operator|(
+name|long
+operator|*
+operator|)
+name|where
+operator|=
+name|BPT
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

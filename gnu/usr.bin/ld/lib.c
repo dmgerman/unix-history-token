@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.4 1993/11/05 12:43:11 pk Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.2 1993/11/09 04:19:00 paul Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -2298,6 +2298,28 @@ name|gotslot_offset
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|entry
+operator|->
+name|symbols
+index|[
+name|i
+index|]
+operator|.
+name|gotslot_claimed
+operator|=
+literal|0
+expr_stmt|;
+name|entry
+operator|->
+name|symbols
+index|[
+name|i
+index|]
+operator|.
+name|rename
+operator|=
+literal|0
 expr_stmt|;
 block|}
 comment|/* Read strings (text segment) */

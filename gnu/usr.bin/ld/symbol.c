@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: symbol.c,v 1.3 1993/11/01 16:26:19 pk Exp $		- symbol table routines  */
+comment|/*  * $Id: symbol.c,v 1.2 1993/11/09 04:19:04 paul Exp $		- symbol table routines  */
 end_comment
 
 begin_comment
@@ -478,7 +478,25 @@ literal|0
 expr_stmt|;
 name|bp
 operator|->
+name|symbolnum
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|rrs_symbolnum
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
 name|size
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|aux
 operator|=
 literal|0
 expr_stmt|;
