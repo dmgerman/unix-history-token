@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Routines for logging error messages or other informative messages.  *  * Log messages can easily contain the program name, a time stamp, system  * error messages, and arbitrary printf-style strings, and can be directed  * to stderr or a log file.  *  * Author: Stephen McKay  *  * NOTICE: This is free software.  I hope you get some use from this program.  * In return you should think about all the nice people who give away software.  * Maybe you should write some free software too.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -21,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -136,7 +146,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Log an error.  */
+comment|/*  * Log an error.  *  * A leading '*' in the message format means we want the system errno  * decoded and appended.  */
 end_comment
 
 begin_function
@@ -164,6 +174,14 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|int
+name|x
+init|=
+name|errno
+decl_stmt|;
+name|int
+name|want_errno
 decl_stmt|;
 if|if
 condition|(
@@ -244,6 +262,23 @@ name|tm_min
 argument_list|)
 expr_stmt|;
 block|}
+name|want_errno
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|fmt
+operator|==
+literal|'*'
+condition|)
+name|want_errno
+operator|++
+operator|,
+name|fmt
+operator|++
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -263,6 +298,22 @@ expr_stmt|;
 name|va_end
 argument_list|(
 name|ap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|want_errno
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|": %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|x
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
