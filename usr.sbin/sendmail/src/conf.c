@@ -3453,6 +3453,8 @@ define|#
 directive|define
 name|PROCTITLEPAD
 value|'\0'
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -3464,8 +3466,6 @@ define|#
 directive|define
 name|PROCTITLEPAD
 value|'\0'
-endif|#
-directive|endif
 endif|#
 directive|endif
 ifdef|#
