@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.1 (Berkeley) %G%"
+literal|"@(#)command.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1712,13 +1712,13 @@ argument_list|)
 condition|?
 name|name
 operator|-
-literal|'a'
+literal|'A'
 operator|+
 literal|10
 else|:
 name|name
 operator|-
-literal|'A'
+literal|'a'
 operator|+
 literal|10
 operator|)
