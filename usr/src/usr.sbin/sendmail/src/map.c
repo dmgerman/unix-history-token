@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.24 (Berkeley) %G%"
+literal|"@(#)map.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2259,6 +2259,25 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* try to make sure that at least the database header is on disk */
+if|if
+condition|(
+name|mode
+operator|==
+name|O_RDWR
+condition|)
+operator|(
+name|void
+operator|)
+name|db
+operator|->
+name|sync
+argument_list|(
+name|db
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|map
 operator|->
 name|map_db2
@@ -2578,6 +2597,25 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* try to make sure that at least the database header is on disk */
+if|if
+condition|(
+name|mode
+operator|==
+name|O_RDWR
+condition|)
+operator|(
+name|void
+operator|)
+name|db
+operator|->
+name|sync
+argument_list|(
+name|db
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|map
 operator|->
 name|map_db2
