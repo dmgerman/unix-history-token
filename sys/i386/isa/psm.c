@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -189,7 +195,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSM_ENABLE
+name|PSM_AUX_TEST
 value|0xa9
 end_define
 
@@ -1407,6 +1413,13 @@ name|PSM_OUTPUT_ACK
 operator|==
 name|PSM_OUTPUT_ACK
 condition|)
+block|{
+comment|/* XXX - Avoids some keyboard hangs during probe */
+name|DELAY
+argument_list|(
+literal|6
+argument_list|)
+expr_stmt|;
 name|inb
 argument_list|(
 name|ioport
@@ -1414,6 +1427,7 @@ operator|+
 name|PSM_DATA
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
