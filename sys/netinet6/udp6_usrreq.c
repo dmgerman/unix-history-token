@@ -2125,8 +2125,6 @@ argument_list|,
 operator|&
 name|udbinfo
 argument_list|,
-name|td
-argument_list|,
 literal|"udp6inp"
 argument_list|)
 expr_stmt|;

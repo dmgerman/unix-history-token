@@ -1493,8 +1493,6 @@ argument_list|,
 operator|&
 name|divcbinfo
 argument_list|,
-name|td
-argument_list|,
 literal|"divinp"
 argument_list|)
 expr_stmt|;

@@ -735,8 +735,6 @@ name|so
 parameter_list|,
 name|pcbinfo
 parameter_list|,
-name|td
-parameter_list|,
 name|type
 parameter_list|)
 name|struct
@@ -748,11 +746,6 @@ name|struct
 name|inpcbinfo
 modifier|*
 name|pcbinfo
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
 decl_stmt|;
 specifier|const
 name|char

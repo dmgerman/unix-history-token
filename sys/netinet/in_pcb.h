@@ -1370,10 +1370,6 @@ name|struct
 name|inpcbinfo
 modifier|*
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|,
 specifier|const
 name|char
 modifier|*
