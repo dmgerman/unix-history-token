@@ -2841,7 +2841,6 @@ continue|continue;
 if|if
 condition|(
 name|i
-operator|++
 operator|<
 literal|60000000
 condition|)
