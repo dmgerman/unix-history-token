@@ -1855,8 +1855,6 @@ name|sp
 argument_list|,
 name|PCIC_POWER
 argument_list|,
-name|PCIC_PCPWRE
-operator||
 name|PCIC_DISRST
 argument_list|)
 expr_stmt|;
