@@ -1045,7 +1045,7 @@ operator|)
 operator|*
 name|fp
 operator|+
-literal|16
+literal|12
 operator|)
 expr_stmt|;
 if|if
