@@ -6221,7 +6221,7 @@ operator|||
 name|sync
 operator|->
 name|ds_resync
-operator|!=
+operator|==
 operator|-
 literal|1
 operator|)
