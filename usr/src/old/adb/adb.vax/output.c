@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	4.4 %G%"
+literal|"@(#)output.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -955,13 +955,6 @@ literal|"%+.16e"
 argument_list|,
 operator|*
 name|rptr
-argument_list|,
-operator|*
-operator|(
-name|rptr
-operator|+
-literal|4
-operator|)
 argument_list|)
 expr_stmt|;
 name|prec
