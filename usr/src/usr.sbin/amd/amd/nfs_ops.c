@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfs_ops.c	5.6 (Berkeley) %G%"
+literal|"@(#)nfs_ops.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2366,6 +2366,32 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NFSMNT_BIODS */
+ifdef|#
+directive|ifdef
+name|NFSMNT_MAXGRPS
+if|if
+condition|(
+name|nfs_args
+operator|.
+name|maxgrouplist
+operator|=
+name|hasmntval
+argument_list|(
+operator|&
+name|mnt
+argument_list|,
+literal|"maxgroups"
+argument_list|)
+condition|)
+name|nfs_args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_MAXGRPS
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NFSMNT_MAXGRPS */
 ifdef|#
 directive|ifdef
 name|notdef
