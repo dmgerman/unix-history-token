@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_lookup.c	6.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ufs_lookup.c	6.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4563,19 +4563,6 @@ operator|->
 name|d_reclen
 control|)
 block|{
-if|if
-condition|(
-name|dp
-operator|->
-name|d_reclen
-operator|<=
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|error
 operator|=
 name|rdwri
@@ -4606,6 +4593,20 @@ name|error
 operator|||
 name|count
 operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* avoid infinite loops */
+if|if
+condition|(
+name|dp
+operator|->
+name|d_reclen
+operator|<=
 literal|0
 condition|)
 return|return
