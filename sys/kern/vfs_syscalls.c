@@ -2665,9 +2665,16 @@ name|ni_vp
 argument_list|)
 operator|)
 condition|)
+block|{
+name|vput
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|error
 goto|;
+block|}
 endif|#
 directive|endif
 name|FILEDESC_LOCK
@@ -2796,7 +2803,7 @@ argument_list|(
 operator|&
 name|nd
 argument_list|,
-literal|0
+name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
 return|return
