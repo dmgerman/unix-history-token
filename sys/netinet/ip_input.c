@@ -7954,6 +7954,16 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
+name|mcopy
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|mcopy
+operator|->
+name|m_len
+expr_stmt|;
 name|m_copydata
 argument_list|(
 name|m
