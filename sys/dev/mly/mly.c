@@ -2201,16 +2201,14 @@ comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-comment|/* lockfunc */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
-comment|/* lockarg */
+comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
@@ -2703,7 +2701,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* alignment,boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -2723,16 +2721,14 @@ comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-comment|/* lockfunc */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
-comment|/* lockarg */
+comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
@@ -2794,6 +2790,8 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -2814,9 +2812,16 @@ name|mly_sg_map_helper
 argument_list|,
 name|sc
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 return|return
 operator|(
 literal|0
@@ -2907,7 +2912,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-comment|/* alignment, boundary */
+comment|/* alignment,boundary */
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
@@ -2931,16 +2936,14 @@ comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-literal|0
+name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-comment|/* lockfunc */
-operator|&
-name|Giant
+name|NULL
 argument_list|,
-comment|/* lockarg */
+comment|/* lockfunc, lockarg */
 operator|&
 name|sc
 operator|->
@@ -3002,6 +3005,8 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -3026,9 +3031,16 @@ name|mly_mmbox_map_helper
 argument_list|,
 name|sc
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|bzero
 argument_list|(
 name|sc
@@ -7934,6 +7946,8 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -7960,9 +7974,16 @@ name|mly_alloc_commands_map
 argument_list|,
 name|sc
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 for|for
 control|(
 name|i
