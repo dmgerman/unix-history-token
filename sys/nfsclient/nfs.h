@@ -1459,7 +1459,6 @@ parameter_list|(
 name|struct
 name|vnode
 modifier|*
-name|vp
 parameter_list|,
 name|struct
 name|buf
