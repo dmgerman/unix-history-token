@@ -7050,6 +7050,10 @@ block|}
 case|case
 name|USB_GET_STRING_DESC
 case|:
+block|{
+name|int
+name|len
+decl_stmt|;
 name|si
 operator|=
 operator|(
@@ -7079,6 +7083,9 @@ operator|&
 name|si
 operator|->
 name|usd_desc
+argument_list|,
+operator|&
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -7091,6 +7098,7 @@ name|EINVAL
 operator|)
 return|;
 break|break;
+block|}
 case|case
 name|USB_DO_REQUEST
 case|:

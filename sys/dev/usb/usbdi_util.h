@@ -361,6 +361,10 @@ parameter_list|,
 name|usb_string_descriptor_t
 modifier|*
 name|sdesc
+parameter_list|,
+name|int
+modifier|*
+name|sizep
 parameter_list|)
 function_decl|;
 end_function_decl
