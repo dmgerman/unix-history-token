@@ -352,12 +352,9 @@ begin_comment
 comment|/* Define if have TFS filesystem */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_FS_TFS
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_FS_TFS */
+end_comment
 
 begin_comment
 comment|/* Define if have TMPFS filesystem */
@@ -529,12 +526,9 @@ begin_comment
 comment|/* Mount(2) type/name for TFS filesystem */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MOUNT_TYPE_TFS
-value|"tfs"
-end_define
+begin_comment
+comment|/* #undef MOUNT_TYPE_TFS */
+end_comment
 
 begin_comment
 comment|/* Mount(2) type/name for TMPFS filesystem */
@@ -710,12 +704,9 @@ begin_comment
 comment|/* Mount-table entry name for TFS filesystem */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MNTTAB_TYPE_TFS
-value|"tfs"
-end_define
+begin_comment
+comment|/* #undef MNTTAB_TYPE_TFS */
+end_comment
 
 begin_comment
 comment|/* Mount-table entry name for TMPFS filesystem */
@@ -2749,7 +2740,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"6.0.2s2"
+value|"6.0.3s1"
 end_define
 
 begin_comment
@@ -5933,7 +5924,7 @@ comment|/*  * Existence of external definitions.  */
 end_comment
 
 begin_comment
-comment|/* does sys_errlist[] exist? */
+comment|/* does extern definition for sys_errlist[] exist? */
 end_comment
 
 begin_define
@@ -5944,7 +5935,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does optarg exist? */
+comment|/* does extern definition for optarg exist? */
 end_comment
 
 begin_define
@@ -5955,7 +5946,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does clnt_spcreateerror() exist? */
+comment|/* does extern definition for clnt_spcreateerror() exist? */
 end_comment
 
 begin_define
@@ -5966,7 +5957,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does clnt_sperrno() exist? */
+comment|/* does extern definition for clnt_sperrno() exist? */
 end_comment
 
 begin_define
@@ -5977,7 +5968,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does free() exist? */
+comment|/* does extern definition for free() exist? */
 end_comment
 
 begin_define
@@ -5988,7 +5979,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does get_myaddress() exist? */
+comment|/* does extern definition for get_myaddress() exist? */
 end_comment
 
 begin_define
@@ -5999,7 +5990,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does getccent() (hpux) exist? */
+comment|/* does extern definition for getccent() (hpux) exist? */
 end_comment
 
 begin_comment
@@ -6007,7 +5998,7 @@ comment|/* #undef HAVE_EXTERN_GETCCENT */
 end_comment
 
 begin_comment
-comment|/* does getdomainname() exist? */
+comment|/* does extern definition for getdomainname() exist? */
 end_comment
 
 begin_define
@@ -6018,7 +6009,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does gethostname() exist? */
+comment|/* does extern definition for gethostname() exist? */
 end_comment
 
 begin_define
@@ -6029,7 +6020,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does getlogin() exist? */
+comment|/* does extern definition for getlogin() exist? */
 end_comment
 
 begin_define
@@ -6040,7 +6031,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does gettablesize() exist? */
+comment|/* does extern definition for gettablesize() exist? */
 end_comment
 
 begin_comment
@@ -6048,7 +6039,7 @@ comment|/* #undef HAVE_EXTERN_GETTABLESIZE */
 end_comment
 
 begin_comment
-comment|/* does getpagesize() exist? */
+comment|/* does extern definition for getpagesize() exist? */
 end_comment
 
 begin_define
@@ -6059,7 +6050,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does innetgr() exist? */
+comment|/* does extern definition for innetgr() exist? */
 end_comment
 
 begin_comment
@@ -6067,7 +6058,7 @@ comment|/* #undef HAVE_EXTERN_INNETGR */
 end_comment
 
 begin_comment
-comment|/* does mkstemp() exist? */
+comment|/* does extern definition for mkstemp() exist? */
 end_comment
 
 begin_define
@@ -6078,7 +6069,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does sbrk() exist? */
+comment|/* does extern definition for sbrk() exist? */
 end_comment
 
 begin_define
@@ -6089,7 +6080,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does seteuid() exist? */
+comment|/* does extern definition for seteuid() exist? */
 end_comment
 
 begin_define
@@ -6100,7 +6091,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does setitimer() exist? */
+comment|/* does extern definition for setitimer() exist? */
 end_comment
 
 begin_define
@@ -6111,7 +6102,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does strcasecmp() exist? */
+comment|/* does extern definition for strcasecmp() exist? */
 end_comment
 
 begin_define
@@ -6122,7 +6113,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does strdup() exist? */
+comment|/* does extern definition for strdup() exist? */
 end_comment
 
 begin_define
@@ -6133,7 +6124,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does strstr() exist? */
+comment|/* does extern definition for strstr() exist? */
 end_comment
 
 begin_define
@@ -6144,7 +6135,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does usleep() exist? */
+comment|/* does extern definition for usleep() exist? */
 end_comment
 
 begin_define
@@ -6155,7 +6146,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* does wait3() exist? */
+comment|/* does extern definition for wait3() exist? */
 end_comment
 
 begin_define
@@ -6166,7 +6157,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* does xdr_opaque_auth() exist? */
+comment|/* does extern definition for vsnprintf() exist? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXTERN_VSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* does extern definition for xdr_opaque_auth() exist? */
 end_comment
 
 begin_define
