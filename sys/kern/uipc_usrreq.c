@@ -159,9 +159,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|vm_zone
-modifier|*
+name|vm_zone_t
 name|unp_zone
 decl_stmt|;
 end_decl_stmt
@@ -6269,7 +6267,7 @@ name|file
 operator|*
 argument_list|)
 argument_list|,
-name|M_FILE
+name|M_TEMP
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -6499,7 +6497,7 @@ name|caddr_t
 operator|)
 name|extra_ref
 argument_list|,
-name|M_FILE
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 name|unp_gcing

@@ -486,9 +486,7 @@ name|syncache_head
 modifier|*
 name|hashbase
 decl_stmt|;
-name|struct
-name|vm_zone
-modifier|*
+name|vm_zone_t
 name|zone
 decl_stmt|;
 name|u_int

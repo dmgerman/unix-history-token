@@ -123,6 +123,12 @@ begin_comment
 comment|/* Machine-dependent proc substruct. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_comment
 comment|/*  * One structure allocated per session.  *  * List of locks  * (m)		locked by s_mtx mtx  * (ps)		locked by pgrpsess_lock sx  * (c)		const until freeing  */
 end_comment
@@ -1014,6 +1020,11 @@ argument_list|)
 name|p_children
 expr_stmt|;
 comment|/* (e) Pointer to list of children. */
+name|struct
+name|mtx
+name|p_mtx
+decl_stmt|;
+comment|/* (k) Lock for this struct. */
 comment|/* The following fields are all zeroed upon creation in fork. */
 define|#
 directive|define
@@ -1063,11 +1074,6 @@ modifier|*
 name|p_textvp
 decl_stmt|;
 comment|/* (b) Vnode of executable. */
-name|struct
-name|mtx
-name|p_mtx
-decl_stmt|;
-comment|/* (k) Lock for this struct. */
 name|char
 name|p_lock
 decl_stmt|;
@@ -2702,9 +2708,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|vm_zone
-modifier|*
+name|vm_zone_t
 name|proc_zone
 decl_stmt|;
 end_decl_stmt

@@ -61,6 +61,12 @@ directive|include
 file|<sys/acl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_comment
 comment|/*  * The vnode is the focus of all file activity in UNIX.  There is a  * unique vnode allocated for each active file, each current directory,  * each mounted-on file, text file, and the root.  */
 end_comment
@@ -1319,9 +1325,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|vm_zone
-modifier|*
+name|vm_zone_t
 name|namei_zone
 decl_stmt|;
 end_decl_stmt

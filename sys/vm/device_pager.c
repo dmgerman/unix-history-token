@@ -234,13 +234,17 @@ name|fakepg_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|vm_zone
-name|fakepg_zone_store
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static struct vm_zone fakepg_zone_store;
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -321,17 +325,16 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|fakepg_zone =&fakepg_zone_store; 	zinitna(fakepg_zone, NULL, "DP fakepg", sizeof(struct vm_page), 0, 0, 2);
+endif|#
+directive|endif
 name|fakepg_zone
 operator|=
-operator|&
-name|fakepg_zone_store
-expr_stmt|;
-name|zinitna
+name|zinit
 argument_list|(
-name|fakepg_zone
-argument_list|,
-name|NULL
-argument_list|,
 literal|"DP fakepg"
 argument_list|,
 sizeof|sizeof
@@ -344,7 +347,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|2
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

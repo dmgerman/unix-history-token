@@ -37,6 +37,12 @@ begin_comment
 comment|/* for IPSEC */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -692,9 +698,7 @@ decl_stmt|;
 name|u_short
 name|lasthi
 decl_stmt|;
-name|struct
-name|vm_zone
-modifier|*
+name|vm_zone_t
 name|ipi_zone
 decl_stmt|;
 comment|/* zone to allocate pcbs from */

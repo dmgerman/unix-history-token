@@ -315,9 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|vm_zone
-modifier|*
+name|vm_zone_t
 name|socket_zone
 decl_stmt|;
 end_decl_stmt

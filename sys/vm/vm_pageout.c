@@ -2535,6 +2535,9 @@ comment|/* 	 * Do whatever cleanup that the pmap code can. 	 */
 name|pmap_collect
 argument_list|()
 expr_stmt|;
+name|uma_reclaim
+argument_list|()
+expr_stmt|;
 name|addl_page_shortage_init
 operator|=
 name|vm_pageout_deficit

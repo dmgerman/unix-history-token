@@ -69,6 +69,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|void
+modifier|*
+name|pv_allocf
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|,
+name|int
+name|bytes
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|flags
+parameter_list|,
+name|int
+name|wait
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|pv_entry_t
 name|pv_alloc
 parameter_list|(

@@ -153,6 +153,12 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -162,18 +168,6 @@ argument_list|,
 literal|"file desc"
 argument_list|,
 literal|"Open file descriptor table"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_FILE
-argument_list|,
-literal|"file"
-argument_list|,
-literal|"Open file structure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -190,6 +184,12 @@ literal|"sigio structures"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|uma_zone_t
+name|file_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -5045,25 +5045,24 @@ name|filelist_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate a new file descriptor. 	 * If the process has file descriptor zero open, add to the list 	 * of open files at that point, otherwise put it at the front of 	 * the list of open files. 	 */
-name|MALLOC
+name|fp
+operator|=
+name|uma_zalloc
+argument_list|(
+name|file_zone
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|bzero
 argument_list|(
 name|fp
 argument_list|,
-expr|struct
-name|file
-operator|*
-argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|file
+operator|*
+name|fp
 argument_list|)
-argument_list|,
-name|M_FILE
-argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * wait until after malloc (which may have blocked) returns before 	 * allocating the slot, else a race might have shrunk it if we had 	 * allocated it before the malloc. 	 */
@@ -5113,11 +5112,11 @@ operator|&
 name|filelist_lock
 argument_list|)
 expr_stmt|;
-name|FREE
+name|uma_zfree
 argument_list|(
-name|fp
+name|file_zone
 argument_list|,
-name|M_FILE
+name|fp
 argument_list|)
 expr_stmt|;
 return|return
@@ -5339,11 +5338,11 @@ operator|->
 name|f_cred
 argument_list|)
 expr_stmt|;
-name|FREE
+name|uma_zfree
 argument_list|(
-name|fp
+name|file_zone
 argument_list|,
-name|M_FILE
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
@@ -9578,6 +9577,31 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
+name|file_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"Files"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|file
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|sx_init
 argument_list|(
 operator|&

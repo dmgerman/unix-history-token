@@ -49,224 +49,86 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_typedef
 typedef|typedef
-struct|struct
-name|vm_zone
-block|{
-name|struct
-name|mtx
-name|zmtx
-decl_stmt|;
-comment|/* lock for data structure */
-name|void
-modifier|*
-name|zitems
-decl_stmt|;
-comment|/* linked list of items */
-name|int
-name|zfreecnt
-decl_stmt|;
-comment|/* free entries */
-name|int
-name|zfreemin
-decl_stmt|;
-comment|/* minimum number of free entries */
-name|int
-name|znalloc
-decl_stmt|;
-comment|/* number of allocations */
-name|vm_offset_t
-name|zkva
-decl_stmt|;
-comment|/* Base kva of zone */
-name|int
-name|zpagecount
-decl_stmt|;
-comment|/* Total # of allocated pages */
-name|int
-name|zpagemax
-decl_stmt|;
-comment|/* Max address space */
-name|int
-name|zmax
-decl_stmt|;
-comment|/* Max number of entries allocated */
-name|int
-name|ztotal
-decl_stmt|;
-comment|/* Total entries allocated now */
-name|int
-name|zsize
-decl_stmt|;
-comment|/* size of each entry */
-name|int
-name|zalloc
-decl_stmt|;
-comment|/* hint for # of pages to alloc */
-name|int
-name|zflags
-decl_stmt|;
-comment|/* flags for zone */
-name|int
-name|zallocflag
-decl_stmt|;
-comment|/* flag for allocation */
-name|struct
-name|vm_object
-modifier|*
-name|zobj
-decl_stmt|;
-comment|/* object to hold zone */
-name|char
-modifier|*
-name|zname
-decl_stmt|;
-comment|/* name for diags */
-comment|/* NOTE: zent is protected by the subsystem lock, *not* by zmtx */
-name|SLIST_ENTRY
-argument_list|(
-argument|vm_zone
-argument_list|)
-name|zent
-expr_stmt|;
-comment|/* singly-linked list of zones */
-block|}
-typedef|*
+name|uma_zone_t
 name|vm_zone_t
 typedef|;
 end_typedef
 
-begin_function_decl
-name|void
-name|vm_zone_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_function_decl
-name|void
+begin_endif
+unit|static void		 vm_zone_init(void); static void		 vm_zone_init2(void);  static vm_zone_t	 zinit(char *name, int size, int nentries,                      int flags, int zalloc); int		 zinitna(vm_zone_t z, struct vm_object *obj, char *name,                      int size, int nentries, int flags, int zalloc); void		 zbootinit(vm_zone_t z, char *name, int size,                      void *item, int nitems); static void		 zdestroy(vm_zone_t z); static void		*zalloc(vm_zone_t z); static void		 zfree(vm_zone_t z, void *item);
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|vm_zone_init2
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+parameter_list|()
+value|uma_startup2()
+end_define
 
-begin_function_decl
-name|int
-name|zinitna
-parameter_list|(
-name|vm_zone_t
-name|z
-parameter_list|,
-name|struct
-name|vm_object
-modifier|*
-name|obj
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|size
-parameter_list|,
-name|int
-name|nentries
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|zalloc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_zone_t
+begin_define
+define|#
+directive|define
 name|zinit
 parameter_list|(
-name|char
-modifier|*
 name|name
 parameter_list|,
-name|int
 name|size
 parameter_list|,
-name|int
 name|nentries
 parameter_list|,
-name|int
 name|flags
 parameter_list|,
-name|int
 name|zalloc
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|uma_zcreate((name), (size), NULL, NULL, NULL, NULL, UMA_ALIGN_PTR, UMA_ZONE_NOFREE)
+end_define
 
-begin_function_decl
-name|void
-name|zbootinit
-parameter_list|(
-name|vm_zone_t
-name|z
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|size
-parameter_list|,
-name|void
-modifier|*
-name|item
-parameter_list|,
-name|int
-name|nitems
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|zdestroy
-parameter_list|(
-name|vm_zone_t
-name|z
-parameter_list|)
-function_decl|;
-end_function_decl
+parameter_list|()
+end_define
 
-begin_function_decl
-name|void
-modifier|*
+begin_define
+define|#
+directive|define
 name|zalloc
 parameter_list|(
-name|vm_zone_t
 name|z
 parameter_list|)
-function_decl|;
-end_function_decl
+value|uma_zalloc((z), M_WAITOK)
+end_define
 
-begin_function_decl
-name|void
+begin_define
+define|#
+directive|define
 name|zfree
 parameter_list|(
-name|vm_zone_t
 name|z
 parameter_list|,
-name|void
-modifier|*
 name|item
 parameter_list|)
-function_decl|;
-end_function_decl
+value|uma_zfree((z), (item))
+end_define
 
 begin_endif
 endif|#

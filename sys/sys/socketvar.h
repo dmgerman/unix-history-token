@@ -45,6 +45,12 @@ begin_comment
 comment|/* for struct selinfo */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel structure per socket.  * Contains send and receive buffer queues,  * handle on protocol and pointer to protocol  * private data and error information.  */
 end_comment
@@ -66,9 +72,7 @@ begin_struct
 struct|struct
 name|socket
 block|{
-name|struct
-name|vm_zone
-modifier|*
+name|vm_zone_t
 name|so_zone
 decl_stmt|;
 comment|/* zone we were allocated from */
@@ -980,9 +984,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|vm_zone
-modifier|*
+name|vm_zone_t
 name|socket_zone
 decl_stmt|;
 end_decl_stmt

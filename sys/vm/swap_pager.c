@@ -1105,8 +1105,6 @@ name|n2
 operator|=
 name|n
 expr_stmt|;
-do|do
-block|{
 name|swap_zone
 operator|=
 name|zinit
@@ -1126,11 +1124,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 if|if
 condition|(
+name|uma_zone_set_obj
+argument_list|(
 name|swap_zone
-operator|!=
+argument_list|,
 name|NULL
+argument_list|,
+name|n
+argument_list|)
 condition|)
 break|break;
 comment|/* 		 * if the allocation failed, try a zone two thirds the 		 * size of the previous attempt. 		 */

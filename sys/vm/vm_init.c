@@ -178,9 +178,6 @@ name|virtual_avail
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize other VM packages 	 */
-name|vm_zone_init
-argument_list|()
-expr_stmt|;
 name|vm_object_init
 argument_list|()
 expr_stmt|;

@@ -918,17 +918,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vm_map_destroy
-parameter_list|(
-name|struct
-name|vm_map
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vm_map_insert
 parameter_list|(

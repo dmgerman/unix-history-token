@@ -15,11 +15,24 @@ directive|define
 name|_SYS_MALLOC_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_define
 define|#
 directive|define
 name|splmem
 value|splhigh
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINALLOCSIZE
+value|UMA_SMALLEST_UNIT
 end_define
 
 begin_comment
@@ -212,140 +225,6 @@ end_expr_stmt
 begin_comment
 comment|/* for INET6 */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * Array of descriptors that describe the contents of each page  */
-end_comment
-
-begin_struct
-struct|struct
-name|kmemusage
-block|{
-name|short
-name|ku_indx
-decl_stmt|;
-comment|/* bucket index */
-union|union
-block|{
-name|u_short
-name|freecnt
-decl_stmt|;
-comment|/* for small allocations, free pieces in page */
-name|u_short
-name|pagecnt
-decl_stmt|;
-comment|/* for large allocations, pages alloced */
-block|}
-name|ku_un
-union|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|ku_freecnt
-value|ku_un.freecnt
-end_define
-
-begin_define
-define|#
-directive|define
-name|ku_pagecnt
-value|ku_un.pagecnt
-end_define
-
-begin_comment
-comment|/*  * Set of buckets for each size of memory block that is retained  */
-end_comment
-
-begin_struct
-struct|struct
-name|kmembuckets
-block|{
-name|caddr_t
-name|kb_next
-decl_stmt|;
-comment|/* list of free blocks */
-name|caddr_t
-name|kb_last
-decl_stmt|;
-comment|/* last free block */
-name|int64_t
-name|kb_calls
-decl_stmt|;
-comment|/* total calls to allocate this size */
-name|long
-name|kb_total
-decl_stmt|;
-comment|/* total number of blocks allocated */
-name|long
-name|kb_elmpercl
-decl_stmt|;
-comment|/* # of elements in this sized allocation */
-name|long
-name|kb_totalfree
-decl_stmt|;
-comment|/* # of free elements in this bucket */
-name|long
-name|kb_highwat
-decl_stmt|;
-comment|/* high water mark */
-name|long
-name|kb_couldfree
-decl_stmt|;
-comment|/* over high water mark and could free */
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MINALLOCSIZE
-value|(1<< MINBUCKET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUCKETINDX
-parameter_list|(
-name|size
-parameter_list|)
-define|\
-value|((size)<= (MINALLOCSIZE * 128) \ 		? (size)<= (MINALLOCSIZE * 8) \ 			? (size)<= (MINALLOCSIZE * 2) \ 				? (size)<= (MINALLOCSIZE * 1) \ 					? (MINBUCKET + 0) \ 					: (MINBUCKET + 1) \ 				: (size)<= (MINALLOCSIZE * 4) \ 					? (MINBUCKET + 2) \ 					: (MINBUCKET + 3) \ 			: (size)<= (MINALLOCSIZE* 32) \ 				? (size)<= (MINALLOCSIZE * 16) \ 					? (MINBUCKET + 4) \ 					: (MINBUCKET + 5) \ 				: (size)<= (MINALLOCSIZE * 64) \ 					? (MINBUCKET + 6) \ 					: (MINBUCKET + 7) \ 		: (size)<= (MINALLOCSIZE * 2048) \ 			? (size)<= (MINALLOCSIZE * 512) \ 				? (size)<= (MINALLOCSIZE * 256) \ 					? (MINBUCKET + 8) \ 					: (MINBUCKET + 9) \ 				: (size)<= (MINALLOCSIZE * 1024) \ 					? (MINBUCKET + 10) \ 					: (MINBUCKET + 11) \ 			: (size)<= (MINALLOCSIZE * 8192) \ 				? (size)<= (MINALLOCSIZE * 4096) \ 					? (MINBUCKET + 12) \ 					: (MINBUCKET + 13) \ 				: (size)<= (MINALLOCSIZE * 16384) \ 					? (MINBUCKET + 14) \ 					: (MINBUCKET + 15))
-end_define
-
-begin_comment
-comment|/*  * Turn virtual addresses into kmemusage pointers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|btokup
-parameter_list|(
-name|addr
-parameter_list|)
-value|(&kmemusage[((caddr_t)(addr) - kmembase)>> PAGE_SHIFT])
-end_define
 
 begin_comment
 comment|/*  * Deprecated macro versions of not-quite-malloc() and free().  */
