@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*************************************************************************  *  *	MOVE LIBRARY  *  *	This set of subroutines moves a cursor to a predefined  *	location, independent of the terminal type.  If the  *	terminal has an addressable cursor, it uses it.  If  *	not, it optimizes for tabs (currently) even if you don't  *      have them.  *  *	At all times the current address of the cursor must be maintained,  *	and that is available as structure cursor.  *  *	The following calls are allowed:  *		move(sp)	move to point sp.  *		up()		move up one line.  *		down()		move down one line.  *		bs()		move left one space (except column 0).  *		nd()		move right one space(no write).  *		clear()		clear screen.  *		home()		home.  *		ll()		move to lower left corner of screen.  *		cr()		carriage return (no line feed).  *		pr()		just like standard printf, but keeps track  *				of cursor position. (Uses pstring).  *		apr()		same as printf, but first argument is&point.  *				(Uses pstring).  *		pstring(s)	output the string of printing characters.  *				However, '\r' is interpreted to mean return  *				to column of origination AND do linefeed.  *				'\n' causes<cr><lf>.  *		putpad(str)	calls tputs to output character with proper  *					padding.  *		outch()		the output routine for a character used by  *					tputs. It just calls putchar.  *		pch(ch)		output character to screen and update  *					cursor address (must be a standard  *					printing character). WILL SCROLL.  *		pchar(ps,ch)	prints one character if it is on the  *					screen at the specified location;  *					otherwise, dumps it.(no wrap-around).  *  *		getcap()	initializes strings for later calls.  *		cap(string)	outputs the string designated in the termcap  *					data base. (Should not move the cursor.)  *		done()		returns the terminal to intial state and exits.  *  *		point(&p,x,y)	return point set to x,y.  *  *		baudrate(x)	returns the baudrate of the terminal.  *		delay(t)	causes an approximately constant delay  *					independent of baudrate.  *					Duration is ~ t/20 seconds.  *  ******************************************************************************/
+comment|/*************************************************************************  *  *	MOVE LIBRARY  *  *	This set of subroutines moves a cursor to a predefined  *	location, independent of the terminal type.  If the  *	terminal has an addressable cursor, it uses it.  If  *	not, it optimizes for tabs (currently) even if you don't  *      have them.  *  *	At all times the current address of the cursor must be maintained,  *	and that is available as structure cursor.  *  *	The following calls are allowed:  *		move(sp)	move to point sp.  *		up()		move up one line.  *		down()		move down one line.  *		bs()		move left one space (except column 0).  *		nd()		move right one space(no write).  *		clear()		clear screen.  *		home()		home.  *		ll()		move to lower left corner of screen.  *		cr()		carriage return (no line feed).  *		pr()		just like standard printf, but keeps track  *				of cursor position. (Uses pstring).  *		apr()		same as printf, but first argument is&point.  *				(Uses pstring).  *		pstring(s)	output the string of printing characters.  *				However, '\r' is interpreted to mean return  *				to column of origination AND do linefeed.  *				'\n' causes<cr><lf>.  *		putpad(str)	calls tputs to output character with proper  *					padding.  *		outch()		the output routine for a character used by  *					tputs. It just calls putchar.  *		pch(ch)		output character to screen and update  *					cursor address (must be a standard  *					printing character). WILL SCROLL.  *		pchar(ps,ch)	prints one character if it is on the  *					screen at the specified location;  *					otherwise, dumps it.(no wrap-around).  *  *		getcap()	initializes strings for later calls.  *		cap(string)	outputs the string designated in the termcap  *					data base. (Should not move the cursor.)  *		done()		returns the terminal to intial state and exits.  *  *		point(&p,x,y)	return point set to x,y.  *  *		baudrate()	returns the baudrate of the terminal.  *		delay(t)	causes an approximately constant delay  *					independent of baudrate.  *					Duration is ~ t/20 seconds.  *  ******************************************************************************/
 end_comment
 
 begin_if
@@ -2177,61 +2177,17 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
-name|baudrate
-argument_list|()
-end_macro
-
-begin_block
-block|{
-switch|switch
-condition|(
-name|orig
-operator|.
-name|sg_ospeed
-condition|)
-block|{
-case|case
-name|B300
-case|:
-return|return
-operator|(
-literal|300
-operator|)
-return|;
-case|case
-name|B1200
-case|:
-return|return
-operator|(
-literal|1200
-operator|)
-return|;
-case|case
-name|B4800
-case|:
-return|return
-operator|(
-literal|4800
-operator|)
-return|;
-case|case
-name|B9600
-case|:
-return|return
-operator|(
-literal|9600
-operator|)
-return|;
-default|default:
-return|return
-operator|(
+begin_if
+if|#
+directive|if
 literal|0
-operator|)
-return|;
-block|}
-block|}
-end_block
+end_if
+
+begin_endif
+unit|baudrate() {  	switch (orig.sg_ospeed){ 	case B300: 		return(300); 	case B1200: 		return(1200); 	case B4800: 		return(4800); 	case B9600: 		return(9600); 	default: 		return(0); 	} }
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|delay
