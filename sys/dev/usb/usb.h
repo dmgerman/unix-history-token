@@ -151,6 +151,31 @@ begin_comment
 comment|/* __FreeBSD__ */
 end_comment
 
+begin_comment
+comment|/* these three defines are used by usbd to autoload the usb kld */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_KLD
+value|"usb"
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_OHCI
+value|"ohci/usb"
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_UHCI
+value|"uhci/usb"
+end_define
+
 begin_define
 define|#
 directive|define
