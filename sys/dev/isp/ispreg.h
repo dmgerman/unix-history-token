@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispreg.h,v 1.7 1999/03/17 05:04:39 mjacob Exp $ */
+comment|/* $Id: ispreg.h,v 1.8 1999/03/25 22:52:45 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_03_25_99 */
+comment|/* release_5_11_99 */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|/*  * This defines types of access to various registers.  *  *  	R:		Rea
 end_comment
 
 begin_comment
-comment|/*  * Offsets for various register blocks.  *  * Sad but true, different architectures have different offsets.  */
+comment|/*  * Offsets for various register blocks.  *  * Sad but true, different architectures have different offsets.  *  * Don't be alarmed if none of this makes sense. The original register  * layout set some defines in a certain pattern. Everything else has been  * grafted on since. For example, the ISP1080 manual will state that DMA  * registers start at 0x80 from the base of the register address space.  * That's true, but for our purposes, we define DMA_REGS_OFF for the 1080  * to start at offset 0x60 because the DMA registers are all defined to  * be DMA_BLOCK+0x20 and so on. Clear?  */
 end_comment
 
 begin_define
@@ -959,7 +959,7 @@ name|ENABLE_INTS
 parameter_list|(
 name|isp
 parameter_list|)
-value|(isp->isp_type& ISP_HA_SCSI)?  \  ISP_WRITE(isp, BIU_ICR, BIU_ICR_ENABLE_RISC_INT | BIU_ICR_ENABLE_ALL_INTS) : \  ISP_WRITE(isp, BIU_ICR, BIU2100_ICR_ENA_RISC_INT | BIU2100_ICR_ENABLE_ALL_INTS)
+value|(IS_SCSI(isp))?  \  ISP_WRITE(isp, BIU_ICR, BIU_ICR_ENABLE_RISC_INT | BIU_ICR_ENABLE_ALL_INTS) : \  ISP_WRITE(isp, BIU_ICR, BIU2100_ICR_ENA_RISC_INT | BIU2100_ICR_ENABLE_ALL_INTS)
 end_define
 
 begin_define
@@ -969,7 +969,7 @@ name|INTS_ENABLED
 parameter_list|(
 name|isp
 parameter_list|)
-value|((isp->isp_type& ISP_HA_SCSI)?  \  (ISP_READ(isp, BIU_ICR)& (BIU_ICR_ENABLE_RISC_INT|BIU_ICR_ENABLE_ALL_INTS)) :\  (ISP_READ(isp, BIU_ICR)& \ 	(BIU2100_ICR_ENA_RISC_INT|BIU2100_ICR_ENABLE_ALL_INTS)))
+value|((IS_SCSI(isp))?  \  (ISP_READ(isp, BIU_ICR)& (BIU_ICR_ENABLE_RISC_INT|BIU_ICR_ENABLE_ALL_INTS)) :\  (ISP_READ(isp, BIU_ICR)& \ 	(BIU2100_ICR_ENA_RISC_INT|BIU2100_ICR_ENABLE_ALL_INTS)))
 end_define
 
 begin_define
@@ -4100,15 +4100,8 @@ comment|/*  W : BIOS enable */
 end_comment
 
 begin_comment
-comment|/*  * Qlogic 1XXX NVRAM is an array of 128 bytes.  *  * Some portion of the front of this is for general host adapter properties  * This is followed by an array of per-target parameters, and is tailed off  * with a checksum xor byte at offset 127. For non-byte entities data is  * stored in Little Endian order.  */
+comment|/*  * NVRAM Definitions (PCI cards only)  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_NVRAM_SIZE
-value|128
-end_define
 
 begin_define
 define|#
@@ -4125,6 +4118,17 @@ name|mask
 parameter_list|)
 define|\
 value|(((c)[(byte)]>> (shift))& (mask))
+end_define
+
+begin_comment
+comment|/*  * Qlogic 1020/1040 NVRAM is an array of 128 bytes.  *  * Some portion of the front of this is for general host adapter properties  * This is followed by an array of per-target parameters, and is tailed off  * with a checksum xor byte at offset 127. For non-byte entities data is  * stored in Little Endian order.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_NVRAM_SIZE
+value|128
 end_define
 
 begin_define
@@ -4608,6 +4612,480 @@ parameter_list|,
 name|t
 parameter_list|)
 value|ISPBSMX(c, _IxT(t, 3), 5, 0x01)
+end_define
+
+begin_comment
+comment|/*  * Qlogic 1080/1240 NVRAM is an array of 256 bytes.  *  * Some portion of the front of this is for general host adapter properties  * This is followed by an array of per-target parameters, and is tailed off  * with a checksum xor byte at offset 256. For non-byte entities data is  * stored in Little Endian order.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_SIZE
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_VERSION
+parameter_list|(
+name|c
+parameter_list|)
+value|ISP_NVRAM_VERSION(c)
+end_define
+
+begin_comment
+comment|/* Offset 5 */
+end_comment
+
+begin_comment
+comment|/* 	uint8_t bios_configuration_mode     :2; 	uint8_t bios_disable                :1; 	uint8_t selectable_scsi_boot_enable :1; 	uint8_t cd_rom_boot_enable          :1; 	uint8_t disable_loading_risc_code   :1; 	uint8_t enable_64bit_addressing     :1; 	uint8_t unused_7                    :1;  */
+end_comment
+
+begin_comment
+comment|/* Offsets 6, 7 */
+end_comment
+
+begin_comment
+comment|/*         uint8_t boot_lun_number    :5;         uint8_t scsi_bus_number    :1;         uint8_t unused_6           :1;         uint8_t unused_7           :1;         uint8_t boot_target_number :4;         uint8_t unused_12          :1;         uint8_t unused_13          :1;         uint8_t unused_14          :1;         uint8_t unused_15          :1;  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_HBA_ENABLE
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 16, 3, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BURST_ENABLE
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 16, 1, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_FIFO_THRESHOLD
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 16, 4, 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_AUTO_TERM_SUPPORT
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 17, 7, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS0_TERM_MODE
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 17, 0, 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS1_TERM_MODE
+parameter_list|(
+name|c
+parameter_list|)
+value|ISPBSMX(c, 17, 2, 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_ISP_PARAMETER
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|(((c)[18]) | ((c)[19]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_FAST_POST
+value|ISPBSMX(c, 20, 0, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_REPORT_LVD_TRANSITION
+value|ISPBSMX(c, 20, 1, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_BUS1_OFF
+value|112
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_INITIATOR_ID
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, ((b == 0)? 0 : ISP1080_BUS1_OFF) + 24, 0, 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS_RESET_DELAY
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 25]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS_RETRY_COUNT
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 26]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_BUS_RETRY_DELAY
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 27]
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_ASYNC_DATA_SETUP_TIME
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, ((b == 0)? 0 : ISP1080_BUS1_OFF) + 28, 0, 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_REQ_ACK_ACTIVE_NEGATION
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, ((b == 0)? 0 : ISP1080_BUS1_OFF) + 28, 4, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_DATA_LINE_ACTIVE_NEGATION
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, ((b == 0)? 0 : ISP1080_BUS1_OFF) + 28, 5, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_SELECTION_TIMEOUT
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(((c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 30]) | \ 	((c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 31]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_MAX_QUEUE_DEPTH
+parameter_list|(
+name|c
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(((c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 32]) | \ 	((c)[((b == 0)? 0 : ISP1080_BUS1_OFF) + 33]<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TARGOFF
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|((b == 0)? 40: (40 + ISP1080_BUS1_OFF))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TARGSIZE
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IxT8
+parameter_list|(
+name|tgt
+parameter_list|,
+name|tidx
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(ISP1080_NVRAM_TARGOFF((b)) + (ISP1080_NVRAM_TARGSIZE * (tgt)) + (tidx))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_RENEG
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 0, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_QFRZ
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 1, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_ARQ
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 2, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_TQING
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 3, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_SYNC
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 4, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_WIDE
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 5, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_PARITY
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 6, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_DISC
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 0, (b)), 7, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_EXEC_THROTTLE
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 1, (b)), 0, 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_SYNC_PERIOD
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 2, (b)), 0, 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_SYNC_OFFSET
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 3, (b)), 0, 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_DEVICE_ENABLE
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 3, (b)), 4, 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_NVRAM_TGT_LUN_DISABLE
+parameter_list|(
+name|c
+parameter_list|,
+name|t
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|ISPBSMX(c, _IxT8(t, 3, (b)), 5, 0x01)
 end_define
 
 begin_comment
