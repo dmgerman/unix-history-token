@@ -1370,7 +1370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cache_leaf_test()  *   *      Test whether this (directory) vnode's namei cache entry contains  *      subdirectories or not.  Used to determine whether the directory is  *      a leaf in the namei cache or not.  Note: the directory may still     *      contain files in the namei cache.  *  *      Returns 0 if the directory is a leaf, -1 if it isn't.  */
+comment|/*  * cache_leaf_test()  *  *      Test whether this (directory) vnode's namei cache entry contains  *      subdirectories or not.  Used to determine whether the directory is  *      a leaf in the namei cache or not.  Note: the directory may still  *      contain files in the namei cache.  *  *      Returns 0 if the directory is a leaf, -1 if it isn't.  */
 end_comment
 
 begin_function
