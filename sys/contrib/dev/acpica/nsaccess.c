@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 171 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 173 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -79,6 +79,11 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
+decl_stmt|;
+name|ACPI_STRING
+name|Val
+init|=
+name|NULL
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -215,9 +220,6 @@ operator|->
 name|Val
 condition|)
 block|{
-name|ACPI_STRING
-name|Val
-decl_stmt|;
 name|Status
 operator|=
 name|AcpiOsPredefinedOverride
@@ -1192,7 +1194,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Extract one ACPI name from the front of the pathname */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|SimpleName

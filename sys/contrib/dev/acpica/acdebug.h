@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -533,17 +533,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDbDecodeNode
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|AcpiDbDisplayResultObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
@@ -564,21 +553,6 @@ parameter_list|(
 name|char
 modifier|*
 name|DisplayCountArg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiDbDisplayInternalObject
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -621,6 +595,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|AcpiDbDisplayObjectType
+parameter_list|(
+name|char
+modifier|*
+name|ObjectArg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|AcpiDbDisplayArgumentObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
@@ -653,17 +638,6 @@ parameter_list|(
 name|void
 modifier|*
 name|Target
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|AcpiDbDecodeInternalObject
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl

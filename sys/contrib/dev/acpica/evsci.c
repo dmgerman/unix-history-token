@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 88 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 93 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -34,20 +34,26 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSciHandler  *  * PARAMETERS:  Context   - Calling Context  *  * RETURN:      Status code indicates whether interrupt was handled.  *  * DESCRIPTION: Interrupt handler that will figure out what function or  *              control method to call to deal with a SCI.  Installed  *              using BU interrupt support.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSciXruptHandler  *  * PARAMETERS:  Context   - Calling Context  *  * RETURN:      Status code indicates whether interrupt was handled.  *  * DESCRIPTION: Interrupt handler that will figure out what function or  *              control method to call to deal with a SCI.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|UINT32
 name|ACPI_SYSTEM_XFACE
-name|AcpiEvSciHandler
+name|AcpiEvSciXruptHandler
 parameter_list|(
 name|void
 modifier|*
 name|Context
 parameter_list|)
 block|{
+name|ACPI_GPE_XRUPT_INFO
+modifier|*
+name|GpeXruptList
+init|=
+name|Context
+decl_stmt|;
 name|UINT32
 name|InterruptHandled
 init|=
@@ -55,21 +61,70 @@ name|ACPI_INTERRUPT_NOT_HANDLED
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"EvSciHandler"
+literal|"EvSciXruptHandler"
 argument_list|)
 expr_stmt|;
 comment|/*      * We are guaranteed by the ACPI CA initialization/shutdown code that      * if this interrupt handler is installed, ACPI is enabled.      */
-comment|/*      * Fixed AcpiEvents:      * Check for and dispatch any Fixed AcpiEvents that have occurred      */
+comment|/*      * Fixed Events:      * Check for and dispatch any Fixed Events that have occurred      */
 name|InterruptHandled
 operator||=
 name|AcpiEvFixedEventDetect
 argument_list|()
 expr_stmt|;
+comment|/*      * General Purpose Events:      * Check for and dispatch any GPEs that have occurred      */
+name|InterruptHandled
+operator||=
+name|AcpiEvGpeDetect
+argument_list|(
+name|GpeXruptList
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|InterruptHandled
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeXruptHandler  *  * PARAMETERS:  Context   - Calling Context  *  * RETURN:      Status code indicates whether interrupt was handled.  *  * DESCRIPTION: Handler for GPE Block Device interrupts  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT32
+name|ACPI_SYSTEM_XFACE
+name|AcpiEvGpeXruptHandler
+parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+name|ACPI_GPE_XRUPT_INFO
+modifier|*
+name|GpeXruptList
+init|=
+name|Context
+decl_stmt|;
+name|UINT32
+name|InterruptHandled
+init|=
+name|ACPI_INTERRUPT_NOT_HANDLED
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"EvGpeXruptHandler"
+argument_list|)
+expr_stmt|;
+comment|/*      * We are guaranteed by the ACPI CA initialization/shutdown code that      * if this interrupt handler is installed, ACPI is enabled.      */
 comment|/*      * GPEs:      * Check for and dispatch any GPEs that have occurred      */
 name|InterruptHandled
 operator||=
 name|AcpiEvGpeDetect
-argument_list|()
+argument_list|(
+name|GpeXruptList
+argument_list|)
 expr_stmt|;
 name|return_VALUE
 argument_list|(
@@ -111,9 +166,9 @@ name|AcpiGbl_FADT
 operator|->
 name|SciInt
 argument_list|,
-name|AcpiEvSciHandler
+name|AcpiEvSciXruptHandler
 argument_list|,
-name|NULL
+name|AcpiGbl_GpeXruptListHead
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -155,7 +210,7 @@ name|AcpiGbl_FADT
 operator|->
 name|SciInt
 argument_list|,
-name|AcpiEvSciHandler
+name|AcpiEvSciXruptHandler
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

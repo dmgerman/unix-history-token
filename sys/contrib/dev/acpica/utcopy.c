@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 112 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 113 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1545,6 +1545,24 @@ name|Buffer
 operator|.
 name|Pointer
 operator|=
+name|NULL
+expr_stmt|;
+comment|/* Create an actual buffer only if length> 0 */
+if|if
+condition|(
+name|SourceDesc
+operator|->
+name|Buffer
+operator|.
+name|Length
+condition|)
+block|{
+name|DestDesc
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+operator|=
 name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|SourceDesc
@@ -1570,6 +1588,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
+comment|/* Copy the actual buffer data */
 name|ACPI_MEMCPY
 argument_list|(
 name|DestDesc
@@ -1591,6 +1610,7 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 break|break;
 case|case

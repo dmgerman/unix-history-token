@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_ACPI_TABLES
+name|NUM_ACPI_TABLE_TYPES
 condition|;
 name|i
 operator|++
@@ -86,7 +86,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|i
 index|]
@@ -106,14 +106,14 @@ name|ACPI_STRNCMP
 argument_list|(
 name|Signature
 argument_list|,
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|i
 index|]
 operator|.
 name|Signature
 argument_list|,
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|i
 index|]
@@ -149,7 +149,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|i
 index|]
@@ -295,7 +295,7 @@ name|ACPI_DB_INFO
 operator|,
 literal|"%s located at %p\n"
 operator|,
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|TableInfo
 operator|->
@@ -462,7 +462,7 @@ modifier|*
 name|TableInfo
 parameter_list|)
 block|{
-name|ACPI_TABLE_DESC
+name|ACPI_TABLE_LIST
 modifier|*
 name|ListHead
 decl_stmt|;
@@ -477,76 +477,7 @@ argument_list|,
 name|TableType
 argument_list|)
 expr_stmt|;
-comment|/*      * Install the table into the global data structure      */
-name|ListHead
-operator|=
-operator|&
-name|AcpiGbl_AcpiTables
-index|[
-name|TableType
-index|]
-expr_stmt|;
-name|TableDesc
-operator|=
-name|ListHead
-expr_stmt|;
-comment|/*      * Two major types of tables:  1) Only one instance is allowed.  This      * includes most ACPI tables such as the DSDT.  2) Multiple instances of      * the table are allowed.  This includes SSDT and PSDTs.      */
-if|if
-condition|(
-name|ACPI_IS_SINGLE_TABLE
-argument_list|(
-name|AcpiGbl_AcpiTableData
-index|[
-name|TableType
-index|]
-operator|.
-name|Flags
-argument_list|)
-condition|)
-block|{
-comment|/*          * Only one table allowed, and a table has alread been installed          *  at this location, so return an error.          */
-if|if
-condition|(
-name|ListHead
-operator|->
-name|Pointer
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_ALREADY_EXISTS
-argument_list|)
-expr_stmt|;
-block|}
-name|TableDesc
-operator|->
-name|Count
-operator|=
-literal|1
-expr_stmt|;
-name|TableDesc
-operator|->
-name|Prev
-operator|=
-name|NULL
-expr_stmt|;
-name|TableDesc
-operator|->
-name|Next
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*          * Multiple tables allowed for this table type, we must link          * the new table in to the list of tables of this type.          */
-if|if
-condition|(
-name|ListHead
-operator|->
-name|Pointer
-condition|)
-block|{
+comment|/* Allocate a descriptor for this table */
 name|TableDesc
 operator|=
 name|ACPI_MEM_CALLOCATE
@@ -569,61 +500,89 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Install the table into the global data structure      */
+name|ListHead
+operator|=
+operator|&
+name|AcpiGbl_TableLists
+index|[
+name|TableType
+index|]
+expr_stmt|;
+comment|/*      * Two major types of tables:  1) Only one instance is allowed.  This      * includes most ACPI tables such as the DSDT.  2) Multiple instances of      * the table are allowed.  This includes SSDT and PSDTs.      */
+if|if
+condition|(
+name|ACPI_IS_SINGLE_TABLE
+argument_list|(
+name|AcpiGbl_TableData
+index|[
+name|TableType
+index|]
+operator|.
+name|Flags
+argument_list|)
+condition|)
+block|{
+comment|/*          * Only one table allowed, and a table has alread been installed          *  at this location, so return an error.          */
+if|if
+condition|(
+name|ListHead
+operator|->
+name|Next
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_ALREADY_EXISTS
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/*      * Link the new table in to the list of tables of this type.      * Just insert at the start of the list, order unimportant.      *      * TableDesc->Prev is already NULL from calloc()      */
+name|TableDesc
+operator|->
+name|Next
+operator|=
+name|ListHead
+operator|->
+name|Next
+expr_stmt|;
+name|ListHead
+operator|->
+name|Next
+operator|=
+name|TableDesc
+expr_stmt|;
+if|if
+condition|(
+name|TableDesc
+operator|->
+name|Next
+condition|)
+block|{
+name|TableDesc
+operator|->
+name|Next
+operator|->
+name|Prev
+operator|=
+name|TableDesc
+expr_stmt|;
+block|}
 name|ListHead
 operator|->
 name|Count
 operator|++
 expr_stmt|;
-comment|/* Update the original previous */
-name|ListHead
-operator|->
-name|Prev
-operator|->
-name|Next
-operator|=
-name|TableDesc
-expr_stmt|;
-comment|/* Update new entry */
-name|TableDesc
-operator|->
-name|Prev
-operator|=
-name|ListHead
-operator|->
-name|Prev
-expr_stmt|;
-name|TableDesc
-operator|->
-name|Next
-operator|=
-name|ListHead
-expr_stmt|;
-comment|/* Update list head */
-name|ListHead
-operator|->
-name|Prev
-operator|=
-name|TableDesc
-expr_stmt|;
-block|}
-else|else
-block|{
-name|TableDesc
-operator|->
-name|Count
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-comment|/* Common initialization of the table descriptor */
+comment|/* Finish initialization of the table descriptor */
 name|TableDesc
 operator|->
 name|Type
 operator|=
-name|TableInfo
-operator|->
-name|Type
+operator|(
+name|UINT8
+operator|)
+name|TableType
 expr_stmt|;
 name|TableDesc
 operator|->
@@ -704,7 +663,7 @@ expr_stmt|;
 comment|/*      * Set the appropriate global pointer (if there is one) to point to the      * newly installed table      */
 if|if
 condition|(
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|TableType
 index|]
@@ -714,7 +673,7 @@ condition|)
 block|{
 operator|*
 operator|(
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|TableType
 index|]
@@ -751,12 +710,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbDeleteAcpiTables  *  * PARAMETERS:  None.  *  * RETURN:      None.  *  * DESCRIPTION: Delete all internal ACPI tables  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbDeleteAllTables  *  * PARAMETERS:  None.  *  * RETURN:      None.  *  * DESCRIPTION: Delete all internal ACPI tables  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiTbDeleteAcpiTables
+name|AcpiTbDeleteAllTables
 parameter_list|(
 name|void
 parameter_list|)
@@ -773,13 +732,13 @@ literal|0
 init|;
 name|Type
 operator|<
-name|NUM_ACPI_TABLES
+name|NUM_ACPI_TABLE_TYPES
 condition|;
 name|Type
 operator|++
 control|)
 block|{
-name|AcpiTbDeleteAcpiTable
+name|AcpiTbDeleteTablesByType
 argument_list|(
 name|Type
 argument_list|)
@@ -789,20 +748,30 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbDeleteAcpiTable  *  * PARAMETERS:  Type                - The table type to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Delete an internal ACPI table  *              Locks the ACPI table mutex  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbDeleteTablesByType  *  * PARAMETERS:  Type                - The table type to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Delete an internal ACPI table  *              Locks the ACPI table mutex  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiTbDeleteAcpiTable
+name|AcpiTbDeleteTablesByType
 parameter_list|(
 name|ACPI_TABLE_TYPE
 name|Type
 parameter_list|)
 block|{
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableDesc
+decl_stmt|;
+name|UINT32
+name|Count
+decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
-literal|"TbDeleteAcpiTable"
+literal|"TbDeleteTablesByType"
 argument_list|,
 name|Type
 argument_list|)
@@ -886,67 +855,23 @@ default|default:
 break|break;
 block|}
 comment|/* Free the table */
-name|AcpiTbFreeAcpiTablesOfType
-argument_list|(
-operator|&
-name|AcpiGbl_AcpiTables
-index|[
-name|Type
-index|]
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_TABLES
-argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbFreeAcpiTablesOfType  *  * PARAMETERS:  TableInfo           - A table info struct  *  * RETURN:      None.  *  * DESCRIPTION: Free the memory associated with an internal ACPI table  *              Table mutex should be locked.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiTbFreeAcpiTablesOfType
-parameter_list|(
-name|ACPI_TABLE_DESC
-modifier|*
-name|ListHead
-parameter_list|)
-block|{
-name|ACPI_TABLE_DESC
-modifier|*
-name|TableDesc
-decl_stmt|;
-name|UINT32
-name|Count
-decl_stmt|;
-name|UINT32
-name|i
-decl_stmt|;
-name|ACPI_FUNCTION_TRACE_PTR
-argument_list|(
-literal|"TbFreeAcpiTablesOfType"
-argument_list|,
-name|ListHead
-argument_list|)
-expr_stmt|;
 comment|/* Get the head of the list */
 name|TableDesc
 operator|=
-name|ListHead
+name|AcpiGbl_TableLists
+index|[
+name|Type
+index|]
+operator|.
+name|Next
 expr_stmt|;
 name|Count
 operator|=
-name|ListHead
-operator|->
+name|AcpiGbl_TableLists
+index|[
+name|Type
+index|]
+operator|.
 name|Count
 expr_stmt|;
 comment|/*      * Walk the entire list, deleting both the allocated tables      * and the table descriptors      */
@@ -972,6 +897,14 @@ name|TableDesc
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_TABLES
+argument_list|)
+expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
@@ -990,21 +923,24 @@ modifier|*
 name|TableDesc
 parameter_list|)
 block|{
+comment|/* Must have a valid table descriptor and pointer */
 if|if
 condition|(
+operator|(
 operator|!
 name|TableDesc
+operator|)
+operator|||
+operator|(
+operator|!
+name|TableDesc
+operator|->
+name|Pointer
+operator|)
 condition|)
 block|{
 return|return;
 block|}
-if|if
-condition|(
-name|TableDesc
-operator|->
-name|Pointer
-condition|)
-block|{
 comment|/* Valid table, determine type of memory allocation */
 switch|switch
 condition|(
@@ -1047,7 +983,6 @@ default|default:
 break|break;
 block|}
 block|}
-block|}
 end_function
 
 begin_comment
@@ -1070,7 +1005,7 @@ name|NextDesc
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiTbUninstallTable"
+literal|"TbUninstallTable"
 argument_list|,
 name|TableDesc
 argument_list|)
@@ -1087,7 +1022,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Unlink the descriptor */
+comment|/* Unlink the descriptor from the doubly linked list */
 if|if
 condition|(
 name|TableDesc
@@ -1099,6 +1034,23 @@ name|TableDesc
 operator|->
 name|Prev
 operator|->
+name|Next
+operator|=
+name|TableDesc
+operator|->
+name|Next
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Is first on list, update list head */
+name|AcpiGbl_TableLists
+index|[
+name|TableDesc
+operator|->
+name|Type
+index|]
+operator|.
 name|Next
 operator|=
 name|TableDesc
@@ -1130,48 +1082,6 @@ argument_list|(
 name|TableDesc
 argument_list|)
 expr_stmt|;
-comment|/* Free the table descriptor (Don't delete the list head, tho) */
-if|if
-condition|(
-operator|(
-name|TableDesc
-operator|->
-name|Prev
-operator|)
-operator|==
-operator|(
-name|TableDesc
-operator|->
-name|Next
-operator|)
-condition|)
-block|{
-name|NextDesc
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Clear the list head */
-name|TableDesc
-operator|->
-name|Pointer
-operator|=
-name|NULL
-expr_stmt|;
-name|TableDesc
-operator|->
-name|Length
-operator|=
-literal|0
-expr_stmt|;
-name|TableDesc
-operator|->
-name|Count
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Free the table descriptor */
 name|NextDesc
 operator|=
@@ -1184,7 +1094,7 @@ argument_list|(
 name|TableDesc
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Return pointer to the next descriptor */
 name|return_PTR
 argument_list|(
 name|NextDesc

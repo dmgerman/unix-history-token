@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsmem24 - Memory resource descriptors  *              $Revision: 22 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsmem24 - Memory resource descriptors  *              $Revision: 24 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -110,7 +110,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -161,7 +161,7 @@ operator|&
 literal|0x01
 expr_stmt|;
 comment|/*      * Get MinBaseAddress (Bytes 4-5)      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -184,7 +184,7 @@ operator|=
 name|Temp16
 expr_stmt|;
 comment|/*      * Get MaxBaseAddress (Bytes 6-7)      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -207,7 +207,7 @@ operator|=
 name|Temp16
 expr_stmt|;
 comment|/*      * Get Alignment (Bytes 8-9)      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -230,7 +230,7 @@ operator|=
 name|Temp16
 expr_stmt|;
 comment|/*      * Get RangeLength (Bytes 10-11)      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -331,7 +331,7 @@ name|Temp16
 operator|=
 literal|0x09
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -371,7 +371,7 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/*      * Set the Range minimum base address      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -390,7 +390,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/*      * Set the Range maximum base address      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -409,7 +409,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/*      * Set the base alignment      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -428,7 +428,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/*      * Set the range length      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -537,7 +537,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -589,7 +589,7 @@ operator|&
 literal|0x01
 expr_stmt|;
 comment|/*      * Get MinBaseAddress (Bytes 4-7)      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -608,7 +608,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Get MaxBaseAddress (Bytes 8-11)      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -627,7 +627,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Get Alignment (Bytes 12-15)      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -646,7 +646,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Get RangeLength (Bytes 16-19)      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -755,7 +755,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -806,7 +806,7 @@ operator|&
 literal|0x01
 expr_stmt|;
 comment|/*      * Get RangeBaseAddress (Bytes 4-7)      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -825,7 +825,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Get RangeLength (Bytes 8-11)      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -922,7 +922,7 @@ name|Temp16
 operator|=
 literal|0x11
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -962,7 +962,7 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/*      * Set the Range minimum base address      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -981,7 +981,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Set the Range maximum base address      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1000,7 +1000,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Set the base alignment      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1019,7 +1019,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Set the range length      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1116,7 +1116,7 @@ name|Temp16
 operator|=
 literal|0x09
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1156,7 +1156,7 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/*      * Set the Range base address      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1175,7 +1175,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Set the range length      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,

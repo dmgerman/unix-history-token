@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 60 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 modifier|*
-name|TableDesc
+name|ReturnTableDesc
 parameter_list|)
 block|{
 name|UINT32
@@ -61,7 +61,7 @@ name|i
 decl_stmt|;
 name|ACPI_TABLE_DESC
 modifier|*
-name|ListHead
+name|TableDesc
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
@@ -82,19 +82,23 @@ name|i
 operator|++
 control|)
 block|{
-name|ListHead
+name|TableDesc
 operator|=
-operator|&
-name|AcpiGbl_AcpiTables
+name|AcpiGbl_TableLists
 index|[
 name|i
 index|]
+operator|.
+name|Next
 expr_stmt|;
-do|do
+while|while
+condition|(
+name|TableDesc
+condition|)
 block|{
 if|if
 condition|(
-name|ListHead
+name|TableDesc
 operator|->
 name|TableId
 operator|==
@@ -102,9 +106,9 @@ name|TableId
 condition|)
 block|{
 operator|*
-name|TableDesc
+name|ReturnTableDesc
 operator|=
-name|ListHead
+name|TableDesc
 expr_stmt|;
 return|return
 operator|(
@@ -112,24 +116,13 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|ListHead
+name|TableDesc
 operator|=
-name|ListHead
+name|TableDesc
 operator|->
 name|Next
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|ListHead
-operator|!=
-operator|&
-name|AcpiGbl_AcpiTables
-index|[
-name|i
-index|]
-condition|)
-do|;
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -204,7 +197,7 @@ operator|)
 return|;
 block|}
 comment|/* Ensure that the signature is 4 ASCII characters */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|Signature

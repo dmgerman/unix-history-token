@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 12 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 27 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeEventInfo  *  * PARAMETERS:  GpeNumber       - Raw GPE number  *  * RETURN:      None.  *  * DESCRIPTION: Returns the EventInfo struct  *              associated with this GPE.  *  * TBD: this function will go away when full support of GPE block devices  *      is implemented!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeEventInfo  *  * PARAMETERS:  GpeDevice           - Device node.  NULL for GPE0/GPE1  *              GpeNumber           - Raw GPE number  *  * RETURN:      A GPE EventInfo struct.  NULL if not a valid GPE  *  * DESCRIPTION: Returns the EventInfo struct associated with this GPE.  *              Validates the GpeBlock and the GpeNumber  *  *              Should be called only when the GPE lists are semaphore locked  *              and not subject to change.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -48,31 +48,61 @@ name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|AcpiEvGetGpeEventInfo
 parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
 name|UINT32
 name|GpeNumber
 parameter_list|)
 block|{
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+decl_stmt|;
 name|ACPI_GPE_BLOCK_INFO
 modifier|*
 name|GpeBlock
 decl_stmt|;
-comment|/* Examine GPE Block 0 */
-name|GpeBlock
-operator|=
-name|AcpiGbl_GpeBlockListHead
+name|ACPI_NATIVE_UINT
+name|i
+decl_stmt|;
+name|ACPI_FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
+comment|/* A NULL GpeBlock means use the FADT-defined GPE block(s) */
 if|if
 condition|(
 operator|!
+name|GpeDevice
+condition|)
+block|{
+comment|/* Examine GPE Block 0 and 1 (These blocks are permanent) */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ACPI_MAX_GPE_BLOCKS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|GpeBlock
+operator|=
+name|AcpiGbl_GpeFadtBlocks
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
 name|GpeBlock
 condition|)
 block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -116,16 +146,37 @@ index|]
 operator|)
 return|;
 block|}
-comment|/* Examine GPE Block 1 */
-name|GpeBlock
+block|}
+block|}
+comment|/* The GpeNumber was not in the range of either FADT GPE block */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/*      * A Non-null GpeDevice means this is a GPE Block Device.      */
+name|ObjDesc
 operator|=
-name|GpeBlock
-operator|->
-name|Next
+name|AcpiNsGetAttachedObject
+argument_list|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|GpeDevice
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
+name|ObjDesc
+operator|||
+operator|!
+name|ObjDesc
+operator|->
+name|Device
+operator|.
 name|GpeBlock
 condition|)
 block|{
@@ -135,6 +186,14 @@ name|NULL
 operator|)
 return|;
 block|}
+name|GpeBlock
+operator|=
+name|ObjDesc
+operator|->
+name|Device
+operator|.
+name|GpeBlock
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -187,26 +246,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeDetect  *  * PARAMETERS:  None  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Detect if any GP events have occurred.  This function is  *              executed at interrupt level.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeDetect  *  * PARAMETERS:  GpeXruptList        - Interrupt block for this interrupt.  *                                    Can have multiple GPE blocks attached.  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Detect if any GP events have occurred.  This function is  *              executed at interrupt level.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
 name|AcpiEvGpeDetect
 parameter_list|(
-name|void
+name|ACPI_GPE_XRUPT_INFO
+modifier|*
+name|GpeXruptList
 parameter_list|)
 block|{
 name|UINT32
 name|IntStatus
 init|=
 name|ACPI_INTERRUPT_NOT_HANDLED
-decl_stmt|;
-name|UINT32
-name|i
-decl_stmt|;
-name|UINT32
-name|j
 decl_stmt|;
 name|UINT8
 name|EnabledStatusByte
@@ -228,15 +283,33 @@ name|ACPI_GPE_BLOCK_INFO
 modifier|*
 name|GpeBlock
 decl_stmt|;
+name|UINT32
+name|GpeNumber
+decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+name|UINT32
+name|j
+decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"EvGpeDetect"
 argument_list|)
 expr_stmt|;
 comment|/* Examine all GPE blocks attached to this interrupt level */
+name|AcpiOsAcquireLock
+argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|,
+name|ACPI_ISR
+argument_list|)
+expr_stmt|;
 name|GpeBlock
 operator|=
-name|AcpiGbl_GpeBlockListHead
+name|GpeXruptList
+operator|->
+name|GpeBlockListHead
 expr_stmt|;
 while|while
 condition|(
@@ -271,6 +344,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* Read the Status Register */
 name|Status
 operator|=
 name|AcpiHwLowLevelRead
@@ -284,8 +358,6 @@ operator|&
 name|GpeRegisterInfo
 operator|->
 name|StatusAddress
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|GpeRegisterInfo
@@ -305,12 +377,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
-name|ACPI_INTERRUPT_NOT_HANDLED
-operator|)
-return|;
+goto|goto
+name|UnlockAndExit
+goto|;
 block|}
+comment|/* Read the Enable Register */
 name|Status
 operator|=
 name|AcpiHwLowLevelRead
@@ -324,8 +395,6 @@ operator|&
 name|GpeRegisterInfo
 operator|->
 name|EnableAddress
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|GpeRegisterInfo
@@ -345,18 +414,44 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
-name|ACPI_INTERRUPT_NOT_HANDLED
-operator|)
-return|;
+goto|goto
+name|UnlockAndExit
+goto|;
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"GPE block at %8.8X%8.8X - Values: Enable %02X Status %02X\n"
+literal|"GPE pair: Status %8.8X%8.8X = %02X, Enable %8.8X%8.8X = %02X\n"
+operator|,
+name|ACPI_HIDWORD
+argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
+name|GpeRegisterInfo
+operator|->
+name|StatusAddress
+operator|.
+name|Address
+argument_list|)
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
+name|GpeRegisterInfo
+operator|->
+name|StatusAddress
+operator|.
+name|Address
+argument_list|)
+argument_list|)
+operator|,
+name|GpeRegisterInfo
+operator|->
+name|Status
 operator|,
 name|ACPI_HIDWORD
 argument_list|(
@@ -385,10 +480,6 @@ operator|,
 name|GpeRegisterInfo
 operator|->
 name|Enable
-operator|,
-name|GpeRegisterInfo
-operator|->
-name|Status
 operator|)
 argument_list|)
 expr_stmt|;
@@ -449,6 +540,16 @@ name|BitMask
 condition|)
 block|{
 comment|/*                      * Found an active GPE. Dispatch the event to a handler                      * or method.                      */
+name|GpeNumber
+operator|=
+operator|(
+name|i
+operator|*
+name|ACPI_GPE_REGISTER_WIDTH
+operator|)
+operator|+
+name|j
+expr_stmt|;
 name|IntStatus
 operator||=
 name|AcpiEvGpeDispatch
@@ -458,14 +559,19 @@ name|GpeBlock
 operator|->
 name|EventInfo
 index|[
-operator|(
-name|i
-operator|*
-name|ACPI_GPE_REGISTER_WIDTH
-operator|)
-operator|+
-name|j
+name|GpeNumber
 index|]
+argument_list|,
+name|GpeNumber
+operator|+
+name|GpeBlock
+operator|->
+name|RegisterInfo
+index|[
+name|GpeNumber
+index|]
+operator|.
+name|BaseGpeNumber
 argument_list|)
 expr_stmt|;
 block|}
@@ -478,6 +584,15 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
+name|UnlockAndExit
+label|:
+name|AcpiOsReleaseLock
+argument_list|(
+name|AcpiGbl_GpeLock
+argument_list|,
+name|ACPI_ISR
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|IntStatus
@@ -487,7 +602,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAsynchExecuteGpeMethod  *  * PARAMETERS:  GpeEventInfo - Info for this GPE  *  * RETURN:      None  *  * DESCRIPTION: Perform the actual execution of a GPE control method.  This  *              function is called from an invocation of AcpiOsQueueForExecution  *              (and therefore does NOT execute at interrupt level) so that  *              the control method itself is not executed in the context of  *              the SCI interrupt handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAsynchExecuteGpeMethod  *  * PARAMETERS:  Context (GpeEventInfo) - Info for this GPE  *  * RETURN:      None  *  * DESCRIPTION: Perform the actual execution of a GPE control method.  This  *              function is called from an invocation of AcpiOsQueueForExecution  *              (and therefore does NOT execute at interrupt level) so that  *              the control method itself is not executed in the context of  *              an interrupt handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -519,12 +634,14 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_GPE_EVENT_INFO
+name|LocalGpeEventInfo
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"EvAsynchExecuteGpeMethod"
 argument_list|)
 expr_stmt|;
-comment|/*      * Take a snapshot of the GPE info for this level - we copy the      * info to prevent a race condition with RemoveHandler.      */
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
@@ -543,6 +660,40 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
+comment|/* Must revalidate the GpeNumber/GpeBlock */
+if|if
+condition|(
+operator|!
+name|AcpiEvValidGpeEvent
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiUtReleaseMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+name|return_VOID
+expr_stmt|;
+block|}
+comment|/*      * Take a snapshot of the GPE info for this level - we copy the      * info to prevent a race condition with RemoveHandler/RemoveBlock.      */
+name|ACPI_MEMCPY
+argument_list|(
+operator|&
+name|LocalGpeEventInfo
+argument_list|,
+name|GpeEventInfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_GPE_EVENT_INFO
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtReleaseMutex
@@ -563,8 +714,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|GpeEventInfo
-operator|->
+name|LocalGpeEventInfo
+operator|.
 name|MethodNode
 condition|)
 block|{
@@ -573,8 +724,8 @@ name|Status
 operator|=
 name|AcpiNsEvaluateByHandle
 argument_list|(
-name|GpeEventInfo
-operator|->
+name|LocalGpeEventInfo
+operator|.
 name|MethodNode
 argument_list|,
 name|NULL
@@ -593,15 +744,15 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"%s while evaluating method [%4.4s] for GPE[%2.2X]\n"
+literal|"%s while evaluating method [%4.4s] for GPE[%2X]\n"
 operator|,
 name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
 operator|,
-name|GpeEventInfo
-operator|->
+name|LocalGpeEventInfo
+operator|.
 name|MethodNode
 operator|->
 name|Name
@@ -616,9 +767,9 @@ block|}
 block|}
 if|if
 condition|(
-name|GpeEventInfo
-operator|->
-name|Type
+name|LocalGpeEventInfo
+operator|.
+name|Flags
 operator|&
 name|ACPI_EVENT_LEVEL_TRIGGERED
 condition|)
@@ -628,7 +779,8 @@ name|Status
 operator|=
 name|AcpiHwClearGpe
 argument_list|(
-name|GpeEventInfo
+operator|&
+name|LocalGpeEventInfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -649,7 +801,8 @@ name|void
 operator|)
 name|AcpiHwEnableGpe
 argument_list|(
-name|GpeEventInfo
+operator|&
+name|LocalGpeEventInfo
 argument_list|)
 expr_stmt|;
 name|return_VOID
@@ -658,7 +811,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeDispatch  *  * PARAMETERS:  GpeEventInfo   - info for this GPE  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Dispatch a General Purpose Event to either a function (e.g. EC)  *              or method (e.g. _Lxx/_Exx) handler.  This function executes  *              at interrupt level.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeDispatch  *  * PARAMETERS:  GpeEventInfo    - info for this GPE  *              GpeNumber       - Number relative to the parent GPE block  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Dispatch a General Purpose Event to either a function (e.g. EC)  *              or method (e.g. _Lxx/_Exx) handler.  *  *              This function executes at interrupt level.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -668,14 +821,11 @@ parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
-parameter_list|)
-block|{
+parameter_list|,
 name|UINT32
 name|GpeNumber
-init|=
-literal|0
-decl_stmt|;
-comment|/* TBD: remove */
+parameter_list|)
+block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -689,7 +839,7 @@ if|if
 condition|(
 name|GpeEventInfo
 operator|->
-name|Type
+name|Flags
 operator|&
 name|ACPI_EVENT_EDGE_TRIGGERED
 condition|)
@@ -712,7 +862,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: Unable to clear GPE[%2.2X]\n"
+literal|"AcpiEvGpeDispatch: Unable to clear GPE[%2X]\n"
 operator|,
 name|GpeNumber
 operator|)
@@ -771,7 +921,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: Unable to disable GPE[%2.2X]\n"
+literal|"AcpiEvGpeDispatch: Unable to disable GPE[%2X]\n"
 operator|,
 name|GpeNumber
 operator|)
@@ -783,7 +933,7 @@ name|ACPI_INTERRUPT_NOT_HANDLED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Execute the method associated with the GPE.          */
+comment|/* Execute the method associated with the GPE. */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -802,7 +952,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: Unable to queue handler for GPE[%2.2X], event is disabled\n"
+literal|"AcpiEvGpeDispatch: Unable to queue handler for GPE[%2X], event is disabled\n"
 operator|,
 name|GpeNumber
 operator|)
@@ -816,7 +966,7 @@ comment|/* No handler or method to run! */
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: No handler or method for GPE[%2.2X], disabling event\n"
+literal|"AcpiEvGpeDispatch: No handler or method for GPE[%2X], disabling event\n"
 operator|,
 name|GpeNumber
 operator|)
@@ -841,7 +991,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: Unable to disable GPE[%2.2X]\n"
+literal|"AcpiEvGpeDispatch: Unable to disable GPE[%2X]\n"
 operator|,
 name|GpeNumber
 operator|)
@@ -854,12 +1004,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * It is now safe to clear level-triggered evnets.      */
+comment|/* It is now safe to clear level-triggered events. */
 if|if
 condition|(
 name|GpeEventInfo
 operator|->
-name|Type
+name|Flags
 operator|&
 name|ACPI_EVENT_LEVEL_TRIGGERED
 condition|)
@@ -882,7 +1032,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiEvGpeDispatch: Unable to clear GPE[%2.2X]\n"
+literal|"AcpiEvGpeDispatch: Unable to clear GPE[%2X]\n"
 operator|,
 name|GpeNumber
 operator|)

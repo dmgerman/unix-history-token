@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 142 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 149 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ directive|include
 file|"acnamesp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acevents.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -40,25 +46,19 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwClearAcpiStatus  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: Clears all fixed and general purpose status bits  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwClearAcpiStatus  *  * PARAMETERS:  Flags           - Lock the hardware or not  *  * RETURN:      none  *  * DESCRIPTION: Clears all fixed and general purpose status bits  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiHwClearAcpiStatus
 parameter_list|(
-name|void
+name|UINT32
+name|Flags
 parameter_list|)
 block|{
-name|ACPI_NATIVE_UINT
-name|i
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
-decl_stmt|;
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -88,6 +88,13 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_MTX_LOCK
+condition|)
+block|{
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
@@ -108,6 +115,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|Status
 operator|=
@@ -157,8 +165,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1bEvtBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -175,77 +181,22 @@ goto|;
 block|}
 block|}
 comment|/* Clear the GPE Bits in all GPE registers in all GPE blocks */
-name|GpeBlock
-operator|=
-name|AcpiGbl_GpeBlockListHead
-expr_stmt|;
-while|while
-condition|(
-name|GpeBlock
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|GpeBlock
-operator|->
-name|RegisterCount
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|Status
 operator|=
-name|AcpiHwLowLevelWrite
+name|AcpiEvWalkGpeList
 argument_list|(
-literal|8
-argument_list|,
-literal|0xFF
-argument_list|,
-operator|&
-name|GpeBlock
-operator|->
-name|RegisterInfo
-index|[
-name|i
-index|]
-operator|.
-name|StatusAddress
-argument_list|,
-operator|(
-name|UINT32
-operator|)
-literal|0
+name|AcpiHwClearGpeBlock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-block|}
-name|GpeBlock
-operator|=
-name|GpeBlock
-operator|->
-name|Next
-expr_stmt|;
-block|}
 name|UnlockAndExit
 label|:
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_MTX_LOCK
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -254,6 +205,7 @@ argument_list|(
 name|ACPI_MTX_HARDWARE
 argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -656,7 +608,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetRegister  *  * PARAMETERS:  RegisterId          - Index of ACPI Register to access  *              UseLock             - Lock the hardware  *  * RETURN:      Value is read from specified Register.  Value returned is  *              normalized to bit0 (is shifted all the way right)  *  * DESCRIPTION: ACPI BitRegister read function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetRegister  *  * PARAMETERS:  RegisterId      - ID of ACPI BitRegister to access  *              ReturnValue     - Value that was read from the register  *              Flags           - Lock the hardware or not  *  * RETURN:      Value is read from specified Register.  Value returned is  *              normalized to bit0 (is shifted all the way right)  *  * DESCRIPTION: ACPI BitRegister read function.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -805,9 +757,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"Read value %X\n"
+literal|"Read value %8.8X register %X\n"
 operator|,
 name|RegisterValue
+operator|,
+name|BitRegInfo
+operator|->
+name|ParentRegister
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1063,7 +1019,7 @@ name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|,
-name|ACPI_REGISTER_PM1_CONTROL
+name|RegisterId
 argument_list|,
 operator|(
 name|UINT16
@@ -1247,9 +1203,15 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"ACPI Register Write actual %X\n"
+literal|"Set bits: %8.8X actual %8.8X register %X\n"
+operator|,
+name|Value
 operator|,
 name|RegisterValue
+operator|,
+name|BitRegInfo
+operator|->
+name|ParentRegister
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1289,9 +1251,6 @@ name|UINT32
 name|Value2
 init|=
 literal|0
-decl_stmt|;
-name|UINT32
-name|BankOffset
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -1352,8 +1311,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1aEvtBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1368,6 +1325,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
+comment|/* PM1B is optional */
 name|Status
 operator|=
 name|AcpiHwLowLevelRead
@@ -1381,8 +1339,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1bEvtBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|Value1
@@ -1393,16 +1349,7 @@ break|break;
 case|case
 name|ACPI_REGISTER_PM1_ENABLE
 case|:
-comment|/* 16-bit access*/
-name|BankOffset
-operator|=
-name|ACPI_DIV_2
-argument_list|(
-name|AcpiGbl_FADT
-operator|->
-name|Pm1EvtLen
-argument_list|)
-expr_stmt|;
+comment|/* 16-bit access */
 name|Status
 operator|=
 name|AcpiHwLowLevelRead
@@ -1413,11 +1360,7 @@ operator|&
 name|Value1
 argument_list|,
 operator|&
-name|AcpiGbl_FADT
-operator|->
-name|XPm1aEvtBlk
-argument_list|,
-name|BankOffset
+name|AcpiGbl_XPm1aEnable
 argument_list|)
 expr_stmt|;
 if|if
@@ -1432,6 +1375,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
+comment|/* PM1B is optional */
 name|Status
 operator|=
 name|AcpiHwLowLevelRead
@@ -1442,11 +1386,7 @@ operator|&
 name|Value2
 argument_list|,
 operator|&
-name|AcpiGbl_FADT
-operator|->
-name|XPm1bEvtBlk
-argument_list|,
-name|BankOffset
+name|AcpiGbl_XPm1bEnable
 argument_list|)
 expr_stmt|;
 name|Value1
@@ -1471,8 +1411,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1aCntBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1500,8 +1438,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1bCntBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|Value1
@@ -1526,8 +1462,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm2CntBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1548,8 +1482,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPmTmrBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1648,9 +1580,6 @@ name|UINT32
 name|Value
 parameter_list|)
 block|{
-name|UINT32
-name|BankOffset
-decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -1709,8 +1638,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1aEvtBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1725,6 +1652,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
+comment|/* PM1B is optional */
 name|Status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -1737,8 +1665,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1bEvtBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1746,15 +1672,6 @@ case|case
 name|ACPI_REGISTER_PM1_ENABLE
 case|:
 comment|/* 16-bit access*/
-name|BankOffset
-operator|=
-name|ACPI_DIV_2
-argument_list|(
-name|AcpiGbl_FADT
-operator|->
-name|Pm1EvtLen
-argument_list|)
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -1764,11 +1681,7 @@ argument_list|,
 name|Value
 argument_list|,
 operator|&
-name|AcpiGbl_FADT
-operator|->
-name|XPm1aEvtBlk
-argument_list|,
-name|BankOffset
+name|AcpiGbl_XPm1aEnable
 argument_list|)
 expr_stmt|;
 if|if
@@ -1783,6 +1696,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
+comment|/* PM1B is optional */
 name|Status
 operator|=
 name|AcpiHwLowLevelWrite
@@ -1792,11 +1706,7 @@ argument_list|,
 name|Value
 argument_list|,
 operator|&
-name|AcpiGbl_FADT
-operator|->
-name|XPm1bEvtBlk
-argument_list|,
-name|BankOffset
+name|AcpiGbl_XPm1bEnable
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1816,8 +1726,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1aCntBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1844,8 +1752,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1bCntBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1865,8 +1771,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1aCntBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1886,8 +1790,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm1bCntBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1907,8 +1809,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPm2CntBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1928,8 +1828,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPmTmrBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1946,9 +1844,6 @@ name|AcpiGbl_FADT
 operator|->
 name|SmiCmd
 argument_list|,
-operator|(
-name|ACPI_INTEGER
-operator|)
 name|Value
 argument_list|,
 literal|8
@@ -1989,7 +1884,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowLevelRead  *  * PARAMETERS:  Register            - GAS register structure  *              Offset              - Offset from the base address in the GAS  *              Width               - 8, 16, or 32  *  * RETURN:      Value read  *  * DESCRIPTION: Read from either memory, IO, or PCI config space.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowLevelRead  *  * PARAMETERS:  Width               - 8, 16, or 32  *              Value               - Where the value is returned  *              Register            - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Read from either memory, IO, or PCI config space.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2006,17 +1901,8 @@ parameter_list|,
 name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Reg
-parameter_list|,
-name|UINT32
-name|Offset
 parameter_list|)
 block|{
-name|ACPI_PHYSICAL_ADDRESS
-name|MemAddress
-decl_stmt|;
-name|ACPI_IO_ADDRESS
-name|IoAddress
-decl_stmt|;
 name|ACPI_PCI_ID
 name|PciId
 decl_stmt|;
@@ -2072,27 +1958,19 @@ block|{
 case|case
 name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 case|:
-name|MemAddress
+name|Status
 operator|=
+name|AcpiOsReadMemory
+argument_list|(
 operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
 name|Reg
 operator|->
 name|Address
 argument_list|)
-operator|+
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
-name|Offset
-operator|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiOsReadMemory
-argument_list|(
-name|MemAddress
 argument_list|,
 name|Value
 argument_list|,
@@ -2103,30 +1981,19 @@ break|break;
 case|case
 name|ACPI_ADR_SPACE_SYSTEM_IO
 case|:
-name|IoAddress
+name|Status
 operator|=
-call|(
-name|ACPI_IO_ADDRESS
-call|)
+name|AcpiOsReadPort
 argument_list|(
+operator|(
+name|ACPI_IO_ADDRESS
+operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
 name|Reg
 operator|->
 name|Address
 argument_list|)
-operator|+
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
-name|Offset
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiOsReadPort
-argument_list|(
-name|IoAddress
 argument_list|,
 name|Value
 argument_list|,
@@ -2179,10 +2046,9 @@ argument_list|)
 expr_stmt|;
 name|PciRegister
 operator|=
-call|(
+operator|(
 name|UINT16
-call|)
-argument_list|(
+operator|)
 name|ACPI_PCI_REGISTER
 argument_list|(
 name|ACPI_GET_ADDRESS
@@ -2191,9 +2057,6 @@ name|Reg
 operator|->
 name|Address
 argument_list|)
-argument_list|)
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 name|Status
@@ -2225,12 +2088,53 @@ name|AddressSpaceId
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+return|return
+operator|(
 name|AE_BAD_PARAMETER
-expr_stmt|;
-break|break;
+operator|)
+return|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_IO
+operator|,
+literal|"Read:  %8.8X width %2d from %8.8X%8.8X (%s)\n"
+operator|,
+operator|*
+name|Value
+operator|,
+name|Width
+operator|,
+name|ACPI_HIDWORD
+argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
+name|Reg
+operator|->
+name|Address
+argument_list|)
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
+name|Reg
+operator|->
+name|Address
+argument_list|)
+argument_list|)
+operator|,
+name|AcpiUtGetRegionName
+argument_list|(
+name|Reg
+operator|->
+name|AddressSpaceId
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status
@@ -2240,7 +2144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowLevelWrite  *  * PARAMETERS:  Width               - 8, 16, or 32  *              Value               - To be written  *              Register            - GAS register structure  *              Offset              - Offset from the base address in the GAS  *  *  * RETURN:      Value read  *  * DESCRIPTION: Read from either memory, IO, or PCI config space.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwLowLevelWrite  *  * PARAMETERS:  Width               - 8, 16, or 32  *              Value               - To be written  *              Register            - GAS register structure  *  * RETURN:      Status  *  * DESCRIPTION: Write to either memory, IO, or PCI config space.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2256,17 +2160,8 @@ parameter_list|,
 name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Reg
-parameter_list|,
-name|UINT32
-name|Offset
 parameter_list|)
 block|{
-name|ACPI_PHYSICAL_ADDRESS
-name|MemAddress
-decl_stmt|;
-name|ACPI_IO_ADDRESS
-name|IoAddress
-decl_stmt|;
 name|ACPI_PCI_ID
 name|PciId
 decl_stmt|;
@@ -2317,31 +2212,20 @@ block|{
 case|case
 name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 case|:
-name|MemAddress
+name|Status
 operator|=
+name|AcpiOsWriteMemory
+argument_list|(
 operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
 name|Reg
 operator|->
 name|Address
 argument_list|)
-operator|+
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
-name|Offset
-operator|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiOsWriteMemory
-argument_list|(
-name|MemAddress
 argument_list|,
-operator|(
-name|ACPI_INTEGER
-operator|)
 name|Value
 argument_list|,
 name|Width
@@ -2351,34 +2235,20 @@ break|break;
 case|case
 name|ACPI_ADR_SPACE_SYSTEM_IO
 case|:
-name|IoAddress
+name|Status
 operator|=
-call|(
-name|ACPI_IO_ADDRESS
-call|)
+name|AcpiOsWritePort
 argument_list|(
+operator|(
+name|ACPI_IO_ADDRESS
+operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
 name|Reg
 operator|->
 name|Address
 argument_list|)
-operator|+
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
-name|Offset
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiOsWritePort
-argument_list|(
-name|IoAddress
 argument_list|,
-operator|(
-name|ACPI_INTEGER
-operator|)
 name|Value
 argument_list|,
 name|Width
@@ -2430,10 +2300,9 @@ argument_list|)
 expr_stmt|;
 name|PciRegister
 operator|=
-call|(
+operator|(
 name|UINT16
-call|)
-argument_list|(
+operator|)
 name|ACPI_PCI_REGISTER
 argument_list|(
 name|ACPI_GET_ADDRESS
@@ -2442,9 +2311,6 @@ name|Reg
 operator|->
 name|Address
 argument_list|)
-argument_list|)
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 name|Status
@@ -2479,12 +2345,52 @@ name|AddressSpaceId
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+return|return
+operator|(
 name|AE_BAD_PARAMETER
-expr_stmt|;
-break|break;
+operator|)
+return|;
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_IO
+operator|,
+literal|"Wrote: %8.8X width %2d   to %8.8X%8.8X (%s)\n"
+operator|,
+name|Value
+operator|,
+name|Width
+operator|,
+name|ACPI_HIDWORD
+argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
+name|Reg
+operator|->
+name|Address
+argument_list|)
+argument_list|)
+operator|,
+name|ACPI_LODWORD
+argument_list|(
+name|ACPI_GET_ADDRESS
+argument_list|(
+name|Reg
+operator|->
+name|Address
+argument_list|)
+argument_list|)
+operator|,
+name|AcpiUtGetRegionName
+argument_list|(
+name|Reg
+operator|->
+name|AddressSpaceId
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|Status

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 145 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 146 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -353,10 +353,13 @@ modifier|*
 name|Buffer
 parameter_list|,
 name|UINT32
+name|BufferLength
+parameter_list|,
+name|UINT32
 name|ByteGranularity
 parameter_list|,
 name|UINT32
-name|Offset
+name|BufferOffset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -373,10 +376,13 @@ modifier|*
 name|Buffer
 parameter_list|,
 name|UINT32
+name|BufferLength
+parameter_list|,
+name|UINT32
 name|ByteGranularity
 parameter_list|,
 name|UINT32
-name|Offset
+name|BufferOffset
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 118 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 120 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -153,11 +153,11 @@ define|#
 directive|define
 name|ACPI_COMMON_NOTIFY_INFO
 define|\
-value|union acpi_operand_object       *SysHandler;
+value|union acpi_operand_object       *SystemNotify;
 comment|/* Handler for system notifies */
-value|\     union acpi_operand_object       *DrvHandler;
+value|\     union acpi_operand_object       *DeviceNotify;
 comment|/* Handler for driver notifies */
-value|\     union acpi_operand_object       *AddrHandler;
+value|\     union acpi_operand_object       *AddressSpace;
 end_define
 
 begin_comment
@@ -392,9 +392,9 @@ decl_stmt|;
 name|union
 name|acpi_operand_object
 modifier|*
-name|AddrHandler
+name|AddressSpace
 decl_stmt|;
-comment|/* Handler for system notifies */
+comment|/* Handler for region access */
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
@@ -440,6 +440,10 @@ name|acpi_object_device
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_NOTIFY_INFO
+name|ACPI_GPE_BLOCK_INFO
+modifier|*
+name|GpeBlock
+decl_stmt|;
 block|}
 name|ACPI_OBJECT_DEVICE
 typedef|;
@@ -883,10 +887,10 @@ name|ACPI_OBJECT_INDEX_FIELD
 name|IndexField
 decl_stmt|;
 name|ACPI_OBJECT_NOTIFY_HANDLER
-name|NotifyHandler
+name|Notify
 decl_stmt|;
 name|ACPI_OBJECT_ADDR_HANDLER
-name|AddrHandler
+name|AddressSpace
 decl_stmt|;
 name|ACPI_OBJECT_REFERENCE
 name|Reference

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -986,14 +986,14 @@ name|TablePtr
 operator|->
 name|Signature
 argument_list|,
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|ACPI_TABLE_PSDT
 index|]
 operator|.
 name|Signature
 argument_list|,
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|ACPI_TABLE_PSDT
 index|]
@@ -1010,14 +1010,14 @@ name|TablePtr
 operator|->
 name|Signature
 argument_list|,
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|ACPI_TABLE_SSDT
 index|]
 operator|.
 name|Signature
 argument_list|,
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
 name|ACPI_TABLE_SSDT
 index|]

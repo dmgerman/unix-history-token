@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 5 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 8 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -77,7 +77,11 @@ modifier|*
 name|ReturnValue
 parameter_list|)
 block|{
+name|ACPI_BUFFER
+name|Buffer
+decl_stmt|;
 name|ACPI_DEVICE_INFO
+modifier|*
 name|Info
 decl_stmt|;
 name|ACPI_STATUS
@@ -104,6 +108,12 @@ argument_list|,
 name|ReturnValue
 argument_list|)
 expr_stmt|;
+name|Buffer
+operator|.
+name|Length
+operator|=
+name|ACPI_ALLOCATE_LOCAL_BUFFER
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiGetObjectInfo
@@ -111,7 +121,7 @@ argument_list|(
 name|ObjHandle
 argument_list|,
 operator|&
-name|Info
+name|Buffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -122,6 +132,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|Info
+operator|=
+name|Buffer
+operator|.
+name|Pointer
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -154,27 +170,34 @@ operator|,
 literal|"    HID: %s, ADR: %8.8X%8.8X, Status: %X\n"
 operator|,
 name|Info
-operator|.
+operator|->
 name|HardwareId
+operator|.
+name|Value
 operator|,
 name|ACPI_HIDWORD
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|Address
 argument_list|)
 operator|,
 name|ACPI_LODWORD
 argument_list|(
 name|Info
-operator|.
+operator|->
 name|Address
 argument_list|)
 operator|,
 name|Info
-operator|.
+operator|->
 name|CurrentStatus
 operator|)
+argument_list|)
+expr_stmt|;
+name|ACPI_MEM_FREE
+argument_list|(
+name|Info
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 68 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -264,7 +264,7 @@ name|ObjDesc
 operator|->
 name|CommonNotify
 operator|.
-name|SysHandler
+name|SystemNotify
 expr_stmt|;
 block|}
 else|else
@@ -275,7 +275,7 @@ name|ObjDesc
 operator|->
 name|CommonNotify
 operator|.
-name|DrvHandler
+name|DeviceNotify
 expr_stmt|;
 block|}
 break|break;
@@ -292,7 +292,7 @@ comment|/* If there is any handler to run, schedule the dispatcher */
 if|if
 condition|(
 operator|(
-name|AcpiGbl_SysNotify
+name|AcpiGbl_SystemNotify
 operator|.
 name|Handler
 operator|&&
@@ -304,7 +304,7 @@ operator|)
 operator|)
 operator|||
 operator|(
-name|AcpiGbl_DrvNotify
+name|AcpiGbl_DeviceNotify
 operator|.
 name|Handler
 operator|&&
@@ -486,20 +486,20 @@ block|{
 comment|/* Global system notification handler */
 if|if
 condition|(
-name|AcpiGbl_SysNotify
+name|AcpiGbl_SystemNotify
 operator|.
 name|Handler
 condition|)
 block|{
 name|GlobalHandler
 operator|=
-name|AcpiGbl_SysNotify
+name|AcpiGbl_SystemNotify
 operator|.
 name|Handler
 expr_stmt|;
 name|GlobalContext
 operator|=
-name|AcpiGbl_SysNotify
+name|AcpiGbl_SystemNotify
 operator|.
 name|Context
 expr_stmt|;
@@ -510,20 +510,20 @@ block|{
 comment|/* Global driver notification handler */
 if|if
 condition|(
-name|AcpiGbl_DrvNotify
+name|AcpiGbl_DeviceNotify
 operator|.
 name|Handler
 condition|)
 block|{
 name|GlobalHandler
 operator|=
-name|AcpiGbl_DrvNotify
+name|AcpiGbl_DeviceNotify
 operator|.
 name|Handler
 expr_stmt|;
 name|GlobalContext
 operator|=
-name|AcpiGbl_DrvNotify
+name|AcpiGbl_DeviceNotify
 operator|.
 name|Context
 expr_stmt|;
@@ -569,7 +569,7 @@ condition|)
 block|{
 name|HandlerObj
 operator|->
-name|NotifyHandler
+name|Notify
 operator|.
 name|Handler
 argument_list|(
@@ -587,7 +587,7 @@ name|Value
 argument_list|,
 name|HandlerObj
 operator|->
-name|NotifyHandler
+name|Notify
 operator|.
 name|Context
 argument_list|)
@@ -1046,18 +1046,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
-decl_stmt|;
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|NextGpeBlock
-decl_stmt|;
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"EvTerminate"
@@ -1069,7 +1057,7 @@ name|AcpiGbl_EventsInitialized
 condition|)
 block|{
 comment|/*          * Disable all event-related functionality.          * In all cases, on error, print a message but obviously we don't abort.          */
-comment|/*          * Disable all fixed events          */
+comment|/* Disable all fixed events */
 for|for
 control|(
 name|i
@@ -1092,8 +1080,6 @@ operator|(
 name|UINT32
 operator|)
 name|i
-argument_list|,
-name|ACPI_EVENT_FIXED
 argument_list|,
 literal|0
 argument_list|)
@@ -1122,84 +1108,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Disable all GPEs          */
-name|GpeBlock
-operator|=
-name|AcpiGbl_GpeBlockListHead
-expr_stmt|;
-while|while
-condition|(
-name|GpeBlock
-condition|)
-block|{
-name|GpeEventInfo
-operator|=
-name|GpeBlock
-operator|->
-name|EventInfo
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-operator|(
-name|GpeBlock
-operator|->
-name|RegisterCount
-operator|*
-literal|8
-operator|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
+comment|/* Disable all GPEs in all GPE blocks */
 name|Status
 operator|=
-name|AcpiHwDisableGpe
+name|AcpiEvWalkGpeList
 argument_list|(
-name|GpeEventInfo
+name|AcpiHwDisableGpeBlock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Could not disable GPE %d\n"
-operator|,
-operator|(
-name|UINT32
-operator|)
-name|i
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-name|GpeEventInfo
-operator|++
-expr_stmt|;
-block|}
-name|GpeBlock
-operator|=
-name|GpeBlock
-operator|->
-name|Next
-expr_stmt|;
-block|}
-comment|/*          * Remove SCI handler          */
+comment|/* Remove SCI handler */
 name|Status
 operator|=
 name|AcpiEvRemoveSciHandler
@@ -1224,7 +1141,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Return to original mode if necessary      */
+comment|/* Return to original mode if necessary */
 if|if
 condition|(
 name|AcpiGbl_OriginalMode
@@ -1255,46 +1172,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/*      * Free global GPE blocks and related info structures      */
-name|GpeBlock
-operator|=
-name|AcpiGbl_GpeBlockListHead
-expr_stmt|;
-while|while
-condition|(
-name|GpeBlock
-condition|)
-block|{
-name|NextGpeBlock
-operator|=
-name|GpeBlock
-operator|->
-name|Next
-expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|GpeBlock
-operator|->
-name|EventInfo
-argument_list|)
-expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|GpeBlock
-operator|->
-name|RegisterInfo
-argument_list|)
-expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|GpeBlock
-argument_list|)
-expr_stmt|;
-name|GpeBlock
-operator|=
-name|NextGpeBlock
-expr_stmt|;
 block|}
 name|return_VOID
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 24 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 27 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -548,7 +548,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|COPY_FIELD
+name|ACPI_COPY_FIELD
 parameter_list|(
 name|Out
 parameter_list|,
@@ -556,20 +556,20 @@ name|In
 parameter_list|,
 name|Field
 parameter_list|)
-value|Out->Field = In->Field
+value|((Out)->Field = (In)->Field)
 end_define
 
 begin_define
 define|#
 directive|define
-name|COPY_ADDRESS
+name|ACPI_COPY_ADDRESS
 parameter_list|(
 name|Out
 parameter_list|,
 name|In
 parameter_list|)
 define|\
-value|COPY_FIELD(Out, In, ResourceType);              \     COPY_FIELD(Out, In, ProducerConsumer);          \     COPY_FIELD(Out, In, Decode);                    \     COPY_FIELD(Out, In, MinAddressFixed);           \     COPY_FIELD(Out, In, MaxAddressFixed);           \     COPY_FIELD(Out, In, Attribute);                 \     COPY_FIELD(Out, In, Granularity);               \     COPY_FIELD(Out, In, MinAddressRange);           \     COPY_FIELD(Out, In, MaxAddressRange);           \     COPY_FIELD(Out, In, AddressTranslationOffset);  \     COPY_FIELD(Out, In, AddressLength);             \     COPY_FIELD(Out, In, ResourceSource);
+value|ACPI_COPY_FIELD(Out, In, ResourceType);              \     ACPI_COPY_FIELD(Out, In, ProducerConsumer);          \     ACPI_COPY_FIELD(Out, In, Decode);                    \     ACPI_COPY_FIELD(Out, In, MinAddressFixed);           \     ACPI_COPY_FIELD(Out, In, MaxAddressFixed);           \     ACPI_COPY_FIELD(Out, In, Attribute);                 \     ACPI_COPY_FIELD(Out, In, Granularity);               \     ACPI_COPY_FIELD(Out, In, MinAddressRange);           \     ACPI_COPY_FIELD(Out, In, MaxAddressRange);           \     ACPI_COPY_FIELD(Out, In, AddressTranslationOffset);  \     ACPI_COPY_FIELD(Out, In, AddressLength);             \     ACPI_COPY_FIELD(Out, In, ResourceSource);
 end_define
 
 begin_comment
@@ -597,10 +597,6 @@ name|ACPI_RESOURCE_ADDRESS32
 modifier|*
 name|Address32
 decl_stmt|;
-name|ACPI_RESOURCE_ADDRESS64
-modifier|*
-name|Address64
-decl_stmt|;
 switch|switch
 condition|(
 name|Resource
@@ -622,7 +618,7 @@ name|Resource
 operator|->
 name|Data
 expr_stmt|;
-name|COPY_ADDRESS
+name|ACPI_COPY_ADDRESS
 argument_list|(
 name|Out
 argument_list|,
@@ -644,7 +640,7 @@ name|Resource
 operator|->
 name|Data
 expr_stmt|;
-name|COPY_ADDRESS
+name|ACPI_COPY_ADDRESS
 argument_list|(
 name|Out
 argument_list|,
@@ -655,22 +651,20 @@ break|break;
 case|case
 name|ACPI_RSTYPE_ADDRESS64
 case|:
-name|Address64
-operator|=
-operator|(
-name|ACPI_RESOURCE_ADDRESS64
-operator|*
-operator|)
+comment|/* Simple copy for 64 bit source */
+name|ACPI_MEMCPY
+argument_list|(
+name|Out
+argument_list|,
 operator|&
 name|Resource
 operator|->
 name|Data
-expr_stmt|;
-name|COPY_ADDRESS
-argument_list|(
-name|Out
 argument_list|,
-name|Address64
+sizeof|sizeof
+argument_list|(
+name|ACPI_RESOURCE_ADDRESS64
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

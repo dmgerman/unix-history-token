@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 69 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 71 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ name|i
 operator|++
 control|)
 block|{
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|WalkState
@@ -176,7 +176,7 @@ name|i
 operator|++
 control|)
 block|{
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|WalkState
@@ -704,12 +704,6 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|NewDesc
-init|=
-name|Object
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"DsMethodDataSetValue"
@@ -772,73 +766,18 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If the object has just been created and is not attached to anything,      * (the reference count is 1), then we can just store it directly into      * the arg/local.  Otherwise, we must copy it.      */
-if|if
-condition|(
-name|Object
-operator|->
-name|Common
-operator|.
-name|ReferenceCount
-operator|>
-literal|1
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiUtCopyIobjectToIobject
-argument_list|(
-name|Object
-argument_list|,
-operator|&
-name|NewDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_EXEC
-operator|,
-literal|"Object Copied %p, new %p\n"
-operator|,
-name|Object
-operator|,
-name|NewDesc
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Increment ref count so object can't be deleted while installed */
+comment|/*       * Increment ref count so object can't be deleted while installed.      * NOTE: We do not copy the object in order to preserve the call by      * reference semantics of ACPI Control Method invocation.      * (See ACPI Specification 2.0C)      */
 name|AcpiUtAddReference
 argument_list|(
-name|NewDesc
+name|Object
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Install the object */
 name|Node
 operator|->
 name|Object
 operator|=
-name|NewDesc
+name|Object
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(

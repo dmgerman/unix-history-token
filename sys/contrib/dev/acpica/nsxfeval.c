@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 7 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfeval - Public interfaces to the ACPI subsystem  *                         ACPI Object evaluation interfaces  *              $Revision: 10 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -847,6 +847,12 @@ modifier|*
 name|ReturnValue
 parameter_list|)
 block|{
+name|ACPI_GET_DEVICES_INFO
+modifier|*
+name|Info
+init|=
+name|Context
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -860,17 +866,13 @@ decl_stmt|;
 name|ACPI_DEVICE_ID
 name|Hid
 decl_stmt|;
-name|ACPI_DEVICE_ID
+name|ACPI_COMPATIBLE_ID_LIST
+modifier|*
 name|Cid
 decl_stmt|;
-name|ACPI_GET_DEVICES_INFO
-modifier|*
-name|Info
+name|ACPI_NATIVE_UINT
+name|i
 decl_stmt|;
-name|Info
-operator|=
-name|Context
-expr_stmt|;
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
@@ -932,7 +934,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-comment|/*      * Run _STA to determine if device is present      */
+comment|/* Run _STA to determine if device is present */
 name|Status
 operator|=
 name|AcpiUtExecute_STA
@@ -974,7 +976,7 @@ name|AE_CTRL_DEPTH
 operator|)
 return|;
 block|}
-comment|/*      * Filter based on device HID& CID      */
+comment|/* Filter based on device HID& CID */
 if|if
 condition|(
 name|Info
@@ -1028,7 +1030,7 @@ name|ACPI_STRNCMP
 argument_list|(
 name|Hid
 operator|.
-name|Buffer
+name|Value
 argument_list|,
 name|Info
 operator|->
@@ -1038,13 +1040,14 @@ sizeof|sizeof
 argument_list|(
 name|Hid
 operator|.
-name|Buffer
+name|Value
 argument_list|)
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
+comment|/* Get the list of Compatible IDs */
 name|Status
 operator|=
 name|AcpiUtExecute_CID
@@ -1083,14 +1086,35 @@ name|AE_CTRL_DEPTH
 operator|)
 return|;
 block|}
-comment|/* TBD: Handle CID packages */
+comment|/* Walk the CID list */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|Cid
+operator|->
+name|Count
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
 name|ACPI_STRNCMP
 argument_list|(
 name|Cid
+operator|->
+name|Id
+index|[
+name|i
+index|]
 operator|.
-name|Buffer
+name|Value
 argument_list|,
 name|Info
 operator|->
@@ -1098,21 +1122,30 @@ name|Hid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|Cid
-operator|.
-name|Buffer
+name|ACPI_COMPATIBLE_ID
 argument_list|)
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
+name|ACPI_MEM_FREE
+argument_list|(
+name|Cid
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK
 operator|)
 return|;
 block|}
+block|}
+name|ACPI_MEM_FREE
+argument_list|(
+name|Cid
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|Status
@@ -1141,7 +1174,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetDevices  *  * PARAMETERS:  HID                 - HID to search for. Can be NULL.  *              UserFunction        - Called when a matching object is found  *              Context             - Passed to user function  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The UserFunction is called whenever an object that matches  *              the type parameter is found.  If the user function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              This is a wrapper for WalkNamespace, but the callback performs  *              additional filtering. Please see AcpiGetDeviceCallback.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetDevices  *  * PARAMETERS:  HID                 - HID to search for. Can be NULL.  *              UserFunction        - Called when a matching object is found  *              Context             - Passed to user function  *              ReturnValue         - Location where return value of  *                                    UserFunction is put if terminated early  *  * RETURNS      Return value from the UserFunction if terminated early.  *              Otherwise, returns NULL.  *  * DESCRIPTION: Performs a modified depth-first walk of the namespace tree,  *              starting (and ending) at the object specified by StartHandle.  *              The UserFunction is called whenever an object of type  *              Device is found.  If the user function returns  *              a non-zero value, the search is terminated immediately and this  *              value is returned to the caller.  *  *              This is a wrapper for WalkNamespace, but the callback performs  *              additional filtering. Please see AcpiGetDeviceCallback.  *  ******************************************************************************/
 end_comment
 
 begin_function
