@@ -2225,7 +2225,6 @@ end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
-comment|/*  * XXX functions missing restrict type-qualifiers.  */
 name|int
 name|accept
 parameter_list|(
@@ -2234,9 +2233,11 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+name|__restrict
 parameter_list|,
 name|socklen_t
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2282,9 +2283,11 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+name|__restrict
 parameter_list|,
 name|socklen_t
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2298,9 +2301,11 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+name|__restrict
 parameter_list|,
 name|socklen_t
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2317,9 +2322,11 @@ name|int
 parameter_list|,
 name|void
 modifier|*
+name|__restrict
 parameter_list|,
 name|socklen_t
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2367,9 +2374,11 @@ parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
+name|__restrict
 parameter_list|,
 name|socklen_t
 modifier|*
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -984,7 +984,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|accept_args
-comment|/* { 		int	s; 		caddr_t	name; 		int	*anamelen; 	} */
+comment|/* { 		int	s; 		struct sockaddr	* __restrict name; 		socklen_t	* __restrict anamelen; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -1009,9 +1009,10 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-name|int
+name|socklen_t
 name|namelen
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|,
 name|s
@@ -4285,9 +4286,10 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|int
+name|socklen_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|struct
@@ -4632,6 +4634,9 @@ name|auio
 operator|.
 name|uio_resid
 operator|!=
+operator|(
+name|int
+operator|)
 name|len
 operator|&&
 operator|(
@@ -4680,6 +4685,9 @@ name|ktruio
 operator|.
 name|uio_resid
 operator|=
+operator|(
+name|int
+operator|)
 name|len
 operator|-
 name|auio
@@ -4723,6 +4731,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|int
+operator|)
 name|len
 operator|-
 name|auio
@@ -4844,7 +4855,7 @@ name|namelenp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+name|socklen_t
 argument_list|)
 argument_list|)
 operator|)
@@ -5135,7 +5146,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|recvfrom_args
-comment|/* { 		int	s; 		caddr_t	buf; 		size_t	len; 		int	flags; 		caddr_t	from; 		int	*fromlenaddr; 	} */
+comment|/* { 		int	s; 		caddr_t	buf; 		size_t	len; 		int	flags; 		struct sockaddr * __restrict	from; 		socklen_t * __restrict fromlenaddr; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -6289,14 +6300,15 @@ decl_stmt|;
 specifier|register
 name|struct
 name|getsockopt_args
-comment|/* { 		int	s; 		int	level; 		int	name; 		caddr_t	val; 		int	*avalsize; 	} */
+comment|/* { 		int	s; 		int	level; 		int	name; 		void * __restrict	val; 		socklen_t * __restrict avalsize; 	} */
 modifier|*
 name|uap
 decl_stmt|;
 block|{
-name|int
+name|socklen_t
 name|valsize
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|struct
@@ -6530,7 +6542,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|getsockname_args
-comment|/* { 		int	fdes; 		caddr_t	asa; 		int	*alen; 	} */
+comment|/* { 		int	fdes; 		struct sockaddr * __restrict asa; 		socklen_t * __restrict alen; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -6548,9 +6560,10 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-name|int
+name|socklen_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|mtx_lock
@@ -6898,7 +6911,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|getpeername_args
-comment|/* { 		int	fdes; 		caddr_t	asa; 		int	*alen; 	} */
+comment|/* { 		int	fdes; 		struct sockaddr * __restrict	asa; 		socklen_t * __restrict	alen; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -6916,9 +6929,10 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-name|int
+name|socklen_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|mtx_lock
