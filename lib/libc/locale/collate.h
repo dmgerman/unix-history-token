@@ -95,6 +95,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|__collate_substitute_nontrivial
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|__collate_version
 index|[
@@ -191,6 +198,7 @@ name|__collate_lookup
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|,
