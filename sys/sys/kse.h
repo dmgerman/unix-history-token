@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/kse.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ucontext.h>
 end_include
 
