@@ -3716,7 +3716,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|package_exists
+name|package_installed
 argument_list|(
 name|cp
 argument_list|)
