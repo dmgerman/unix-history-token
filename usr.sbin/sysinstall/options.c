@@ -1337,6 +1337,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
+operator||
+name|DITEM_CONTINUE
 return|;
 default|default:
 name|beep
