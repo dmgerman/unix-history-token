@@ -75,6 +75,10 @@ name|u_int32_t
 name|entry
 decl_stmt|;
 comment|/* entrypoint offset from base */
+name|vm_offset_t
+name|ventry
+decl_stmt|;
+comment|/* entrypoint in kernel virtual segment */
 block|}
 struct|;
 end_struct
@@ -774,6 +778,52 @@ define|#
 directive|define
 name|PNP_SET_BOOTFIRST
 value|"sp",		0x66
+end_define
+
+begin_comment
+comment|/*  * PCI BIOS functions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIBIOS_READ_CONFIG_BYTE
+value|0xb108
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIBIOS_READ_CONFIG_WORD
+value|0xb109
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIBIOS_READ_CONFIG_DWORD
+value|0xb10a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIBIOS_WRITE_CONFIG_BYTE
+value|0xb10b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIBIOS_WRITE_CONFIG_WORD
+value|0xb10c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIBIOS_WRITE_CONFIG_DWORD
+value|0xb10d
 end_define
 
 begin_function_decl

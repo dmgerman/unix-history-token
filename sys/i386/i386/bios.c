@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_pnp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"isa.h"
 end_include
 
@@ -240,7 +234,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/*      * BIOS32 Service Directory      */
+name|char
+modifier|*
+name|p
+decl_stmt|;
+comment|/*      * BIOS32 Service Directory, PCI BIOS      */
 comment|/* look for the signature */
 if|if
 condition|(
@@ -383,6 +381,30 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Allow user override of PCI BIOS search */
+if|if
+condition|(
+operator|(
+operator|(
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"machdep.bios.pci"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|)
+operator|||
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"disable"
+argument_list|)
+condition|)
+block|{
 comment|/* See if there's a PCI BIOS entrypoint here */
 name|PCIbios
 operator|.
@@ -406,13 +428,18 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"pcibios: PCI BIOS entry at 0x%x\n"
+literal|"pcibios: PCI BIOS entry at 0x%x+0x%x\n"
+argument_list|,
+name|PCIbios
+operator|.
+name|base
 argument_list|,
 name|PCIbios
 operator|.
 name|entry
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -423,9 +450,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * PnP BIOS      */
+comment|/*      * PnP BIOS      *      * Allow user override of PnP BIOS search      */
 if|if
 condition|(
+operator|(
+operator|(
+operator|(
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"machdep.bios.pnp"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|)
+operator|||
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"disable"
+argument_list|)
+operator|)
+operator|&&
+operator|(
 operator|(
 name|sigaddr
 operator|=
@@ -444,6 +494,7 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 comment|/* get a virtual pointer to the structure */
@@ -735,6 +786,21 @@ operator|=
 name|args
 operator|.
 name|edx
+expr_stmt|;
+name|ent
+operator|->
+name|ventry
+operator|=
+name|BIOS_PADDRTOVADDR
+argument_list|(
+name|ent
+operator|->
+name|base
+operator|+
+name|ent
+operator|->
+name|entry
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1917,16 +1983,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PNPBIOS
-end_ifdef
-
-begin_comment
-comment|/* remove conditional later */
-end_comment
-
 begin_comment
 comment|/*  * PnP BIOS interface; enumerate devices only known to the system  * BIOS and save information about them for later use.  */
 end_comment
@@ -2803,15 +2859,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PNPBIOS */
-end_comment
 
 end_unit
 
