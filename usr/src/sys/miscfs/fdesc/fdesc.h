@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc.h	8.3 (Berkeley) %G%  *  * $Id: fdesc.h,v 1.8 1993/04/06 15:28:33 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc.h	8.4 (Berkeley) %G%  *  * $Id: fdesc.h,v 1.8 1993/04/06 15:28:33 jsp Exp $  */
 end_comment
 
 begin_ifdef
@@ -101,6 +101,23 @@ begin_struct
 struct|struct
 name|fdescnode
 block|{
+name|struct
+name|fdescnode
+modifier|*
+name|fd_forw
+decl_stmt|;
+comment|/* Hash chain */
+name|struct
+name|fdescnode
+modifier|*
+name|fd_back
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|fd_vnode
+decl_stmt|;
+comment|/* Back ptr to vnode */
 name|fdntype
 name|fd_type
 decl_stmt|;
@@ -146,6 +163,39 @@ begin_decl_stmt
 specifier|extern
 name|dev_t
 name|devctty
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fdesc_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fdesc_root
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
