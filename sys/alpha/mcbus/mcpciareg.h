@@ -248,7 +248,7 @@ begin_define
 define|#
 directive|define
 name|_MCPCIA_INT_ACK0
-value|0x100003F00
+value|0x010003F00
 end_define
 
 begin_comment
@@ -259,7 +259,7 @@ begin_define
 define|#
 directive|define
 name|_MCPCIA_INT_ACK1
-value|0x100003F40
+value|0x010003F40
 end_define
 
 begin_comment
@@ -774,26 +774,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MCPCIA_INT_ACK0
-parameter_list|(
-name|ccp
-parameter_list|)
-value|(_SYBRIDGE(ccp) | _MCPCIA_INT_ACK0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCPCIA_INT_ACK1
-parameter_list|(
-name|ccp
-parameter_list|)
-value|(_SYBRIDGE(ccp) | _MCPCIA_INT_ACK1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MCPCIA_PERF_MON
 parameter_list|(
 name|ccp
@@ -1099,6 +1079,28 @@ parameter_list|(
 name|ccp
 parameter_list|)
 value|(_SYBRIDGE(ccp) | _MCPCIA_W_DAC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCPCIA_INT_ACK0
+parameter_list|(
+name|ccp
+parameter_list|)
+define|\
+value|((ccp)->sysbase | MCPCIA_PCI_IACK | _MCPCIA_INT_ACK0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCPCIA_INT_ACK1
+parameter_list|(
+name|ccp
+parameter_list|)
+define|\
+value|((ccp)->sysbase | MCPCIA_PCI_IACK | _MCPCIA_INT_ACK1)
 end_define
 
 begin_comment
@@ -1642,7 +1644,33 @@ comment|/*  * Interrupt Specific bits...  *  * Mostly we don't have to mess with
 end_comment
 
 begin_comment
-comment|/*  * bits 0-15 correspond to 4 slots (time 4 buspins) for each PCI bus.  * bit 16 is the NCR810 onboard SCSI interrupt.  * bits 19-20 are reserved.  */
+comment|/*  * Bits for INT_CTL register  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCPCIA_INTCTL_EN_INT
+value|0x1
+end_define
+
+begin_comment
+comment|/* enable interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCPCIA_INTCTL_EN_INT_NUM
+value|0x2
+end_define
+
+begin_comment
+comment|/* enable INT_ADR/ADR_EXT */
+end_comment
+
+begin_comment
+comment|/*  * Bits for MASK0 registers.  * bits 0-15 correspond to 4 slots (time 4 buspins) for each PCI bus.  * bit 16 is the NCR810 onboard SCSI interrupt.  * bits 19-20 are reserved.  */
 end_comment
 
 begin_define
