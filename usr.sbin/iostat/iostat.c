@@ -2773,7 +2773,7 @@ name|state
 control|)
 name|printf
 argument_list|(
-literal|"%3.0f"
+literal|" %2.0f"
 argument_list|,
 name|rint
 argument_list|(
