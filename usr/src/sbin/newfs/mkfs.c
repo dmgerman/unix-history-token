@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	1.4 (Berkeley) %G%"
+literal|"@(#)mkfs.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2700,7 +2700,7 @@ name|ibc
 argument_list|,
 name|ib
 argument_list|,
-name|i
+name|BSIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2917,7 +2917,7 @@ name|roundup
 argument_list|(
 name|dbc
 argument_list|,
-name|FSIZE
+name|BSIZE
 argument_list|)
 argument_list|)
 expr_stmt|;
