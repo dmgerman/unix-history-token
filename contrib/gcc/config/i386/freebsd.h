@@ -298,16 +298,6 @@ value|do {									\         output_file_directive (FILE, main_input_filename);	
 end_define
 
 begin_comment
-comment|/* don't override the defauts, in case gdb gets upset */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_IDENTIFY_GCC
-end_undef
-
-begin_comment
 comment|/* This is how to store into the string BUF    the symbol_ref name of an internal numbered label where          PREFIX is the class of label and NUM is the number within the class.      This is suitable for output with `assemble_name'.  */
 end_comment
 
@@ -631,6 +621,10 @@ define|\
 value|do {									\   static int sym_lineno = 1;						\   if (TARGET_ELF) {							\     fprintf (file, ".stabn 68,0,%d,.LM%d-", line, sym_lineno);		\     assemble_name (file, XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     fprintf (file, "\n.LM%d:\n", sym_lineno);				\     sym_lineno += 1;							\   } else {								\     fprintf (file, "\t%s %d,0,%d\n", ASM_STABD_OP, N_SLINE, lineno);	\   }									\ } while (0)
 end_define
 
+begin_comment
+comment|/* in elf, the function stabs come first, before the relative offsets */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -642,6 +636,29 @@ define|#
 directive|define
 name|DBX_CHECK_FUNCTION_FIRST
 value|TARGET_ELF
+end_define
+
+begin_comment
+comment|/* tag end of file in elf mode */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DBX_OUTPUT_MAIN_SOURCE_FILE_END
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DBX_OUTPUT_MAIN_SOURCE_FILE_END
+parameter_list|(
+name|FILE
+parameter_list|,
+name|FILENAME
+parameter_list|)
+define|\
+value|do {									\   if (TARGET_ELF) {							\     fprintf (FILE, "\t.text\n\t.stabs \"\",%d,0,0,.Letext\n.Letext:\n", N_SO); \   }									\ } while (0)
 end_define
 
 begin_comment
