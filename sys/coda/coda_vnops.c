@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   *  	@(#) src/sys/coda/coda_vnops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_vnops.c,v 1.15 1999/01/29 07:23:53 bde Exp $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   *  	@(#) src/sys/coda/coda_vnops.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: coda_vnops.c,v 1.16 1999/07/21 12:51:36 phk Exp $  *   */
 end_comment
 
 begin_comment
@@ -1119,8 +1119,8 @@ argument_list|(
 argument|CODA_OPEN
 argument_list|,
 argument|myprintf((
-literal|"open: dev %d inode %d result %d\n"
-argument|, 				  dev, inode, error));
+literal|"open: dev %#lx inode %lu result %d\n"
+argument|, 				       (u_long)dev2udev(dev), (u_long)inode, 				       error));
 argument_list|)
 block|}
 comment|/* Translate the<device, inode> pair for the cache file into        an inode pointer. */
@@ -1799,8 +1799,8 @@ argument_list|(
 argument|CODA_RDWR
 argument_list|,
 argument|myprintf((
-literal|"coda_rdwr(%d, %p, %d, %qd, %d)\n"
-argument|, rw,  			      uiop->uio_iov->iov_base, uiop->uio_resid,  			      uiop->uio_offset, uiop->uio_segflg));
+literal|"coda_rdwr(%d, %p, %d, %lld, %d)\n"
+argument|, rw,  			      (void *)uiop->uio_iov->iov_base, uiop->uio_resid,  			      (long long)uiop->uio_offset, uiop->uio_segflg));
 argument_list|)
 comment|/* Check for rdwr of control object. */
 if|if
@@ -7193,8 +7193,8 @@ argument_list|(
 argument|CODA_READDIR
 argument_list|,
 argument|myprintf((
-literal|"coda_readdir(%p, %d, %qd, %d)\n"
-argument|, uiop->uio_iov->iov_base, uiop->uio_resid, uiop->uio_offset, uiop->uio_segflg));
+literal|"coda_readdir(%p, %d, %lld, %d)\n"
+argument|, 				      (void *)uiop->uio_iov->iov_base, 				      uiop->uio_resid, 				      (long long)uiop->uio_offset, 				      uiop->uio_segflg));
 argument_list|)
 comment|/* Check for readdir of control object. */
 if|if
@@ -8146,9 +8146,15 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"coda_grab_vnode: devtomp(%d) returns NULL\n"
+literal|"coda_grab_vnode: devtomp(%#lx) returns NULL\n"
 operator|,
+operator|(
+name|u_long
+operator|)
+name|dev2udev
+argument_list|(
 name|dev
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8178,12 +8184,25 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"coda_grab_vnode: iget/vget(%d, %d) returns %p, err %d\n"
+literal|"coda_grab_vnode: iget/vget(%lx, %lu) returns %p, err %d\n"
 operator|,
+operator|(
+name|u_long
+operator|)
+name|dev2udev
+argument_list|(
 name|dev
+argument_list|)
 operator|,
+operator|(
+name|u_long
+operator|)
 name|ino
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|*
 name|vpp
 operator|,
