@@ -36,6 +36,49 @@ file|<machine/cpufunc.h>
 end_include
 
 begin_comment
+comment|/*  * Hack around due to egcs-1.1.2 not knowing what __func__ is.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|==
+literal|91
+end_if
+
+begin_comment
+comment|/* egcs 1.1.2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__func__
+value|__FUNCTION__
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Trace classes  */
 end_comment
 
