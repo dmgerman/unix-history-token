@@ -1303,7 +1303,7 @@ name|fs
 parameter_list|,
 name|b
 parameter_list|)
-value|((b)<< (fs)->fs_fsbtodb)
+value|((daddr_t)(b)<< (fs)->fs_fsbtodb)
 end_define
 
 begin_define
