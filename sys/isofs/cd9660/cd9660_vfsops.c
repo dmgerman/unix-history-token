@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<isofs/cd9660/iso.h>
 end_include
 

@@ -124,12 +124,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<gnu/ext2fs/fs.h>
 end_include
 

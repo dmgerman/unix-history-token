@@ -91,12 +91,6 @@ directive|include
 file|<sys/acl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
-end_include
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE

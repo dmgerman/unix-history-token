@@ -45,12 +45,6 @@ directive|include
 file|<i386/linux/linux_util.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
-end_include
-
 begin_decl_stmt
 specifier|const
 name|char

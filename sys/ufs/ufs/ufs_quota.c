@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/extattr.h>
 end_include
 

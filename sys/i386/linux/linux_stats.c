@@ -87,12 +87,6 @@ directive|include
 file|<i386/linux/linux_util.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_zone.h>
-end_include
-
 begin_struct
 struct|struct
 name|linux_newstat

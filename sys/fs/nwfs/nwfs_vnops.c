@@ -78,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netncp/ncp.h>
 end_include
 
