@@ -467,6 +467,7 @@ comment|/* destination dir in a copy */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|argv0
@@ -541,6 +542,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|tmpdir

@@ -1324,7 +1324,10 @@ function_decl|(
 modifier|*
 name|wrf
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|ARCHD
+modifier|*
+parameter_list|)
 function_decl|;
 name|int
 name|fd
@@ -3387,7 +3390,7 @@ call|(
 modifier|*
 name|frmt
 operator|->
-name|trail
+name|trail_tar
 call|)
 argument_list|(
 name|hdbuf
@@ -3493,7 +3496,7 @@ operator|+
 name|shftsz
 expr_stmt|;
 block|}
-comment|/* 	 * ok got a valid header, check for trailer if format encodes it in the 	 * the header. NOTE: the parameters are different than trailer routines 	 * which encode trailers outside of the header! 	 */
+comment|/* 	 * ok got a valid header, check for trailer if format encodes it in the 	 * the header. 	 */
 if|if
 condition|(
 name|frmt
@@ -3505,7 +3508,7 @@ call|(
 modifier|*
 name|frmt
 operator|->
-name|trail
+name|trail_cpio
 call|)
 argument_list|(
 name|arcn

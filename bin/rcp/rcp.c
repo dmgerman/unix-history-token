@@ -274,10 +274,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|argv_copy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|period
+index|[]
+init|=
+literal|"."
 decl_stmt|;
 end_decl_stmt
 
@@ -323,28 +334,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|run_err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|void
@@ -440,9 +429,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|targ
-decl_stmt|,
-modifier|*
-name|shell
 decl_stmt|;
 comment|/* 	 * Prepare for execing ourselves. 	 */
 name|argc_copy
@@ -672,8 +658,6 @@ name|sp
 operator|=
 name|getservbyname
 argument_list|(
-name|shell
-operator|=
 literal|"shell"
 argument_list|,
 literal|"tcp"
@@ -689,9 +673,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s/tcp: unknown service"
-argument_list|,
-name|shell
+literal|"shell/tcp: unknown service"
 argument_list|)
 expr_stmt|;
 name|port
@@ -978,7 +960,7 @@ literal|0
 condition|)
 name|targ
 operator|=
-literal|"."
+name|period
 expr_stmt|;
 if|if
 condition|(
@@ -1104,7 +1086,7 @@ literal|0
 condition|)
 name|src
 operator|=
-literal|"."
+name|period
 expr_stmt|;
 name|host
 operator|=
@@ -1694,7 +1676,7 @@ literal|0
 condition|)
 name|src
 operator|=
-literal|"."
+name|period
 expr_stmt|;
 if|if
 condition|(
@@ -2921,9 +2903,6 @@ modifier|*
 name|targ
 decl_stmt|,
 modifier|*
-name|why
-decl_stmt|,
-modifier|*
 name|vect
 index|[
 literal|1
@@ -2938,6 +2917,11 @@ name|path
 index|[
 name|PATH_MAX
 index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|why
 decl_stmt|;
 define|#
 directive|define
@@ -4005,6 +3989,9 @@ if|if
 condition|(
 name|j
 operator|!=
+operator|(
+name|off_t
+operator|)
 name|count
 condition|)
 block|{
@@ -4061,6 +4048,9 @@ name|count
 argument_list|)
 operator|)
 operator|!=
+operator|(
+name|off_t
+operator|)
 name|count
 condition|)
 block|{

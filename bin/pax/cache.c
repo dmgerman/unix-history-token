@@ -557,6 +557,7 @@ comment|/*  * name_uid()  *	caches the name (if any) for the uid. If frc set, we
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|name_uid
@@ -870,6 +871,7 @@ comment|/*  * name_gid()  *	caches the name (if any) for the gid. If frc set, we
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|name_gid

@@ -245,6 +245,7 @@ index|[
 name|DATELEN
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|timefrmt
@@ -659,6 +660,7 @@ index|[
 name|MODELEN
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|timefrmt
@@ -788,6 +790,7 @@ name|char
 modifier|*
 name|dest
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|src

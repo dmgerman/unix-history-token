@@ -218,14 +218,47 @@ begin_comment
 comment|/* pipe/socket */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|struct
+name|archd
+name|ARCHD
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|fsub
+name|FSUB
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|oplist
+name|OPLIST
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|pattern
+name|PATTERN
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Format Specific Routine Table  *  * The format specific routine table allows new archive formats to be quickly  * added. Overall pax operation is independent of the actual format used to  * form the archive. Only those routines which deal directly with the archive  * are tailored to the oddities of the specific format. All other routines are  * independent of the archive format. Data flow in and out of the format  * dependent routines pass pointers to ARCHD structure (described below).  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|fsub
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -278,7 +311,12 @@ function_decl|(
 modifier|*
 name|id
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 comment|/* checks if a buffer is a valid header */
 comment|/* returns 1 if it is, o.w. returns a 0 */
@@ -287,7 +325,9 @@ function_decl|(
 modifier|*
 name|st_rd
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* initialize routine for read. so format */
 comment|/* can set up tables etc before it starts */
@@ -297,7 +337,13 @@ function_decl|(
 modifier|*
 name|rd
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|ARCHD
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* read header routine. passed a pointer to */
 comment|/* ARCHD. It must extract the info from the */
@@ -316,7 +362,9 @@ function_decl|(
 modifier|*
 name|end_rd
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* read cleanup. Allows format to clean up */
 comment|/* and MUST RETURN THE LENGTH OF THE TRAILER */
@@ -327,7 +375,9 @@ function_decl|(
 modifier|*
 name|st_wr
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* initialize routine for write operations */
 name|int
@@ -335,7 +385,10 @@ function_decl|(
 modifier|*
 name|wr
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|ARCHD
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* write archive header. Passed an ARCHD */
 comment|/* filled with the specs on the next file to */
@@ -352,7 +405,9 @@ function_decl|(
 modifier|*
 name|end_wr
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* end write. write the trailer and do any */
 comment|/* other format specific functions needed */
@@ -360,9 +415,27 @@ comment|/* at the end of an archive write */
 name|int
 function_decl|(
 modifier|*
-name|trail
+name|trail_cpio
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|ARCHD
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|trail_tar
+function_decl|)
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* returns 0 if a valid trailer, -1 if not */
 comment|/* For formats which encode the trailer */
@@ -370,15 +443,20 @@ comment|/* outside of a valid header, a return value */
 comment|/* of 1 indicates that the block passed to */
 comment|/* it can never contain a valid header (skip */
 comment|/* this block, no point in looking at it)  */
-comment|/* CAUTION: parameters to this function are */
-comment|/* different for trailers inside or outside */
-comment|/* of headers. See get_head() for details */
 name|int
 function_decl|(
 modifier|*
 name|rd_data
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|ARCHD
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|off_t
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* read/process file data from the archive */
 name|int
@@ -386,7 +464,15 @@ function_decl|(
 modifier|*
 name|wr_data
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|ARCHD
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|off_t
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* write/process file data to the archive */
 name|int
@@ -394,20 +480,20 @@ function_decl|(
 modifier|*
 name|options
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* process format specific options (-o) */
 block|}
-name|FSUB
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Pattern matching structure  *  * Used to store command line patterns  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|pattern
 block|{
@@ -451,17 +537,16 @@ name|fow
 decl_stmt|;
 comment|/* next pattern */
 block|}
-name|PATTERN
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * General Archive Structure (used internal to pax)  *  * This structure is used to pass information about archive members between  * the format independent routines and the format specific routines. When  * new archive formats are added, they must accept requests and supply info  * encoded in a structure of this type. The name fields are declared statically  * here, as there is only ONE of these floating around, size is not a major  * consideration. Eventually converting the name fields to a dynamic length  * may be required if and when the supporting operating system removes all  * restrictions on the length of pathnames it will resolve.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|archd
 block|{
 name|int
 name|nlen
@@ -574,16 +659,14 @@ name|PAX_CTG
 value|10
 comment|/* high performance file */
 block|}
-name|ARCHD
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Format Specific Options List  *  * Used to pass format options to the format options handler  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
 name|oplist
 block|{
@@ -604,9 +687,8 @@ name|fow
 decl_stmt|;
 comment|/* next option */
 block|}
-name|OPLIST
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * General Macros  */

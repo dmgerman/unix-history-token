@@ -28,6 +28,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -43,6 +55,18 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pax.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_function
 name|int
 name|getoldopt
@@ -55,6 +79,7 @@ modifier|*
 modifier|*
 name|argv
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|optstring

@@ -19,6 +19,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|arcname
@@ -38,6 +39,7 @@ begin_function_decl
 name|int
 name|ar_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -463,6 +465,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|name_uid
@@ -475,6 +478,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|name_gid
@@ -1021,6 +1025,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1114,6 +1119,7 @@ name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1167,6 +1173,7 @@ begin_function_decl
 name|int
 name|opt_add
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1474,6 +1481,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|argv0

@@ -639,6 +639,9 @@ literal|0
 operator|)
 operator|||
 operator|(
+operator|(
+name|size_t
+operator|)
 name|arcn
 operator|->
 name|sb

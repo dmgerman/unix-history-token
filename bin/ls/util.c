@@ -33,7 +33,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_expr_stmt

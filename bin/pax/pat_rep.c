@@ -855,7 +855,7 @@ name|str
 parameter_list|,
 name|char
 modifier|*
-name|chdname
+name|chdnam
 parameter_list|)
 block|{
 name|PATTERN
@@ -966,7 +966,7 @@ name|pt
 operator|->
 name|chdname
 operator|=
-name|chdname
+name|chdnam
 expr_stmt|;
 if|if
 condition|(

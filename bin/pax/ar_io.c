@@ -194,23 +194,43 @@ begin_comment
 comment|/* mode for append */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|STDO
-value|"<STDOUT>"
-end_define
+begin_decl_stmt
+specifier|static
+name|char
+name|none
+index|[]
+init|=
+literal|"<NONE>"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pseudo name for no file */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|stdo
+index|[]
+init|=
+literal|"<STDOUT>"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* pseudo name for stdout */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|STDN
-value|"<STDIN>"
-end_define
+begin_decl_stmt
+specifier|static
+name|char
+name|stdn
+index|[]
+init|=
+literal|"<STDIN>"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* pseudo name for stdin */
@@ -353,6 +373,7 @@ comment|/* do we unlink null archives?  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|arcname
@@ -430,6 +451,7 @@ begin_function
 name|int
 name|ar_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -502,7 +524,7 @@ name|STDIN_FILENO
 expr_stmt|;
 name|arcname
 operator|=
-name|STDN
+name|stdn
 expr_stmt|;
 block|}
 elseif|else
@@ -571,7 +593,7 @@ name|STDOUT_FILENO
 expr_stmt|;
 name|arcname
 operator|=
-name|STDO
+name|stdo
 expr_stmt|;
 block|}
 elseif|else
@@ -645,7 +667,7 @@ name|STDOUT_FILENO
 expr_stmt|;
 name|arcname
 operator|=
-name|STDO
+name|stdo
 expr_stmt|;
 block|}
 elseif|else
@@ -684,7 +706,7 @@ case|:
 comment|/* 		 * arfd not used in COPY mode 		 */
 name|arcname
 operator|=
-literal|"<NONE>"
+name|none
 expr_stmt|;
 name|lstrval
 operator|=
@@ -3726,14 +3748,14 @@ name|strcmp
 argument_list|(
 name|arcname
 argument_list|,
-name|STDO
+name|stdo
 argument_list|)
 operator|&&
 name|strcmp
 argument_list|(
 name|arcname
 argument_list|,
-name|STDN
+name|stdn
 argument_list|)
 operator|&&
 operator|(
@@ -4138,6 +4160,13 @@ name|void
 operator|)
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|arcname
 argument_list|)
 expr_stmt|;
@@ -4220,7 +4249,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|gzip_program
+name|gzip_prog
 parameter_list|,
 name|int
 name|wr
@@ -4232,6 +4261,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|gzip_flags
@@ -4391,9 +4421,9 @@ if|if
 condition|(
 name|execlp
 argument_list|(
-name|gzip_program
+name|gzip_prog
 argument_list|,
-name|gzip_program
+name|gzip_prog
 argument_list|,
 name|gzip_flags
 argument_list|,

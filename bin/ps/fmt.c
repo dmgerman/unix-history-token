@@ -219,6 +219,9 @@ name|arg_max
 operator|+
 literal|1
 operator|>
+operator|(
+name|long
+operator|)
 name|SIZE_MAX
 condition|)
 name|errx

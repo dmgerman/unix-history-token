@@ -168,6 +168,7 @@ specifier|static
 name|int
 name|printaname
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 parameter_list|,
@@ -261,6 +262,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|FTSENT
 modifier|*
 parameter_list|,
@@ -544,6 +546,7 @@ begin_function
 name|void
 name|printscol
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 name|dp
@@ -659,6 +662,7 @@ begin_function
 name|void
 name|printlong
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 name|dp
@@ -807,7 +811,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*lld "
+literal|"%*jd "
 argument_list|,
 name|dp
 operator|->
@@ -1037,7 +1041,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*s%*lld "
+literal|"%*s%*jd "
 argument_list|,
 literal|8
 operator|-
@@ -1187,6 +1191,7 @@ begin_function
 name|void
 name|printstream
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 name|dp
@@ -1195,10 +1200,6 @@ block|{
 name|FTSENT
 modifier|*
 name|p
-decl_stmt|;
-specifier|extern
-name|int
-name|termwidth
 decl_stmt|;
 name|int
 name|chcnt
@@ -1319,15 +1320,12 @@ begin_function
 name|void
 name|printcol
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 name|dp
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|termwidth
-decl_stmt|;
 specifier|static
 name|FTSENT
 modifier|*
@@ -1766,6 +1764,7 @@ specifier|static
 name|int
 name|printaname
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 name|p
@@ -1836,7 +1835,7 @@ name|chcnt
 operator|+=
 name|printf
 argument_list|(
-literal|"%*lld "
+literal|"%*jd "
 argument_list|,
 operator|(
 name|int
@@ -1935,6 +1934,8 @@ decl_stmt|;
 specifier|static
 name|time_t
 name|now
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|char
@@ -2269,6 +2270,9 @@ block|{
 name|char
 name|tmp
 init|=
+operator|(
+name|char
+operator|)
 name|c
 decl_stmt|;
 operator|(
@@ -2578,6 +2582,8 @@ operator|(
 literal|1
 operator|)
 return|;
+default|default:
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -2691,6 +2697,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|C_NUMCOLORS
 condition|;
 name|i
@@ -2712,6 +2721,9 @@ name|len
 operator|<=
 literal|2
 operator|*
+operator|(
+name|size_t
+operator|)
 name|i
 condition|)
 block|{
@@ -2931,9 +2943,9 @@ name|c
 index|[
 name|j
 index|]
+argument_list|)
 operator|==
 literal|'x'
-argument_list|)
 condition|)
 name|colors
 index|[
@@ -3226,6 +3238,9 @@ name|printf
 argument_list|(
 literal|"%*s "
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|width
 argument_list|,
 literal|"0B"
@@ -3239,6 +3254,9 @@ name|printf
 argument_list|(
 literal|"%*.*f%c "
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|width
 operator|-
 literal|1
@@ -3266,8 +3284,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*lld "
+literal|"%*jd "
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|width
 argument_list|,
 name|bytes
@@ -3376,6 +3397,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
+specifier|const
 name|FTSENT
 modifier|*
 name|p

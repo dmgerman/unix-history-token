@@ -127,6 +127,7 @@ begin_function_decl
 name|void
 name|printcol
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 parameter_list|)
@@ -137,6 +138,7 @@ begin_function_decl
 name|void
 name|printlong
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 parameter_list|)
@@ -158,6 +160,7 @@ begin_function_decl
 name|void
 name|printscol
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 parameter_list|)
@@ -168,6 +171,7 @@ begin_function_decl
 name|void
 name|printstream
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 parameter_list|)
@@ -289,6 +293,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|termwidth
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

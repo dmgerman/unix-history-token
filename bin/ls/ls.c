@@ -127,6 +127,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -215,11 +221,29 @@ parameter_list|)
 value|(1 + CHAR_BIT * sizeof(t) / 3 + 1)
 end_define
 
+begin_comment
+comment|/*  * MAKENINES(n) turns n into (10**n)-1.  This is useful for converting a width  * into a number that wide in decimal.  * XXX: Overflows are not considered.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKENINES
+parameter_list|(
+name|n
+parameter_list|)
+define|\
+value|do {								\ 		intmax_t i;						\ 									\
+comment|/* Use a loop as all values of n are small. */
+value|\ 		for (i = 1; n> 0; i *= 10)				\ 			n--;						\ 		n = i - 1;						\ 	} while(0)
+end_define
+
 begin_function_decl
 specifier|static
 name|void
 name|display
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 parameter_list|,
@@ -227,16 +251,6 @@ name|FTSENT
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|u_quad_t
-name|makenines
-parameter_list|(
-name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -285,6 +299,7 @@ modifier|*
 name|printfcn
 function_decl|)
 parameter_list|(
+specifier|const
 name|DISPLAY
 modifier|*
 parameter_list|)
@@ -565,6 +580,7 @@ comment|/* use time of last mode change */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_stream
 decl_stmt|;
@@ -1923,6 +1939,9 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printname
 argument_list|(
 name|p
@@ -1944,6 +1963,9 @@ operator|>
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printname
 argument_list|(
 name|p
@@ -2027,6 +2049,7 @@ specifier|static
 name|void
 name|display
 parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
 name|p
@@ -2058,12 +2081,13 @@ decl_stmt|;
 name|off_t
 name|maxsize
 decl_stmt|;
+name|long
+name|maxblock
+decl_stmt|;
 name|u_long
 name|btotal
 decl_stmt|,
 name|labelstrlen
-decl_stmt|,
-name|maxblock
 decl_stmt|,
 name|maxinode
 decl_stmt|,
@@ -2228,8 +2252,6 @@ decl_stmt|;
 comment|/* Fill-in "::" as "0:0:0" for the sake of scanf. */
 name|jinitmax
 operator|=
-name|initmax2
-operator|=
 name|malloc
 argument_list|(
 name|strlen
@@ -2254,6 +2276,10 @@ literal|1
 argument_list|,
 literal|"malloc"
 argument_list|)
+expr_stmt|;
+name|initmax2
+operator|=
+name|jinitmax
 expr_stmt|;
 if|if
 condition|(
@@ -2384,7 +2410,7 @@ name|sscanf
 argument_list|(
 name|jinitmax
 argument_list|,
-literal|" %lu : %lu : %lu : %i : %i : %i : %llu : %lu : %lu "
+literal|" %lu : %ld : %lu : %u : %u : %i : %jd : %lu : %lu "
 argument_list|,
 operator|&
 name|maxinode
@@ -2513,30 +2539,22 @@ comment|/* FALLTHROUGH */
 default|default:
 break|break;
 block|}
-name|maxinode
-operator|=
-name|makenines
+name|MAKENINES
 argument_list|(
 name|maxinode
 argument_list|)
 expr_stmt|;
-name|maxblock
-operator|=
-name|makenines
+name|MAKENINES
 argument_list|(
 name|maxblock
 argument_list|)
 expr_stmt|;
-name|maxnlink
-operator|=
-name|makenines
+name|MAKENINES
 argument_list|(
 name|maxnlink
 argument_list|)
 expr_stmt|;
-name|maxsize
-operator|=
-name|makenines
+name|MAKENINES
 argument_list|(
 name|maxsize
 argument_list|)
@@ -3581,7 +3599,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%qu"
+literal|"%ju"
 argument_list|,
 name|maxsize
 argument_list|)
@@ -3785,56 +3803,6 @@ operator|*
 name|b
 argument_list|)
 operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Makenines() returns (10**n)-1.  This is useful for converting a width  * into a number that wide in decimal.  */
-end_comment
-
-begin_function
-specifier|static
-name|u_quad_t
-name|makenines
-parameter_list|(
-name|u_long
-name|n
-parameter_list|)
-block|{
-name|u_long
-name|i
-decl_stmt|;
-name|u_quad_t
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Use a loop instead of pow(), since all values of n are small. */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n
-condition|;
-name|i
-operator|++
-control|)
-name|reg
-operator|*=
-literal|10
-expr_stmt|;
-name|reg
-operator|--
-expr_stmt|;
-return|return
-name|reg
 return|;
 block|}
 end_function

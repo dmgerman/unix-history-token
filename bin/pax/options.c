@@ -416,6 +416,8 @@ name|cpio_endwr
 block|,
 name|cpio_trail
 block|,
+name|NULL
+block|,
 name|rd_wrfile
 block|,
 name|wr_rdfile
@@ -457,6 +459,8 @@ block|,
 name|cpio_endwr
 block|,
 name|cpio_trail
+block|,
+name|NULL
 block|,
 name|rd_wrfile
 block|,
@@ -500,6 +504,8 @@ name|cpio_endwr
 block|,
 name|cpio_trail
 block|,
+name|NULL
+block|,
 name|rd_wrfile
 block|,
 name|wr_rdfile
@@ -542,6 +548,8 @@ name|cpio_endwr
 block|,
 name|cpio_trail
 block|,
+name|NULL
+block|,
 name|rd_wrfile
 block|,
 name|wr_rdfile
@@ -578,6 +586,8 @@ block|,
 name|tar_wr
 block|,
 name|tar_endwr
+block|,
+name|NULL
 block|,
 name|tar_trail
 block|,
@@ -617,6 +627,8 @@ block|,
 name|ustar_wr
 block|,
 name|tar_endwr
+block|,
+name|NULL
 block|,
 name|tar_trail
 block|,
@@ -3233,15 +3245,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mkpath
 parameter_list|(
-name|path
-parameter_list|)
 name|char
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|stat
@@ -4242,6 +4253,7 @@ name|strcmp
 argument_list|(
 operator|(
 operator|(
+specifier|const
 name|FSUB
 operator|*
 operator|)
@@ -4252,6 +4264,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
+specifier|const
 name|FSUB
 operator|*
 operator|)
@@ -4387,6 +4400,7 @@ begin_function
 name|int
 name|opt_add
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -4407,6 +4421,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|endpt
+decl_stmt|;
+name|char
+modifier|*
+name|lstr
 decl_stmt|;
 if|if
 condition|(
@@ -4441,7 +4459,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|str
+name|lstr
 operator|=
 name|strdup
 argument_list|(
@@ -4470,7 +4488,7 @@ name|frpt
 operator|=
 name|endpt
 operator|=
-name|str
+name|lstr
 expr_stmt|;
 comment|/* 	 * break into name and values pieces and stuff each one into a 	 * OPLIST structure. When we know the format, the format specific 	 * option function will go through this list 	 */
 while|while
@@ -4534,7 +4552,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|str
+name|lstr
 argument_list|)
 expr_stmt|;
 return|return
@@ -4574,7 +4592,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|str
+name|lstr
 argument_list|)
 expr_stmt|;
 return|return
