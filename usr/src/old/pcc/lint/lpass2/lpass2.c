@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpass2.c	1.1	(Berkeley)	%G%"
+literal|"@(#)lpass2.c	1.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|FSZ
-value|250
+value|500
 end_define
 
 begin_define
