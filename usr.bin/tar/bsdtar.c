@@ -941,6 +941,21 @@ name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_OWNER
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|argv
+operator|==
+name|NULL
+condition|)
+name|bsdtar
+operator|->
+name|progname
+operator|=
+literal|"bsdtar"
+expr_stmt|;
+else|else
+block|{
 name|bsdtar
 operator|->
 name|progname
@@ -974,6 +989,7 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
+block|}
 comment|/* Rewrite traditional-style tar arguments, if used. */
 name|argv
 operator|=
@@ -2239,6 +2255,13 @@ name|dest
 decl_stmt|;
 if|if
 condition|(
+name|src_argv
+index|[
+literal|0
+index|]
+operator|==
+name|NULL
+operator|||
 name|src_argv
 index|[
 literal|1
