@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.17 1998/02/18 09:28:36 jkh Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.18 1998/02/20 13:11:49 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1387,6 +1387,9 @@ name|pmp
 operator|->
 name|pm_maxcluster
 condition|;
+name|cn
+operator|+=
+name|N_INUSEBITS
 control|)
 if|if
 condition|(
