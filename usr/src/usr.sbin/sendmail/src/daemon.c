@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.26 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.27 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.26 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.27 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,12 +211,6 @@ block|{
 name|int
 name|t
 decl_stmt|;
-specifier|register
-name|struct
-name|servent
-modifier|*
-name|sp
-decl_stmt|;
 name|int
 name|on
 init|=
@@ -291,6 +285,12 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|register
+name|struct
+name|servent
+modifier|*
+name|sp
+decl_stmt|;
 name|sp
 operator|=
 name|getservbyname
@@ -312,10 +312,19 @@ argument_list|(
 literal|"554 service \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|severe
-goto|;
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+literal|25
+argument_list|)
+expr_stmt|;
 block|}
+else|else
 name|DaemonAddr
 operator|.
 name|sin
@@ -1136,12 +1145,15 @@ argument_list|(
 literal|"554 makeconnection: service \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EX_OSERR
-operator|)
-return|;
+name|port
+operator|=
+name|htons
+argument_list|(
+literal|25
+argument_list|)
+expr_stmt|;
 block|}
+else|else
 name|port
 operator|=
 name|sp
