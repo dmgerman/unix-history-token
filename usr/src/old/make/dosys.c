@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dosys.c	4.6 (Berkeley) 83/05/22"
+literal|"@(#)dosys.c	4.7 (Berkeley) 83/06/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,7 +183,7 @@ condition|(
 operator|(
 name|waitpid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 operator|)
 operator|==
