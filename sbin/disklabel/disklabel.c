@@ -1196,48 +1196,6 @@ name|RESTORE
 case|:
 if|if
 condition|(
-name|installboot
-operator|&&
-name|argc
-operator|==
-literal|3
-condition|)
-block|{
-name|makelabel
-argument_list|(
-name|argv
-index|[
-literal|2
-index|]
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|lab
-argument_list|)
-expr_stmt|;
-name|argc
-operator|--
-expr_stmt|;
-comment|/* 			 * We only called makelabel() for its side effect 			 * of setting the bootstrap file names.  Discard 			 * all changes to `lab' so that all values in the 			 * final label come from the ASCII label. 			 */
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|lab
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|lab
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|argc
 operator|!=
 literal|2
@@ -1488,7 +1446,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Construct a prototype disklabel from /etc/disktab.  As a side  * effect, set the names of the primary and secondary boot files  * if specified.  */
+comment|/*  * Construct a prototype disklabel from /etc/disktab.  */
 end_comment
 
 begin_function
@@ -7728,7 +7686,7 @@ literal|"       disklabel -w -B [-n] [ -b bootprog ] disk type [ packid ]"
 argument_list|,
 literal|"\t\t(to write label and install boot program)"
 argument_list|,
-literal|"       disklabel -R -B [-n] [ -b bootprog ] disk protofile [ type ]"
+literal|"       disklabel -R -B [-n] [ -b bootprog ] disk protofile"
 argument_list|,
 literal|"\t\t(to restore label and install boot program)"
 argument_list|)
