@@ -1011,6 +1011,26 @@ name|pbusy
 operator|=
 name|nbusy
 expr_stmt|;
+if|if
+condition|(
+name|iter
+operator|>
+literal|5
+operator|&&
+name|bioops
+operator|.
+name|io_sync
+condition|)
+call|(
+modifier|*
+name|bioops
+operator|.
+name|io_sync
+call|)
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 name|sync
 argument_list|(
 operator|&
@@ -1131,7 +1151,9 @@ name|DIAGNOSTIC
 argument_list|)
 name|printf
 argument_list|(
-literal|"%d: dev:%s, flags:%08lx, blkno:%ld, lblkno:%ld\n"
+literal|"%p %d: dev:%s, flags:%08lx, blkno:%ld, lblkno:%ld\n"
+argument_list|,
+name|bp
 argument_list|,
 name|nbusy
 argument_list|,
