@@ -54,6 +54,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -81,6 +87,12 @@ directive|include
 file|<pthread.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_function_decl
 name|void
 function_decl|(
@@ -88,46 +100,6 @@ modifier|*
 name|__cleanup
 function_decl|)
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* XXX - why are these declarations here? */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|__sys_sigprocmask
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|sigset_t
-modifier|*
-parameter_list|,
-name|sigset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|__sys_sigaction
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|struct
-name|sigaction
-modifier|*
-parameter_list|,
-name|struct
-name|sigaction
-modifier|*
-parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -173,7 +145,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|__sys_sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -188,11 +160,8 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|kill
+name|raise
 argument_list|(
-name|getpid
-argument_list|()
-argument_list|,
 name|SIGABRT
 argument_list|)
 expr_stmt|;
@@ -220,7 +189,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|__sys_sigaction
+name|_sigaction
 argument_list|(
 name|SIGABRT
 argument_list|,
@@ -243,7 +212,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|__sys_sigprocmask
+name|_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -258,11 +227,8 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|kill
+name|raise
 argument_list|(
-name|getpid
-argument_list|()
-argument_list|,
 name|SIGABRT
 argument_list|)
 expr_stmt|;
