@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.4 1994/10/20 06:48:39 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.5 1994/10/20 19:30:50 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
 end_include
 
 begin_define
@@ -204,6 +210,7 @@ argument_list|(
 name|jmp_restart
 argument_list|)
 expr_stmt|;
+comment|/* XXX Allow people to "restart" */
 if|if
 condition|(
 name|getenv
@@ -291,6 +298,11 @@ comment|/* 		 * XXX sort it by mountpoint, so that safe seq of mounting 		 * is 
 name|stage2
 argument_list|()
 expr_stmt|;
+name|reboot
+argument_list|(
+name|RB_AUTOBOOT
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -298,6 +310,14 @@ condition|(
 name|getenv
 argument_list|(
 literal|"STAGE3"
+argument_list|)
+operator|||
+operator|!
+name|access
+argument_list|(
+literal|"/this_is_hd"
+argument_list|,
+name|R_OK
 argument_list|)
 condition|)
 block|{
@@ -307,11 +327,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|Fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Must setenv STAGE0 or STAGE3\n"
+literal|"Must setenv STAGE0 or STAGE3"
 argument_list|)
 expr_stmt|;
 block|}
