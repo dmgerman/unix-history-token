@@ -1,4 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1990, 1991 William F. Jolitz.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ne.c	7.4 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * NE2000 Ethernet driver  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -12,10 +20,6 @@ name|NNE
 operator|>
 literal|0
 end_if
-
-begin_comment
-comment|/*-  * NE2000 Ethernet driver  * Copyright (C) 1990,91 W. Jolitz  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ne.c	7.3 (Berkeley) %G%  *  * Parts inspired from Tim Tucker's if_wd driver for the wd8003,  * insight on the ne2000 gained from Robert Clements PC/FTP driver.  */
-end_comment
 
 begin_include
 include|#

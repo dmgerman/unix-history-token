@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)fd.c	7.3 (Berkeley) %G%  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -12,22 +16,6 @@ name|NFD
 operator|>
 literal|0
 end_if
-
-begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)fd.c	7.2 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*                               fd driver                                  */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
 
 begin_include
 include|#
