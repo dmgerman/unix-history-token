@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1968,9 +1968,13 @@ name|vp
 operator|=
 name|mp
 operator|->
-name|mnt_mounth
+name|mnt_vnodelist
+operator|.
+name|lh_first
 init|;
 name|vp
+operator|!=
+name|NULL
 condition|;
 name|vp
 operator|=
@@ -1981,7 +1985,9 @@ name|nextvp
 operator|=
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 expr_stmt|;
 if|if
 condition|(
@@ -1997,6 +2003,8 @@ condition|(
 name|vget
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 goto|goto
@@ -2031,7 +2039,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 operator|!=
 name|nextvp
 operator|||
@@ -2204,9 +2214,13 @@ name|vp
 operator|=
 name|mp
 operator|->
-name|mnt_mounth
+name|mnt_vnodelist
+operator|.
+name|lh_first
 init|;
 name|vp
+operator|!=
+name|NULL
 condition|;
 name|vp
 operator|=
@@ -2217,13 +2231,17 @@ name|nextvp
 operator|=
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 expr_stmt|;
 if|if
 condition|(
 name|vget
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 goto|goto
@@ -2270,7 +2288,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 operator|!=
 name|nextvp
 operator|||
@@ -3266,9 +3286,13 @@ name|vp
 operator|=
 name|mp
 operator|->
-name|mnt_mounth
+name|mnt_vnodelist
+operator|.
+name|lh_first
 init|;
 name|vp
+operator|!=
+name|NULL
 condition|;
 name|vp
 operator|=
@@ -3279,7 +3303,9 @@ name|nextvp
 operator|=
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 expr_stmt|;
 if|if
 condition|(
@@ -3294,6 +3320,8 @@ condition|(
 name|vget
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 goto|goto
@@ -3356,7 +3384,9 @@ if|if
 condition|(
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 operator|!=
 name|nextvp
 operator|||
