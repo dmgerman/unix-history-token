@@ -858,6 +858,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+specifier|static
 name|char
 name|buf
 index|[
