@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.29 1995/03/12 07:56:06 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993,1994 John S. Dyson  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.30 1995/03/16 18:17:34 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1459,18 +1459,32 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+for|for
+control|(
 name|pager
 operator|=
 name|vnode_pager_list
 operator|.
 name|tqh_first
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|pager
-condition|)
+operator|!=
+name|NULL
+condition|;
+name|pager
+operator|=
+name|npager
+control|)
 block|{
 comment|/* 		 * Save the next pointer now since uncaching may terminate the 		 * object and render pager invalid 		 */
+name|npager
+operator|=
+name|pager
+operator|->
+name|pg_list
+operator|.
+name|tqe_next
+expr_stmt|;
 name|vp
 operator|=
 operator|(
@@ -1483,14 +1497,6 @@ name|pg_data
 operator|)
 operator|->
 name|vnp_vp
-expr_stmt|;
-name|npager
-operator|=
-name|pager
-operator|->
-name|pg_list
-operator|.
-name|tqe_next
 expr_stmt|;
 if|if
 condition|(
@@ -1509,6 +1515,12 @@ name|v_mount
 operator|==
 name|mp
 condition|)
+block|{
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1517,16 +1529,18 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|pager
-operator|=
-name|npager
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * Remove vnode associated object from the object cache.  *  * Note: this routine may be invoked as a result of a pager put  * operation (possibly at object termination time), so we must be careful.  */
+comment|/*  * Remove vnode associated object from the object cache.  * This routine must be called with the vnode locked.  *  * XXX unlock the vnode.  * We must do this since uncaching the object may result in its  * destruction which may initiate paging activity which may necessitate  * re-locking the vnode.  */
 end_comment
 
 begin_function
@@ -1548,8 +1562,6 @@ name|object
 decl_stmt|;
 name|boolean_t
 name|uncached
-decl_stmt|,
-name|locked
 decl_stmt|;
 name|vm_pager_t
 name|pager
@@ -1592,23 +1604,43 @@ operator|(
 name|TRUE
 operator|)
 return|;
-comment|/* 	 * Unlock the vnode if it is currently locked. We do this since 	 * uncaching the object may result in its destruction which may 	 * initiate paging activity which may necessitate locking the vnode. 	 */
-name|locked
-operator|=
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+operator|!
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|nfsv2_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
 if|if
 condition|(
-name|locked
-condition|)
-name|VOP_UNLOCK
-argument_list|(
 name|vp
+operator|->
+name|v_op
+operator|!=
+name|nfsv2_vnodeop_p
+condition|)
+name|panic
+argument_list|(
+literal|"vnode_pager_uncache: vnode not locked!"
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * Must use vm_object_lookup() as it actually removes the object from 	 * the cache list. 	 */
 name|object
 operator|=
@@ -1632,6 +1664,11 @@ operator|<=
 literal|1
 operator|)
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|pager_cache
 argument_list|(
 name|object
@@ -1639,20 +1676,16 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|uncached
 operator|=
 name|TRUE
-expr_stmt|;
-if|if
-condition|(
-name|locked
-condition|)
-name|VOP_LOCK
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
