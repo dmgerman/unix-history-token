@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.13 83/09/16"
+literal|"@(#)inet.c	4.14 (Berkeley) 83/09/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -1325,6 +1325,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\t%d message%s with bad code fields\n"
+argument_list|,
+name|icmpstat
+operator|.
+name|icps_badcode
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_badcode
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\t%d message%s< minimum length\n"
