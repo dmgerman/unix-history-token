@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.3 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -941,7 +941,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|", ttl = %ld"
+literal|", ttl = %u"
 argument_list|,
 name|getlong
 argument_list|(
