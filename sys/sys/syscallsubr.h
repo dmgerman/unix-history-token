@@ -35,7 +35,7 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|sockaddr
+name|mbuf
 struct_decl|;
 end_struct_decl
 
@@ -47,7 +47,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|mbuf
+name|sockaddr
 struct_decl|;
 end_struct_decl
 
