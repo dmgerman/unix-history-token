@@ -37,6 +37,9 @@ name|intptr_t
 name|sc_addr
 decl_stmt|;
 name|int
+name|sc_depth
+decl_stmt|;
+name|int
 name|sc_height
 decl_stmt|;
 name|int
@@ -63,6 +66,14 @@ name|sc_font
 decl_stmt|;
 name|int
 name|sc_font_height
+decl_stmt|;
+name|vi_blank_display_t
+modifier|*
+name|sc_blank
+decl_stmt|;
+name|vi_putc_t
+modifier|*
+name|sc_putc
 decl_stmt|;
 block|}
 struct|;
