@@ -2397,7 +2397,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|hlen
 decl_stmt|;
 name|long
@@ -2434,6 +2434,9 @@ literal|"%-15s %*s %8s %8s %8s  %s\n"
 argument_list|,
 literal|"Device"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|hlen
 argument_list|,
 name|header
@@ -2461,9 +2464,10 @@ modifier|*
 name|ksw
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|hlen
-decl_stmt|,
+decl_stmt|;
+name|int
 name|pagesize
 decl_stmt|;
 name|long
@@ -2520,6 +2524,9 @@ name|ksw
 operator|->
 name|ksw_devname
 argument_list|,
+operator|(
+name|int
+operator|)
 name|hlen
 argument_list|,
 name|CONVERT
@@ -2592,9 +2599,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|hlen
-decl_stmt|,
+decl_stmt|;
+name|int
 name|pagesize
 decl_stmt|;
 name|long
@@ -2665,6 +2673,9 @@ literal|"%-15s %*d %8d %8d %5.0f%%\n"
 argument_list|,
 literal|"Total"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|hlen
 argument_list|,
 name|CONVERT
