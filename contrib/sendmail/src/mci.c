@@ -1961,6 +1961,23 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* 	**  The following check is just for paranoia.  It protects the 	**  assignment in the if() clause. If there's not some minimum 	**  amount of space we can stop right now. The check will not 	**  trigger as long as sizeof(buf)=4000. 	*/
+if|if
+condition|(
+name|p
+operator|>=
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|4
+condition|)
+goto|goto
+name|printit
+goto|;
 if|if
 condition|(
 name|mci
@@ -1981,6 +1998,7 @@ operator|++
 operator|=
 literal|'<'
 expr_stmt|;
+comment|/* protected above */
 for|for
 control|(
 name|f
@@ -4277,6 +4295,10 @@ name|end
 expr_stmt|;
 while|while
 condition|(
+name|start
+operator|>
+name|pathname
+operator|&&
 operator|*
 operator|(
 name|start
@@ -4330,6 +4352,10 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+name|end
+operator|>
+name|pathname
+operator|&&
 operator|*
 name|end
 operator|==

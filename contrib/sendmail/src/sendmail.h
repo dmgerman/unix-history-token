@@ -6618,6 +6618,17 @@ begin_comment
 comment|/* max params per rewrite */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAX_MAP_ARGS
+value|10
+end_define
+
+begin_comment
+comment|/* max arguments for map */
+end_comment
+
 begin_comment
 comment|/* external<==> internal mapping table */
 end_comment

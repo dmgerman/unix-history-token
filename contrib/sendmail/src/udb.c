@@ -646,7 +646,7 @@ comment|/* if name is too long, assume it won't match */
 if|if
 condition|(
 name|keylen
-operator|>
+operator|>=
 sizeof|sizeof
 name|keybuf
 condition|)

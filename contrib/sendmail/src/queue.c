@@ -15505,15 +15505,15 @@ case|case
 literal|'H'
 case|:
 comment|/* header */
-comment|/* 			**  count size before chompheader() destroys the line. 			**  this isn't accurate due to macro expansion, but 			**  better than before. "+3" to skip H?? at least. 			*/
+comment|/* 			**  count size before chompheader() destroys the line. 			**  this isn't accurate due to macro expansion, but 			**  better than before. "-3" to skip H?? at least. 			*/
 name|hdrsize
 operator|+=
 name|strlen
 argument_list|(
 name|bp
-operator|+
-literal|3
 argument_list|)
+operator|-
+literal|3
 expr_stmt|;
 operator|(
 name|void
@@ -15965,6 +15965,13 @@ name|qflags
 operator||=
 name|QPRIMARY
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
 name|q
 operator|=
 name|parseaddr
@@ -15984,6 +15991,11 @@ name|e
 argument_list|,
 name|true
 argument_list|)
+expr_stmt|;
+else|else
+name|q
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
