@@ -578,36 +578,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|hear_no_evil
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_inet_ip
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|hear_no_evil
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|hear_no_evil
-argument_list|,
-literal|0
-argument_list|,
-literal|"Drop all received EVIL packets."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side of  * the Strong ES model described in RFC 1122, but since the routing table  * and transmit implementation do not implement the Strong ES model,  * setting this to 1 results in an odd hybrid.  *  * XXX - ip_checkinterface currently must be disabled if you use ipnat  * to translate the destination address to another local interface.  *  * XXX - ip_checkinterface must be disabled if you add IP aliases  * to the loopback interface instead of the interface where the  * packets for those addresses are received.  */
 end_comment
@@ -1965,29 +1935,6 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for RFC3514 (EVIL) packets. 	 */
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_EF
-condition|)
-block|{
-name|ipstat
-operator|.
-name|ips_evil
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|hear_no_evil
-condition|)
-goto|goto
-name|bad
-goto|;
-block|}
 comment|/* 	 * Check that the amount of data in the buffers 	 * is as at least much as the IP header would have us expect. 	 * Trim mbufs if longer than we expect. 	 * Drop packet if shorter than we expect. 	 */
 if|if
 condition|(

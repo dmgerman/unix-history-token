@@ -348,10 +348,6 @@ name|u_long
 name|ips_badaddr
 decl_stmt|;
 comment|/* invalid address on header */
-name|u_long
-name|ips_evil
-decl_stmt|;
-comment|/* EVIL packets received */
 block|}
 struct|;
 end_struct

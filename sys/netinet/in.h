@@ -2338,17 +2338,6 @@ begin_comment
 comment|/* get entire dummynet pipes */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IP_EVIL_INTENT
-value|65
-end_define
-
-begin_comment
-comment|/* RFC3514 */
-end_comment
-
 begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment

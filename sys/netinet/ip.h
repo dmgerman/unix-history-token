@@ -99,11 +99,6 @@ value|0x8000
 comment|/* reserved fragment flag */
 define|#
 directive|define
-name|IP_EF
-value|0x8000
-comment|/* evil flag, per RFC 3514 */
-define|#
-directive|define
 name|IP_DF
 value|0x4000
 comment|/* dont fragment flag */
