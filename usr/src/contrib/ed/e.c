@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)e.c	5.7 (Berkeley) %G%"
+literal|"@(#)e.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -435,14 +435,6 @@ name|char
 modifier|*
 name|tmp_path
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DBI
-name|RECNOINFO
-name|l_dbaccess
-decl_stmt|;
-endif|#
-directive|endif
 name|sigspecial
 operator|++
 expr_stmt|;
@@ -561,7 +553,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DBI
-comment|/* 	(l_dbaccess.bval) = (u_char) '\0'; 	(l_dbaccess.cachesize) = 0; 	(l_dbaccess.flags) = R_NOKEY; 	(l_dbaccess.lorder) = 0; 	(l_dbaccess.reclen) = 0; 	dbhtmp = dbopen(template, O_CREAT | O_RDWR, 	    S_IRUSR | S_IWUSR, (DBTYPE) DB_RECNO,&l_dbaccess); */
+comment|/* open using btree only, recno will mess things up 	 * because of garbage collection and how recno operates 	 * with delete. 	 */
 name|dbhtmp
 operator|=
 name|dbopen
@@ -579,7 +571,7 @@ argument_list|,
 operator|(
 name|DBTYPE
 operator|)
-name|DB_RECNO
+name|DB_BTREE
 argument_list|,
 name|NULL
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)d.c	5.4 (Berkeley) %G%"
+literal|"@(#)d.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -561,6 +561,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DBI
+comment|/* garbage collection should be done iff the 			 * open was done as btree, not recno. 			 */
 name|l_db_key
 operator|.
 name|size
