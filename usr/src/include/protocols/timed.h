@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)timed.h	1.3	(Berkeley)	%G%	*/
+comment|/*	@(#)timed.h	1.4	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -301,8 +301,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TSPTYPENUMBER
+name|TSP_SETDATE
 value|22
+end_define
+
+begin_comment
+comment|/* New from date command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSP_SETDATEREQ
+value|23
+end_define
+
+begin_comment
+comment|/* New remote for above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TSPTYPENUMBER
+value|24
 end_define
 
 begin_ifdef
@@ -363,6 +385,10 @@ block|,
 literal|"MSITEREQ"
 block|,
 literal|"TEST"
+block|,
+literal|"SETDATE"
+block|,
+literal|"SETDATEREQ"
 block|}
 decl_stmt|;
 end_decl_stmt
