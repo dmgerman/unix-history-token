@@ -23,12 +23,9 @@ directive|define
 name|_RPC_CLNT_STAT_H
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"@(#)clnt_stat.h	1.2	97/04/28 SMI"
-end_pragma
+begin_comment
+comment|/* #pragma ident	"@(#)clnt_stat.h	1.2	97/04/28 SMI" */
+end_comment
 
 begin_ifdef
 ifdef|#
