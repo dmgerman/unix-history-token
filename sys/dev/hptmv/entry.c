@@ -9691,6 +9691,13 @@ literal|"ENXIO\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|ccb
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
