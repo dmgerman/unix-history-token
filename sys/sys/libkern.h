@@ -481,6 +481,23 @@ end_endif
 
 begin_function_decl
 name|int
+name|fnmatch
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|locc
 parameter_list|(
 name|int
@@ -837,6 +854,94 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* fnmatch() return values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FNM_NOMATCH
+value|1
+end_define
+
+begin_comment
+comment|/* Match failed. */
+end_comment
+
+begin_comment
+comment|/* fnmatch() flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FNM_NOESCAPE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Disable backslash escaping. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FNM_PATHNAME
+value|0x02
+end_define
+
+begin_comment
+comment|/* Slash must be matched by slash. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FNM_PERIOD
+value|0x04
+end_define
+
+begin_comment
+comment|/* Period must be matched by period. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FNM_LEADING_DIR
+value|0x08
+end_define
+
+begin_comment
+comment|/* Ignore /<tail> after Imatch. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FNM_CASEFOLD
+value|0x10
+end_define
+
+begin_comment
+comment|/* Case insensitive search. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FNM_IGNORECASE
+value|FNM_CASEFOLD
+end_define
+
+begin_define
+define|#
+directive|define
+name|FNM_FILE_NAME
+value|FNM_PATHNAME
+end_define
 
 begin_endif
 endif|#
