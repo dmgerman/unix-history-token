@@ -4,7 +4,7 @@ comment|/* utility functions for `patch' */
 end_comment
 
 begin_comment
-comment|/* $Id: util.c,v 1.22 1997/06/13 06:28:37 eggert Exp $ */
+comment|/* $Id: util.c,v 1.24 1997/07/10 08:16:12 eggert Exp $ */
 end_comment
 
 begin_comment
@@ -727,6 +727,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|int
+name|to_dir_known_to_exist
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|errno
@@ -750,6 +755,10 @@ argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
+name|to_dir_known_to_exist
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|rename
@@ -763,9 +772,6 @@ literal|0
 condition|)
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|EXDEV
 if|if
 condition|(
 name|errno
@@ -777,14 +783,24 @@ if|if
 condition|(
 operator|!
 name|backup
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|to
 argument_list|)
-operator|!=
+operator|==
 literal|0
-operator|&&
+condition|)
+name|to_dir_known_to_exist
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|errno
 operator|!=
 name|ENOENT
@@ -793,6 +809,17 @@ name|pfatal
 argument_list|(
 literal|"can't remove `%s'"
 argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|to_dir_known_to_exist
+condition|)
+name|makedirs
+argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
@@ -807,8 +834,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 name|pfatal
 argument_list|(
 literal|"can't rename `%s' to `%s'"
@@ -3075,17 +3100,17 @@ name|ask
 argument_list|(
 name|reverse
 condition|?
-literal|"  Ignore -R? [y] "
+literal|"  Ignore -R? [n] "
 else|:
-literal|"  Assume -R? [y] "
+literal|"  Assume -R? [n] "
 argument_list|)
 expr_stmt|;
 name|r
 operator|=
 operator|*
 name|buf
-operator|!=
-literal|'n'
+operator|==
+literal|'y'
 expr_stmt|;
 if|if
 condition|(
