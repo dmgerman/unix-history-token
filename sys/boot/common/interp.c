@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp.c,v 1.11 1999/01/13 21:59:58 abial Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: interp.c,v 1.14 1999/02/04 17:06:46 dcs Exp $  */
 end_comment
 
 begin_comment
@@ -280,14 +280,14 @@ directive|endif
 comment|/*      * Read our default configuration      */
 if|if
 condition|(
-name|source
+name|include
 argument_list|(
 literal|"/boot/loader.rc"
 argument_list|)
 operator|!=
 name|CMD_OK
 condition|)
-name|source
+name|include
 argument_list|(
 literal|"/boot/boot.conf"
 argument_list|)
@@ -415,13 +415,13 @@ end_comment
 begin_expr_stmt
 name|COMMAND_SET
 argument_list|(
-name|source
+name|include
 argument_list|,
-literal|"source"
+literal|"include"
 argument_list|,
 literal|"read commands from a file"
 argument_list|,
-name|command_source
+name|command_include
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -429,7 +429,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|int
-name|command_source
+name|command_include
 parameter_list|(
 name|int
 name|argc
@@ -473,7 +473,7 @@ operator|++
 control|)
 name|res
 operator|=
-name|source
+name|include
 argument_list|(
 name|argv
 index|[
@@ -491,7 +491,7 @@ end_function
 
 begin_struct
 struct|struct
-name|sourceline
+name|includeline
 block|{
 name|char
 modifier|*
@@ -512,7 +512,7 @@ directive|define
 name|SL_IGNOREERR
 value|(1<<1)
 name|struct
-name|sourceline
+name|includeline
 modifier|*
 name|next
 decl_stmt|;
@@ -522,7 +522,7 @@ end_struct
 
 begin_function
 name|int
-name|source
+name|include
 parameter_list|(
 name|char
 modifier|*
@@ -530,7 +530,7 @@ name|filename
 parameter_list|)
 block|{
 name|struct
-name|sourceline
+name|includeline
 modifier|*
 name|script
 decl_stmt|,
@@ -547,6 +547,23 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* big enough? */
+ifdef|#
+directive|ifdef
+name|BOOT_FORTH
+name|int
+name|res
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|,
+name|line
+decl_stmt|;
+else|#
+directive|else
 name|int
 name|argc
 decl_stmt|,
@@ -567,6 +584,8 @@ name|flags
 decl_stmt|,
 name|line
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -637,6 +656,15 @@ block|{
 name|line
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BOOT_FORTH
+name|cp
+operator|=
+name|input
+expr_stmt|;
+else|#
+directive|else
 name|flags
 operator|=
 literal|0
@@ -694,6 +722,8 @@ operator||=
 name|SL_IGNOREERR
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Allocate script line structure and copy line, flags */
 name|sp
 operator|=
@@ -702,7 +732,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sourceline
+name|includeline
 argument_list|)
 operator|+
 name|strlen
@@ -726,7 +756,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sourceline
+name|includeline
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -738,12 +768,17 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BOOT_FORTH
 name|sp
 operator|->
 name|flags
 operator|=
 name|flags
 expr_stmt|;
+endif|#
+directive|endif
 name|sp
 operator|->
 name|line
@@ -788,10 +823,15 @@ name|fd
 argument_list|)
 expr_stmt|;
 comment|/*      * Execute the script      */
+ifndef|#
+directive|ifndef
+name|BOOT_FORTH
 name|argv
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|res
 operator|=
 name|CMD_OK
@@ -813,6 +853,51 @@ operator|->
 name|next
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|BOOT_FORTH
+name|res
+operator|=
+name|bf_run
+argument_list|(
+name|sp
+operator|->
+name|text
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+name|VM_OUTOFTEXT
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|command_errbuf
+argument_list|,
+literal|"Error while including %s:\n%s"
+argument_list|,
+name|filename
+argument_list|,
+name|sp
+operator|->
+name|text
+argument_list|)
+expr_stmt|;
+name|res
+operator|=
+name|CMD_ERROR
+expr_stmt|;
+break|break;
+block|}
+else|else
+name|res
+operator|=
+name|CMD_OK
+expr_stmt|;
+else|#
+directive|else
 comment|/* print if not being quiet */
 if|if
 condition|(
@@ -938,7 +1023,12 @@ name|CMD_ERROR
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 block|}
+ifndef|#
+directive|ifndef
+name|BOOT_FORTH
 if|if
 condition|(
 name|argv
@@ -950,6 +1040,8 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|script
