@@ -2169,6 +2169,11 @@ return|;
 case|case
 name|PT_IO
 case|:
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|piod
 operator|=
 name|addr
