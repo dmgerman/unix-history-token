@@ -4351,6 +4351,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Compatibility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Filedes
+value|fd
+end_define
+
+begin_define
+define|#
+directive|define
+name|Ottyb
+value|shell_mode
+end_define
+
+begin_define
+define|#
+directive|define
+name|Nttyb
+value|prog_mode
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTY
+value|struct termios
+end_define
+
 begin_endif
 endif|#
 directive|endif
