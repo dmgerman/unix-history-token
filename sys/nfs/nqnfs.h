@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nqnfs.h	8.1 (Berkeley) 6/10/93  * $Id: nqnfs.h,v 1.4 1994/09/22 22:10:45 wollman Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nqnfs.h	8.1 (Berkeley) 6/10/93  * $Id: nqnfs.h,v 1.5 1994/10/02 17:27:07 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -177,6 +177,23 @@ begin_comment
 comment|/*  * Definitions used for saving the "last lease expires" time in Non-volatile  * RAM on the server. The default definitions below assume that NOVRAM is not  * available.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HASNVRAM
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|HASNVRAM
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -318,27 +335,20 @@ begin_struct
 struct|struct
 name|nqlease
 block|{
-name|struct
-name|nqlease
-modifier|*
-name|lc_chain1
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Timer queue list (must be first) */
-name|struct
-name|nqlease
-modifier|*
-name|lc_fhnext
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|nqlease
+argument_list|)
+name|lc_hash
+expr_stmt|;
 comment|/* Fhandle hash list */
-name|struct
-name|nqlease
-modifier|*
-modifier|*
-name|lc_fhprev
-decl_stmt|;
+name|CIRCLEQ_ENTRY
+argument_list|(
+argument|nqlease
+argument_list|)
+name|lc_timer
+expr_stmt|;
+comment|/* Timer queue list */
 name|time_t
 name|lc_expiry
 decl_stmt|;
@@ -662,46 +672,49 @@ begin_comment
 comment|/*  * List head for timer queue.  */
 end_comment
 
-begin_union
-specifier|extern
-union|union
-name|nqsrvthead
-block|{
-name|union
-name|nqsrvthead
-modifier|*
-name|th_head
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|struct
+begin_macro
+name|CIRCLEQ_HEAD
+argument_list|(
+argument_list|,
+argument|nqlease
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|nqtimerhead
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * List head for the file handle hash table.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NQFHHASH
+parameter_list|(
+name|f
+parameter_list|)
+define|\
+value|(&nqfhhashtbl[(*((u_long *)(f)))& nqfhhash])
+end_define
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|nqfhhashhead
+argument_list|,
 name|nqlease
-modifier|*
-name|th_chain
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|nqthead
-union|;
-end_union
+argument_list|)
+operator|*
+name|nqfhhashtbl
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|nqlease
-modifier|*
-modifier|*
-name|nqfhead
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_long
-name|nqfheadhash
+name|nqfhhash
 decl_stmt|;
 end_decl_stmt
 
