@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.74
+literal|3.75
 operator|%
 name|G
 operator|%
@@ -4315,6 +4315,9 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|NOTDEF
 specifier|static
 name|char
 name|buf
@@ -4636,6 +4639,18 @@ operator|(
 name|buf
 operator|)
 return|;
+else|#
+directive|else
+else|NOTDEF
+comment|/* oh bother, this breaks UUCP......   */
+return|return
+operator|(
+name|name
+operator|)
+return|;
+endif|#
+directive|endif
+endif|NOTDEF
 block|}
 end_function
 
