@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mv.c	4.2 (Berkeley) %G%"
+literal|"@(#)mv.c	4.3 (Berkeley) 81/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -1020,58 +1020,6 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|iflag
-operator|&&
-operator|!
-name|fflag
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"remove %s? "
-argument_list|,
-name|target
-argument_list|)
-expr_stmt|;
-name|cc
-operator|=
-name|c
-operator|=
-name|getchar
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-name|c
-operator|!=
-literal|'\n'
-operator|&&
-name|c
-operator|!=
-name|EOF
-condition|)
-name|c
-operator|=
-name|getchar
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|cc
-operator|!=
-literal|'y'
-condition|)
 return|return
 operator|(
 literal|1
