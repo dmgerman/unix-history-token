@@ -101,7 +101,7 @@ name|p2
 parameter_list|,
 name|n
 parameter_list|)
-value|bcmp((char *)(p1), (char *)(p2), (int)(n))
+value|bcmp((void *)(p1), (void *)(p2), (int)(n))
 end_define
 
 begin_define
@@ -115,26 +115,8 @@ name|p2
 parameter_list|,
 name|n
 parameter_list|)
-value|bcopy((char *)(p1), (char *)(p2), (int)(n))
+value|bcopy((void *)(p1), (void *)(p2), (int)(n))
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ovbcopy
-value|bcopy
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -1601,17 +1583,11 @@ name|len
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|ovbcopy
+name|BCOPY
 argument_list|(
 name|cp
 argument_list|,
-call|(
-name|caddr_t
-call|)
-argument_list|(
+operator|(
 operator|(
 name|intptr_t
 operator|)
@@ -1619,7 +1595,7 @@ name|cp
 operator|&
 operator|~
 literal|3
-argument_list|)
+operator|)
 argument_list|,
 name|len
 argument_list|)
