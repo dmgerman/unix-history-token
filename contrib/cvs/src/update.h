@@ -68,6 +68,10 @@ name|preload_update_dir
 operator|,
 name|int
 name|xpull_template
+operator|,
+name|char
+operator|*
+name|repository
 operator|)
 argument_list|)
 decl_stmt|;
@@ -92,6 +96,7 @@ name|isemptydir
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|dir

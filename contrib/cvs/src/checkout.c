@@ -407,7 +407,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|command_name
+name|cvs_cmd_name
 argument_list|,
 literal|"export"
 argument_list|)
@@ -566,7 +566,7 @@ literal|0
 argument_list|,
 literal|"-q or -Q must be specified before \"%s\""
 argument_list|,
-name|command_name
+name|cvs_cmd_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -911,7 +911,6 @@ expr_stmt|;
 name|ign_setup
 argument_list|()
 expr_stmt|;
-comment|/* We have to expand names here because the "expand-modules"            directive to the server has the side-effect of having the            server send the check-in and update programs for the            various modules/dirs requested.  If we turn this off and            simply request the names of the modules and directories (as            below in !expand_modules), those files (CVS/Checkin.prog            or CVS/Update.prog) don't get created.  Grrr.  */
 name|expand_modules
 operator|=
 operator|(
@@ -1109,6 +1108,11 @@ argument_list|(
 literal|"-j"
 argument_list|,
 name|join_rev2
+argument_list|)
+expr_stmt|;
+name|send_arg
+argument_list|(
+literal|"--"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1381,6 +1385,10 @@ begin_comment
 comment|/* FIXME: This is and emptydir_name are in checkout.c for historical    reasons, probably want to move them.  */
 end_comment
 
+begin_comment
+comment|/* int  * safe_location ( char *where )  *  * Return true if where is a safe destination for a checkout.  *  * INPUTS  *  where	The requested destination directory.  *  * GLOBALS  *  current_parsed_root->directory  *  current_parsed_root->isremote  *  		Used to locate our CVSROOT.  *  * RETURNS  *  true	If we are running in client mode or if where is not located  *  		within the CVSROOT.  *  false	Otherwise.  *  * ERRORS  *  Exits with a fatal error message when various events occur, such as not  *  being able to resolve a path or failing ot chdir to a path.  */
+end_comment
+
 begin_function
 name|int
 name|safe_location
@@ -1401,79 +1409,53 @@ modifier|*
 name|where_location
 decl_stmt|;
 name|char
+modifier|*
 name|hardpath
-index|[
-name|PATH_MAX
-operator|+
-literal|5
-index|]
 decl_stmt|;
 name|size_t
 name|hardpath_len
 decl_stmt|;
 name|int
-name|x
-decl_stmt|;
-name|int
 name|retval
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_READLINK
-comment|/* FIXME-arbitrary limit: should be retrying this like xgetwd.        But how does readlink let us know that the buffer was too small?        (by returning sizeof hardpath - 1?).  */
-name|x
-operator|=
-name|readlink
-argument_list|(
-name|current_parsed_root
-operator|->
-name|directory
-argument_list|,
-name|hardpath
-argument_list|,
-sizeof|sizeof
-name|hardpath
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|x
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
-name|x
-operator|==
-operator|-
-literal|1
+name|trace
 condition|)
-block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-name|hardpath
+name|stderr
 argument_list|,
-name|current_parsed_root
-operator|->
-name|directory
+literal|"%s-> safe_location( where=%s )\n"
+argument_list|,
+name|CLIENT_SERVER_STR
+argument_list|,
+name|where
+condition|?
+name|where
+else|:
+literal|"(null)"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|hardpath
-index|[
-name|x
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+comment|/* Don't compare remote CVSROOTs to our destination directory. */
+if|if
+condition|(
+name|current_parsed_root
+operator|->
+name|isremote
+condition|)
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
+comment|/* CLIENT_SUPPORT */
 comment|/* set current - even if where is set we'll need to cd back... */
 name|current
 operator|=
@@ -1493,6 +1475,15 @@ argument_list|,
 name|errno
 argument_list|,
 literal|"could not get working directory"
+argument_list|)
+expr_stmt|;
+name|hardpath
+operator|=
+name|xresolvepath
+argument_list|(
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 comment|/* if where is set, set current to where, where - last_component( where ),      * or fail, depending on whether the directories exist or not.      */
@@ -1597,8 +1588,13 @@ argument_list|(
 name|where
 argument_list|)
 expr_stmt|;
+comment|/* It's okay to cast out the const below since we know we just                  * allocated where_location and can do what we like with it.                  */
 name|parent
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|last_component
 argument_list|(
 name|where_location
@@ -1623,6 +1619,11 @@ operator|-
 literal|1
 condition|)
 block|{
+name|free
+argument_list|(
+name|where_location
+argument_list|)
+expr_stmt|;
 name|where_location
 operator|=
 name|xgetwd
@@ -1771,6 +1772,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|current
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|hardpath
 argument_list|)
 expr_stmt|;
 return|return
@@ -3076,21 +3082,15 @@ argument_list|(
 name|reposcopy
 argument_list|)
 expr_stmt|;
-block|{
-name|int
-name|where_is_absolute
-init|=
+comment|/* The top-level CVSADM directory should always be 	   current_parsed_root->directory.  Create it, but only if WHERE is 	   relative.  If WHERE is absolute, our current directory 	   may not have a thing to do with where the sources are 	   being checked out.  If it does, build_dirs_and_chdir 	   will take care of creating adm files here. */
+comment|/* FIXME: checking is_absolute (where) is a horrid kludge; 	   I suspect we probably can just skip the call to 	   build_one_dir whenever the -d command option was specified 	   to checkout.  */
+if|if
+condition|(
+operator|!
 name|isabsolute
 argument_list|(
 name|where
 argument_list|)
-decl_stmt|;
-comment|/* The top-level CVSADM directory should always be 	       current_parsed_root->directory.  Create it, but only if WHERE is 	       relative.  If WHERE is absolute, our current directory 	       may not have a thing to do with where the sources are 	       being checked out.  If it does, build_dirs_and_chdir 	       will take care of creating adm files here. */
-comment|/* FIXME: checking where_is_absolute is a horrid kludge; 	       I suspect we probably can just skip the call to 	       build_one_dir whenever the -d command option was specified 	       to checkout.  */
-if|if
-condition|(
-operator|!
-name|where_is_absolute
 operator|&&
 name|top_level_admin
 operator|&&
@@ -3099,7 +3099,7 @@ operator|==
 name|CHECKOUT
 condition|)
 block|{
-comment|/* It may be argued that we shouldn't set any sticky 		   bits for the top-level repository.  FIXME?  */
+comment|/* It may be argued that we shouldn't set any sticky 	       bits for the top-level repository.  FIXME?  */
 name|build_one_dir
 argument_list|(
 name|current_parsed_root
@@ -3116,7 +3116,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SERVER_SUPPORT
-comment|/* We _always_ want to have a top-level admin 		   directory.  If we're running in client/server mode, 		   send a "Clear-static-directory" command to make 		   sure it is created on the client side.  (See 5.10 		   in cvsclient.dvi to convince yourself that this is 		   OK.)  If this is a duplicate command being sent, it 		   will be ignored on the client side.  */
+comment|/* We _always_ want to have a top-level admin 	       directory.  If we're running in client/server mode, 	       send a "Clear-static-directory" command to make 	       sure it is created on the client side.  (See 5.10 	       in cvsclient.dvi to convince yourself that this is 	       OK.)  If this is a duplicate command being sent, it 	       will be ignored on the client side.  */
 if|if
 condition|(
 name|server_active
@@ -3133,7 +3133,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Build dirs on the path if necessary and leave us in the 	       bottom directory (where if where was specified) doesn't 	       contain a CVS subdir yet, but all the others contain 	       CVS and Entries.Static files */
+comment|/* Build dirs on the path if necessary and leave us in the 	   bottom directory (where if where was specified) doesn't 	   contain a CVS subdir yet, but all the others contain 	   CVS and Entries.Static files */
 if|if
 condition|(
 name|build_dirs_and_chdir
@@ -3166,7 +3166,6 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 block|}
 comment|/* set up the repository (or make sure the old one matches) */
 if|if
@@ -3699,6 +3698,8 @@ argument_list|,
 name|preload_update_dir
 argument_list|,
 name|pull_template
+argument_list|,
+name|repository
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4001,6 +4002,8 @@ argument_list|,
 name|preload_update_dir
 argument_list|,
 name|pull_template
+argument_list|,
+name|repository
 argument_list|)
 expr_stmt|;
 name|out
@@ -4197,7 +4200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build all the dirs along the path to DIRS with CVS subdirs with appropriate    repositories.  If ->repository is NULL, do not create a CVSADM directory    for that subdirectory; just CVS_CHDIR into it.  */
+comment|/* Build all the dirs along the path to DIRS with CVS subdirs with appropriate  * repositories.  If DIRS->repository is NULL or the directory already exists,  * do not create a CVSADM directory for that subdirectory; just CVS_CHDIR into  * it.  Frees all storage used by DIRS.  *  * ASSUMPTIONS  *   1. Parent directories will be listed in DIRS before their children.  *   2. At most a single directory will need to be changed at one time.  In  *      other words, if we are in /a/b/c, and our final destination is  *      /a/b/c/d/e/f, then we will build d, then d/e, then d/e/f.  *  * INPUTS  *   dirs	Simple list composed of dir_to_build structures, listing  *		information about directories to build.  *   sticky	Passed to build_one_dir to tell it whether there are any sticky  *		tags or dates to be concerned with.  *  * RETURNS  *   1 on error, 0 otherwise.  *  * ERRORS  *  The only nonfatal error this function may return is if the CHDIR fails.  */
 end_comment
 
 begin_function
@@ -4235,6 +4238,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|dir
