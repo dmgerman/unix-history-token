@@ -3769,13 +3769,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
-argument_list|(
-name|lp1
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -3796,6 +3789,13 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|lp1
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -3814,6 +3814,13 @@ argument_list|,
 literal|"%s: bad sector table not supported\n"
 argument_list|,
 name|sname
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lp1
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 continue|continue;
