@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)lfs_vfsops.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)lfs_vfsops.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -312,7 +312,7 @@ name|mp
 operator|->
 name|m_flag
 operator|=
-literal|0
+name|M_RDONLY
 expr_stmt|;
 name|mp
 operator|->
@@ -1197,6 +1197,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_sbsize
+operator|<
+name|SBSIZE
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_INVAL
+expr_stmt|;
+end_if
+
 begin_expr_stmt
 name|brelse
 argument_list|(
@@ -1978,6 +1995,25 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mntflushbuf
+argument_list|(
+name|mp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mntinvalbuf
+argument_list|(
+name|mp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 name|ump
 operator|=
 name|VFSTOUFS
@@ -2716,7 +2752,7 @@ literal|0
 argument_list|,
 name|NOCRED
 argument_list|,
-name|waitfor
+name|MNT_NOWAIT
 argument_list|)
 condition|)
 name|allerror
@@ -2733,14 +2769,20 @@ name|updlock
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
-name|bflush
+comment|/* 	 * Force stale file system control information to be flushed. 	 */
+name|vflushbuf
 argument_list|(
 name|ump
 operator|->
 name|um_devvp
-operator|->
-name|v_mounton
+argument_list|,
+name|waitfor
+operator|==
+name|MNT_WAIT
+condition|?
+name|B_SYNC
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
