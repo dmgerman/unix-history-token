@@ -79,14 +79,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* first hint is /etc/objectformat */
+comment|/* first hint is /etc/objformat */
 name|FILE
 modifier|*
 name|fp
 init|=
 name|fopen
 argument_list|(
-literal|"/etc/objectformat"
+literal|"/etc/objformat"
 argument_list|,
 literal|"r"
 argument_list|)
@@ -191,7 +191,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unrecognized line in /etc/objectformat: %s\n"
+literal|"Unrecognized line in /etc/objformat: %s\n"
 argument_list|,
 name|buf
 argument_list|)
