@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -55,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/krb.h>
+file|<krb.h>
 end_include
 
 begin_include

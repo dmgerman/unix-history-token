@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"yppasswd_private.h"
 end_include
 
@@ -132,10 +138,6 @@ modifier|*
 name|user
 parameter_list|)
 block|{
-name|struct
-name|timeval
-name|timeout
-decl_stmt|;
 name|struct
 name|yppasswd
 name|yppasswd

@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -41,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -198,6 +210,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strchr
@@ -206,6 +219,7 @@ name|buf
 argument_list|,
 literal|'#'
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cp

@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.11 1997/03/29 04:31:59 imp Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,7 +165,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<varargs.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -189,7 +189,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/krb.h>
+file|<krb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"krb.h"
 end_include
 
 begin_decl_stmt
@@ -401,6 +407,7 @@ expr_stmt|;
 comment|/* if called as something other than "rsh", use it as the host name */
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strrchr
@@ -412,6 +419,7 @@ index|]
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 operator|++
 name|p
@@ -949,7 +957,7 @@ argument_list|,
 name|schedule
 argument_list|)
 expr_stmt|;
-name|des_set_key_krb
+name|des_set_key
 argument_list|(
 operator|&
 name|cred
@@ -1567,13 +1575,20 @@ name|doencrypt
 condition|)
 name|wc
 operator|=
-name|des_write
+name|des_enc_write
 argument_list|(
 name|rem
 argument_list|,
 name|bp
 argument_list|,
 name|cc
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|cred
+operator|.
+name|session
 argument_list|)
 expr_stmt|;
 else|else
@@ -1804,7 +1819,7 @@ name|doencrypt
 condition|)
 name|cc
 operator|=
-name|des_read
+name|des_enc_read
 argument_list|(
 name|rfd2
 argument_list|,
@@ -1812,6 +1827,13 @@ name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|cred
+operator|.
+name|session
 argument_list|)
 expr_stmt|;
 else|else
@@ -1894,7 +1916,7 @@ name|doencrypt
 condition|)
 name|cc
 operator|=
-name|des_read
+name|des_enc_read
 argument_list|(
 name|rem
 argument_list|,
@@ -1902,6 +1924,13 @@ name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|cred
+operator|.
+name|session
 argument_list|)
 expr_stmt|;
 else|else
@@ -2010,7 +2039,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|des_write
+name|des_enc_write
 argument_list|(
 name|rfd2
 argument_list|,
@@ -2018,6 +2047,13 @@ operator|&
 name|signo
 argument_list|,
 literal|1
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|cred
+operator|.
+name|session
 argument_list|)
 expr_stmt|;
 else|else
