@@ -1253,6 +1253,16 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|mntopts
+operator|==
+name|NULL
+condition|)
+name|mntopts
+operator|=
+literal|""
+expr_stmt|;
 name|name
 operator|=
 name|mntpath
@@ -1266,10 +1276,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|mntopts
-operator|==
-name|NULL
-operator|||
 operator|*
 name|mntopts
 operator|==
