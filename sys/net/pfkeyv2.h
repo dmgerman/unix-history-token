@@ -1401,31 +1401,35 @@ directive|ifndef
 name|_KERNEL
 end_ifndef
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|pfkey_sadump
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|sadb_msg
-modifier|*
+operator|*
 name|m
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|pfkey_spdump
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|sadb_msg
-modifier|*
+operator|*
 name|m
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
@@ -2007,7 +2011,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __PFKEY_V2_H */
+comment|/* !__PFKEY_V2_H */
 end_comment
 
 begin_endif
@@ -2016,7 +2020,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _NET_PFKEYV2_H_ */
+comment|/* !_NET_PFKEYV2_H_ */
 end_comment
 
 end_unit
