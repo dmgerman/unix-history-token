@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypxfr_main.c,v 1.11 1997/12/08 07:49:54 charnier Exp $"
+literal|"$Id: ypxfr_main.c,v 1.12 1998/08/02 16:44:18 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,7 +294,7 @@ block|}
 block|}
 if|if
 condition|(
-name|_rpcpmstart
+name|ypxfr_prognum
 condition|)
 block|{
 name|timeout
@@ -339,7 +339,8 @@ literal|"%s"
 argument_list|,
 name|clnt_spcreateerror
 argument_list|(
-literal|"failed to \ establish callback handle"
+literal|"failed to "
+literal|"establish callback handle"
 argument_list|)
 argument_list|)
 expr_stmt|;
