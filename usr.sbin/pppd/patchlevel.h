@@ -14,21 +14,21 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"2.2"
+value|"2.3"
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMPLEMENTATION
-value|"beta3"
+value|""
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATE
-value|"11 July 95"
+value|"22 May 97"
 end_define
 
 end_unit
