@@ -68,12 +68,12 @@ name|int
 name|psd
 decl_stmt|;
 comment|/* parity subdisk number */
-name|int
+name|u_int64_t
 name|stripe
 decl_stmt|;
 comment|/* stripe number */
 name|int
-name|isparity
+name|paritysd
 init|=
 literal|0
 decl_stmt|;
@@ -258,48 +258,6 @@ operator|->
 name|p_pid
 expr_stmt|;
 comment|/* note who last had a bash at it */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-name|bp
-operator|=
-name|geteblk
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
-comment|/* Get a buffer */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|==
-name|NULL
-condition|)
-return|return
-name|ENOMEM
-return|;
-comment|/*      * Amount to transfer: block size, unless it      * would overlap the end      */
-name|bp
-operator|->
-name|b_bcount
-operator|=
-name|size
-expr_stmt|;
-name|bp
-operator|->
-name|b_resid
-operator|=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
 comment|/* Now decide where to read from */
 switch|switch
 condition|(
@@ -366,20 +324,6 @@ operator|->
 name|stripesize
 expr_stmt|;
 comment|/* offset from beginning of stripe */
-name|lock
-operator|=
-name|lockrange
-argument_list|(
-name|plexblkno
-operator|<<
-name|DEV_BSHIFT
-argument_list|,
-name|bp
-argument_list|,
-name|plex
-argument_list|)
-expr_stmt|;
-comment|/* lock it */
 break|break;
 case|case
 name|plex_raid4
@@ -438,6 +382,24 @@ name|stripesize
 operator|)
 expr_stmt|;
 comment|/* stripe number */
+comment|/* Make sure we don't go beyond the end of the band. */
+name|size
+operator|=
+name|min
+argument_list|(
+name|size
+argument_list|,
+operator|(
+name|plex
+operator|->
+name|stripesize
+operator|-
+name|stripeoffset
+operator|)
+operator|<<
+name|DEV_BSHIFT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|plex
@@ -471,7 +433,7 @@ operator|->
 name|subdisks
 expr_stmt|;
 comment|/* parity subdisk for this stripe */
-name|isparity
+name|paritysd
 operator|=
 name|plex
 operator|->
@@ -500,38 +462,11 @@ operator|->
 name|stripesize
 expr_stmt|;
 comment|/* one stripe less */
+elseif|else
 if|if
 condition|(
-operator|!
-name|isparity
+name|paritysd
 condition|)
-name|lock
-operator|=
-name|lockrange
-argument_list|(
-name|plexblkno
-operator|<<
-name|DEV_BSHIFT
-argument_list|,
-name|bp
-argument_list|,
-name|plex
-argument_list|)
-expr_stmt|;
-comment|/* lock it */
-break|break;
-case|case
-name|plex_disorg
-case|:
-comment|/* to keep the compiler happy */
-block|}
-if|if
-condition|(
-name|isparity
-condition|)
-block|{
-comment|/* we're reviving a parity block, */
-comment|/* 	 * We have calculated plexblkno assuming it 	 * was a data block.  Go back to the beginning 	 * of the band. 	 */
 name|plexblkno
 operator|-=
 name|plex
@@ -542,26 +477,28 @@ name|sd
 operator|->
 name|plexsdno
 expr_stmt|;
-comment|/* Don't need that bp after all, we'll get a new one. */
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_INVAL
-expr_stmt|;
-name|brelse
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* is this kosher? */
+comment|/* go back to the beginning of the band */
+break|break;
+case|case
+name|plex_disorg
+case|:
+comment|/* to keep the compiler happy */
+block|}
+if|if
+condition|(
+name|paritysd
+condition|)
+block|{
+comment|/* we're reviving a parity block, */
 name|bp
 operator|=
 name|parityrebuild
 argument_list|(
 name|plex
 argument_list|,
-name|plexblkno
+name|sd
+operator|->
+name|revived
 argument_list|,
 name|size
 argument_list|,
@@ -589,6 +526,48 @@ block|}
 else|else
 block|{
 comment|/* data block */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+name|bp
+operator|=
+name|geteblk
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
+comment|/* Get a buffer */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
+comment|/* 	 * Amount to transfer: block size, unless it 	 * would overlap the end. 	 */
+name|bp
+operator|->
+name|b_bcount
+operator|=
+name|size
+expr_stmt|;
+name|bp
+operator|->
+name|b_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
 name|bp
 operator|->
 name|b_blkno
@@ -596,6 +575,28 @@ operator|=
 name|plexblkno
 expr_stmt|;
 comment|/* start here */
+if|if
+condition|(
+name|isstriped
+argument_list|(
+name|plex
+argument_list|)
+condition|)
+comment|/* we need to lock striped plexes */
+name|lock
+operator|=
+name|lockrange
+argument_list|(
+name|plexblkno
+operator|<<
+name|DEV_BSHIFT
+argument_list|,
+name|bp
+argument_list|,
+name|plex
+argument_list|)
+expr_stmt|;
+comment|/* lock it */
 if|if
 condition|(
 name|vol
@@ -1096,6 +1097,33 @@ name|EINVAL
 expr_stmt|;
 return|return;
 block|}
+elseif|else
+if|if
+condition|(
+name|plex
+operator|->
+name|state
+operator|<
+name|plex_flaky
+condition|)
+block|{
+name|reply
+operator|->
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|reply
+operator|->
+name|msg
+argument_list|,
+literal|"Plex is not completely accessible\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|pstripe
 operator|=
 name|data
@@ -1333,7 +1361,9 @@ expr_stmt|;
 comment|/* moved this much further down */
 if|if
 condition|(
-name|pstripe
+name|plex
+operator|->
+name|checkblock
 operator|>=
 name|SD
 index|[
@@ -1409,7 +1439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rebuild a parity stripe.  Return pointer to  * parity bp.  On return,  *  * 1.  The band is locked.  The caller must unlock  *     the band and release the buffer header.  *  * 2.  All buffer headers except php have been  *     released.  The caller must release pbp.  *  * 3.  For checkparity and rebuildandcheckparity,  *     the parity is compared with the current  *     parity block.  If it's different, the  *     offset of the error is returned to  *     errorloc.  The caller can set the value of  *     the pointer to NULL if this is called for  *     rebuilding parity.  */
+comment|/*  * Rebuild a parity stripe.  Return pointer to  * parity bp.  On return,  *  * 1.  The band is locked.  The caller must unlock  *     the band and release the buffer header.  *  * 2.  All buffer headers except php have been  *     released.  The caller must release pbp.  *  * 3.  For checkparity and rebuildandcheckparity,  *     the parity is compared with the current  *     parity block.  If it's different, the  *     offset of the error is returned to  *     errorloc.  The caller can set the value of  *     the pointer to NULL if this is called for  *     rebuilding parity.  *  * pstripe is the subdisk-relative base address of  * the data to be reconstructed, size is the size  * of the transfer in bytes.  */
 end_comment
 
 begin_function
@@ -1453,7 +1483,7 @@ decl_stmt|;
 name|int
 name|sdno
 decl_stmt|;
-name|int
+name|u_int64_t
 name|stripe
 decl_stmt|;
 comment|/* stripe number */
@@ -1798,12 +1828,7 @@ index|]
 operator|->
 name|b_bcount
 operator|=
-name|bpp
-index|[
-name|sdno
-index|]
-operator|->
-name|b_bufsize
+name|mysize
 expr_stmt|;
 name|bpp
 index|[
@@ -2152,7 +2177,7 @@ operator|*
 name|errorloc
 operator|=
 call|(
-name|u_long
+name|off_t
 call|)
 argument_list|(
 name|pstripe
@@ -2464,9 +2489,7 @@ name|bp
 operator|->
 name|b_bcount
 operator|=
-name|bp
-operator|->
-name|b_bufsize
+name|size
 expr_stmt|;
 name|bp
 operator|->
@@ -2630,9 +2653,7 @@ name|bp
 operator|->
 name|b_bcount
 operator|=
-name|bp
-operator|->
-name|b_bufsize
+name|size
 expr_stmt|;
 name|bp
 operator|->

@@ -168,6 +168,25 @@ name|bcmp
 argument_list|(
 name|dname
 argument_list|,
+literal|"wd"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+comment|/* IDE disk */
+name|devmajor
+operator|=
+literal|3
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|dname
+argument_list|,
 literal|"da"
 argument_list|,
 literal|2
@@ -419,7 +438,6 @@ comment|/* didn't find anything */
 return|return
 name|ENODEV
 return|;
-comment|/*      * XXX This doesn't really belong here, but we      * get rude remarks from the drivers if we don't      * set it.  phk, where are you when I need you?      */
 name|drive
 operator|->
 name|dev
@@ -2057,6 +2075,15 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+condition|)
+name|s
+operator|++
+expr_stmt|;
+comment|/* find the end */
 if|if
 condition|(
 name|vol
@@ -3245,7 +3272,7 @@ name|d_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Fitting unto the vine, a vinum has a single      * track with all its sectors.      */
+comment|/*      * A Vinum volume has a single track with all      * its sectors.      */
 name|lp
 operator|->
 name|d_secsize

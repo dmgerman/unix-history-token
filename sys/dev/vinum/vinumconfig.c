@@ -1088,7 +1088,7 @@ name|i
 return|;
 block|}
 block|}
-comment|/*      * The plex doesn't have any subdisk with a larger      * offset.  Insert it      */
+comment|/*      * The plex doesn't have any subdisk with a      * larger offset.  Insert it here.      */
 name|plex
 operator|->
 name|sdnos
@@ -1105,6 +1105,15 @@ operator|=
 name|i
 expr_stmt|;
 comment|/* note where we are in the subdisk */
+name|sd
+operator|->
+name|plexno
+operator|=
+name|plex
+operator|->
+name|plexno
+expr_stmt|;
+comment|/* and who we belong to */
 return|return
 name|i
 return|;
