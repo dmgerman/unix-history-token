@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: stat_flags.c,v 1.7 1997/08/07 15:33:49 steve Exp $"
+literal|"$Id: stat_flags.c,v 1.8 1997/08/07 22:28:25 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +145,9 @@ argument_list|(
 literal|"uchg"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UF_NOUNLINK
 if|if
 condition|(
 name|flags
@@ -156,6 +159,8 @@ argument_list|(
 literal|"uunlnk"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|flags
@@ -211,6 +216,9 @@ argument_list|(
 literal|"schg"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SF_NOUNLINK
 if|if
 condition|(
 name|flags
@@ -222,6 +230,8 @@ argument_list|(
 literal|"sunlnk"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|prefix
@@ -498,6 +508,9 @@ argument_list|,
 name|SF_IMMUTABLE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SF_NOUNLINK
 name|TEST
 argument_list|(
 name|p
@@ -516,6 +529,8 @@ argument_list|,
 name|SF_NOUNLINK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
@@ -569,6 +584,9 @@ argument_list|,
 name|UF_IMMUTABLE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UF_NOUNLINK
 name|TEST
 argument_list|(
 name|p
@@ -587,6 +605,8 @@ argument_list|,
 name|UF_NOUNLINK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* FALLTHROUGH */
 default|default:
 return|return
