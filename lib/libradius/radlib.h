@@ -28,6 +28,17 @@ file|<netinet/in.h>
 end_include
 
 begin_comment
+comment|/* Limits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAD_MAX_ATTR_LEN
+value|253
+end_define
+
+begin_comment
 comment|/* Message types */
 end_comment
 
@@ -622,6 +633,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RAD_ACCT_INPUT_GIGAWORDS
+value|52
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAD_ACCT_OUTPUT_GIGAWORDS
+value|53
+end_define
+
+begin_define
+define|#
+directive|define
 name|RAD_CHAP_CHALLENGE
 value|60
 end_define
@@ -817,6 +842,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RAD_EAP_MESSAGE
+value|79
+end_define
+
+begin_comment
+comment|/* Octets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAD_MESSAGE_AUTHENTIC
+value|80
+end_define
+
+begin_comment
+comment|/* Octets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAD_ACCT_INTERIM_INTERVAL
+value|85
+end_define
+
+begin_comment
+comment|/* Integer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RAD_NAS_IPV6_ADDRESS
 value|95
 end_define
@@ -907,6 +965,13 @@ define|#
 directive|define
 name|RAD_STOP
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAD_UPDATE
+value|3
 end_define
 
 begin_define
@@ -1467,6 +1532,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|rad_put_message_authentic
+parameter_list|(
+name|struct
+name|rad_handle
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ssize_t
 name|rad_request_authenticator
 parameter_list|(
@@ -1515,6 +1591,24 @@ parameter_list|(
 name|struct
 name|rad_handle
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_char
+modifier|*
+name|rad_demangle
+parameter_list|(
+name|struct
+name|rad_handle
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -306,6 +306,10 @@ name|MSGSIZE
 index|]
 decl_stmt|;
 comment|/* Request to send */
+name|char
+name|request_created
+decl_stmt|;
+comment|/* rad_create_request() called? */
 name|int
 name|req_len
 decl_stmt|;
@@ -329,6 +333,14 @@ name|char
 name|chap_pass
 decl_stmt|;
 comment|/* Have we got a CHAP_PASSWORD ? */
+name|int
+name|authentic_pos
+decl_stmt|;
+comment|/* Position of message authenticator */
+name|char
+name|eap_msg
+decl_stmt|;
+comment|/* Are we an EAP Proxy? */
 name|unsigned
 name|char
 name|response
