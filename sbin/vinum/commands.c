@@ -2646,6 +2646,7 @@ if|if
 condition|(
 operator|(
 operator|(
+operator|(
 name|stat
 operator|->
 name|device_type
@@ -2656,6 +2657,20 @@ operator|==
 name|DEVSTAT_TYPE_DIRECT
 operator|)
 comment|/* disk device */
+operator|||
+operator|(
+operator|(
+name|stat
+operator|->
+name|device_type
+operator|&
+name|DEVSTAT_TYPE_MASK
+operator|)
+operator|==
+name|DEVSTAT_TYPE_STORARRAY
+operator|)
+operator|)
+comment|/* storage array */
 operator|&&
 operator|(
 operator|(
