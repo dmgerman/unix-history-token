@@ -54,14 +54,8 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*  * Synonym for fputwc(wc, stdout). Function call overhead is not an issue here:  * wchar.h #define's putwchar(wc) to fgetwc(wc, stdout).  */
+comment|/*  * Synonym for fputwc(wc, stdout).  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|putwchar
-end_undef
 
 begin_function
 name|wint_t

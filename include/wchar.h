@@ -1173,46 +1173,6 @@ begin_macro
 name|__END_DECLS
 end_macro
 
-begin_define
-define|#
-directive|define
-name|getwc
-parameter_list|(
-name|fp
-parameter_list|)
-value|fgetwc(fp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|getwchar
-parameter_list|()
-value|fgetwc(stdin)
-end_define
-
-begin_define
-define|#
-directive|define
-name|putwc
-parameter_list|(
-name|wc
-parameter_list|,
-name|fp
-parameter_list|)
-value|fputwc((wc), (fp))
-end_define
-
-begin_define
-define|#
-directive|define
-name|putwchar
-parameter_list|(
-name|wc
-parameter_list|)
-value|fputwc((wc), stdout)
-end_define
-
 begin_endif
 endif|#
 directive|endif

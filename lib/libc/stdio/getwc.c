@@ -54,14 +54,8 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*  * Synonym for fgetwc(). The only difference is that getwc(), if it is a  * macro, may evaluate `fp' more than once. Function call overhead is not  * an issue here: wchar.h #define's getwc to fgetwc.  */
+comment|/*  * Synonym for fgetwc(). The only difference is that getwc(), if it is a  * macro, may evaluate `fp' more than once.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|getwc
-end_undef
 
 begin_function
 name|wint_t

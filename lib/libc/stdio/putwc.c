@@ -54,14 +54,8 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*  * Synonym for fputwc(). The only difference is that putwc(), if it is a  * macro, may evaluate `fp' more than once. Function call overhead is not  * an issue here: wchar.h #define's putwc to fputwc.  */
+comment|/*  * Synonym for fputwc(). The only difference is that putwc(), if it is a  * macro, may evaluate `fp' more than once.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|putwc
-end_undef
 
 begin_function
 name|wint_t

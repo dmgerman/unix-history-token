@@ -54,14 +54,8 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/*  * Synonym for fgetwc(stdin). Function call overhead is not an issue here:  * wchar.h #define's getwchar() to fgetwc(stdin).  */
+comment|/*  * Synonym for fgetwc(stdin).  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|getwchar
-end_undef
 
 begin_function
 name|wint_t
