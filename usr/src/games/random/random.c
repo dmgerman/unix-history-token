@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	8.5 (Berkeley) %G%"
+literal|"@(#)random.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -128,8 +134,9 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
-name|time_t
-name|now
+name|struct
+name|timeval
+name|tp
 decl_stmt|;
 name|double
 name|denom
@@ -283,10 +290,12 @@ block|}
 operator|(
 name|void
 operator|)
-name|time
+name|gettimeofday
 argument_list|(
 operator|&
-name|now
+name|tp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|srandom
@@ -295,7 +304,13 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|now
+name|tp
+operator|.
+name|tv_usec
+operator|+
+name|tp
+operator|.
+name|tv_sec
 operator|+
 name|getpid
 argument_list|()
