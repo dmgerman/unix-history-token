@@ -212,6 +212,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|iso88025_broadcastaddr
 index|[
@@ -2072,14 +2073,8 @@ if|if
 condition|(
 name|bcmp
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|iso88025_broadcastaddr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|th
 operator|->
 name|iso88025_dhost
