@@ -1283,5 +1283,15 @@ parameter_list|)
 value|((x + 1)& (WX_MAX_RDESC - 1))
 end_define
 
+begin_define
+define|#
+directive|define
+name|R_PREV_IDX
+parameter_list|(
+name|x
+parameter_list|)
+value|((x - 1)& (WX_MAX_RDESC - 1))
+end_define
+
 end_unit
 
