@@ -180,20 +180,6 @@ name|TARGET_ELF
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|TARGET_AOUT
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_UNDERSCORES
-value|(0)
-end_define
-
 begin_undef
 undef|#
 directive|undef

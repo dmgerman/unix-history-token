@@ -1777,16 +1777,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* XXX HAVE_GAS_SHF_MERGE is target-dependent so it shouldn't be put in    this target-independent config file.  Defining it breaks aout support    on i386's.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_GAS_SHF_MERGE
-end_undef
-
-begin_comment
 comment|/* Define if your assembler supports explicit relocations. */
 end_comment
 
@@ -1838,15 +1828,11 @@ begin_comment
 comment|/* Define true if the assembler supports '.long foo@GOTOFF'. */
 end_comment
 
-begin_comment
-comment|/* DEO:XXX match TARGET_ELF definition in i386/freebsd.h.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|HAVE_AS_GOTOFF_IN_DATA
-value|((target_flags& MASK_AOUT) == 0)
+value|1
 end_define
 
 begin_comment
