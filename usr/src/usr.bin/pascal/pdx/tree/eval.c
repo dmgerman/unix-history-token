@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c 1.3 %G%"
+literal|"@(#)eval.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,6 +271,28 @@ name|p
 operator|->
 name|nameval
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isvariable
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"cannot evaluate a %s"
+argument_list|,
+name|classname
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|f
 operator|=
 name|container
@@ -310,6 +332,7 @@ name|NIL
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 case|case
