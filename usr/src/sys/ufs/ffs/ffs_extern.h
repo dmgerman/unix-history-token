@@ -75,6 +75,12 @@ name|vnode
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
@@ -233,7 +239,19 @@ name|fid
 operator|*
 operator|,
 expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
 name|vnode
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+expr|struct
+name|ucred
 operator|*
 operator|*
 operator|)
