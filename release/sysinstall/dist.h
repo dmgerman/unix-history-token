@@ -195,119 +195,126 @@ begin_define
 define|#
 directive|define
 name|DIST_SRC_BASE
-value|0x0001
+value|0x00001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_SRC_CONTRIB
+value|0x00002
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_GNU
-value|0x0002
+value|0x00004
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_ETC
-value|0x0004
+value|0x00008
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_GAMES
-value|0x0008
+value|0x00010
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_INCLUDE
-value|0x0010
+value|0x00020
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_LIB
-value|0x0020
+value|0x00040
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_LIBEXEC
-value|0x0040
+value|0x00080
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_LKM
-value|0x0080
+value|0x00100
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_RELEASE
-value|0x0100
+value|0x00200
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_SBIN
-value|0x0200
+value|0x00400
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_SHARE
-value|0x0400
+value|0x00800
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_SYS
-value|0x0800
+value|0x01000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_UBIN
-value|0x1000
+value|0x02000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_USBIN
-value|0x2000
+value|0x04000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_BIN
-value|0x4000
+value|0x08000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_SMAILCF
-value|0x8000
+value|0x10000
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIST_SRC_ALL
-value|0x7FFF
+value|0xFFFF
 end_define
 
 begin_comment
