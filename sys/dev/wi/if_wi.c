@@ -319,18 +319,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|wi_stop
-parameter_list|(
-name|struct
-name|wi_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|wi_watchdog
 parameter_list|(
 name|struct
@@ -12408,7 +12396,6 @@ literal|0
 operator|)
 return|;
 block|}
-specifier|static
 name|void
 name|wi_stop
 parameter_list|(
