@@ -1535,6 +1535,11 @@ modifier|*
 name|ku_func
 decl_stmt|;
 comment|/* userland upcall function. */
+name|unsigned
+name|int
+name|ku_mflags
+decl_stmt|;
+comment|/* cached upcall mailbox flags */
 block|}
 struct|;
 end_struct
