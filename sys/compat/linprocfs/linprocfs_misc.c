@@ -210,7 +210,7 @@ name|T2J
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) * 100) / (stathz ? stathz : hz))
+value|(((x) * 100UL) / (stathz ? stathz : hz))
 end_define
 
 begin_comment
