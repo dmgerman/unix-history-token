@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.15 1996/09/18 16:18:05 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.16 1996/09/19 09:15:20 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -300,28 +300,6 @@ block|}
 struct|;
 end_struct
 
-begin_include
-include|#
-directive|include
-file|"fxp.h"
-end_include
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|fxp_softc
-modifier|*
-name|fxp_sc
-index|[
-name|NFXP
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX Yuck */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -481,21 +459,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|fxp_shutdown
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|fxp_intr
 name|__P
@@ -622,6 +585,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|void
+name|fxp_shutdown
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|timeout_t
 name|fxp_stats_update
 decl_stmt|;
@@ -643,7 +622,7 @@ block|,
 operator|&
 name|fxp_count
 block|,
-name|fxp_shutdown
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1072,13 +1051,6 @@ name|malloc_fail
 goto|;
 block|}
 block|}
-name|fxp_sc
-index|[
-name|unit
-index|]
-operator|=
-name|sc
-expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -1197,6 +1169,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Add shutdown hook so that DMA is disabled prior to reboot. Not 	 * doing do could allow DMA to corrupt kernel memory during the 	 * reboot before the driver initializes. 	 */
+name|at_shutdown
+argument_list|(
+name|fxp_shutdown
+argument_list|,
+name|sc
+argument_list|,
+name|SHUTDOWN_POST_SYNC
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -1602,43 +1584,36 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Device shutdown routine. Usually called at system shutdown. The  * main purpose of this routine is to shut off receiver DMA so that  * kernel memory doesn't get clobbered during warmboot.  */
+comment|/*  * Device shutdown routine. Called at system shutdown after sync. The  * main purpose of this routine is to shut off receiver DMA so that  * kernel memory doesn't get clobbered during warmboot.  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|fxp_shutdown
 parameter_list|(
-name|unit
+name|howto
 parameter_list|,
-name|force
+name|sc
 parameter_list|)
 name|int
-name|unit
+name|howto
 decl_stmt|;
-name|int
-name|force
-decl_stmt|;
-block|{
-name|struct
-name|fxp_softc
+name|void
 modifier|*
 name|sc
-init|=
-name|fxp_sc
-index|[
-name|unit
-index|]
 decl_stmt|;
+block|{
 name|fxp_stop
 argument_list|(
+operator|(
+expr|struct
+name|fxp_softc
+operator|*
+operator|)
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
