@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.h	4.4	82/02/21	*/
+comment|/*	if_imp.h	4.5	82/03/16	*/
 end_comment
 
 begin_comment
@@ -35,35 +35,10 @@ name|u_char
 name|dl_host
 decl_stmt|;
 comment|/* host number */
-union|union
-block|{
 name|u_short
-name|dl_short
-decl_stmt|;
-name|u_char
-name|dl_char
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|dlun
-union|;
-define|#
-directive|define
 name|dl_imp
-value|dlun.dl_short
+decl_stmt|;
 comment|/* imp field */
-define|#
-directive|define
-name|dl_impno
-value|dlun.dl_char[1]
-comment|/* imp number */
-define|#
-directive|define
-name|dl_lh
-value|dlun.dl_char[0]
-comment|/* logical host */
 name|u_char
 name|dl_link
 decl_stmt|;
@@ -112,14 +87,6 @@ define|#
 directive|define
 name|il_imp
 value|il_dl.dl_imp
-define|#
-directive|define
-name|il_impno
-value|il_dl.dl_impno
-define|#
-directive|define
-name|il_lh
-value|il_dl.dl_lh
 define|#
 directive|define
 name|il_link
