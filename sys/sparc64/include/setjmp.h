@@ -19,28 +19,7 @@ begin_define
 define|#
 directive|define
 name|_JBLEN
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|_JB_FP
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|_JB_PC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|_JB_SP
-value|2
+value|31
 end_define
 
 begin_comment
@@ -53,7 +32,8 @@ directive|ifndef
 name|_ANSI_SOURCE
 end_ifndef
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|_sigjmp_buf
 block|{
@@ -66,13 +46,6 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|_sigjmp_buf
 name|sigjmp_buf
 index|[
 literal|1
@@ -85,7 +58,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
 name|_jmp_buf
 block|{
@@ -98,13 +72,6 @@ literal|1
 index|]
 decl_stmt|;
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|_jmp_buf
 name|jmp_buf
 index|[
 literal|1
