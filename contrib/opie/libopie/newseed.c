@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* newseed.c: The opienewseed() library function.  %%% copyright-cmetz This software is Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Created by cmetz for OPIE 2.22. */
+comment|/* newseed.c: The opienewseed() library function.  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  	History:  	Modified by cmetz for OPIE 2.31. Added time.h. 	Created by cmetz for OPIE 2.22. */
 end_comment
 
 begin_include
@@ -8,6 +8,27 @@ include|#
 directive|include
 file|"opie_cfg.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|HAVE_TIME_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_TIME_H */
+end_comment
 
 begin_if
 if|#

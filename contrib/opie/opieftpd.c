@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opieftpd.c: Main program for an FTP daemon.  %%% portions-copyright-cmetz Portions of this software are Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.3. Fixed the filename at the top. 		Moved LS_COMMAND here. 	Modified by cmetz for OPIE 2.2. Use FUNCTION definition et al.                 Removed useless strings (I don't think that removing the                 ucb copyright one is a problem -- please let me know if                 I'm wrong). Changed default CMASK to 077. Removed random                 comments. Use ANSI stdargs for reply/lreply if we can,                 added stdargs version of reply/lreply. Don't declare the                 tos variable unless IP_TOS defined. Include stdargs headers                 early. More headers ifdefed. Made everything static.                 Got rid of gethostname() call and use of hostname. Pared                 down status response for places where header files frequently                 cause trouble. Made logging of user logins (ala -l)                 non-optional. Moved reply()/lrepy(). Fixed some prototypes. 	Modified at NRL for OPIE 2.1. Added declaration of envp. Discard 	        result of opiechallenge (allows access control to work). 		Added patches for AIX. Symbol changes for autoconf.         Modified at NRL for OPIE 2.01. Changed password lookup handling                 to avoid problems with drain-bamaged shadow password packages.                 Properly handle internal state for anonymous FTP. Unlock                 user accounts properly if login fails because of /etc/shells.                 Make sure to close syslog by function to avoid problems with                 drain bamaged syslog implementations. 	Modified at NRL for OPIE 2.0. 	Originally from BSD Net/2.  	        There is some really, really ugly code in here. */
+comment|/* opieftpd.c: Main program for an FTP daemon.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.31. Merged in some 4.4BSD-Lite changes. 		Merged in a security fix to BSD-derived ftpds. 	Modified by cmetz for OPIE 2.3. Fixed the filename at the top. 		Moved LS_COMMAND here. 	Modified by cmetz for OPIE 2.2. Use FUNCTION definition et al.                 Removed useless strings (I don't think that removing the                 ucb copyright one is a problem -- please let me know if                 I'm wrong). Changed default CMASK to 077. Removed random                 comments. Use ANSI stdargs for reply/lreply if we can,                 added stdargs version of reply/lreply. Don't declare the                 tos variable unless IP_TOS defined. Include stdargs headers                 early. More headers ifdefed. Made everything static.                 Got rid of gethostname() call and use of hostname. Pared                 down status response for places where header files frequently                 cause trouble. Made logging of user logins (ala -l)                 non-optional. Moved reply()/lrepy(). Fixed some prototypes. 	Modified at NRL for OPIE 2.1. Added declaration of envp. Discard 	        result of opiechallenge (allows access control to work). 		Added patches for AIX. Symbol changes for autoconf.         Modified at NRL for OPIE 2.01. Changed password lookup handling                 to avoid problems with drain-bamaged shadow password packages.                 Properly handle internal state for anonymous FTP. Unlock                 user accounts properly if login fails because of /etc/shells.                 Make sure to close syslog by function to avoid problems with                 drain bamaged syslog implementations. 	Modified at NRL for OPIE 2.0. 	Originally from BSD Net/2.  	        There is some really, really ugly code in here. */
 end_comment
 
 begin_comment
@@ -977,6 +977,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|VOIDRET
+name|myoob
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|getdatasock
@@ -1105,7 +1118,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|logwtmp
+name|opielogwtmp
 name|__P
 argument_list|(
 operator|(
@@ -1592,6 +1605,78 @@ comment|/* HAVE_ANSISTDARG */
 end_comment
 
 begin_decl_stmt
+name|VOIDRET
+name|enable_signalling
+name|FUNCTION_NOARGS
+block|{
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|lostconn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|signal
+argument_list|(
+name|SIGURG
+argument_list|,
+name|myoob
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"signal: %m"
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|VOIDRET
+name|disable_signalling
+name|FUNCTION_NOARGS
+block|{
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|signal
+argument_list|(
+name|SIGURG
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"signal: %m"
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|VOIDRET
 name|lostconn
@@ -2065,7 +2150,7 @@ name|reply
 argument_list|(
 literal|331
 argument_list|,
-literal|"Guest login ok, send ident as password."
+literal|"Guest login ok, send your e-mail address as your password."
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -2362,19 +2447,17 @@ argument|; 	if (line[
 literal|0
 argument|] ==
 literal|'#'
-argument|) 	  continue; 	if (strcmp(line, name) ==
-literal|0
-argument|) 	  return (
+argument|) 	  continue; 	if (!strcmp(line, name)) {           fclose(fd); 	  return (
 literal|1
-argument|);       }     fclose(fd);   }   return (
+argument|);         }       }     fclose(fd);   }   return (
 literal|0
 argument|); }
 comment|/*  * Terminate login as previous user, if any, resetting state;  * used when USER command is given or login fails.  */
-argument|static VOIDRET end_login FUNCTION_NOARGS {   if (seteuid((uid_t)
+argument|static VOIDRET end_login FUNCTION_NOARGS {   disable_signalling();   if (seteuid((uid_t)
 literal|0
 argument|))     syslog(LOG_ERR,
 literal|"Can't set euid"
-argument|);   if (logged_in)     logwtmp(ttyline,
+argument|);   if (logged_in)     opielogwtmp(ttyline,
 literal|""
 argument|,
 literal|""
@@ -2390,7 +2473,7 @@ argument|;
 endif|#
 directive|endif
 comment|/* DOANONYMOUS */
-argument|}  VOIDRET pass FUNCTION((passwd), char *passwd) {   int legit = askpasswd +
+argument|enable_signalling(); }  VOIDRET pass FUNCTION((passwd), char *passwd) {   int legit = askpasswd +
 literal|1
 argument_list|,
 argument|i;    if (logged_in || askpasswd ==
@@ -2424,7 +2507,19 @@ argument|);       }       return;     }
 if|#
 directive|if
 name|DOANONYMOUS
-argument|}
+argument|} else     if ((passwd[
+literal|0
+argument|]<=
+literal|' '
+argument|) ||  checkuser(passwd)) {       reply(
+literal|530
+argument|,
+literal|"No identity, no service."
+argument|);       syslog(LOG_DEBUG,
+literal|"Bogus address: %s"
+argument|, passwd);       exit(
+literal|0
+argument|);     }
 endif|#
 directive|endif
 comment|/* DOANONYMOUS */
@@ -2432,11 +2527,19 @@ argument|login_attempts =
 literal|0
 argument|;
 comment|/* this time successful */
-argument|setegid((gid_t) pw->pw_gid);   initgroups(pw->pw_name, pw->pw_gid);
+argument|if (setegid((gid_t) pw->pw_gid)<
+literal|0
+argument|) {     reply(
+literal|550
+argument|,
+literal|"Can't set gid."
+argument|);     syslog(LOG_DEBUG,
+literal|"gid = %d, errno = %s(%d)"
+argument|, pw->pw_gid, strerror(errno), errno);     return;   }   initgroups(pw->pw_name, pw->pw_gid);
 comment|/* open wtmp before chroot */
 argument|sprintf(ttyline,
 literal|"ftp%d"
-argument|, getpid());   logwtmp(ttyline, pw->pw_name, remotehost);   logged_in =
+argument|, getpid());   opielogwtmp(ttyline, pw->pw_name, remotehost);   logged_in =
 literal|1
 argument|;
 if|#
@@ -2511,6 +2614,22 @@ argument|);     goto bad;   }
 endif|#
 directive|endif
 comment|/* _AIX */
+comment|/*   * Display a login message, if it exists.   * N.B. reply(230,) must follow the message.   */
+argument|{   FILE *fd;    if ((fd = fopen(_PATH_FTPLOGINMESG,
+literal|"r"
+argument|)) != NULL) {     char *cp
+argument_list|,
+argument|line[
+literal|128
+argument|];      while (fgets(line, sizeof(line), fd) != NULL) {       if ((cp = strchr(line,
+literal|'\n'
+argument|)) != NULL)         *cp =
+literal|'\0'
+argument|;       lreply(
+literal|230
+argument|,
+literal|"%s"
+argument|, line);     }     (void) fflush(stdout);     (void) fclose(fd);   }   }
 if|#
 directive|if
 name|DOANONYMOUS
@@ -2550,9 +2669,9 @@ argument|, remotehost, pw->pw_name);     setproctitle(proctitle);
 endif|#
 directive|endif
 comment|/* DOTITLE */
-argument|syslog(LOG_NOTICE,
+argument|syslog(LOG_INFO,
 literal|"FTP login from %s with user name %s"
-argument|,       remotehost, pw->pw_name);   }   home = pw->pw_dir;
+argument|, remotehost, pw->pw_name);   }   home = pw->pw_dir;
 comment|/* home dir for globbing */
 argument|umask(defumask);   return;  bad:
 comment|/* Forget all about it... */
@@ -2687,7 +2806,7 @@ literal|1
 argument_list|,
 argument|tries;    if (data>=
 literal|0
-argument|)     return (fdopen(data, mode));   if (seteuid((uid_t)
+argument|)     return (fdopen(data, mode));   disable_signalling();   if (seteuid((uid_t)
 literal|0
 argument|))     syslog(LOG_ERR,
 literal|"Can't set euid"
@@ -2707,7 +2826,7 @@ argument|)       break;     if (errno != EADDRINUSE || tries>
 literal|10
 argument|)       goto bad;     sleep(tries);   }   if (seteuid((uid_t) pw->pw_uid))     syslog(LOG_ERR,
 literal|"Can't set euid"
-argument|);
+argument|);   enable_signalling();
 ifdef|#
 directive|ifdef
 name|IP_TOS
@@ -2718,9 +2837,9 @@ literal|"setsockopt (IP_TOS): %m"
 argument|);
 endif|#
 directive|endif
-argument|return (fdopen(s, mode)); bad:   if (seteuid((uid_t) pw->pw_uid))     syslog(LOG_ERR,
+argument|return (fdopen(s, mode)); bad:   {   int t = errno;    if (seteuid((uid_t) pw->pw_uid))     syslog(LOG_ERR,
 literal|"Can't set euid"
-argument|);   close(s);   return (NULL); }  static FILE *dataconn FUNCTION((name, size, mode), char *name AND off_t size AND char *mode) {   char sizebuf[
+argument|);   enable_signalling();   close(s);    errno = t;   }   return (NULL); }  static FILE *dataconn FUNCTION((name, size, mode), char *name AND off_t size AND char *mode) {   char sizebuf[
 literal|32
 argument|];   FILE *file;   int retry =
 literal|0
@@ -3153,11 +3272,11 @@ argument|);   syslog(LOG_INFO,
 literal|"connection from %s at %s"
 argument|,     remotehost, ctime(&t)); }
 comment|/*  * Record logout in wtmp file  * and exit with supplied status.  */
-argument|VOIDRET dologout FUNCTION((status), int status) {   if (logged_in) {     if (seteuid((uid_t)
+argument|VOIDRET dologout FUNCTION((status), int status) {   disable_signalling();   if (logged_in) {     if (seteuid((uid_t)
 literal|0
 argument|))       syslog(LOG_ERR,
 literal|"Can't set euid"
-argument|);     logwtmp(ttyline,
+argument|);     opielogwtmp(ttyline,
 literal|""
 argument|,
 literal|""
@@ -3265,7 +3384,9 @@ argument|,
 literal|"Can't open passive connection"
 argument|);   return; }
 comment|/*  * Generate unique name for file with basename "local".  * The file named "local" is already known to exist.  * Generates failure reply on error.  */
-argument|static char *gunique FUNCTION((local), char *local) {   static char new[MAXPATHLEN];   struct stat st;   char *cp = strrchr(local,
+argument|static char *gunique FUNCTION((local), char *local) {   static char new[MAXPATHLEN+
+literal|1
+argument|];   struct stat st;   char *cp = strrchr(local,
 literal|'/'
 argument|);   int count =
 literal|0
@@ -3359,7 +3480,9 @@ argument|:
 literal|""
 argument|);       byte_count += strlen(dirname) +
 literal|1
-argument|;       continue;     } else       if ((st.st_mode& S_IFMT) != S_IFDIR) 	continue;      if ((dirp = opendir(dirname)) == NULL)       continue;      while ((dir = readdir(dirp)) != NULL) {       char nbuf[MAXPATHLEN];        if (dir->d_name[
+argument|;       continue;     } else       if ((st.st_mode& S_IFMT) != S_IFDIR) 	continue;      if ((dirp = opendir(dirname)) == NULL)       continue;      while ((dir = readdir(dirp)) != NULL) {       char nbuf[MAXPATHLEN+
+literal|1
+argument|];        if (dir->d_name[
 literal|0
 argument|] ==
 literal|'.'
@@ -3462,7 +3585,7 @@ argument|; }
 endif|#
 directive|endif
 comment|/* DOTITLE */
-argument|void catchexit FUNCTION_NOARGS {   closelog(); }  int main FUNCTION((argc, argv, envp), int argc AND char *argv[] AND char *envp[]) {   int addrlen
+argument|VOIDRET catchexit FUNCTION_NOARGS {   closelog(); }  int main FUNCTION((argc, argv, envp), int argc AND char *argv[] AND char *envp[]) {   int addrlen
 argument_list|,
 argument|on =
 literal|1
@@ -3576,11 +3699,7 @@ argument|, 		*cp); 	break;       } nextopt:     argc--
 argument_list|,
 argument|argv++;   }   freopen(_PATH_DEVNULL,
 literal|"w"
-argument|, stderr);   signal(SIGPIPE, lostconn);   signal(SIGCHLD, SIG_IGN);   if ((int) signal(SIGURG, myoob)<
-literal|0
-argument|)     syslog(LOG_ERR,
-literal|"signal: %m"
-argument|);
+argument|, stderr);   signal(SIGCHLD, SIG_IGN);   enable_signalling();
 comment|/* Try to handle urgent data inline */
 ifdef|#
 directive|ifdef
@@ -3612,23 +3731,43 @@ argument|;   type = TYPE_A;   form = FORM_N;   stru = STRU_F;   mode = MODE_S;  
 literal|0
 argument|] =
 literal|'\0'
-argument|;   af_pwok = opieaccessfile(remotehost);
-if|#
-directive|if
+argument|;   af_pwok = opieaccessfile(remotehost);    {   FILE *fd;   char line[
+literal|128
+argument|];
+comment|/* If logins are disabled, print out the message. */
+argument|if ((fd = fopen(_PATH_NOLOGIN,
+literal|"r"
+argument|)) != NULL) {     while (fgets(line, sizeof(line), fd) != NULL) {       if ((cp = strchr(line,
+literal|'\n'
+argument|)) != NULL)         *cp =
+literal|'\0'
+argument|;       lreply(
+literal|530
+argument|,
+literal|"%s"
+argument|, line);     }     (void) fflush(stdout);     (void) fclose(fd);     reply(
+literal|530
+argument|,
+literal|"System not available."
+argument|);     exit(
 literal|0
-argument|{   struct utsname utsname;    if (uname(&utsname)< 0) {     syslog(LOG_ERR, "uname() failed: %s", strerror(errno));     exit(1);   }    reply(220, "%s FTP server ready.", utsname.nodename);   }
-else|#
-directive|else
-comment|/* 0 */
-argument|reply(
+argument|);   }   if ((fd = fopen(_PATH_FTPWELCOME,
+literal|"r"
+argument|)) != NULL) {     while (fgets(line, sizeof(line), fd) != NULL) {       if ((cp = strchr(line,
+literal|'\n'
+argument|)) != NULL)         *cp =
+literal|'\0'
+argument|;       lreply(
+literal|220
+argument|,
+literal|"%s"
+argument|, line);     }     (void) fflush(stdout);     (void) fclose(fd);
+comment|/* reply(220,) must follow */
+argument|}   };    reply(
 literal|220
 argument|,
 literal|"FTP server ready."
-argument|);
-endif|#
-directive|endif
-comment|/* 0 */
-argument|setjmp(errcatch);   for (;;)     yyparse();
+argument|);    setjmp(errcatch);   for (;;)     yyparse();
 comment|/* NOTREACHED */
 argument|return
 literal|0

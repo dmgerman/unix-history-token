@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* pututline.c: A replacement for the pututline() function  %%% copyright-cmetz This software is Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Created by cmetz for OPIE 2.3. */
+comment|/* pututline.c: A replacement for the pututline() function  %%% copyright-cmetz-96 This software is Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to this software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.          History:  	Modified by cmetz for OPIE 2.31. If the OS won't tell us where 		_PATH_UTMP is, use Autoconf-discovered values. 	Created by cmetz for OPIE 2.3. */
 end_comment
 
 begin_include
@@ -26,6 +26,28 @@ include|#
 directive|include
 file|"opie.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UTMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_UTMP
+value|PATH_UTMP_AC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _PATH_UTMP */
+end_comment
 
 begin_decl_stmt
 name|void

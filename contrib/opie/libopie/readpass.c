@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* readpass.c: The opiereadpass() library function.  %%% portions-copyright-cmetz Portions of this software are Copyright 1996 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.          History:  	Modified by cmetz for OPIE 2.3. Use TCSAFLUSH always. 	Modified by cmetz for OPIE 2.22. Replaced echo w/ flags.                Really use FUNCTION. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.                Flush extraneous characters up to eol. Handle gobs of possible                erase and kill keys if on a terminal. To do so, use RAW                terminal I/O and handle echo ourselves. (should also help                DOS et al portability). Fixed include order. Re-did MSDOS 	       and OS/2 includes. Set up VMIN and VTIME. Added some non-UNIX 	       portability cruft. Limit backspacing and killing. In terminal                mode, eat random other control characters. Added eof handling.         Created at NRL for OPIE 2.2 from opiesubr.c. Change opiestrip_crlf to                opiestripcrlf. Don't strip to seven bits.  */
+comment|/* readpass.c: The opiereadpass() library function.  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1997 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.          History:  	Modified by cmetz for OPIE 2.31. Use usleep() to delay after setting 		the terminal attributes; this might help certain buggy 		systems. 	Modified by cmetz for OPIE 2.3. Use TCSAFLUSH always. 	Modified by cmetz for OPIE 2.22. Replaced echo w/ flags.                Really use FUNCTION. 	Modified by cmetz for OPIE 2.2. Use FUNCTION declaration et al.                Flush extraneous characters up to eol. Handle gobs of possible                erase and kill keys if on a terminal. To do so, use RAW                terminal I/O and handle echo ourselves. (should also help                DOS et al portability). Fixed include order. Re-did MSDOS 	       and OS/2 includes. Set up VMIN and VTIME. Added some non-UNIX 	       portability cruft. Limit backspacing and killing. In terminal                mode, eat random other control characters. Added eof handling.         Created at NRL for OPIE 2.2 from opiesubr.c. Change opiestrip_crlf to                opiestripcrlf. Don't strip to seven bits.  */
 end_comment
 
 begin_include
@@ -738,6 +738,17 @@ block|}
 endif|#
 directive|endif
 comment|/* VEOF */
+if|#
+directive|if
+name|HAVE_USLEEP
+name|usleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_USLEEP */
 if|if
 condition|(
 name|tcsetattr
@@ -753,6 +764,17 @@ condition|)
 goto|goto
 name|error
 goto|;
+if|#
+directive|if
+name|HAVE_USLEEP
+name|usleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_USLEEP */
 block|}
 else|#
 directive|else
