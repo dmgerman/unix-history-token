@@ -20,6 +20,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|WX_PRODUCT_LIVENGOOD
+value|0x1001
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_PRODUCT_82452_SC
+value|0x1003
+end_define
+
+begin_define
+define|#
+directive|define
 name|WX_MMBA
 value|0x10
 end_define
@@ -40,6 +54,58 @@ define|#
 directive|define
 name|WX_CACHELINE_SIZE
 value|0x20
+end_define
+
+begin_comment
+comment|/* Join PCI ID and revision into one value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WX_WISEMAN_0
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_WISEMAN_2_0
+value|0x10000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_WISEMAN_2_1
+value|0x10000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_LIVENGOOD
+value|0x10010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_WISEMAN
+parameter_list|(
+name|sc
+parameter_list|)
+value|((sc)->wx_idnrev< WX_LIVENGOOD)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_LIVENGOOD
+parameter_list|(
+name|sc
+parameter_list|)
+value|(!IS_WISEMAN(sc))
 end_define
 
 begin_comment
@@ -340,6 +406,20 @@ define|#
 directive|define
 name|WXREG_EECDR
 value|0x00000010
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_EXCT
+value|0x00000018
+end_define
+
+begin_define
+define|#
+directive|define
+name|WXREG_MDIC
+value|0x00000020
 end_define
 
 begin_define
@@ -740,6 +820,61 @@ begin_comment
 comment|/* Invert Loss-of-Signal */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WXDCR_100BT
+value|0x100
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: Set 100BaseT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDCR_1000BT
+value|0x200
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: Set 1000BaseT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDCR_BEM32
+value|0x400
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: Set Big Endian 32 (?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDCR_FRCSPD
+value|0x800
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: Force Speed (?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDCR_FRCDPX
+value|0x1000
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: Force Full Duplex */
+end_comment
+
 begin_comment
 comment|/*  * General purpose I/O pins  *  * Pin 0 is for the LED.  *  * Pin 1 is to detect loss of signal (LOS)- if it is set, we've lost signal.  */
 end_comment
@@ -942,6 +1077,83 @@ begin_comment
 comment|/* transmit paused */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WXDSR_TBIMODE
+value|0x20
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: Fibre Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDSR_100BT
+value|0x40
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: 100BaseT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDSR_1000BT
+value|0x80
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: 1000BaseT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDSR_ASDV
+value|0x300
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: ?? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDSR_MTXCKOK
+value|0x400
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: ?? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDSR_PCI66
+value|0x800
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: 66 MHz bus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXDSR_BUS64
+value|0x1000
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: In 64 bit slot */
+end_comment
+
 begin_comment
 comment|/*  * EEPROM Register Defines  */
 end_comment
@@ -1106,6 +1318,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WXISR_RXDMT1
+value|0x20
+end_define
+
+begin_comment
+comment|/* receiver ring 1 getting empty */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WXISR_RXO
 value|0x40
 end_define
@@ -1123,6 +1346,17 @@ end_define
 
 begin_comment
 comment|/* ring 0 receiver timer interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXISR_RXT1
+value|0x100
+end_define
+
+begin_comment
+comment|/* ring 1 receiver timer interrupt */
 end_comment
 
 begin_define
@@ -1235,12 +1469,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WXRCTL_BSEX
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: Buffer Size Extension */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WXRCTL_2KRBUF
 value|(0<< 16)
 end_define
 
 begin_comment
-comment|/* 2-Kbyte Receive Buffers */
+comment|/* 2KB Receive Buffers */
 end_comment
 
 begin_define
@@ -1251,7 +1496,7 @@ value|(1<< 16)
 end_define
 
 begin_comment
-comment|/* 1-Kbyte Receive Buffers */
+comment|/* 1KB Receive Buffers */
 end_comment
 
 begin_define
@@ -1274,6 +1519,39 @@ end_define
 
 begin_comment
 comment|/* 256 Byte Receive Buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXRCTL_4KRBUF
+value|(3<< 16)
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: 4KB Receive Buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXRCTL_8KRBUF
+value|(2<< 16)
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: 8KB Receive Buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WXRCTL_16KRBUF
+value|(1<< 16)
+end_define
+
+begin_comment
+comment|/* LIVENGOOD: 16KB Receive Buffers */
 end_comment
 
 begin_comment
@@ -1584,6 +1862,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|WX_EEPROM_CTLR2_OFF
+value|0xF
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_EEPROM_CTLR2_SWDPIO
+value|0xF0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_EEPROM_EXT_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|WX_XTIMER_DFLT
 value|0x100
 end_define
@@ -1605,8 +1904,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|WX_TIPG_DFLT
+name|WX_WISEMAN_TIPG_DFLT
 value|(10 | (2<< 10) | (10<< 20))
+end_define
+
+begin_define
+define|#
+directive|define
+name|WX_LIVENGOOD_TIPG_DFLT
+value|(6 | (8<< 10) | (6<< 20))
 end_define
 
 begin_define
