@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.58 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.59 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1458,14 +1458,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  386BSD / FreeBSD 1.0E (works) / NetBSD (not tested) ** **  4.3BSD clone, closer to 4.4BSD ** **	See also BSD defines. */
+comment|/* **  386BSD / FreeBSD 1.0E / NetBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD ** **	See also BSD defines. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__386BSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#
