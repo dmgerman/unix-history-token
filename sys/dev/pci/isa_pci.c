@@ -284,10 +284,6 @@ literal|0x24208086
 case|:
 comment|/* Intel 82801AB (ICH0) */
 case|case
-literal|0x24408086
-case|:
-comment|/* Intel 82801BA (ICH2) */
-case|case
 literal|0x00061004
 case|:
 comment|/* VLSI 82C593 */
