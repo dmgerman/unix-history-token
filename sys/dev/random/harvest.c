@@ -256,7 +256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Entropy harvesting routine. This is supposed to be fast; do  * not do anything slow in here!  * Implemented as in indirect call to allow non-inclusion of  * the entropy device.  */
+comment|/* Entropy harvesting routine. This is supposed to be fast; do  * not do anything slow in here!  * Implemented as in indirect call to allow non-inclusion of  * the entropy device.  *  * XXXRW: get_cyclecount() is cheap on most modern hardware, where cycle  * counters are built in, but on older hardware it will do a real time clock  * read which can be quite expensive.  */
 end_comment
 
 begin_function
