@@ -772,14 +772,11 @@ control|)
 block|{
 name|ifp
 operator|=
-name|ifnet_addrs
-index|[
+name|ifnet_byindex
+argument_list|(
 name|ifn
-index|]
-operator|->
-name|ifa_ifp
+argument_list|)
 expr_stmt|;
-comment|/* pointer to interface */
 comment|/* Only look at ether interfaces, exclude alteon nics 			 * because osf/1 doesn't know about most of them. 			 */
 if|if
 condition|(
