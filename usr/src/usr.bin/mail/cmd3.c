@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.15 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -953,8 +953,6 @@ argument_list|(
 name|np
 argument_list|,
 name|myname
-argument_list|,
-name|icequal
 argument_list|)
 expr_stmt|;
 if|if
@@ -981,8 +979,6 @@ name|np
 argument_list|,
 operator|*
 name|ap
-argument_list|,
-name|icequal
 argument_list|)
 expr_stmt|;
 if|if
@@ -1125,8 +1121,6 @@ argument_list|(
 name|np
 argument_list|,
 name|myname
-argument_list|,
-name|icequal
 argument_list|)
 expr_stmt|;
 if|if
@@ -1155,8 +1149,6 @@ name|np
 argument_list|,
 operator|*
 name|ap
-argument_list|,
-name|icequal
 argument_list|)
 expr_stmt|;
 name|head
@@ -1667,12 +1659,10 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|argcount
-argument_list|(
+operator|*
 name|arglist
-argument_list|)
 operator|==
-literal|0
+name|NOSTR
 condition|)
 block|{
 for|for
@@ -2187,12 +2177,10 @@ name|p
 decl_stmt|;
 if|if
 condition|(
-name|argcount
-argument_list|(
+operator|*
 name|argv
-argument_list|)
 operator|==
-literal|0
+name|NOSTR
 condition|)
 block|{
 for|for
@@ -2332,12 +2320,12 @@ return|;
 block|}
 if|if
 condition|(
-name|argcount
-argument_list|(
 name|argv
-argument_list|)
-operator|==
+index|[
 literal|1
+index|]
+operator|==
+name|NOSTR
 condition|)
 block|{
 name|printgroup

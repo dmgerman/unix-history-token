@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	5.8 (Berkeley) %G%"
+literal|"@(#)list.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2185,12 +2185,13 @@ expr_stmt|;
 comment|/* 	 * strip away leading white space. 	 */
 while|while
 condition|(
-name|any
-argument_list|(
 name|c
-argument_list|,
-literal|" \t"
-argument_list|)
+operator|==
+literal|' '
+operator|||
+name|c
+operator|==
+literal|'\t'
 condition|)
 name|c
 operator|=
@@ -2342,12 +2343,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|any
-argument_list|(
 name|c
-argument_list|,
-literal|"'\""
-argument_list|)
+operator|==
+literal|'\''
+operator|||
+name|c
+operator|==
+literal|'"'
 condition|)
 block|{
 name|quotec
@@ -2381,12 +2383,15 @@ name|quotec
 operator|==
 literal|0
 operator|&&
-name|any
-argument_list|(
+operator|(
 name|c
-argument_list|,
-literal|" \t"
-argument_list|)
+operator|==
+literal|' '
+operator|||
+name|c
+operator|==
+literal|'\t'
+operator|)
 condition|)
 break|break;
 if|if

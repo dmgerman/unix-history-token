@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.12 (Berkeley) %G%"
+literal|"@(#)popen.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -770,9 +770,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|r
-decl_stmt|;
 if|if
 condition|(
 name|wait_child

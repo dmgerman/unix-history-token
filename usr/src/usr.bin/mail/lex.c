@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.15 (Berkeley) %G%"
+literal|"@(#)lex.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -857,14 +857,15 @@ condition|(
 operator|*
 name|cp
 operator|&&
-operator|!
-name|any
+name|index
 argument_list|(
+literal|" \t0123456789$^.:/-+*'\""
+argument_list|,
 operator|*
 name|cp
-argument_list|,
-literal|" \t0123456789$^.:/-+*'\""
 argument_list|)
+operator|==
+name|NOSTR
 condition|)
 operator|*
 name|cp2

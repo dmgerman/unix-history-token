@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	5.7 (Berkeley) %G%"
+literal|"@(#)fmt.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1049,15 +1049,15 @@ literal|' '
 expr_stmt|;
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
+literal|".:!"
+argument_list|,
 name|cp
 index|[
 operator|-
 literal|1
 index|]
-argument_list|,
-literal|".:!"
 argument_list|)
 condition|)
 operator|*
@@ -1352,9 +1352,6 @@ specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|cp2
 decl_stmt|;
 specifier|register
 name|int

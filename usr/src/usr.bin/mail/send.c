@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.14 (Berkeley) %G%"
+literal|"@(#)send.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,12 +424,14 @@ operator|==
 literal|'S'
 operator|)
 operator|&&
-name|icequal
+name|strcasecmp
 argument_list|(
 name|line
 argument_list|,
 literal|"status"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 					 * If the field is "status," go compute 					 * and print the real Status: field 					 */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)names.c	5.12 (Berkeley) %G%"
+literal|"@(#)names.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -723,12 +723,12 @@ operator|*
 name|cp
 operator|&&
 operator|!
-name|any
+name|index
 argument_list|(
+literal|" \t,("
+argument_list|,
 operator|*
 name|cp
-argument_list|,
-literal|" \t,("
 argument_list|)
 condition|;
 operator|*
@@ -2193,7 +2193,7 @@ name|new
 expr_stmt|;
 while|while
 condition|(
-name|nstrcmp
+name|strcasecmp
 argument_list|(
 name|t
 operator|->
@@ -2226,7 +2226,7 @@ block|}
 comment|/* 		 * If we ran out of t's, put the new entry after 		 * the current value of t. 		 */
 if|if
 condition|(
-name|nstrcmp
+name|strcasecmp
 argument_list|(
 name|t
 operator|->
@@ -2376,7 +2376,7 @@ name|n_flink
 operator|!=
 name|NIL
 operator|&&
-name|icequal
+name|strcasecmp
 argument_list|(
 name|np
 operator|->
@@ -2388,6 +2388,8 @@ name|n_flink
 operator|->
 name|n_name
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|t
 operator|=
@@ -2453,69 +2455,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Version of strcmp which ignores case differences.  */
-end_comment
-
-begin_expr_stmt
-name|nstrcmp
-argument_list|(
-name|s1
-argument_list|,
-name|s2
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|s1
-operator|,
-operator|*
-name|s2
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|register
-name|int
-name|c1
-decl_stmt|,
-name|c2
-decl_stmt|;
-do|do
-block|{
-name|c1
-operator|=
-operator|*
-name|s1
-operator|++
-expr_stmt|;
-name|c2
-operator|=
-operator|*
-name|s2
-operator|++
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|c1
-operator|&&
-name|c1
-operator|==
-name|c2
-condition|)
-do|;
-return|return
-operator|(
-name|c1
-operator|-
-name|c2
-operator|)
-return|;
-block|}
-end_block
 
 begin_comment
 comment|/*  * Put another node onto a list of names and return  * the list.  */
@@ -2636,46 +2575,29 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Delete the given name from a namelist, using the passed  * function to compare the names.  */
+comment|/*  * Delete the given name from a namelist.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|struct
 name|name
 modifier|*
 name|delname
-argument_list|(
+parameter_list|(
 name|np
-argument_list|,
+parameter_list|,
 name|name
-argument_list|,
-name|cmpfun
-argument_list|)
-decl|register struct
+parameter_list|)
+specifier|register
+name|struct
 name|name
 modifier|*
 name|np
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|name
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|cmpfun
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2701,10 +2623,7 @@ name|n_flink
 control|)
 if|if
 condition|(
-call|(
-modifier|*
-name|cmpfun
-call|)
+name|strcasecmp
 argument_list|(
 name|p
 operator|->
@@ -2712,6 +2631,8 @@ name|n_name
 argument_list|,
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -2796,12 +2717,10 @@ name|n_blink
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|np
-operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Pretty print a name list  * Uncomment it if you need it.  */

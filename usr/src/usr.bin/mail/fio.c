@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.14 (Berkeley) %G%"
+literal|"@(#)fio.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2397,11 +2397,11 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
-literal|' '
-argument_list|,
 name|xname
+argument_list|,
+literal|' '
 argument_list|)
 operator|&&
 name|stat

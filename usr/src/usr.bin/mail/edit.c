@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.9 (Berkeley) %G%"
+literal|"@(#)edit.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,14 +195,6 @@ name|sigint
 function_decl|)
 parameter_list|()
 function_decl|;
-name|int
-name|m
-init|=
-name|msgvec
-index|[
-name|i
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|i
@@ -224,7 +216,10 @@ name|printf
 argument_list|(
 literal|"Edit message %d [ynq]? "
 argument_list|,
-name|m
+name|msgvec
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -248,13 +243,15 @@ name|p
 operator|=
 name|buf
 init|;
-name|any
-argument_list|(
 operator|*
 name|p
-argument_list|,
-literal|" \t"
-argument_list|)
+operator|==
+literal|' '
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\t'
 condition|;
 name|p
 operator|++
@@ -284,14 +281,17 @@ operator|=
 operator|&
 name|message
 index|[
-name|m
+name|msgvec
+index|[
+name|i
+index|]
 operator|-
 literal|1
 index|]
 expr_stmt|;
 name|touch
 argument_list|(
-name|m
+name|mp
 argument_list|)
 expr_stmt|;
 name|sigint

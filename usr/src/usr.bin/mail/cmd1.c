@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.15 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1158,10 +1158,6 @@ modifier|*
 name|mp
 decl_stmt|;
 specifier|register
-name|int
-name|mesg
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1387,25 +1383,21 @@ name|ip
 operator|++
 control|)
 block|{
-name|mesg
-operator|=
-operator|*
-name|ip
-expr_stmt|;
-name|touch
-argument_list|(
-name|mesg
-argument_list|)
-expr_stmt|;
 name|mp
 operator|=
 operator|&
 name|message
 index|[
-name|mesg
+operator|*
+name|ip
 operator|-
 literal|1
 index|]
+expr_stmt|;
+name|touch
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|dot
 operator|=
@@ -1426,7 +1418,8 @@ name|obuf
 argument_list|,
 literal|"Message %d:\n"
 argument_list|,
-name|mesg
+operator|*
+name|ip
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1532,10 +1525,6 @@ name|message
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
-name|int
-name|mesg
-decl_stmt|;
 name|int
 name|c
 decl_stmt|,
@@ -1621,25 +1610,21 @@ name|ip
 operator|++
 control|)
 block|{
-name|mesg
-operator|=
-operator|*
-name|ip
-expr_stmt|;
-name|touch
-argument_list|(
-name|mesg
-argument_list|)
-expr_stmt|;
 name|mp
 operator|=
 operator|&
 name|message
 index|[
-name|mesg
+operator|*
+name|ip
 operator|-
 literal|1
 index|]
+expr_stmt|;
+name|touch
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|dot
 operator|=
@@ -1658,7 +1643,8 @@ name|printf
 argument_list|(
 literal|"Message %d:\n"
 argument_list|,
-name|mesg
+operator|*
+name|ip
 argument_list|)
 expr_stmt|;
 name|ibuf
