@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys_term.c,v 1.20 1998/05/14 10:07:29 jb Exp $"
+literal|"$Id: sys_term.c,v 1.21 1999/04/07 08:27:44 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
 
 begin_include
 include|#
