@@ -4916,6 +4916,14 @@ operator|(
 literal|"Intel 82801BA/BAM (ICH2) Hub to PCI bridge"
 operator|)
 return|;
+case|case
+literal|0x1a318086
+case|:
+return|return
+operator|(
+literal|"Intel 82845 PCI-PCI (AGP) bridge"
+operator|)
+return|;
 comment|/* VLSI -- vendor 0x1004 */
 case|case
 literal|0x01021004
