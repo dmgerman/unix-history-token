@@ -1276,6 +1276,42 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSEC_ESP
+end_ifdef
+
+begin_comment
+comment|/* ESP auth */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_key
+argument_list|,
+name|KEYCTL_ESP_AUTH
+argument_list|,
+name|esp_auth
+argument_list|,
+name|CTLFLAG_RW
+argument_list|, \
+operator|&
+name|ipsec_esp_auth
+argument_list|,
+literal|0
+argument_list|,
+literal|"ESP auth"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* minimum ESP key length */
 end_comment
