@@ -1370,7 +1370,7 @@ block|}
 else|else
 name|puts
 argument_list|(
-literal|"What old gtimer?"
+literal|"What old timer?"
 argument_list|)
 expr_stmt|;
 break|break;
