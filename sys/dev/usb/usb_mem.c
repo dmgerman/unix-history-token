@@ -254,7 +254,7 @@ begin_define
 define|#
 directive|define
 name|USB_MEM_CHUNKS
-value|(PAGE_SIZE / 64)
+value|(PAGE_SIZE / USB_MEM_SMALL)
 end_define
 
 begin_define
@@ -1153,6 +1153,32 @@ operator|->
 name|fullblock
 operator|=
 literal|0
+expr_stmt|;
+comment|/* XXX - override the tag, ok since we never free it */
+name|b
+operator|->
+name|tag
+operator|=
+name|tag
+expr_stmt|;
+name|KASSERT
+argument_list|(
+sizeof|sizeof
+expr|*
+name|f
+operator|<=
+name|USB_MEM_SMALL
+argument_list|,
+operator|(
+literal|"USB_MEM_SMALL(%d) is too small for struct usb_frag_dma(%d)\n"
+operator|,
+name|USB_MEM_SMALL
+operator|,
+sizeof|sizeof
+expr|*
+name|f
+operator|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
