@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_output.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_output.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"in_pcb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"in_systm.h"
 end_include
 
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"in_pcb.h"
 end_include
 
 begin_include
@@ -582,7 +582,7 @@ goto|goto
 name|send
 goto|;
 block|}
-comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input).  If the difference is at least two 	 * max size segments or at least 35% of the maximum possible 	 * window, then want to send a window update to peer. 	 */
+comment|/* 	 * Compare available window to amount of window 	 * known to peer (as advertised window less 	 * next expected input).  If the difference is at least two 	 * max size segments, or at least 50% of the maximum possible 	 * window, then want to send a window update to peer. 	 */
 if|if
 condition|(
 name|win
@@ -607,14 +607,6 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_cc
-operator|==
-literal|0
-operator|&&
 name|adv
 operator|>=
 literal|2
@@ -628,17 +620,15 @@ name|send
 goto|;
 if|if
 condition|(
-literal|100
+literal|2
 operator|*
 name|adv
-operator|/
+operator|>=
 name|so
 operator|->
 name|so_rcv
 operator|.
 name|sb_hiwat
-operator|>=
-literal|35
 condition|)
 goto|goto
 name|send
@@ -1727,7 +1717,7 @@ operator|)
 operator|->
 name|ip_ttl
 operator|=
-name|TCP_TTL
+name|tcp_ttl
 expr_stmt|;
 if|#
 directive|if
