@@ -155,7 +155,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	G - Giant  *	i - interlock  *	m - mntvnodes mutex  *	p - pollinfo lock  *	s - spechash mutex  *	S - syncer mutex  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * Vnodes may be found on many lists.  The general way to deal with operating  * on a vnode that is on a list is:  *	1) Lock the list and find the vnode.  *	2) Lock interlock so that the vnode does not go away.  *	3) Unlock the list to avoid lock order reversals.  *	4) vget with LK_INTERLOCK and check for ENOENT, or  *	5) Check for XLOCK if the vnode lock is not required.  *	6) Perform your operation, then vput().  *  * XXX Not all fields are locked yet and some fields that are marked are not  * locked consistently.  This is a work in progress.  Requires Giant!  */
+comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	G - Giant  *	i - interlock  *	m - mntvnodes mutex  *	p - pollinfo lock  *	s - spechash mutex  *	S - syncer mutex  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * Vnodes may be found on many lists.  The general way to deal with operating  * on a vnode that is on a list is:  *	1) Lock the list and find the vnode.  *	2) Lock interlock so that the vnode does not go away.  *	3) Unlock the list to avoid lock order reversals.  *	4) vget with LK_INTERLOCK and check for ENOENT, or  *	5) Check for DOOMED if the vnode lock is not required.  *	6) Perform your operation, then vput().  *  * XXX Not all fields are locked yet and some fields that are marked are not  * locked consistently.  This is a work in progress.  Requires Giant!  */
 end_comment
 
 begin_if
@@ -336,7 +336,7 @@ name|thread
 modifier|*
 name|v_vxthread
 decl_stmt|;
-comment|/* i thread owning VXLOCK */
+comment|/* i thread running vgone. */
 name|u_long
 name|v_iflag
 decl_stmt|;
@@ -590,28 +590,6 @@ end_define
 
 begin_comment
 comment|/*  * Vnode flags.  *	VI flags are protected by interlock and live in v_iflag  *	VV flags are protected by the vnode lock and live in v_vflag  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VI_XLOCK
-value|0x0001
-end_define
-
-begin_comment
-comment|/* vnode is locked to change vtype */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VI_XWANT
-value|0x0002
-end_define
-
-begin_comment
-comment|/* thread is waiting for vnode */
 end_comment
 
 begin_define
@@ -1590,7 +1568,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_iflag& (VI_DOOMED|VI_DOINGINACT|VI_XLOCK))&& \ 	 ((vp)->v_iflag& VI_FREE)&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount)
+value|(((vp)->v_iflag& VI_FREE)&&					\ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount)
 end_define
 
 begin_comment
@@ -1605,22 +1583,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED|VI_DOINGINACT))&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&& \ 	 (!(vp)->v_object || \ 	  !((vp)->v_object->ref_count || (vp)->v_object->resident_page_count)))
-end_define
-
-begin_comment
-comment|/* Requires interlock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMIGHTFREE
-parameter_list|(
-name|vp
-parameter_list|)
-define|\
-value|(!((vp)->v_iflag& (VI_FREE|VI_DOOMED|VI_XLOCK|VI_DOINGINACT))&& \ 	 LIST_EMPTY(&(vp)->v_cache_src)&& !(vp)->v_usecount)
+value|(!((vp)->v_iflag& VI_FREE)&&					\ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount&&			\ 	 (!(vp)->v_object ||						\ 	  !((vp)->v_object->ref_count || (vp)->v_object->resident_page_count)))
 end_define
 
 begin_comment
@@ -1635,7 +1598,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(((vp)->v_iflag& VI_FREE)&& \ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
+value|(((vp)->v_iflag& VI_FREE)&&					\ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
 end_define
 
 begin_define
@@ -3873,30 +3836,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|v_addpollinfo
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vx_wait
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|vx_waitl
 parameter_list|(
 name|struct
 name|vnode
