@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.5 (Berkeley) 82/06/17"
+literal|"@(#)files.c	4.6 (Berkeley) 83/02/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,9 +49,17 @@ literal|"LFLAGS="
 block|,
 literal|"CC=cc"
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 literal|"AS=as"
 block|,
 else|#
@@ -302,9 +310,6 @@ name|filename
 argument_list|)
 operator|)
 return|;
-if|#
-directive|if
-name|vax
 if|if
 condition|(
 name|stat
@@ -317,22 +322,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|stat
-argument_list|(
-name|filename
-argument_list|,
-operator|&
-name|buf
-argument_list|)
-operator|<
-literal|0
-condition|)
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -2118,9 +2107,17 @@ name|objhead
 operator|.
 name|a_data
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|skip
 operator|+=
 name|objhead
