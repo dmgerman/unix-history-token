@@ -15,6 +15,12 @@ directive|define
 name|_NETGRAPH_KSOCKET_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
 begin_comment
 comment|/* Node type name and magic cookie */
 end_comment
@@ -83,6 +89,38 @@ parameter_list|(
 name|svtype
 parameter_list|)
 value|{			\ 	{							\ 	  { "level",&ng_parse_int32_type	},	\ 	  { "name",&ng_parse_int32_type	},	\ 	  { "value",		(svtype)		},	\ 	  { NULL },						\ 	}							\ }
+end_define
+
+begin_comment
+comment|/* For NGM_KSOCKET_ACCEPT control message responses */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_ksocket_accept
+block|{
+name|u_int32_t
+name|nodeid
+decl_stmt|;
+comment|/* node ID of connected ksocket */
+name|struct
+name|sockaddr
+name|addr
+decl_stmt|;
+comment|/* peer's address (variable length) */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NGM_KSOCKET_ACCEPT_INFO
+value|{					\ 	{								\ 	  { "nodeid",&ng_parse_hint32_type		  },	\ 	  { "addr",&ng_ksocket_generic_sockaddr_type },	\ 	  { NULL }							\ 	}								\ }
 end_define
 
 begin_comment
