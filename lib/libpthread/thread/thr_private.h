@@ -539,6 +539,10 @@ name|int
 name|k_waiting
 decl_stmt|;
 name|int
+name|k_error
+decl_stmt|;
+comment|/* syscall errno in critical */
+name|int
 name|k_cpu
 decl_stmt|;
 comment|/* CPU ID when bound */
@@ -2606,6 +2610,15 @@ name|void
 name|_kse_critical_leave
 parameter_list|(
 name|kse_critical_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_kse_in_critical
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
