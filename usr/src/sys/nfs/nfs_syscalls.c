@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -205,6 +205,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|nfs_compress
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -218,6 +227,54 @@ directive|define
 name|FALSE
 value|0
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|compressreply
+index|[
+name|NFS_NPROCS
+index|]
+init|=
+block|{
+name|FALSE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|FALSE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|FALSE
+block|,
+name|FALSE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|,
+name|TRUE
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * NFS server system calls  * getfh() lives here too, but maybe should move to kern/vfs_syscalls.c  */
@@ -569,6 +626,8 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|cacherep
+decl_stmt|,
+name|wascomp
 decl_stmt|;
 name|u_long
 name|retxid
@@ -982,6 +1041,9 @@ name|msk
 argument_list|,
 operator|&
 name|mtch
+argument_list|,
+operator|&
+name|wascomp
 argument_list|)
 condition|)
 block|{
@@ -1231,6 +1293,32 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|wascomp
+operator|&&
+name|compressreply
+index|[
+name|procid
+index|]
+condition|)
+block|{
+name|m
+operator|=
+name|nfs_compress
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|siz
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+block|}
 comment|/* 			 * For non-atomic protocols, prepend a Sun RPC 			 * Record Mark. 			 */
 if|if
 condition|(
