@@ -980,6 +980,24 @@ value|_IOR('x', 67, unsigned long )
 end_define
 
 begin_comment
+comment|/* set clear-buffer-on-start */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848SCBUF
+value|_IOW('x', 68, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BT848GCBUF
+value|_IOR('x', 68, int)
+end_define
+
+begin_comment
 comment|/* Read/Write the BT848's I2C bus directly  * b7-b0:    data (read/write)  * b15-b8:   internal peripheral register (write)     * b23-b16:  i2c addr (write)  * b31-b24:  1 = write, 0 = read   */
 end_comment
 

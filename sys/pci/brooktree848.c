@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BT848 1.30 Driver for Brooktree's Bt848 based cards.    The Brooktree  BT848 Driver driver is based upon Mark Tinguely and    Jim Lowe's driver for the Matrox Meteor PCI card . The     Philips SAA 7116 and SAA 7196 are very different chipsets than    the BT848. For starters, the BT848 is a one chipset solution and    it incorporates a RISC engine to control the DMA transfers --    that is it the actual dma process is control by a program which    resides in the hosts memory also the register definitions between    the Philips chipsets and the Bt848 are very different.     The original copyright notice by Mark and Jim is included mostly    to honor their fantastic work in the Matrox Meteor driver!        Enjoy,       Amancio   */
+comment|/* BT848 1.33 Driver for Brooktree's Bt848 based cards.    The Brooktree  BT848 Driver driver is based upon Mark Tinguely and    Jim Lowe's driver for the Matrox Meteor PCI card . The     Philips SAA 7116 and SAA 7196 are very different chipsets than    the BT848. For starters, the BT848 is a one chipset solution and    it incorporates a RISC engine to control the DMA transfers --    that is it the actual dma process is control by a program which    resides in the hosts memory also the register definitions between    the Philips chipsets and the Bt848 are very different.     The original copyright notice by Mark and Jim is included mostly    to honor their fantastic work in the Matrox Meteor driver!        Enjoy,       Amancio   */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * 1. Redistributions of source code must retain the   * Copyright (c
 end_comment
 
 begin_comment
-comment|/*		Change History: 1.0		1/24/97	   First Alpha release  1.1		2/20/97	   Added video ioctl so we can do PCI To PCI 			   data transfers. This is for capturing data 			   directly to a vga frame buffer which has 			   a linear frame buffer. Minor code clean-up.  1.3		2/23/97	   Fixed system lock-up reported by  			   Randall Hopper<rhh@ct.picker.com>. This 			   problem seems somehow to be exhibited only 			   in his system. I changed the setting of 			   INT_MASK for CAP_CONTINUOUS to be exactly 			   the same as CAP_SINGLE apparently setting 			   bit 23 cleared the system lock up.  			   version 1.1 of the driver has been reported 			   to work with STB's WinTv, Hauppage's Wincast/Tv 			   and last but not least with the Intel Smart 			   Video Recorder.  1.4		3/9/97	   fsmp@freefall.org 			   Merged code to support tuners on STB and WinCast 			   cards. 			   Modifications to the contrast and chroma ioctls. 			   Textual cleanup.  1.5             3/15/97    fsmp@freefall.org                 	   new bt848 specific versions of hue/bright/                            contrast/satu/satv.                            Amancio's patch to fix "screen freeze" problem.  1.6             3/19/97    fsmp@freefall.org 			   new table-driven frequency lookup. 			   removed disable_intr()/enable_intr() calls from i2c. 			   misc. cleanup.  1.7             3/19/97    fsmp@freefall.org 			   added audio support submitted by: 				Michael Petry<petry@netwolf.NetMasters.com>  1.8             3/20/97    fsmp@freefall.org 			   extended audio support. 			   card auto-detection. 			   major cleanup, order of routines, declarations, etc.  1.9             3/22/97    fsmp@freefall.org 			   merged in Amancio's minor unit for tuner control 			   mods. 			   misc. cleanup, especially in the _intr routine. 			   made AUDIO_SUPPORT mainline code.  1.10            3/23/97    fsmp@freefall.org 			   added polled hardware i2c routines, 			   removed all existing software i2c routines. 			   created software i2cProbe() routine. 			   Randall Hopper's fixes of BT848_GHUE& BT848_GBRIG. 			   eeprom support.  1.11            3/24/97    fsmp@freefall.org 			   Louis Mamakos's new bt848 struct.  1.12		3/25/97    fsmp@freefall.org 			   japanese freq table from Naohiro Shichijo. 			   new table structs for tuner lookups. 			   major scrub for "magic numbers".  1.13		3/28/97    fsmp@freefall.org 			   1st PAL support. 			   MAGIC_[1-4] demarcates magic #s needing PAL work. 			   AFC code submitted by Richard Tobin<richard@cogsci.ed.ac.uk>.  1.14		3/29/97    richard@cogsci.ed.ac.uk 			   PAL support: magic numbers moved into 			   format_params structure. 			   Revised AFC interface. 			   fixed DMA_PROG_ALLOC size misdefinition.  1.15		4/18/97	   John-Mark Gurney<gurney_j@resnet.uoregon.edu>                            Added [SR]RGBMASKs ioctl for byte swapping.  1.16		4/20/97	   Randall Hopper<rhh@ct.picker.com>                            Generalized RGBMASK ioctls for general pixel 			   format setting [SG]ACTPIXFMT, and added query API 			   to return driver-supported pix fmts GSUPPIXFMT.  1.17		4/21/97	   hasty@rah.star-gate.com                            Clipping support added.  1.18		4/23/97	   Clean up after failed CAP_SINGLEs where bt                             interrupt isn't delivered, and fixed fixing  			   CAP_SINGLEs that for ODD_ONLY fields. 1.19            9/8/97     improved yuv support , cleaned up weurope                            channel table, incorporated cleanup work from                            Luigi, fixed pci interface bug due to a                            change in the pci interface which disables                            interrupts from a PCI device by default,                            Added Luigi's, ioctl's BT848_SLNOTCH,                             BT848_GLNOTCH (set luma notch and get luma not) 1.20            10/5/97    Keith Sklower<sklower@CS.Berkeley.EDU> submitted                            a patch to fix compilation of the BSDI's PCI                            interface.                             Hideyuki Suzuki<hideyuki@sat.t.u-tokyo.ac.jp>                            Submitted a patch for Japanese cable channels                            Joao Carlos Mendes Luis jonny@gta.ufrj.br                            Submitted general ioctl to set video broadcast                            formats (PAL, NTSC, etc..) previously we depended                            on the Bt848 auto video detect feature. 1.21            10/24/97   Randall Hopper<rhh@ct.picker.com>                            Fix temporal decimation, disable it when                            doing CAP_SINGLEs, and in dual-field capture, don't                            capture fields for different frames 1.22            11/08/97   Randall Hopper<rhh@ct.picker.com>                            Fixes for packed 24bpp - FIFO alignment 1.23            11/17/97   Amancio<hasty@star-gate.com>                            Added yuv support mpeg encoding  1.24            12/27/97   Jonathan Hanna<pangolin@rogers.wave.ca>                            Patch to support Philips FR1236MK2 tuner 1.25            02/02/98   Takeshi Ohashi<ohashi@atohasi.mickey.ai.kyutech.ac.jp> submitted                            code to support bktr_read .                            Flemming Jacobsen<fj@schizo.dk.tfs.com>                            submitted code to support  radio available with in                            some bt848 based cards;additionally, wrote code to                            correctly recognized his bt848 card.                            Roger Hardiman<roger@cs.strath.ac.uk> submitted                             various fixes to smooth out the microcode and made                             all modes consistent. 1.26                       Moved Luigi's I2CWR ioctl from the video_ioctl                            section to the tuner_ioctl section                            Changed Major device from 79 to 92 and reserved                            our Major device number -- hasty@star-gate.com 1.27                       Last batch of patches for radio support from                            Flemming Jacobsen<fj@trw.nl>.                            Added B849 PCI ID submitted by:                             Tomi Vainio<tomppa@fidata.fi> 1.28                       Frank Nobis<fn@Radio-do.de> added tuner support                            for the  German Phillips PAL tuner and                            additional channels for german cable tv. 1.29                       Roger Hardiman<roger@cs.strath.ac.uk>                            Revised autodetection code to correctly handle both                            old and new VideoLogic Captivator PCI cards.                            Added tsleep of 2 seconds to initialistion code                            for PAL users.Corrected clock selection code on                            format change. 1.30                       Bring back Frank Nobis<fn@Radio-do.de>'s opt_bktr.h  */
+comment|/*		Change History: 1.0		1/24/97	   First Alpha release  1.1		2/20/97	   Added video ioctl so we can do PCI To PCI 			   data transfers. This is for capturing data 			   directly to a vga frame buffer which has 			   a linear frame buffer. Minor code clean-up.  1.3		2/23/97	   Fixed system lock-up reported by  			   Randall Hopper<rhh@ct.picker.com>. This 			   problem seems somehow to be exhibited only 			   in his system. I changed the setting of 			   INT_MASK for CAP_CONTINUOUS to be exactly 			   the same as CAP_SINGLE apparently setting 			   bit 23 cleared the system lock up.  			   version 1.1 of the driver has been reported 			   to work with STB's WinTv, Hauppage's Wincast/Tv 			   and last but not least with the Intel Smart 			   Video Recorder.  1.4		3/9/97	   fsmp@freefall.org 			   Merged code to support tuners on STB and WinCast 			   cards. 			   Modifications to the contrast and chroma ioctls. 			   Textual cleanup.  1.5             3/15/97    fsmp@freefall.org                 	   new bt848 specific versions of hue/bright/                            contrast/satu/satv.                            Amancio's patch to fix "screen freeze" problem.  1.6             3/19/97    fsmp@freefall.org 			   new table-driven frequency lookup. 			   removed disable_intr()/enable_intr() calls from i2c. 			   misc. cleanup.  1.7             3/19/97    fsmp@freefall.org 			   added audio support submitted by: 				Michael Petry<petry@netwolf.NetMasters.com>  1.8             3/20/97    fsmp@freefall.org 			   extended audio support. 			   card auto-detection. 			   major cleanup, order of routines, declarations, etc.  1.9             3/22/97    fsmp@freefall.org 			   merged in Amancio's minor unit for tuner control 			   mods. 			   misc. cleanup, especially in the _intr routine. 			   made AUDIO_SUPPORT mainline code.  1.10            3/23/97    fsmp@freefall.org 			   added polled hardware i2c routines, 			   removed all existing software i2c routines. 			   created software i2cProbe() routine. 			   Randall Hopper's fixes of BT848_GHUE& BT848_GBRIG. 			   eeprom support.  1.11            3/24/97    fsmp@freefall.org 			   Louis Mamakos's new bt848 struct.  1.12		3/25/97    fsmp@freefall.org 			   japanese freq table from Naohiro Shichijo. 			   new table structs for tuner lookups. 			   major scrub for "magic numbers".  1.13		3/28/97    fsmp@freefall.org 			   1st PAL support. 			   MAGIC_[1-4] demarcates magic #s needing PAL work. 			   AFC code submitted by Richard Tobin<richard@cogsci.ed.ac.uk>.  1.14		3/29/97    richard@cogsci.ed.ac.uk 			   PAL support: magic numbers moved into 			   format_params structure. 			   Revised AFC interface. 			   fixed DMA_PROG_ALLOC size misdefinition.  1.15		4/18/97	   John-Mark Gurney<gurney_j@resnet.uoregon.edu>                            Added [SR]RGBMASKs ioctl for byte swapping.  1.16		4/20/97	   Randall Hopper<rhh@ct.picker.com>                            Generalized RGBMASK ioctls for general pixel 			   format setting [SG]ACTPIXFMT, and added query API 			   to return driver-supported pix fmts GSUPPIXFMT.  1.17		4/21/97	   hasty@rah.star-gate.com                            Clipping support added.  1.18		4/23/97	   Clean up after failed CAP_SINGLEs where bt                             interrupt isn't delivered, and fixed fixing  			   CAP_SINGLEs that for ODD_ONLY fields. 1.19            9/8/97     improved yuv support , cleaned up weurope                            channel table, incorporated cleanup work from                            Luigi, fixed pci interface bug due to a                            change in the pci interface which disables                            interrupts from a PCI device by default,                            Added Luigi's, ioctl's BT848_SLNOTCH,                             BT848_GLNOTCH (set luma notch and get luma not) 1.20            10/5/97    Keith Sklower<sklower@CS.Berkeley.EDU> submitted                            a patch to fix compilation of the BSDI's PCI                            interface.                             Hideyuki Suzuki<hideyuki@sat.t.u-tokyo.ac.jp>                            Submitted a patch for Japanese cable channels                            Joao Carlos Mendes Luis jonny@gta.ufrj.br                            Submitted general ioctl to set video broadcast                            formats (PAL, NTSC, etc..) previously we depended                            on the Bt848 auto video detect feature. 1.21            10/24/97   Randall Hopper<rhh@ct.picker.com>                            Fix temporal decimation, disable it when                            doing CAP_SINGLEs, and in dual-field capture, don't                            capture fields for different frames 1.22            11/08/97   Randall Hopper<rhh@ct.picker.com>                            Fixes for packed 24bpp - FIFO alignment 1.23            11/17/97   Amancio<hasty@star-gate.com>                            Added yuv support mpeg encoding  1.24            12/27/97   Jonathan Hanna<pangolin@rogers.wave.ca>                            Patch to support Philips FR1236MK2 tuner 1.25            02/02/98   Takeshi Ohashi<ohashi@atohasi.mickey.ai.kyutech.ac.jp> submitted                            code to support bktr_read .                            Flemming Jacobsen<fj@schizo.dk.tfs.com>                            submitted code to support  radio available with in                            some bt848 based cards;additionally, wrote code to                            correctly recognized his bt848 card.                            Roger Hardiman<roger@cs.strath.ac.uk> submitted                             various fixes to smooth out the microcode and made                             all modes consistent. 1.26                       Moved Luigi's I2CWR ioctl from the video_ioctl                            section to the tuner_ioctl section                            Changed Major device from 79 to 92 and reserved                            our Major device number -- hasty@star-gate.com 1.27                       Last batch of patches for radio support from                            Flemming Jacobsen<fj@trw.nl>.                            Added B849 PCI ID submitted by:                             Tomi Vainio<tomppa@fidata.fi> 1.28                       Frank Nobis<fn@Radio-do.de> added tuner support                            for the  German Phillips PAL tuner and                            additional channels for german cable tv. 1.29                       Roger Hardiman<roger@cs.strath.ac.uk>                            Revised autodetection code to correctly handle both                            old and new VideoLogic Captivator PCI cards.                            Added tsleep of 2 seconds to initialistion code                            for PAL users.Corrected clock selection code on                            format change. 1.30                       Bring back Frank Nobis<fn@Radio-do.de>'s opt_bktr.h  1.31                       Randall Hopper<rhh@ct.picker.com>                            submitted ioctl to clear the video buffer                            prior to starting video capture 			   Amancio : clean up yuv12 so that it does not                            affect rgb capture. Basically, fxtv after                            capturing in yuv12 mode , switching to rgb                            would cause the video capture to be too bright. 1.32                       disable inverse gamma function for rgb and yuv                            capture. fixed meteor brightness ioctl it now                            converts the brightness value from unsigned to                             signed. 1.33                       added sysctl: hw.bt848.tuner, hw.bt848.reverse_mute,                            hw.bt848.card 			   card takes a value from 0 to bt848_max_card                            tuner takes a value from 0 to bt848_max_tuner                            reverse_mute : 0 no effect, 1 reverse tuner                            mute function some tuners are wired reversed :( */
 end_comment
 
 begin_define
@@ -225,6 +225,132 @@ include|#
 directive|include
 file|<pci/brktree_reg.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bt848_card
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bt848_tuner
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bt848_reverse_mute
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bt848
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Bt848 Driver mgmt"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_bt848
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|card
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bt848_card
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_bt848
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tuner
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bt848_tuner
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_bt848
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|reverse_mute
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bt848_reverse_mute
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -2365,6 +2491,964 @@ value|0x0f
 end_define
 
 begin_comment
+comment|/*  * the data for each type of tuner  *  * if probeCard() fails to detect the proper tuner on boot you can  * override it by setting the following define to the tuner present:  * #define OVERRIDE_TUNER<tuner type>  *  * where<tuner type> is one of the following tuner defines.  */
+end_comment
+
+begin_comment
+comment|/* indexes into tuners[] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_TUNER
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMIC_NTSC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMIC_PAL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMIC_SECAM
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_NTSC
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_PAL
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_SECAM
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEMIC_PALI
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_PALI
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_FR1236_NTSC
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHILIPS_FR1216_PAL
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_TUNER
+value|11
+end_define
+
+begin_comment
+comment|/* XXX FIXME: this list is incomplete */
+end_comment
+
+begin_comment
+comment|/* input types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTYPE_XXX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYPE_NTSC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYPE_NTSC_J
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYPE_PAL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYPE_PAL_M
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYPE_PAL_N
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYPE_SECAM
+value|6
+end_define
+
+begin_comment
+comment|/** struct TUNER { 	char*		name; 	u_char		type; 	u_char		pllAddr; 	u_char		pllControl; 	u_char		bandLimits[ 2 ]; 	u_char		bandAddrs[ 3 ]; };  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|TUNER
+name|tuners
+index|[]
+init|=
+block|{
+comment|/* XXX FIXME: fill in the band-switch crosspoints */
+comment|/* NO_TUNER */
+block|{
+literal|"<none>"
+block|,
+comment|/* the 'name' */
+name|TTYPE_XXX
+block|,
+comment|/* input type */
+literal|0x00
+block|,
+comment|/* PLL write address */
+block|{
+literal|0x00
+block|,
+comment|/* control byte for PLL */
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* TEMIC_NTSC */
+block|{
+literal|"Temic NTSC"
+block|,
+comment|/* the 'name' */
+name|TTYPE_NTSC
+block|,
+comment|/* input type */
+name|TEMIC_NTSC_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* TEMIC_PAL */
+block|{
+literal|"Temic PAL"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+name|TEMIC_PALI_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* TEMIC_SECAM */
+block|{
+literal|"Temic SECAM"
+block|,
+comment|/* the 'name' */
+name|TTYPE_SECAM
+block|,
+comment|/* input type */
+literal|0x00
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* PHILIPS_NTSC */
+block|{
+literal|"Philips NTSC"
+block|,
+comment|/* the 'name' */
+name|TTYPE_NTSC
+block|,
+comment|/* input type */
+name|PHILIPS_NTSC_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* PHILIPS_PAL */
+block|{
+literal|"Philips PAL"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+name|PHILIPS_PAL_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_FCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_FCONTROL
+block|,
+name|TSA552x_FCONTROL
+block|,
+name|TSA552x_RADIO
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|,
+literal|0xa4
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* PHILIPS_SECAM */
+block|{
+literal|"Philips SECAM"
+block|,
+comment|/* the 'name' */
+name|TTYPE_SECAM
+block|,
+comment|/* input type */
+literal|0x00
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_RADIO
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|,
+literal|0xa4
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* TEMIC_PAL I */
+block|{
+literal|"Temic PAL I"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+name|TEMIC_PALI_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0x02
+block|,
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* PHILIPS_PAL */
+block|{
+literal|"Philips PAL I"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+name|TEMIC_PALI_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* PHILIPS_FR1236_NTSC */
+block|{
+literal|"Philips FR1236 NTSC FM"
+block|,
+comment|/* the 'name' */
+name|TTYPE_NTSC
+block|,
+comment|/* input type */
+name|PHILIPS_FR1236_NTSC_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_SCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_SCONTROL
+block|,
+name|TSA552x_SCONTROL
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|,
+literal|0x00
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+comment|/* PHILIPS_FR1216_PAL */
+block|{
+literal|"Philips FR1216 PAL FM"
+block|,
+comment|/* the 'name' */
+name|TTYPE_PAL
+block|,
+comment|/* input type */
+name|PHILIPS_FR1216_PAL_WADDR
+block|,
+comment|/* PLL write address */
+block|{
+name|TSA552x_FCONTROL
+block|,
+comment|/* control byte for PLL */
+name|TSA552x_FCONTROL
+block|,
+name|TSA552x_FCONTROL
+block|,
+name|TSA552x_RADIO
+block|}
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|}
+block|,
+comment|/* band-switch crosspoints */
+block|{
+literal|0xa0
+block|,
+literal|0x90
+block|,
+literal|0x30
+block|,
+literal|0xa4
+block|}
+block|}
+block|,
+comment|/* the band-switch values */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/******************************************************************************  * card probe  */
+end_comment
+
+begin_comment
+comment|/*  * the recognized cards, used as indexes of several tables.  *  * if probeCard() fails to detect the proper card on boot you can  * override it by setting the following define to the card you are using:  * #define OVERRIDE_CARD<card type>  *  * where<card type> is one of the following card defines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_MIRO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_HAUPPAUGE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_STB
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_INTEL
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_IMS_TURBO
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|6
+end_define
+
+begin_comment
+comment|/*  * the data for each type of card  *  * Note:  *   these entried MUST be kept in the order defined by the CARD_XXX defines!  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|CARDTYPE
+name|cards
+index|[]
+init|=
+block|{
+comment|/* CARD_UNKNOWN */
+block|{
+literal|"Unknown"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* dbx unknown */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm unknown */
+literal|0
+block|,
+comment|/* EEProm unknown */
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* CARD_MIRO */
+block|{
+literal|"Miro TV"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* dbx unknown */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm unknown */
+literal|0
+block|,
+comment|/* size unknown */
+block|{
+literal|0x02
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x0a
+block|,
+literal|1
+block|}
+block|}
+block|,
+comment|/* XXX ??? */
+comment|/* CARD_HAUPPAUGE */
+block|{
+literal|"Hauppauge WinCast/TV"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+name|PFC8582_WADDR
+block|,
+comment|/* EEProm type */
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+block|,
+comment|/* 256 bytes */
+block|{
+literal|0x00
+block|,
+literal|0x02
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|1
+block|}
+block|}
+block|,
+comment|/* audio MUX values */
+comment|/* CARD_STB */
+block|{
+literal|"STB TV/PCI"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+name|X24C01_WADDR
+block|,
+comment|/* EEProm type */
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|128
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+block|,
+comment|/* 128 bytes */
+block|{
+literal|0x00
+block|,
+literal|0x01
+block|,
+literal|0x02
+block|,
+literal|0x02
+block|,
+literal|1
+block|}
+block|}
+block|,
+comment|/* audio MUX values */
+comment|/* CARD_INTEL */
+block|{
+literal|"Intel Smart Video III/VideoLogic Captivator PCI"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* CARD_IMS_TURBO */
+block|{
+literal|"IMS TV Turbo"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+name|PFC8582_WADDR
+block|,
+comment|/* EEProm type */
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+block|,
+comment|/* 256 bytes */
+block|{
+literal|0x00
+block|,
+literal|0x02
+block|,
+literal|0x01
+block|,
+literal|0x01
+block|,
+literal|1
+block|}
+block|}
+comment|/* audio MUX values */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|bt848_card_sig
+name|bt848_card_signature
+index|[
+literal|1
+index|]
+init|=
+block|{
+comment|/* IMS TURBO TV : card 5 */
+block|{
+literal|5
+block|,
+literal|9
+block|,
+block|{
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|02
+block|,
+literal|00
+block|,
+literal|00
+block|,
+literal|00
+block|}
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* debug utility for holding previous INT_STAT contents */
 end_comment
 
@@ -3685,6 +4769,12 @@ operator|=
 name|FIFO_RISC_DISABLED
 expr_stmt|;
 block|}
+name|bktr
+operator|->
+name|clr_on_start
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* defaults for the tuner section of the card */
 name|bktr
 operator|->
@@ -3727,6 +4817,27 @@ operator|->
 name|audio_mute_state
 operator|=
 name|FALSE
+expr_stmt|;
+name|bktr
+operator|->
+name|bt848_card
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|bktr
+operator|->
+name|bt848_tuner
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|bktr
+operator|->
+name|reverse_mute
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|probeCard
 argument_list|(
@@ -3968,7 +5079,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* STATUS_SUM */
-comment|/*	printf( " STATUS %x %x %x \n", 		dstatus, bktr_status, bt848->risc_count ); 		*/
+comment|/* printf( " STATUS %x %x %x \n", 		dstatus, bktr_status, bt848->risc_count ); 	*/
 comment|/* if risc was disabled re-start process again */
 if|if
 condition|(
@@ -4751,6 +5862,176 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|bt848_card
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|bt848_card
+operator|>>
+literal|8
+operator|==
+name|unit
+operator|)
+operator|&&
+operator|(
+operator|(
+name|bt848_card
+operator|&
+literal|0xff
+operator|)
+operator|<
+name|Bt848_MAX_CARD
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|bktr
+operator|->
+name|bt848_card
+operator|!=
+operator|(
+name|bt848_card
+operator|&
+literal|0xff
+operator|)
+condition|)
+block|{
+name|bktr
+operator|->
+name|bt848_card
+operator|=
+operator|(
+name|bt848_card
+operator|&
+literal|0xff
+operator|)
+expr_stmt|;
+name|probeCard
+argument_list|(
+name|bktr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|bt848_tuner
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|bt848_tuner
+operator|>>
+literal|8
+operator|==
+name|unit
+operator|)
+operator|&&
+operator|(
+operator|(
+name|bt848_tuner
+operator|&
+literal|0xff
+operator|)
+operator|<
+name|Bt848_MAX_TUNER
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|bktr
+operator|->
+name|bt848_tuner
+operator|!=
+operator|(
+name|bt848_tuner
+operator|&
+literal|0xff
+operator|)
+condition|)
+block|{
+name|bktr
+operator|->
+name|bt848_tuner
+operator|=
+operator|(
+name|bt848_tuner
+operator|&
+literal|0xff
+operator|)
+expr_stmt|;
+name|probeCard
+argument_list|(
+name|bktr
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|bt848_reverse_mute
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|(
+name|bt848_reverse_mute
+operator|>>
+literal|8
+operator|)
+operator|==
+name|unit
+operator|)
+operator|&&
+operator|(
+operator|(
+name|bt848_reverse_mute
+operator|&
+literal|0xff
+operator|)
+operator|<
+name|Bt848_MAX_TUNER
+operator|)
+condition|)
+block|{
+name|bktr
+operator|->
+name|reverse_mute
+operator|=
+name|bt848_reverse_mute
+operator|&
+literal|0xff
+expr_stmt|;
+name|bt848_reverse_mute
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
 switch|switch
 condition|(
 name|MINOR
@@ -4845,6 +6126,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|bktr
+operator|->
+name|clr_on_start
+operator|=
+name|FALSE
+expr_stmt|;
 name|bt848
 operator|->
 name|dstatus
@@ -4899,7 +6186,7 @@ name|bt848
 operator|->
 name|color_ctl_gamma
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|bt848
 operator|->
@@ -5083,7 +6370,7 @@ operator|=
 name|BT848_INT_MYSTERYBIT
 expr_stmt|;
 comment|/* what does this bit do ??? */
-comment|/* wait 2 seconds while bt848 initialises */
+comment|/* wait .25 seconds while bt848 initialises */
 name|tsleep
 argument_list|(
 operator|(
@@ -5096,8 +6383,8 @@ argument_list|,
 literal|"btinit"
 argument_list|,
 name|hz
-operator|*
-literal|2
+operator|/
+literal|4
 argument_list|)
 expr_stmt|;
 return|return
@@ -5966,6 +7253,9 @@ name|fp
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|char
+name|char_temp
 decl_stmt|;
 name|bt848
 operator|=
@@ -7069,10 +8359,9 @@ case|case
 name|METEORSBRIG
 case|:
 comment|/* set brightness */
-name|bt848
-operator|->
-name|bright
+name|char_temp
 operator|=
+operator|(
 operator|*
 operator|(
 name|u_char
@@ -7081,6 +8370,15 @@ operator|)
 name|arg
 operator|&
 literal|0xff
+operator|)
+operator|-
+literal|128
+expr_stmt|;
+name|bt848
+operator|->
+name|bright
+operator|=
+name|char_temp
 expr_stmt|;
 break|break;
 case|case
@@ -7349,6 +8647,45 @@ operator|)
 operator|&
 literal|0xff
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|BT848SCBUF
+case|:
+comment|/* set Clear-Buffer-on-start flag */
+name|bktr
+operator|->
+name|clr_on_start
+operator|=
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|!=
+literal|0
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|BT848GCBUF
+case|:
+comment|/* get Clear-Buffer-on-start flag */
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+operator|(
+name|int
+operator|)
+name|bktr
+operator|->
+name|clr_on_start
 expr_stmt|;
 break|break;
 case|case
@@ -12093,21 +13430,44 @@ name|SYNC_LEVEL
 expr_stmt|;
 name|bt848
 operator|->
-name|color_ctl_rgb_ded
+name|oform
 operator|=
-literal|1
+literal|0x00
 expr_stmt|;
 name|bt848
 operator|->
 name|e_vscale_hi
 operator||=
-literal|0xc0
+literal|0x40
 expr_stmt|;
+comment|/* set chroma comb */
 name|bt848
 operator|->
 name|o_vscale_hi
 operator||=
-literal|0xc0
+literal|0x40
+expr_stmt|;
+name|bt848
+operator|->
+name|e_vscale_hi
+operator|&=
+operator|~
+literal|0x80
+expr_stmt|;
+comment|/* clear Ycomb */
+name|bt848
+operator|->
+name|o_vscale_hi
+operator|&=
+operator|~
+literal|0x80
+expr_stmt|;
+comment|/* disable gamma correction removal */
+name|bt848
+operator|->
+name|color_ctl_gamma
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -12454,7 +13814,7 @@ literal|1
 operator|<<
 literal|24
 operator||
-name|BKTR_VRE
+name|BKTR_VRO
 expr_stmt|;
 operator|*
 name|dma_prog
@@ -12498,7 +13858,7 @@ literal|1
 operator|<<
 literal|24
 operator||
-name|BKTR_VRO
+name|BKTR_VRE
 expr_stmt|;
 operator|*
 name|dma_prog
@@ -14290,68 +15650,7 @@ name|bt848
 operator|->
 name|oform
 operator|=
-literal|0x00
-expr_stmt|;
-name|bt848
-operator|->
-name|e_control
-operator||=
-name|BT848_E_CONTROL_LDEC
-expr_stmt|;
-comment|/* disable luma decimation */
-name|bt848
-operator|->
-name|o_control
-operator||=
-name|BT848_O_CONTROL_LDEC
-expr_stmt|;
-name|bt848
-operator|->
-name|e_scloop
-operator||=
-name|BT848_O_SCLOOP_CAGC
-expr_stmt|;
-comment|/* chroma agc enable */
-name|bt848
-operator|->
-name|o_scloop
-operator||=
-name|BT848_O_SCLOOP_CAGC
-expr_stmt|;
-name|bt848
-operator|->
-name|e_vscale_hi
-operator|&=
-operator|~
-literal|0x80
-expr_stmt|;
-comment|/* clear Ycomb */
-name|bt848
-operator|->
-name|o_vscale_hi
-operator|&=
-operator|~
-literal|0x80
-expr_stmt|;
-name|bt848
-operator|->
-name|e_vscale_hi
-operator||=
-literal|0x40
-expr_stmt|;
-comment|/* set chroma comb */
-name|bt848
-operator|->
-name|o_vscale_hi
-operator||=
-literal|0x40
-expr_stmt|;
-comment|/* disable gamma correction removal */
-name|bt848
-operator|->
-name|color_ctl_gamma
-operator|=
-literal|1
+literal|0x0
 expr_stmt|;
 comment|/* Construct Write */
 name|inst
@@ -15774,6 +17073,61 @@ operator|->
 name|format_params
 index|]
 expr_stmt|;
+comment|/*  If requested, clear out capture buf first  */
+if|if
+condition|(
+name|bktr
+operator|->
+name|clr_on_start
+operator|&&
+operator|(
+name|bktr
+operator|->
+name|video
+operator|.
+name|addr
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|bktr
+operator|->
+name|bigbuf
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|bktr
+operator|->
+name|rows
+operator|*
+name|bktr
+operator|->
+name|cols
+operator|*
+name|bktr
+operator|->
+name|frames
+operator|*
+name|pixfmt_table
+index|[
+name|bktr
+operator|->
+name|pixfmt
+index|]
+operator|.
+name|public
+operator|.
+name|Bpp
+argument_list|)
+expr_stmt|;
+block|}
 name|bt848
 operator|=
 name|bktr
@@ -17310,850 +18664,6 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * card probe  */
-end_comment
-
-begin_comment
-comment|/*  * the recognized cards, used as indexes of several tables.  *  * if probeCard() fails to detect the proper card on boot you can  * override it by setting the following define to the card you are using:  * #define OVERRIDE_CARD<card type>  *  * where<card type> is one of the following card defines.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CARD_UNKNOWN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARD_MIRO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARD_HAUPPAUGE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARD_STB
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARD_INTEL
-value|4
-end_define
-
-begin_comment
-comment|/*  * the data for each type of card  *  * Note:  *   these entried MUST be kept in the order defined by the CARD_XXX defines!  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|CARDTYPE
-name|cards
-index|[]
-init|=
-block|{
-comment|/* CARD_UNKNOWN */
-block|{
-literal|"Unknown"
-block|,
-comment|/* the 'name' */
-name|NULL
-block|,
-comment|/* the tuner */
-literal|0
-block|,
-comment|/* dbx unknown */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* EEProm unknown */
-literal|0
-block|,
-comment|/* EEProm unknown */
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|}
-block|,
-comment|/* CARD_MIRO */
-block|{
-literal|"Miro TV"
-block|,
-comment|/* the 'name' */
-name|NULL
-block|,
-comment|/* the tuner */
-literal|0
-block|,
-comment|/* dbx unknown */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* EEProm unknown */
-literal|0
-block|,
-comment|/* size unknown */
-block|{
-literal|0x02
-block|,
-literal|0x01
-block|,
-literal|0x00
-block|,
-literal|0x0a
-block|,
-literal|1
-block|}
-block|}
-block|,
-comment|/* XXX ??? */
-comment|/* CARD_HAUPPAUGE */
-block|{
-literal|"Hauppauge WinCast/TV"
-block|,
-comment|/* the 'name' */
-name|NULL
-block|,
-comment|/* the tuner */
-literal|0
-block|,
-comment|/* dbx is optional */
-literal|0
-block|,
-name|PFC8582_WADDR
-block|,
-comment|/* EEProm type */
-call|(
-name|u_char
-call|)
-argument_list|(
-literal|256
-operator|/
-name|EEPROMBLOCKSIZE
-argument_list|)
-block|,
-comment|/* 256 bytes */
-block|{
-literal|0x00
-block|,
-literal|0x02
-block|,
-literal|0x01
-block|,
-literal|0x01
-block|,
-literal|1
-block|}
-block|}
-block|,
-comment|/* audio MUX values */
-comment|/* CARD_STB */
-block|{
-literal|"STB TV/PCI"
-block|,
-comment|/* the 'name' */
-name|NULL
-block|,
-comment|/* the tuner */
-literal|0
-block|,
-comment|/* dbx is optional */
-literal|0
-block|,
-name|X24C01_WADDR
-block|,
-comment|/* EEProm type */
-call|(
-name|u_char
-call|)
-argument_list|(
-literal|128
-operator|/
-name|EEPROMBLOCKSIZE
-argument_list|)
-block|,
-comment|/* 128 bytes */
-block|{
-literal|0x00
-block|,
-literal|0x01
-block|,
-literal|0x02
-block|,
-literal|0x02
-block|,
-literal|1
-block|}
-block|}
-block|,
-comment|/* audio MUX values */
-comment|/* CARD_INTEL */
-block|{
-literal|"Intel Smart Video III/VideoLogic Captivator PCI"
-block|,
-comment|/* the 'name' */
-name|NULL
-block|,
-comment|/* the tuner */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * the data for each type of tuner  *  * if probeCard() fails to detect the proper tuner on boot you can  * override it by setting the following define to the tuner present:  * #define OVERRIDE_TUNER<tuner type>  *  * where<tuner type> is one of the following tuner defines.  */
-end_comment
-
-begin_comment
-comment|/* indexes into tuners[] */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_TUNER
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEMIC_NTSC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEMIC_PAL
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEMIC_SECAM
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHILIPS_NTSC
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHILIPS_PAL
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHILIPS_SECAM
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEMIC_PALI
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHILIPS_PALI
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHILIPS_FR1236_NTSC
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHILIPS_FR1216_PAL
-value|10
-end_define
-
-begin_comment
-comment|/* XXX FIXME: this list is incomplete */
-end_comment
-
-begin_comment
-comment|/* input types */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TTYPE_XXX
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYPE_NTSC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYPE_NTSC_J
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYPE_PAL
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYPE_PAL_M
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYPE_PAL_N
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|TTYPE_SECAM
-value|6
-end_define
-
-begin_comment
-comment|/** struct TUNER { 	char*		name; 	u_char		type; 	u_char		pllAddr; 	u_char		pllControl; 	u_char		bandLimits[ 2 ]; 	u_char		bandAddrs[ 3 ]; };  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|TUNER
-name|tuners
-index|[]
-init|=
-block|{
-comment|/* XXX FIXME: fill in the band-switch crosspoints */
-comment|/* NO_TUNER */
-block|{
-literal|"<none>"
-block|,
-comment|/* the 'name' */
-name|TTYPE_XXX
-block|,
-comment|/* input type */
-literal|0x00
-block|,
-comment|/* PLL write address */
-block|{
-literal|0x00
-block|,
-comment|/* control byte for PLL */
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* TEMIC_NTSC */
-block|{
-literal|"Temic NTSC"
-block|,
-comment|/* the 'name' */
-name|TTYPE_NTSC
-block|,
-comment|/* input type */
-name|TEMIC_NTSC_WADDR
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_SCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_SCONTROL
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0x02
-block|,
-literal|0x04
-block|,
-literal|0x01
-block|,
-literal|0x00
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* TEMIC_PAL */
-block|{
-literal|"Temic PAL"
-block|,
-comment|/* the 'name' */
-name|TTYPE_PAL
-block|,
-comment|/* input type */
-name|TEMIC_PALI_WADDR
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_SCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_SCONTROL
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0x02
-block|,
-literal|0x04
-block|,
-literal|0x01
-block|,
-literal|0x00
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* TEMIC_SECAM */
-block|{
-literal|"Temic SECAM"
-block|,
-comment|/* the 'name' */
-name|TTYPE_SECAM
-block|,
-comment|/* input type */
-literal|0x00
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_SCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_SCONTROL
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0x02
-block|,
-literal|0x04
-block|,
-literal|0x01
-block|,
-literal|0x00
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* PHILIPS_NTSC */
-block|{
-literal|"Philips NTSC"
-block|,
-comment|/* the 'name' */
-name|TTYPE_NTSC
-block|,
-comment|/* input type */
-name|PHILIPS_NTSC_WADDR
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_SCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_SCONTROL
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0xa0
-block|,
-literal|0x90
-block|,
-literal|0x30
-block|,
-literal|0x00
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* PHILIPS_PAL */
-block|{
-literal|"Philips PAL"
-block|,
-comment|/* the 'name' */
-name|TTYPE_PAL
-block|,
-comment|/* input type */
-name|PHILIPS_PAL_WADDR
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_FCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_FCONTROL
-block|,
-name|TSA552x_FCONTROL
-block|,
-name|TSA552x_RADIO
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0xa0
-block|,
-literal|0x90
-block|,
-literal|0x30
-block|,
-literal|0xa4
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* PHILIPS_SECAM */
-block|{
-literal|"Philips SECAM"
-block|,
-comment|/* the 'name' */
-name|TTYPE_SECAM
-block|,
-comment|/* input type */
-literal|0x00
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_SCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_RADIO
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0xa0
-block|,
-literal|0x90
-block|,
-literal|0x30
-block|,
-literal|0xa4
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* TEMIC_PAL I */
-block|{
-literal|"Temic PAL I"
-block|,
-comment|/* the 'name' */
-name|TTYPE_PAL
-block|,
-comment|/* input type */
-name|TEMIC_PALI_WADDR
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_SCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_SCONTROL
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0x02
-block|,
-literal|0x04
-block|,
-literal|0x01
-block|,
-literal|0x00
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* PHILIPS_PAL */
-block|{
-literal|"Philips PAL I"
-block|,
-comment|/* the 'name' */
-name|TTYPE_PAL
-block|,
-comment|/* input type */
-name|TEMIC_PALI_WADDR
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_SCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_SCONTROL
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0xa0
-block|,
-literal|0x90
-block|,
-literal|0x30
-block|,
-literal|0x00
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* PHILIPS_FR1236_NTSC */
-block|{
-literal|"Philips FR1236 NTSC FM"
-block|,
-comment|/* the 'name' */
-name|TTYPE_NTSC
-block|,
-comment|/* input type */
-name|PHILIPS_FR1236_NTSC_WADDR
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_SCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_SCONTROL
-block|,
-name|TSA552x_SCONTROL
-block|,
-literal|0x00
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0xa0
-block|,
-literal|0x90
-block|,
-literal|0x30
-block|,
-literal|0x00
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-comment|/* PHILIPS_FR1216_PAL */
-block|{
-literal|"Philips FR1216 PAL FM"
-block|,
-comment|/* the 'name' */
-name|TTYPE_PAL
-block|,
-comment|/* input type */
-name|PHILIPS_FR1216_PAL_WADDR
-block|,
-comment|/* PLL write address */
-block|{
-name|TSA552x_FCONTROL
-block|,
-comment|/* control byte for PLL */
-name|TSA552x_FCONTROL
-block|,
-name|TSA552x_FCONTROL
-block|,
-name|TSA552x_RADIO
-block|}
-block|,
-block|{
-literal|0x00
-block|,
-literal|0x00
-block|}
-block|,
-comment|/* band-switch crosspoints */
-block|{
-literal|0xa0
-block|,
-literal|0x90
-block|,
-literal|0x30
-block|,
-literal|0xa4
-block|}
-block|}
-block|,
-comment|/* the band-switch values */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * get a signature of the card  * read all 128 possible i2c read addresses from 0x01 thru 0xff  * build a bit array with a 1 bit for each i2c device that responds  *  * XXX FIXME: use offset& count args  */
 end_comment
 
@@ -18214,7 +18724,7 @@ literal|0
 init|;
 name|x
 operator|<
-literal|128
+name|count
 condition|;
 operator|++
 name|x
@@ -18394,12 +18904,27 @@ parameter_list|)
 block|{
 name|int
 name|card
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|card_found
 decl_stmt|;
 name|int
 name|status
 decl_stmt|;
 name|bt848_ptr_t
 name|bt848
+decl_stmt|;
+name|u_char
+name|probe_signature
+index|[
+literal|128
+index|]
+decl_stmt|,
+modifier|*
+name|probe_temp
 decl_stmt|;
 name|int
 name|any_i2c_devices
@@ -18460,6 +18985,35 @@ name|checkTuner
 goto|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bktr
+operator|->
+name|bt848_card
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+operator|(
+name|card
+operator|=
+name|bktr
+operator|->
+name|bt848_card
+operator|)
+index|]
+expr_stmt|;
+goto|goto
+name|checkTuner
+goto|;
+block|}
 comment|/* Check for i2c devices */
 if|if
 condition|(
@@ -18594,6 +19148,189 @@ goto|goto
 name|checkTuner
 goto|;
 block|}
+name|signCard
+argument_list|(
+name|bktr
+argument_list|,
+literal|1
+argument_list|,
+literal|128
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|probe_signature
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"card signature \n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|Bt848_MAX_SIGN
+condition|;
+name|j
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|" %02x "
+argument_list|,
+name|probe_signature
+index|[
+name|j
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n\n"
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+sizeof|sizeof
+name|bt848_card_signature
+operator|)
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bt848_card_sig
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|card_found
+operator|=
+literal|1
+expr_stmt|;
+name|probe_temp
+operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|&
+name|bt848_card_signature
+index|[
+name|i
+index|]
+operator|.
+name|signature
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|Bt848_MAX_SIGN
+condition|;
+name|j
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|probe_temp
+index|[
+name|j
+index|]
+operator|&
+literal|0xf
+operator|)
+operator|!=
+operator|(
+name|probe_signature
+index|[
+name|j
+index|]
+operator|&
+literal|0xf
+operator|)
+condition|)
+block|{
+name|card_found
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+block|}
+if|if
+condition|(
+name|card_found
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+name|card
+operator|=
+name|bt848_card_signature
+index|[
+name|i
+index|]
+operator|.
+name|card
+index|]
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|bt848_card_signature
+index|[
+name|i
+index|]
+operator|.
+name|tuner
+index|]
+expr_stmt|;
+goto|goto
+name|checkDBX
+goto|;
+block|}
+block|}
 comment|/* XXX FIXME: (how do I) look for a Miro card */
 name|bktr
 operator|->
@@ -18633,6 +19370,36 @@ name|checkDBX
 goto|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bktr
+operator|->
+name|bt848_tuner
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|.
+name|tuner
+operator|=
+operator|&
+name|tuners
+index|[
+name|bktr
+operator|->
+name|bt848_tuner
+operator|&
+literal|0xff
+index|]
+expr_stmt|;
+goto|goto
+name|checkDBX
+goto|;
+block|}
 comment|/* Check for i2c devices */
 if|if
 condition|(
@@ -21124,6 +21891,25 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bktr
+operator|->
+name|reverse_mute
+condition|)
+name|bktr
+operator|->
+name|audio_mux_select
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|bktr
+operator|->
+name|audio_mux_select
+operator|=
+literal|3
+expr_stmt|;
 break|break;
 case|case
 name|AUDIO_EXTERN
@@ -21209,6 +21995,7 @@ name|audio_mute_state
 operator|==
 name|TRUE
 condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|BKTR_REVERSEMUTE
@@ -21224,6 +22011,22 @@ literal|3
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bktr
+operator|->
+name|reverse_mute
+condition|)
+name|idx
+operator|=
+literal|3
+expr_stmt|;
+else|else
+name|idx
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 name|idx
 operator|=
@@ -21264,9 +22067,20 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cmd: %d\n"
+literal|"cmd: %d audio mux %x temp %x \n"
 argument_list|,
 name|cmd
+argument_list|,
+name|bktr
+operator|->
+name|card
+operator|.
+name|audiomuxs
+index|[
+name|idx
+index|]
+argument_list|,
+name|temp
 argument_list|)
 expr_stmt|;
 else|#

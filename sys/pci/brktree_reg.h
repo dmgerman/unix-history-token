@@ -1605,6 +1605,10 @@ name|int
 name|signal
 decl_stmt|;
 comment|/* signal to send to process */
+name|int
+name|clr_on_start
+decl_stmt|;
+comment|/* clear cap buf on capture start? */
 define|#
 directive|define
 name|METEOR_SIG_MODE_MASK
@@ -1929,6 +1933,15 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+name|int
+name|reverse_mute
+decl_stmt|;
+name|int
+name|bt848_tuner
+decl_stmt|;
+name|int
+name|bt848_card
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1949,6 +1962,33 @@ modifier|*
 name|bktr_ptr_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_SIGN
+value|16
+end_define
+
+begin_struct
+struct|struct
+name|bt848_card_sig
+block|{
+name|int
+name|card
+decl_stmt|;
+name|int
+name|tuner
+decl_stmt|;
+name|u_char
+name|signature
+index|[
+name|Bt848_MAX_SIGN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 
