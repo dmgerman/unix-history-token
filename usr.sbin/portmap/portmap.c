@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: portmap.c,v 1.4.2.2 1997/10/10 06:16:58 charnier Exp $"
+literal|"$Id: portmap.c,v 1.4.2.3 1998/03/09 13:51:55 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2542,6 +2542,13 @@ name|void
 name|reap
 parameter_list|()
 block|{
+name|int
+name|save_errno
+decl_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 while|while
 condition|(
 name|wait3
@@ -2565,6 +2572,10 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 block|}
 end_function
 

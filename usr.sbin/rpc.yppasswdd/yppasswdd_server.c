@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yppasswdd_server.c,v 1.9.2.2 1997/11/05 07:37:01 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +220,13 @@ decl_stmt|;
 name|int
 name|st
 decl_stmt|;
+name|int
+name|saved_errno
+decl_stmt|;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|sig
@@ -264,6 +271,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
 return|return;
 block|}
 end_function
