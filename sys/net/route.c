@@ -81,16 +81,6 @@ directive|include
 file|<netinet/ip_mroute.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|SA
-parameter_list|(
-name|p
-parameter_list|)
-value|((struct sockaddr *)(p))
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -417,7 +407,7 @@ name|RTM_MISS
 decl_stmt|;
 name|newrt
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -519,15 +509,9 @@ name|RTM_RESOLVE
 argument_list|,
 name|dst
 argument_list|,
-name|SA
-argument_list|(
-literal|0
-argument_list|)
+name|NULL
 argument_list|,
-name|SA
-argument_list|(
-literal|0
-argument_list|)
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -791,12 +775,25 @@ modifier|*
 name|rt
 parameter_list|)
 block|{
-comment|/* 	 * find the tree for that address family 	 */
 name|struct
 name|radix_node_head
 modifier|*
 name|rnh
-init|=
+decl_stmt|;
+comment|/* XXX the NULL checks are probably useless */
+if|if
+condition|(
+name|rt
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"rtfree: NULL rt"
+argument_list|)
+expr_stmt|;
+name|rnh
+operator|=
 name|rt_tables
 index|[
 name|rt_key
@@ -806,20 +803,16 @@ argument_list|)
 operator|->
 name|sa_family
 index|]
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|rt
-operator|==
-literal|0
-operator|||
 name|rnh
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"rtfree"
+literal|"rtfree: NULL rnh"
 argument_list|)
 expr_stmt|;
 name|RT_LOCK_ASSERT
@@ -1048,7 +1041,7 @@ name|short
 modifier|*
 name|stat
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|rt_addrinfo
@@ -1071,7 +1064,7 @@ name|gateway
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -1152,7 +1145,7 @@ if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 name|rt_mask
@@ -1542,7 +1535,7 @@ block|{
 comment|/* 		 * If we are adding a route to an interface, 		 * and the interface is a pt to pt link 		 * we should search for the destination 		 * as our clue to the interface.  Otherwise 		 * we can use the local address. 		 */
 name|ifa
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1550,7 +1543,6 @@ name|flags
 operator|&
 name|RTF_HOST
 condition|)
-block|{
 name|ifa
 operator|=
 name|ifa_ifwithdstaddr
@@ -1558,12 +1550,11 @@ argument_list|(
 name|dst
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ifa
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ifa
 operator|=
@@ -1588,7 +1579,7 @@ if|if
 condition|(
 name|ifa
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ifa
 operator|=
@@ -1601,7 +1592,7 @@ if|if
 condition|(
 name|ifa
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|struct
@@ -1622,11 +1613,11 @@ if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|RT_REMREF
@@ -1649,11 +1640,11 @@ operator|->
 name|rt_ifa
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -1692,7 +1683,7 @@ if|if
 condition|(
 name|ifa
 operator|==
-literal|0
+name|NULL
 condition|)
 name|ifa
 operator|=
@@ -1707,35 +1698,19 @@ return|;
 block|}
 end_function
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|walktree_f_t
 name|rt_fixdelete
-parameter_list|(
-name|struct
-name|radix_node
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|walktree_f_t
 name|rt_fixchange
-parameter_list|(
-name|struct
-name|radix_node
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -2189,7 +2164,7 @@ if|if
 condition|(
 name|rnh
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2225,7 +2200,7 @@ if|if
 condition|(
 name|rn
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -2351,7 +2326,7 @@ name|rt
 operator|->
 name|rt_gwroute
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * Give the protocol a chance to keep things in sync. 	 */
@@ -2536,7 +2511,7 @@ if|if
 condition|(
 name|rnh
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2558,7 +2533,7 @@ condition|)
 block|{
 name|netmask
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|flags
 operator|&=
@@ -2592,7 +2567,7 @@ if|if
 condition|(
 name|rn
 operator|==
-literal|0
+name|NULL
 condition|)
 name|senderr
 argument_list|(
@@ -2704,7 +2679,7 @@ name|rt
 operator|->
 name|rt_gwroute
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 		 * give the protocol a chance to keep things in sync. 		 */
@@ -2768,7 +2743,7 @@ if|if
 condition|(
 name|ret_nrt
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 name|rt
@@ -2777,7 +2752,7 @@ operator|*
 name|ret_nrt
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 name|senderr
 argument_list|(
@@ -2824,7 +2799,7 @@ operator|->
 name|rt_genmask
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 name|flags
 operator||=
@@ -2901,7 +2876,7 @@ if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 name|senderr
 argument_list|(
@@ -3044,7 +3019,7 @@ if|if
 condition|(
 name|rn
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|struct
@@ -3120,7 +3095,7 @@ if|if
 condition|(
 name|rn
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -3177,7 +3152,7 @@ name|rt
 operator|->
 name|rt_parent
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 		 * If we got here from RESOLVE, then we are cloning 		 * so clone the rest, and note that we 		 * are a clone (and increment the parent's references) 		 */
 if|if
@@ -3281,7 +3256,7 @@ argument_list|(
 name|rt
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|struct
@@ -3425,6 +3400,7 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+comment|/* The cast is safe because *rt starts with a struct radix_node. */
 name|struct
 name|rtentry
 modifier|*
@@ -3476,12 +3452,7 @@ argument_list|(
 name|rt
 argument_list|)
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|rt_mask
 argument_list|(
@@ -3492,13 +3463,7 @@ name|rt
 operator|->
 name|rt_flags
 argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 return|;
 block|}
@@ -3511,26 +3476,6 @@ end_function
 begin_comment
 comment|/*  * This routine is called from rt_setgate() to do the analogous thing for  * adds and changes.  There is the added complication in this case of a  * middle insert; i.e., insertion of a new network route between an older  * network route and (cloned) host routes.  For this reason, a simple check  * of rt->rt_parent is insufficient; each candidate route must be tested  * against the (mask, value) of the new route (passed as before in vp)  * to see if the new route matches it.  *  * XXX - it may be possible to do fixdelete() for changes and reserve this  * routine just for adds.  I'm not sure why I thought it was necessary to do  * changes this way.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|rtfcdebug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -3547,6 +3492,7 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+comment|/* The cast is safe because *rt starts with a struct radix_node. */
 name|struct
 name|rtentry
 modifier|*
@@ -3604,24 +3550,7 @@ name|len
 decl_stmt|,
 name|mlen
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|rtfcdebug
-condition|)
-name|printf
-argument_list|(
-literal|"rt_fixchange: rt %p, rt0 %p\n"
-argument_list|,
-name|rt
-argument_list|,
-name|rt0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+comment|/* make sure we have a parent, and route is not pinned or cloning */
 if|if
 condition|(
 operator|!
@@ -3641,25 +3570,9 @@ name|RTF_CLONING
 operator|)
 operator|)
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|rtfcdebug
-condition|)
-name|printf
-argument_list|(
-literal|"no parent, pinned or cloning\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
-block|}
 if|if
 condition|(
 name|rt
@@ -3668,57 +3581,10 @@ name|rt_parent
 operator|==
 name|rt0
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|rtfcdebug
-condition|)
-name|printf
-argument_list|(
-literal|"parent match\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-name|rtrequest
-argument_list|(
-name|RTM_DELETE
-argument_list|,
-name|rt_key
-argument_list|(
-name|rt
-argument_list|)
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-literal|0
-argument_list|,
-name|rt_mask
-argument_list|(
-name|rt
-argument_list|)
-argument_list|,
-name|rt
-operator|->
-name|rt_flags
-argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|*
-operator|)
-literal|0
-argument_list|)
-return|;
-block|}
+comment|/* parent match */
+goto|goto
+name|delete_rt
+goto|;
 comment|/* 	 * There probably is a function somewhere which does this... 	 * if not, there should be. 	 */
 name|len
 operator|=
@@ -3808,26 +3674,10 @@ argument_list|)
 operator|->
 name|sa_len
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|rtfcdebug
-condition|)
-name|printf
-argument_list|(
-literal|"rt_fixchange: inserting a less "
-literal|"specific route\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+comment|/* less specific route */
 return|return
 literal|0
 return|;
-block|}
 for|for
 control|(
 name|i
@@ -3845,7 +3695,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -3873,27 +3722,10 @@ index|[
 name|i
 index|]
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|rtfcdebug
-condition|)
-name|printf
-argument_list|(
-literal|"rt_fixchange: inserting a less "
-literal|"specific route\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
-block|}
-block|}
+comment|/* less specific route */
 for|for
 control|(
 name|i
@@ -3911,7 +3743,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -3931,41 +3762,13 @@ index|[
 name|i
 index|]
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|rtfcdebug
-condition|)
-name|printf
-argument_list|(
-literal|"no match\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
-block|}
-block|}
+comment|/* no match */
 comment|/* 	 * OK, this node is a clone, and matches the node currently being 	 * changed/added under the node's mask.  So, get rid of it. 	 */
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|rtfcdebug
-condition|)
-name|printf
-argument_list|(
-literal|"deleting\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+name|delete_rt
+label|:
 return|return
 name|rtrequest
 argument_list|(
@@ -3976,12 +3779,7 @@ argument_list|(
 name|rt
 argument_list|)
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|rt_mask
 argument_list|(
@@ -3992,13 +3790,7 @@ name|rt
 operator|->
 name|rt_flags
 argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 return|;
 block|}
@@ -4036,11 +3828,6 @@ name|dst
 operator|->
 name|sa_family
 index|]
-decl_stmt|;
-name|caddr_t
-name|new
-decl_stmt|,
-name|old
 decl_stmt|;
 name|int
 name|dlen
@@ -4126,14 +3913,14 @@ return|return
 name|EADDRNOTAVAIL
 return|;
 block|}
-comment|/* 	 * Both dst and gateway are stored in the same malloc'd chunk 	 * (If I ever get my hands on....) 	 * if we need to malloc a new chunk, then keep the old one around 	 * till we don't need it any more. 	 */
+comment|/* 	 * Prepare to store the gateway in rt->rt_gateway. 	 * Both dst and gateway are stored one after the other in the same 	 * malloc'd chunk. If we have room, we can reuse the old buffer, 	 * rt_gateway already points to the right place. 	 * Otherwise, malloc a new block and update the 'dst' address. 	 */
 if|if
 condition|(
 name|rt
 operator|->
 name|rt_gateway
 operator|==
-literal|0
+name|NULL
 operator|||
 name|glen
 operator|>
@@ -4145,16 +3932,9 @@ name|rt_gateway
 argument_list|)
 condition|)
 block|{
-name|old
-operator|=
-operator|(
 name|caddr_t
-operator|)
-name|rt_key
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
+name|new
+decl_stmt|;
 name|R_Malloc
 argument_list|(
 name|new
@@ -4170,43 +3950,37 @@ if|if
 condition|(
 name|new
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOBUFS
 return|;
-name|rt_key
-argument_list|(
-name|rt
-argument_list|)
-operator|=
-name|new
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * otherwise just overwrite the old one 		 */
-name|new
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|rt_key
-argument_list|(
-name|rt
-argument_list|)
-expr_stmt|;
-name|old
-operator|=
-literal|0
-expr_stmt|;
-block|}
-comment|/* 	 * copy the new gateway value into the memory chunk 	 */
+comment|/* 		 * XXX note, we copy from *dst and not *rt_key(rt) because 		 * rt_setgate() can be called to initialize a newly 		 * allocated route entry, in which case rt_key(rt) == NULL 		 * (and also rt->rt_gateway == NULL). 		 * Free()/free() handle a NULL argument just fine. 		 */
 name|bcopy
 argument_list|(
-name|gate
+name|dst
 argument_list|,
-operator|(
+name|new
+argument_list|,
+name|dlen
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|rt_key
+argument_list|(
+name|rt
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* free old block, if any */
+name|rt_key
+argument_list|(
+name|rt
+argument_list|)
+operator|=
+name|new
+expr_stmt|;
 name|rt
 operator|->
 name|rt_gateway
@@ -4221,36 +3995,20 @@ name|new
 operator|+
 name|dlen
 operator|)
-operator|)
+expr_stmt|;
+block|}
+comment|/* 	 * Copy the new gateway value into the memory chunk. 	 */
+name|bcopy
+argument_list|(
+name|gate
+argument_list|,
+name|rt
+operator|->
+name|rt_gateway
 argument_list|,
 name|glen
 argument_list|)
 expr_stmt|;
-comment|/* 	 * if we are replacing the chunk (or it's new) we need to 	 * replace the dst as well 	 */
-if|if
-condition|(
-name|old
-condition|)
-block|{
-name|bcopy
-argument_list|(
-name|dst
-argument_list|,
-name|new
-argument_list|,
-name|dlen
-argument_list|)
-expr_stmt|;
-name|Free
-argument_list|(
-name|old
-argument_list|)
-expr_stmt|;
-name|old
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* 	 * If there is already a gwroute, it's now almost definitly wrong 	 * so drop it. 	 */
 if|if
 condition|(
@@ -4629,14 +4387,14 @@ name|mbuf
 modifier|*
 name|m
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|rtentry
 modifier|*
 name|rt
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|rt_addrinfo
@@ -4822,12 +4580,14 @@ operator|||
 operator|!
 name|sa_equal
 argument_list|(
-name|SA
-argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|rn
 operator|->
 name|rn_key
-argument_list|)
 argument_list|,
 name|dst
 argument_list|)
@@ -5164,7 +4924,7 @@ name|rt
 operator|->
 name|rt_gwroute
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|lookup
@@ -5239,7 +4999,7 @@ if|if
 condition|(
 name|rt
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|RT_UNLOCK
