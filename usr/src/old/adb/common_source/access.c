@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)access.c	5.1 (Berkeley) %G%"
+literal|"@(#)access.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,8 +489,109 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * THE FOLLOWING IS GROSS.  WE SHOULD REPLACE PTRACE WITH SPECIAL  * FILES A LA /proc.  *  * Read or write using ptrace.  io_ptrace arranges that the  * addresses passed to ptrace are an even multiple of sizeof(int),  * and is able to read or write single bytes.  *  * Since ptrace is so horribly slow, and some commands do repeated  * reading of units smaller than an `int', io_ptrace calls cptrace  * (cached ptrace) to allow some cacheing.  cptrace also converts a  * read/write op and a space into a ptrace op, and returns 0 on success  * and hence takes a pointer to the value cell rather than the value.  *  * N.B.: The cache retains the pid, so that killing and restarting  * a process invalidates the cache entry.  If pid's were reused fast  * enough this could fail, and we would need a cache-invalidate  * routine, to be called whenever a process is started.  Fortunately  * that is not now the case.  */
+comment|/*  * THE FOLLOWING IS GROSS.  WE SHOULD REPLACE PTRACE WITH SPECIAL  * FILES A LA /proc.  *  * Read or write using ptrace.  io_ptrace arranges that the  * addresses passed to ptrace are an even multiple of sizeof(int),  * and is able to read or write single bytes.  *  * Since ptrace is so horribly slow, and some commands do repeated  * reading of units smaller than an `int', io_ptrace calls cptrace  * (cached ptrace) to allow some cacheing.  cptrace also converts a  * read/write op and a space into a ptrace op, and returns 0 on success  * and hence takes a pointer to the value cell rather than the value.  */
 end_comment
+
+begin_struct
+struct|struct
+name|cache
+block|{
+name|short
+name|rop
+decl_stmt|,
+name|wop
+decl_stmt|;
+comment|/* ptrace ops for read and write */
+name|int
+name|valid
+decl_stmt|;
+comment|/* true iff cache entry valid */
+name|int
+modifier|*
+name|addr
+decl_stmt|;
+comment|/* address of cached value */
+name|int
+name|val
+decl_stmt|;
+comment|/* and the value */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cache
+name|icache
+init|=
+block|{
+name|PT_READ_I
+block|,
+name|PT_WRITE_I
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cache
+name|dcache
+init|=
+block|{
+name|PT_READ_D
+block|,
+name|PT_WRITE_D
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Invalidate one or both caches.  * This is the only function that accepts two spaces simultaneously.  */
+end_comment
+
+begin_macro
+name|cacheinval
+argument_list|(
+argument|space
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|space
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|space
+operator|&
+name|SP_INSTR
+condition|)
+name|icache
+operator|.
+name|valid
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|space
+operator|&
+name|SP_DATA
+condition|)
+name|dcache
+operator|.
+name|valid
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_block
 
 begin_decl_stmt
 name|int
@@ -538,77 +639,25 @@ end_function
 
 begin_block
 block|{
-specifier|static
-struct|struct
-name|cache
-block|{
-name|short
-name|rop
-decl_stmt|,
-name|wop
-decl_stmt|;
-comment|/* ptrace ops for read and write */
-name|int
-name|pid
-decl_stmt|;
-comment|/* pid, iff cache entry valid */
-name|int
-modifier|*
-name|addr
-decl_stmt|;
-comment|/* address of cached value */
-name|int
-name|val
-decl_stmt|;
-comment|/* and the value */
-block|}
-name|cache
-index|[
-literal|2
-index|]
-init|=
-block|{
-block|{
-name|PT_READ_D
-block|,
-name|PT_WRITE_D
-block|}
-block|,
-block|{
-name|PT_READ_I
-block|,
-name|PT_WRITE_I
-block|}
-block|}
-struct|;
 specifier|register
 name|struct
 name|cache
 modifier|*
 name|c
-decl_stmt|;
-name|int
-name|v
-decl_stmt|;
-comment|/* set c to point to cache[0] for dspace, cache[1] for ispace */
-name|c
-operator|=
+init|=
 name|space
 operator|&
 name|SP_DATA
 condition|?
 operator|&
-name|cache
-index|[
-literal|0
-index|]
+name|dcache
 else|:
 operator|&
-name|cache
-index|[
-literal|1
-index|]
-expr_stmt|;
+name|icache
+decl_stmt|;
+name|int
+name|v
+decl_stmt|;
 if|if
 condition|(
 name|rw
@@ -620,9 +669,7 @@ if|if
 condition|(
 name|c
 operator|->
-name|pid
-operator|==
-name|p
+name|valid
 operator|&&
 name|c
 operator|->
@@ -694,7 +741,7 @@ else|else
 block|{
 name|c
 operator|->
-name|pid
+name|valid
 operator|=
 literal|0
 expr_stmt|;
@@ -735,9 +782,9 @@ return|;
 block|}
 name|c
 operator|->
-name|pid
+name|valid
 operator|=
-name|p
+literal|1
 expr_stmt|;
 name|c
 operator|->

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcs.c	5.3 (Berkeley) %G%"
+literal|"@(#)pcs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -963,7 +963,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * ... return true iff stopped due to breakpoint  */
+comment|/*  * Run subprocess for a while.  * Return true iff stopped due to breakpoint.  */
 end_comment
 
 begin_function
@@ -1088,6 +1088,14 @@ name|execsig
 argument_list|)
 expr_stmt|;
 comment|/* END XXX */
+comment|/* paranoia, SP_DATA usually sufficient, but this is easy */
+name|cacheinval
+argument_list|(
+name|SP_INSTR
+operator||
+name|SP_DATA
+argument_list|)
+expr_stmt|;
 name|bpwait
 argument_list|()
 expr_stmt|;
@@ -1379,6 +1387,14 @@ end_macro
 
 begin_block
 block|{
+name|cacheinval
+argument_list|(
+name|SP_INSTR
+operator||
+name|SP_DATA
+argument_list|)
+expr_stmt|;
+comment|/* paranoia */
 operator|(
 name|void
 operator|)
@@ -1488,11 +1504,17 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|pid
+operator|=
+literal|0
+expr_stmt|;
 name|error
 argument_list|(
 name|NOFORK
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|bpwait
