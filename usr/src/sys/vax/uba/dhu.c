@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1073,6 +1073,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_WOPEN
+expr_stmt|;
 name|ttychars
 argument_list|(
 name|tp
@@ -1259,11 +1265,12 @@ name|TS_WOPEN
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|error
 operator|=
-name|tsleep
+name|ttysleep
 argument_list|(
+name|tp
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -1280,16 +1287,6 @@ name|ttopen
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|error
-operator|=
-name|ttclosed
-argument_list|(
-name|tp
-argument_list|)
-operator|)
 condition|)
 break|break;
 block|}

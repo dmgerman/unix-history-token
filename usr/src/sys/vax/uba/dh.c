@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dh.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dh.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1135,12 +1135,6 @@ name|t_dev
 operator|=
 name|dev
 expr_stmt|;
-name|tp
-operator|->
-name|t_state
-operator||=
-name|TS_WOPEN
-expr_stmt|;
 comment|/* 	 * While setting up state for this uba and this dh, 	 * block uba resets which can clear the state. 	 */
 name|s
 operator|=
@@ -1282,6 +1276,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_WOPEN
+expr_stmt|;
 name|ttychars
 argument_list|(
 name|tp
@@ -3902,6 +3902,12 @@ init|;
 condition|;
 control|)
 block|{
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_WOPEN
+expr_stmt|;
 name|addr
 operator|->
 name|dmcsr
@@ -3988,11 +3994,12 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
 name|error
 operator|=
-name|tsleep
+name|ttysleep
 argument_list|(
+name|tp
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -4009,16 +4016,6 @@ name|ttopen
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|error
-operator|=
-name|ttclosed
-argument_list|(
-name|tp
-argument_list|)
-operator|)
 condition|)
 break|break;
 block|}
