@@ -19,14 +19,14 @@ begin_define
 define|#
 directive|define
 name|TSB_KERNEL_MIN_ADDRESS
-value|(0xd0000000)
+value|(0xa0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TSB_USER_MIN_ADDRESS
-value|(0xe0000000)
+value|(0xb0000000)
 end_define
 
 begin_define
@@ -140,52 +140,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TSB_KERNEL_MB
-value|(512)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_KERNEL_VM_RANGE
-value|(TSB_KERNEL_MB * (1<< 20))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_KERNEL_RANGE
-define|\
-value|((TSB_KERNEL_VM_RANGE / PAGE_SIZE) * sizeof (struct stte))
-end_define
-
-begin_define
-define|#
-directive|define
 name|TSB_KERNEL_MASK
-define|\
-value|((TSB_KERNEL_RANGE / sizeof (struct stte)) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_1M_STTE_SHIFT
-value|(21)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_1M_STTE_SIZE
-value|(1<< TSB_1M_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_SIZE_REG
-value|(7)
+value|((TSB_KERNEL_SIZE>> STTE_SHIFT) - 1)
 end_define
 
 begin_decl_stmt

@@ -209,21 +209,21 @@ begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|(0x400000)
+value|(0xc0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(0xd0000000)
+value|(0xffffe000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|(0x400000)
+value|(0xc0000000)
 end_define
 
 begin_comment
