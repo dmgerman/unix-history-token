@@ -7431,6 +7431,19 @@ name|caddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+comment|/* 		 * XXXMAC: This will eventually become an explicit 		 * labeling point. 		 */
+name|mac_create_mbuf_from_mbuf
+argument_list|(
+name|m
+argument_list|,
+name|mcopy
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
