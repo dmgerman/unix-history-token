@@ -535,8 +535,10 @@ decl_stmt|;
 comment|/* 	 * If the variable name begins with a '.', it could very well be one of 	 * the local ones.  We check the name against all the local variables 	 * and substitute the short version in for 'name' if it matches one of 	 * them. 	 */
 if|if
 condition|(
-operator|*
 name|name
+index|[
+literal|0
+index|]
 operator|==
 literal|'.'
 condition|)
@@ -5738,11 +5740,9 @@ block|{
 if|if
 condition|(
 operator|(
-operator|(
 name|vlen
 operator|==
 literal|1
-operator|)
 operator|)
 operator|||
 operator|(
@@ -6129,7 +6129,7 @@ name|v
 decl_stmt|;
 name|char
 modifier|*
-name|result
+name|value
 decl_stmt|;
 name|vname
 operator|=
@@ -6163,7 +6163,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|result
+name|value
 operator|=
 name|VarExpand
 argument_list|(
@@ -6198,7 +6198,7 @@ name|TRUE
 expr_stmt|;
 return|return
 operator|(
-name|result
+name|value
 operator|)
 return|;
 block|}
@@ -6268,7 +6268,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|result
+name|value
 operator|=
 name|emalloc
 argument_list|(
@@ -6280,7 +6280,7 @@ argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
-name|result
+name|value
 argument_list|,
 name|input
 argument_list|,
@@ -6288,7 +6288,7 @@ operator|*
 name|consumed
 argument_list|)
 expr_stmt|;
-name|result
+name|value
 index|[
 operator|*
 name|consumed
@@ -6303,7 +6303,7 @@ name|TRUE
 expr_stmt|;
 return|return
 operator|(
-name|result
+name|value
 operator|)
 return|;
 block|}
@@ -6401,7 +6401,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|result
+name|value
 operator|=
 name|emalloc
 argument_list|(
@@ -6413,7 +6413,7 @@ argument_list|)
 expr_stmt|;
 name|strncpy
 argument_list|(
-name|result
+name|value
 argument_list|,
 name|input
 argument_list|,
@@ -6421,7 +6421,7 @@ operator|*
 name|consumed
 argument_list|)
 expr_stmt|;
-name|result
+name|value
 index|[
 operator|*
 name|consumed
@@ -6436,7 +6436,7 @@ name|TRUE
 expr_stmt|;
 return|return
 operator|(
-name|result
+name|value
 operator|)
 return|;
 block|}
@@ -6967,11 +6967,11 @@ name|consumed
 parameter_list|,
 name|Boolean
 modifier|*
-name|freePtr
+name|freeResult
 parameter_list|)
 block|{
 name|char
-name|name
+name|vname
 index|[
 literal|2
 index|]
@@ -6980,7 +6980,11 @@ name|Var
 modifier|*
 name|v
 decl_stmt|;
-name|name
+name|char
+modifier|*
+name|value
+decl_stmt|;
+name|vname
 index|[
 literal|0
 index|]
@@ -6990,24 +6994,24 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|name
+name|vname
 index|[
 literal|1
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* consume character */
 operator|*
 name|consumed
 operator|+=
 literal|1
 expr_stmt|;
+comment|/* consume single letter */
 name|v
 operator|=
 name|VarFind
 argument_list|(
-name|name
+name|vname
 argument_list|,
 name|ctxt
 argument_list|,
@@ -7025,11 +7029,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
-name|result
-decl_stmt|;
-name|result
+name|value
 operator|=
 name|VarExpand
 argument_list|(
@@ -7058,13 +7058,13 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
 return|return
 operator|(
-name|result
+name|value
 operator|)
 return|;
 block|}
@@ -7087,7 +7087,7 @@ block|{
 comment|/* XXX: It looks like $% and $! are reversed here */
 switch|switch
 condition|(
-name|name
+name|vname
 index|[
 literal|0
 index|]
@@ -7097,7 +7097,7 @@ case|case
 literal|'@'
 case|:
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -7113,7 +7113,7 @@ case|case
 literal|'%'
 case|:
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -7129,7 +7129,7 @@ case|case
 literal|'*'
 case|:
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -7145,7 +7145,7 @@ case|case
 literal|'!'
 case|:
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|TRUE
 expr_stmt|;
@@ -7159,7 +7159,7 @@ operator|)
 return|;
 default|default:
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
@@ -7176,7 +7176,7 @@ block|}
 block|}
 comment|/* 	 * Variable name was not found. 	 */
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
@@ -7193,7 +7193,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The value of the variable or var_Error if the specification  *	is invalid.  The number of characters in the specification  *	is placed in the variable pointed to by consumed.  (for  *	invalid specifications, this is just 2 to skip the '$' and  *	the following letter, or 1 if '$' was the last character  *	in the string).  A Boolean in *freePtr telling whether the  *	returned string should be freed by the caller.  *  * Side Effects:  *	None.  *  * Assumption:  *	It is assumed that Var_Parse() is called with input[0] == '$'.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The value of the variable or var_Error if the specification  *	is invalid.  The number of characters in the specification  *	is placed in the variable pointed to by consumed.  (for  *	invalid specifications, this is just 2 to skip the '$' and  *	the following letter, or 1 if '$' was the last character  *	in the string).  A Boolean in *freeResult telling whether the  *	returned string should be freed by the caller.  *  * Side Effects:  *	None.  *  * Assumption:  *	It is assumed that Var_Parse() is called with input[0] == '$'.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -7219,16 +7219,16 @@ name|consumed
 parameter_list|,
 name|Boolean
 modifier|*
-name|freePtr
+name|freeResult
 parameter_list|)
 block|{
 comment|/* assert(input[0] == '$'); */
-comment|/* consume '$' */
 operator|*
 name|consumed
 operator|+=
 literal|1
 expr_stmt|;
+comment|/* consume '$' */
 name|input
 operator|+=
 literal|1
@@ -7245,7 +7245,7 @@ condition|)
 block|{
 comment|/* Error, there is only a dollar sign in the input string. */
 operator|*
-name|freePtr
+name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
@@ -7290,7 +7290,7 @@ name|err
 argument_list|,
 name|consumed
 argument_list|,
-name|freePtr
+name|freeResult
 argument_list|)
 operator|)
 return|;
@@ -7310,7 +7310,7 @@ name|err
 argument_list|,
 name|consumed
 argument_list|,
-name|freePtr
+name|freeResult
 argument_list|)
 operator|)
 return|;
