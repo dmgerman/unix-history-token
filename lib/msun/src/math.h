@@ -692,16 +692,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * set X_TLOSS = pi*2**52, which is possibly defined in<values.h>  * (one may replace the following line by "#include<values.h>")  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|X_TLOSS
 value|1.41484755040568800000e+16
 end_define
+
+begin_comment
+comment|/* pi*2**52 */
+end_comment
 
 begin_define
 define|#
