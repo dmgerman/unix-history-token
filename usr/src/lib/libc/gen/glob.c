@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.12 (Berkeley) %G%"
+literal|"@(#)glob.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,14 +38,8 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * glob(3) -- a superset of the one defined in POSIX 1003.2.  *  * The [!...] convention to negate a range is supported (SysV, Posix, ksh).  *  * Optional extra services, controlled by flags not defined by POSIX:  *  * GLOB_QUOTE:  *	Escaping convention: \ inhibits any special meaning the following  *	character might have (except \ at end of string is retained).  * GLOB_MAGCHAR:  *	Set in gl_flags if pattern contained a globbing character.  * gl_matchc:  *	Number of matches in the current invocation of glob.  */
+comment|/*  * glob(3) -- a superset of the one defined in POSIX 1003.2.  *  * The [!...] convention to negate a range is supported (SysV, Posix, ksh).  *  * Optional extra services, controlled by flags not defined by POSIX:  *  * GLOB_QUOTE:  *	Escaping convention: \ inhibits any special meaning the following  *	character might have (except \ at end of string is retained).  * GLOB_MAGCHAR:  *	Set in gl_flags if pattern contained a globbing character.  * GLOB_NOMAGIC:  *	Same as GLOB_NOCHECK, but it will only append pattern if it did  *	not contain any magic characters.  [Used in csh style globbing]  * gl_matchc:  *	Number of matches in the current invocation of glob.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_include
 include|#
@@ -838,12 +832,6 @@ block|{
 case|case
 name|LBRACKET
 case|:
-name|pglob
-operator|->
-name|gl_flags
-operator||=
-name|GLOB_MAGCHAR
-expr_stmt|;
 name|c
 operator|=
 operator|*
@@ -982,6 +970,12 @@ operator|!=
 name|RBRACKET
 condition|)
 do|;
+name|pglob
+operator|->
+name|gl_flags
+operator||=
+name|GLOB_MAGCHAR
+expr_stmt|;
 operator|*
 name|bufnext
 operator|++
@@ -1069,6 +1063,7 @@ operator|(
 name|err
 operator|)
 return|;
+comment|/* 	 * If there was no match we are going to append the pattern  	 * if GLOB_NOCHECK was specified or if GLOB_NOMAGIC was specified 	 * and the pattern did not contain any magic characters 	 * GLOB_NOMAGIC is there just for compatibility with csh. 	 */
 if|if
 condition|(
 name|pglob
@@ -1077,9 +1072,30 @@ name|gl_pathc
 operator|==
 name|oldpathc
 operator|&&
+operator|(
+operator|(
 name|flags
 operator|&
 name|GLOB_NOCHECK
+operator|)
+operator|||
+operator|(
+operator|(
+name|flags
+operator|&
+name|GLOB_NOMAGIC
+operator|)
+operator|&&
+operator|!
+operator|(
+name|pglob
+operator|->
+name|gl_flags
+operator|&
+name|GLOB_MAGCHAR
+operator|)
+operator|)
+operator|)
 condition|)
 block|{
 if|if

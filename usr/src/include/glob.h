@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|GLOB_APPEND
-value|0x01
+value|0x001
 end_define
 
 begin_comment
@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|GLOB_DOOFFS
-value|0x02
+value|0x002
 end_define
 
 begin_comment
@@ -80,40 +80,18 @@ begin_define
 define|#
 directive|define
 name|GLOB_ERR
-value|0x04
+value|0x004
 end_define
 
 begin_comment
 comment|/* return on error */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|GLOB_MAGCHAR
-value|0x08
-end_define
-
-begin_comment
-comment|/* pattern had globbing characters */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|GLOB_MARK
-value|0x10
+value|0x008
 end_define
 
 begin_comment
@@ -124,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|GLOB_NOCHECK
-value|0x20
+value|0x010
 end_define
 
 begin_comment
@@ -135,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|GLOB_NOSORT
-value|0x40
+value|0x020
 end_define
 
 begin_comment
@@ -151,8 +129,30 @@ end_ifndef
 begin_define
 define|#
 directive|define
+name|GLOB_MAGCHAR
+value|0x040
+end_define
+
+begin_comment
+comment|/* pattern had globbing characters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_NOMAGIC
+value|0x080
+end_define
+
+begin_comment
+comment|/* GLOB_NOCHECK without magic chars (csh) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GLOB_QUOTE
-value|0x80
+value|0x100
 end_define
 
 begin_comment
