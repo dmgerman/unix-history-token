@@ -886,20 +886,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
-name|pmap_testbit
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|int
-name|bit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|pmap_insert_entry
 parameter_list|(
@@ -11196,24 +11182,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pmap_testbit tests bits in pte's  * note that the testbit/changebit routines are inline,  * and a lot of things compile-time evaluate.  */
+comment|/*  *	pmap_is_modified:  *  *	Return whether or not the specified physical page was modified  *	in any physical maps.  */
 end_comment
 
 begin_function
-specifier|static
 name|boolean_t
-name|pmap_testbit
+name|pmap_is_modified
 parameter_list|(
-name|m
-parameter_list|,
-name|bit
-parameter_list|)
 name|vm_page_t
 name|m
-decl_stmt|;
-name|int
-name|bit
-decl_stmt|;
+parameter_list|)
 block|{
 name|pv_entry_t
 name|pv
@@ -11237,23 +11215,6 @@ name|flags
 operator|&
 name|PG_FICTITIOUS
 operator|)
-condition|)
-return|return
-name|FALSE
-return|;
-if|if
-condition|(
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|m
-operator|->
-name|md
-operator|.
-name|pv_list
-argument_list|)
-operator|==
-name|NULL
 condition|)
 return|return
 name|FALSE
@@ -11283,17 +11244,6 @@ block|{
 comment|/* 		 * if the bit being tested is the modified bit, then 		 * mark clean_map and ptes as never 		 * modified. 		 */
 if|if
 condition|(
-name|bit
-operator|&
-operator|(
-name|PG_A
-operator||
-name|PG_M
-operator|)
-condition|)
-block|{
-if|if
-condition|(
 operator|!
 name|pmap_track_modified
 argument_list|(
@@ -11303,7 +11253,6 @@ name|pv_va
 argument_list|)
 condition|)
 continue|continue;
-block|}
 if|#
 directive|if
 name|defined
@@ -11349,7 +11298,7 @@ condition|(
 operator|*
 name|pte
 operator|&
-name|bit
+name|PG_M
 condition|)
 block|{
 name|splx
@@ -11944,29 +11893,6 @@ return|return
 operator|(
 name|rtval
 operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	pmap_is_modified:  *  *	Return whether or not the specified physical page was modified  *	in any physical maps.  */
-end_comment
-
-begin_function
-name|boolean_t
-name|pmap_is_modified
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-return|return
-name|pmap_testbit
-argument_list|(
-name|m
-argument_list|,
-name|PG_M
-argument_list|)
 return|;
 block|}
 end_function
