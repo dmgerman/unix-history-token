@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	telnet.h	4.1	82/02/28	*/
+comment|/*	telnet.h	4.2	82/03/01	*/
 end_comment
 
 begin_comment
@@ -227,6 +227,10 @@ name|TELOPT_RCP
 value|2
 end_define
 
+begin_comment
+comment|/* prepare to reconnect */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -234,12 +238,20 @@ name|TELOPT_SGA
 value|3
 end_define
 
+begin_comment
+comment|/* suppress go ahead */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TELOPT_NAME
+name|TELOPT_NAMS
 value|4
 end_define
+
+begin_comment
+comment|/* approximate message size */
+end_comment
 
 begin_define
 define|#
@@ -248,12 +260,20 @@ name|TELOPT_STATUS
 value|5
 end_define
 
+begin_comment
+comment|/* give status */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TELOPT_TM
 value|6
 end_define
+
+begin_comment
+comment|/* timing mark */
+end_comment
 
 begin_define
 define|#
@@ -262,12 +282,20 @@ name|TELOPT_RCTE
 value|7
 end_define
 
+begin_comment
+comment|/* remote controlled transmission and echo */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TELOPT_NAOL
 value|8
 end_define
+
+begin_comment
+comment|/* negotiate about output line width */
+end_comment
 
 begin_define
 define|#
@@ -276,12 +304,20 @@ name|TELOPT_NAOP
 value|9
 end_define
 
+begin_comment
+comment|/* negotiate about output page size */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TELOPT_NAOCRD
 value|10
 end_define
+
+begin_comment
+comment|/* negotiate about CR disposition */
+end_comment
 
 begin_define
 define|#
@@ -290,12 +326,20 @@ name|TELOPT_NAOHTS
 value|11
 end_define
 
+begin_comment
+comment|/* negotiate about horizontal tabstops */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TELOPT_NAOHTD
 value|12
 end_define
+
+begin_comment
+comment|/* negotiate about horizontal tab disposition */
+end_comment
 
 begin_define
 define|#
@@ -304,12 +348,20 @@ name|TELOPT_NAOFFD
 value|13
 end_define
 
+begin_comment
+comment|/* negotiate about formfeed disposition */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TELOPT_NAOVTS
 value|14
 end_define
+
+begin_comment
+comment|/* negotiate about vertical tab stops */
+end_comment
 
 begin_define
 define|#
@@ -318,12 +370,20 @@ name|TELOPT_NAOVTD
 value|15
 end_define
 
+begin_comment
+comment|/* negotiate about vertical tab disposition */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TELOPT_NAOLFD
 value|16
 end_define
+
+begin_comment
+comment|/* negotiate about output LF disposition */
+end_comment
 
 begin_define
 define|#
@@ -332,12 +392,64 @@ name|TELOPT_XASCII
 value|17
 end_define
 
+begin_comment
+comment|/* extended ascic character set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_LOGOUT
+value|18
+end_define
+
+begin_comment
+comment|/* force logout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_BM
+value|19
+end_define
+
+begin_comment
+comment|/* byte macro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_DET
+value|20
+end_define
+
+begin_comment
+comment|/* data entry terminal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_SUPDUP
+value|21
+end_define
+
+begin_comment
+comment|/* supdup protocol */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TELOPT_EXOPL
 value|255
 end_define
+
+begin_comment
+comment|/* extended-options-list */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -440,7 +552,15 @@ block|,
 literal|"NAOLFD"
 block|,
 literal|"EXTEND ASCII"
-block|, }
+block|,
+literal|"LOGOUT"
+block|,
+literal|"BYTE MACRO"
+block|,
+literal|"DATA ENTRY TERMINAL"
+block|,
+literal|"SUPDUP"
+block|}
 decl_stmt|;
 end_decl_stmt
 
