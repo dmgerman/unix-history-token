@@ -91,14 +91,14 @@ comment|/* unused for now */
 name|char
 name|namefont
 index|[
-literal|10
+literal|12
 index|]
 decl_stmt|;
 comment|/* name of this font (e.g., "R" */
 name|char
 name|intname
 index|[
-literal|10
+literal|3
 index|]
 decl_stmt|;
 comment|/* internal name (=number) on device, in ascii */
