@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	2.4 (Berkeley) %G%"
+literal|"@(#)fsck.c	2.4 (Berkeley) 4/15/82"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_else
@@ -731,6 +731,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* inode we are currently working on */
+end_comment
+
+begin_decl_stmt
+name|ino_t
+name|dnum
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* directory inode currently being worked on */
 end_comment
 
 begin_decl_stmt
@@ -4477,6 +4487,14 @@ name|size
 decl_stmt|,
 name|offset
 decl_stmt|;
+name|ino_t
+name|number
+init|=
+name|inum
+decl_stmt|;
+name|DINODE
+name|dino
+decl_stmt|;
 if|if
 condition|(
 name|SPECIAL
@@ -4486,6 +4504,11 @@ operator|(
 name|KEEPON
 operator|)
 return|;
+name|dino
+operator|=
+operator|*
+name|dp
+expr_stmt|;
 name|func
 operator|=
 operator|(
@@ -4502,8 +4525,8 @@ name|ndb
 operator|=
 name|howmany
 argument_list|(
-name|dp
-operator|->
+name|dino
+operator|.
 name|di_size
 argument_list|,
 name|sblock
@@ -4516,8 +4539,8 @@ control|(
 name|ap
 operator|=
 operator|&
-name|dp
-operator|->
+name|dino
+operator|.
 name|di_db
 index|[
 literal|0
@@ -4526,8 +4549,8 @@ init|;
 name|ap
 operator|<
 operator|&
-name|dp
-operator|->
+name|dino
+operator|.
 name|di_db
 index|[
 name|NDADDR
@@ -4552,8 +4575,8 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|,
-name|dp
-operator|->
+name|dino
+operator|.
 name|di_size
 argument_list|)
 operator|)
@@ -4582,6 +4605,10 @@ operator|=
 name|sblock
 operator|.
 name|fs_frag
+expr_stmt|;
+name|dnum
+operator|=
+name|number
 expr_stmt|;
 if|if
 condition|(
@@ -4616,8 +4643,8 @@ control|(
 name|ap
 operator|=
 operator|&
-name|dp
-operator|->
+name|dino
+operator|.
 name|di_ib
 index|[
 literal|0
@@ -4638,6 +4665,10 @@ name|n
 operator|++
 control|)
 block|{
+name|dnum
+operator|=
+name|number
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -4655,8 +4686,8 @@ name|n
 argument_list|,
 name|flg
 argument_list|,
-name|dp
-operator|->
+name|dino
+operator|.
 name|di_size
 operator|-
 name|sblock
@@ -6082,6 +6113,9 @@ decl_stmt|;
 name|int
 name|blksiz
 decl_stmt|;
+name|ino_t
+name|number
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -6176,6 +6210,12 @@ operator|.
 name|blksiz
 operator|=
 name|blksiz
+expr_stmt|;
+name|dirp
+operator|.
+name|number
+operator|=
+name|dnum
 expr_stmt|;
 for|for
 control|(
@@ -6478,7 +6518,11 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"DIRECTORY CORRUPTED"
+literal|"DIRECTORY %D CORRUPTED"
+argument_list|,
+name|dirp
+operator|->
+name|number
 argument_list|)
 expr_stmt|;
 if|if
