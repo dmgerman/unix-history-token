@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"truss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
@@ -2128,9 +2134,10 @@ begin_function
 name|void
 name|print_syscall
 parameter_list|(
-name|FILE
+name|struct
+name|trussinfo
 modifier|*
-name|outfile
+name|trussinfo
 parameter_list|,
 specifier|const
 name|char
@@ -2158,6 +2165,8 @@ name|len
 operator|+=
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"%s("
@@ -2190,6 +2199,8 @@ name|len
 operator|+=
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"%s"
@@ -2205,6 +2216,8 @@ name|len
 operator|+=
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"<missing argument>"
@@ -2214,6 +2227,8 @@ name|len
 operator|+=
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"%s"
@@ -2236,6 +2251,8 @@ name|len
 operator|+=
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|")"
@@ -2262,6 +2279,8 @@ operator|++
 control|)
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"\t"
@@ -2274,9 +2293,10 @@ begin_function
 name|void
 name|print_syscall_ret
 parameter_list|(
-name|FILE
+name|struct
+name|trussinfo
 modifier|*
-name|outfile
+name|trussinfo
 parameter_list|,
 specifier|const
 name|char
@@ -2300,7 +2320,7 @@ parameter_list|)
 block|{
 name|print_syscall
 argument_list|(
-name|outfile
+name|trussinfo
 argument_list|,
 name|name
 argument_list|,
@@ -2316,6 +2336,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|" ERR#%d '%s'\n"
@@ -2333,6 +2355,8 @@ else|else
 block|{
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|" = %d (0x%x)\n"

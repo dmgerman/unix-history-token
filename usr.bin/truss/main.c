@@ -102,35 +102,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"truss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * These should really be parameterized -- I don't like having globals,  * but this is the easiest way, right now, to deal with them.  */
+comment|/*  * It's difficult to parameterize this because it must be  * accessible in a signal handler.  */
 end_comment
-
-begin_decl_stmt
-name|int
-name|pid
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nosigs
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|outfile
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -185,18 +168,22 @@ modifier|*
 name|enter_syscall
 function_decl|)
 parameter_list|(
-name|int
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|exit_syscall
 function_decl|)
 parameter_list|(
-name|int
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -270,7 +257,10 @@ name|ex_types
 modifier|*
 name|set_etype
 parameter_list|(
-name|void
+name|struct
+name|trussinfo
+modifier|*
+name|trussinfo
 parameter_list|)
 block|{
 name|struct
@@ -299,6 +289,8 @@ name|etype
 argument_list|,
 literal|"/proc/%d/etype"
 argument_list|,
+name|trussinfo
+operator|->
 name|pid
 argument_list|)
 expr_stmt|;
@@ -469,6 +461,54 @@ name|sigexit
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|trussinfo
+modifier|*
+name|trussinfo
+decl_stmt|;
+comment|/* Initialize the trussinfo struct */
+name|trussinfo
+operator|=
+operator|(
+expr|struct
+name|trussinfo
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|trussinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trussinfo
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc() failed"
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|trussinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|trussinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|trussinfo
+operator|->
 name|outfile
 operator|=
 name|stderr
@@ -501,6 +541,8 @@ case|case
 literal|'p'
 case|:
 comment|/* specified pid */
+name|trussinfo
+operator|->
 name|pid
 operator|=
 name|atoi
@@ -522,9 +564,11 @@ case|case
 literal|'S'
 case|:
 comment|/* Don't trace signals */
-name|nosigs
-operator|=
-literal|1
+name|trussinfo
+operator|->
+name|flags
+operator||=
+name|NOSIGS
 expr_stmt|;
 break|break;
 default|default:
@@ -544,6 +588,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|trussinfo
+operator|->
 name|pid
 operator|==
 literal|0
@@ -554,6 +600,8 @@ literal|0
 operator|)
 operator|||
 operator|(
+name|trussinfo
+operator|->
 name|pid
 operator|!=
 literal|0
@@ -577,6 +625,8 @@ comment|/* Use output file */
 if|if
 condition|(
 operator|(
+name|trussinfo
+operator|->
 name|outfile
 operator|=
 name|fopen
@@ -602,6 +652,8 @@ block|}
 comment|/*    * If truss starts the process itself, it will ignore some signals --    * they should be passed off to the process, which may or may not    * exit.  If, however, we are examining an already-running process,    * then we restore the event mask on these same signals.    */
 if|if
 condition|(
+name|trussinfo
+operator|->
 name|pid
 operator|==
 literal|0
@@ -612,6 +664,8 @@ name|command
 operator|=
 name|av
 expr_stmt|;
+name|trussinfo
+operator|->
 name|pid
 operator|=
 name|setup_and_wait
@@ -670,6 +724,8 @@ name|Procfd
 operator|=
 name|start_tracing
 argument_list|(
+name|trussinfo
+operator|->
 name|pid
 argument_list|,
 name|S_EXEC
@@ -683,7 +739,13 @@ operator||
 name|S_EXIT
 operator||
 operator|(
-name|nosigs
+operator|(
+name|trussinfo
+operator|->
+name|flags
+operator|&
+name|NOSIGS
+operator|)
 condition|?
 literal|0
 else|:
@@ -710,7 +772,9 @@ expr_stmt|;
 name|funcs
 operator|=
 name|set_etype
-argument_list|()
+argument_list|(
+name|trussinfo
+argument_list|)
 expr_stmt|;
 comment|/*    * At this point, it's a simple loop, waiting for the process to    * stop, finding out why, printing out why, and then continuing it.    * All of the grunt work is done in the support routines.    */
 do|do
@@ -758,7 +822,7 @@ name|funcs
 operator|->
 name|enter_syscall
 argument_list|(
-name|pid
+name|trussinfo
 argument_list|,
 name|pfs
 operator|.
@@ -785,7 +849,7 @@ name|funcs
 operator|->
 name|exit_syscall
 argument_list|(
-name|pid
+name|trussinfo
 argument_list|,
 name|pfs
 operator|.
@@ -798,6 +862,8 @@ name|S_SIG
 case|:
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"SIGNAL %lu\n"
@@ -819,6 +885,8 @@ name|S_EXIT
 case|:
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"process exit, rval = %lu\n"
@@ -835,7 +903,9 @@ case|:
 name|funcs
 operator|=
 name|set_etype
-argument_list|()
+argument_list|(
+name|trussinfo
+argument_list|)
 expr_stmt|;
 name|in_exec
 operator|=
@@ -845,6 +915,8 @@ break|break;
 default|default:
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"Process stopped because of:  %d\n"
@@ -874,6 +946,8 @@ if|if
 condition|(
 name|kill
 argument_list|(
+name|trussinfo
+operator|->
 name|pid
 argument_list|,
 literal|0
@@ -906,6 +980,8 @@ condition|)
 do|;
 name|fflush
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|)
 expr_stmt|;

@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"truss.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"syscall.h"
 end_include
 
@@ -141,14 +147,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|Procfd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|outfile
 decl_stmt|;
 end_decl_stmt
 
@@ -321,8 +319,10 @@ begin_function
 name|void
 name|i386_syscall_entry
 parameter_list|(
-name|int
-name|pid
+name|struct
+name|trussinfo
+modifier|*
+name|trussinfo
 parameter_list|,
 name|int
 name|nargs
@@ -364,6 +364,8 @@ operator|==
 operator|-
 literal|1
 operator|||
+name|trussinfo
+operator|->
 name|pid
 operator|!=
 name|cpid
@@ -375,6 +377,8 @@ name|buf
 argument_list|,
 literal|"/proc/%d/regs"
 argument_list|,
+name|trussinfo
+operator|->
 name|pid
 argument_list|)
 expr_stmt|;
@@ -397,6 +401,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"-- CANNOT READ REGISTERS --\n"
@@ -406,6 +412,8 @@ return|return;
 block|}
 name|cpid
 operator|=
+name|trussinfo
+operator|->
 name|pid
 expr_stmt|;
 block|}
@@ -563,6 +571,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"-- UNKNOWN SYSCALL %d --\n"
@@ -659,6 +669,8 @@ directive|if
 name|DEBUG
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"unknown syscall %s -- setting args to %d\n"
@@ -877,6 +889,8 @@ directive|if
 name|DEBUG
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"\n"
@@ -910,7 +924,7 @@ condition|)
 block|{
 name|print_syscall
 argument_list|(
-name|outfile
+name|trussinfo
 argument_list|,
 name|fsc
 operator|.
@@ -935,11 +949,13 @@ comment|/*  * And when the system call is done, we handle it here.  * Currently,
 end_comment
 
 begin_function
-name|void
+name|int
 name|i386_syscall_exit
 parameter_list|(
-name|int
-name|pid
+name|struct
+name|trussinfo
+modifier|*
+name|trussinfo
 parameter_list|,
 name|int
 name|syscall
@@ -976,6 +992,8 @@ operator|==
 operator|-
 literal|1
 operator|||
+name|trussinfo
+operator|->
 name|pid
 operator|!=
 name|cpid
@@ -987,6 +1005,8 @@ name|buf
 argument_list|,
 literal|"/proc/%d/regs"
 argument_list|,
+name|trussinfo
+operator|->
 name|pid
 argument_list|)
 expr_stmt|;
@@ -1009,6 +1029,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|trussinfo
+operator|->
 name|outfile
 argument_list|,
 literal|"-- CANNOT READ REGISTERS --\n"
@@ -1018,6 +1040,8 @@ return|return;
 block|}
 name|cpid
 operator|=
+name|trussinfo
+operator|->
 name|pid
 expr_stmt|;
 block|}
@@ -1050,7 +1074,18 @@ argument_list|(
 name|regs
 argument_list|)
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|trussinfo
+operator|->
+name|outfile
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|retval
 operator|=
 name|regs
@@ -1240,7 +1275,7 @@ block|}
 comment|/*    * It would probably be a good idea to merge the error handling,    * but that complicates things considerably.    */
 name|print_syscall_ret
 argument_list|(
-name|outfile
+name|trussinfo
 argument_list|,
 name|fsc
 operator|.
@@ -1262,7 +1297,11 @@ expr_stmt|;
 name|clear_fsc
 argument_list|()
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|retval
+operator|)
+return|;
 block|}
 end_function
 

@@ -154,7 +154,8 @@ begin_function_decl
 name|void
 name|print_syscall
 parameter_list|(
-name|FILE
+name|struct
+name|trussinfo
 modifier|*
 parameter_list|,
 specifier|const
@@ -174,7 +175,8 @@ begin_function_decl
 name|void
 name|print_syscall_ret
 parameter_list|(
-name|FILE
+name|struct
+name|trussinfo
 modifier|*
 parameter_list|,
 specifier|const

@@ -61,7 +61,9 @@ specifier|extern
 name|void
 name|alpha_syscall_entry
 parameter_list|(
-name|int
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -70,10 +72,12 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|alpha_syscall_exit
 parameter_list|(
-name|int
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -96,7 +100,9 @@ specifier|extern
 name|void
 name|i386_syscall_entry
 parameter_list|(
-name|int
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -105,10 +111,12 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|i386_syscall_exit
 parameter_list|(
-name|int
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -120,7 +128,9 @@ specifier|extern
 name|void
 name|i386_linux_syscall_entry
 parameter_list|(
-name|int
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
@@ -129,10 +139,12 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|i386_linux_syscall_exit
 parameter_list|(
-name|int
+name|struct
+name|trussinfo
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
