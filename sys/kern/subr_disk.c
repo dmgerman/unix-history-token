@@ -1145,11 +1145,6 @@ name|d_psize
 operator|=
 name|diskpsize
 expr_stmt|;
-name|cdevsw_add
-argument_list|(
-name|proto
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
