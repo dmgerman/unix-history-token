@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdryp.c,v 1.1 1994/08/07 23:04:54 wollman Exp $"
+literal|"$Id: xdryp.c,v 1.2 1995/04/02 01:02:17 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2074,7 +2074,6 @@ name|xdr_domainname
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
 name|objp
 operator|->
 name|domain
@@ -2094,7 +2093,6 @@ name|xdr_mapname
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
 name|objp
 operator|->
 name|map
@@ -2134,7 +2132,6 @@ name|xdr_peername
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
 name|objp
 operator|->
 name|owner
