@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.48 1999/01/27 21:49:57 dillon Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.49 1999/01/28 00:57:47 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -1758,65 +1758,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 			 * detect EOF condition 			 */
-if|if
-condition|(
-name|rpipe
-operator|->
-name|pipe_state
-operator|&
-name|PIPE_EOF
-condition|)
-block|{
-comment|/* XXX error = ? */
-break|break;
-block|}
-comment|/* 			 * If the "write-side" has been blocked, wake it up now. 			 */
-if|if
-condition|(
-name|rpipe
-operator|->
-name|pipe_state
-operator|&
-name|PIPE_WANTW
-condition|)
-block|{
-name|rpipe
-operator|->
-name|pipe_state
-operator|&=
-operator|~
-name|PIPE_WANTW
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|rpipe
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|nread
-operator|>
-literal|0
-condition|)
-break|break;
-if|if
-condition|(
-name|fp
-operator|->
-name|f_flag
-operator|&
-name|FNONBLOCK
-condition|)
-block|{
-name|error
-operator|=
-name|EAGAIN
-expr_stmt|;
-break|break;
-block|}
-comment|/* 			 * If there is no more to read in the pipe, reset 			 * its pointers to the beginning.  This improves 			 * cache hit stats. 			 */
+comment|/* 			 * If there is no more to read in the pipe, reset 			 * its pointers to the beginning.  This improves 			 * cache hit stats. 			 * 			 * We get this over with now because it may block 			 * and cause the state to change out from under us, 			 * rather then have to re-test the state both before 			 * and after this fragment. 			 */
 if|if
 condition|(
 operator|(
@@ -1866,11 +1808,33 @@ argument_list|(
 name|rpipe
 argument_list|)
 expr_stmt|;
+comment|/* 				 * If pipe filled up due to pipelock 				 * blocking, loop back up. 				 */
+if|if
+condition|(
+name|rpipe
+operator|->
+name|pipe_buffer
+operator|.
+name|cnt
+operator|>
+literal|0
+condition|)
+continue|continue;
 block|}
-else|else
+comment|/* 			 * detect EOF condition 			 */
+if|if
+condition|(
+name|rpipe
+operator|->
+name|pipe_state
+operator|&
+name|PIPE_EOF
+condition|)
 block|{
+comment|/* XXX error = ? */
 break|break;
 block|}
+comment|/* 			 * If the "write-side" has been blocked, wake it up now. 			 */
 if|if
 condition|(
 name|rpipe
@@ -1893,6 +1857,33 @@ name|rpipe
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * break if error (signal via pipelock), or if some  			 * data was read 			 */
+if|if
+condition|(
+name|error
+operator|||
+name|nread
+operator|>
+literal|0
+condition|)
+break|break;
+comment|/* 			 * Handle non-blocking mode operation 			 */
+if|if
+condition|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FNONBLOCK
+condition|)
+block|{
+name|error
+operator|=
+name|EAGAIN
+expr_stmt|;
+break|break;
+block|}
+comment|/* 			 * Wait for more data 			 */
 name|rpipe
 operator|->
 name|pipe_state
