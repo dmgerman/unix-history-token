@@ -96,12 +96,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|Ef_fmt
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|EF_fmt
+name|md_order
 decl_stmt|;
 specifier|const
 name|char

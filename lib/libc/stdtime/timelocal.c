@@ -47,16 +47,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|LCTIME_SIZE_FULL
+name|LCTIME_SIZE
 value|(sizeof(struct lc_time_T) / sizeof(char *))
-end_define
-
-begin_define
-define|#
-directive|define
-name|LCTIME_SIZE_MIN
-define|\
-value|(offsetof(struct lc_time_T, ampm_fmt) / sizeof(char *))
 end_define
 
 begin_decl_stmt
@@ -158,7 +150,7 @@ comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, usin
 literal|"%m/%d/%y"
 block|,
 comment|/* 	** c_fmt (ctime-compatible) 	*/
-literal|"%a %Ef %T %Y"
+literal|"%a %b %e %T %Y"
 block|,
 comment|/* am */
 literal|"AM"
@@ -167,8 +159,9 @@ comment|/* pm */
 literal|"PM"
 block|,
 comment|/* date_fmt */
-literal|"%a %Ef %X %Z %Y"
+literal|"%a %b %e %X %Z %Y"
 block|,
+comment|/* alt_month 	** Standalone motnhs forms for %OB 	*/
 block|{
 literal|"January"
 block|,
@@ -195,11 +188,8 @@ block|,
 literal|"December"
 block|}
 block|,
-comment|/* Ef_fmt 	** To determine short months / day order 	*/
-literal|"%b %e"
-block|,
-comment|/* EF_fmt 	** To determine long months / day order 	*/
-literal|"%B %e"
+comment|/* md_order 	** Month / day order in dates 	*/
+literal|"md"
 block|,
 comment|/* ampm_fmt 	** To determine 12-hour clock format time (empty, if N/A) 	*/
 literal|"%I:%M:%S %p"
@@ -248,14 +238,6 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-name|_time_locale
-operator|.
-name|ampm_fmt
-operator|=
-name|_C_time_locale
-operator|.
-name|ampm_fmt
-expr_stmt|;
 name|ret
 operator|=
 name|__part_load_locale
@@ -269,9 +251,9 @@ name|time_locale_buf
 argument_list|,
 literal|"LC_TIME"
 argument_list|,
-name|LCTIME_SIZE_FULL
+name|LCTIME_SIZE
 argument_list|,
-name|LCTIME_SIZE_MIN
+name|LCTIME_SIZE
 argument_list|,
 operator|(
 specifier|const
@@ -282,15 +264,6 @@ operator|)
 operator|&
 name|_time_locale
 argument_list|)
-expr_stmt|;
-comment|/* XXX: always overwrite for ctime format parsing compatibility */
-name|_time_locale
-operator|.
-name|c_fmt
-operator|=
-name|_C_time_locale
-operator|.
-name|c_fmt
 expr_stmt|;
 return|return
 operator|(

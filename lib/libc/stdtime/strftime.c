@@ -637,7 +637,6 @@ continue|continue;
 case|case
 literal|'c'
 case|:
-comment|/* NOTE: c_fmt is hardcoded in timelocal.c */
 name|pt
 operator|=
 name|_fmt
@@ -755,9 +754,18 @@ name|pt
 operator|=
 name|_fmt
 argument_list|(
+operator|*
+operator|(
 name|tptr
 operator|->
-name|Ef_fmt
+name|md_order
+operator|)
+operator|==
+literal|'d'
+condition|?
+literal|"%e %b"
+else|:
+literal|"%b %e"
 argument_list|,
 name|t
 argument_list|,
@@ -775,14 +783,36 @@ condition|(
 operator|!
 name|Ealternative
 condition|)
-break|break;
 name|pt
 operator|=
 name|_fmt
 argument_list|(
+literal|"%Y-%m-%d"
+argument_list|,
+name|t
+argument_list|,
+name|pt
+argument_list|,
+name|ptlim
+argument_list|)
+expr_stmt|;
+else|else
+name|pt
+operator|=
+name|_fmt
+argument_list|(
+operator|*
+operator|(
 name|tptr
 operator|->
-name|EF_fmt
+name|md_order
+operator|)
+operator|==
+literal|'d'
+condition|?
+literal|"%e %B"
+else|:
+literal|"%B %e"
 argument_list|,
 name|t
 argument_list|,
