@@ -856,7 +856,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|"/%d pct %d%%"
+literal|"/%ld pct %ld%%"
 argument_list|,
 name|len
 argument_list|,
@@ -959,7 +959,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|" (%d%%)"
+literal|" (%ld%%)"
 argument_list|,
 operator|(
 operator|(
