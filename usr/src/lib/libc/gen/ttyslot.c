@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyslot.c	5.3 (Berkeley) %G%"
+literal|"@(#)ttyslot.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,9 @@ modifier|*
 name|ttyname
 argument_list|()
 decl_stmt|;
+name|setttyent
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|cnt
