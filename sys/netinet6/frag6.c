@@ -14,6 +14,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_random_ip_id.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -271,16 +277,24 @@ name|void
 name|frag6_init
 parameter_list|()
 block|{
+ifndef|#
+directive|ifndef
+name|RANDOM_IP_ID
 name|struct
 name|timeval
 name|tv
 decl_stmt|;
+endif|#
+directive|endif
 name|ip6_maxfragpackets
 operator|=
 name|nmbclusters
 operator|/
 literal|4
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|RANDOM_IP_ID
 comment|/* 	 * in many cases, random() here does NOT return random number 	 * as initialization during bootstrap time occur in fixed order. 	 */
 name|microtime
 argument_list|(
@@ -288,9 +302,6 @@ operator|&
 name|tv
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RANDOM_IP_ID
 name|ip6_id
 operator|=
 name|random
