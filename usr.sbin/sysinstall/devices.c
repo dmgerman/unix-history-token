@@ -679,6 +679,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"txp"
+block|,
+literal|"3Com 3cR990 ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"ti"
 block|,
 literal|"Alteon Networks PCI gigabit ethernet card"
