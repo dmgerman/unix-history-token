@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.14 1998/08/12 09:58:15 wosch Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.15 1998/09/11 14:38:12 dt Exp $  */
 end_comment
 
 begin_include
@@ -3040,7 +3040,7 @@ argument_list|(
 name|cputime
 argument_list|)
 argument_list|,
-literal|10000.0
+literal|100.0
 operator|*
 name|weighted_cpu
 argument_list|(
@@ -3048,14 +3048,10 @@ name|pct
 argument_list|,
 name|pp
 argument_list|)
-operator|/
-name|hz
 argument_list|,
-literal|10000.0
+literal|100.0
 operator|*
 name|pct
-operator|/
-name|hz
 argument_list|,
 name|cmdlength
 argument_list|,
@@ -3300,7 +3296,7 @@ define|#
 directive|define
 name|ORDERKEY_PCTCPU
 define|\
-value|if (lresult = PP(p2, p_pctcpu) - PP(p1, p_pctcpu), \      (result = lresult> 0 ? 1 : lresult< 0 ? -1 : 0) == 0)
+value|if (lresult = (long) PP(p2, p_pctcpu) - (long) PP(p1, p_pctcpu), \      (result = lresult> 0 ? 1 : lresult< 0 ? -1 : 0) == 0)
 end_define
 
 begin_define
