@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	4.10	82/04/19	*/
+comment|/*	subr_xxx.c	4.11	82/06/07	*/
 end_comment
 
 begin_comment
@@ -168,6 +168,11 @@ name|rablock
 operator|=
 literal|0
 expr_stmt|;
+name|rasize
+operator|=
+literal|0
+expr_stmt|;
+comment|/* conservative */
 comment|/* 	 * If the next write will extend the file into a new block, 	 * and the file is currently composed of a fragment 	 * this fragment has to be extended to be a full block. 	 */
 name|nb
 operator|=
@@ -587,8 +592,13 @@ name|NDADDR
 operator|-
 literal|1
 condition|)
+block|{
 name|rablock
 operator|=
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
 name|ip
 operator|->
 name|i_db
@@ -597,7 +607,22 @@ name|i
 operator|+
 literal|1
 index|]
+argument_list|)
 expr_stmt|;
+name|rasize
+operator|=
+name|blksize
+argument_list|(
+name|fs
+argument_list|,
+name|ip
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|nb
@@ -1033,15 +1058,28 @@ argument_list|)
 operator|-
 literal|1
 condition|)
+block|{
 name|rablock
 operator|=
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
 name|bap
 index|[
 name|i
 operator|+
 literal|1
 index|]
+argument_list|)
 expr_stmt|;
+name|rasize
+operator|=
+name|fs
+operator|->
+name|fs_bsize
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|nb

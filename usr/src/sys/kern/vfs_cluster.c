@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.32	82/06/01	*/
+comment|/*	vfs_cluster.c	4.33	82/06/07	*/
 end_comment
 
 begin_include
@@ -202,20 +202,26 @@ name|dev
 parameter_list|,
 name|blkno
 parameter_list|,
+name|size
+parameter_list|,
 name|rablkno
 parameter_list|,
-name|size
+name|rasize
 parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
 name|daddr_t
 name|blkno
-decl_stmt|,
-name|rablkno
 decl_stmt|;
 name|int
 name|size
+decl_stmt|;
+name|daddr_t
+name|rablkno
+decl_stmt|;
+name|int
+name|rasize
 decl_stmt|;
 block|{
 specifier|register
@@ -340,7 +346,7 @@ name|dev
 argument_list|,
 name|rablkno
 argument_list|,
-name|size
+name|rasize
 argument_list|)
 expr_stmt|;
 if|if
@@ -412,7 +418,7 @@ expr_stmt|;
 comment|/* pay in advance */
 block|}
 block|}
-comment|/* 	 * If we get here with bp NULL, then the block 	 * must've been in core and bread will find it for us. 	 */
+comment|/* 	 * If block was in core, let bread get it. 	 * If block wasn't in core, then the read was started 	 * above, and just wait for it. 	 */
 if|if
 condition|(
 name|bp
