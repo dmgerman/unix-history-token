@@ -1090,7 +1090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Receive data, and do something with it.  * Actually we receive a queue item which holds the data.  * If we free the item it will also free the data unless we have  * previously disassociated it using the NGI_GET_M() macro.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. The caller will never free m, so if we use up this data or  * abort we must free it.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.   */
+comment|/*  * Receive data, and do something with it.  * Actually we receive a queue item which holds the data.  * If we free the item it will also free the data unless we have  * previously disassociated it using the NGI_GET_M() macro.  * Possibly send it out on another link after processing.  * Possibly do something different if it comes from different  * hooks. The caller will never free m, so if we use up this data or  * abort we must free it.  *  * If we want, we may decide to force this data to be queued and reprocessed  * at the netgraph NETISR time.  * We would do that by setting the HK_QUEUE flag on our hook. We would do that  * in the connect() method.  */
 end_comment
 
 begin_function
@@ -1495,7 +1495,7 @@ directive|if
 literal|0
 comment|/* 	 * If for some reason we want incoming date to be queued 	 * by the NETISR system and delivered later we can set the same bit on 	 * OUR hook. (maybe to allow unwinding of the stack) 	 */
 block|if (NG_HOOK_PRIVATE(hook)) { 		int dlci;
-comment|/*  		 * If it's dlci 1023, requeue it so that it's handled 		 * at a lower priority. This is how a node decides to 		 * defer a data message. 		 */
+comment|/* 		 * If it's dlci 1023, requeue it so that it's handled 		 * at a lower priority. This is how a node decides to 		 * defer a data message. 		 */
 block|dlci = ((struct XXX_hookinfo *) NG_HOOK_PRIVATE(hook))->dlci; 		if (dlci == 1023) { 			NG_HOOK_FORCE_QUEUE(hook); 		}
 endif|#
 directive|endif
