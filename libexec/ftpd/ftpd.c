@@ -8978,9 +8978,6 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
 name|off_t
 name|cnt
 decl_stmt|;
@@ -9138,10 +9135,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|len
-operator|=
-name|filesize
-expr_stmt|;
 name|err
 operator|=
 name|cnt
@@ -9157,9 +9150,9 @@ operator|!=
 operator|-
 literal|1
 operator|&&
-name|cnt
-operator|<
 name|filesize
+operator|>
+literal|0
 condition|)
 block|{
 name|err
@@ -9172,7 +9165,7 @@ name|netfd
 argument_list|,
 name|offset
 argument_list|,
-name|len
+literal|0
 argument_list|,
 operator|(
 expr|struct
@@ -9202,7 +9195,7 @@ name|offset
 operator|+=
 name|cnt
 expr_stmt|;
-name|len
+name|filesize
 operator|-=
 name|cnt
 expr_stmt|;
