@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.6 (Berkeley) %G%"
+literal|"@(#)map.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1099,7 +1099,7 @@ operator|*
 name|p
 operator|++
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 if|if
@@ -1144,12 +1144,10 @@ if|if
 condition|(
 operator|*
 name|p
-operator|==
+operator|!=
 literal|'\0'
 condition|)
-return|return
-name|NULL
-return|;
+block|{
 name|map
 operator|->
 name|map_file
@@ -1205,6 +1203,7 @@ operator|->
 name|map_file
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|pp
 operator|=
