@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.20 1997/06/24 07:48:02 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.4 1997/06/25 20:44:00 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -3901,7 +3901,76 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * determine which APIC pin an ISA INT is attached to.  */
+comment|/*  * Given a traditional ISA INT mask, return an APIC mask.  */
+end_comment
+
+begin_function
+name|u_int
+name|isa_apic_mask
+parameter_list|(
+name|u_int
+name|isa_mask
+parameter_list|)
+block|{
+name|int
+name|isa_irq
+decl_stmt|;
+name|int
+name|apic_pin
+decl_stmt|;
+name|isa_irq
+operator|=
+name|ffs
+argument_list|(
+name|isa_mask
+argument_list|)
+expr_stmt|;
+comment|/* find its bit position */
+if|if
+condition|(
+name|isa_irq
+operator|==
+literal|0
+condition|)
+comment|/* doesn't exist */
+return|return
+literal|0
+return|;
+operator|--
+name|isa_irq
+expr_stmt|;
+comment|/* make it zero based */
+name|apic_pin
+operator|=
+name|isa_apic_pin
+argument_list|(
+name|isa_irq
+argument_list|)
+expr_stmt|;
+comment|/* look for APIC connection */
+if|if
+condition|(
+name|apic_pin
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|(
+literal|1
+operator|<<
+name|apic_pin
+operator|)
+return|;
+comment|/* convert pin# to a mask */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Determine which APIC pin an ISA/EISA INT is attached to.  */
 end_comment
 
 begin_define
@@ -3936,10 +4005,10 @@ end_define
 
 begin_function
 name|int
-name|get_isa_apic_irq
+name|isa_apic_pin
 parameter_list|(
 name|int
-name|isaIRQ
+name|isa_irq
 parameter_list|)
 block|{
 name|int
@@ -3953,7 +4022,7 @@ name|SMP_TIMER_NC
 argument_list|)
 if|if
 condition|(
-name|isaIRQ
+name|isa_irq
 operator|==
 literal|0
 condition|)
@@ -3977,28 +4046,29 @@ condition|;
 operator|++
 name|intr
 control|)
-comment|/* search each INT record */
+block|{
+comment|/* check each record */
 if|if
 condition|(
-operator|(
 name|INTTYPE
 argument_list|(
 name|intr
 argument_list|)
 operator|==
 literal|0
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+comment|/* standard INT */
+if|if
+condition|(
 name|SRCBUSIRQ
 argument_list|(
 name|intr
 argument_list|)
 operator|==
-name|isaIRQ
-operator|)
+name|isa_irq
 condition|)
-comment|/* a candidate IRQ */
+block|{
 if|if
 condition|(
 name|apic_int_is_bus_type
@@ -4007,193 +4077,7 @@ name|intr
 argument_list|,
 name|ISA
 argument_list|)
-condition|)
-comment|/* check bus match */
-return|return
-name|INTPIN
-argument_list|(
-name|intr
-argument_list|)
-return|;
-comment|/* exact match */
-return|return
-operator|-
-literal|1
-return|;
-comment|/* NOT found */
-block|}
-end_function
-
-begin_undef
-undef|#
-directive|undef
-name|SRCBUSIRQ
-end_undef
-
-begin_comment
-comment|/*  *   */
-end_comment
-
-begin_function
-name|u_int
-name|get_isa_apic_mask
-parameter_list|(
-name|u_int
-name|isaMASK
-parameter_list|)
-block|{
-name|int
-name|apicpin
-decl_stmt|,
-name|isairq
-decl_stmt|;
-name|isairq
-operator|=
-name|ffs
-argument_list|(
-name|isaMASK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isairq
-operator|==
-literal|0
-condition|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-operator|--
-name|isairq
-expr_stmt|;
-name|apicpin
-operator|=
-name|get_isa_apic_irq
-argument_list|(
-name|isairq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|apicpin
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|apicpin
-operator|=
-name|get_eisa_apic_irq
-argument_list|(
-name|isairq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|apicpin
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-return|return
-literal|0
-return|;
-block|}
-block|}
-return|return
-operator|(
-literal|1
-operator|<<
-name|apicpin
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * determine which APIC pin an EISA INT is attached to.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SRCBUSIRQ
-parameter_list|(
-name|I
-parameter_list|)
-value|(io_apic_ints[(I)].src_bus_irq)
-end_define
-
-begin_function
-name|int
-name|get_eisa_apic_irq
-parameter_list|(
-name|int
-name|eisaIRQ
-parameter_list|)
-block|{
-name|int
-name|intr
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP_TIMER_NC
-argument_list|)
-if|if
-condition|(
-name|eisaIRQ
-operator|==
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-endif|#
-directive|endif
-comment|/* SMP_TIMER_NC */
-for|for
-control|(
-name|intr
-operator|=
-literal|0
-init|;
-name|intr
-operator|<
-name|nintrs
-condition|;
-operator|++
-name|intr
-control|)
-comment|/* search each INT record */
-if|if
-condition|(
-operator|(
-name|INTTYPE
-argument_list|(
-name|intr
-argument_list|)
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|SRCBUSIRQ
-argument_list|(
-name|intr
-argument_list|)
-operator|==
-name|eisaIRQ
-operator|)
-condition|)
-comment|/* a candidate IRQ */
-if|if
-condition|(
+operator|||
 name|apic_int_is_bus_type
 argument_list|(
 name|intr
@@ -4201,14 +4085,16 @@ argument_list|,
 name|EISA
 argument_list|)
 condition|)
-comment|/* check bus match */
 return|return
 name|INTPIN
 argument_list|(
 name|intr
 argument_list|)
 return|;
-comment|/* exact match */
+comment|/* found */
+block|}
+block|}
+block|}
 return|return
 operator|-
 literal|1
@@ -4224,7 +4110,7 @@ name|SRCBUSIRQ
 end_undef
 
 begin_comment
-comment|/*  * determine which APIC pin a PCI INT is attached to.  */
+comment|/*  * Determine which APIC pin a PCI INT is attached to.  */
 end_comment
 
 begin_define
@@ -4259,7 +4145,7 @@ end_define
 
 begin_function
 name|int
-name|get_pci_apic_irq
+name|pci_apic_pin
 parameter_list|(
 name|int
 name|pciBus
@@ -4291,7 +4177,7 @@ condition|;
 operator|++
 name|intr
 control|)
-comment|/* search each record */
+comment|/* check each record */
 if|if
 condition|(
 operator|(
@@ -4302,6 +4188,7 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+comment|/* standard INT */
 operator|&&
 operator|(
 name|SRCBUSID
@@ -4340,7 +4227,6 @@ argument_list|,
 name|PCI
 argument_list|)
 condition|)
-comment|/* check bus match */
 return|return
 name|INTPIN
 argument_list|(
@@ -4385,6 +4271,53 @@ undef|#
 directive|undef
 name|INTTYPE
 end_undef
+
+begin_comment
+comment|/*  * Reprogram the MB chipset to NOT redirect an ISA INTerrupt.  *  * XXX FIXME:  *  Exactly what this means is unclear at this point.  It is a solution  *  for motherboards that redirect the MBIRQ0 pin.  Generically a motherboard  *  could route any of the ISA INTs to upper (>15) IRQ values.  But most would  *  NOT be redirected via MBIRQ0, thus "undirect()ing" them would NOT be an  *  option.  */
+end_comment
+
+begin_function
+name|int
+name|undirect_isa_irq
+parameter_list|(
+name|int
+name|rirq
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|READY
+argument_list|)
+name|printf
+argument_list|(
+literal|"Freeing redirected ISA irq %d.\n"
+argument_list|,
+name|rirq
+argument_list|)
+expr_stmt|;
+comment|/** FIXME: tickle the MB redirector chip */
+return|return
+operator|???
+return|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"Freeing (NOT implemented) redirected ISA irq %d.\n"
+argument_list|,
+name|rirq
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
+comment|/* READY */
+block|}
+end_function
 
 begin_comment
 comment|/*  * Reprogram the MB chipset to NOT redirect a PCI INTerrupt  */
@@ -4428,53 +4361,6 @@ condition|)
 name|printf
 argument_list|(
 literal|"Freeing (NOT implemented) redirected PCI irq %d.\n"
-argument_list|,
-name|rirq
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-endif|#
-directive|endif
-comment|/* READY */
-block|}
-end_function
-
-begin_comment
-comment|/*  * Reprogram the MB chipset to NOT redirect an ISA INTerrupt.  *  * XXX FIXME:  *  Exactly what this means is unclear at this point.  It is a solution  *  for motherboards that redirect the MBIRQ0 pin.  Generically a motherboard  *  could route any of the ISA INTs to upper (>15) IRQ values.  But most would  *  NOT be redirected via MBIRQ0, thus "undirect()ing" them would NOT be an  *  option.  */
-end_comment
-
-begin_function
-name|int
-name|undirect_isa_irq
-parameter_list|(
-name|int
-name|rirq
-parameter_list|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|READY
-argument_list|)
-name|printf
-argument_list|(
-literal|"Freeing redirected ISA irq %d.\n"
-argument_list|,
-name|rirq
-argument_list|)
-expr_stmt|;
-comment|/** FIXME: tickle the MB redirector chip */
-return|return
-operator|???
-return|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"Freeing (NOT implemented) redirected ISA irq %d.\n"
 argument_list|,
 name|rirq
 argument_list|)
