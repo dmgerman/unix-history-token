@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Socket operations for use by nfs  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"types.h"
-end_include
 
 begin_include
 include|#
@@ -22,25 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"uio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"signal.h"
 end_include
 
 begin_include
@@ -100,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"syslog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../netinet/in.h"
 end_include
 
@@ -143,12 +125,6 @@ begin_include
 include|#
 directive|include
 file|"nfsmount.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"syslog.h"
 end_include
 
 begin_define
@@ -700,17 +676,35 @@ name|soreserve
 argument_list|(
 name|so
 argument_list|,
+name|min
+argument_list|(
+literal|4
+operator|*
+operator|(
 name|nmp
 operator|->
 name|nm_wsize
 operator|+
 name|NFS_MAXPKTHDR
+operator|)
 argument_list|,
+name|NFS_MAXPACKET
+argument_list|)
+argument_list|,
+name|min
+argument_list|(
+literal|4
+operator|*
+operator|(
 name|nmp
 operator|->
 name|nm_rsize
 operator|+
 name|NFS_MAXPKTHDR
+operator|)
+argument_list|,
+name|NFS_MAXPACKET
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -902,6 +896,11 @@ name|soreserve
 argument_list|(
 name|so
 argument_list|,
+name|min
+argument_list|(
+literal|4
+operator|*
+operator|(
 name|nmp
 operator|->
 name|nm_wsize
@@ -912,7 +911,21 @@ sizeof|sizeof
 argument_list|(
 name|u_long
 argument_list|)
+operator|)
 argument_list|,
+name|NFS_MAXPACKET
+operator|+
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
+argument_list|)
+argument_list|,
+name|min
+argument_list|(
+literal|4
+operator|*
+operator|(
 name|nmp
 operator|->
 name|nm_rsize
@@ -922,6 +935,15 @@ operator|+
 sizeof|sizeof
 argument_list|(
 name|u_long
+argument_list|)
+operator|)
+argument_list|,
+name|NFS_MAXPACKET
+operator|+
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
 argument_list|)
 argument_list|)
 condition|)
