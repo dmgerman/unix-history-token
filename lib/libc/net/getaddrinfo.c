@@ -3121,7 +3121,7 @@ name|scope
 operator|=
 name|if_nametoindex
 argument_list|(
-name|cp
+name|hostname2
 argument_list|)
 expr_stmt|;
 if|if
@@ -3149,7 +3149,7 @@ name|explore_numeric
 argument_list|(
 name|pai
 argument_list|,
-name|hostname2
+name|cp
 argument_list|,
 name|servname
 argument_list|,
