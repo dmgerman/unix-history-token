@@ -27,6 +27,54 @@ directive|include
 file|<sys/uio.h>
 end_include
 
+begin_struct
+struct|struct
+name|componentname
+block|{
+comment|/* 	 * Arguments to lookup. 	 */
+name|u_long
+name|cn_nameiop
+decl_stmt|;
+comment|/* namei operation */
+name|u_long
+name|cn_flags
+decl_stmt|;
+comment|/* flags to namei */
+name|struct
+name|thread
+modifier|*
+name|cn_thread
+decl_stmt|;
+comment|/* thread requesting lookup */
+name|struct
+name|ucred
+modifier|*
+name|cn_cred
+decl_stmt|;
+comment|/* credentials */
+comment|/* 	 * Shared between lookup and commit routines. 	 */
+name|char
+modifier|*
+name|cn_pnbuf
+decl_stmt|;
+comment|/* pathname buffer */
+name|char
+modifier|*
+name|cn_nameptr
+decl_stmt|;
+comment|/* pointer to looked up name */
+name|long
+name|cn_namelen
+decl_stmt|;
+comment|/* length of looked up component */
+name|long
+name|cn_consume
+decl_stmt|;
+comment|/* chars to consume in lookup() */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Encapsulation of namei parameters.  */
 end_comment
@@ -98,52 +146,10 @@ name|ni_loopcnt
 decl_stmt|;
 comment|/* count of symlinks encountered */
 comment|/* 	 * Lookup parameters: this structure describes the subset of 	 * information from the nameidata structure that is passed 	 * through the VOP interface. 	 */
-struct|struct
+name|struct
 name|componentname
-block|{
-comment|/* 		 * Arguments to lookup. 		 */
-name|u_long
-name|cn_nameiop
-decl_stmt|;
-comment|/* namei operation */
-name|u_long
-name|cn_flags
-decl_stmt|;
-comment|/* flags to namei */
-name|struct
-name|thread
-modifier|*
-name|cn_thread
-decl_stmt|;
-comment|/* thread requesting lookup */
-name|struct
-name|ucred
-modifier|*
-name|cn_cred
-decl_stmt|;
-comment|/* credentials */
-comment|/* 		 * Shared between lookup and commit routines. 		 */
-name|char
-modifier|*
-name|cn_pnbuf
-decl_stmt|;
-comment|/* pathname buffer */
-name|char
-modifier|*
-name|cn_nameptr
-decl_stmt|;
-comment|/* pointer to looked up name */
-name|long
-name|cn_namelen
-decl_stmt|;
-comment|/* length of looked up component */
-name|long
-name|cn_consume
-decl_stmt|;
-comment|/* chars to consume in lookup() */
-block|}
 name|ni_cnd
-struct|;
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -512,7 +518,47 @@ begin_function
 specifier|static
 name|__inline
 name|void
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 name|NDINIT
+parameter_list|(
+name|struct
+name|nameidata
+modifier|*
+name|ndp
+parameter_list|,
+name|u_long
+name|op
+parameter_list|,
+name|u_long
+name|flags
+parameter_list|,
+name|enum
+name|uio_seg
+name|segflg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|namep
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+else|#
+directive|else
+function|NDINIT
 parameter_list|(
 name|ndp
 parameter_list|,
@@ -550,6 +596,8 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 name|ndp
 operator|->
