@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_access.c	7.1	86/11/20	*/
+comment|/*	kdb_access.c	7.2	86/11/20	*/
 end_comment
 
 begin_comment
@@ -88,14 +88,22 @@ name|off_t
 name|addr
 decl_stmt|;
 block|{
-return|return
-operator|(
+name|u_int
+name|w
+init|=
 name|get
 argument_list|(
 name|addr
 argument_list|,
 name|space
 argument_list|)
+decl_stmt|;
+name|chkerr
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|w
 operator|)
 return|;
 block|}
