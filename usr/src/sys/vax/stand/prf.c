@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	prf.c	4.3	81/05/05	*/
+comment|/*	prf.c	4.4	82/11/13	*/
 end_comment
 
 begin_include
@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/cons.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../vax/cons.h"
 end_include
 
 begin_comment

@@ -14,19 +14,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
+file|"../h/inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/in.h"
+file|"../vaxuba/ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/in_systm.h"
+file|"../netinet/in.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/in_systm.h"
 end_include
 
 begin_define
@@ -38,19 +44,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../net/if_imp.h"
+file|"../netimp/if_imp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if_acc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inode.h"
+file|"../vaxif/if_acc.h"
 end_include
 
 begin_include

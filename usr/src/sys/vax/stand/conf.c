@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.12	82/07/15	*/
+comment|/*	conf.c	4.13	82/11/13	*/
 end_comment
 
 begin_include
@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mbareg.h"
+file|"../h/fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"../vaxmba/mbareg.h"
 end_include
 
 begin_include

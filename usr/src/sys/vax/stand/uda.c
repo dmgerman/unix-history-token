@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.2	82/07/15	*/
+comment|/*	uda.c	4.3	82/11/13	*/
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"../h/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ubareg.h"
 end_include
 
 begin_include
@@ -84,13 +78,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../h/udareg.h"
+file|"../vaxuba/udareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mscp.h"
+file|"../vaxuba/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/mscp.h"
 end_include
 
 begin_decl_stmt

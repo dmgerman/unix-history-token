@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.5	82/07/15	*/
+comment|/*	autoconf.c	4.6	82/11/13	*/
 end_comment
 
 begin_include
@@ -12,37 +12,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/nexus.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
+file|"../vax/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbareg.h"
+file|"../vax/nexus.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../vaxuba/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/mbareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
 end_include
 
 begin_include

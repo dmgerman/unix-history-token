@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.7	82/03/07	*/
+comment|/*	ht.c	4.8	82/11/13	*/
 end_comment
 
 begin_comment
 comment|/*  * TM03/TU?? tape driver  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../h/htreg.h"
-end_include
 
 begin_include
 include|#
@@ -34,13 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mbareg.h"
+file|"../h/fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"../vaxmba/htreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/mbareg.h"
 end_include
 
 begin_include

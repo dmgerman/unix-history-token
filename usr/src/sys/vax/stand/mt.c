@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.2	82/07/15	*/
+comment|/*	mt.c	4.3	82/11/13	*/
 end_comment
 
 begin_comment
@@ -10,19 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/mtreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/inode.h"
 end_include
 
 begin_include
@@ -34,13 +22,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mbareg.h"
+file|"../h/inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"../h/fs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/mtreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/mbareg.h"
 end_include
 
 begin_include

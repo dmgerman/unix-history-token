@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.5	82/07/15	*/
+comment|/*	ts.c	4.6	82/11/13	*/
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|"../h/param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/tsreg.h"
 end_include
 
 begin_include
@@ -34,13 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
+file|"../h/fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"../vaxuba/tsreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubareg.h"
 end_include
 
 begin_include

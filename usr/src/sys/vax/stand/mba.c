@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.4	82/07/15	*/
+comment|/*	mba.c	4.5	82/11/13	*/
 end_comment
 
 begin_include
@@ -24,25 +24,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mbareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../h/vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"../vax/mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/mbareg.h"
 end_include
 
 begin_include

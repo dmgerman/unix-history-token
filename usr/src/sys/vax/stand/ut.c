@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.3	82/07/15	*/
+comment|/*	ut.c	4.4	82/11/13	*/
 end_comment
 
 begin_comment
@@ -28,13 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
+file|"../h/fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/fs.h"
+file|"../vaxuba/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/utreg.h"
 end_include
 
 begin_include
@@ -47,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"savax.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/utreg.h"
 end_include
 
 begin_decl_stmt
