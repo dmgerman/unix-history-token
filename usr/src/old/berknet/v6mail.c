@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v6mail.c	4.2	(Berkeley)	%G%"
+literal|"@(#)v6mail.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3584,7 +3584,7 @@ literal|"%s%s"
 argument_list|,
 name|file
 argument_list|,
-literal|".mail"
+literal|".lock"
 argument_list|)
 expr_stmt|;
 name|sprintf
