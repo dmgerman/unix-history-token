@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.96 1999/04/16 21:22:52 peter Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.97 1999/04/17 19:48:45 dfr Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -5713,6 +5713,41 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+name|eisab_match
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x04828086
+case|:
+comment|/* Recognize this specifically, it has PCI-HOST class (!) */
+return|return
+operator|(
+literal|"Intel 82375EB PCI-EISA bridge"
+operator|)
+return|;
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
 name|isab_match
 parameter_list|(
 name|device_t
@@ -5754,14 +5789,6 @@ return|;
 return|return
 operator|(
 literal|"Intel 82378IB PCI to ISA bridge"
-operator|)
-return|;
-case|case
-literal|0x04828086
-case|:
-return|return
-operator|(
-literal|"Intel 82375EB PCI-EISA bridge"
 operator|)
 return|;
 case|case
@@ -5887,6 +5914,29 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
+name|int
+name|is_eisa
+decl_stmt|;
+name|is_eisa
+operator|=
+literal|0
+expr_stmt|;
+name|desc
+operator|=
+name|eisab_match
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|desc
+condition|)
+name|is_eisa
+operator|=
+literal|1
+expr_stmt|;
+else|else
 name|desc
 operator|=
 name|isab_match
@@ -5904,6 +5954,49 @@ argument_list|(
 name|dev
 argument_list|,
 name|desc
+argument_list|)
+expr_stmt|;
+comment|/* In case of a generic EISA bridge */
+if|if
+condition|(
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_BRIDGE_EISA
+condition|)
+name|is_eisa
+operator|=
+literal|1
+expr_stmt|;
+comment|/* For PCI-EISA bridge, add both eisa and isa */
+comment|/* Don't bother adding more than one EISA bus */
+if|if
+condition|(
+name|is_eisa
+operator|&&
+operator|!
+name|devclass_get_device
+argument_list|(
+name|devclass_find
+argument_list|(
+literal|"isa"
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|"eisa"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Don't bother adding more than one ISA bus */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.14 1999/03/08 21:36:33 gibbs Exp $  */
+comment|/*  * Generic driver for the BusLogic MultiMaster SCSI host adapters  * Product specific probe and attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bt.c,v 1.15 1999/04/07 23:01:43 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
 end_include
 
 begin_comment
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
 end_include
 
 begin_include
@@ -871,115 +883,38 @@ comment|/* Exported functions */
 end_comment
 
 begin_function
-name|struct
-name|bt_softc
-modifier|*
-name|bt_alloc
+name|void
+name|bt_init_softc
 parameter_list|(
-name|int
-name|unit
+name|device_t
+name|dev
 parameter_list|,
-name|bus_space_tag_t
-name|tag
+name|struct
+name|resource
+modifier|*
+name|port
 parameter_list|,
-name|bus_space_handle_t
-name|bsh
+name|struct
+name|resource
+modifier|*
+name|irq
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|drq
 parameter_list|)
 block|{
 name|struct
 name|bt_softc
 modifier|*
 name|bt
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|unit
-operator|!=
-name|BT_TEMP_UNIT
-condition|)
-block|{
-if|if
-condition|(
-name|unit
-operator|>=
-name|NBT
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bt: unit number (%d) too high\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-comment|/* 		 * Allocate a storage area for us 		 */
-if|if
-condition|(
-name|bt_softcs
-index|[
-name|unit
-index|]
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bt%d: memory already allocated\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-block|}
-name|bt
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bt_softc
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bt
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bt%d: cannot malloc!\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-name|bzero
-argument_list|(
-name|bt
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|bt_softc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -1006,57 +941,76 @@ argument_list|)
 expr_stmt|;
 name|bt
 operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|bt
+operator|->
 name|unit
 operator|=
-name|unit
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|bt
+operator|->
+name|port
+operator|=
+name|port
+expr_stmt|;
+name|bt
+operator|->
+name|irq
+operator|=
+name|irq
+expr_stmt|;
+name|bt
+operator|->
+name|drq
+operator|=
+name|drq
 expr_stmt|;
 name|bt
 operator|->
 name|tag
 operator|=
-name|tag
+name|rman_get_bustag
+argument_list|(
+name|port
+argument_list|)
 expr_stmt|;
 name|bt
 operator|->
 name|bsh
 operator|=
-name|bsh
+name|rman_get_bushandle
+argument_list|(
+name|port
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bt
-operator|->
-name|unit
-operator|!=
-name|BT_TEMP_UNIT
-condition|)
-block|{
-name|bt_softcs
-index|[
-name|unit
-index|]
-operator|=
-name|bt
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|bt
-operator|)
-return|;
 block|}
 end_function
 
 begin_function
 name|void
-name|bt_free
+name|bt_free_softc
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|bt_softc
 modifier|*
 name|bt
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 switch|switch
 condition|(
 name|bt
@@ -1306,32 +1260,6 @@ literal|0
 case|:
 break|break;
 block|}
-if|if
-condition|(
-name|bt
-operator|->
-name|unit
-operator|!=
-name|BT_TEMP_UNIT
-condition|)
-block|{
-name|bt_softcs
-index|[
-name|bt
-operator|->
-name|unit
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-name|free
-argument_list|(
-name|bt
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1339,10 +1267,8 @@ begin_function
 name|int
 name|bt_port_probe
 parameter_list|(
-name|struct
-name|bt_softc
-modifier|*
-name|bt
+name|device_t
+name|dev
 parameter_list|,
 name|struct
 name|bt_probe_info
@@ -1350,6 +1276,16 @@ modifier|*
 name|info
 parameter_list|)
 block|{
+name|struct
+name|bt_softc
+modifier|*
+name|bt
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|config_data_t
 name|config_data
 decl_stmt|;
@@ -1361,12 +1297,12 @@ if|if
 condition|(
 name|bt_probe
 argument_list|(
-name|bt
+name|dev
 argument_list|)
 operator|||
 name|bt_fetch_adapter_info
 argument_list|(
-name|bt
+name|dev
 argument_list|)
 condition|)
 return|return
@@ -1569,12 +1505,20 @@ begin_function
 name|int
 name|bt_probe
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|bt_softc
 modifier|*
 name|bt
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|esetup_info_data_t
 name|esetup_info
 decl_stmt|;
@@ -1632,14 +1576,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Failed Status Reg Test - %x\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"Failed Status Reg Test - %x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -1670,14 +1611,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Failed Intstat Reg Test\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"Failed Intstat Reg Test\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1706,14 +1644,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Failed Geometry Reg Test\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"Failed Geometry Reg Test\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1744,14 +1679,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: Failed Reset\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"Failed Reset\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1825,12 +1757,20 @@ begin_function
 name|int
 name|bt_fetch_adapter_info
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|bt_softc
 modifier|*
 name|bt
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|board_id_data_t
 name|board_id
 decl_stmt|;
@@ -1882,14 +1822,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bt_fetch_adapter_info - Failed Get Board Info\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"bt_fetch_adapter_info - Failed Get Board Info\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1988,15 +1925,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bt_fetch_adapter_info - Failed Get "
-literal|"Firmware 3rd Digit\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"bt_fetch_adapter_info - Failed Get "
+literal|"Firmware 3rd Digit\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2086,15 +2020,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bt_fetch_adapter_info - Failed Get "
-literal|"Firmware 4th Digit\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"bt_fetch_adapter_info - Failed Get "
+literal|"Firmware 4th Digit\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2370,15 +2301,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bt_fetch_adapter_info - Failed Inquire "
-literal|"Model Number\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"bt_fetch_adapter_info - Failed Inquire "
+literal|"Model Number\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2780,15 +2708,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bt_fetch_adapter_info - Failed "
-literal|"Get Auto SCSI Info\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"bt_fetch_adapter_info - Failed "
+literal|"Get Auto SCSI Info\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2955,15 +2880,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bt_fetch_adapter_info - Failed "
-literal|"Get Setup Info\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"bt_fetch_adapter_info - Failed "
+literal|"Get Setup Info\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3086,14 +3008,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bt_fetch_adapter_info - Failed Get Config\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"bt_fetch_adapter_info - Failed Get Config\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3126,21 +3045,26 @@ begin_function
 name|int
 name|bt_init
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|bt_softc
 modifier|*
 name|bt
-parameter_list|)
-block|{
-comment|/* Announce the Adapter */
-name|printf
+init|=
+name|device_get_softc
 argument_list|(
-literal|"%s: BT-%s FW Rev. %s "
-argument_list|,
-name|bt_name
-argument_list|(
-name|bt
+name|dev
 argument_list|)
+decl_stmt|;
+comment|/* Announce the Adapter */
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"BT-%s FW Rev. %s "
 argument_list|,
 name|bt
 operator|->
@@ -3672,14 +3596,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"%s: bt_init - Unable to allocate initial ccbs\n"
+name|dev
 argument_list|,
-name|bt_name
-argument_list|(
-name|bt
-argument_list|)
+literal|"bt_init - Unable to allocate initial ccbs\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3704,12 +3625,20 @@ begin_function
 name|int
 name|bt_attach
 parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
 name|struct
 name|bt_softc
 modifier|*
 name|bt
-parameter_list|)
-block|{
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|tagged_dev_openings
 decl_stmt|;
@@ -3892,51 +3821,28 @@ name|ENXIO
 operator|)
 return|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|bt_name
-parameter_list|(
-name|struct
-name|bt_softc
-modifier|*
-name|bt
-parameter_list|)
-block|{
-specifier|static
-name|char
-name|name
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|snprintf
+comment|/* 	 * Setup interrupt. 	 */
+name|bus_setup_intr
 argument_list|(
-name|name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|name
-argument_list|)
-argument_list|,
-literal|"bt%d"
+name|dev
 argument_list|,
 name|bt
 operator|->
-name|unit
+name|irq
+argument_list|,
+name|bt_intr
+argument_list|,
+name|bt
+argument_list|,
+operator|&
+name|bt
+operator|->
+name|ih
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|name
+literal|0
 operator|)
 return|;
 block|}
@@ -4791,14 +4697,13 @@ name|bccb
 operator|==
 name|NULL
 condition|)
-name|printf
-argument_list|(
-literal|"%s: Can't malloc BCCB\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Can't malloc BCCB\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -6384,15 +6289,14 @@ name|error
 operator|!=
 name|EFBIG
 condition|)
-name|printf
-argument_list|(
-literal|"%s: Unexepected error 0x%x returned from "
-literal|"bus_dmamap_load\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Unexepected error 0x%x returned from "
+literal|"bus_dmamap_load\n"
 argument_list|,
 name|error
 argument_list|)
@@ -6774,15 +6678,14 @@ name|BMBO_FREE
 condition|)
 block|{
 comment|/* 		 * We should never encounter a busy mailbox. 		 * If we do, warn the user, and treat it as 		 * a resource shortage.  If the controller is 		 * hung, one of the pending transactions will 		 * timeout causing us to start recovery operations. 		 */
-name|printf
-argument_list|(
-literal|"%s: Encountered busy mailbox with %d out of %d "
-literal|"commands active!!!\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"Encountered busy mailbox with %d out of %d "
+literal|"commands active!!!\n"
 argument_list|,
 name|bt
 operator|->
@@ -7115,14 +7018,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: btdone - Attempt to free non-active BCCB %p\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btdone - Attempt to free non-active BCCB %p\n"
 argument_list|,
 operator|(
 name|void
@@ -7380,14 +7282,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
-argument_list|(
-literal|"%s: No longer in timeout\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"No longer in timeout\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7413,28 +7314,26 @@ block|{
 case|case
 name|BMBI_FREE
 case|:
-name|printf
-argument_list|(
-literal|"%s: btdone - CCB completed with free status!\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btdone - CCB completed with free status!\n"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BMBI_NOT_FOUND
 case|:
-name|printf
-argument_list|(
-literal|"%s: btdone - CCB Abort failed to find CCB\n"
-argument_list|,
-name|bt_name
+name|device_printf
 argument_list|(
 name|bt
-argument_list|)
+operator|->
+name|dev
+argument_list|,
+literal|"btdone - CCB Abort failed to find CCB\n"
 argument_list|)
 expr_stmt|;
 break|break;
