@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	5.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -65,43 +65,6 @@ end_define
 begin_comment
 comment|/* standard error file descriptor */
 end_comment
-
-begin_comment
-comment|/* fnmatch(3) defines */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FNM_PATHNAME
-value|0x01
-end_define
-
-begin_comment
-comment|/* match pathnames, not filenames */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FNM_QUOTE
-value|0x02
-end_define
-
-begin_comment
-comment|/* escape special chars with \ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
