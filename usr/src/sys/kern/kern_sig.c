@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	6.11	85/03/12	*/
+comment|/*	kern_sig.c	6.12	85/03/13	*/
 end_comment
 
 begin_include
@@ -1811,6 +1811,15 @@ name|p_cursig
 operator|=
 name|sig
 expr_stmt|;
+name|psignal
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|,
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 name|stop
 argument_list|(
 name|p
@@ -2181,6 +2190,15 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * If traced, always stop, and stay 			 * stopped until released by the parent. 			 */
+name|psignal
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|,
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|stop
@@ -2340,6 +2358,15 @@ operator|&
 name|STRC
 condition|)
 continue|continue;
+name|psignal
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|,
+name|SIGCHLD
+argument_list|)
+expr_stmt|;
 name|stop
 argument_list|(
 name|p
@@ -2430,7 +2457,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Put the argument process into the stopped  * state and notify the parent via wakeup and/or signal.  */
+comment|/*  * Put the argument process into the stopped  * state and notify the parent via wakeup.  * Signals are handled elsewhere.  */
 end_comment
 
 begin_expr_stmt
@@ -2469,25 +2496,6 @@ operator|)
 name|p
 operator|->
 name|p_pptr
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Avoid sending signal to parent if process is traced 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|STRC
-condition|)
-return|return;
-name|psignal
-argument_list|(
-name|p
-operator|->
-name|p_pptr
-argument_list|,
-name|SIGCHLD
 argument_list|)
 expr_stmt|;
 block|}
