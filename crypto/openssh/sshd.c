@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.246 2002/06/20 23:05:56 markus Exp $"
+literal|"$OpenBSD: sshd.c,v 1.251 2002/06/25 18:51:04 markus Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -969,13 +977,13 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|pid_t
-name|pid
-decl_stmt|;
 name|int
 name|save_errno
 init|=
 name|errno
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 name|int
 name|status
@@ -2034,13 +2042,19 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|int
-name|i
+name|gid_t
+name|gidset
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|pw
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 comment|/* Enable challenge-response authentication for privilege separation */
 name|privsep_challenge_enable
@@ -2183,11 +2197,70 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-name|do_setusercontext
+if|#
+directive|if
+literal|0
+comment|/* XXX not ready, to heavy after chroot */
+block|do_setusercontext(pw);
+else|#
+directive|else
+name|gidset
+index|[
+literal|0
+index|]
+operator|=
+name|pw
+operator|->
+name|pw_gid
+expr_stmt|;
+if|if
+condition|(
+name|setgid
+argument_list|(
+name|pw
+operator|->
+name|pw_gid
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"setgid failed for %u"
+argument_list|,
+name|pw
+operator|->
+name|pw_gid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setgroups
+argument_list|(
+literal|1
+argument_list|,
+name|gidset
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"setgroups: %.100s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|permanently_set_uid
 argument_list|(
 name|pw
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2380,6 +2453,16 @@ name|x_authctxt
 operator|=
 name|authctxt
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BROKEN_FD_PASSING
+if|if
+condition|(
+literal|1
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|authctxt
@@ -2395,6 +2478,8 @@ operator|.
 name|use_login
 condition|)
 block|{
+endif|#
+directive|endif
 comment|/* File descriptor passing is broken or root login */
 name|monitor_apply_keystate
 argument_list|(
@@ -2526,9 +2611,6 @@ name|pmonitor
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|char
 modifier|*
@@ -2681,9 +2763,6 @@ return|return
 name|p
 return|;
 block|}
-end_function
-
-begin_function
 name|Key
 modifier|*
 name|get_hostkey_by_type
@@ -2742,9 +2821,6 @@ return|return
 name|NULL
 return|;
 block|}
-end_function
-
-begin_function
 name|Key
 modifier|*
 name|get_hostkey_by_index
@@ -2781,9 +2857,6 @@ index|]
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|get_hostkey_index
 parameter_list|(
@@ -2835,13 +2908,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * returns 1 if connection should be dropped, 0 otherwise.  * dropping starts at connection #max_startups_begin with a probability  * of (max_startups_rate/100). the probability increases linearly until  * all connections are dropped for startups> max_startups  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|drop_connection
@@ -2960,9 +3027,6 @@ else|:
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|usage
@@ -3110,13 +3174,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Main program for the daemon.  */
-end_comment
-
-begin_function
 name|int
 name|main
 parameter_list|(
@@ -4230,6 +4288,35 @@ condition|)
 name|fatal
 argument_list|(
 literal|"Missing privilege separation directory: %s"
+argument_list|,
+name|_PATH_PRIVSEP_CHROOT_DIR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|st
+operator|.
+name|st_uid
+operator|!=
+literal|0
+operator|||
+operator|(
+name|st
+operator|.
+name|st_mode
+operator|&
+operator|(
+name|S_IWGRP
+operator||
+name|S_IWOTH
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"Bad owner or mode for %s"
 argument_list|,
 name|_PATH_PRIVSEP_CHROOT_DIR
 argument_list|)
@@ -5627,7 +5714,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX: this breaks Solaris */
-block|if (setsid()< 0) 		error("setsid: %.100s", strerror(errno));
+block|if (!debug_flag&& !inetd_flag&& setsid()< 0) 		error("setsid: %.100s", strerror(errno));
 endif|#
 directive|endif
 comment|/* 	 * Disable the key regeneration alarm.  We will not regenerate the 	 * key since we are no longer in a position to give it to anyone. We 	 * will not restart on SIGHUP since it no longer makes sense. 	 */
@@ -6083,13 +6170,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Decrypt session_key_int using our private server key and private host key  * (key with larger modulus first).  */
-end_comment
-
-begin_function
 name|int
 name|ssh1_session_key
 parameter_list|(
@@ -6339,13 +6420,7 @@ name|rsafail
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * SSH1 key exchange  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|do_ssh1_kex
@@ -7206,13 +7281,7 @@ name|packet_write_wait
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * SSH2 key exchange: diffie-hellman-group1-sha1  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|do_ssh2_kex

@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: serverloop.c,v 1.102 2002/06/11 05:46:20 mpech Exp $"
+literal|"$OpenBSD: serverloop.c,v 1.103 2002/06/24 14:33:27 markus Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3560,17 +3568,15 @@ name|char
 modifier|*
 name|ctype
 decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
 name|int
 name|rchan
 decl_stmt|;
-name|int
+name|u_int
 name|rmaxpack
-decl_stmt|;
-name|int
+decl_stmt|,
 name|rwindow
+decl_stmt|,
+name|len
 decl_stmt|;
 name|ctype
 operator|=

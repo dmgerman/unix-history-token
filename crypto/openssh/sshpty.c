@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshpty.c,v 1.4 2001/12/19 07:18:56 deraadt Exp $"
+literal|"$OpenBSD: sshpty.c,v 1.7 2002/06/24 17:57:20 deraadt Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1739,13 +1747,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* _CRAY */
@@ -1977,14 +1983,20 @@ operator|)
 condition|)
 name|error
 argument_list|(
-literal|"chown(%.100s, %d, %d) failed: %.100s"
+literal|"chown(%.100s, %u, %u) failed: %.100s"
 argument_list|,
 name|ttyname
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|pw
 operator|->
 name|pw_uid
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|gid
 argument_list|,
 name|strerror
@@ -1996,14 +2008,20 @@ expr_stmt|;
 else|else
 name|fatal
 argument_list|(
-literal|"chown(%.100s, %d, %d) failed: %.100s"
+literal|"chown(%.100s, %u, %u) failed: %.100s"
 argument_list|,
 name|ttyname
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|pw
 operator|->
 name|pw_uid
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|gid
 argument_list|,
 name|strerror

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: session.h,v 1.17 2002/03/29 18:59:32 markus Exp $	*/
+comment|/*	$OpenBSD: session.h,v 1.18 2002/06/23 21:06:41 deraadt Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -68,7 +72,7 @@ name|ttyfd
 decl_stmt|,
 name|ptymaster
 decl_stmt|;
-name|int
+name|u_int
 name|row
 decl_stmt|,
 name|col
@@ -94,14 +98,14 @@ name|time_t
 name|last_login_time
 decl_stmt|;
 comment|/* X11 */
-name|int
+name|u_int
 name|display_number
 decl_stmt|;
 name|char
 modifier|*
 name|display
 decl_stmt|;
-name|int
+name|u_int
 name|screen
 decl_stmt|;
 name|char

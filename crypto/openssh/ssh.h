@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh.h,v 1.70 2002/06/03 12:04:07 deraadt Exp $	*/
+comment|/*	$OpenBSD: ssh.h,v 1.71 2002/06/22 02:00:29 stevesk Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -215,7 +219,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Name of the environment variable containing the pathname of the  * authentication socket.  */
+comment|/*  * Name of the environment variable containing the process ID of the  * authentication agent.  */
 end_comment
 
 begin_define

@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshlogin.c,v 1.3 2001/12/19 07:18:56 deraadt Exp $"
+literal|"$OpenBSD: sshlogin.c,v 1.4 2002/06/23 03:30:17 deraadt Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

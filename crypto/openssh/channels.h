@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: channels.h,v 1.68 2002/06/10 22:28:41 markus Exp $	*/
+comment|/*	$OpenBSD: channels.h,v 1.70 2002/06/24 14:33:27 markus Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -324,22 +328,22 @@ modifier|*
 name|remote_name
 decl_stmt|;
 comment|/* remote hostname */
-name|int
+name|u_int
 name|remote_window
 decl_stmt|;
-name|int
+name|u_int
 name|remote_maxpacket
 decl_stmt|;
-name|int
+name|u_int
 name|local_window
 decl_stmt|;
-name|int
+name|u_int
 name|local_window_max
 decl_stmt|;
-name|int
+name|u_int
 name|local_consumed
 decl_stmt|;
-name|int
+name|u_int
 name|local_maxpacket
 decl_stmt|;
 name|int
@@ -586,9 +590,9 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
-name|int
+name|u_int
 parameter_list|,
 name|int
 parameter_list|,
@@ -1112,6 +1116,9 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|u_int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

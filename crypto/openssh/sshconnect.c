@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.125 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.126 2002/06/23 03:30:17 deraadt Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1168,7 +1176,7 @@ argument_list|,
 sizeof|sizeof
 name|strport
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|port
 argument_list|)

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: session.c,v 1.138 2002/06/20 23:05:55 markus Exp $"
+literal|"$OpenBSD: session.c,v 1.142 2002/06/26 13:49:26 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1094,10 +1094,6 @@ decl_stmt|,
 name|screen_flag
 decl_stmt|;
 name|int
-name|compression_level
-init|=
-literal|0
-decl_stmt|,
 name|enable_compression_after_reply
 init|=
 literal|0
@@ -1108,6 +1104,10 @@ decl_stmt|,
 name|data_len
 decl_stmt|,
 name|dlen
+decl_stmt|,
+name|compression_level
+init|=
+literal|0
 decl_stmt|;
 name|s
 operator|=
@@ -3638,6 +3638,21 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|envsizep
+operator|>=
+literal|1000
+condition|)
+name|fatal
+argument_list|(
+literal|"child_set_env: too many env vars,"
+literal|" skipping: %.100s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|envsizep
@@ -3776,6 +3791,11 @@ decl_stmt|,
 modifier|*
 name|value
 decl_stmt|;
+name|u_int
+name|lineno
+init|=
+literal|0
+decl_stmt|;
 name|f
 operator|=
 name|fopen
@@ -3806,6 +3826,20 @@ name|f
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|++
+name|lineno
+operator|>
+literal|1000
+condition|)
+name|fatal
+argument_list|(
+literal|"Too many lines in environment file %s"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|cp
@@ -3882,11 +3916,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Bad line in %.100s: %.200s\n"
+literal|"Bad line %u in %.100s\n"
+argument_list|,
+name|lineno
 argument_list|,
 name|filename
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5390,6 +5424,11 @@ modifier|*
 name|pw
 parameter_list|)
 block|{
+name|char
+name|tty
+init|=
+literal|'\0'
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_CYGWIN
@@ -5433,6 +5472,18 @@ comment|/* HAVE_SETPCRED */
 ifdef|#
 directive|ifdef
 name|HAVE_LOGIN_CAP
+ifdef|#
+directive|ifdef
+name|__bsdi__
+name|setpgid
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|setusercontext
@@ -5627,6 +5678,24 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(WITH_IRIX_PROJECT) || defined(WITH_IRIX_JOBS) || defined(WITH_IRIX_ARRAY) */
+ifdef|#
+directive|ifdef
+name|_AIX
+comment|/* XXX: Disable tty setting.  Enabled if required later */
+name|aix_usrinfo
+argument_list|(
+name|pw
+argument_list|,
+operator|&
+name|tty
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _AIX */
 comment|/* Permanently switch to the desired uid. */
 name|permanently_set_uid
 argument_list|(
@@ -5897,25 +5966,6 @@ argument_list|(
 name|pw
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_AIX
-name|aix_usrinfo
-argument_list|(
-name|pw
-argument_list|,
-name|s
-operator|->
-name|tty
-argument_list|,
-name|s
-operator|->
-name|ttyfd
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* _AIX */
 name|do_setusercontext
 argument_list|(
 name|pw
@@ -9140,10 +9190,8 @@ return|return
 literal|0
 return|;
 block|}
-name|s
-operator|->
-name|display_number
-operator|=
+if|if
+condition|(
 name|x11_create_display_inet
 argument_list|(
 name|options
@@ -9157,13 +9205,12 @@ argument_list|,
 name|s
 operator|->
 name|single_connection
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|s
 operator|->
 name|display_number
+argument_list|)
 operator|==
 operator|-
 literal|1
@@ -9218,7 +9265,7 @@ argument_list|,
 sizeof|sizeof
 name|display
 argument_list|,
-literal|"localhost:%d.%d"
+literal|"localhost:%u.%u"
 argument_list|,
 name|s
 operator|->
@@ -9236,7 +9283,7 @@ argument_list|,
 sizeof|sizeof
 name|auth_display
 argument_list|,
-literal|"unix:%d.%d"
+literal|"unix:%u.%u"
 argument_list|,
 name|s
 operator|->
@@ -9334,7 +9381,7 @@ argument_list|,
 sizeof|sizeof
 name|display
 argument_list|,
-literal|"%.50s:%d.%d"
+literal|"%.50s:%u.%u"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -9359,7 +9406,7 @@ argument_list|,
 sizeof|sizeof
 name|display
 argument_list|,
-literal|"%.400s:%d.%d"
+literal|"%.400s:%u.%u"
 argument_list|,
 name|hostname
 argument_list|,
