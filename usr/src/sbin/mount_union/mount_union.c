@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_union.c	8.4 (Berkeley) %G%"
+literal|"@(#)mount_union.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,66 +205,20 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:o:r:"
+literal|"bo:r"
 argument_list|)
 operator|)
 operator|!=
 name|EOF
 condition|)
-block|{
 switch|switch
 condition|(
 name|ch
 condition|)
 block|{
 case|case
-literal|'a'
-case|:
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|optarg
-argument_list|,
-literal|"bove"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-name|args
-operator|.
-name|mntflags
-operator|&=
-operator|~
-name|UNMNT_OPMASK
-expr_stmt|;
-name|args
-operator|.
-name|mntflags
-operator||=
-name|UNMNT_ABOVE
-expr_stmt|;
-break|break;
-case|case
 literal|'b'
 case|:
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|optarg
-argument_list|,
-literal|"elow"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 name|args
 operator|.
 name|mntflags
@@ -296,20 +250,6 @@ break|break;
 case|case
 literal|'r'
 case|:
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|optarg
-argument_list|,
-literal|"eplace"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 name|args
 operator|.
 name|mntflags
@@ -331,7 +271,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-block|}
+comment|/* NOTREACHED */
 block|}
 name|argc
 operator|-=
@@ -548,7 +488,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_union [-o options] target_fs mount_point\n"
+literal|"usage: mount_union [-br] [-o options] target_fs mount_point\n"
 argument_list|)
 expr_stmt|;
 name|exit
