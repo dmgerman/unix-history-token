@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -351,17 +351,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UNSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* need unsetenv(3) support */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -380,6 +369,20 @@ parameter_list|,
 name|e
 parameter_list|)
 value|setresuid(r, e, -1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/hp-ux"
 end_define
 
 begin_endif
@@ -419,28 +422,6 @@ begin_comment
 comment|/* no vfork primitive available */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UNSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* need unsetenv(3) support */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYS5TZ
-value|1
-end_define
-
-begin_comment
-comment|/* use System V style timezones */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -465,17 +446,6 @@ end_define
 
 begin_comment
 comment|/* no vfork primitive available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* need unsetenv(3) support */
 end_comment
 
 begin_define
@@ -530,13 +500,9 @@ end_if
 begin_define
 define|#
 directive|define
-name|UNSETENV
-value|1
+name|LA_TYPE
+value|LA_INT
 end_define
-
-begin_comment
-comment|/* need unsetenv(3) support */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -564,6 +530,38 @@ include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/kernel/unix"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/etc/mail/sendmail.cf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/mail/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -644,6 +642,42 @@ begin_comment
 comment|/* have setreuid(2) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has setenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_INT
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_AVENRUN
+value|"avenrun"
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -662,6 +696,28 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|HASSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has setenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HASSETREUID
 value|1
 end_define
@@ -673,11 +729,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|seteuid
-parameter_list|(
-name|uid
-parameter_list|)
-value|setreuid(-1, uid)
+name|LA_TYPE
+value|LA_INT
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_AVENRUN
+value|"avenrun"
 end_define
 
 begin_endif
@@ -705,13 +765,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNSETENV
-value|1
+name|LA_TYPE
+value|LA_ZERO
 end_define
-
-begin_comment
-comment|/* need unsetenv(3) support */
-end_comment
 
 begin_endif
 endif|#
@@ -719,33 +775,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  BSD */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASGETDTABLESIZE
-value|1
-end_define
-
-begin_comment
-comment|/* we have getdtablesize(2) call */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 4.4BSD */
+comment|/* **  4.4 BSD */
 end_comment
 
 begin_ifdef
@@ -759,17 +789,6 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|HASSETREUID
-value|1
-end_define
-
-begin_comment
-comment|/* have setreuid(2) call */
-end_comment
 
 begin_define
 define|#
@@ -810,17 +829,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UNSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* need unsetenv(3) support */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|FORK
 value|fork
 end_define
@@ -830,6 +838,168 @@ define|#
 directive|define
 name|MAXPATHLEN
 value|PATHSIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_ZERO
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  ConvexOS 11.0 and later */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_CONVEX_SOURCE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_comment
+comment|/* include all the System V defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has POSIX setsid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETDTABLESIZE
+value|1
+end_define
+
+begin_comment
+comment|/* we have getdtablesize(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* have setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  RISC/os 4.51 ** **	Untested... */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|mips
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ultrix
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has setenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_INT
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_AVENRUN
+value|"avenrun"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/unix"
 end_define
 
 begin_endif
@@ -844,6 +1014,83 @@ end_comment
 begin_comment
 comment|/********************************************************************** **  More general defines **********************************************************************/
 end_comment
+
+begin_comment
+comment|/* general BSD defines */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has setenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETDTABLESIZE
+value|1
+end_define
+
+begin_comment
+comment|/* we have getdtablesize(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* have setreuid(2) call */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SUBR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* general System V defines */
@@ -869,17 +1116,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYS5TZ
-value|1
-end_define
-
-begin_comment
-comment|/* use System V style timezones */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASUNAME
 value|1
 end_define
@@ -898,6 +1134,24 @@ end_define
 begin_comment
 comment|/* use System V ustat(2) syscall */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_INT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

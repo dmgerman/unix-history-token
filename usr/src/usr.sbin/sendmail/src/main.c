@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.7 (Berkeley) %G%"
+literal|"@(#)main.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -583,29 +583,6 @@ name|bool
 name|canrename
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SYS5TZ
-end_ifndef
-
-begin_comment
-comment|/* enforce use of kernel-supplied time zone information */
-end_comment
-
-begin_expr_stmt
-name|unsetenv
-argument_list|(
-literal|"TZ"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* in 4.4BSD, the table can be huge; impose a reasonable limit */
@@ -2786,12 +2763,6 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYS5TZ
-end_ifdef
-
 begin_comment
 comment|/* Enforce use of local time (null string overrides this) */
 end_comment
@@ -2818,51 +2789,16 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-block|{
-name|p
-operator|=
-name|xalloc
+name|setenv
 argument_list|(
-name|strlen
-argument_list|(
-name|TimeZoneSpec
-argument_list|)
-operator|+
-literal|4
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|p
-argument_list|,
-literal|"TZ="
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|p
+literal|"TZ"
 argument_list|,
 name|TimeZoneSpec
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-name|putenv
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
 end_if
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|if
