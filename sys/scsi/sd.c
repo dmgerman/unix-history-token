@@ -9,7 +9,7 @@ name|char
 name|rev
 index|[]
 init|=
-literal|"$Revision: 1.3 $"
+literal|"$Revision: 1.2 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -756,7 +756,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"	sd%d: %dMB, cyls %d, heads %d, secs %d, bytes/sec %d\n"
+literal|"sd%d: %dMB, cyls %d, heads %d, secs %d, bytes/sec %d\n"
 argument_list|,
 name|unit
 argument_list|,
