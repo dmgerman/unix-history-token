@@ -5,12 +5,12 @@ name|char
 name|_itelid
 index|[]
 init|=
-literal|"@(#)$Id: iitel.c,v 1.11 1995/12/17 21:17:44 phk Exp $"
+literal|"@(#)$Id: iitel.c,v 1.12 1996/03/28 14:27:51 scrappy Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.11 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.12 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  */
 end_comment
 
 begin_include
@@ -1039,7 +1039,7 @@ name|state
 operator||=
 name|READ_WAIT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1051,6 +1051,10 @@ argument_list|,
 name|PZERO
 operator||
 name|PCATCH
+argument_list|,
+literal|"itelrd"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1180,7 +1184,7 @@ name|state
 operator||=
 name|WRITE_WAIT
 expr_stmt|;
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1192,6 +1196,10 @@ argument_list|,
 name|PZERO
 operator||
 name|PCATCH
+argument_list|,
+literal|"itelwr"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
