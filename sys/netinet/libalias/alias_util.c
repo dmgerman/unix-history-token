@@ -40,12 +40,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"alias.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"alias_local.h"
 end_include
 
 begin_function
 name|u_short
-name|InternetChecksum
+name|PacketAliasInternetChecksum
 parameter_list|(
 name|u_short
 modifier|*
@@ -158,7 +164,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|InternetChecksum
+name|PacketAliasInternetChecksum
 argument_list|(
 operator|(
 name|u_short

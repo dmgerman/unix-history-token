@@ -402,13 +402,13 @@ comment|/*  .                                  */
 union|union
 comment|/* Auxiliary data                      */
 block|{
-name|struct
-name|in_addr
-name|frag_addr
-decl_stmt|;
 name|char
 modifier|*
 name|frag_ptr
+decl_stmt|;
+name|struct
+name|in_addr
+name|frag_addr
 decl_stmt|;
 name|struct
 name|tcp_dat
@@ -2124,6 +2124,25 @@ name|LINK_FRAGMENT_PTR
 case|:
 name|fragmentPtrLinkCount
 operator|--
+expr_stmt|;
+if|if
+condition|(
+name|link
+operator|->
+name|data
+operator|.
+name|frag_ptr
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|link
+operator|->
+name|data
+operator|.
+name|frag_ptr
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -4138,7 +4157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* External routines for getting or changing link data    (external to alias_db.c, but internal to alias*.c)      SetFragmentData(), GetFragmentData()     SetFragmentPtr(), GetFragmentPtr()     SetStateIn(), SetStateOut(), GetStateIn(), GetStateOut()     GetOriginalAddress(), GetDestAddress(), GetAliasAddress()     GetOriginalPort(), GetAliasPort()     SetAckModified(), GetAckModified()     GetDeltaAckIn(), GetDeltaSeqOut(), AddSeq()     ClearNewLink()     CheckNewLink() */
+comment|/* External routines for getting or changing link data    (external to alias_db.c, but internal to alias*.c)      SetFragmentData(), GetFragmentData()     SetFragmentPtr(), GetFragmentPtr()     SetStateIn(), SetStateOut(), GetStateIn(), GetStateOut()     GetOriginalAddress(), GetDestAddress(), GetAliasAddress()     GetOriginalPort(), GetAliasPort()     SetAckModified(), GetAckModified()     GetDeltaAckIn(), GetDeltaSeqOut(), AddSeq() */
 end_comment
 
 begin_function
@@ -4478,38 +4497,6 @@ block|{
 name|aliasAddress
 operator|=
 name|alias_addr
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|SetDefaultTargetAddress
-parameter_list|(
-name|struct
-name|in_addr
-name|target_addr
-parameter_list|)
-block|{
-name|targetAddress
-operator|=
-name|target_addr
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|ClearDefaultTargetAddress
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|targetAddress
-operator|.
-name|s_addr
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
@@ -5269,7 +5256,7 @@ end_function
 
 begin_function
 name|void
-name|ClearNewDefaultLink
+name|ClearCheckNewLink
 parameter_list|(
 name|void
 parameter_list|)
@@ -5281,18 +5268,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|int
-name|CheckNewDefaultLink
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|newDefaultLink
-return|;
-block|}
-end_function
+begin_comment
+comment|/* Miscellaneous Functions      HouseKeeping()     InitPacketAliasLog()     UninitPacketAliasLog() */
+end_comment
 
 begin_comment
 comment|/*     Whenever an outgoing or incoming packet is handled, HouseKeeping()     is called to find and remove timed-out aliasing links.  Logic exists     to sweep through the entire table and linked list structure     every 60 seconds.      (prototype in alias_local.h) */
@@ -5470,7 +5448,82 @@ block|}
 end_function
 
 begin_comment
-comment|/* Outside world interfaces  -- "outside world" means other than alias*.c routines --      PacketAliasRedirectPort()     PacketAliasRedirectAddr()     SetPacketAliasAddress()     InitPacketAliasLog()     UninitPacketAliasLog()     InitPacketAlias()     SetPacketAliasMode()  (prototypes in alias.h) */
+comment|/* Init the log file and enable logging */
+end_comment
+
+begin_function
+name|void
+name|InitPacketAliasLog
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+operator|~
+name|packetAliasMode
+operator|&
+name|PKT_ALIAS_LOG
+operator|)
+operator|&&
+operator|(
+name|monitorFile
+operator|=
+name|fopen
+argument_list|(
+literal|"/var/log/alias.log"
+argument_list|,
+literal|"w"
+argument_list|)
+operator|)
+condition|)
+block|{
+name|packetAliasMode
+operator||=
+name|PKT_ALIAS_LOG
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|monitorFile
+argument_list|,
+literal|"PacketAlias/InitPacketAliasLog: Packet alias logging enabled.\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Close the log-file and disable logging. */
+end_comment
+
+begin_function
+name|void
+name|UninitPacketAliasLog
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|monitorFile
+condition|)
+name|fclose
+argument_list|(
+name|monitorFile
+argument_list|)
+expr_stmt|;
+name|packetAliasMode
+operator|&=
+operator|~
+name|PKT_ALIAS_LOG
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Outside world interfaces  -- "outside world" means other than alias*.c routines --      PacketAliasRedirectPort()     PacketAliasRedirectAddr()     PacketAliasRedirectDelete()     PacketAliasSetAddress()     PacketAliasInit()     PacketAliasSetMode()  (prototypes in alias.h) */
 end_comment
 
 begin_comment
@@ -5607,76 +5660,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function is slightly less generalized than    PacketAliasRedirectPort and is included for backwards    compatibility */
-end_comment
-
-begin_function
-name|int
-name|PacketAliasPermanentLink
-parameter_list|(
-name|struct
-name|in_addr
-name|src_addr
-parameter_list|,
-name|u_short
-name|src_port
-parameter_list|,
-name|struct
-name|in_addr
-name|dst_addr
-parameter_list|,
-name|u_short
-name|dst_port
-parameter_list|,
-name|u_short
-name|alias_port
-parameter_list|,
-name|u_char
-name|proto
-parameter_list|)
-block|{
-name|struct
-name|alias_link
-modifier|*
-name|link
-decl_stmt|;
-name|link
-operator|=
-name|PacketAliasRedirectPort
-argument_list|(
-name|src_addr
-argument_list|,
-name|src_port
-argument_list|,
-name|dst_addr
-argument_list|,
-name|dst_port
-argument_list|,
-name|nullAddress
-argument_list|,
-name|alias_port
-argument_list|,
-name|proto
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|link
-operator|==
-name|NULL
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-else|else
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Static address translation */
 end_comment
 
@@ -5760,7 +5743,7 @@ modifier|*
 name|link
 parameter_list|)
 block|{
-comment|/* This is a very dangerous function to put in the API,    because an invalid pointer can crash the program. */
+comment|/* This is a dangerous function to put in the API,    because an invalid pointer can crash the program. */
 name|deleteAllLinks
 operator|=
 literal|1
@@ -5779,7 +5762,7 @@ end_function
 
 begin_function
 name|void
-name|SetPacketAliasAddress
+name|PacketAliasSetAddress
 parameter_list|(
 name|struct
 name|in_addr
@@ -5788,6 +5771,10 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|packetAliasMode
+operator|&
+name|PKT_ALIAS_RESET_ON_ADDR_CHANGE
+operator|&&
 name|aliasAddress
 operator|.
 name|s_addr
@@ -5808,84 +5795,25 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Init the log file and enable logging */
-end_comment
-
 begin_function
 name|void
-name|InitPacketAliasLog
+name|PacketAliasSetTarget
 parameter_list|(
-name|void
+name|struct
+name|in_addr
+name|target_addr
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|(
-operator|~
-name|packetAliasMode
-operator|&
-name|PKT_ALIAS_LOG
-operator|)
-operator|&&
-operator|(
-name|monitorFile
+name|targetAddress
 operator|=
-name|fopen
-argument_list|(
-literal|"/var/log/alias.log"
-argument_list|,
-literal|"w"
-argument_list|)
-operator|)
-condition|)
-block|{
-name|packetAliasMode
-operator||=
-name|PKT_ALIAS_LOG
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|monitorFile
-argument_list|,
-literal|"PacketAlias/InitPacketAliasLog: Packet alias logging enabled.\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Close the log-file and disable logging. */
-end_comment
-
-begin_function
-name|void
-name|UninitPacketAliasLog
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|monitorFile
-condition|)
-name|fclose
-argument_list|(
-name|monitorFile
-argument_list|)
-expr_stmt|;
-name|packetAliasMode
-operator|&=
-operator|~
-name|PKT_ALIAS_LOG
+name|target_addr
 expr_stmt|;
 block|}
 end_function
 
 begin_function
 name|void
-name|InitPacketAlias
+name|PacketAliasInit
 parameter_list|(
 name|void
 parameter_list|)
@@ -5998,6 +5926,12 @@ name|s_addr
 operator|=
 literal|0
 expr_stmt|;
+name|targetAddress
+operator|.
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
 name|icmpLinkCount
 operator|=
 literal|0
@@ -6031,25 +5965,9 @@ operator|=
 name|PKT_ALIAS_SAME_PORTS
 operator||
 name|PKT_ALIAS_USE_SOCKETS
+operator||
+name|PKT_ALIAS_RESET_ON_ADDR_CHANGE
 expr_stmt|;
-if|if
-condition|(
-name|packetAliasMode
-operator|&
-name|PKT_ALIAS_LOG
-condition|)
-block|{
-name|InitPacketAliasLog
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|monitorFile
-argument_list|,
-literal|"Packet aliasing initialized.\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -6060,7 +5978,7 @@ end_comment
 begin_function
 name|unsigned
 name|int
-name|SetPacketAliasMode
+name|PacketAliasSetMode
 parameter_list|(
 name|unsigned
 name|int
@@ -6125,9 +6043,18 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*    Clear all packet aliasing links, but leave mode    flags unchanged.  Typically used when the interface    address changes and all existing links become    invalid. */
-end_comment
+begin_function
+name|int
+name|PacketAliasCheckNewLink
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|newDefaultLink
+return|;
+block|}
+end_function
 
 end_unit
 
