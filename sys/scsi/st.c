@@ -4,11 +4,11 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.a
 end_comment
 
 begin_comment
-comment|/* $Revision: 1.13 $ */
+comment|/* $Revision: 1.14 $ */
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *      $Id: st.c,v 1.13 1993/11/18 05:03:05 rgrimes Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *      $Id: st.c,v 1.14 1993/12/19 00:54:59 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -2205,7 +2205,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|ENXIO
+name|EBUSY
 operator|)
 return|;
 block|}
@@ -3969,6 +3969,13 @@ operator|&
 name|SDEV_WAITING
 condition|)
 block|{
+name|sc_link
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SDEV_WAITING
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(

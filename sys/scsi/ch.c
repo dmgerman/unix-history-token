@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.6 1993/11/25 01:37:31 wollman Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.7 1993/12/19 00:54:49 wollman Exp $  */
 end_comment
 
 begin_include
@@ -564,7 +564,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return
-name|ENXIO
+name|EBUSY
 return|;
 block|}
 comment|/* 	 * Make sure the device has been initialised 	 */
