@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to the Computer Systems  * Engineering Group at Lawrence Berkeley Laboratory and to the University  * of California at Berkeley by Jef Poskanzer.  *  * %sccs.include.redist.c%  *  *	@(#)raster.h	7.1 (Berkeley) %G%  *  * from: $Header: raster.h,v 1.14 92/06/17 08:14:43 torek Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to the Computer Systems  * Engineering Group at Lawrence Berkeley Laboratory and to the University  * of California at Berkeley by Jef Poskanzer.  *  * %sccs.include.redist.c%  *  *	@(#)raster.h	8.1 (Berkeley) %G%  *  * from: $Header: raster.h,v 1.14 92/06/17 08:14:43 torek Exp $  */
 end_comment
 
 begin_comment
