@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.18	81/03/01	*/
+comment|/*	hp.c	4.19	81/03/01	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * HP disk driver for RP0x+RM0x  */
+comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	Check out handling of spun-down drives and write lock  *	Add RM80 bad sector handling  *	Add reading of bad sector information and disk layout from sector 1  *	Add bad sector forwarding code  *	Check interaction with tape driver on same mba  *	Check multiple drive handling  */
 end_comment
 
 begin_include
@@ -2372,19 +2372,11 @@ name|unit
 operator|>=
 name|NHP
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bad unit\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
-block|}
 define|#
 directive|define
 name|phys
@@ -2420,19 +2412,11 @@ name|mi_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dna\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|ENXIO
 operator|)
 return|;
-block|}
 name|mba
 operator|=
 name|phys
@@ -2541,19 +2525,11 @@ index|]
 operator|.
 name|nblocks
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"oor\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EINVAL
 operator|)
 return|;
-block|}
 while|while
 condition|(
 name|num
@@ -2755,33 +2731,11 @@ name|hpds
 operator|&
 name|HP_ERR
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dskerr: (%d,%d,%d) ds=%x er=%x\n"
-argument_list|,
-name|cn
-argument_list|,
-name|tn
-argument_list|,
-name|sn
-argument_list|,
-name|hpaddr
-operator|->
-name|hpds
-argument_list|,
-name|hpaddr
-operator|->
-name|hper1
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|EIO
 operator|)
 return|;
-block|}
 name|start
 operator|+=
 name|blk
