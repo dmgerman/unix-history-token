@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)char.c	5.7 (Berkeley) %G%"
+literal|"@(#)char.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -363,8 +363,6 @@ comment|/*	`		a		b		c	*/
 name|_Q1
 operator||
 name|_GLOB
-operator||
-name|_CMD
 operator||
 name|_META
 block|,

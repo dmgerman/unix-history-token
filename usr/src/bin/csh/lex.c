@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.18 (Berkeley) %G%"
+literal|"@(#)lex.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5105,7 +5105,7 @@ condition|(
 operator|!
 name|any
 argument_list|(
-literal|": \t\\\n}"
+literal|": \t\\\n}'\""
 argument_list|,
 name|c
 argument_list|)
@@ -5800,6 +5800,8 @@ operator|)
 return|;
 if|if
 condition|(
+name|alvec
+operator|&&
 operator|*
 name|alvec
 condition|)
