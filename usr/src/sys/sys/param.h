@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	6.5	84/08/29	*/
+comment|/*	param.h	6.6	84/12/20	*/
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|NMOUNT
-value|15
+value|20
 end_define
 
 begin_comment
@@ -87,15 +87,11 @@ begin_define
 define|#
 directive|define
 name|NOFILE
-value|20
+value|48
 end_define
 
 begin_comment
 comment|/* max open files per process */
-end_comment
-
-begin_comment
-comment|/* NOFILE MUST NOT BE>= 31; SEE pte.h */
 end_comment
 
 begin_define
@@ -113,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|NCARGS
-value|10240
+value|20480
 end_define
 
 begin_comment
@@ -220,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|NZERO
-value|20
+value|0
 end_define
 
 begin_comment
