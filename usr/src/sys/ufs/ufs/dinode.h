@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,6 +12,17 @@ define|#
 directive|define
 name|ROOTINO
 value|((ino_t)2)
+end_define
+
+begin_comment
+comment|/*  * The Whiteout inode# is a dummy non-zero inode number which will  * never be allocated to a real file.  It is used as a place holder  * in the directory entry which has been tagged as a DT_W entry.  * See the comments about ROOTINO above.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WINO
+value|((ino_t)1)
 end_define
 
 begin_comment
