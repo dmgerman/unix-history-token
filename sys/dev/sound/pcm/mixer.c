@@ -179,6 +179,12 @@ name|SOUND_MIXER_OGAIN
 index|]
 operator|=
 literal|50
+block|,
+index|[
+name|SOUND_MIXER_MONITOR
+index|]
+operator|=
+literal|75
 block|, }
 decl_stmt|;
 end_decl_stmt
