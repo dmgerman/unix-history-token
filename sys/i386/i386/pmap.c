@@ -2246,6 +2246,10 @@ directive|endif
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return an address which is the base of the Virtual mapping of  * all the PTEs for the given pmap. Note this doesn't say that  * all the PTEs will be present or that the pages there are valid.  * The PTEs are made available by the recursive mapping trick.  * It will map in the alternate PTE space if needed.  */
+end_comment
+
 begin_function
 specifier|static
 name|unsigned
