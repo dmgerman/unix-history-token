@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getNAME.c	5.1 (Berkeley) %G%"
+literal|"@(#)getNAME.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,11 +200,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 for|for
 control|(
