@@ -720,7 +720,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|t_or_u_flag_provided
+name|t_or_u_flag
 init|=
 literal|0
 decl_stmt|;
@@ -1434,7 +1434,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|t_or_u_flag_provided
+name|t_or_u_flag
 operator|++
 expr_stmt|;
 if|if
@@ -1461,7 +1461,7 @@ break|break;
 case|case
 literal|'u'
 case|:
-name|t_or_u_flag_provided
+name|t_or_u_flag
 operator|++
 expr_stmt|;
 if|if
@@ -2467,7 +2467,7 @@ expr_stmt|;
 comment|/* 	 * Only complain if -t or -u have been specified; the default 	 * case (4096 sectors per cylinder) is intented to disagree 	 * with the disklabel. 	 */
 if|if
 condition|(
-name|t_or_u_flag_provided
+name|t_or_u_flag
 operator|&&
 name|secpercyl
 operator|!=
