@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: df.c,v 1.16 1997/03/28 15:24:17 imp Exp $"
+literal|"$Id: df.c,v 1.17 1997/08/07 21:31:00 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,7 +240,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|ufs_df
 name|__P
 argument_list|(
@@ -322,6 +322,8 @@ decl_stmt|,
 name|maxwidth
 decl_stmt|,
 name|width
+decl_stmt|,
+name|rv
 decl_stmt|;
 name|char
 modifier|*
@@ -474,6 +476,10 @@ operator|=
 name|width
 expr_stmt|;
 block|}
+name|rv
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -568,7 +574,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|rv
 argument_list|)
 expr_stmt|;
 block|}
@@ -623,6 +629,10 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -640,6 +650,8 @@ operator|==
 name|S_IFCHR
 condition|)
 block|{
+name|rv
+operator|=
 name|ufs_df
 argument_list|(
 operator|*
@@ -647,6 +659,8 @@ name|argv
 argument_list|,
 name|maxwidth
 argument_list|)
+operator|||
+name|rv
 expr_stmt|;
 continue|continue;
 block|}
@@ -715,6 +729,10 @@ argument_list|,
 name|mntpt
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -734,6 +752,8 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|rv
+operator|=
 name|ufs_df
 argument_list|(
 operator|*
@@ -741,6 +761,8 @@ name|argv
 argument_list|,
 name|maxwidth
 argument_list|)
+operator|||
+name|rv
 expr_stmt|;
 operator|(
 name|void
@@ -785,6 +807,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|warn
 argument_list|(
 literal|"%s"
@@ -793,6 +816,11 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
+literal|1
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -841,6 +869,10 @@ argument_list|,
 name|mntpt
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -871,7 +903,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|rv
 operator|)
 return|;
 block|}
@@ -1478,7 +1510,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|ufs_df
 parameter_list|(
 name|file
@@ -1543,7 +1575,9 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -1571,7 +1605,9 @@ argument_list|(
 name|rfd
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 name|sfsp
 operator|=
@@ -1763,6 +1799,9 @@ argument_list|(
 name|rfd
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
