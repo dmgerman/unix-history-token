@@ -45,7 +45,7 @@ name|list
 parameter_list|,
 name|parmN
 parameter_list|)
-value|__builtin_stdarg_start(&(list), parmN)
+value|__builtin_stdarg_start(list, parmN)
 end_define
 
 begin_define
