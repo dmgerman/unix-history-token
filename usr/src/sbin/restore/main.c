@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.3 (Berkeley) %G%"
+literal|"@(#)main.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/dinode.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
@@ -1231,6 +1231,26 @@ literal|'s'
 case|:
 if|if
 condition|(
+operator|*
+name|argv
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"option requires an argument -- %c"
+argument_list|,
+operator|*
+name|ap
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|nargv
 index|[
@@ -1299,13 +1319,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|argv
-operator|!=
-name|NULL
-condition|)
 operator|++
 name|argv
 expr_stmt|;
@@ -1371,6 +1384,17 @@ name|argv
 operator|++
 condition|)
 empty_stmt|;
+comment|/* Update argument count. */
+operator|*
+name|argcp
+operator|=
+name|nargv
+operator|-
+operator|*
+name|argvp
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
 
