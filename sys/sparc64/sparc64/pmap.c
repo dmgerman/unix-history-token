@@ -4858,8 +4858,6 @@ name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_BUSY
 argument_list|)
 expr_stmt|;
@@ -5280,8 +5278,6 @@ name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
@@ -5700,8 +5696,6 @@ name|vm_page_flag_clear
 argument_list|(
 name|m
 argument_list|,
-name|PG_MAPPED
-operator||
 name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
