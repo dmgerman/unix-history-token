@@ -1895,7 +1895,6 @@ name|sc
 operator|->
 name|isa16bit
 condition|)
-block|{
 comment|/* 		 * Set FIFO threshold to 8, No auto-init Remote DMA, byte 		 * order=80x86, word-wide DMA xfers, 		 */
 name|ed_nic_outb
 argument_list|(
@@ -1910,9 +1909,7 @@ operator||
 name|ED_DCR_LS
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 comment|/* 		 * Same as above, but byte-wide DMA xfers 		 */
 name|ed_nic_outb
 argument_list|(
@@ -1925,7 +1922,6 @@ operator||
 name|ED_DCR_LS
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Clear Remote Byte Count Registers 	 */
 name|ed_nic_outb
 argument_list|(
@@ -2155,7 +2151,6 @@ name|if_flags
 operator|&
 name|IFF_ALTPHYS
 condition|)
-block|{
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -2165,9 +2160,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -2177,7 +2170,6 @@ argument_list|,
 name|ED_3COM_CR_XSEL
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -3092,7 +3084,6 @@ name|sc
 operator|->
 name|next_packet
 condition|)
-block|{
 name|len
 operator|+=
 operator|(
@@ -3107,9 +3098,7 @@ operator|)
 operator|*
 name|ED_PAGE_SIZE
 expr_stmt|;
-block|}
 else|else
-block|{
 name|len
 operator|+=
 operator|(
@@ -3136,7 +3125,6 @@ operator|)
 operator|*
 name|ED_PAGE_SIZE
 expr_stmt|;
-block|}
 comment|/* 			 * because buffers are aligned on 256-byte boundary, 			 * the length computed above is off by 256 in almost 			 * all cases. Fix it... 			 */
 if|if
 condition|(
@@ -4167,7 +4155,6 @@ name|if_flags
 operator|&
 name|IFF_ALTPHYS
 condition|)
-block|{
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -4177,9 +4164,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ed_asic_outb
 argument_list|(
 name|sc
@@ -4189,7 +4174,6 @@ argument_list|,
 name|ED_3COM_CR_XSEL
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -4229,9 +4213,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|ED_NO_MIIBUS
 case|case
 name|SIOCGIFMEDIA
 case|:
@@ -4253,6 +4234,9 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
 name|mii
 operator|=
 name|device_get_softc
@@ -4776,7 +4760,6 @@ name|sc
 operator|->
 name|isa16bit
 condition|)
-block|{
 name|ed_asic_insw
 argument_list|(
 name|sc
@@ -4790,9 +4773,7 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ed_asic_insb
 argument_list|(
 name|sc
@@ -4804,7 +4785,6 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -4920,7 +4900,6 @@ name|sc
 operator|->
 name|isa16bit
 condition|)
-block|{
 name|ed_asic_outsw
 argument_list|(
 name|sc
@@ -4934,9 +4913,7 @@ operator|/
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ed_asic_outsb
 argument_list|(
 name|sc
@@ -4948,7 +4925,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Wait for remote DMA complete. This is necessary because on the 	 * transmit side, data is handled internally by the NIC in bursts and 	 * we can't start another remote DMA until this one completes. Not 	 * waiting causes really bad things to happen - like the NIC 	 * irrecoverably jamming the ISA bus. 	 */
 while|while
 condition|(
@@ -5198,7 +5174,6 @@ name|m
 operator|->
 name|m_len
 condition|)
-block|{
 name|ed_asic_outsb
 argument_list|(
 name|sc
@@ -5214,7 +5189,6 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
-block|}
 name|m
 operator|=
 name|m
@@ -5378,7 +5352,6 @@ if|if
 condition|(
 name|wantbyte
 condition|)
-block|{
 name|ed_asic_outw
 argument_list|(
 name|sc
@@ -5393,7 +5366,6 @@ operator|)
 name|savebyte
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Wait for remote DMA complete. This is necessary because on the 	 * transmit side, data is handled internally by the NIC in bursts and 	 * we can't start another remote DMA until this one completes. Not 	 * waiting causes really bad things to happen - like the NIC 	 * irrecoverably jamming the ISA bus. 	 */
 while|while
