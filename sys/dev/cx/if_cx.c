@@ -16235,7 +16235,7 @@ argument_list|(
 operator|&
 name|tty_ithd
 argument_list|,
-literal|"tty:cx"
+literal|"cx"
 argument_list|,
 name|cx_softintr
 argument_list|,

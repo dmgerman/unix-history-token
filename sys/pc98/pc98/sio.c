@@ -8980,7 +8980,7 @@ argument_list|(
 operator|&
 name|tty_ithd
 argument_list|,
-literal|"tty:sio"
+literal|"sio"
 argument_list|,
 name|siopoll
 argument_list|,
@@ -8999,13 +8999,13 @@ argument_list|(
 operator|&
 name|clk_ithd
 argument_list|,
-literal|"tty:sio"
+literal|"sio"
 argument_list|,
 name|siopoll
 argument_list|,
 name|NULL
 argument_list|,
-name|SWI_TTY
+name|SWI_CLOCK
 argument_list|,
 literal|0
 argument_list|,
