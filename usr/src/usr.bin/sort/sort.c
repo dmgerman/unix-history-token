@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.2 (Berkeley) %G%"
+literal|"@(#)sort.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|L
-value|512
+value|1024
 end_define
 
 begin_define
@@ -60,12 +60,35 @@ name|C
 value|20
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MEM
+value|(64*2048)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MEM
 value|(16*2048)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2474,6 +2497,16 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|blank
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == ' ' || (c) == '\t')
+end_define
+
 begin_function
 name|main
 parameter_list|(
@@ -2922,6 +2955,9 @@ name|ep
 operator|-=
 literal|512
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|vax
 name|brk
 argument_list|(
 name|ep
@@ -2930,6 +2966,8 @@ literal|512
 argument_list|)
 expr_stmt|;
 comment|/* for recursion */
+endif|#
+directive|endif
 name|a
 operator|=
 name|ep
@@ -2971,7 +3009,20 @@ name|ntext
 operator|=
 name|nlines
 operator|*
-literal|8
+literal|4
+operator|*
+operator|(
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+operator|)
 expr_stmt|;
 name|tspace
 operator|=
@@ -6196,6 +6247,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|blank
+end_ifndef
+
 begin_macro
 name|blank
 argument_list|(
@@ -6227,6 +6284,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
