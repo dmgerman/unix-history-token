@@ -238,7 +238,7 @@ block|,
 comment|/* [Client] Sent discovery initiation */
 name|PPPOE_PRIMED
 block|,
-comment|/* [Server] Sent offer message */
+comment|/* [Server] Received discovery initiation */
 name|PPPOE_SOFFER
 block|,
 comment|/* [Server] Sent offer message */
@@ -581,7 +581,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Generate a new session id  * XXX find out the freeBSD locking scheme.  */
+comment|/*  * Generate a new session id  * XXX find out the FreeBSD locking scheme.  */
 end_comment
 
 begin_function
@@ -3931,6 +3931,11 @@ argument_list|,
 name|PTT_SRV_NAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tag
+condition|)
+block|{
 name|insert_tag
 argument_list|(
 name|sp
@@ -3938,7 +3943,8 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
-comment|/* returned service */
+comment|/* return service */
+block|}
 name|tag
 operator|=
 name|get_tag
@@ -3948,6 +3954,23 @@ argument_list|,
 name|PTT_HOST_UNIQ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tag
+operator|&&
+name|ntohs
+argument_list|(
+name|tag
+operator|->
+name|tag_len
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|sp
+argument_list|)
+condition|)
+block|{
 name|insert_tag
 argument_list|(
 name|sp
@@ -3955,7 +3978,8 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
-comment|/* returned hostuniq */
+comment|/* return it */
+block|}
 name|scan_tags
 argument_list|(
 name|sp
@@ -4349,6 +4373,7 @@ name|EMSGSIZE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Also need to trim excess at the end */
 if|if
 condition|(
 name|m
@@ -4382,7 +4407,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX also need to trim excess at end I should think */
 if|if
 condition|(
 name|sp
@@ -4706,7 +4730,7 @@ operator|->
 name|timeout_handle
 argument_list|)
 expr_stmt|;
-comment|/* 			 * This is the first time we hear 			 * from the client, so note it's 			 * unicast address, replacing the 			 * broadcast address . 			 */
+comment|/* 			 * This is the first time we hear 			 * from the client, so note it's 			 * unicast address, replacing the 			 * broadcast address. 			 */
 name|bcopy
 argument_list|(
 name|wh
@@ -4813,6 +4837,23 @@ argument_list|,
 name|PTT_HOST_UNIQ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tag
+operator|&&
+name|ntohs
+argument_list|(
+name|tag
+operator|->
+name|tag_len
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|sp
+argument_list|)
+condition|)
+block|{
 name|insert_tag
 argument_list|(
 name|sp
@@ -4821,6 +4862,7 @@ name|tag
 argument_list|)
 expr_stmt|;
 comment|/* returned hostunique */
+block|}
 name|insert_tag
 argument_list|(
 name|sp
@@ -4841,6 +4883,11 @@ argument_list|,
 name|PTT_SRV_NAME
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tag
+condition|)
+block|{
 name|insert_tag
 argument_list|(
 name|sp
@@ -4848,7 +4895,8 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
-comment|/* returned service */
+comment|/* return service */
+block|}
 comment|/* XXX maybe put the tag in the session store */
 name|scan_tags
 argument_list|(
@@ -5536,7 +5584,7 @@ operator|->
 name|state
 condition|)
 block|{
-comment|/* 		 * resend the last packet, using an exponential backoff. 		 * After a period of time, stop growing the backoff, 		 * and either leave it, or reverst to the start. 		 */
+comment|/* 		 * resend the last packet, using an exponential backoff. 		 * After a period of time, stop growing the backoff, 		 * and either leave it, or revert to the start. 		 */
 case|case
 name|PPPOE_SINIT
 case|:
@@ -5868,7 +5916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse an incoming packet to see if any tags should be copied to the  * output packet. DOon't do any tags that are likely to have been  * handles a the main state machine.  */
+comment|/*  * Parse an incoming packet to see if any tags should be copied to the  * output packet. Don't do any tags that have been handled in the main  * state machine.  */
 end_comment
 
 begin_function
