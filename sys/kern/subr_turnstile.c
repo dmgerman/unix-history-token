@@ -676,6 +676,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifndef|#
+directive|ifndef
+name|SMP
+comment|/* 		 * For UP, we check to see if p is curproc (this shouldn't 		 * ever happen however as it would mean we are in a deadlock.) 		 */
+name|KASSERT
+argument_list|(
+name|p
+operator|!=
+name|curproc
+argument_list|,
+operator|(
+literal|"Deadlock detected"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * If on run queue move to new run queue, and 		 * quit. 		 */
 if|if
 condition|(
@@ -1761,20 +1778,6 @@ decl_stmt|;
 name|p
 operator|=
 name|curproc
-expr_stmt|;
-name|MPASS4
-argument_list|(
-name|mtx_owned
-argument_list|(
-name|m
-argument_list|)
-argument_list|,
-literal|"mtx_owned(mpp)"
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3926,6 +3929,8 @@ name|dup_list
 index|[]
 init|=
 block|{
+literal|"process lock"
+block|,
 name|NULL
 block|}
 decl_stmt|;
