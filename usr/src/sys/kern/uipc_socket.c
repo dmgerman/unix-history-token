@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.54	82/10/16	*/
+comment|/*	uipc_socket.c	4.55	82/10/17	*/
 end_comment
 
 begin_include
@@ -3145,7 +3145,11 @@ operator|&=
 operator|~
 name|SS_NBIO
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|FIOASYNC
 case|:
@@ -3172,7 +3176,11 @@ operator|&=
 operator|~
 name|SS_ASYNC
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SIOCSKEEP
 case|:
@@ -3199,7 +3207,11 @@ name|so_options
 operator||=
 name|SO_KEEPALIVE
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SIOCGKEEP
 case|:
@@ -3220,7 +3232,11 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SIOCSLINGER
 case|:
@@ -3255,7 +3271,11 @@ name|so_options
 operator||=
 name|SO_DONTLINGER
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SIOCGLINGER
 case|:
@@ -3270,7 +3290,11 @@ name|so
 operator|->
 name|so_linger
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SIOCSPGRP
 case|:
@@ -3285,7 +3309,11 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SIOCGPGRP
 case|:
@@ -3300,7 +3328,11 @@ name|so
 operator|->
 name|so_pgrp
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SIOCDONE
 case|:
@@ -3356,10 +3388,8 @@ name|flags
 operator|&
 name|FWRITE
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 call|(
 modifier|*
 name|so
@@ -3394,8 +3424,13 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-return|return;
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 case|case
 name|SIOCSENDOOB
@@ -3453,6 +3488,8 @@ argument_list|)
 operator|=
 name|oob
 expr_stmt|;
+return|return
+operator|(
 call|(
 modifier|*
 name|so
@@ -3482,8 +3519,8 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-return|return;
+operator|)
+return|;
 block|}
 case|case
 name|SIOCRCVOOB
@@ -3512,7 +3549,11 @@ name|u_error
 operator|=
 name|ENOBUFS
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 operator|*
 name|mtod
@@ -3578,7 +3619,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 case|case
 name|SIOCATMARK
@@ -3600,7 +3645,11 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* routing table update calls */
 case|case
 name|SIOCADDRT
@@ -3614,11 +3663,16 @@ operator|!
 name|suser
 argument_list|()
 condition|)
-return|return;
+return|return
+operator|(
 name|u
 operator|.
 name|u_error
-operator|=
+operator|)
+return|;
+comment|/* XXX */
+return|return
+operator|(
 name|rtrequest
 argument_list|(
 name|cmd
@@ -3630,16 +3684,15 @@ operator|*
 operator|)
 name|data
 argument_list|)
-expr_stmt|;
-return|return;
+operator|)
+return|;
 comment|/* type/protocol specific ioctls */
 block|}
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EOPNOTSUPP
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
