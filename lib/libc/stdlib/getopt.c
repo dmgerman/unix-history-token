@@ -18,13 +18,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_comment
+comment|/*static char *sccsid = "from: @(#)getopt.c	4.13 (Berkeley) 2/23/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
-index|[]
+modifier|*
+name|rcsid
 init|=
-literal|"@(#)getopt.c	4.13 (Berkeley) 2/23/91"
+literal|"$Id: getopt.c,v 1.5 1993/10/12 21:52:45 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,13 +68,27 @@ name|int
 name|opterr
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* if error message should be printed */
+end_comment
+
+begin_decl_stmt
+name|int
 name|optind
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* index into parent argv vector */
+end_comment
+
+begin_decl_stmt
+name|int
 name|optopt
 decl_stmt|;
 end_decl_stmt
@@ -88,6 +106,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* argument associated with option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOOPT
+value|(int)':'
+end_define
+
+begin_comment
+comment|/* No option */
 end_comment
 
 begin_define
@@ -180,7 +209,8 @@ name|EMSG
 expr_stmt|;
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -208,7 +238,8 @@ name|EMSG
 expr_stmt|;
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -236,7 +267,7 @@ operator|!
 operator|(
 name|oli
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ostr
 argument_list|,
@@ -245,7 +276,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means EOF. 		 */
+comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means -1. 		 */
 if|if
 condition|(
 name|optopt
@@ -257,7 +288,8 @@ literal|'-'
 condition|)
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 if|if
@@ -272,6 +304,11 @@ expr_stmt|;
 if|if
 condition|(
 name|opterr
+operator|&&
+operator|*
+name|ostr
+operator|!=
+literal|':'
 condition|)
 block|{
 if|if
@@ -280,7 +317,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|nargv
@@ -372,11 +409,21 @@ name|EMSG
 expr_stmt|;
 if|if
 condition|(
+name|opterr
+operator|&&
+operator|*
+name|ostr
+operator|!=
+literal|':'
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|nargv
@@ -394,10 +441,6 @@ else|else
 operator|++
 name|p
 expr_stmt|;
-if|if
-condition|(
-name|opterr
-condition|)
 operator|(
 name|void
 operator|)
@@ -412,8 +455,18 @@ argument_list|,
 name|optopt
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
+operator|(
+operator|*
+name|ostr
+operator|==
+literal|':'
+operator|)
+condition|?
+name|NOOPT
+else|:
 name|BADCH
 operator|)
 return|;
