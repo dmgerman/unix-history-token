@@ -474,10 +474,6 @@ name|vop_t
 modifier|*
 modifier|*
 parameter_list|,
-name|vop_t
-modifier|*
-modifier|*
-parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -817,15 +813,6 @@ name|vop_t
 modifier|*
 modifier|*
 name|ext2_vnodeop_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|ext2_specop_p
 decl_stmt|;
 end_decl_stmt
 

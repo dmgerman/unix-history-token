@@ -5609,8 +5609,6 @@ name|ext2_vinit
 argument_list|(
 name|mp
 argument_list|,
-name|ext2_specop_p
-argument_list|,
 name|ext2_fifoop_p
 argument_list|,
 operator|&
