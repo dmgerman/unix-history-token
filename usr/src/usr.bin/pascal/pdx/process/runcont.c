@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runcont.c 1.3 %G%"
+literal|"@(#)runcont.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,6 +433,21 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|process
+operator|->
+name|status
+operator|!=
+name|STOPPED
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"could not start program"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -470,6 +485,15 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|process
+operator|->
+name|status
+operator|==
+name|STOPPED
+condition|)
+block|{
 name|just_started
 operator|=
 name|TRUE
@@ -481,6 +505,22 @@ expr_stmt|;
 name|cont
 argument_list|()
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|option
+argument_list|(
+literal|'r'
+argument_list|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"could not start program"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 

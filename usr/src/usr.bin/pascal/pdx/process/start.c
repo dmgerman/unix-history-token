@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c 1.6 %G%"
+literal|"@(#)start.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,14 +379,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
-name|panic
-argument_list|(
-literal|"could not start program"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_block
