@@ -2137,8 +2137,11 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot allocate %d bytes of reply memory\n"
+literal|"cannot allocate %lu bytes of reply memory\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
