@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.32 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1105,10 +1105,6 @@ name|struct
 name|hostent
 modifier|*
 name|hp
-decl_stmt|,
-modifier|*
-name|gethostdomain
-argument_list|()
 decl_stmt|;
 specifier|extern
 name|struct
