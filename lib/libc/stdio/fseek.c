@@ -1111,6 +1111,12 @@ operator|>
 name|LONG_MAX
 condition|)
 block|{
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
+expr_stmt|;
 name|errno
 operator|=
 name|EOVERFLOW
