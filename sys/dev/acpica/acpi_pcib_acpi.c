@@ -1301,8 +1301,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|u_long
 name|acpi_host_mem_start
 init|=
 literal|0x80000000
