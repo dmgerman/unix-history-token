@@ -1358,6 +1358,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_kernbase
+value|kernbase
+end_define
+
+begin_define
+define|#
+directive|define
 name|_kernelname
 value|kernelname
 end_define
