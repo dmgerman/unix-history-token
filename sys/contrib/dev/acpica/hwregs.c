@@ -221,7 +221,7 @@ argument_list|,
 operator|(
 name|UINT32
 operator|)
-name|i
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
