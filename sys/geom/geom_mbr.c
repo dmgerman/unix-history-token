@@ -964,7 +964,6 @@ name|arg
 parameter_list|,
 name|int
 name|flag
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1004,11 +1003,26 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Get hold of the interesting bits from the bio. */
 name|bp
 operator|=
 name|arg
 expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|==
+name|EV_CANCEL
+condition|)
+block|{
+name|g_io_deliver
+argument_list|(
+name|bp
+argument_list|,
+name|ENXIO
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|gp
 operator|=
 name|bp

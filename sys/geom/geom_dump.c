@@ -355,7 +355,6 @@ name|p
 parameter_list|,
 name|int
 name|flag
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -368,6 +367,17 @@ name|sbuf
 modifier|*
 name|sb
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|flag
+operator|!=
+name|EV_CANCEL
+argument_list|,
+operator|(
+literal|"g_confdot was cancelled"
+operator|)
+argument_list|)
+expr_stmt|;
 name|sb
 operator|=
 name|p
@@ -591,7 +601,6 @@ name|p
 parameter_list|,
 name|int
 name|flag
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -604,6 +613,17 @@ name|sbuf
 modifier|*
 name|sb
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|flag
+operator|!=
+name|EV_CANCEL
+argument_list|,
+operator|(
+literal|"g_conftxt was cancelled"
+operator|)
+argument_list|)
+expr_stmt|;
 name|sb
 operator|=
 name|p
@@ -1334,9 +1354,19 @@ name|p
 parameter_list|,
 name|int
 name|flag
-name|__unused
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|flag
+operator|!=
+name|EV_CANCEL
+argument_list|,
+operator|(
+literal|"g_confxml was cancelled"
+operator|)
+argument_list|)
+expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;

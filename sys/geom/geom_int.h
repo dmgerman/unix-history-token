@@ -266,17 +266,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|g_cancel_event
-parameter_list|(
-name|void
-modifier|*
-name|ref
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|g_run_events
 parameter_list|(
 name|void

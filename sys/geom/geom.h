@@ -770,6 +770,13 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|EV_CANCEL
+value|1
+end_define
+
 begin_function_decl
 name|int
 name|g_call_me
@@ -783,6 +790,17 @@ modifier|*
 name|arg
 parameter_list|,
 modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|g_cancel_event
+parameter_list|(
+name|void
+modifier|*
+name|ref
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -2450,7 +2450,6 @@ name|arg
 parameter_list|,
 name|int
 name|flag
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2506,14 +2505,29 @@ decl_stmt|;
 name|uint64_t
 name|sum
 decl_stmt|;
-comment|/* We don't need topology for now. */
-name|g_topology_unlock
-argument_list|()
-expr_stmt|;
-comment|/* Get hold of the interesting bits from the bio. */
 name|bp
 operator|=
 name|arg
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|==
+name|EV_CANCEL
+condition|)
+block|{
+name|g_io_deliver
+argument_list|(
+name|bp
+argument_list|,
+name|ENXIO
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* We don't need topology for now. */
+name|g_topology_unlock
+argument_list|()
 expr_stmt|;
 name|gp
 operator|=
@@ -3093,7 +3107,6 @@ name|arg
 parameter_list|,
 name|int
 name|flag
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -3132,6 +3145,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|flag
+operator|!=
+name|EV_CANCEL
+argument_list|,
+operator|(
+literal|"g_bsd_hotwrite cancelled"
+operator|)
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|arg
