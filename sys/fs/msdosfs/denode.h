@@ -146,12 +146,6 @@ modifier|*
 name|de_vnode
 decl_stmt|;
 comment|/* addr of vnode we are part of */
-name|struct
-name|vnode
-modifier|*
-name|de_devvp
-decl_stmt|;
-comment|/* vnode of blk dev we live on */
 name|u_long
 name|de_flag
 decl_stmt|;
