@@ -2952,7 +2952,7 @@ argument_list|(
 name|i
 argument_list|)
 operator|>
-name|NFONT
+name|nfonts
 condition|?
 literal|0
 else|:
