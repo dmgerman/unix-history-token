@@ -20,12 +20,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_apm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_mca.h"
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/power.h>
 end_include
 
 begin_include
@@ -2887,39 +2887,26 @@ argument_list|(
 name|SMP
 argument_list|)
 comment|/* 	 * We can not use the TSC in SMP mode, until we figure out a 	 * cheap (impossible), reliable and precise (yeah right!)  way 	 * to synchronize the TSCs of all the CPUs. 	 * Curse Intel for leaving the counter out of the I/O APIC. 	 */
-ifdef|#
-directive|ifdef
-name|DEV_APM
 comment|/* 	 * We can not use the TSC if we support APM. Precise timekeeping 	 * on an APM'ed machine is at best a fools pursuit, since  	 * any and all of the time spent in various SMM code can't  	 * be reliably accounted for.  Reading the RTC is your only 	 * source of reliable time info.  The i8254 looses too of course 	 * but we need to have some kind of time... 	 * We don't know at this point whether APM is going to be used 	 * or not, nor when it might be activated.  Play it safe. 	 */
-block|{
-name|int
-name|disabled
-init|=
-literal|0
-decl_stmt|;
-name|resource_int_value
-argument_list|(
-literal|"apm"
-argument_list|,
-literal|0
-argument_list|,
-literal|"disabled"
-argument_list|,
-operator|&
-name|disabled
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|disabled
+name|power_pm_get_type
+argument_list|()
 operator|==
-literal|0
+name|POWER_PM_TYPE_APM
 condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"TSC initialization skipped: APM enabled.\n"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* DEV_APM */
 if|if
 condition|(
 name|tsc_present

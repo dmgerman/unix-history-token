@@ -301,16 +301,16 @@ init|=
 literal|0x1C00000
 block|,
 comment|/* eventhandler init */
-name|SI_SUB_CPU
+name|SI_SUB_KLD
 init|=
 literal|0x2000000
 block|,
-comment|/* CPU resource(s)*/
-name|SI_SUB_KLD
+comment|/* KLD and module setup */
+name|SI_SUB_CPU
 init|=
 literal|0x2100000
 block|,
-comment|/* KLD and module setup */
+comment|/* CPU resource(s)*/
 name|SI_SUB_INTRINSIC
 init|=
 literal|0x2200000
