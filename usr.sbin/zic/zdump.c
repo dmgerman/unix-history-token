@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: zdump.c,v 1.5 1999/01/21 17:12:49 wollman Exp $"
+literal|"$Id: zdump.c,v 1.5 1999/01/21 17:46:19 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -855,6 +855,16 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -1717,7 +1727,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
