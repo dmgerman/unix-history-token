@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* $Id: mount_nfs.c,v 1.5 2003/11/05 14:58:58 rees Exp $ */
 end_comment
 

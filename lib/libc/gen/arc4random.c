@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * Arc4 random number generator for OpenBSD.  * Copyright 1996 David Mazieres<dm@lcs.mit.edu>.  *  * Modification and redistribution in source and binary forms is  * permitted provided that due credit is given to the author and the  * OpenBSD project (for instance by leaving this copyright notice  * intact).  */
 end_comment
 
