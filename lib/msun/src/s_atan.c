@@ -200,14 +200,14 @@ ifdef|#
 directive|ifdef
 name|__STDC__
 name|double
-name|atan
+name|__generic_atan
 argument_list|(
 argument|double x
 argument_list|)
 else|#
 directive|else
 name|double
-name|atan
+name|__generic_atan
 argument_list|(
 argument|x
 argument_list|)

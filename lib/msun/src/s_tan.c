@@ -52,14 +52,14 @@ end_ifdef
 
 begin_function
 name|double
-name|tan
+name|__generic_tan
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double tan
+function|double __generic_tan
 parameter_list|(
 name|x
 parameter_list|)

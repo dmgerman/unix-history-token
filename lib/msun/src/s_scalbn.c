@@ -88,7 +88,7 @@ end_ifdef
 
 begin_function
 name|double
-name|scalbn
+name|__generic_scalbn
 parameter_list|(
 name|double
 name|x
@@ -98,7 +98,7 @@ name|n
 parameter_list|)
 else|#
 directive|else
-function|double scalbn
+function|double __generic_scalbn
 parameter_list|(
 name|x
 parameter_list|,

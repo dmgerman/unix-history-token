@@ -52,14 +52,14 @@ end_ifdef
 
 begin_function
 name|int
-name|ilogb
+name|__generic_ilogb
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|int ilogb
+function|int __generic_ilogb
 parameter_list|(
 name|x
 parameter_list|)

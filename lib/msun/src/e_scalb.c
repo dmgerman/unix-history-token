@@ -58,7 +58,7 @@ end_ifdef
 
 begin_decl_stmt
 name|double
-name|__ieee754_scalb
+name|__generic___ieee754_scalb
 argument_list|(
 name|double
 name|x
@@ -69,7 +69,7 @@ argument_list|)
 else|#
 directive|else
 name|double
-name|__ieee754_scalb
+name|__generic___ieee754_scalb
 argument_list|(
 name|x
 argument_list|,
@@ -104,7 +104,7 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_scalb
+name|__generic___ieee754_scalb
 parameter_list|(
 name|double
 name|x
@@ -114,7 +114,7 @@ name|fn
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_scalb
+function|double __generic___ieee754_scalb
 parameter_list|(
 name|x
 parameter_list|,

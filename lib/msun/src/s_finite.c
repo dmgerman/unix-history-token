@@ -52,14 +52,14 @@ end_ifdef
 
 begin_function
 name|int
-name|finite
+name|__generic_finite
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|int finite
+function|int __generic_finite
 parameter_list|(
 name|x
 parameter_list|)

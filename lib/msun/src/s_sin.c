@@ -52,14 +52,14 @@ end_ifdef
 
 begin_function
 name|double
-name|sin
+name|__generic_sin
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double sin
+function|double __generic_sin
 parameter_list|(
 name|x
 parameter_list|)

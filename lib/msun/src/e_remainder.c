@@ -87,7 +87,7 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_remainder
+name|__generic___ieee754_remainder
 parameter_list|(
 name|double
 name|x
@@ -97,7 +97,7 @@ name|p
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_remainder
+function|double __generic___ieee754_remainder
 parameter_list|(
 name|x
 parameter_list|,

@@ -158,14 +158,14 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_log
+name|__generic___ieee754_log
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_log
+function|double __generic___ieee754_log
 parameter_list|(
 name|x
 parameter_list|)

@@ -109,7 +109,7 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_atan2
+name|__generic___ieee754_atan2
 parameter_list|(
 name|double
 name|y
@@ -119,7 +119,7 @@ name|x
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_atan2
+function|double __generic___ieee754_atan2
 parameter_list|(
 name|y
 parameter_list|,

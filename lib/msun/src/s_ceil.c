@@ -87,14 +87,14 @@ end_ifdef
 
 begin_function
 name|double
-name|ceil
+name|__generic_ceil
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double ceil
+function|double __generic_ceil
 parameter_list|(
 name|x
 parameter_list|)

@@ -87,14 +87,14 @@ end_ifdef
 
 begin_function
 name|double
-name|floor
+name|__generic_floor
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double floor
+function|double __generic_floor
 parameter_list|(
 name|x
 parameter_list|)

@@ -95,14 +95,14 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_sqrt
+name|__generic___ieee754_sqrt
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_sqrt
+function|double __generic___ieee754_sqrt
 parameter_list|(
 name|x
 parameter_list|)

@@ -147,14 +147,14 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_acos
+name|__generic___ieee754_acos
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_acos
+function|double __generic___ieee754_acos
 parameter_list|(
 name|x
 parameter_list|)

@@ -52,14 +52,14 @@ end_ifdef
 
 begin_function
 name|double
-name|logb
+name|__generic_logb
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double logb
+function|double __generic_logb
 parameter_list|(
 name|x
 parameter_list|)

@@ -169,7 +169,7 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_exp
+name|__generic___ieee754_exp
 parameter_list|(
 name|double
 name|x
@@ -177,7 +177,7 @@ parameter_list|)
 comment|/* default IEEE double exp */
 else|#
 directive|else
-function|double __ieee754_exp
+function|double __generic___ieee754_exp
 parameter_list|(
 name|x
 parameter_list|)
