@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	6.1	83/07/29	*/
+comment|/*	raw_usrreq.c	6.2	84/07/26	*/
 end_comment
 
 begin_include
@@ -1066,7 +1066,8 @@ name|rcb_route
 operator|.
 name|ro_rt
 condition|)
-name|rtfree
+block|{
+name|RTFREE
 argument_list|(
 name|rp
 operator|->
@@ -1075,6 +1076,15 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
+name|rp
+operator|->
+name|rcb_route
+operator|.
+name|ro_rt
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|rp
 operator|->
 name|rcb_route
@@ -1145,21 +1155,12 @@ name|so
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 	 * Not supported. 	 */
 case|case
 name|PRU_CONTROL
 case|:
-name|m
-operator|=
-name|NULL
-expr_stmt|;
-name|error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-break|break;
-comment|/* 	 * Not supported. 	 */
 case|case
-name|PRU_ACCEPT
+name|PRU_RCVOOB
 case|:
 case|case
 name|PRU_RCVD
@@ -1167,8 +1168,13 @@ case|:
 case|case
 name|PRU_SENSE
 case|:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 case|case
-name|PRU_RCVOOB
+name|PRU_ACCEPT
 case|:
 case|case
 name|PRU_SENDOOB
