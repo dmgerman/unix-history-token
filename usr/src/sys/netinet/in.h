@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.h	4.13	82/06/13	*/
+comment|/*	in.h	4.14	82/06/30	*/
 end_comment
 
 begin_comment
@@ -236,6 +236,13 @@ name|IPPORT_CMDSERVER
 value|514
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPPORT_EFSSERVER
+value|520
+end_define
+
 begin_comment
 comment|/*  * UNIX UDP sockets  */
 end_comment
@@ -253,6 +260,17 @@ directive|define
 name|IPPORT_WHOSERVER
 value|513
 end_define
+
+begin_define
+define|#
+directive|define
+name|IPPORT_ROUTESERVER
+value|520
+end_define
+
+begin_comment
+comment|/* 520+1 also used */
+end_comment
 
 begin_comment
 comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).  */
