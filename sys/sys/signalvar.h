@@ -485,7 +485,7 @@ value|SIGEMPTYSET(sig); (sig).__bits[0] = osig
 end_define
 
 begin_function
-specifier|extern
+specifier|static
 name|__inline
 name|int
 name|__sigisempty
@@ -536,7 +536,7 @@ block|}
 end_function
 
 begin_function
-specifier|extern
+specifier|static
 name|__inline
 name|int
 name|__sigseteq
