@@ -803,19 +803,12 @@ operator|(
 name|UMATCH_NONE
 operator|)
 return|;
-if|if
-condition|(
-name|uaa
-operator|->
-name|matchlvl
-condition|)
-return|return
-operator|(
-name|uaa
-operator|->
-name|matchlvl
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|if (uaa->matchlvl) 		return (uaa->matchlvl);
+endif|#
+directive|endif
 return|return
 operator|(
 name|UMATCH_IFACECLASS_GENERIC
