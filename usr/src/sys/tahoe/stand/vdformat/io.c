@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)io.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|wait_for_char
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vdtimeout
 decl_stmt|;
 end_decl_stmt
 
