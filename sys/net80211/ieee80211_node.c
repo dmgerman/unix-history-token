@@ -7023,6 +7023,12 @@ operator|->
 name|ic_curmode
 operator|==
 name|IEEE80211_MODE_11G
+operator|||
+name|ic
+operator|->
+name|ic_curmode
+operator|==
+name|IEEE80211_MODE_TURBO_G
 condition|)
 name|ieee80211_node_join_11g
 argument_list|(
@@ -7164,6 +7170,12 @@ operator|->
 name|ic_curmode
 operator|==
 name|IEEE80211_MODE_11G
+operator|||
+name|ic
+operator|->
+name|ic_curmode
+operator|==
+name|IEEE80211_MODE_TURBO_G
 argument_list|,
 operator|(
 literal|"not in 11g, curmode %x"
@@ -7536,6 +7548,12 @@ operator|->
 name|ic_curmode
 operator|==
 name|IEEE80211_MODE_11G
+operator|||
+name|ic
+operator|->
+name|ic_curmode
+operator|==
+name|IEEE80211_MODE_TURBO_G
 condition|)
 name|ieee80211_node_leave_11g
 argument_list|(
