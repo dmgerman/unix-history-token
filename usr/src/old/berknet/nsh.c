@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nsh.c	4.1	(Berkeley)	%G%"
+literal|"@(#)nsh.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -14,12 +14,6 @@ include|#
 directive|include
 file|"defs.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|FREELPR
-end_define
 
 begin_comment
 comment|/* 	nsh -c "comand to be executed"  	This pseudo-shell is executed over the network 	as the login shell of an acount "network", no passwd. 	It will only execute certain allowed commands.  	has these exit codes: 		EX_USAGE = 	wrong # arguments to nsh 		9 = 		command you execute may not take arguments 		10= 		the execl failed 		EX_UNAVAILABLE= could not find full path name for the command  	count is the # of arguments (= argc) allowed. 	a count of 0 turns off the command */
@@ -136,14 +130,6 @@ block|,
 literal|"/usr/bin/netlog"
 block|,
 literal|"/usr/ucb/netlog"
-block|,
-literal|"vpr"
-block|,
-literal|20
-block|,
-literal|"/usr/ucb/vpr"
-block|,
-literal|"/usr/ucb/vpr"
 block|,
 literal|"netq"
 block|,
@@ -511,7 +497,7 @@ block|}
 comment|/* 	fprintf(stderr,"%s\n",buf); 	*/
 name|execl
 argument_list|(
-literal|"/bin/sh"
+name|Bsh
 argument_list|,
 literal|"sh"
 argument_list|,
