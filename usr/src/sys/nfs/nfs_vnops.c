@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.100 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.101 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5528,6 +5528,14 @@ if|if
 condition|(
 operator|!
 name|error
+operator|&&
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|MAKEENTRY
+operator|)
 condition|)
 name|cache_enter
 argument_list|(
@@ -5914,6 +5922,14 @@ if|if
 condition|(
 operator|!
 name|error
+operator|&&
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|MAKEENTRY
+operator|)
 condition|)
 name|cache_enter
 argument_list|(
@@ -10074,6 +10090,14 @@ argument_list|,
 name|frev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cnp
+operator|->
+name|cn_namelen
+operator|<=
+name|NCHNAMLEN
+condition|)
 name|cache_enter
 argument_list|(
 name|ndp
