@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	8.3.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -612,6 +612,11 @@ modifier|*
 name|rnh
 decl_stmt|;
 name|struct
+name|radix_node_head
+modifier|*
+name|rnh
+decl_stmt|;
+name|struct
 name|rt_addrinfo
 name|info
 decl_stmt|;
@@ -1017,15 +1022,38 @@ name|rtm
 operator|->
 name|rtm_flags
 argument_list|,
-operator|(
-expr|struct
-name|rtentry
-operator|*
-operator|*
-operator|)
-literal|0
+operator|&
+name|saved_nrt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|rt
+operator|=
+name|saved_nrt
+operator|)
+operator|->
+name|rt_refcnt
+operator|<=
+literal|0
+condition|)
+name|rt
+operator|->
+name|rt_refcnt
+operator|++
+expr_stmt|;
+goto|goto
+name|report
+goto|;
+block|}
 break|break;
 case|case
 name|RTM_GET
@@ -1098,6 +1126,8 @@ block|{
 case|case
 name|RTM_GET
 case|:
+name|report
+label|:
 name|dst
 operator|=
 name|rt_key
@@ -1187,7 +1217,9 @@ name|len
 operator|=
 name|rt_msg2
 argument_list|(
-name|RTM_GET
+name|rtm
+operator|->
+name|rtm_type
 argument_list|,
 operator|&
 name|info
@@ -1267,7 +1299,9 @@ name|void
 operator|)
 name|rt_msg2
 argument_list|(
-name|RTM_GET
+name|rtm
+operator|->
+name|rtm_type
 argument_list|,
 operator|&
 name|info
