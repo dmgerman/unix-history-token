@@ -634,23 +634,6 @@ comment|/* The job is stopped */
 end_comment
 
 begin_comment
-comment|/*  * tfile is used to build temp file names to store shell commands to  * execute.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|tfile
-index|[
-sizeof|sizeof
-argument_list|(
-name|TMPPAT
-argument_list|)
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Descriptions for various shells.  */
 end_comment
 
@@ -4880,6 +4863,15 @@ comment|/* File descriptor for temp file */
 name|LstNode
 modifier|*
 name|ln
+decl_stmt|;
+name|char
+name|tfile
+index|[
+sizeof|sizeof
+argument_list|(
+name|TMPPAT
+argument_list|)
+index|]
 decl_stmt|;
 if|if
 condition|(
