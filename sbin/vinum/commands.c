@@ -1399,7 +1399,7 @@ decl_stmt|;
 name|int
 name|plexfh
 init|=
-name|NULL
+literal|0
 decl_stmt|;
 comment|/* file handle for plex */
 name|pid_t
