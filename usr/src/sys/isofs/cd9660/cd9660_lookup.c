@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *  *	@(#)cd9660_lookup.c	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *  *	@(#)cd9660_lookup.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -239,6 +239,15 @@ name|cnp
 operator|->
 name|cn_nameiop
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|cnp
+operator|->
+name|cn_proc
+decl_stmt|;
 name|bp
 operator|=
 name|NULL
@@ -427,6 +436,10 @@ block|{
 name|VOP_UNLOCK
 argument_list|(
 name|pdp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -435,7 +448,9 @@ name|vget
 argument_list|(
 name|vdp
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -453,9 +468,13 @@ operator|)
 condition|)
 name|error
 operator|=
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|pdp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -467,7 +486,9 @@ name|vget
 argument_list|(
 name|vdp
 argument_list|,
-literal|1
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -487,6 +508,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|pdp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -532,6 +557,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|pdp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -539,9 +568,13 @@ if|if
 condition|(
 name|error
 operator|=
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|pdp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1422,6 +1455,10 @@ block|{
 name|VOP_UNLOCK
 argument_list|(
 name|pdp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* race to get the inode */
@@ -1459,9 +1496,15 @@ condition|(
 name|error
 condition|)
 block|{
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|pdp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1483,9 +1526,13 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|pdp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|p
 argument_list|)
 operator|)
 condition|)
@@ -1591,6 +1638,10 @@ condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|pdp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vfsops.c	8.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2625,7 +2625,14 @@ modifier|*
 name|isodir
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|iso_mnt
 modifier|*
@@ -2749,6 +2756,22 @@ argument_list|(
 expr|struct
 name|iso_node
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|lockinit
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|i_lock
+argument_list|,
+name|PINOD
+argument_list|,
+literal|"isonode"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vp
@@ -3381,6 +3404,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|nvp
