@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"adw.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/advansys/adwlib.h>
 end_include
 
