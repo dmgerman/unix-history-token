@@ -270,6 +270,7 @@ name|NULL
 operator|||
 operator|(
 operator|(
+specifier|const
 name|_MSKanjiState
 operator|*
 operator|)

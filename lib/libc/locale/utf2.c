@@ -246,6 +246,7 @@ name|NULL
 operator|||
 operator|(
 operator|(
+specifier|const
 name|_UTF2State
 operator|*
 operator|)

@@ -236,6 +236,7 @@ name|NULL
 operator|||
 operator|(
 operator|(
+specifier|const
 name|_GBKState
 operator|*
 operator|)
