@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.42 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -821,20 +821,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|pass
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|receive_data
 name|__P
@@ -890,20 +876,6 @@ specifier|static
 name|char
 modifier|*
 name|sgetsave
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|user
 name|__P
 argument_list|(
 operator|(
