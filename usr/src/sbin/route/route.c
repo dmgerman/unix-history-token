@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	8.1 (Berkeley) %G%"
+literal|"@(#)route.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,9 @@ argument_list|()
 decl_stmt|,
 name|pmsg_addrs
 argument_list|()
+decl_stmt|,
+name|mask_addr
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +440,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|__dead
 name|void
 name|usage
 parameter_list|(
@@ -572,6 +576,7 @@ value|(x += ROUNDUP((n)->sa_len))
 end_define
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -593,10 +598,6 @@ name|optind
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|;
-name|char
-modifier|*
-name|argvp
 decl_stmt|;
 if|if
 condition|(
@@ -877,11 +878,17 @@ if|if
 condition|(
 name|uid
 condition|)
+block|{
+name|errno
+operator|=
+name|EACCES
+expr_stmt|;
 name|quit
 argument_list|(
 literal|"must be root to alter routing table"
 argument_list|)
 expr_stmt|;
+block|}
 name|shutdown
 argument_list|(
 name|s
@@ -2597,11 +2604,17 @@ if|if
 condition|(
 name|uid
 condition|)
+block|{
+name|errno
+operator|=
+name|EACCES
+expr_stmt|;
 name|quit
 argument_list|(
 literal|"must be root to alter routing table"
 argument_list|)
 expr_stmt|;
+block|}
 name|cmd
 operator|=
 name|argv
@@ -4481,12 +4494,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|x25_makemask
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -4571,7 +4582,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|short
@@ -4945,8 +4956,6 @@ name|mib
 index|[
 literal|6
 index|]
-decl_stmt|,
-name|af
 decl_stmt|;
 name|char
 modifier|*
@@ -5614,12 +5623,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|mask_addr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|olen
@@ -5861,7 +5868,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|char
