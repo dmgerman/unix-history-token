@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.18 (Berkeley) %G%"
+literal|"@(#)fts.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,6 +438,18 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|fts_level
+operator|=
+name|FTS_ROOTLEVEL
+expr_stmt|;
+name|p
+operator|->
+name|fts_parent
+operator|=
+name|parent
+expr_stmt|;
 comment|/* 		 * If comparison routine supplied, traverse in sorted 		 * order; otherwise traverse in the order specified. 		 */
 if|if
 condition|(
@@ -518,18 +530,6 @@ name|p
 expr_stmt|;
 block|}
 block|}
-name|p
-operator|->
-name|fts_level
-operator|=
-name|FTS_ROOTLEVEL
-expr_stmt|;
-name|p
-operator|->
-name|fts_parent
-operator|=
-name|parent
-expr_stmt|;
 block|}
 if|if
 condition|(
