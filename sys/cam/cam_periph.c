@@ -2371,7 +2371,7 @@ index|[
 name|i
 index|]
 operator|=
-name|B_READ
+name|B_WRITE
 expr_stmt|;
 if|if
 condition|(
@@ -2442,7 +2442,7 @@ index|[
 name|i
 index|]
 operator||=
-name|B_WRITE
+name|B_READ
 expr_stmt|;
 if|if
 condition|(
