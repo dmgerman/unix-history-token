@@ -1784,6 +1784,11 @@ name|struct
 name|image_params
 modifier|*
 name|imgp
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|execlabel
 parameter_list|)
 block|{
 name|struct
