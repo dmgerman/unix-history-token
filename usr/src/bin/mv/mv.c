@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Smith of The State University of New York at Buffalo.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Smith of The State University of New York at Buffalo.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1989, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mv.c	8.1 (Berkeley) %G%"
+literal|"@(#)mv.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,9 +218,9 @@ specifier|register
 name|int
 name|baselen
 decl_stmt|,
-name|exitval
-decl_stmt|,
 name|len
+decl_stmt|,
+name|rval
 decl_stmt|;
 specifier|register
 name|char
@@ -248,7 +248,6 @@ decl_stmt|;
 while|while
 condition|(
 operator|(
-operator|(
 name|ch
 operator|=
 name|getopt
@@ -262,13 +261,9 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
-operator|)
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -415,7 +410,7 @@ name|baselen
 expr_stmt|;
 for|for
 control|(
-name|exitval
+name|rval
 operator|=
 literal|0
 init|;
@@ -477,7 +472,7 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-name|exitval
+name|rval
 operator|=
 literal|1
 expr_stmt|;
@@ -495,8 +490,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|exitval
-operator||=
+if|if
+condition|(
 name|do_move
 argument_list|(
 operator|*
@@ -504,12 +499,16 @@ name|argv
 argument_list|,
 name|path
 argument_list|)
+condition|)
+name|rval
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
 name|exit
 argument_list|(
-name|exitval
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
@@ -542,6 +541,12 @@ name|int
 name|ask
 decl_stmt|,
 name|ch
+decl_stmt|;
+name|char
+name|modep
+index|[
+literal|15
+index|]
 decl_stmt|;
 comment|/* 	 * Check access.  If interactive and file exists, ask user if it 	 * should be replaced.  Otherwise if file exists but isn't writable 	 * make sure the user wants to clobber it. 	 */
 if|if
@@ -604,6 +609,15 @@ name|sb
 argument_list|)
 condition|)
 block|{
+name|strmode
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|,
+name|modep
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -611,13 +625,40 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"override mode %o on %s? "
+literal|"override %s%s%s/%s for %s? "
 argument_list|,
+name|modep
+operator|+
+literal|1
+argument_list|,
+name|modep
+index|[
+literal|9
+index|]
+operator|==
+literal|' '
+condition|?
+literal|""
+else|:
+literal|" "
+argument_list|,
+name|user_from_uid
+argument_list|(
 name|sb
 operator|.
-name|st_mode
-operator|&
-literal|07777
+name|st_uid
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+name|group_from_gid
+argument_list|(
+name|sb
+operator|.
+name|st_gid
+argument_list|,
+literal|0
+argument_list|)
 argument_list|,
 name|to
 argument_list|)
@@ -705,7 +746,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * If rename fails, and it's a regular file, do the copy internally; 	 * otherwise, use cp and rm. 	 */
+comment|/* 	 * If rename fails because we're trying to cross devices, and 	 * it's a regular file, do the copy internally; otherwise, use 	 * cp and rm. 	 */
 if|if
 condition|(
 name|stat
@@ -1192,13 +1233,14 @@ name|status
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|pid
 operator|=
 name|vfork
 argument_list|()
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|execl
@@ -1207,7 +1249,7 @@ name|_PATH_CP
 argument_list|,
 literal|"mv"
 argument_list|,
-literal|"-pR"
+literal|"-PRp"
 argument_list|,
 name|from
 argument_list|,
