@@ -4977,9 +4977,30 @@ block|{
 case|case
 literal|0x41ab
 case|:
+comment|/* 101/102/... Enhanced */
 case|case
 literal|0x83ab
 case|:
+comment|/* ditto */
+case|case
+literal|0x54ab
+case|:
+comment|/* SpaceSaver */
+case|case
+literal|0x84ab
+case|:
+comment|/* ditto */
+if|#
+directive|if
+literal|0
+block|case 0x90ab:
+comment|/* 'G' */
+block|case 0x91ab:
+comment|/* 'P' */
+block|case 0x92ab:
+comment|/* 'A' */
+endif|#
+directive|endif
 operator|*
 name|type
 operator|=
