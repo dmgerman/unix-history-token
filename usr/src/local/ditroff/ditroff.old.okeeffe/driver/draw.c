@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	draw.c	1.5	84/02/09  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
+comment|/*	draw.c	1.6	84/03/15  *  *	This file contains the functions for producing the graphics  *   images in the canon/imagen driver for ditroff.  */
 end_comment
 
 begin_include
@@ -30,6 +30,13 @@ end_include
 begin_comment
 comment|/* imports from dip.c */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FATAL
+value|1
+end_define
 
 begin_define
 define|#
@@ -1193,6 +1200,8 @@ operator|++
 condition|)
 empty_stmt|;
 comment|/* copy what's left to the beginning */
+if|if
+condition|(
 name|fgets
 argument_list|(
 operator|(
@@ -1210,6 +1219,15 @@ name|buf
 operator|)
 argument_list|,
 name|fp
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"unexpected end of input"
 argument_list|)
 expr_stmt|;
 name|ptr
