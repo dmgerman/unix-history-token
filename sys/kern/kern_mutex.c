@@ -2140,7 +2140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The important part of mtx_trylock{,_flags}()  * Tries to acquire lock `m.' We do NOT handle recursion here; we assume that  * if we're called, it's because we know we don't already own this lock.  */
+comment|/*  * The important part of mtx_trylock{,_flags}()  * Tries to acquire lock `m.' We do NOT handle recursion here.  If this  * function is called on a recursed mutex, it will return failure and  * will not recursively acquire the lock.  You are expected to know what  * you are doing.  */
 end_comment
 
 begin_function
@@ -2172,19 +2172,6 @@ argument_list|(
 name|curthread
 operator|!=
 name|NULL
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|!
-name|mtx_owned
-argument_list|(
-name|m
-argument_list|)
-argument_list|,
-operator|(
-literal|"mtx_trylock() called on a mutex already owned"
-operator|)
 argument_list|)
 expr_stmt|;
 name|rval
