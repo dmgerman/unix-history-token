@@ -5261,6 +5261,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ntransmitted
+operator|==
+literal|0
+condition|)
 name|retransmit
 argument_list|()
 expr_stmt|;
