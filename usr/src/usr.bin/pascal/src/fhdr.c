@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fhdr.c 1.3 %G%"
+literal|"@(#)fhdr.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,23 +223,10 @@ operator|==
 name|cbn
 condition|)
 block|{
-comment|/* 		 * Symbol already defined 		 * in this block. it is either 		 * a redeclared symbol (error) 		 * a forward declaration, 		 * or an external declaration. 		 */
+comment|/* 		 * Symbol already defined 		 * in this block. it is either 		 * a redeclared symbol (error) 		 * a forward declaration, 		 * or an external declaration. 		 * check that forwards are of the right kind: 		 *     if this fails, we are trying to redefine it 		 *     and enter() will complain. 		 */
 if|if
 condition|(
 operator|(
-name|p
-operator|->
-name|class
-operator|==
-name|FUNC
-operator|||
-name|p
-operator|->
-name|class
-operator|==
-name|PROC
-operator|)
-operator|&&
 operator|(
 name|p
 operator|->
@@ -249,6 +236,39 @@ name|NFORWD
 operator|)
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|p
+operator|->
+name|class
+operator|==
+name|FUNC
+operator|&&
+name|r
+index|[
+literal|0
+index|]
+operator|==
+name|T_FDEC
+operator|)
+operator|||
+operator|(
+name|p
+operator|->
+name|class
+operator|==
+name|PROC
+operator|&&
+name|r
+index|[
+literal|0
+index|]
+operator|==
+name|T_PDEC
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* 			 * Grammar doesnt forbid 			 * types on a resolution 			 * of a forward function 			 * declaration. 			 */
