@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.39 1998/07/22 06:15:19 phk Exp $"
+literal|"$Id: syslogd.c,v 1.40 1998/07/27 13:04:14 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1491,6 +1491,8 @@ name|tvp
 decl_stmt|;
 name|pid_t
 name|ppid
+init|=
+literal|1
 decl_stmt|;
 while|while
 condition|(
@@ -3084,8 +3086,6 @@ name|msg
 decl_stmt|;
 block|{
 name|int
-name|c
-decl_stmt|,
 name|pri
 decl_stmt|,
 name|flags
