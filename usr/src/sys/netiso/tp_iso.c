@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  * $Header: /var/src/sys/netiso/RCS/tp_iso.c,v 5.1 89/02/09 16:20:51 hagens Exp $  * $Source: /var/src/sys/netiso/RCS/tp_iso.c,v $  *	@(#)tp_iso.c	7.5 (Berkeley) %G%  *  * Here is where you find the iso-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  * 		iso_getsufx: gets transport suffix out of an isopcb structure.  * 		iso_putsufx: put transport suffix into an isopcb structure.  *		iso_putnetaddr: put a whole net addr into an isopcb.  *		iso_getnetaddr: get a whole net addr from an isopcb.  *		iso_recycle_suffix: clear suffix for reuse in isopcb  * 		tpclnp_ctlinput: handle ER CNLPdu : icmp-like stuff  * 		tpclnp_mtu: figure out what size tpdu to use  *		tpclnp_input: take a pkt from clnp, strip off its clnp header,   *				give to tp  *		tpclnp_output_dg: package a pkt for clnp given 2 addresses& some data  *		tpclnp_output: package a pkt for clnp given an isopcb& some data  */
+comment|/*   * ARGO TP  * $Header: /var/src/sys/netiso/RCS/tp_iso.c,v 5.1 89/02/09 16:20:51 hagens Exp $  * $Source: /var/src/sys/netiso/RCS/tp_iso.c,v $  *	@(#)tp_iso.c	7.6 (Berkeley) %G%  *  * Here is where you find the iso-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  * 		iso_getsufx: gets transport suffix out of an isopcb structure.  * 		iso_putsufx: put transport suffix into an isopcb structure.  *		iso_putnetaddr: put a whole net addr into an isopcb.  *		iso_getnetaddr: get a whole net addr from an isopcb.  *		iso_recycle_suffix: clear suffix for reuse in isopcb  * 		tpclnp_ctlinput: handle ER CNLPdu : icmp-like stuff  * 		tpclnp_mtu: figure out what size tpdu to use  *		tpclnp_input: take a pkt from clnp, strip off its clnp header,   *				give to tp  *		tpclnp_output_dg: package a pkt for clnp given 2 addresses& some data  *		tpclnp_output: package a pkt for clnp given an isopcb& some data  */
 end_comment
 
 begin_ifndef
@@ -1523,6 +1523,8 @@ parameter_list|,
 name|dst
 parameter_list|,
 name|clnp_len
+parameter_list|,
+name|ce_bit
 parameter_list|)
 specifier|register
 name|struct
@@ -1543,6 +1545,8 @@ end_function
 begin_decl_stmt
 name|int
 name|clnp_len
+decl_stmt|,
+name|ce_bit
 decl_stmt|;
 end_decl_stmt
 
@@ -1742,6 +1746,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|tpclnp_output_dg
+argument_list|,
+name|ce_bit
 argument_list|)
 expr_stmt|;
 end_expr_stmt
