@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.19 1999/01/17 01:22:54 billf Exp $"
+literal|"$Id: main.c,v 1.22 1999/01/26 22:31:23 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +273,7 @@ index|[
 name|MAXPATHLEN
 index|]
 init|=
-literal|"ftp://ftp.FreeBSD.org/pub/FreeBSD/"
+literal|"ftp://ftp.FreeBSD.org/pub/FreeBSD/ports/"
 decl_stmt|;
 name|start
 operator|=
@@ -853,12 +853,12 @@ operator|==
 literal|300005
 condition|)
 return|return
-literal|"packages-3.0/Latest/"
+literal|"i386/packages-3.0/"
 return|;
 elseif|else
 if|if
 condition|(
-literal|30004
+literal|300004
 operator|>
 name|reldate
 operator|&&
@@ -867,12 +867,12 @@ operator|>=
 literal|300000
 condition|)
 return|return
-literal|"packages-current-aout/Latest/"
+literal|"i386/packages-3.0-aout/Latest/"
 return|;
 elseif|else
 if|if
 condition|(
-literal|30004
+literal|300004
 operator|<
 name|reldate
 condition|)
@@ -885,9 +885,9 @@ argument_list|,
 literal|"elf"
 argument_list|)
 condition|?
-literal|"packages-current/Latest/"
+literal|"i386/packages-3-stable/Latest/"
 else|:
-literal|"packages-current-aout/Latest"
+literal|"i386/packages-3.0-aout/Latest/"
 return|;
 return|return
 operator|(
