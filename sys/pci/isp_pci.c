@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.17 1999/03/25 22:53:56 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.18 1999/04/04 01:14:02 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -1069,6 +1069,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|isp_pci_driver
