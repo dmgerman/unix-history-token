@@ -43,6 +43,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MOPT_NOATIME
+value|{ "atime",	1, MNT_NOATIME, 0 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOPT_NOAUTO
 value|{ "auto",	1, 0, 0 }
 end_define
@@ -160,7 +167,7 @@ define|#
 directive|define
 name|MOPT_STDOPTS
 define|\
-value|MOPT_FSTAB_COMPAT,						\ 	MOPT_NOAUTO,							\ 	MOPT_NODEV,							\ 	MOPT_NOEXEC,							\ 	MOPT_NOSUID,							\ 	MOPT_RDONLY,							\ 	MOPT_UNION
+value|MOPT_FSTAB_COMPAT,						\ 	MOPT_NOATIME,							\ 	MOPT_NOAUTO,							\ 	MOPT_NODEV,							\ 	MOPT_NOEXEC,							\ 	MOPT_NOSUID,							\ 	MOPT_RDONLY,							\ 	MOPT_UNION
 end_define
 
 begin_decl_stmt

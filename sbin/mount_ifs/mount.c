@@ -414,6 +414,12 @@ literal|"local"
 block|}
 block|,
 block|{
+name|MNT_NOATIME
+block|,
+literal|"noatime"
+block|}
+block|,
+block|{
 name|MNT_NODEV
 block|,
 literal|"nodev"
