@@ -1990,7 +1990,7 @@ block|}
 default|default:
 name|printf
 argument_list|(
-literal|" %6d"
+literal|" %6lu"
 argument_list|,
 name|fst
 operator|.
