@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	8.3 (Berkeley) %G%"
+literal|"@(#)ftpd.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4960,13 +4960,16 @@ condition|)
 block|{
 name|lreply
 argument_list|(
-literal|230
+literal|226
 argument_list|,
 literal|"WARNING! %d bare linefeeds received in ASCII mode"
 argument_list|,
 name|bare_lfs
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"   File may not have transferred correctly.\r\n"
