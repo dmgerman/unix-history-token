@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	3.1 83/08/11"
+literal|"@(#)error.c	3.2 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +312,7 @@ name|wwprintf
 argument_list|(
 name|errwin
 argument_list|,
-literal|"\r\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
