@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpmain.c	1.3 (UKC) %G%	5.6 (Berkeley) 2/23/87"
+literal|"@(#)dumpmain.c	1.4 (UKC) %G%	5.6 (Berkeley) 2/23/87"
 decl_stmt|;
 end_decl_stmt
 
@@ -1538,13 +1538,13 @@ operator|!
 name|pipeout
 condition|)
 block|{
+name|rewind
+argument_list|()
+expr_stmt|;
 name|close
 argument_list|(
 name|to
 argument_list|)
-expr_stmt|;
-name|rewind
-argument_list|()
 expr_stmt|;
 block|}
 else|#
