@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ncheck.c	1.5 (Berkeley) %G%"
+literal|"@(#)ncheck.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,10 +522,10 @@ name|sblock
 argument_list|,
 name|cgimin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 argument_list|,
@@ -614,10 +614,10 @@ name|sblock
 argument_list|,
 name|cgimin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 argument_list|,
@@ -697,10 +697,10 @@ name|sblock
 argument_list|,
 name|cgimin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 argument_list|,

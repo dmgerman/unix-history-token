@@ -4,11 +4,11 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.12	%G%	*/
+comment|/*	fs.h	1.13	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at mkfs time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_bblkno]		Boot sector  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(cg, fs)'' macro.  *  * The first boot and super blocks are given in absolute disk addresses.  */
+comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at mkfs time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_bblkno]		Boot sector  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(fs, cg)'' macro.  *  * The first boot and super blocks are given in absolute disk addresses.  */
 end_comment
 
 begin_define
@@ -568,11 +568,11 @@ define|#
 directive|define
 name|cgbblock
 parameter_list|(
-name|c
-parameter_list|,
 name|fs
+parameter_list|,
+name|c
 parameter_list|)
-value|(fsbtodb(fs, cgbase(c,fs)) + (fs)->fs_bblkno)
+value|(fsbtodb(fs, cgbase(fs, c)) + (fs)->fs_bblkno)
 end_define
 
 begin_define
@@ -580,11 +580,11 @@ define|#
 directive|define
 name|cgsblock
 parameter_list|(
-name|c
-parameter_list|,
 name|fs
+parameter_list|,
+name|c
 parameter_list|)
-value|(fsbtodb(fs, cgbase(c,fs)) + (fs)->fs_sblkno)
+value|(fsbtodb(fs, cgbase(fs, c)) + (fs)->fs_sblkno)
 end_define
 
 begin_comment
@@ -596,9 +596,9 @@ define|#
 directive|define
 name|cgbase
 parameter_list|(
-name|c
-parameter_list|,
 name|fs
+parameter_list|,
+name|c
 parameter_list|)
 value|((daddr_t)((fs)->fs_fpg * (c)))
 end_define
@@ -612,11 +612,11 @@ define|#
 directive|define
 name|cgtod
 parameter_list|(
-name|c
-parameter_list|,
 name|fs
+parameter_list|,
+name|c
 parameter_list|)
-value|(cgbase(c,fs) + (fs)->fs_cblkno)
+value|(cgbase(fs, c) + (fs)->fs_cblkno)
 end_define
 
 begin_comment
@@ -628,11 +628,11 @@ define|#
 directive|define
 name|cgimin
 parameter_list|(
-name|c
-parameter_list|,
 name|fs
+parameter_list|,
+name|c
 parameter_list|)
-value|(cgbase(c,fs) + (fs)->fs_iblkno)
+value|(cgbase(fs, c) + (fs)->fs_iblkno)
 end_define
 
 begin_comment
@@ -644,11 +644,11 @@ define|#
 directive|define
 name|cgdmin
 parameter_list|(
-name|c
-parameter_list|,
 name|fs
+parameter_list|,
+name|c
 parameter_list|)
-value|(cgbase(c,fs) + (fs)->fs_dblkno)
+value|(cgbase(fs, c) + (fs)->fs_dblkno)
 end_define
 
 begin_comment
@@ -664,9 +664,9 @@ define|#
 directive|define
 name|itoo
 parameter_list|(
-name|x
-parameter_list|,
 name|fs
+parameter_list|,
+name|x
 parameter_list|)
 value|((x) % INOPB(fs))
 end_define
@@ -676,9 +676,9 @@ define|#
 directive|define
 name|itog
 parameter_list|(
-name|x
-parameter_list|,
 name|fs
+parameter_list|,
+name|x
 parameter_list|)
 value|((x) / (fs)->fs_ipg)
 end_define
@@ -688,12 +688,12 @@ define|#
 directive|define
 name|itod
 parameter_list|(
-name|x
-parameter_list|,
 name|fs
+parameter_list|,
+name|x
 parameter_list|)
 define|\
-value|((daddr_t)(cgimin(itog(x,fs),fs) + \ 	(x) % (fs)->fs_ipg / INOPB(fs) * (fs)->fs_frag))
+value|((daddr_t)(cgimin(fs, itog(fs, x)) + \ 	(x) % (fs)->fs_ipg / INOPB(fs) * (fs)->fs_frag))
 end_define
 
 begin_comment
@@ -705,9 +705,9 @@ define|#
 directive|define
 name|dtog
 parameter_list|(
-name|d
-parameter_list|,
 name|fs
+parameter_list|,
+name|d
 parameter_list|)
 value|((d) / (fs)->fs_fpg)
 end_define
@@ -717,9 +717,9 @@ define|#
 directive|define
 name|dtogd
 parameter_list|(
-name|d
-parameter_list|,
 name|fs
+parameter_list|,
+name|d
 parameter_list|)
 value|((d) % (fs)->fs_fpg)
 end_define

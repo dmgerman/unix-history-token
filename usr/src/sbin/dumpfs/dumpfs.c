@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	1.9 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -888,10 +888,10 @@ name|afs
 argument_list|,
 name|cgtod
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|afs
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 operator|*

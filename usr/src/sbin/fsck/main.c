@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.18 (Berkeley) %G%"
+literal|"@(#)main.c	1.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -580,6 +580,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of alternate super block */
+end_comment
+
+begin_decl_stmt
+name|int
+name|debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* output debugging info */
 end_comment
 
 begin_decl_stmt
@@ -1295,6 +1305,13 @@ literal|"Alternate super block location: %d\n"
 argument_list|,
 name|bflag
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|debug
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -2192,10 +2209,10 @@ name|cgblk
 argument_list|,
 name|cgtod
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|,
 name|sblock
@@ -2259,7 +2276,17 @@ name|i
 argument_list|)
 condition|)
 block|{
-comment|/* 					printf("%d bad, not used\n", inum); 					*/
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%d bad, not used\n"
+argument_list|,
+name|inum
+argument_list|)
+expr_stmt|;
 name|inosumbad
 operator|++
 expr_stmt|;
@@ -2447,7 +2474,17 @@ name|i
 argument_list|)
 condition|)
 block|{
-comment|/* 					printf("%d bad, marked used\n", inum); 					*/
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%d bad, marked used\n"
+argument_list|,
+name|inum
+argument_list|)
+expr_stmt|;
 name|inosumbad
 operator|++
 expr_stmt|;
@@ -2507,6 +2544,10 @@ operator|.
 name|cs_nifree
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
 name|printf
 argument_list|(
 literal|"cg[%d].cg_cs.cs_nifree is %d not %d\n"
@@ -3135,18 +3176,18 @@ operator|*
 operator|(
 name|cgdmin
 argument_list|(
-literal|0
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+literal|0
 argument_list|)
 operator|-
 name|cgtod
 argument_list|(
-literal|0
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 expr_stmt|;
@@ -3171,10 +3212,10 @@ name|cbase
 init|=
 name|cgbase
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 decl_stmt|;
 name|short
@@ -3277,10 +3318,10 @@ name|n_bad
 operator|+=
 name|cgtod
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 operator|-
 name|cbase
@@ -3294,10 +3335,10 @@ name|cgblk
 argument_list|,
 name|cgtod
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|,
 name|sblock
@@ -3540,6 +3581,10 @@ name|i
 index|]
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
 name|printf
 argument_list|(
 literal|"cg[%d].cg_frsum[%d] have %d calc %d\n"
@@ -3597,6 +3642,10 @@ name|n
 index|]
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
 name|printf
 argument_list|(
 literal|"cg[%d].cg_btot[%d] have %d calc %d\n"
@@ -3656,6 +3705,10 @@ name|i
 index|]
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
 name|printf
 argument_list|(
 literal|"cg[%d].cg_b[%d][%d] have %d calc %d\n"
@@ -5759,10 +5812,10 @@ name|c
 operator|=
 name|dtog
 argument_list|(
-name|blk
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|blk
 argument_list|)
 expr_stmt|;
 if|if
@@ -5775,10 +5828,10 @@ name|blk
 operator|<
 name|cgdmin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 condition|)
 block|{
@@ -7110,10 +7163,10 @@ if|if
 condition|(
 name|cgdmin
 argument_list|(
-literal|0
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+literal|0
 argument_list|)
 operator|>=
 name|sblock
@@ -7685,10 +7738,10 @@ name|iblk
 operator|=
 name|itod
 argument_list|(
-name|inum
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|inum
 argument_list|)
 expr_stmt|;
 if|if
@@ -8757,10 +8810,10 @@ name|dbase
 operator|=
 name|cgbase
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 name|dmax
@@ -8789,10 +8842,10 @@ name|dmin
 operator|=
 name|cgdmin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 operator|-
 name|dbase
@@ -9533,10 +9586,10 @@ name|sblock
 argument_list|,
 name|cgtod
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 argument_list|,
@@ -10916,10 +10969,8 @@ name|mask
 operator|)
 return|;
 default|default:
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"isblock bad fs_frag %d\n"
 argument_list|,
 name|fs
@@ -10927,7 +10978,11 @@ operator|->
 name|fs_frag
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
 end_block

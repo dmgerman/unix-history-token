@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.14 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,10 +769,10 @@ name|cgd
 operator|=
 name|cgtod
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 for|for
@@ -781,10 +781,10 @@ name|d
 operator|=
 name|cgbase
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 init|;
 name|d
@@ -812,10 +812,10 @@ name|d
 operator|=
 name|cgimin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 while|while
@@ -847,10 +847,10 @@ name|d
 operator|=
 name|cgdmin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 for|for
@@ -957,10 +957,10 @@ name|sblock
 argument_list|,
 name|cgimin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 argument_list|,
@@ -1080,10 +1080,10 @@ name|cbase
 operator|=
 name|cgbase
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 name|bread
@@ -1095,10 +1095,10 @@ name|sblock
 argument_list|,
 name|cgtod
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 argument_list|,
@@ -1950,10 +1950,10 @@ name|cg
 operator|=
 name|dtog
 argument_list|(
-name|bno
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|bno
 argument_list|)
 expr_stmt|;
 if|if
@@ -1966,10 +1966,10 @@ name|bno
 operator|<
 name|cgdmin
 argument_list|(
-name|cg
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|cg
 argument_list|)
 operator|||
 name|bno
@@ -2375,10 +2375,10 @@ name|dbase
 operator|=
 name|cgbase
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 name|dmax
@@ -2407,10 +2407,10 @@ name|dmin
 operator|=
 name|cgdmin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 operator|-
 name|dbase
@@ -2556,10 +2556,10 @@ name|sblock
 argument_list|,
 name|cgimin
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 argument_list|,
@@ -3227,10 +3227,10 @@ name|sblock
 argument_list|,
 name|cgtod
 argument_list|(
-name|c
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 argument_list|,

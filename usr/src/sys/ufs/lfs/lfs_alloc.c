@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)lfs_alloc.c 1.14 %G%"
+literal|"@(#)lfs_alloc.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,11 +309,11 @@ name|cg
 operator|=
 name|itog
 argument_list|(
+name|fs
+argument_list|,
 name|ip
 operator|->
 name|i_number
-argument_list|,
-name|fs
 argument_list|)
 expr_stmt|;
 else|else
@@ -321,9 +321,9 @@ name|cg
 operator|=
 name|dtog
 argument_list|(
-name|bpref
-argument_list|,
 name|fs
+argument_list|,
+name|bpref
 argument_list|)
 expr_stmt|;
 name|bno
@@ -569,9 +569,9 @@ name|cg
 operator|=
 name|dtog
 argument_list|(
-name|bprev
-argument_list|,
 name|fs
+argument_list|,
+name|bprev
 argument_list|)
 expr_stmt|;
 else|else
@@ -940,9 +940,9 @@ name|cg
 operator|=
 name|itog
 argument_list|(
-name|ipref
-argument_list|,
 name|fs
+argument_list|,
+name|ipref
 argument_list|)
 expr_stmt|;
 name|ino
@@ -1713,9 +1713,9 @@ name|fs
 argument_list|,
 name|cgtod
 argument_list|(
-name|cg
-argument_list|,
 name|fs
+argument_list|,
+name|cg
 argument_list|)
 argument_list|)
 argument_list|,
@@ -1749,9 +1749,9 @@ name|bno
 operator|=
 name|dtogd
 argument_list|(
-name|bprev
-argument_list|,
 name|fs
+argument_list|,
+name|bprev
 argument_list|)
 expr_stmt|;
 for|for
@@ -2031,9 +2031,9 @@ name|fs
 argument_list|,
 name|cgtod
 argument_list|(
-name|cg
-argument_list|,
 name|fs
+argument_list|,
+name|cg
 argument_list|)
 argument_list|)
 argument_list|,
@@ -2177,9 +2177,9 @@ name|bpref
 operator|=
 name|dtogd
 argument_list|(
-name|bno
-argument_list|,
 name|fs
+argument_list|,
+name|bno
 argument_list|)
 expr_stmt|;
 for|for
@@ -2461,9 +2461,9 @@ name|bpref
 operator|=
 name|dtogd
 argument_list|(
-name|bpref
-argument_list|,
 name|fs
+argument_list|,
+name|bpref
 argument_list|)
 expr_stmt|;
 comment|/* 	 * if the requested block is available, use it 	 */
@@ -3025,9 +3025,9 @@ name|fs
 argument_list|,
 name|cgtod
 argument_list|(
-name|cg
-argument_list|,
 name|fs
+argument_list|,
+name|cg
 argument_list|)
 argument_list|)
 argument_list|,
@@ -3354,9 +3354,9 @@ name|cg
 operator|=
 name|dtog
 argument_list|(
-name|bno
-argument_list|,
 name|fs
+argument_list|,
+name|bno
 argument_list|)
 expr_stmt|;
 if|if
@@ -3381,9 +3381,9 @@ name|fs
 argument_list|,
 name|cgtod
 argument_list|(
-name|cg
-argument_list|,
 name|fs
+argument_list|,
+name|cg
 argument_list|)
 argument_list|)
 argument_list|,
@@ -3413,9 +3413,9 @@ name|bno
 operator|=
 name|dtogd
 argument_list|(
-name|bno
-argument_list|,
 name|fs
+argument_list|,
+name|bno
 argument_list|)
 expr_stmt|;
 if|if
@@ -3927,9 +3927,9 @@ name|cg
 operator|=
 name|itog
 argument_list|(
-name|ino
-argument_list|,
 name|fs
+argument_list|,
+name|ino
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3944,9 +3944,9 @@ name|fs
 argument_list|,
 name|cgtod
 argument_list|(
-name|cg
-argument_list|,
 name|fs
+argument_list|,
+name|cg
 argument_list|)
 argument_list|)
 argument_list|,
@@ -4145,9 +4145,9 @@ name|start
 operator|=
 name|dtogd
 argument_list|(
-name|bpref
-argument_list|,
 name|fs
+argument_list|,
+name|bpref
 argument_list|)
 operator|/
 name|NBBY
@@ -4650,14 +4650,14 @@ name|bn
 operator|<
 name|cgdmin
 argument_list|(
+name|fs
+argument_list|,
 name|dtog
 argument_list|(
+name|fs
+argument_list|,
 name|bn
-argument_list|,
-name|fs
 argument_list|)
-argument_list|,
-name|fs
 argument_list|)
 condition|)
 block|{

@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 1.10 %G%"
+literal|"@(#)main.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6677,9 +6677,9 @@ name|cg
 operator|=
 name|itog
 argument_list|(
-name|ino
-argument_list|,
 name|fs
+argument_list|,
+name|ino
 argument_list|)
 expr_stmt|;
 name|bp
@@ -6694,9 +6694,9 @@ name|fs
 argument_list|,
 name|cgtod
 argument_list|(
-name|cg
-argument_list|,
 name|fs
+argument_list|,
+name|cg
 argument_list|)
 argument_list|)
 argument_list|,

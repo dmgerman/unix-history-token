@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c 1.2 %G%"
+literal|"@(#)clri.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,10 +319,10 @@ name|sblock
 argument_list|,
 name|itod
 argument_list|(
-name|n
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|n
 argument_list|)
 argument_list|)
 operator|*
@@ -424,10 +424,10 @@ name|sblock
 argument_list|,
 name|itod
 argument_list|(
-name|n
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|n
 argument_list|)
 argument_list|)
 operator|*
@@ -461,10 +461,10 @@ name|j
 operator|=
 name|itoo
 argument_list|(
-name|n
-argument_list|,
 operator|&
 name|sblock
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 for|for

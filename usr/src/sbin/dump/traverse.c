@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.4 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1659,9 +1659,9 @@ name|sblock
 argument_list|,
 name|itod
 argument_list|(
-name|ino
-argument_list|,
 name|sblock
+argument_list|,
+name|ino
 argument_list|)
 argument_list|)
 argument_list|,
