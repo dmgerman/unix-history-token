@@ -52,7 +52,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  The members are accessed via the PCPU_GET/SET/PTR  * macros defined in<machine/pcpu.h>.  */
+comment|/*  * This structure maps out the global data that needs to be kept on a  * per-cpu basis.  The members are accessed via the PCPU_GET/SET/PTR  * macros defined in<machine/pcpu.h>.  Machine dependent fields are  * defined in the PCPU_MD_FIELDS macro defined in<machine/pcpu.h>.  */
 end_comment
 
 begin_struct
