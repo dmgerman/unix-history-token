@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 105 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -277,6 +277,21 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acnetbsd.h"
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|MODESTO
 argument_list|)
 end_elif
@@ -453,6 +468,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !DEBUGGER_THREADING */
+end_comment
 
 begin_comment
 comment|/******************************************************************************  *  * C library configuration  *  *****************************************************************************/
