@@ -4615,7 +4615,7 @@ operator|)
 literal|'\0'
 argument_list|)
 expr_stmt|;
-comment|/* 		     * If lhs didn't end with the delimiter, complain and 		     * return NULL 		     */
+comment|/* 		     * If lhs didn't end with the delimiter, complain and 		     * exit. 		     */
 if|if
 condition|(
 operator|*
@@ -4624,35 +4624,7 @@ operator|!=
 name|del
 condition|)
 block|{
-operator|*
-name|lengthPtr
-operator|=
-name|cp
-operator|-
-name|start
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|freePtr
-condition|)
-block|{
-name|free
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-block|}
-name|Buf_Destroy
-argument_list|(
-name|buf
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|Error
+name|Fatal
 argument_list|(
 literal|"Unclosed substitution for %s (%c missing)"
 argument_list|,
@@ -4663,11 +4635,6 @@ argument_list|,
 name|del
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|var_Error
-operator|)
-return|;
 block|}
 comment|/* 		     * Fetch pattern and destroy buffer, but preserve the data 		     * in it, since that's our lhs. Note that Buf_GetAll 		     * will return the actual number of bytes, which includes 		     * the null byte, so we have to decrement the length by 		     * one. 		     */
 name|pattern
@@ -4941,35 +4908,7 @@ operator|!=
 name|del
 condition|)
 block|{
-operator|*
-name|lengthPtr
-operator|=
-name|cp
-operator|-
-name|start
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|freePtr
-condition|)
-block|{
-name|free
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-block|}
-name|Buf_Destroy
-argument_list|(
-name|buf
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|Error
+name|Fatal
 argument_list|(
 literal|"Unclosed substitution for %s (%c missing)"
 argument_list|,
@@ -4980,11 +4919,6 @@ argument_list|,
 name|del
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|var_Error
-operator|)
-return|;
 block|}
 name|pattern
 operator|.
@@ -5164,7 +5098,7 @@ name|delim
 operator|!=
 literal|'\0'
 condition|)
-name|Error
+name|Fatal
 argument_list|(
 literal|"Unclosed substitution for %s (%c missing)"
 argument_list|,
@@ -5241,7 +5175,7 @@ name|delim
 operator|!=
 literal|'\0'
 condition|)
-name|Error
+name|Fatal
 argument_list|(
 literal|"Unclosed substitution for %s (%c missing)"
 argument_list|,
