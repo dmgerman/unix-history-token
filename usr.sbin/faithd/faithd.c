@@ -1051,7 +1051,7 @@ name|MAXARGV
 condition|)
 name|exit_failure
 argument_list|(
-literal|"too many augments"
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 name|serverarg
@@ -1969,7 +1969,7 @@ argument_list|(
 name|s_wld
 argument_list|)
 expr_stmt|;
-comment|/*NOTRECHED*/
+comment|/*NOTREACHED*/
 name|exit
 argument_list|(
 literal|1
