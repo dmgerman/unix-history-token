@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)map.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)map.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -37,7 +37,7 @@ comment|/* size of this segment of the map */
 name|int
 name|m_addr
 decl_stmt|;
-comment|/* resource-space addr of start of segment */
+comment|/* start of segment */
 block|}
 struct|;
 end_struct
@@ -58,9 +58,6 @@ end_define
 begin_decl_stmt
 name|struct
 name|map
-modifier|*
-name|argmap
-decl_stmt|,
 modifier|*
 name|kernelmap
 decl_stmt|,
