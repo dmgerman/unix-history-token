@@ -218,7 +218,9 @@ block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|}
 decl_stmt|,
 name|input2
 init|=
@@ -238,7 +240,9 @@ block|,
 literal|0
 block|,
 literal|0
-block|, }
+block|,
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -336,11 +340,21 @@ comment|/* empty field replacement string (-e) */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|char
+name|default_tabchar
+index|[]
+init|=
+literal|" \t"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|tabchar
 init|=
-literal|" \t"
+name|default_tabchar
 decl_stmt|;
 end_decl_stmt
 
@@ -1862,6 +1876,7 @@ end_function
 
 begin_block
 block|{
+name|unsigned
 name|int
 name|cnt1
 decl_stmt|,
@@ -1978,6 +1993,7 @@ modifier|*
 name|lp
 decl_stmt|;
 block|{
+name|unsigned
 name|int
 name|cnt
 decl_stmt|;
@@ -2009,6 +2025,9 @@ index|]
 operator|.
 name|filenum
 operator|==
+operator|(
+name|unsigned
+operator|)
 name|F
 operator|->
 name|number
@@ -2148,6 +2167,7 @@ end_decl_stmt
 
 begin_block
 block|{
+name|unsigned
 name|int
 name|cnt
 decl_stmt|;
@@ -2718,6 +2738,7 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|unsigned
 name|int
 name|len
 decl_stmt|;
