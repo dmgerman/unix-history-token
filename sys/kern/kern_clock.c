@@ -1175,7 +1175,7 @@ name|PPAUSE
 argument_list|,
 literal|"stopprof"
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 name|p

@@ -8070,7 +8070,7 @@ decl_stmt|;
 name|u_int32_t
 name|off
 init|=
-name|NULL
+literal|0
 decl_stmt|;
 name|struct
 name|fwohcidb_tr
@@ -8155,7 +8155,7 @@ if|if
 condition|(
 name|off
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|err
@@ -8479,7 +8479,7 @@ decl_stmt|;
 name|u_int32_t
 name|off
 init|=
-name|NULL
+literal|0
 decl_stmt|;
 name|struct
 name|fwohcidb_tr
@@ -8576,7 +8576,7 @@ if|if
 condition|(
 name|off
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|err

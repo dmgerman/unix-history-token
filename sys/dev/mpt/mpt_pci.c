@@ -1893,7 +1893,7 @@ name|mpt
 operator|->
 name|reply_phys
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 return|return

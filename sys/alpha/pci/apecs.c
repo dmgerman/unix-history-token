@@ -1032,7 +1032,7 @@ name|sc
 operator|->
 name|cfg1_base
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|set_iointr
 argument_list|(

@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|UMTX_UNOWNED
-value|NULL
+value|0x0
 end_define
 
 begin_define

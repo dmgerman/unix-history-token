@@ -616,7 +616,7 @@ name|adp
 operator|->
 name|va_io_base
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|adp
 operator|->
@@ -628,7 +628,7 @@ name|adp
 operator|->
 name|va_crtc_addr
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|gfb_device_softcs
 index|[

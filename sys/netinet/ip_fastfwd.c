@@ -1557,7 +1557,7 @@ name|ICMP_TIMXCEED
 argument_list|,
 name|ICMP_TIMXCEED_INTRANS
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -1769,7 +1769,7 @@ name|ICMP_UNREACH
 argument_list|,
 name|ICMP_UNREACH_HOST
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -2695,7 +2695,7 @@ name|ICMP_UNREACH
 argument_list|,
 name|ICMP_UNREACH_HOST
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -2876,7 +2876,7 @@ name|ICMP_UNREACH
 argument_list|,
 name|ICMP_UNREACH_NEEDFRAG
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|ifp
 argument_list|)

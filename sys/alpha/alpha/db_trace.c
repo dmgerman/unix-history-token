@@ -237,6 +237,8 @@ literal|"console restart"
 block|}
 block|,
 block|{
+literal|0
+block|,
 name|NULL
 block|}
 block|}
@@ -579,7 +581,7 @@ index|]
 operator|.
 name|ss_val
 operator|!=
-name|NULL
+literal|0
 condition|;
 operator|++
 name|i
@@ -1294,7 +1296,7 @@ index|]
 operator|.
 name|ss_val
 operator|!=
-name|NULL
+literal|0
 condition|;
 operator|++
 name|i
