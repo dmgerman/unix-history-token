@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cpufunc.h,v 1.78 1998/05/12 18:28:05 dyson Exp $  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cpufunc.h,v 1.79 1998/05/17 18:53:08 tegge Exp $  */
 end_comment
 
 begin_comment
@@ -335,14 +335,14 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_long
+name|u_int
 name|inl
 parameter_list|(
 name|u_int
 name|port
 parameter_list|)
 block|{
-name|u_long
+name|u_int
 name|data
 decl_stmt|;
 asm|__asm __volatile("inl %%dx,%0" : "=a" (data) : "d" (port));
@@ -561,7 +561,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_long
+name|u_int
 name|temp
 decl_stmt|;
 comment|/* 	 * This should be implemented as load_cr3(rcr3()) when load_cr3() 	 * is inlined. 	 */
@@ -625,7 +625,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_long
+name|u_int
 name|temp
 decl_stmt|;
 comment|/* 	 * This should be implemented as load_cr3(rcr3()) when load_cr3() 	 * is inlined. 	 */
@@ -769,7 +769,7 @@ parameter_list|(
 name|u_int
 name|port
 parameter_list|,
-name|u_long
+name|u_int
 name|data
 parameter_list|)
 block|{
@@ -924,13 +924,13 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_long
+name|u_int
 name|rcr2
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_long
+name|u_int
 name|data
 decl_stmt|;
 asm|__asm __volatile("movl %%cr2,%0" : "=r" (data));
@@ -945,13 +945,13 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_long
+name|u_int
 name|read_eflags
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_long
+name|u_int
 name|ef
 decl_stmt|;
 asm|__asm __volatile("pushfl; popl %0" : "=r" (ef));
@@ -966,14 +966,14 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|quad_t
+name|u_int64_t
 name|rdmsr
 parameter_list|(
 name|u_int
 name|msr
 parameter_list|)
 block|{
-name|quad_t
+name|u_int64_t
 name|rv
 decl_stmt|;
 asm|__asm __volatile(".byte 0x0f, 0x32" : "=A" (rv) : "c" (msr));
@@ -988,14 +988,14 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|quad_t
+name|u_int64_t
 name|rdpmc
 parameter_list|(
 name|u_int
 name|pmc
 parameter_list|)
 block|{
-name|quad_t
+name|u_int64_t
 name|rv
 decl_stmt|;
 asm|__asm __volatile(".byte 0x0f, 0x33" : "=A" (rv) : "c" (pmc));
@@ -1010,13 +1010,13 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|quad_t
+name|u_int64_t
 name|rdtsc
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|quad_t
+name|u_int64_t
 name|rv
 decl_stmt|;
 asm|__asm __volatile(".byte 0x0f, 0x31" : "=A" (rv));
@@ -1085,7 +1085,7 @@ name|__inline
 name|void
 name|write_eflags
 parameter_list|(
-name|u_long
+name|u_int
 name|ef
 parameter_list|)
 block|{
@@ -1102,7 +1102,7 @@ parameter_list|(
 name|u_int
 name|msr
 parameter_list|,
-name|quad_t
+name|u_int64_t
 name|newval
 parameter_list|)
 block|{
@@ -1169,7 +1169,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int
 name|inl
 name|__P
 argument_list|(
@@ -1330,7 +1330,7 @@ operator|(
 name|u_int
 name|port
 operator|,
-name|u_long
+name|u_int
 name|data
 operator|)
 argument_list|)
@@ -1414,7 +1414,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int
 name|rcr2
 name|__P
 argument_list|(
@@ -1426,7 +1426,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|quad_t
+name|u_int64_t
 name|rdmsr
 name|__P
 argument_list|(
@@ -1439,7 +1439,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|quad_t
+name|u_int64_t
 name|rdpmc
 name|__P
 argument_list|(
@@ -1452,7 +1452,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|quad_t
+name|u_int64_t
 name|rdtsc
 name|__P
 argument_list|(
@@ -1464,7 +1464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int
 name|read_eflags
 name|__P
 argument_list|(
@@ -1511,7 +1511,7 @@ name|write_eflags
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int
 name|ef
 operator|)
 argument_list|)
@@ -1527,7 +1527,7 @@ operator|(
 name|u_int
 name|msr
 operator|,
-name|quad_t
+name|u_int64_t
 name|newval
 operator|)
 argument_list|)
@@ -1549,7 +1549,7 @@ name|load_cr0
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int
 name|cr0
 operator|)
 argument_list|)
@@ -1562,7 +1562,7 @@ name|load_cr3
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int
 name|cr3
 operator|)
 argument_list|)
@@ -1575,7 +1575,7 @@ name|load_cr4
 name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int
 name|cr4
 operator|)
 argument_list|)
@@ -1608,7 +1608,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int
 name|rcr3
 name|__P
 argument_list|(
@@ -1620,7 +1620,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
+name|u_int
 name|rcr4
 name|__P
 argument_list|(
