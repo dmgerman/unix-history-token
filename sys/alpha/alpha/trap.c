@@ -2061,6 +2061,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 			 * It is only a kernel address space fault iff: 			 *	1. !user and 			 *	2. pcb_onfault not set or 			 *	3. pcb_onfault set but kernel space data fault 			 * The last can occur during an exec() copyin where the 			 * argument space is lazy-allocated. 			 * 			 * For the purposes of the Linux emulator, we allow 			 * kernel accesses to a small region of the 			 * user stack which the emulator uses to 			 * translate syscall arguments. 			 */
 if|if
 condition|(
@@ -2382,10 +2388,22 @@ operator|==
 name|KERN_SUCCESS
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
