@@ -1560,7 +1560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Process Interrupt Queue  *   * Processes entries on the ATM interrupt queue.  This queue is used by  * device interface drivers in order to schedule events from the driver's   * lower (interrupt) half to the driver's stack services.  *  * The interrupt routines must store the stack processing function to call  * and a token (typically a driver/stack control block) at the front of the  * queued buffer.  We assume that the function pointer and token values are   * both contained (and properly aligned) in the first buffer of the chain.  *  * Arguments:  *	none  *  * Returns:  *	none  *  */
+comment|/*  * Process Interrupt Queue  *   * Processes entries on the ATM interrupt queue.  This queue is used by  * device interface drivers in order to schedule events from the driver's   * lower (interrupt) half to the driver's stack services.  *  * The interrupt routines must store the stack processing function to call  * and a token (typically a driver/stack control block) at the front of the  * queued buffer.  We assume that the function pointer and token values are   * both contained (and properly aligned) in the first buffer of the chain.  * The size of these two fields is not accounted for in the packet header  * length field. The packet header itself must be in the first mbuf.  *  * Arguments:  *	none  *  * Returns:  *	none  *  */
 end_comment
 
 begin_function
@@ -1587,11 +1587,11 @@ decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 comment|/* 	 * Get function to call and token value 	 */
-name|KB_DATASTART
+name|cp
+operator|=
+name|mtod
 argument_list|(
 name|m
-argument_list|,
-name|cp
 argument_list|,
 name|caddr_t
 argument_list|)
@@ -1622,12 +1622,10 @@ operator|*
 operator|)
 name|cp
 expr_stmt|;
-name|KB_HEADADJ
-argument_list|(
 name|m
-argument_list|,
-operator|-
-operator|(
+operator|->
+name|m_len
+operator|-=
 sizeof|sizeof
 argument_list|(
 name|func
@@ -1637,35 +1635,21 @@ sizeof|sizeof
 argument_list|(
 name|token
 argument_list|)
-operator|)
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|KB_LEN
+name|m
+operator|->
+name|m_data
+operator|+=
+sizeof|sizeof
 argument_list|(
-name|m
+name|func
 argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|KBuffer
-modifier|*
-name|m1
-decl_stmt|;
-name|KB_UNLINKHEAD
+operator|+
+sizeof|sizeof
 argument_list|(
-name|m
-argument_list|,
-name|m1
+name|token
 argument_list|)
 expr_stmt|;
-name|m
-operator|=
-name|m1
-expr_stmt|;
-block|}
 comment|/* 	 * Call processing function 	 */
 call|(
 modifier|*
