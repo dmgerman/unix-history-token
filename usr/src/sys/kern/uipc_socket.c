@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.72	83/03/15	*/
+comment|/*	uipc_socket.c	4.73	83/03/19	*/
 end_comment
 
 begin_include
@@ -3747,6 +3747,9 @@ case|:
 case|case
 name|SIOCSIFFLAGS
 case|:
+case|case
+name|SIOCSIFDSTADDR
+case|:
 if|if
 condition|(
 operator|!
@@ -3775,6 +3778,9 @@ name|SIOCGIFADDR
 case|:
 case|case
 name|SIOCGIFFLAGS
+case|:
+case|case
+name|SIOCGIFDSTADDR
 case|:
 return|return
 operator|(
