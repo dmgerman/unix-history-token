@@ -11618,13 +11618,23 @@ name|dev_spec
 operator|=
 name|current_speed
 expr_stmt|;
-comment|/* set single-initiator buffering mode */
+comment|/* if set, set single-initiator buffering mode */
+if|if
+condition|(
+name|softc
+operator|->
+name|buffer_mode
+operator|==
+name|SMH_SA_BUF_MODE_SIBUF
+condition|)
+block|{
 name|mode_hdr
 operator|->
 name|dev_spec
 operator||=
 name|SMH_SA_BUF_MODE_SIBUF
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mode_blk
