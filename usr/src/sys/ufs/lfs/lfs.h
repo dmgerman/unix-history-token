@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -906,7 +906,7 @@ name|ino_t
 name|bi_inode
 decl_stmt|;
 comment|/* inode # */
-name|off_t
+name|daddr_t
 name|bi_lbn
 decl_stmt|;
 comment|/* logical block w/in file */
