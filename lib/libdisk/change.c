@@ -344,7 +344,7 @@ directive|ifdef
 name|PC98
 name|type
 operator|=
-literal|0x494
+literal|0xc494
 expr_stmt|;
 else|#
 directive|else
