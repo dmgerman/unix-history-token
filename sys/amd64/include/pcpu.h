@@ -27,16 +27,113 @@ directive|ifndef
 name|__GNUC__
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_error
 error|#
 directive|error
-error|gcc is required to use this file
+error|gcc or lint is required to use this file
 end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* lint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PCPU_PTR
+parameter_list|(
+name|name
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__PCPU_GET
+parameter_list|(
+name|name
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__PCPU_SET
+parameter_list|(
+name|name
+parameter_list|,
+name|val
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_GET
+parameter_list|(
+name|member
+parameter_list|)
+value|__PCPU_GET(pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_PTR
+parameter_list|(
+name|member
+parameter_list|)
+value|__PCPU_PTR(pc_ ## member)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_SET
+parameter_list|(
+name|member
+parameter_list|,
+name|val
+parameter_list|)
+value|__PCPU_SET(pc_ ## member, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_MD_FIELDS
+define|\
+value|int foo;		\ 	char bar
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_include
 include|#
@@ -179,6 +276,15 @@ name|val
 parameter_list|)
 value|__PCPU_SET(pc_ ## member, val)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__ */
+end_comment
 
 begin_endif
 endif|#
