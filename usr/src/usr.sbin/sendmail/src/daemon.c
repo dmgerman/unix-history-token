@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.44
+literal|3.45
 operator|%
 name|G
 operator|%
@@ -123,17 +123,6 @@ begin_comment
 comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Waits until some interesting activity occurs.  When **		it does, a child is created to process it, and the **		parent waits for completion.  Return from this **		routine is always in the child.  The file pointers **		"InChannel" and "OutChannel" should be set to point **		to the communication channel. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAXCONNS
-value|4
-end_define
-
-begin_comment
-comment|/* maximum simultaneous sendmails */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|sockaddr_in
@@ -156,6 +145,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* fd describing socket */
+end_comment
+
+begin_decl_stmt
+name|int
+name|MaxConnections
+init|=
+literal|4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum simultaneous sendmails */
 end_comment
 
 begin_macro

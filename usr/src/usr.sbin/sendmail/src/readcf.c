@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -2483,6 +2483,29 @@ begin_comment
 comment|/* the stored wizard password */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DAEMON
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|MaxConnections
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max simult. SMTP conns */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|DAEMON
+end_endif
+
 begin_macro
 name|setoption
 argument_list|(
@@ -2962,6 +2985,24 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DAEMON
+case|case
+literal|'N'
+case|:
+comment|/* maximum simultaneous SMTP connections */
+name|MaxConnections
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+endif|DAEMON
 case|case
 literal|'o'
 case|:
