@@ -3902,6 +3902,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* Set Non-Volatile Control Register from EEPROM */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|NVCTL
+argument_list|,
+name|epic_read_eeprom
+argument_list|(
+name|sc
+argument_list|,
+name|EEPROM_NVCTL
+argument_list|)
+operator|&
+literal|0x1F
+argument_list|)
+expr_stmt|;
 comment|/* Set defaults */
 name|sc
 operator|->
