@@ -1688,7 +1688,13 @@ condition|)
 block|{
 name|seterr
 argument_list|(
-literal|"proc size mismatch"
+literal|"proc size mismatch (kinfo_proc: %d)"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|kinfo_proc
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
