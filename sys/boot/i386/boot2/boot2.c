@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.14 1998/11/08 15:36:35 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.15 1998/11/08 18:29:29 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -1018,6 +1018,11 @@ name|cmd
 argument_list|)
 condition|)
 name|autoboot
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|cmd
 operator|=
 literal|0
 expr_stmt|;
