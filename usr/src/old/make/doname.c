@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)doname.c	4.1 (Berkeley) 81/02/28"
+literal|"@(#)doname.c	4.2 (Berkeley) 83/02/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -836,6 +836,22 @@ name|endloop
 goto|;
 block|}
 block|}
+name|setvar
+argument_list|(
+literal|"*"
+argument_list|,
+operator|&
+name|prefix
+index|[
+name|rindex
+argument_list|(
+name|prefix
+argument_list|,
+literal|'/'
+argument_list|)
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|endloop
