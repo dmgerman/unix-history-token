@@ -2743,6 +2743,7 @@ operator|)
 operator|-
 literal|1
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"PARENT WAS I=%lu\n"
@@ -2750,6 +2751,14 @@ argument_list|,
 name|parentdir
 argument_list|)
 expr_stmt|;
+comment|/* 			 * The parent directory, because of the ordering 			 * guarantees, has had the link count incremented 			 * for the child, but no entry was made.  This 			 * fixes the parent link count so that fsck does 			 * not need to be rerun. 			 */
+name|lncntp
+index|[
+name|parentdir
+index|]
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|preen
