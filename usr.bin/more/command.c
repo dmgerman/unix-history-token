@@ -161,6 +161,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+modifier|*
+name|av
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|quitting
 decl_stmt|;
@@ -2005,6 +2014,27 @@ case|case
 name|A_HELP
 case|:
 comment|/* help */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|_PATH_HELPFILE
+argument_list|,
+name|av
+index|[
+name|curr_ac
+index|]
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Already viewing help."
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|lower_left
 argument_list|()
 expr_stmt|;
@@ -2491,12 +2521,6 @@ block|{
 specifier|extern
 name|int
 name|sc_width
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|av
 decl_stmt|;
 specifier|register
 name|int
